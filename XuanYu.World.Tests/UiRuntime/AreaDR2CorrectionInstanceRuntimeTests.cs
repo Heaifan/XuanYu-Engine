@@ -18,13 +18,13 @@ public sealed class AreaDR2CorrectionInstanceRuntimeTests
         {
             var vm = new UiVm(null, seedInitialScene: false); vm.AddCubeEntity(); vm.ToggleEditorMode();
             var right = new Right { DataContext = vm }; host.Show(right, 480, 720); right.UpdateLayout();
-            return (EditorTabs: Count<EditorRightTabs>(right), Map: Count<MapEditorPanel>(right),
-                Entity: Count<EntityInspectorPanel>(right), Dock: Count<EditorLayerDock>(right),
-                VisibleEntity: Visible<EntityInspectorPanel>(right), VisibleDock: Visible<EditorLayerDock>(right));
+            return (EditorTabs: Count<EditorRightTabs>(right), Inspector: Count<InspectorPanel>(right),
+                Legacy: Count<EntityInspectorPanel>(right) + Count<MapEditorPanel>(right), Dock: Count<EditorLayerDock>(right),
+                VisibleInspector: Visible<InspectorPanel>(right), VisibleDock: Visible<EditorLayerDock>(right));
         });
 
-        Assert.Equal(1, state.EditorTabs); Assert.Equal(1, state.Map); Assert.Equal(1, state.Entity);
-        Assert.Equal(1, state.Dock); Assert.Equal(1, state.VisibleEntity); Assert.Equal(1, state.VisibleDock);
+        Assert.Equal(1, state.EditorTabs); Assert.Equal(1, state.Inspector); Assert.Equal(0, state.Legacy);
+        Assert.Equal(1, state.Dock); Assert.Equal(1, state.VisibleInspector); Assert.Equal(1, state.VisibleDock);
     }
 
     [Fact]

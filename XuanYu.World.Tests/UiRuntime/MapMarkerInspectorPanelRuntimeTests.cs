@@ -16,7 +16,7 @@ public sealed class MapMarkerInspectorPanelRuntimeTests
     public MapMarkerInspectorPanelRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Selected_marker_mounts_the_two_dimensional_inspector_panel()
+    public void Selected_marker_uses_single_focus_property_content_without_legacy_panel()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var state = host.Run(() =>
@@ -29,21 +29,16 @@ public sealed class MapMarkerInspectorPanelRuntimeTests
             vm.SelectMapGeometry(new(MapGeometryFeatureKind.Marker, marker.MarkerId.ToString()));
             var panel = new InspectorPanel { DataContext = vm };
             host.Show(panel, 420, 620); Dispatcher.UIThread.RunJobs(); panel.UpdateLayout();
-            var markerPanel = panel.FindControl<MarkerInspectorPanel>("MarkerInspectorHost")!;
-            var vector = markerPanel.FindControl<XYVectorProperty>("PositionProperty")!;
-            var apply = UiRuntimeTestHost.Descendants<XYButton>(markerPanel).Single(button => button.Content?.ToString() == "应用位置");
-            vector.X = 9; vector.Y = 10; apply.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            return (Visible: markerPanel.IsEffectivelyVisible, Dimension: vector.Dimension,
-                X: vector.X, Y: vector.Y, OtherPanels: UiRuntimeTestHost.Descendants<MarkerInspectorPanel>(panel).Count(),
-                AppliedX: vm.MarkerInspectorPositionX, AppliedY: vm.MarkerInspectorPositionY);
+            vm.SelectInspectorCategoryCommand.Execute("基础"); Dispatcher.UIThread.RunJobs(); panel.UpdateLayout();
+            return (Presenters: UiRuntimeTestHost.Descendants<InspectorReadOnlyValuePresenter>(panel).Count(),
+                LegacyPanels: UiRuntimeTestHost.Descendants<MarkerInspectorPanel>(panel).Count(),
+                Selectable: UiRuntimeTestHost.Descendants<XYSelectableText>(panel).Count(),
+                Categories: vm.InspectorCategories.ToArray());
         });
 
-        Assert.True(state.Visible);
-        Assert.Equal(XYVectorDimension.Vector2, state.Dimension);
-        Assert.Equal(9, state.X);
-        Assert.Equal(10, state.Y);
-        Assert.Equal(1, state.OtherPanels);
-        Assert.Equal(9, state.AppliedX);
-        Assert.Equal(10, state.AppliedY);
+        Assert.True(state.Presenters > 0);
+        Assert.Equal(0, state.LegacyPanels);
+        Assert.Equal(0, state.Selectable);
+        Assert.Equal("最近", state.Categories[0]);
     }
 }

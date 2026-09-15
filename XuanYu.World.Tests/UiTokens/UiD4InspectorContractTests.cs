@@ -34,7 +34,7 @@ public sealed class UiD4InspectorContractTests
         Assert.DoesNotContain("NarrowFields", Panel);
         Assert.DoesNotContain("ColumnDefinition Width=\"96\"", Panel);
         Assert.Contains("ColumnDefinitions=\"80,*\"", Panel);      // ReadonlyKeyValueRow 默认标签列 80
-        Assert.Contains("ToolTip.Tip=\"{Binding Value}\"", Panel); // 值省略后 Tooltip 完整值
+        Assert.Contains("InspectorReadOnlyValuePresenter", Panel); // 统一只读值 Presenter 提供 Tooltip 与复制
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public sealed class UiD4InspectorContractTests
     [Fact]
     public void Inspector_group_uses_full_width_header_with_separator()
     {
-        Assert.Contains("InspectorCategories", Panel);
+        Assert.Contains("InspectorCategoryItems", Panel);
         Assert.Contains("SearchBox", Panel);
         Assert.DoesNotContain("XYPager", Panel);
     }

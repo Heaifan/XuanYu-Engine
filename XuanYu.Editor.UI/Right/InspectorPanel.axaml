@@ -3,6 +3,13 @@
              x:Class="XuanYu.Editor.UI.InspectorPanel" x:DataType="local:UiVm">
   <UserControl.Styles>
     <Style Selector="Grid.inspectorProperty"><Setter Property="MinHeight" Value="30"/><Setter Property="Margin" Value="0,2"/></Style>
+    <Style Selector="xy|XYToggleButton.inspectorNavigationItem">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="HorizontalContentAlignment" Value="Left"/>
+      <Setter Property="Margin" Value="0,1"/><Setter Property="MinHeight" Value="30"/>
+    </Style>
+    <Style Selector="xy|XYToggleButton.inspectorNavigationItem:checked">
+      <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
   </UserControl.Styles>
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="108,*" ColumnSpacing="8">
     <Grid Grid.ColumnSpan="2" ColumnDefinitions="*,Auto" ColumnSpacing="8" IsVisible="{Binding HasInspectorSelection}" x:Name="EntityHeader">
@@ -17,22 +24,19 @@
     <xy:XYTextField Grid.Row="1" Grid.ColumnSpan="2" x:Name="SearchBox" PlaceholderText="搜索全部属性…"
                     Text="{Binding InspectorSearchText, Mode=TwoWay}" Margin="0,8,0,8"/>
     <Border Grid.Row="2" Padding="0,4,0,0">
-      <ItemsControl ItemsSource="{Binding InspectorCategories}">
+      <ItemsControl ItemsSource="{Binding InspectorCategoryItems}" x:Name="InspectorCategories">
         <ItemsControl.ItemTemplate><DataTemplate>
-          <xy:XYButton Content="{Binding}" Command="{Binding $parent[UserControl].DataContext.SelectInspectorCategoryCommand}"
-                       CommandParameter="{Binding}" HorizontalAlignment="Stretch" Margin="0,1"/>
+          <xy:XYToggleButton Content="{Binding Category}" IsChecked="{Binding IsSelected, Mode=OneWay}"
+                             Classes="inspectorNavigationItem"
+                             Command="{Binding $parent[UserControl].DataContext.SelectInspectorCategoryCommand}"
+                             CommandParameter="{Binding Category}"/>
         </DataTemplate></ItemsControl.ItemTemplate>
       </ItemsControl>
     </Border>
     <ScrollViewer Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Auto">
       <StackPanel Spacing="4">
         <xy:XYSectionTitle Text="{Binding InspectorCategory}" IsVisible="{Binding !IsInspectorSearchMode}"/>
-        <local:MapEditorPanel x:Name="MapWorkspace" IsVisible="{Binding IsMapInspectorBasicPage}"/>
-        <local:MarkerInspectorPanel x:Name="MarkerInspectorHost" IsVisible="{Binding IsMarkerInspectorBasicPage}"/>
-        <local:FeatureInspectorPanel local:XYDiagnostic.DebugId="{Binding DiagnosticFeatureModuleId}" x:Name="FeatureInspectorHost" IsVisible="{Binding IsFeatureInspectorBasicPage}"/>
-        <local:EntityInspectorPanel x:Name="EntityInspectorHost" IsVisible="{Binding IsEntityInspectorBasicPage}"/>
-        <local:LayerInspectorPanel x:Name="LayerInspectorHost" IsVisible="{Binding IsLayerInspectorVisible}"/>
-        <ItemsControl ItemsSource="{Binding InspectorProperties}" IsVisible="{Binding IsInspectorPropertyListVisible}">
+        <ItemsControl ItemsSource="{Binding InspectorProperties}" IsVisible="{Binding IsInspectorPropertyListVisible}" x:Name="InspectorPropertyRows">
           <ItemsControl.ItemTemplate><DataTemplate x:DataType="local:InspectorPropertyRow">
             <StackPanel>
               <xy:XYCaption Text="{Binding Path}"/>
@@ -40,20 +44,18 @@
                 <xy:XYLabel Text="{Binding DisplayName}" VerticalAlignment="Center"/>
                 <xy:XYTextField Grid.Column="1" Text="{Binding Value}" IsVisible="{Binding IsEditable}"
                                 LostFocus="PropertyEditor_LostFocus" KeyDown="PropertyEditor_KeyDown"/>
-                <xy:XYSelectableText Grid.Column="1" Text="{Binding Value}" Variant="Technical" ToolTip.Tip="{Binding Value}" IsVisible="{Binding !IsEditable}"/>
+                <local:InspectorReadOnlyValuePresenter Grid.Column="1" IsVisible="{Binding !IsEditable}"/>
               </Grid>
             </StackPanel>
           </DataTemplate></ItemsControl.ItemTemplate>
         </ItemsControl>
-        <xy:XYEmptyText Text="未找到匹配属性。" IsVisible="{Binding InspectorProperties.Count, Converter={x:Static local:InspectorPanel.IsZero}}"/>
+        <xy:XYEmptyText Text="暂无最近编辑属性" IsVisible="{Binding IsInspectorRecentEmpty}"/>
+        <xy:XYEmptyText Text="未找到匹配属性。" IsVisible="{Binding IsInspectorNoResults}"/>
       </StackPanel>
     </ScrollViewer>
     <StackPanel Grid.Row="2" Grid.ColumnSpan="2" IsVisible="{Binding IsInspectorEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center">
       <xy:XYEmptyText Text="未选择对象"/>
       <xy:XYCaption Text="选择地图、点、道路或区域以查看属性。"/>
     </StackPanel>
-    <Grid Grid.Row="2" IsVisible="False" DataContext="{Binding}" x:Name="LayerCompatibilityHost">
-      <Grid IsVisible="{Binding HasCurrentLayerSelection}"/>
-    </Grid>
   </Grid>
 </UserControl>

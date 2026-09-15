@@ -38,10 +38,10 @@ public sealed class UiMapLayoutContractTests
     [Fact]
     public void Map_editor_has_frozen_content_navigation_tabs()
     {
-        Assert.Equal(3, MapEditor.Split("ToggleInspectorSectionCommand").Length - 1);
-        Assert.Contains("CommandParameter=\"Basic\"", MapEditor);
-        Assert.Contains("CommandParameter=\"Environment\"", MapEditor);
-        Assert.Contains("CommandParameter=\"Assets\"", MapEditor);
+        Assert.Equal(3, MapEditor.Split("InspectorSectionHeader").Length - 1);
+        Assert.Contains("Header=\"基础设置\"", MapEditor);
+        Assert.Contains("Header=\"环境\"", MapEditor);
+        Assert.Contains("Header=\"地图资产\"", MapEditor);
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public sealed class UiMapLayoutContractTests
     [Fact]
     public void Global_inspector_has_no_layer_panel()
     {
-        Assert.Contains("LayerInspectorPanel", File.ReadAllText(Path.Combine(
+        Assert.DoesNotContain("LayerInspectorPanel", File.ReadAllText(Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml")));
     }
 
@@ -72,12 +72,12 @@ public sealed class UiMapLayoutContractTests
     public void Right_keeps_global_tabs_and_rehomes_edit_contexts()
     {
         Assert.Contains("Label=\"检查器\"", Right);
-        Assert.Contains("Label=\"调试\"", Right);
+        Assert.DoesNotContain("Label=\"调试\"", Right);
         var rightShell = File.ReadAllText(Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "Right.axaml"));
         var inspector = File.ReadAllText(Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
-        Assert.Contains("<local:MapEditorPanel", inspector);
+        Assert.Contains("InspectorPropertyRow", inspector);
         Assert.DoesNotContain("<local:MapEditorPanel", rightShell);
         Assert.DoesNotContain("<local:RegionalAuthoringPanel", rightShell);
         Assert.DoesNotContain("<local:RegionalAuthoringPanel", File.ReadAllText(Path.Combine(

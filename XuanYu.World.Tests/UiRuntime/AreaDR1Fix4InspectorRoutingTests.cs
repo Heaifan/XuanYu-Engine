@@ -21,7 +21,7 @@ public sealed class AreaDR1Fix4InspectorRoutingTests
             var right = new Right { DataContext = vm };
             host.Show(right, 480, 720); right.UpdateLayout();
             return (Map: UiRuntimeTestHost.Descendants<MapFormPanel>(right).Any(x => x.IsEffectivelyVisible),
-                Entity: UiRuntimeTestHost.Descendants<EntityInspectorPanel>(right).Count(x => x.IsEffectivelyVisible));
+                Entity: UiRuntimeTestHost.Descendants<InspectorPanel>(right).Count(x => x.IsEffectivelyVisible));
         });
 
         Assert.False(visible.Map);
@@ -38,11 +38,11 @@ public sealed class AreaDR1Fix4InspectorRoutingTests
             var right = new Right { DataContext = vm };
             host.Show(right, 480, 720); right.UpdateLayout();
             return (Map: UiRuntimeTestHost.Descendants<MapFormPanel>(right).Count(x => x.IsEffectivelyVisible),
-                Entity: UiRuntimeTestHost.Descendants<EntityInspectorPanel>(right).Count(x => x.IsEffectivelyVisible));
+                Entity: UiRuntimeTestHost.Descendants<InspectorPanel>(right).Count(x => x.IsEffectivelyVisible));
         });
 
         Assert.Equal(0, visible.Map);
-        Assert.Equal(0, visible.Entity);
+        Assert.Equal(1, visible.Entity);
     }
 
     [Fact]

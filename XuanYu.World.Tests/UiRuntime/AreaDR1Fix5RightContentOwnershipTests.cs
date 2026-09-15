@@ -29,7 +29,7 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
 
         Assert.True(state.EntityOwner);
         Assert.False(state.MapVisible); Assert.False(state.RegionVisible); Assert.True(state.LayerVisible);
-        Assert.Equal(1, state.VisibleEntityPanels);
+        Assert.Equal(1, state.VisibleInspectorPanels);
         Assert.Equal(tool, state.ActiveTool);
     }
 
@@ -63,7 +63,7 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
         });
 
         Assert.False(state.EntityOwner); Assert.True(state.MapVisible); Assert.True(state.LayerVisible);
-        Assert.False(state.RegionVisible); Assert.Equal(0, state.VisibleEntityPanels);
+        Assert.False(state.RegionVisible); Assert.Equal(1, state.VisibleInspectorPanels);
     }
 
     [Fact]
@@ -75,7 +75,8 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
         Assert.DoesNotContain("<local:EntityInspectorPanel", source);
         var inspector = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
-        Assert.Contains("<local:MapEditorPanel", inspector);
+        Assert.Contains("InspectorPropertyRow", inspector);
+        Assert.DoesNotContain("<local:MapEditorPanel", inspector);
     }
 
     static SnapshotData Snapshot(UiRuntimeTestHost host, UiVm vm)
@@ -83,10 +84,10 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
         var right = new Right { DataContext = vm }; host.Show(right, 480, 720); right.UpdateLayout();
         return new(
             vm.IsEntityInspector,
-            Find<MapEditorPanel>(right, "MapWorkspace").IsEffectivelyVisible,
+            vm.IsMapInspector,
             false,
             Find<EditorLayerDock>(right, "LayerWorkspace").IsEffectivelyVisible,
-            UiRuntimeTestHost.Descendants<EntityInspectorPanel>(right).Count(x => x.IsEffectivelyVisible),
+            UiRuntimeTestHost.Descendants<InspectorPanel>(right).Count(x => x.IsEffectivelyVisible),
             vm.ActiveTool);
     }
 
@@ -94,5 +95,5 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
         UiRuntimeTestHost.Descendants<T>(right).Single(x => x.Name == name);
 
     readonly record struct SnapshotData(bool EntityOwner, bool MapVisible, bool RegionVisible,
-        bool LayerVisible, int VisibleEntityPanels, string ActiveTool);
+        bool LayerVisible, int VisibleInspectorPanels, string ActiveTool);
 }

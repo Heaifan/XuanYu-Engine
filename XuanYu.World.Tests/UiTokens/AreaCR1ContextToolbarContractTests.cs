@@ -33,9 +33,9 @@ public sealed class AreaCR1ContextToolbarContractTests
     {
         var inspector = Read("Right/InspectorPanel.axaml");
         Assert.Contains("SearchBox", inspector);
-        Assert.Contains("InspectorCategories", inspector);
+        Assert.Contains("InspectorCategoryItems", inspector);
         Assert.Equal(1, inspector.Split("<ScrollViewer", StringSplitOptions.None).Length - 1);
-        Assert.Contains("MapEditorPanel", inspector);
+        Assert.Contains("InspectorPropertyRow", inspector);
         Assert.DoesNotContain("开始绘制", inspector);
         Assert.DoesNotContain("撤销顶点", inspector);
     }

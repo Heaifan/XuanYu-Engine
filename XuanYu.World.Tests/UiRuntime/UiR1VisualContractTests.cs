@@ -12,31 +12,20 @@ public sealed class UiR1VisualContractTests
     public UiR1VisualContractTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Editor_right_debug_titles_use_the_canonical_section_visual()
+    public void Editor_right_uses_semantic_inspector_navigation_items()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var state = host.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false) { RightTabIndex = 2 };
+            var vm = new UiVm(null, seedInitialScene: false);
+            vm.MapSession.SelectMap();
             var tabs = new EditorRightTabs { DataContext = vm };
             host.Show(tabs, 640, 700); tabs.UpdateLayout();
-            var titles = UiRuntimeTestHost.Descendants<XYSectionTitle>(tabs).ToArray();
-            var first = titles.First();
-            var header = Assert.IsType<Grid>(first.Child);
-            var mark = Assert.IsType<Border>(header.Children[0]);
-            var text = Assert.IsType<TextBlock>(header.Children[1]);
-            return (Count: titles.Length, Separators: UiRuntimeTestHost.Descendants<XYSeparator>(tabs).Count(),
-                Background: ColorOf(first.Background), Mark: ColorOf(mark.Background), MarkWidth: mark.Width,
-                MarkHeight: mark.Height, FontSize: text.FontSize, FontWeight: text.FontWeight,
-                Text: text.Text, MarkClass: mark.Classes.Contains("xyui-section-title-left-mark"));
+            return (Count: UiRuntimeTestHost.Descendants<XYToggleButton>(tabs)
+                    .Count(x => x.Classes.Contains("inspectorNavigationItem")), Text: vm.InspectorCategory);
         });
 
-        Assert.Equal(4, state.Count); Assert.Equal(0, state.Separators);
-        Assert.Equal(Color.Parse("#EEF3F6"), state.Background);
-        Assert.Equal(Color.Parse("#526873"), state.Mark);
-        Assert.Equal(3, state.MarkWidth); Assert.Equal(16, state.MarkHeight);
-        Assert.Equal(14, state.FontSize); Assert.Equal(FontWeight.SemiBold, state.FontWeight);
-        Assert.False(string.IsNullOrWhiteSpace(state.Text)); Assert.True(state.MarkClass);
+        Assert.True(state.Count > 0); Assert.Equal("最近", state.Text);
     }
 
     [Fact]

@@ -46,7 +46,10 @@ public sealed class EditorModeUiCompositionTests
     [Fact]
     public void Map_context_lives_in_inspector_content_and_not_right_sibling()
     {
-        Assert.Contains("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+        var inspector = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
+        Assert.Contains("InspectorPropertyRow", inspector);
+        Assert.DoesNotContain("<local:MapEditorPanel", inspector);
+        Assert.DoesNotContain("<local:FeatureInspectorPanel", inspector);
         Assert.DoesNotContain("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));
         Assert.Contains("MapPagePanel", Read("XuanYu.Editor.UI", "Right", "MapPagePanel.axaml"));
         Assert.Contains("EditorLayerDock", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));

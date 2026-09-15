@@ -32,26 +32,24 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
         Assert.True(state.Project); Assert.True(state.File);
     }
     [Fact]
-    public void Right_uses_xy_tabs_for_inspector_hierarchy_debug_and_back()
+    public void Right_uses_xy_tabs_for_inspector_and_hierarchy_and_back()
     {
         using var host = new UiRuntimeTestHost(_fixture);
-        var state = host.Run<(int Tabs, int Native, bool Hierarchy, bool Debug, bool Inspector, string Selection)>(() =>
+        var state = host.Run<(int Tabs, int Native, bool Hierarchy, bool Inspector, string Selection)>(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false); vm.AddCubeEntity(); vm.ToggleEditorMode(); var selected = vm.SelectionKey;
             var tabs = new EditorRightTabs { DataContext = vm };
             host.Show(tabs, 300, 420); tabs.UpdateLayout();
             var nav = UiRuntimeTestHost.Descendants<XYTabs>(tabs).SingleOrDefault();
-            if (nav is null) return (Tabs: 0, Native: UiRuntimeTestHost.Descendants<TabControl>(tabs).Count(), Hierarchy: false, Debug: false, Inspector: false, Selection: "");
+            if (nav is null) return (Tabs: 0, Native: UiRuntimeTestHost.Descendants<TabControl>(tabs).Count(), Hierarchy: false, Inspector: false, Selection: "");
             nav.Select("hierarchy"); Dispatcher.UIThread.RunJobs();
             var hierarchy = UiRuntimeTestHost.Descendants<HierarchyWorkspace>(tabs).Single().IsEffectivelyVisible;
-            nav.Select("debug"); Dispatcher.UIThread.RunJobs();
-            var debug = tabs.FindControl<Grid>("DebugWorkspace") is not null;
             nav.Select("inspector"); Dispatcher.UIThread.RunJobs();
-            return (1, UiRuntimeTestHost.Descendants<TabControl>(tabs).Count(), hierarchy, debug,
+            return (1, UiRuntimeTestHost.Descendants<TabControl>(tabs).Count(), hierarchy,
                 UiRuntimeTestHost.Descendants<InspectorPanel>(tabs).Single().IsEffectivelyVisible, vm.SelectionKey == selected ? vm.SelectionKey : "");
         });
         Assert.Equal(1, state.Tabs); Assert.Equal(0, state.Native);
-        Assert.True(state.Hierarchy); Assert.True(state.Debug); Assert.True(state.Inspector);
+        Assert.True(state.Hierarchy); Assert.True(state.Inspector);
         Assert.NotEmpty(state.Selection);
     }
     [Fact]
@@ -65,7 +63,7 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
             UiRuntimeTestHost.Descendants<XYTabs>(right).Single().Select("inspector"); right.UpdateLayout();
             return Snapshot(right);
         });
-        Assert.Equal(1, state.MapForms); Assert.Equal(1, state.MapPages); Assert.Equal(1, state.Layers);
+        Assert.Equal(0, state.MapForms); Assert.Equal(0, state.MapPages); Assert.Equal(1, state.Layers);
     }
     [Fact]
     public void Clearing_entity_owner_restores_single_map_context()
@@ -79,7 +77,7 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
             UiRuntimeTestHost.Descendants<XYTabs>(right).Single().Select("inspector"); right.UpdateLayout();
             return Snapshot(right);
         });
-        Assert.Equal(1, state.MapForms); Assert.Equal(1, state.MapPages); Assert.Equal(1, state.Layers);
+        Assert.Equal(0, state.MapForms); Assert.Equal(0, state.MapPages); Assert.Equal(1, state.Layers);
     }
     [Fact]
     public void Navigation_sources_use_xy_tabs_without_native_tab_hosts()

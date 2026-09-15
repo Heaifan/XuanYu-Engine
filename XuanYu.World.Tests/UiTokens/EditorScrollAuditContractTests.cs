@@ -12,7 +12,7 @@ public sealed class EditorScrollAuditContractTests
         var inspector = File.ReadAllText(Path.Combine(Root, "Right", "InspectorPanel.axaml"));
         var map = File.ReadAllText(Path.Combine(Root, "Right", "MapEditorPanel.axaml"));
         Assert.Contains("x:Name=\"SearchBox\"", inspector);
-        Assert.Contains("InspectorCategories", inspector);
+        Assert.Contains("InspectorCategoryItems", inspector);
         Assert.Equal(1, inspector.Split("<ScrollViewer", StringSplitOptions.None).Length - 1);
         Assert.DoesNotContain("<ScrollViewer", map);
     }

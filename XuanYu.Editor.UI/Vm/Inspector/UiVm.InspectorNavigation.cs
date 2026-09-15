@@ -24,12 +24,13 @@ public sealed partial class UiVm
     public string InspectorCategory { get => _inspectorCategory; private set => Set(ref _inspectorCategory, value); }
     public bool IsInspectorSearchMode => _inspectorSearchText.Length > 0;
     public bool IsInspectorBasicPage => !IsInspectorSearchMode && InspectorCategory == "基础";
-    public bool IsInspectorPropertyListVisible => IsInspectorSearchMode || InspectorCategory != "基础";
-    public bool IsMapInspectorBasicPage => IsMapInspector && IsInspectorBasicPage;
-    public bool IsMarkerInspectorBasicPage => IsMarkerInspector && IsInspectorBasicPage;
-    public bool IsFeatureInspectorBasicPage => IsFeatureInspector && IsInspectorBasicPage;
-    public bool IsEntityInspectorBasicPage => IsEntityInspector && IsInspectorBasicPage;
+    public bool IsInspectorPropertyListVisible => HasInspectorSelection;
+    public bool IsInspectorRecentCategory => InspectorCategory == "最近";
+    public bool IsInspectorRecentEmpty => IsInspectorRecentCategory && InspectorProperties.Count == 0;
+    public bool IsInspectorNoResults => IsInspectorPropertyListVisible && !IsInspectorRecentEmpty && InspectorProperties.Count == 0;
     public IReadOnlyList<string> InspectorCategories => CategoriesFor(InspectorIdentity);
+    public IReadOnlyList<InspectorCategoryItem> InspectorCategoryItems =>
+        InspectorCategories.Select(category => new InspectorCategoryItem(category, category == InspectorCategory)).ToArray();
     public IReadOnlyList<InspectorPropertyRow> InspectorProperties =>
         IsInspectorSearchMode ? SearchRows() : RowsFor(InspectorCategory);
     public ICommand SelectInspectorCategoryCommand => new RelayCommand(value => SelectCategory(value?.ToString()));
@@ -44,9 +45,9 @@ public sealed partial class UiVm
         }
         OnPropertyChanged(nameof(InspectorCategories)); OnPropertyChanged(nameof(InspectorProperties));
         OnPropertyChanged(nameof(IsInspectorSearchMode)); OnPropertyChanged(nameof(IsInspectorBasicPage));
-        OnPropertyChanged(nameof(IsInspectorPropertyListVisible)); OnPropertyChanged(nameof(IsMapInspectorBasicPage));
-        OnPropertyChanged(nameof(IsMarkerInspectorBasicPage)); OnPropertyChanged(nameof(IsFeatureInspectorBasicPage));
-        OnPropertyChanged(nameof(IsEntityInspectorBasicPage));
+        OnPropertyChanged(nameof(IsInspectorPropertyListVisible)); OnPropertyChanged(nameof(IsInspectorRecentCategory));
+        OnPropertyChanged(nameof(IsInspectorRecentEmpty)); OnPropertyChanged(nameof(IsInspectorNoResults));
+        OnPropertyChanged(nameof(InspectorCategoryItems));
     }
 
     void SelectCategory(string? category)
@@ -59,9 +60,9 @@ public sealed partial class UiVm
     void RaiseInspectorNavigationBindings()
     {
         OnPropertyChanged(nameof(InspectorProperties)); OnPropertyChanged(nameof(IsInspectorBasicPage));
-        OnPropertyChanged(nameof(IsInspectorPropertyListVisible)); OnPropertyChanged(nameof(IsMapInspectorBasicPage));
-        OnPropertyChanged(nameof(IsMarkerInspectorBasicPage)); OnPropertyChanged(nameof(IsFeatureInspectorBasicPage));
-        OnPropertyChanged(nameof(IsEntityInspectorBasicPage));
+        OnPropertyChanged(nameof(IsInspectorPropertyListVisible)); OnPropertyChanged(nameof(IsInspectorRecentCategory));
+        OnPropertyChanged(nameof(IsInspectorRecentEmpty)); OnPropertyChanged(nameof(IsInspectorNoResults));
+        OnPropertyChanged(nameof(InspectorCategoryItems));
     }
 
     IReadOnlyList<InspectorPropertyRow> SearchRows() => InspectorPropertySearch.Find(AllDescriptors(), _inspectorSearchText)
@@ -79,7 +80,7 @@ public sealed partial class UiVm
     {
         if (kind == InspectorObjectKind.Empty) return [];
         var categories = AllDescriptors().Select(item => item.Category).Distinct().ToList();
-        if (_inspectorRecent.KeysFor(kind).Count > 0) categories.Insert(0, "最近");
+        categories.Insert(0, "最近");
         return categories;
     }
 

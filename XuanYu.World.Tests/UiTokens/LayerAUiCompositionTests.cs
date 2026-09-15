@@ -17,7 +17,7 @@ public sealed class LayerAUiCompositionTests
         Assert.Contains("IsVisible=\"{Binding IsEditMode}\"", right);
         Assert.Contains("GridSplitter", right);
         Assert.DoesNotContain("<local:MapEditorPanel", right);
-        Assert.Contains("<local:MapEditorPanel", Read("Right/InspectorPanel.axaml"));
+        Assert.DoesNotContain("<local:MapEditorPanel", Read("Right/InspectorPanel.axaml"));
         Assert.DoesNotContain("Header=\"图层\"", map);
         Assert.DoesNotContain("LayerPanel", map);
     }
@@ -28,8 +28,9 @@ public sealed class LayerAUiCompositionTests
         var inspector = Read("Right/InspectorPanel.axaml");
         var map = Read("Right/MapPagePanel.axaml");
         var layer = Read("Right/LayerPanel.axaml");
-        Assert.Contains("LayerInspectorPanel", inspector);
-        Assert.Contains("HasCurrentLayerSelection", inspector);
+        Assert.DoesNotContain("LayerInspectorPanel", inspector);
+        Assert.DoesNotContain("HasCurrentLayerSelection", inspector);
+        Assert.Contains("InspectorPropertyRow", inspector);
         Assert.Contains("CurrentLayerItems", layer);
         Assert.DoesNotContain("区域绘制", map);
     }

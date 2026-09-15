@@ -29,9 +29,9 @@ public sealed partial class UiVm
         {
             InspectorCategory = category;
             OnPropertyChanged(nameof(InspectorProperties)); OnPropertyChanged(nameof(IsInspectorBasicPage));
-            OnPropertyChanged(nameof(IsInspectorPropertyListVisible));
-            OnPropertyChanged(nameof(IsMapInspectorBasicPage)); OnPropertyChanged(nameof(IsMarkerInspectorBasicPage));
-            OnPropertyChanged(nameof(IsFeatureInspectorBasicPage)); OnPropertyChanged(nameof(IsEntityInspectorBasicPage));
+            OnPropertyChanged(nameof(IsInspectorPropertyListVisible)); OnPropertyChanged(nameof(IsInspectorRecentCategory));
+            OnPropertyChanged(nameof(IsInspectorRecentEmpty)); OnPropertyChanged(nameof(IsInspectorNoResults));
+            OnPropertyChanged(nameof(InspectorCategoryItems));
         }
     }
 
