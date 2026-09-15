@@ -13,12 +13,7 @@ public partial class DiagnosticOverlayHost
 
     public void ProbeHover(Visual hit, bool deepVisual)
     {
-        if (ProbeEnabled)
-        {
-            DiagnosticProbeTrace.MarkProbeHover();
-            var result = DiagnosticProbeResolver.Resolve(hit, deepVisual);
-            DiagnosticProbeTrace.MarkResolverResult(); SetProbeResult(result);
-        }
+        if (ProbeEnabled) SetProbeResult(DiagnosticProbeResolver.Resolve(hit, deepVisual));
     }
 
     public async Task ProbeClick()
@@ -36,33 +31,30 @@ public partial class DiagnosticOverlayHost
     void AttachProbeHandlers(TopLevel topLevel)
     {
         topLevel.AddHandler(InputElement.PointerMovedEvent, OnProbePointerMoved, RoutingStrategies.Tunnel, true);
-        topLevel.AddHandler(InputElement.PointerPressedEvent, OnProbePointerPressed, RoutingStrategies.Tunnel, true);
         topLevel.AddHandler(InputElement.KeyDownEvent, OnProbeKeyDown, RoutingStrategies.Tunnel, true);
     }
 
     void DetachProbeHandlers(TopLevel topLevel)
     {
         topLevel.RemoveHandler(InputElement.PointerMovedEvent, OnProbePointerMoved);
-        topLevel.RemoveHandler(InputElement.PointerPressedEvent, OnProbePointerPressed);
         topLevel.RemoveHandler(InputElement.KeyDownEvent, OnProbeKeyDown);
     }
 
     void OnProbePointerMoved(object? sender, PointerEventArgs e)
     {
-        DiagnosticProbeTrace.MarkPointer(e.Source);
         if (!ProbeEnabled || e.Source is not Visual hit || ReferenceEquals(hit, this)) return;
         ProbeHover(hit, e.KeyModifiers.HasFlag(KeyModifiers.Alt));
     }
 
-    void OnProbePointerPressed(object? sender, PointerPressedEventArgs e)
+    async void OnProbeKeyDown(object? sender, KeyEventArgs e)
     {
-        if (!ProbeEnabled || e.Source is not Visual hit || ReferenceEquals(hit, this)) return;
-        ProbeHover(hit, e.KeyModifiers.HasFlag(KeyModifiers.Alt)); _ = ProbeClick(); e.Handled = true;
-    }
-
-    void OnProbeKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (!ProbeEnabled || e.Key != Key.Escape) return;
+        if (!ProbeEnabled) return;
+        if (e.Key == Key.C && e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
+            e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            await ProbeClick(); e.Handled = true; return;
+        }
+        if (e.Key != Key.Escape) return;
         ExitProbe(); e.Handled = true;
     }
 }

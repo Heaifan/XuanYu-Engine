@@ -13,7 +13,6 @@ public partial class DiagnosticOverlayHost
         if (_topLevel is Window window)
         {
             AttachProbeHandlers(window);
-            DiagnosticProbeTrace.MarkHandlers(true);
             window.Activated += OnWindowActivated;
             window.Deactivated += OnWindowDeactivated;
             window.PropertyChanged += OnWindowPropertyChanged;
@@ -27,7 +26,6 @@ public partial class DiagnosticOverlayHost
         window.Deactivated -= OnWindowDeactivated;
         window.PropertyChanged -= OnWindowPropertyChanged;
         DetachProbeHandlers(window);
-        DiagnosticProbeTrace.MarkHandlers(false);
         _topLevel = null;
     }
 
