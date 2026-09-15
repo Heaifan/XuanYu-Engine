@@ -54,34 +54,7 @@
           <TextBlock Text="环绕"/>
         </StackPanel>
       </xy:XYButton>
-      <xy:XYMenuBar Classes="compact"
-                    ShowDivider="False"
-                    VerticalAlignment="Center">
-        <xy:XYMenuBarItem Label="环境">
-          <xy:XYMenu>
-            <xy:XYMenuItem Label="构造网格"
-                           CheckKind="Check"
-                           IsChecked="{Binding ShowGrid}"
-                           Command="{Binding RunCommand}"
-                           CommandParameter="显示构造网格"/>
-            <xy:XYMenuItem Label="世界原点"
-                           CheckKind="Check"
-                           IsChecked="{Binding ShowOrigin}"
-                           Command="{Binding RunCommand}"
-                           CommandParameter="显示世界原点"/>
-            <xy:XYMenuItem Label="世界坐标轴"
-                           CheckKind="Check"
-                           IsChecked="{Binding ShowWorldAxes}"
-                           Command="{Binding RunCommand}"
-                           CommandParameter="显示世界坐标轴"/>
-            <xy:XYMenuItem Label="编辑器背景"
-                           CheckKind="Check"
-                           IsChecked="{Binding ShowEditorBackground}"
-                           Command="{Binding RunCommand}"
-                           CommandParameter="显示编辑器背景"/>
-          </xy:XYMenu>
-        </xy:XYMenuBarItem>
-      </xy:XYMenuBar>
+      <local:ViewOptionsMenu/>
     </StackPanel>
   </Border>
 </UserControl>

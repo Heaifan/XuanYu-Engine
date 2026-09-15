@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
+             x:Class="XuanYu.Editor.UI.ViewOptionsMenu"
+             x:DataType="local:UiVm">
+  <xy:XYMenuBar Classes="compact" ShowDivider="False" VerticalAlignment="Center">
+    <xy:XYMenuBarItem Label="视图">
+      <xy:XYMenu>
+        <xy:XYMenuItem Label="构造网格" CheckKind="Check" IsChecked="{Binding ShowGrid}"
+                       Command="{Binding RunCommand}" CommandParameter="显示构造网格"/>
+        <xy:XYMenuItem Label="世界原点" CheckKind="Check" IsChecked="{Binding ShowOrigin}"
+                       Command="{Binding RunCommand}" CommandParameter="显示世界原点"/>
+        <xy:XYMenuItem Label="世界坐标轴" CheckKind="Check" IsChecked="{Binding ShowWorldAxes}"
+                       Command="{Binding RunCommand}" CommandParameter="显示世界坐标轴"/>
+        <xy:XYMenuItem Label="编辑器背景" CheckKind="Check" IsChecked="{Binding ShowEditorBackground}"
+                       Command="{Binding RunCommand}" CommandParameter="显示编辑器背景"/>
+        <xy:XYSeparator Variant="Section" Classes="xyui-menu-separator"/>
+        <xy:XYMenuItem Label="诊断模式" CheckKind="Check" IsChecked="{Binding IsDiagnosticMode}"
+                       Command="{Binding RunCommand}" CommandParameter="诊断模式"/>
+      </xy:XYMenu>
+    </xy:XYMenuBarItem>
+  </xy:XYMenuBar>
+</UserControl>

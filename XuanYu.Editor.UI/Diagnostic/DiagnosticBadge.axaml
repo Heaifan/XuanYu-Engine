@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XuanYu.Editor.UI.DiagnosticBadge">
+  <Border x:Name="BadgeSurface"
+          Padding="4,1"
+          CornerRadius="2"
+          Background="#CC203040"
+          BorderBrush="#80526873"
+          BorderThickness="1"
+          Opacity="0.78"
+          PointerPressed="BadgeSurface_PointerPressed">
+    <TextBlock x:Name="BadgeText"
+               FontSize="10"
+               Foreground="#FFFFFFFF"/>
+  </Border>
+</UserControl>

@@ -42,6 +42,7 @@ public sealed partial class UiVm
     public event Action<RenderProjectionResult>? RenderProjectionChanged;
     void ApplyRunCommand(string name)
     {
+        if (TryToggleDiagnosticMode(name)) return;
         if (TryToggleViewportAssist(name)) return;
         if (TryRouteMapCommand(name)) return; // F1：地图面板命令真实路由（兜底之前）
         if (name is "聚焦") { FrameSelectedCamera(); return; }

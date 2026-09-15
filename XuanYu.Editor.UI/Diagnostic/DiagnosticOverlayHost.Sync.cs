@@ -1,0 +1,36 @@
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+
+namespace XuanYu.Editor.UI;
+
+public partial class DiagnosticOverlayHost
+{
+    void Reconcile()
+    {
+        CloseAll();
+        if (_vm?.IsDiagnosticMode != true) return;
+        foreach (var target in DiagnosticRegistry.Targets.Values)
+        {
+            if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is null) continue;
+            var popup = new Popup
+            {
+                PlacementTarget = target,
+                Placement = PlacementMode.TopEdgeAlignedLeft,
+                IsLightDismissEnabled = false,
+                TakesFocusFromNativeControl = false,
+                ShouldUseOverlayLayer = false,
+                Child = new DiagnosticBadge(target, _clipboard),
+            };
+            PopupOwner.Children.Add(popup);
+            _popups.Add(popup);
+            popup.IsOpen = true;
+        }
+    }
+
+    void CloseAll()
+    {
+        foreach (var popup in _popups) popup.IsOpen = false;
+        PopupOwner.Children.Clear();
+        _popups.Clear();
+    }
+}
