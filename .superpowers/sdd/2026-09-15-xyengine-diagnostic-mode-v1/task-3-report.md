@@ -21,4 +21,7 @@ GREEN for the registration implementation and targeted runtime coverage. The imp
 ## Concerns
 
 - User visual acceptance is still required; this report does not claim CLOSED.
+- FIX1 completed: diagnostic badges now use the Editor Window OverlayLayer; deactivation/minimize closes them and activation reconciles them. The duplicate `XYE.LAYER_DOCK` declaration was removed.
+- FIX1 regression evidence: diagnostic filtered tests 22/22 passed, including the real `UiRoot` ContextToolBar non-zero Bounds check.
+- The user’s real-device FAIL remains the acceptance state until the four-step recheck confirms no cross-application badges and valid ContextToolBar snapshot dimensions.
 - `changelog.md` was recovered from the committed UTF-16 baseline after the interrupted agent left it as a two-byte BOM, then updated with the truthful T3 entry and final gate result.
