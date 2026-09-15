@@ -27,12 +27,24 @@ public partial class DiagnosticOverlayHost
         _topLevel = null;
     }
 
-    void OnWindowActivated(object? sender, EventArgs e) => Reconcile();
-    void OnWindowDeactivated(object? sender, EventArgs e) => CloseAll();
+    void OnWindowActivated(object? sender, EventArgs e)
+    {
+        Reconcile();
+        RenderProbe();
+    }
+
+    void OnWindowDeactivated(object? sender, EventArgs e)
+    {
+        CloseAll();
+        ClearProbeVisuals();
+    }
 
     void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == Window.WindowStateProperty && e.NewValue is WindowState.Minimized)
+        {
             CloseAll();
+            ClearProbeVisuals();
+        }
     }
 }

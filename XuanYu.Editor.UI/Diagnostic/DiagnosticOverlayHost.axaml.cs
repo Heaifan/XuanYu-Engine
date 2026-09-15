@@ -39,6 +39,7 @@ public partial class DiagnosticOverlayHost : UserControl
         DetachTopLevel();
         DetachVm();
         CloseAll();
+        ClearProbeVisuals();
     }
 
     void OnDataContextChanged(object? sender, EventArgs e)

@@ -1,7 +1,14 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="XuanYu.Editor.UI.DiagnosticOverlayHost"
-             Width="0"
-             Height="0">
-  <Canvas x:Name="PopupOwner" Width="0" Height="0"/>
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             IsHitTestVisible="False">
+  <Grid>
+    <Canvas x:Name="PopupOwner" Width="0" Height="0"/>
+    <Canvas x:Name="ProbeOwner"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            IsHitTestVisible="False"/>
+  </Grid>
 </UserControl>
