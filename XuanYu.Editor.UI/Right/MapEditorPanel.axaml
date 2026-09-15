@@ -4,6 +4,7 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              xmlns:xycore="using:XYUI.Avalonia"
              x:Class="XuanYu.Editor.UI.MapEditorPanel"
+             local:XYDiagnostic.DebugId="XYE.INSPECTOR.MAP"
              Classes="compactEditor"
              x:DataType="local:UiVm">
   <UserControl.Styles>

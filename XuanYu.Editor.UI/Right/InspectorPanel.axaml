@@ -4,6 +4,7 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              xmlns:xyvec="using:XYUI.Avalonia.Vector"
              x:Class="XuanYu.Editor.UI.InspectorPanel"
+             local:XYDiagnostic.DebugId="XYE.INSPECTOR"
              x:DataType="local:UiVm">
   <UserControl.Styles>
     <!-- ARCH-UI-SPEC-R1-D4-F1：检查器只读键值行——标签 80 / 值 * / 单行双列（无上下拆行） -->
@@ -40,7 +41,7 @@
 
     <local:LayerInspectorPanel IsVisible="{Binding IsLayerInspectorVisible}"/>
 
-    <local:FeatureInspectorPanel IsVisible="{Binding IsFeatureInspector}"/>
+    <local:FeatureInspectorPanel local:XYDiagnostic.DebugId="{Binding DiagnosticFeatureModuleId}" x:Name="FeatureInspectorHost" IsVisible="{Binding IsFeatureInspector}"/>
 
     <local:EntityInspectorPanel IsVisible="{Binding IsEntityInspector}"/>
 

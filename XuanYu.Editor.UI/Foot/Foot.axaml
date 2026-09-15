@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" xmlns:av="using:Avalonia.Controls" xmlns:xy="using:XYUI.Avalonia.Controls" x:Class="XuanYu.Editor.UI.Foot" x:DataType="local:UiVm">
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" xmlns:av="using:Avalonia.Controls" xmlns:xy="using:XYUI.Avalonia.Controls" x:Class="XuanYu.Editor.UI.Foot" x:DataType="local:UiVm" local:XYDiagnostic.DebugId="XYE.LOG_PANEL">
   <UserControl.Styles>
     <StyleInclude Source="avares://XuanYu.Editor.UI/Foot/Foot.States.axaml"/>
     <Style Selector="xy|XYToggleButton.logFilter"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="8,3"/><Setter Property="Margin" Value="0"/></Style>

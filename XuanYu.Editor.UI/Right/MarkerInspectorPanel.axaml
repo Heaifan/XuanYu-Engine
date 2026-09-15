@@ -4,6 +4,7 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              xmlns:xycore="using:XYUI.Avalonia"
   x:Class="XuanYu.Editor.UI.MarkerInspectorPanel"
+             local:XYDiagnostic.DebugId="XYE.INSPECTOR.MARKER"
              x:DataType="local:UiVm">
   <StackPanel Spacing="8">
     <xy:XYToggleButton Content="基础" IsChecked="{Binding IsInspectorBasicExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Basic" HorizontalAlignment="Stretch"/>

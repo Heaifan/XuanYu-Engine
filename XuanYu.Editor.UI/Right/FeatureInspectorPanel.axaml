@@ -5,13 +5,13 @@
              x:Class="XuanYu.Editor.UI.FeatureInspectorPanel"
              x:DataType="local:UiVm">
   <StackPanel Spacing="8">
-    <xy:XYToggleButton Content="基础" IsChecked="{Binding IsInspectorBasicExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Basic" HorizontalAlignment="Stretch"/>
+    <xy:XYToggleButton local:XYDiagnostic.DebugId="{Binding DiagnosticFeatureBasicId}" x:Name="FeatureBasicSection" Content="基础" IsChecked="{Binding IsInspectorBasicExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Basic" HorizontalAlignment="Stretch"/>
     <xy:XYEmptyText IsVisible="{Binding IsInspectorBasicExpanded}" Text="当前对象暂无基础属性。"/>
-    <xy:XYToggleButton Content="几何" IsChecked="{Binding IsInspectorGeometryExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Geometry" HorizontalAlignment="Stretch"/>
+    <xy:XYToggleButton local:XYDiagnostic.DebugId="{Binding DiagnosticFeatureGeometryId}" x:Name="FeatureGeometrySection" Content="几何" IsChecked="{Binding IsInspectorGeometryExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Geometry" HorizontalAlignment="Stretch"/>
     <xy:XYEmptyText IsVisible="{Binding IsInspectorGeometryExpanded}" Text="几何操作由视口负责。"/>
-    <xy:XYToggleButton Content="状态" IsChecked="{Binding IsInspectorStatusExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Status" HorizontalAlignment="Stretch"/>
+    <xy:XYToggleButton local:XYDiagnostic.DebugId="{Binding DiagnosticFeatureStateId}" x:Name="FeatureStateSection" Content="状态" IsChecked="{Binding IsInspectorStatusExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Status" HorizontalAlignment="Stretch"/>
     <xy:XYEmptyText IsVisible="{Binding IsInspectorStatusExpanded}" Text="当前对象暂无状态属性。"/>
-    <xy:XYToggleButton Content="关联" IsChecked="{Binding IsInspectorRelationsExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Relations" HorizontalAlignment="Stretch"/>
+    <xy:XYToggleButton local:XYDiagnostic.DebugId="{Binding DiagnosticFeatureRelationsId}" x:Name="FeatureRelationsSection" Content="关联" IsChecked="{Binding IsInspectorRelationsExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Relations" HorizontalAlignment="Stretch"/>
     <xy:XYEmptyText IsVisible="{Binding IsInspectorRelationsExpanded}" Text="当前对象暂无关联属性。"/>
   </StackPanel>
 </UserControl>

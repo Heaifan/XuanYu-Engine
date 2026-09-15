@@ -3,6 +3,7 @@
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.VulkanViewport"
+             local:XYDiagnostic.DebugId="XYE.VIEWPORT"
              x:DataType="local:UiVm">
   <Grid>
     <!-- F3：去除黑色粗边框与圆角卡片——Vulkan 画面贴合视口；最多保留 1 DIP 浅灰分隔。 -->

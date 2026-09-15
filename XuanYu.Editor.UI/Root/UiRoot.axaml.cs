@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using Avalonia.Controls;
+using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
 
@@ -22,6 +23,9 @@ public partial class UiRoot : UserControl
         LeftColumn.PropertyChanged += (_, _) => ClampLayout();
         RightColumn.PropertyChanged += (_, _) => ClampLayout();
         DataContextChanged += (_, _) => HookVm();
+        Loaded += (_, _) => RefreshDiagnosticRegistry();
+        AttachedToVisualTree += (_, _) => RefreshDiagnosticRegistry();
+        Unloaded += (_, _) => DiagnosticRegistry.Clear();
         ClampLayout();
     }
 
@@ -37,6 +41,14 @@ public partial class UiRoot : UserControl
     void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(UiVm.IsLogOpen)) ClampLayout();
+        if (e.PropertyName == nameof(UiVm.InspectorIdentity)) RefreshDiagnosticRegistry();
+    }
+
+    void RefreshDiagnosticRegistry()
+    {
+        DiagnosticRegistry.Clear();
+        foreach (var target in this.GetVisualDescendants().OfType<Control>())
+            if (XYDiagnostic.GetDebugId(target) is not null) DiagnosticRegistry.Register(target);
     }
 
     ColumnDefinition LeftColumn => MainLayoutGrid.ColumnDefinitions[0];

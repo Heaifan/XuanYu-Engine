@@ -12,7 +12,7 @@
           VerticalAlignment="Center">
       <local:WorkspaceSelector Grid.Column="0"
                                VerticalAlignment="Center"/>
-      <local:FileModule Grid.Column="1"
+      <local:FileModule local:XYDiagnostic.DebugId="XYE.MENU" Grid.Column="1"
                         VerticalAlignment="Center"/>
       <local:RuntimeStatusModule Grid.Column="3"
                                  HorizontalAlignment="Right"
@@ -26,7 +26,7 @@
                   Spacing="8"
                   VerticalAlignment="Center">
         <local:EditToolsModule/>
-        <local:ContextToolBar/>
+        <local:ContextToolBar local:XYDiagnostic.DebugId="XYE.CONTEXT_TOOLBAR"/>
         <local:ViewModule/>
         <local:SnapModule/>
       </StackPanel>

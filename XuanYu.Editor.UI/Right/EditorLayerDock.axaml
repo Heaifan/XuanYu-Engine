@@ -3,6 +3,7 @@
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.EditorLayerDock"
+             local:XYDiagnostic.DebugId="XYE.LAYER_DOCK"
              x:DataType="local:UiVm">
   <UserControl.Styles>
     <Style Selector="Border.layerDockHeader">

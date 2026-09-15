@@ -3,6 +3,7 @@
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.ProjectWorkspace"
+             local:XYDiagnostic.DebugId="XYE.PROJECT_TREE"
              x:DataType="local:UiVm">
   <ScrollViewer x:Name="ProjectScrollHost"
                 HorizontalScrollBarVisibility="Disabled"
