@@ -65,6 +65,7 @@
       <xy:XYMenuBar Classes="compact" ShowDivider="False" VerticalAlignment="Center">
         <xy:XYMenuBarItem Label="视图"><xy:XYMenu>
           <xy:XYMenuItem Label="诊断模式" CheckKind="Check" IsChecked="{Binding IsDiagnosticMode}" Command="{Binding RunCommand}" CommandParameter="诊断模式"/>
+          <xy:XYMenuItem Label="元素拾取" CheckKind="Check" IsChecked="{Binding IsDiagnosticProbeMode}" Command="{Binding RunCommand}" CommandParameter="元素拾取"/>
         </xy:XYMenu></xy:XYMenuBarItem>
       </xy:XYMenuBar>
     </StackPanel>

@@ -21,6 +21,7 @@ public sealed partial class UiVm
     {
         if (name != "诊断模式") return false;
         IsDiagnosticMode = !IsDiagnosticMode;
+        if (!IsDiagnosticMode) IsDiagnosticProbeMode = false;
         return true;
     }
 

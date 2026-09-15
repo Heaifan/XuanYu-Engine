@@ -5,7 +5,6 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
-
 namespace XuanYu.World.Tests.UiRuntime;
 
 [Collection("UiRuntime")]
@@ -24,6 +23,18 @@ public sealed class DiagnosticProbeInteractionTests
             return vm.IsDiagnosticProbeMode;
         });
         Assert.True(state);
+    }
+
+    [Fact]
+    public void Turning_diagnostic_mode_off_exits_probe_mode()
+    {
+        var state = _fixture.Run(() =>
+        {
+            var vm = new UiVm(null, seedInitialScene: false);
+            vm.RunCommand.Execute("诊断模式"); vm.RunCommand.Execute("元素拾取");
+            vm.RunCommand.Execute("诊断模式"); return vm.IsDiagnosticProbeMode;
+        });
+        Assert.False(state);
     }
 
     [Fact]

@@ -17,7 +17,7 @@ DONE_WITH_CONCERNS. T3 interaction is implemented locally on top of the existing
 
 - RED: focused build failed because the new interaction API was absent (`IsDiagnosticProbeMode`, `ProbeHover`, `CurrentProbeResult`, `ProbeClick`, `ExitProbe`); this was the expected pre-implementation failure.
 - GREEN build: `dotnet build XuanYu.World.Tests\\XuanYu.World.Tests.csproj --no-restore -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false -v:minimal` — 0 warnings, 0 errors.
-- GREEN tests: `dotnet test XuanYu.World.Tests\\XuanYu.World.Tests.csproj --no-build --no-restore --filter FullyQualifiedName~DiagnosticProbeInteractionTests` — 4 passed, 0 failed.
+- GREEN tests: `dotnet test XuanYu.World.Tests\\XuanYu.World.Tests.csproj --no-build --no-restore --filter FullyQualifiedName~DiagnosticProbeInteractionTests` — 5 passed, 0 failed.
 
 ## Coverage
 
@@ -33,4 +33,4 @@ The focused tests exercise the host interaction methods directly; they do not ye
 
 ## Commit
 
-Implementation commit before this report correction: `ae9d01a79e2ad84ec18cb5fe8b51725318aba709`; report is committed locally with the final change set. Not pushed.
+Implementation commit: `2555382d`; follow-up command/menu and diagnostic-off reset are pending in the working tree. Not pushed.
