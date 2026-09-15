@@ -28,6 +28,7 @@ public partial class DiagnosticOverlayHost : UserControl
     void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         _loaded = true;
+        AttachTopLevel();
         AttachVm();
         Reconcile();
     }
@@ -35,6 +36,7 @@ public partial class DiagnosticOverlayHost : UserControl
     void OnUnloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         _loaded = false;
+        DetachTopLevel();
         DetachVm();
         CloseAll();
     }

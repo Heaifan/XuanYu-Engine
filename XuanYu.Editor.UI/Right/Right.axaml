@@ -6,6 +6,6 @@
   <Grid RowDefinitions="*,Auto,*">
     <local:EditorRightTabs Grid.Row="0"/>
     <GridSplitter Grid.Row="1" Height="4" Background="{StaticResource Color.Border.Default}" HorizontalAlignment="Stretch" VerticalAlignment="Center" ResizeDirection="Rows" IsVisible="{Binding IsEditMode}"/>
-    <local:EditorLayerDock local:XYDiagnostic.DebugId="XYE.LAYER_DOCK" x:Name="LayerWorkspace" Grid.Row="2" IsVisible="{Binding IsEditMode}"/>
+    <local:EditorLayerDock x:Name="LayerWorkspace" Grid.Row="2" IsVisible="{Binding IsEditMode}"/>
   </Grid>
 </UserControl>

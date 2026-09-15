@@ -18,7 +18,7 @@ public partial class DiagnosticOverlayHost
                 Placement = PlacementMode.TopEdgeAlignedLeft,
                 IsLightDismissEnabled = false,
                 TakesFocusFromNativeControl = false,
-                ShouldUseOverlayLayer = false,
+                ShouldUseOverlayLayer = true,
                 Child = new DiagnosticBadge(target, _clipboard),
             };
             PopupOwner.Children.Add(popup);
