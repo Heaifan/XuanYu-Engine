@@ -16,9 +16,9 @@ GREEN for the registration implementation and targeted runtime coverage. The imp
 - Filtered diagnostic tests: `dotnet test XuanYu.World.Tests\XuanYu.World.Tests.csproj --no-build --no-restore --filter "FullyQualifiedName~DiagnosticRegistrationRuntimeTests|FullyQualifiedName~DiagnosticSnapshotTests|FullyQualifiedName~DiagnosticOverlayRuntimeTests"` — 9 passed, 0 failed, 0 skipped.
 - `git diff --check` — passed before the metadata recovery step.
 - Changed handwritten `.cs`/`.axaml` files checked; all are at or below 100 lines.
-- Full formal gate and final commit remain pending.
+- Final gate: solution build passed with 0 warnings/0 errors; full World.Tests ran 1550 passed, 4 failed (pre-existing baseline failures in `EditorModeUiCompositionTests`, `UiD4MapEditorContractTests`, `AreaDR1Fix5RightContentOwnershipTests`, and `AreaBLeftWorkspaceRuntimeTests`); ARCH-A passed; `git diff --check` passed.
 
 ## Concerns
 
 - User visual acceptance is still required; this report does not claim CLOSED.
-- `changelog.md` was recovered from the committed UTF-16 baseline after the interrupted agent left it as a two-byte BOM, then updated with the truthful T3 entry.
+- `changelog.md` was recovered from the committed UTF-16 baseline after the interrupted agent left it as a two-byte BOM, then updated with the truthful T3 entry and final gate result.

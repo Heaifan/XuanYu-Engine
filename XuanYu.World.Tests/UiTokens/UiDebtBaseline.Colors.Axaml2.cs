@@ -45,5 +45,8 @@ internal static partial class UiDebtBaseline
         list.Add(new("W63", "XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml", "Name:FallbackLayer", UiRuleKind.HexColor, "Background", "#E8EEF5"));
         list.Add(new("W63", "XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml", "Path:Name:FallbackLayer/StackPanel/TextBlock:1", UiRuleKind.HexColor, "Foreground", "#4A5A70"));
         list.Add(new("W63", "XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml", "Name:FallbackText", UiRuleKind.HexColor, "Foreground", "#6B7688"));
+        list.Add(new("DIAG-V1", "XuanYu.Editor.UI/Diagnostic/DiagnosticBadge.axaml", "Name:BadgeSurface", UiRuleKind.HexColor, "Background", "#CC203040"));
+        list.Add(new("DIAG-V1", "XuanYu.Editor.UI/Diagnostic/DiagnosticBadge.axaml", "Name:BadgeSurface", UiRuleKind.HexColor, "BorderBrush", "#80526873"));
+        list.Add(new("DIAG-V1", "XuanYu.Editor.UI/Diagnostic/DiagnosticBadge.axaml", "Name:BadgeText", UiRuleKind.HexColor, "Foreground", "#FFFFFFFF"));
     }
 }

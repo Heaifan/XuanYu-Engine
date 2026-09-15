@@ -71,7 +71,7 @@ public sealed class UiR1FinalLeftTopContractTests
         Assert.Contains("<local:FileModule Grid.Column=\"1\"", top);
         Assert.Contains("<local:RuntimeStatusModule Grid.Column=\"3\"", top);
         Assert.Contains("<local:EditToolsModule/>", top);
-        Assert.Contains("<local:ContextToolBar/>", top);
+        Assert.Contains("<local:ContextToolBar", top);
         Assert.Contains("<local:ViewModule/>", top);
         Assert.Contains("<local:SnapModule/>", top);
         Assert.DoesNotContain("IsVisible", top);

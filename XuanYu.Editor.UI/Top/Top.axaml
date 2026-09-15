@@ -12,7 +12,7 @@
           VerticalAlignment="Center">
       <local:WorkspaceSelector Grid.Column="0"
                                VerticalAlignment="Center"/>
-      <local:FileModule local:XYDiagnostic.DebugId="XYE.MENU" Grid.Column="1"
+      <local:FileModule Grid.Column="1" local:XYDiagnostic.DebugId="XYE.MENU"
                         VerticalAlignment="Center"/>
       <local:RuntimeStatusModule Grid.Column="3"
                                  HorizontalAlignment="Right"

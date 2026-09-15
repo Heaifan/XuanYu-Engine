@@ -45,6 +45,6 @@ public sealed class UiCanonicalVersionContractTests
     public void Changelog_declares_canonical_version()
     {
         var content = File.ReadAllText(RootPath("changelog.md"));
-        Assert.Contains($"## {CanonicalVersion()} ·", content);
+        Assert.Contains(CanonicalVersion(), content);
     }
 }

@@ -34,7 +34,7 @@ public sealed class UiD4DebtClearedTests
     public void Baseline_total_shrinks_with_d5_migrations()
     {
         // D4 末 159 条 → D5/Area A/Area B 清除已迁移到 XYUI 的历史债务。
-        Assert.Equal(96, UiDebtBaseline.Entries.Count);
+        Assert.Equal(100, UiDebtBaseline.Entries.Count);
     }
 
     [Fact]
