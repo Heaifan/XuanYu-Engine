@@ -28,13 +28,13 @@ public partial class DiagnosticOverlayHost
         _probeHighlight = new Border
         {
             Width = bounds.Width, Height = bounds.Height,
-            BorderBrush = new SolidColorBrush(Color.Parse("#FFB84D")),
+            BorderBrush = Brushes.Orange,
             BorderThickness = new Thickness(2), IsHitTestVisible = false,
         };
         _probeCard = new Border
         {
             Child = new TextBlock { Text = result.ControlType, Foreground = Brushes.White },
-            Background = new SolidColorBrush(Color.Parse("#E0203040")),
+            Background = Brushes.Black, Opacity = 0.8,
             Padding = new Thickness(4, 2), IsHitTestVisible = false,
         };
         Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);

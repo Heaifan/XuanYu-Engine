@@ -14,7 +14,6 @@ public sealed class DiagnosticProbeOverlayRuntimeTests
     readonly UiHeadlessFixture _fixture;
 
     public DiagnosticProbeOverlayRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
-
     [Fact]
     public void Probe_keeps_at_most_one_highlight_when_target_changes()
     {
@@ -27,7 +26,6 @@ public sealed class DiagnosticProbeOverlayRuntimeTests
             Assert.Equal(1, host.ActiveProbeCardCount); window.Close();
         });
     }
-
     [Fact]
     public void Probe_does_not_change_target_bounds_or_scroll_extent()
     {
@@ -42,7 +40,6 @@ public sealed class DiagnosticProbeOverlayRuntimeTests
             Assert.DoesNotContain(host.GetVisualDescendants(), x => ReferenceEquals(x, target)); window.Close();
         });
     }
-
     [Fact]
     public void Probe_clear_removes_highlight_and_creates_no_popup_or_window()
     {
@@ -56,7 +53,6 @@ public sealed class DiagnosticProbeOverlayRuntimeTests
             Assert.Equal(topLevels, TopLevel.GetTopLevel(host) is null ? 0 : 1); window.Close();
         });
     }
-
     [Fact]
     public void Probe_hides_when_window_is_minimized_and_recovers_on_activation()
     {
@@ -69,7 +65,6 @@ public sealed class DiagnosticProbeOverlayRuntimeTests
             window.Activate(); Dispatcher.UIThread.RunJobs(); Assert.Equal(1, host.ActiveProbeHighlightCount); window.Close();
         });
     }
-
     [Fact]
     public void Probe_clears_when_diagnostic_mode_turns_off_and_stays_cleared_on_activation()
     {
