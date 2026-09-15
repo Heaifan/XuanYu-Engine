@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 
 namespace XuanYu.Editor.UI;
 
@@ -16,5 +18,35 @@ public partial class InspectorPanel : UserControl
     public InspectorPanel()
     {
         InitializeComponent();
+        AddHandler(KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
     }
+
+    void OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (DataContext is not UiVm vm) return;
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && e.Key == Key.F)
+        { SearchBox.Focus(); SearchBox.SelectAll(); e.Handled = true; return; }
+        if (e.Key == Key.Escape && vm.IsInspectorSearchMode) { vm.InspectorSearchText = ""; e.Handled = true; return; }
+        if (vm.IsInspectorSearchMode && e.Key is Key.Up or Key.Down or Key.Enter)
+        {
+            if (e.Key == Key.Enter) vm.ActivateInspectorSearchResult();
+            else vm.MoveInspectorSearch(e.Key == Key.Up ? -1 : 1);
+            e.Handled = true;
+        }
+    }
+
+    void PropertyEditor_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        if (sender is XYUI.Avalonia.Controls.XYTextField field && field.DataContext is InspectorPropertyRow row && DataContext is UiVm vm)
+            vm.CommitInspectorProperty(row.Key, field.Text ?? "");
+    }
+
+    void PropertyEditor_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter) return;
+        PropertyEditor_LostFocus(sender, new RoutedEventArgs());
+        e.Handled = true;
+    }
+
+    public static FuncValueConverter<int, bool> IsZero { get; } = new(value => value == 0);
 }

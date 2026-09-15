@@ -16,7 +16,7 @@ public sealed class InspectorSectionRailScrollRuntimeTests
     [InlineData(300)]
     [InlineData(360)]
     [InlineData(480)]
-    public void Entity_inspector_has_no_deprecated_total_scroll_surface(double width)
+    public void Inspector_keeps_fixed_shell_with_one_content_scroll_host(double width)
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var result = host.Run<(int Count, Rect Before, Rect Bounds)>(() =>
@@ -32,12 +32,12 @@ public sealed class InspectorSectionRailScrollRuntimeTests
             return (UiRuntimeTestHost.Descendants<ScrollViewer>(inspector).Count(), before, header.Bounds);
         });
 
-        Assert.Equal(0, result.Count);
+        Assert.Equal(1, result.Count);
         Assert.Equal(result.Before.Y, result.Bounds.Y);
     }
 
     [Fact]
-    public void Empty_inspector_keeps_auto_scroll_inactive_when_content_fits()
+    public void Empty_inspector_keeps_one_content_scroll_host()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var sizes = host.Run<int>(() =>
@@ -48,6 +48,6 @@ public sealed class InspectorSectionRailScrollRuntimeTests
             return UiRuntimeTestHost.Descendants<ScrollViewer>(inspector).Count();
         });
 
-        Assert.Equal(0, sizes);
+        Assert.Equal(1, sizes);
     }
 }

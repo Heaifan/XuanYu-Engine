@@ -7,14 +7,14 @@ public sealed class EditorScrollAuditContractTests
     static string Root => Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI");
 
     [Fact]
-    public void Inspector_uses_sections_without_total_scroll_host()
+    public void Inspector_has_one_right_content_scroll_host_and_fixed_shell()
     {
         var inspector = File.ReadAllText(Path.Combine(Root, "Right", "InspectorPanel.axaml"));
         var map = File.ReadAllText(Path.Combine(Root, "Right", "MapEditorPanel.axaml"));
-        Assert.DoesNotContain("InspectorScrollViewer", inspector);
-        Assert.DoesNotContain("<ScrollViewer", inspector);
-        Assert.Contains("ToggleInspectorSectionCommand", map);
-        Assert.Contains("IsInspectorBasicExpanded", map);
+        Assert.Contains("x:Name=\"SearchBox\"", inspector);
+        Assert.Contains("InspectorCategories", inspector);
+        Assert.Equal(1, inspector.Split("<ScrollViewer", StringSplitOptions.None).Length - 1);
+        Assert.DoesNotContain("<ScrollViewer", map);
     }
 
     [Fact]

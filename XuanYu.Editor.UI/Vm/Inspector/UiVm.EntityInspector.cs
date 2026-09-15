@@ -28,7 +28,12 @@ public sealed partial class UiVm
     public double InspectorScaleY => InspectorVector("缩放").Y;
     public double InspectorScaleZ => InspectorVector("缩放").Z;
 
-    public bool CommitInspectorEntityName() => RenameSelectedEntity(InspectorEntityNameText);
+    public bool CommitInspectorEntityName()
+    {
+        var committed = RenameSelectedEntity(InspectorEntityNameText);
+        RecordInspectorCommit("Entity.Basic.Name", committed);
+        return committed;
+    }
 
     public void CommitInspectorVector(string group, double x, double y, double z)
     {

@@ -38,6 +38,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InspectorSelectionSubtitle)); OnPropertyChanged(nameof(InspectorSectionTitle));
         OnPropertyChanged(nameof(IsMapWorkspaceInspectorVisible)); OnPropertyChanged(nameof(IsLayerInspectorVisible));
         OnPropertyChanged(nameof(IsGenericInspectorVisible)); OnPropertyChanged(nameof(IsRegionInspectorPlaceholderVisible));
+        RefreshInspectorNavigation();
         RaiseDiagnosticIdentityBindings();
     }
 }

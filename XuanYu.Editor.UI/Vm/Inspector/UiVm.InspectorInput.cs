@@ -30,6 +30,7 @@ public sealed partial class UiVm
         if (!commit.Changed)
         {
             FooterMessage = "检查器数值未变化。";
+            RecordInspectorCommit(InspectorPropertyKey(group), false);
             return false;
         }
         RecordTransformHistory(commit);
@@ -40,6 +41,15 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(TransformHistoryCount));
         OnPropertyChanged(nameof(TransformRedoCount));
         PublishSceneRenderSnapshot();
+        RecordInspectorCommit(InspectorPropertyKey(group), true);
         return true;
     }
+
+    static string InspectorPropertyKey(string group) => group switch
+    {
+        "位置" => "Entity.Geometry.Position",
+        "旋转" => "Entity.Geometry.Rotation",
+        "缩放" => "Entity.Geometry.Scale",
+        _ => "Entity.Geometry.Unknown"
+    };
 }

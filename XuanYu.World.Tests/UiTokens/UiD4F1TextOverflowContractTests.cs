@@ -37,15 +37,10 @@ public sealed class UiD4F1TextOverflowContractTests
     }
 
     [Fact]
-    public void Debug_rows_share_one_grid_row_and_never_wrap()
+    public void Debug_workspace_is_not_a_production_surface()
     {
-        // 当前上下文/当前对象/输入状态：标签与值在同一 Grid 行（96 列）
-        Assert.Contains("ColumnDefinitions=\"96,*\"", Right);
-        Assert.Contains("DebugContextItems", Right);
-        Assert.Contains("DebugObjectItems", Right);
-        Assert.Contains("DebugInputItems", Right);
-        Assert.Contains("ToolTip.Tip=\"{Binding Value}\"", Right); // 动态值完整 Tooltip
-        Assert.DoesNotContain("TextWrapping=\"Wrap\"", Right);    // 调试页值不换行（走 uiValue）
+        Assert.DoesNotContain("DebugWorkspace", Right);
+        Assert.DoesNotContain("Id=\"debug\"", Right);
     }
 
     [Fact]

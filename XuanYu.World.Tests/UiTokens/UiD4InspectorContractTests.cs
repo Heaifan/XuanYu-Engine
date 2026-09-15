@@ -48,17 +48,16 @@ public sealed class UiD4InspectorContractTests
     [Fact]
     public void Inspector_group_uses_full_width_header_with_separator()
     {
-        Assert.Contains("Content=\"基础\"", Entity);
-        Assert.Contains("Content=\"变换\"", Entity);
-        Assert.Contains("Content=\"技术信息\"", Entity);
-        Assert.Contains("ToggleInspectorSectionCommand", Entity);
+        Assert.Contains("InspectorCategories", Panel);
+        Assert.Contains("SearchBox", Panel);
+        Assert.DoesNotContain("XYPager", Panel);
     }
 
     [Fact]
-    public void Debug_tab_label_column_migrated_to_96()
+    public void Debug_tab_is_not_a_production_right_tab()
     {
-        Assert.Contains("ColumnDefinitions=\"96,*\"", Right);      // W44：调试页标签列 96
-        Assert.DoesNotContain("ColumnDefinitions=\"70,*\"", Right);
+        Assert.DoesNotContain("Id=\"debug\"", Right);
+        Assert.DoesNotContain("DebugWorkspace", Right);
     }
 
     [Fact]
