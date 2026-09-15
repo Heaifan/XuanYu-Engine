@@ -70,6 +70,27 @@ public sealed class DiagnosticProbeOverlayRuntimeTests
         });
     }
 
+    [Fact]
+    public void Probe_clears_when_diagnostic_mode_turns_off_and_stays_cleared_on_activation()
+    {
+        _fixture.Run(() =>
+        {
+            var vm = new UiVm(null, seedInitialScene: false);
+            var target = Target(120, 30); var host = new DiagnosticOverlayHost();
+            var window = new Window { Width = 320, Height = 200, DataContext = vm,
+                Content = new Grid { Children = { target, host } } };
+            host.DataContext = vm;
+            window.Show(); window.UpdateLayout(); vm.RunCommand.Execute("诊断模式");
+            Dispatcher.UIThread.RunJobs(); window.UpdateLayout();
+            host.SetProbeResult(Result(target));
+            Assert.Equal(1, host.ActiveProbeHighlightCount);
+            vm.RunCommand.Execute("诊断模式"); Dispatcher.UIThread.RunJobs();
+            Assert.Equal(0, host.ActiveProbeHighlightCount);
+            window.Activate(); Dispatcher.UIThread.RunJobs();
+            Assert.Equal(0, host.ActiveProbeHighlightCount); window.Close();
+        });
+    }
+
     static Window Show(DiagnosticOverlayHost host, params Control[] controls)
     {
         var content = new Grid(); foreach (var control in controls) content.Children.Add(control); content.Children.Add(host);

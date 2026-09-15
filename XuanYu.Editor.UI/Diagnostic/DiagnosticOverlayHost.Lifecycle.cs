@@ -30,7 +30,7 @@ public partial class DiagnosticOverlayHost
     void OnWindowActivated(object? sender, EventArgs e)
     {
         Reconcile();
-        RenderProbe();
+        if (_vm is null || _vm.IsDiagnosticMode) RenderProbe();
     }
 
     void OnWindowDeactivated(object? sender, EventArgs e)

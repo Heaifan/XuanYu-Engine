@@ -8,7 +8,11 @@ public partial class DiagnosticOverlayHost
     void Reconcile()
     {
         CloseAll();
-        if (_vm?.IsDiagnosticMode != true) return;
+        if (_vm is not null && !_vm.IsDiagnosticMode)
+        {
+            ClearProbeVisuals();
+            return;
+        }
         foreach (var target in DiagnosticRegistry.Targets.Values)
         {
             if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is null) continue;
