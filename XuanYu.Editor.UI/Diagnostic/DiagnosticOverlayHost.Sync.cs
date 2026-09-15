@@ -13,7 +13,8 @@ public partial class DiagnosticOverlayHost
             ClearProbeVisuals();
             return;
         }
-        if (_vm?.IsDiagnosticProbeMode != true) ClearProbeVisuals();
+        if (_vm?.IsDiagnosticProbeMode == true) RenderTraceCard();
+        else ClearProbeVisuals();
         foreach (var target in DiagnosticRegistry.Targets.Values)
         {
             if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is null) continue;

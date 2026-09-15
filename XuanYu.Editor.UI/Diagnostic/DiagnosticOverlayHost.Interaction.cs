@@ -13,7 +13,12 @@ public partial class DiagnosticOverlayHost
 
     public void ProbeHover(Visual hit, bool deepVisual)
     {
-        if (ProbeEnabled) SetProbeResult(DiagnosticProbeResolver.Resolve(hit, deepVisual));
+        if (ProbeEnabled)
+        {
+            DiagnosticProbeTrace.MarkProbeHover();
+            var result = DiagnosticProbeResolver.Resolve(hit, deepVisual);
+            DiagnosticProbeTrace.MarkResolverResult(); SetProbeResult(result);
+        }
     }
 
     public async Task ProbeClick()
@@ -44,6 +49,7 @@ public partial class DiagnosticOverlayHost
 
     void OnProbePointerMoved(object? sender, PointerEventArgs e)
     {
+        DiagnosticProbeTrace.MarkPointer(e.Source);
         if (!ProbeEnabled || e.Source is not Visual hit || ReferenceEquals(hit, this)) return;
         ProbeHover(hit, e.KeyModifiers.HasFlag(KeyModifiers.Alt));
     }

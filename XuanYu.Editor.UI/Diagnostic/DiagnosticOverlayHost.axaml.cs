@@ -27,6 +27,7 @@ public partial class DiagnosticOverlayHost : UserControl
 
     void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
+        DiagnosticProbeTrace.Reset(); DiagnosticProbeTrace.MarkHostLoaded();
         _loaded = true;
         AttachTopLevel();
         AttachVm();
