@@ -11,7 +11,7 @@ public sealed partial class XYSubMenu : Border
     public XYSubMenu? ParentSubMenu { get => _parentSubMenu; set { if (ReferenceEquals(_parentSubMenu, value)) return; _parentSubMenu?._children.Remove(this); _parentSubMenu = value; if (value is not null && !value._children.Contains(this)) value._children.Add(this); if (value?.EffectiveVisible == false) Close(); else SyncVisibility(); } }
     public XYMenuItem? Trigger { get => _trigger; set { if (ReferenceEquals(_trigger, value)) return; DetachTriggers(); _trigger = value; AttachTriggers(); } }
     public IReadOnlyList<XYSubMenu> ChildSubMenus => _children;
-    public bool IsOpen { get; private set; } = true;
+    public bool IsOpen { get; private set; }
     public bool EffectiveVisible => IsOpen && (_parentSubMenu?.EffectiveVisible ?? true);
     public XYSubMenuConnector Connector => _connector;
     public bool OpenLeft { get => _openLeft; set { _openLeft = value; Build(); } }

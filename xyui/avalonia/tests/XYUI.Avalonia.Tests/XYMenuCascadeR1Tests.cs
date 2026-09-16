@@ -14,6 +14,21 @@ public sealed class XYMenuCascadeR1Tests : IClassFixture<XyuiHeadlessFixture>
     readonly XyuiHeadlessFixture _fx;
     public XYMenuCascadeR1Tests(XyuiHeadlessFixture fx) => _fx = fx;
 
+    [Fact] public void New_submenu_is_closed_by_default() => _fx.Run(() => Assert.False(new XYSubMenu().IsOpen));
+    [Fact] public void Fixed_root_submenu_reserves_no_parent_width() => _fx.Run(() =>
+    {
+        var grid = Assert.IsType<Grid>(new XYSubMenu { ParentMenu = new XYMenu(), ChildMenu = new XYMenu() }.Child);
+        Assert.Equal(0, grid.ColumnDefinitions[0].Width.Value);
+    });
+
+    [Fact] public void Gallery_nested_item_has_real_submenu_relation() => _fx.Run(() =>
+    {
+        var preview = XYUI.Avalonia.Gallery.XYUI3LiveExamplesFactory.CreateLiveExamples("XYUI-3-3.04")!;
+        var zip = preview.GetVisualDescendants().OfType<XYMenuItem>().Single(x => x.Label.StartsWith("批量资产包"));
+        Assert.NotNull(zip.SubMenu);
+        Assert.Contains(zip.SubMenu!.ChildMenu.Items.OfType<XYMenuItem>(), x => x.Label == "增量资产清单");
+    });
+
     [Fact] public void Fixed_root_has_three_sibling_submenus() => _fx.Run(() =>
     { var t = Tree(); Assert.Equal(3, t.Root.SubMenusForTest().Count); Assert.All(t.Items, x => Assert.Same(t.Root, x.SubMenu!.ParentMenu)); });
 

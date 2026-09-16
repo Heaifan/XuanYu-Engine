@@ -10,13 +10,16 @@ public static partial class XYUI3LiveExamplesFactory
     static Control CreateSubMenuLiveExamples()
     {
         var feedback = new TextBlock { Text = "就绪 · 鼠标悬停或点击「导出为...」展开子菜单", Classes = { "xyui-text-caption" } };
+        var batch = SubAction("批量资产包 (ZIP)...", feedback, sub: true);
         var child = new XYMenu(
             SubAction("地图数据 (GeoJSON)", feedback),
             SubAction("高度图图像 (PNG)", feedback),
             SubAction("项目配置文件 (JSON)", feedback),
             XYMenu.Separator(),
-            SubAction("批量资产包 (ZIP)...", feedback, sub: true)
+            batch
         );
+        var batchSubMenu = new XYSubMenu { ParentMenu = child, ChildMenu = new XYMenu(SubAction("增量资产清单", feedback)), Trigger = batch };
+        batch.SubMenu = batchSubMenu;
         var export = SubAction("导出为...", feedback, sub: true);
         var parent = new XYMenu(
             SubAction("打开工程", feedback),

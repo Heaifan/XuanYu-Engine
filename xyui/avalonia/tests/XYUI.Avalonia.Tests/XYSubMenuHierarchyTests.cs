@@ -39,7 +39,7 @@ public sealed class XYSubMenuHierarchyTests : IClassFixture<XyuiHeadlessFixture>
         var root = new XYSubMenu { OpenLeft = openLeft, ParentMenu = new XYMenu(), ChildMenu = new XYMenu() };
         var child = new XYSubMenu { OpenLeft = openLeft, ParentMenu = new XYMenu(), ChildMenu = new XYMenu(), ParentSubMenu = root };
         _ = new XYSubMenu { OpenLeft = openLeft, ParentMenu = new XYMenu(), ChildMenu = new XYMenu(), ParentSubMenu = child };
-        var grandchild = child.ChildSubMenus.Single(); return (root, child, grandchild);
+        var grandchild = child.ChildSubMenus.Single(); root.Open(); child.Open(); grandchild.Open(); return (root, child, grandchild);
     }
     static (XYSubMenu Root, XYSubMenu First, XYSubMenu Second, XYSubMenu FirstGrandchild) Siblings()
     {
@@ -47,6 +47,6 @@ public sealed class XYSubMenuHierarchyTests : IClassFixture<XyuiHeadlessFixture>
         var first = new XYSubMenu { ParentMenu = new XYMenu(), ChildMenu = new XYMenu(), ParentSubMenu = root };
         var second = new XYSubMenu { ParentMenu = new XYMenu(), ChildMenu = new XYMenu(), ParentSubMenu = root };
         var grandchild = new XYSubMenu { ParentMenu = new XYMenu(), ChildMenu = new XYMenu(), ParentSubMenu = first };
-        return (root, first, second, grandchild);
+        root.Open(); return (root, first, second, grandchild);
     }
 }
