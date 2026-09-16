@@ -14,17 +14,12 @@ public sealed class FeatureEditUiContractTests
         var toolbar = Read("Top/ContextToolBar.axaml");
         var code = Read("Top/ContextToolBar.axaml.cs");
         
-        Assert.Contains("IsVisible=\"{Binding IsEditMode}\"", toolbar);
+        Assert.Contains("IsVisible=\"{Binding IsRegionEditMode}\"", toolbar);
         Assert.DoesNotContain("地图编辑", toolbar);
         Assert.DoesNotContain("要素编辑", toolbar);
         Assert.Contains("XYSplitButton", toolbar);
-        Assert.Contains("Category(\"点\"", code);
-        Assert.Contains("Category(\"线\"", code);
-        Assert.Contains("Category(\"面\"", code);
-        
-        Assert.Contains("Category(\"点\"", code);
-        Assert.Contains("Category(\"线\"", code);
-        Assert.Contains("Category(\"面\"", code);
+        Assert.Contains("XYMenu.FromModels", code);
+        Assert.Contains("XYMenuItemModel", code);
     }
 
     [Fact]

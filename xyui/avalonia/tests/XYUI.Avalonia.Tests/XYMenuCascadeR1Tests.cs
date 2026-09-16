@@ -32,7 +32,7 @@ public sealed class XYMenuCascadeR1Tests : IClassFixture<XyuiHeadlessFixture>
     [Fact] public void Nested_submenu_is_mounted_into_visual_tree() => _fx.Run(() =>
     {
         var root = XYMenu.FromModels([M("a", "A", [M("b", "B", [M("c", "C")])])]);
-        var first = root.Items.OfType<XYMenuItem>().Single(); var firstSubMenu = first.SubMenu!; var host = new Grid { Children = { root, firstSubMenu } };
+        var first = root.Items.OfType<XYMenuItem>().Single(); var firstSubMenu = first.SubMenu!; var host = new Grid { Children = { root } };
         var window = XyuiBatchTestHost.Show(host); Dispatcher.UIThread.RunJobs();
         Assert.NotNull(firstSubMenu.GetVisualDescendants().OfType<XYSubMenu>().SingleOrDefault());
         var second = firstSubMenu.ChildMenu.Items.OfType<XYMenuItem>().Single(); firstSubMenu.Open(); second.Activate(); Dispatcher.UIThread.RunJobs();

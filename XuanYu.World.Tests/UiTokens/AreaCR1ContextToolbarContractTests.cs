@@ -34,7 +34,9 @@ public sealed class AreaCR1ContextToolbarContractTests
         var code = Read("Top/ContextToolBar.axaml.cs");
         Assert.Contains("XYSplitButton", toolbar);
         Assert.Contains("DrawButtonLabel", toolbar);
-        Assert.Contains("XYSubMenu", code);
+        Assert.Contains("XYMenu.FromModels", code);
+        Assert.Contains("XYMenuItemModel", code);
+        Assert.DoesNotContain("new XYSubMenu", code);
         Assert.DoesNotContain("DrawSubMenuPopup", code);
         Assert.Contains("道路", code);
         Assert.Contains("区域", code);
@@ -62,7 +64,7 @@ public sealed class AreaCR1ContextToolbarContractTests
     public void Context_toolbar_is_present_in_editor_mode_without_duplicate_breadcrumb()
     {
         var toolbar = Read("Top/ContextToolBar.axaml");
-        Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsEditMode}\"", toolbar);
+        Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsRegionEditMode}\"", toolbar);
         Assert.DoesNotContain("地图编辑", toolbar);
         Assert.DoesNotContain("要素编辑", toolbar);
     }

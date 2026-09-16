@@ -4,11 +4,15 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.ContextToolBar"
              x:DataType="local:UiVm">
-  <Border x:Name="ContextRoot" IsVisible="{Binding IsEditMode}"
+  <Border x:Name="ContextRoot" IsVisible="{Binding IsRegionEditMode}"
           MinWidth="220"
           BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
           CornerRadius="{StaticResource Radius.Standard}" Padding="8,4">
     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+      <xy:XYToggleButton Content="选择" IsChecked="{Binding IsSelectTool, Mode=OneWay}"
+                         Command="{Binding SelectToolCommand}" CommandParameter="选择"/>
+      <xy:XYToggleButton Content="框选" IsEnabled="False"
+                         IsChecked="{Binding IsBoxSelectTool, Mode=OneWay}"/>
       <xy:XYSplitButton x:Name="DrawSplitButton" Content="{Binding DrawButtonLabel}" />
       <Popup x:Name="DrawMenuPopup" Placement="Bottom" IsLightDismissEnabled="True">
         <xy:XYMenu x:Name="DrawMenu" />

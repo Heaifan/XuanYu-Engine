@@ -45,7 +45,7 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
             split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
             var menu = (toolbar.FindControl<Popup>("DrawMenuPopup")!.Child as XYMenu)!;
             menu.Items.OfType<XYMenuItem>().Single(item => item.Label == "面").Activate();
-            var submenu = Assert.IsType<XYSubMenu>(toolbar.FindControl<Popup>("DrawMenuPopup")!.Child);
+            var submenu = menu.Items.OfType<XYMenuItem>().Single(item => item.Label == "面").SubMenu!;
             submenu.ChildMenu.Items.OfType<XYMenuItem>().Single().Activate();
             var state = vm.IsRegionEditMode && vm.CanStartRegionDrawing;
             return state;

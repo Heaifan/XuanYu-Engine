@@ -37,12 +37,13 @@ public sealed class FeatureEditCR1RuntimeTests
     }
 
     [Fact]
-    public void Map_edit_mode_shows_context_tools_and_root_menu()
+    public void Feature_edit_mode_shows_context_tools_and_root_menu()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
+            vm.SwitchWorkspaceCommand.Execute("RegionEditor");
             vm.ToggleEditorModeCommand.Execute(null);
             var toolbar = new ContextToolBar { DataContext = vm };
             host.Show(toolbar, 800, 100); toolbar.UpdateLayout();
@@ -75,7 +76,7 @@ public sealed class FeatureEditCR1RuntimeTests
             split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
             var root = (toolbar.FindControl<Popup>("DrawMenuPopup")!.Child as XYMenu)!;
             root.Items.OfType<XYMenuItem>().Single(x => x.Label == "线").Activate();
-            var submenu = Assert.IsType<XYSubMenu>(toolbar.FindControl<Popup>("DrawMenuPopup")!.Child);
+            var submenu = root.Items.OfType<XYMenuItem>().Single(x => x.Label == "线").SubMenu!;
             submenu.ChildMenu.Items.OfType<XYMenuItem>().Single().Activate();
             await Task.Delay(1);
             Assert.True(vm.IsDrawingTransactionActive);

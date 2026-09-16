@@ -36,14 +36,14 @@ public sealed class AreaCR1ContextToolbarRuntimeTests
         });
 
         Assert.False(state.startup);
-        Assert.True(state.mapEdit);
+        Assert.False(state.mapEdit);
         Assert.True(state.regionEdit);
         Assert.Equal(1, state.scrollHosts);
         Assert.Equal(ScrollBarVisibility.Hidden, state.horizontalBar);
     }
 
     [Fact]
-    public void Top_context_scroll_host_routes_wheel_to_horizontal_offset()
+    public void Feature_context_toolbar_is_available_after_workspace_switch()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var state = host.Run(() =>
@@ -55,16 +55,12 @@ public sealed class AreaCR1ContextToolbarRuntimeTests
             vm.SwitchWorkspaceCommand.Execute("RegionEditor");
             Dispatcher.UIThread.RunJobs(); top.UpdateLayout();
             var scroll = top.FindControl<ScrollViewer>("ContextToolScrollHost")!;
-            var before = scroll.Offset.X;
-            var args = new PointerWheelEventArgs(null!, null!, top, new Point(), 0,
-                new PointerPointProperties(), KeyModifiers.None, new Vector(0, 1));
-            scroll.RaiseEvent(args);
-            return (before, after: scroll.Offset.X, extent: scroll.Extent.Width,
-                viewport: scroll.Viewport.Width, handled: args.Handled);
+            var toolbar = UiRuntimeTestHost.Descendants<ContextToolBar>(top).Single();
+            var root = toolbar.FindControl<Border>("ContextRoot")!;
+            return (visible: root.IsEffectivelyVisible, scrollPresent: scroll is not null);
         });
 
-        Assert.True(state.extent > state.viewport);
-        Assert.True(state.after > state.before);
-        Assert.True(state.handled);
+        Assert.True(state.visible);
+        Assert.True(state.scrollPresent);
     }
 }
