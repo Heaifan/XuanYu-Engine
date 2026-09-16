@@ -1,37 +1,30 @@
 # 玄域引擎工程知识库
 
-> 文档状态：V1 正式入库
-> 整理时间：2026-08-10 17:56（UTC+08:00）
-> 证据基线：`changelog.md`、`docs/archive/changelog/changelog-2026-07.md`、`docs/archive/changelog/changelog-2026-06.md` 与可核验 Git Commit
-> 目录原则：`docs/knowledge/` 下禁止创建子目录；按大类集中到单一 Markdown 文件。
+> 最后治理更新：2026-09-16  
+> 目的：把经过工程证据验证的知识变成未来任务的主动输入，而不是被动归档。
 
-## 1. 目的
+---
 
-知识库保存“以后遇到类似问题应该如何判断、设计、修复与验证”的长期工程经验。它不是 changelog 的副本，也不是 AI 开发宪法、UI 规范或架构文档的重复抄写。
+## 1. 职责
 
-四类文档的职责严格区分：
-
-- **宪法 / 规范**：必须遵守什么。
-- **Changelog**：某个版本发生了什么。
-- **Incident**：某次事故发生了什么、如何收口。
-- **Lesson**：为什么会沿着错误前提投入，以及何时必须停止局部修补。
-- **Knowledge**：从事故与教训中提炼出的可复用工程规则。
-
-知识闭环：
+知识治理采用以下分工：
 
 ```text
-Changelog / Git 事实
-        ↓
-      Incident
-        ↓ 反思
-       Lesson
-        ↓ 提炼
-     Knowledge
-        ↓ 固化
-Tests / Runtime Gate / Architecture Gate
+开发宪法        = 不可违反的长期底线
+DEC             = 用户已经批准的重要长期决策
+Knowledge       = 经工程实践验证的系统 / 工程规律
+Lesson          = 错误前提、停止条件与复盘教训
+ERR             = Agent 实际犯错事实与根因
+EXP             = 从一个或多个 ERR 提炼的防复发规则
+Knowledge Index = 任务域 → 开发前应读取什么
+Changelog       = 实际发生的有效变化
+File Tree       = 当前文件与职责
+Plan / Audit    = 过程材料，不自动成为长期知识
 ```
 
-## 2. 文件结构
+知识库不是 changelog 副本，也不复制宪法和正式架构文档全文。
+
+## 2. 当前结构
 
 ```text
 docs/knowledge/
@@ -45,88 +38,206 @@ docs/knowledge/
 ├─ data.md
 ├─ performance.md
 ├─ incidents.md
-└─ lessons.md
+├─ lessons.md
+└─ decisions/
+   └─ 已批准的长期决策文档
 ```
 
-**硬规则：不得新增 `docs/knowledge/<category>/...`、`incidents/2026/...` 等嵌套目录。** 细分依靠知识 ID、标签和 `knowledge-index.md`，不依靠继续套文件夹。
+`decisions/` 是当前仓库已经存在并正式使用的 DEC 容器，不再使用“知识目录绝对禁止子目录”的旧规则。
 
-## 3. 条目类型与最低字段
+除 `decisions/` 或以后经用户批准的新长期类别外，不得为了单条 Knowledge 机械创建大量小目录和小文件。工程知识仍优先按主题集中维护。
 
-每条正式 Knowledge 至少包含：
+Agent 错误与防复发经验不放入本目录，权威位置固定为：
 
-1. ID、状态、优先级、证据等级、标签、适用范围；
-2. 首次确认的**绝对日期/时间**、版本、Commit、来源；
-3. 如有后续修正，记录最近验证版本；
-4. 问题与根因；
-5. 工程规则；
-6. 禁止做法；
-7. 正确做法；
-8. **真实历史示例**；
-9. **未来应用示例**；
-10. 验证方法；
-11. 边界 / 例外；
-12. 关联 Incident / Knowledge。
+```text
+docs/governance/agent-error-log.md
+docs/governance/agent-experience-rules.md
+```
 
-每条正式 Lesson 还必须明确区分“已确认事实”和“高置信机制解释（尚未直接证明）”，并包含停止条件、禁止做法、正确做法、关联 Incident / Knowledge / Gate。
+## 3. 知识闭环
 
-禁止使用“今天、昨天、刚才、这次、上一轮、前几天”等相对时间作为证据时间。若原始历史只记录到日期或月份，必须原样说明“原文未记录时分/具体日”，**禁止补造精度**。
+长期知识必须进入开发前和开发后的闭环：
 
-## 4. Commit 证据规则
+```text
+真实项目事实 / Git / 验收 / 测试
+            ↓
+ Incident / ERR / Lesson
+            ↓
+ Knowledge / EXP / DEC
+            ↓
+     knowledge-index.md
+            ↓
+      Knowledge Preflight
+            ↓
+          开发
+            ↓
+        验证与回写
+            ↓
+ Regression Test / Runtime Gate / Architecture Gate
+```
 
-- 能从 Git 核验时，优先使用完整 Commit SHA；正文可同时给短 Hash。
-- Changelog 只有短 Hash 时，允许暂存短 Hash。
-- Changelog 写“以本轮最终 Git 记录为准”且当前资料无法可靠定位时，写：`待补证（Codex 入库前由本地 Git 追溯）`。
-- 禁止根据版本号、文件时间或相邻提交猜 Hash。
-- 历史版本号冲突时，Commit Hash 优先于版本号。
+只写入而不在下一次任务加载的知识，视为治理未完成。
 
-## 5. 证据等级
+## 4. Knowledge Preflight
 
-- **E1 — 单次事故经验**：至少有一份真实项目证据，但尚未跨版本复现。
-- **E2 — 重复验证经验**：同类问题在多个版本、修复阶段或独立路径中重复得到验证。
-- **E3 — 工程合同**：经验已被稳定自动测试、Runtime Gate、Architecture Gate 等机器门禁固化。
+MEDIUM / HIGH 任务，以及 `knowledge-index.md` 已经建立任务域映射的工作，在设计或写代码前必须：
 
-证据等级描述成熟度，不表示知识重要性。P0/E1 可以比 P1/E3 更紧急。
+1. 识别任务域；
+2. 查 `knowledge-index.md`；
+3. 读取该域直接相关的 DEC / Knowledge / Lesson / EXP；
+4. 在 Task State 中列出实际加载 ID；
+5. 不读取与任务无关的全部知识库。
 
-## 6. 优先级
+推荐格式：
 
-- **P0**：违反后可能导致用户数据损坏、错误验收、输入失控、渲染/空间语义错误、重大返工或阶段错误关闭。
-- **P1**：明显影响稳定性、性能、可维护性或调试效率，但通常不会立即破坏核心状态。
-- **P2**：经验性优化，可按任务相关性采用。
+```text
+Knowledge Preflight
+Task Domain: Data / Save
+Loaded:
+- K-DATA-001
+- K-DATA-002
+- EXP-DATA-xxx
+```
 
-## 7. 生命周期
+没有匹配项时写 `Loaded: none`。
 
-知识状态使用：
+## 5. 任务结束的知识回写
 
-- `Active`：当前适用。
-- `Superseded`：已被新知识替代，保留历史链接。
-- `Deprecated`：架构或技术栈变化后不再适用。
+任务完成前只做一次最小判断：
 
-同一问题出现新证据时，优先更新原条目的“最近验证”和示例，不重复创建近义知识。只有工程规则本身不同，才新建 ID。
+```text
+新增长期决策？       → DEC
+形成长期工程规律？   → Knowledge
+出现值得复盘的教训？ → Lesson / Incident
+Agent 真正犯错？      → ERR
+产生防复发通用规则？ → EXP
+```
 
-## 8. Milestone Knowledge Review 分类
+全部为否时：
 
-每个正式 Milestone 在 `CLOSED` 前必须执行一次知识沉淀审计。审计不复制 changelog，而是基于 Milestone 的计划、Commit、验收、失败/返工记录、架构决策、测试证据和最终实现筛选可复用结论。
+```text
+Knowledge Writeback: none
+```
 
-候选必须且只能归入以下分类：
+不得为了“完成知识流程”制造空洞条目。
 
-- `KNOWLEDGE`：稳定、可复用且有真实工程证据，更新对应主题文件和索引。
-- `LESSON`：有上下文的失败或教训，更新 `lessons.md`，必要时同步 `incidents.md`。
-- `CHANGELOG_ONLY`：只保留发生历史，不进入长期知识。
-- `BACKLOG`：真实但不在当前范围，写入现有 Milestone Backlog 或架构债务事实源。
-- `REJECTED`：一次性现象、未经验证猜想或已被事实推翻，不入库。
-- `CONSTITUTION_CANDIDATE`：单独报告，必须经明确批准后才能修改宪法。
+## 6. 正式 Knowledge 最低要求
 
-审计未完成、分类未明确或落库结果未完成时，Milestone 不得标记 `CLOSED`。同一根因优先更新既有条目；知识条目仍必须满足本文件的证据、边界、历史示例和未来应用要求。
+每条正式 Knowledge 应至少包含：
 
-## 9. 当前验证口径提醒
+- 唯一 ID；
+- 当前状态；
+- 优先级；
+- 证据等级；
+- 标签 / 适用范围；
+- 首次确认的绝对日期、版本、Commit（能确认时）；
+- 最近验证证据；
+- 问题与根因；
+- 工程规则；
+- 禁止做法；
+- 正确做法；
+- 真实历史示例；
+- 未来应用示例；
+- 验证方法；
+- 适用边界；
+- 关联 Incident / Lesson / DEC / ERR / EXP。
 
-历史 changelog 中存在早期“0 Error / 存量 Warning”记录，这些只作为历史事实引用。**当前玄域引擎正式构建门禁为全解决方案 0 Warning / 0 Error；任何 Warning 均视为阻塞。** 知识库不得把历史容忍口径恢复成当前规则。
+Commit 无法确认时必须写 `待补证`，不得猜测。
 
-## 10. 本轮入库复核
+## 7. 证据等级
 
-1. 本轮保持正式知识库扁平结构，不创建子目录。
-2. 已搜索全文 `待补证`，只对本地 Git 能可靠定位的历史补齐 Hash；无法定位处继续保留待补证说明。
-3. 已按项目治理规则同步 `file-tree.md`、`changelog.md` 与宪法条款。
-4. 本轮经用户授权修订 AI 开发宪法，新增第十六章知识治理制度。
-5. 正式门禁结果以本轮最终 changelog 条目和交付报告为准。
-6. Commit + Push 后必须重新核验远端分支 tip 与本地 HEAD 一致，再报告交付。
+- **E1 — 单次工程证据**：至少一次明确真实项目证据；
+- **E2 — 重复工程证据**：不同版本、模块或独立事件重复证明；
+- **E3 — 制度化工程合同**：已经由自动测试、Runtime Gate、Architecture Gate、静态检查等机器机制长期保护。
+
+证据等级只能按真实证据升级。
+
+## 8. 当前状态语义
+
+长期治理的统一顶层状态语义：
+
+```text
+ACTIVE
+SUPERSEDED
+RETIRED
+```
+
+既有 Knowledge 中的 `Candidate / Active / Reinforced / Superseded / Retired` 历史成熟度可以继续保留；其有效性必须能映射到：当前有效 / 已替代 / 已退役。
+
+旧条目不得因过时无痕删除。
+
+## 9. 去重原则
+
+新增前先搜索已有条目。
+
+同一根因：
+
+- Knowledge 优先强化原 ID；
+- ERR 保留每次真实事件；
+- EXP 优先累计 Occurrences，不重复造近义规则；
+- 新决策若替代旧 DEC，旧 DEC 标记 SUPERSEDED 并链接新项。
+
+数量不是知识库质量指标。
+
+## 10. 决策知识 DEC
+
+`docs/knowledge/decisions/` 保存已经由用户批准、未来开发必须知道的重要长期决策。
+
+DEC 应回答：
+
+- 决定了什么；
+- 为什么；
+- 适用范围；
+- 哪些方案已经被否决；
+- 什么条件下可以重新讨论；
+- 当前状态；
+- 相关 Knowledge / ERR / EXP / 架构文档。
+
+普通实现细节、临时方案和未批准建议不得写成 DEC。
+
+## 11. Milestone Knowledge Review
+
+正式 Milestone 在 CLOSED 前执行一次知识沉淀审计；小 Fix 不机械创建重型报告。
+
+候选只进入一种：
+
+```text
+KNOWLEDGE
+LESSON
+ERR
+EXP
+CHANGELOG_ONLY
+BACKLOG
+REJECTED
+CONSTITUTION_CANDIDATE
+```
+
+`CONSTITUTION_CANDIDATE` 只能由用户 / ChatGPT 审批后进入宪法。
+
+## 12. 自动化优先
+
+反复出现或高风险知识，优先转化为：
+
+```text
+Knowledge / EXP
+→ Regression Test
+→ Static Check / Runtime Gate / Architecture Gate
+```
+
+能够机器防止的问题，不长期只依赖 AI 记住。
+
+## 13. 月度健康检查
+
+至少检查：
+
+- Index 是否仍与正文一致；
+- 任务是否真的执行 Knowledge Preflight；
+- 是否存在长期待补证；
+- 是否出现重复 Knowledge / EXP；
+- ACTIVE 条目是否已被新架构推翻；
+- SUPERSEDED / RETIRED 链接是否正确；
+- ERR 是否存在长期未处理；
+- 高风险经验是否适合自动化；
+- 知识库是否开始复制 changelog、宪法或架构文档。
+
+治理检查不要求每月创建一篇新报告，发现问题直接修正权威资料即可。

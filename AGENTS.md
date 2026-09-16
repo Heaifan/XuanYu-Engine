@@ -1,55 +1,141 @@
 # AGENTS.md — XuanYu Engine（玄域引擎）AI 协作入口
 
-> 本文件是仓库内所有 AI 编码工具（Claude Code / Codex / Cursor / Hermes 等）的统一入口。
-> **唯一权威规则：`docs/玄域引擎_AI开发宪法.md`（2.3 版，17 章 86 条）。**
-> 本文件只做索引与红线摘要；两者冲突时以宪法为准。执行手册见 `docs/dev-rules.md`。
+> 仓库内 AI 编码工具统一入口。  
+> **唯一权威规则：`docs/玄域引擎_AI开发宪法.md`（3.0）。**  
+> 代码硬规则：`docs/CODE_CONSTITUTION.md`。  
+> 执行手册：`docs/dev-rules.md`。
 
 ## 项目
 
-- C# 游戏编辑器（Avalonia UI + Vulkan 渲染），解决方案 `XuanYu.Engine.slnx`
-- 正式开发分支跟随当前主里程碑；实际分支与远端关系以本轮 Git 接管核对为准
+- C# 游戏编辑器（Avalonia UI + Vulkan 渲染）
+- 解决方案：`XuanYu.Engine.slnx`
+- GitHub 是正式跨设备事实源；当前分支和远端关系每轮以实际仓库核对为准
+- XYUI 是仓库内一等内置子系统，Canonical 根固定为 `xyui/`
 
-## 多 Agent 通道（DEV-FIRST）
+## 不可侵犯红线
 
-- 正式开发 Agent 使用有 upstream 的里程碑分支，每轮必须 Commit + Push；GitHub 是正式事实源。
-- 除 XYUI 内置子系统外，UI Agent 默认使用独立 `local/<任务>` 分支与 worktree，可本地 Commit，但不设 upstream、禁止 Push。
-- XYUI 永久内置于本仓库 `xyui/`，与 Engine 共用工作区、分支、版本、构建、提交和维护生命周期；不存在独立 XYUI 正式工作区或 Git 基线。
-- 双方冲突时正式功能、架构、测试和共享元数据优先；UI 基于最新正式远端 HEAD 重新适配，不得阻塞主开发。
-- 正式开发只显式暂存本轮文件；禁止把 UI 本地 Commit 放在正式分支上，以免被后续 Push 传递到 GitHub。
+1. **5+100**：所有手写 `.cs` / `.axaml` / `.js` 单文件 ≤100 行；无临时例外、无复杂文件例外、无“单职责即可超限”例外。
+2. **事实真实性**：Evidence Before Claim；未执行不得称通过，局部不得冒充全量，本地不得冒充远端，推测不得冒充根因。
+3. **唯一事实源**：UI / Renderer / Inspector / Snapshot / 索引只能投影或派生领域事实。
+4. **分层边界**：`Editor.UI` 不得直接依赖 Vulkan 实现；`Render.Abstractions` 不得引用 `Silk.NET.Vulkan`。
+5. **高频性能**：PointerMoved / Hover / DragPreview / RenderFrame 等正式主链不得依赖可预见的大规模 O(N) 全量扫描或重型副作用。
+6. **失败不得掩盖**：空 catch、弱化断言、删测试、跳门禁、伪造结果均禁止。
+7. **敏感信息与 AI 私有过程禁入库**。
 
-## 硬红线（违反即违宪）
+## 每轮入口
 
-1. **5+100 行**：每个手写 `.cs` / `.axaml` ≤ 100 行（含生成物），arch-a-guard 硬门禁
-2. **分层边界**：`Editor.UI` 不得直接依赖 Vulkan；`Render.Abstractions` 不得引用 `Silk.NET.Vulkan`
-3. **串行 dotnet 门禁**：一次只运行一个 dotnet 命令；解决方案只完整构建一次；测试用 `--no-build`
-4. **禁止掩盖失败**：空 catch、弱化断言、删测试、跳过门禁一律禁止
-5. **敏感信息禁入库**：密钥、AI 聊天记录、本地工具状态（`.agents/`、`.workbuddy/`、`.hermes/`）一律不进 git
-
-## 每轮流程
-
-冻结目标（≤3 项）→ 只读调查（禁凭计划猜文件名）→ 实装 → 快速验证 → 正式门禁 → 最小文档同步 → commit + push → 等待真机验收
-
-## 正式门禁（严格串行）
-
-```bash
-dotnet build-server shutdown
-export MSBUILDDISABLENODEREUSE=1
-dotnet build XuanYu.Engine.slnx --no-restore -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false
-dotnet test <测试项目> --no-build --no-restore   # 每个测试项目串行
-scripts/arch-a-guard.ps1                          # 架构守卫（依赖边界 + 5+100）
-git diff --check
-dotnet build-server shutdown
+```text
+1. 接管核对 Git / 工作区
+2. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
+3. MEDIUM / HIGH 或已登记任务域 → Knowledge Preflight
+4. 实装
+5. 按 GATE-L / GATE-M / GATE-H 验证
+6. Knowledge Writeback 判断
+7. 原子 Commit → Push → 远端 tip 复核
+8. 需要真机时进入“待真机验收”
 ```
 
-## 文档同步（每轮必做）
+不再强制“普通目标 ≤3”，也不要求每条中间报告重复完整 TODO。限制未解决依赖链、失控并行和 Scope Expansion。
 
-- `changelog.md`：顶部新条目（版本 / 日期精确到秒 / 目标 / 变化 / 验证 / Hash / 遗留），只记真实执行结果
-- `file-tree.md`：从 `git ls-files` 重建，每个 tracked 文件一句话职责；无版本号、无阶段号、无职责索引
-- 版本号**四处**一致：`changelog.md` / `run.bat`(title) / `XuanYu.Editor.UI/Win/UiWin.axaml`(Title) / `XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocument.cs`(DocumentWindowTitle)
-- SVG 按宪法第六十八条按需生成（非每轮强制），生成后必须 XML 校验
+## 风险与验证
 
-## 验收
+### LOW → GATE-L
 
-- 自动测试通过 ≠ CLOSED；真机验收由用户负责，未验收不得启动下一阶段
-- 真机/人工验收清单写 IPO 格式（序号 / 路径 / 输入 / 过程 / 输出），界面文字用中文
-- 服务层能力若没有 UI 入口，不进真机清单（归自动测试）
+- 最小相关 Build / 编译验证
+- 相关专项测试
+- 5+100
+- `git diff --check`
+- Scope 检查
+
+纯文档任务不无意义运行完整代码 Build。
+
+### MEDIUM → GATE-M
+
+- 受影响项目 Build
+- 受影响测试集
+- 相关架构检查
+- 专项回归
+- 5+100
+- `git diff --check`
+
+### HIGH → GATE-H
+
+- 完整 Solution Build：0 Warning / 0 Error
+- 当前适用正式测试套件
+- Architecture Gate
+- 5+100
+- 专项回归
+- `git diff --check`
+- 任务要求的运行 / 真机 / 数据闭环
+
+`dotnet build` / `dotnet test` 始终串行；完整门禁按风险和可信基线节点执行，而不是每个微编辑都重复执行。
+
+## 两次失败规则
+
+同一根因假设 + 同一路径修复连续失败两次后，停止该假设。
+
+只有收集新证据、说明旧假设为何失效并建立新假设后才能继续；禁止无新证据第三次重复撞同一路径。
+
+## Scope
+
+允许当前根因所必需的受控邻接修复，但必须：
+
+- 与根因直接相关；
+- 不改公共 API；
+- 不改 Schema；
+- 不引入新依赖；
+- 不改变无关行为；
+- 可由当前任务验证。
+
+否则停止扩围。
+
+## 知识与经验入口
+
+开发前索引：`docs/knowledge/knowledge-index.md`
+
+长期职责：
+
+```text
+DEC        已批准长期决策
+Knowledge  经工程证据验证的规律
+Lesson     错误前提 / 停止条件 / 教训
+ERR        Agent 实际犯错事实
+EXP        防复发经验规则
+```
+
+Agent 错误权威库：
+
+- `docs/governance/agent-error-log.md`
+- `docs/governance/agent-experience-rules.md`
+
+正式 ERR / EXP 由 ChatGPT 创建、修改、合并和关闭；Codex / Gemini / 其他执行 Agent 只读并按任务加载。
+
+## 人工验收
+
+人工 / 真机使用中文 IPO：
+
+```text
+序号
+路径
+输入 I
+过程 P
+输出 O
+```
+
+必须使用当前 UI 真实中文路径，输出必须可观察、可判定。
+
+普通 LOW / MEDIUM 局部任务不强制 IPO，可使用 `Changed / Verified / Residual Risk`。
+
+## Git
+
+正式成果以原子、可验证节点 Commit，不要求每个微小编辑单独提交。
+
+未经用户批准禁止 Force Push、Rebase、改写历史、删除远端分支、创建 / 合并 PR、Tag、Release。
+
+必须实际核验远端 tip 后才能声明 Push 完成和本地 / 远端一致。
+
+## 收口
+
+自动测试通过不等于需要真机的 UI、渲染、输入、生命周期阶段 CLOSED。
+
+达到 Goal + Gate + 必要文档 + Commit/Push/远端复核后停止当前开发轮；需要真机时等待用户验收，不主动扩展下一阶段。

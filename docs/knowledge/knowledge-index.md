@@ -1,8 +1,29 @@
 # 玄域引擎知识索引
 
-> 索引整理时间：2026-08-11 00:03（UTC+08:00）
-> 状态：V3 正式入库，共 22 条 Knowledge、4 条 Lesson。
-> 使用方法：AI 接到任务后先按标签/分类定位相关 ID，再读取对应主题文件全文；不要默认把全部知识无差别塞入实现上下文。
+> 最后治理更新：2026-09-16  
+> 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
+
+## 任务域预检映射
+
+MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前执行 Knowledge Preflight。
+
+| 任务域 | 典型触发 | 优先读取 |
+|---|---|---|
+| 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001、K-GOV-002；再检查相关 ACTIVE EXP |
+| 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；`decisions/` 中相关 DEC；相关 ACTIVE EXP |
+| 空间 / 几何 | Camera、Screen↔World、Geometry、Snap、Topology | K-SPA-001、K-SPA-002、K-GEO-001、K-GEO-002；相关 DEC / EXP |
+| Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan | K-REN-001～K-REN-004、K-NATIVE-001、L-REN-001、L-REN-002；相关 EXP |
+| Input | Pointer、Capture、手势 Owner | K-INP-001、K-INP-002；相关 EXP |
+| UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互 | K-UI-001；相关 `decisions/`；UI 类 ACTIVE EXP |
+| Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
+| Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
+| Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
+
+任务若横跨多个域，只加载与当前 Scope 直接相关条目，不机械全文读取。
+
+---
+
+## 当前知识条目
 
 | ID | 类型 | 分类 | 标题 | 优先级 | 证据 | 首次关键证据 | 状态 |
 |---|---|---|---|---|---|---|---|
@@ -44,5 +65,8 @@
 - `ui.md`：K-UI-001
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
-- `incidents.md`：上述知识的代表性事故记录与映射
-- `lessons.md`：L-ARCH-001、L-REN-001、L-REN-002、L-VAL-001 及后续可复用的停止条件与错误前提复盘
+- `incidents.md`：代表性事故记录与映射
+- `lessons.md`：L-ARCH-001、L-REN-001、L-REN-002、L-VAL-001 及后续复盘
+- `decisions/`：已批准并仍有长期约束价值的 DEC
+- `docs/governance/agent-error-log.md`：Agent 真实错误事实
+- `docs/governance/agent-experience-rules.md`：去重后的防复发经验规则
