@@ -14,10 +14,10 @@ static class InspectorDescriptors
     };
 
     static IReadOnlyList<InspectorPropertyDescriptor> Feature(InspectorObjectKind kind, string name) =>
-        [D($"{kind}.Basic.Name", kind, "基础", "标识", $"{name}名称"), D($"{kind}.Geometry.Points", kind, "几何", "形状", "节点数量"), D($"{kind}.Status.State", kind, "状态", "可见性", "状态")];
+        [D($"{kind}.Basic.Name", kind, "基础", "标识", $"{name}名称", IsEditable: true), D($"{kind}.Geometry.Points", kind, "几何", "形状", "节点数量"), D($"{kind}.Status.State", kind, "状态", "可见性", "状态")];
 
-    static InspectorPropertyDescriptor D(string key, InspectorObjectKind kind, string category, string section, string name) =>
-        new(key, kind, category, section, name);
+    static InspectorPropertyDescriptor D(string key, InspectorObjectKind kind, string category, string section, string name,
+        bool IsEditable = false) => new(key, kind, category, section, name, IsEditable: IsEditable);
 
     public static string ValueFor(UiVm vm, string key) => key switch
     {

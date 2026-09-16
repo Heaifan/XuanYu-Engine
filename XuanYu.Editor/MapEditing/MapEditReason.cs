@@ -24,5 +24,8 @@ public enum MapEditReason
     RegionGeometryEdited = 18,
     RoadGeometryEdited = 19,
     MarkerCreated = 20,
-    MarkerGeometryEdited = 21
+    MarkerGeometryEdited = 21,
+    RoadRenamed = 22,
+    RegionRenamed = 23,
+    MarkerRenamed = 24
 }

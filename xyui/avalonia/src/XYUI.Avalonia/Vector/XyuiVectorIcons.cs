@@ -4,7 +4,7 @@ using Avalonia.Media;
 
 namespace XYUI.Avalonia.Vector;
 
-public enum XyuiVectorIcon { Info, Error, Warning, Search, Locate, Browse, Copy, Code, Tag, StatusDot, Check, Section, Empty, ChevronDown, Clear, Filter, Eye, Calendar, Clock, ChevronLeft, ChevronRight, ScrubLeftRight, MoreHorizontal, Add, DragGrip, File, NewFile, Open, Save, Undo, Redo, Play, Stop, Select, BoxSelect, Move, Rotate, Scale, Focus, ViewAll, Pan, Orbit, Snap }
+public enum XyuiVectorIcon { Info, Error, Warning, Search, Locate, Browse, Copy, Code, Tag, StatusDot, Check, Section, Empty, ChevronDown, Clear, Filter, Eye, Calendar, Clock, ChevronLeft, ChevronRight, ScrubLeftRight, MoreHorizontal, InspectorRecent, InspectorBasic, InspectorGeometry, InspectorStatus, InspectorRelation, InspectorMore, Add, DragGrip, File, NewFile, Open, Save, Undo, Redo, Play, Stop, Select, BoxSelect, Move, Rotate, Scale, Focus, ViewAll, Pan, Orbit, Snap }
 
 public static class XyuiVectorIcons
 {
@@ -36,6 +36,12 @@ public static class XyuiVectorIcons
             [XyuiVectorIcon.ChevronRight] = "M9 6 L15 12 L9 18",
             [XyuiVectorIcon.ScrubLeftRight] = "M8 7 L3 12 L8 17 M16 7 L21 12 L16 17 M4 12 H20",
             [XyuiVectorIcon.MoreHorizontal] = "M5 10.5 A1.5 1.5 0 1 0 5 13.5 A1.5 1.5 0 1 0 5 10.5 M12 10.5 A1.5 1.5 0 1 0 12 13.5 A1.5 1.5 0 1 0 12 10.5 M19 10.5 A1.5 1.5 0 1 0 19 13.5 A1.5 1.5 0 1 0 19 10.5",
+            [XyuiVectorIcon.InspectorRecent] = "M5.2 6.1 A6 6 0 1 1 4.1 11 M5.2 3.9 V6.4 H2.7 M10 6.7 V10 L12.4 11.5",
+            [XyuiVectorIcon.InspectorBasic] = "M3.25 4 H16.75 A1.75 1.75 0 0 1 18.5 5.75 V14.25 A1.75 1.75 0 0 1 16.75 16 H3.25 A1.75 1.75 0 0 1 1.5 14.25 V5.75 A1.75 1.75 0 0 1 3.25 4 Z M7.85 8 A1.25 1.25 0 1 1 5.35 8 A1.25 1.25 0 1 1 7.85 8 M9.5 7.1 H14 M5.2 12 H14",
+            [XyuiVectorIcon.InspectorGeometry] = "M5 14.5 L7.6 5.5 L15 8 L13.2 14.5 H5 Z M7.6 4.2 A1.3 1.3 0 1 1 7.6 6.8 A1.3 1.3 0 1 1 7.6 4.2 M15 6.7 A1.3 1.3 0 1 1 15 9.3 A1.3 1.3 0 1 1 15 6.7 M13.2 13.2 A1.3 1.3 0 1 1 13.2 15.8 A1.3 1.3 0 1 1 13.2 13.2 M5 13.2 A1.3 1.3 0 1 1 5 15.8 A1.3 1.3 0 1 1 5 13.2",
+            [XyuiVectorIcon.InspectorStatus] = "M8 6 A2 2 0 1 1 4 6 A2 2 0 1 1 8 6 M10 6 H15 M16 13.5 A2 2 0 1 1 12 13.5 A2 2 0 1 1 16 13.5 M5 13.5 H10",
+            [XyuiVectorIcon.InspectorRelation] = "M7 9.2 L13 5.8 M7 10.8 L13 14.2 M7 10 A2 2 0 1 1 3 10 A2 2 0 1 1 7 10 M17 5 A2 2 0 1 1 13 5 A2 2 0 1 1 17 5 M17 15 A2 2 0 1 1 13 15 A2 2 0 1 1 17 15",
+            [XyuiVectorIcon.InspectorMore] = "M6.25 10 A1.25 1.25 0 1 1 3.75 10 A1.25 1.25 0 1 1 6.25 10 M11.25 10 A1.25 1.25 0 1 1 8.75 10 A1.25 1.25 0 1 1 11.25 10 M16.25 10 A1.25 1.25 0 1 1 13.75 10 A1.25 1.25 0 1 1 16.25 10",
             [XyuiVectorIcon.Add] = "M12 5 V19 M5 12 H19",
             [XyuiVectorIcon.DragGrip] = "M8 7 A1 1 0 1 0 8 9 A1 1 0 1 0 8 7 M16 7 A1 1 0 1 0 16 9 A1 1 0 1 0 16 7 M8 15 A1 1 0 1 0 8 17 A1 1 0 1 0 8 15 M16 15 A1 1 0 1 0 16 17 A1 1 0 1 0 16 15",
             [XyuiVectorIcon.File] = "M3 3H13L17 7V21H3ZM13 3V7H17M6 11H14M6 15H14",

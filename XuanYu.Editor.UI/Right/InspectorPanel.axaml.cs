@@ -56,10 +56,10 @@ public partial class InspectorPanel : UserControl
 
     static XyuiVectorIcon IconFor(string category) => category switch
     {
-        "最近" => XyuiVectorIcon.Clock, "基础" => XyuiVectorIcon.Section,
-        "几何" => XyuiVectorIcon.Move, "状态" => XyuiVectorIcon.StatusDot,
-        "关联" => XyuiVectorIcon.Tag, "其他" => XyuiVectorIcon.MoreHorizontal,
-        _ => XyuiVectorIcon.Section
+        "最近" => XyuiVectorIcon.InspectorRecent, "基础" => XyuiVectorIcon.InspectorBasic,
+        "几何" => XyuiVectorIcon.InspectorGeometry, "状态" => XyuiVectorIcon.InspectorStatus,
+        "关联" => XyuiVectorIcon.InspectorRelation, "其他" => XyuiVectorIcon.InspectorMore,
+        _ => XyuiVectorIcon.InspectorBasic
     };
 
     void OnKeyDown(object? sender, KeyEventArgs e)

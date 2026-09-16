@@ -85,7 +85,7 @@ public sealed partial class UiVm
     }
 
     InspectorPropertyRow Row(InspectorPropertyDescriptor descriptor) =>
-        new(descriptor, ValueFor(descriptor.Key), descriptor.Key == "Entity.Basic.Name");
+        new(descriptor, ValueFor(descriptor.Key), descriptor.IsEditable || descriptor.Key == "Entity.Basic.Name");
 
     IReadOnlyList<InspectorPropertyDescriptor> AllDescriptors() => InspectorDescriptors.For(this, InspectorIdentity);
     string ValueFor(string key) => InspectorDescriptors.ValueFor(this, key);

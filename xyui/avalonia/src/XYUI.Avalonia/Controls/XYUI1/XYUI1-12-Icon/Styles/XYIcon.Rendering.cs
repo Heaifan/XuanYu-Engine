@@ -16,7 +16,8 @@ public sealed partial class XYIcon
         using (context.PushTransform(Matrix.CreateTranslation(offset)))
         using (context.PushTransform(Matrix.CreateScale(scale, scale)))
         {
-            var pen = Stroke is null ? null : new Pen(Stroke, StrokeThickness / scale);
+            var pen = Stroke is null ? null : new Pen(Stroke, StrokeThickness / scale,
+                lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
             context.DrawGeometry(Fill, pen, IconGeometry);
         }
     }

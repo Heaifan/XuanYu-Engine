@@ -38,6 +38,7 @@ public sealed partial class UiVm
     public bool CommitInspectorProperty(string key, string text) => key switch
     {
         "Entity.Basic.Name" => CommitEntityName(text),
+        "Road.Basic.Name" or "Region.Basic.Name" or "Marker.Basic.Name" => CommitSelectedFeatureName(text),
         _ => false
     };
 

@@ -6,6 +6,10 @@ public sealed class InspectorFix2ContractTests
 {
     static readonly string Panel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+    static readonly string PanelCode = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
+        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml.cs"));
+    static readonly string Icons = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
+        "..", "..", "..", "..", "xyui", "avalonia", "src", "XYUI.Avalonia", "Vector", "XyuiVectorIcons.cs"));
 
     [Fact]
     public void Inspector_uses_fixed_width_xyui_navigation_rail()
@@ -32,5 +36,15 @@ public sealed class InspectorFix2ContractTests
         Assert.Equal("", vm.InspectorFeaturePointCountText);
         Assert.Equal("", vm.InspectorFeatureClosedText);
         Assert.Equal("", vm.InspectorFeatureStatusText);
+    }
+
+    [Fact]
+    public void Inspector_categories_use_dedicated_semantic_vector_icons()
+    {
+        foreach (var icon in new[] { "InspectorRecent", "InspectorBasic", "InspectorGeometry", "InspectorStatus", "InspectorRelation", "InspectorMore" })
+        {
+            Assert.Contains($"XyuiVectorIcon.{icon}", Icons);
+            Assert.Contains($"XyuiVectorIcon.{icon}", PanelCode);
+        }
     }
 }

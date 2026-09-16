@@ -6,4 +6,5 @@ public sealed record InspectorPropertyDescriptor(
     string Category,
     string Section,
     string DisplayName,
-    string Alias = "");
+    string Alias = "",
+    bool IsEditable = false);
