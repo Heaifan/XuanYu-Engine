@@ -5,7 +5,7 @@
              x:Class="XuanYu.Editor.UI.InspectorReadOnlyValuePresenter"
              x:DataType="local:InspectorPropertyRow">
   <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-    <xy:XYText x:Name="ValueText" Text="{Binding Value}" ToolTip.Tip="{Binding Value}"/>
+    <xy:XYText x:Name="ValueText" Text="{Binding Value}"/>
     <xy:XYButton Grid.Column="1" Content="复制" Classes="inspectorCopyButton"
                  Click="CopyValue_Click" AutomationProperties.Name="复制属性值"/>
   </Grid>

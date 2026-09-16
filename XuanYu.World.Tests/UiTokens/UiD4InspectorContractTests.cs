@@ -34,7 +34,7 @@ public sealed class UiD4InspectorContractTests
         Assert.DoesNotContain("NarrowFields", Panel);
         Assert.DoesNotContain("ColumnDefinition Width=\"96\"", Panel);
         Assert.Contains("ColumnDefinitions=\"80,*\"", Panel);      // ReadonlyKeyValueRow 默认标签列 80
-        Assert.Contains("InspectorReadOnlyValuePresenter", Panel); // 统一只读值 Presenter 提供 Tooltip 与复制
+        Assert.Contains("InspectorReadOnlyValuePresenter", Panel); // 统一只读值 Presenter 提供复制
     }
 
     [Fact]
