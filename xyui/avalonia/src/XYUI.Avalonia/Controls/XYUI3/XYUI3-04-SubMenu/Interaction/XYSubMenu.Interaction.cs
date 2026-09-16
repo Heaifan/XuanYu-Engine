@@ -30,7 +30,7 @@ public sealed partial class XYSubMenu
     public void Close()
     {
         if (_closing) return; _closing = true; var wasOpen = IsOpen || ChildMenu.IsOpen || _children.Any(x => x.IsOpen);
-        IsOpen = false; foreach (var child in _children.ToArray()) child.Close(); ChildMenu.IsVisible = false; ChildMenu.Close(); ParentMenu.ClearSelection(); SyncVisibility(); _closing = false;
+        IsOpen = false; foreach (var child in _children.ToArray()) child.Close(); ChildMenu.IsVisible = false; ChildMenu.Close(); ClearTriggerState(); SyncVisibility(); _closing = false;
         if (wasOpen) Closed?.Invoke(this, EventArgs.Empty);
     }
     bool EffectiveParentVisible() => _parentSubMenu?.EffectiveVisible ?? true;

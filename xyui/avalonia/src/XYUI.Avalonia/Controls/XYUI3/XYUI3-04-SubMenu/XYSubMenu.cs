@@ -21,20 +21,21 @@ public sealed partial class XYSubMenu : Border
     public XYSubMenu() { Classes.Add("xyui-sub-menu"); Child = _grid; Build(); InitializeInteraction(); AttachTriggers(); }
     void Build()
     {
-        _parent.MinWidth = 270; _child.MinWidth = 260; _connector.IsMirrored = OpenLeft;
-        _grid.Children.Clear(); _grid.ColumnDefinitions = new ColumnDefinitions("270,40,260");
-        if (OpenLeft) { _grid.Children.Add(_child); _grid.Children.Add(_connector); _grid.Children.Add(_parent); Grid.SetColumn(_connector, 1); Grid.SetColumn(_parent, 2); }
-        else { _grid.Children.Add(_parent); _grid.Children.Add(_connector); _grid.Children.Add(_child); Grid.SetColumn(_connector, 1); Grid.SetColumn(_child, 2); }
+        _child.MinWidth = 260; _connector.IsMirrored = OpenLeft;
+        _grid.Children.Clear(); _grid.ColumnDefinitions = new ColumnDefinitions("0,40,260");
+        if (OpenLeft) { _grid.Children.Add(_child); _grid.Children.Add(_connector); Grid.SetColumn(_connector, 1); }
+        else { _grid.Children.Add(_connector); _grid.Children.Add(_child); Grid.SetColumn(_connector, 1); Grid.SetColumn(_child, 2); }
         Child = _grid; SyncVisibility();
     }
     void AttachTriggers()
     {
         ParentMenu.RegisterSubMenu(this); var items = _trigger is null ? ParentMenu.Items.OfType<XYMenuItem>().Where(x => x.HasSubMenu).Take(1) : [_trigger];
-        foreach (var item in items) { item.SubMenuRequested -= OnTriggerRequested; item.SubMenuRequested += OnTriggerRequested; item.PointerEntered -= OnTriggerPointerEntered; item.PointerEntered += OnTriggerPointerEntered; }
+        foreach (var item in items) { item.PointerEntered -= OnTriggerPointerEntered; item.PointerEntered += OnTriggerPointerEntered; if (_trigger is null) { item.SubMenuRequested -= OnTriggerRequested; item.SubMenuRequested += OnTriggerRequested; } }
         ParentMenu.Closed -= OnParentClosed; ParentMenu.Closed += OnParentClosed;
     }
     void DetachTriggers()
-    { foreach (var item in ParentMenu.Items.OfType<XYMenuItem>()) { item.SubMenuRequested -= OnTriggerRequested; item.PointerEntered -= OnTriggerPointerEntered; } ParentMenu.Closed -= OnParentClosed; }
+    { foreach (var item in ParentMenu.Items.OfType<XYMenuItem>()) { item.PointerEntered -= OnTriggerPointerEntered; item.SubMenuRequested -= OnTriggerRequested; } ParentMenu.Closed -= OnParentClosed; }
+    internal void ClearTriggerState() => _trigger?.ClearSubMenuState();
     void AttachChild() { foreach (var item in ChildMenu.Items.OfType<XYMenuItem>()) { item.Invoked -= OnChildInvoked; item.Invoked += OnChildInvoked; } }
     void DetachChild() { foreach (var item in ChildMenu.Items.OfType<XYMenuItem>()) item.Invoked -= OnChildInvoked; }
     void OnChildInvoked(object? sender, EventArgs e) => Close();

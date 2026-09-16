@@ -45,6 +45,7 @@ public sealed partial class XYMenuItem
     public void OpenSubMenu() { if (IsEnabled && (HasSubMenu || SubMenu is not null)) { IsSelected = true; IsSubMenuOpen = true; SubMenu?.Open(); SubMenuRequested?.Invoke(this, EventArgs.Empty); } }
     public void CloseSubMenu() { IsSubMenuOpen = false; SubMenu?.Close(); }
     internal void ClearInteractionState() { IsSelected = false; IsSubMenuOpen = false; SubMenu?.Close(); }
+    internal void ClearSubMenuState() { IsSelected = false; IsSubMenuOpen = false; }
 
     void OnPointerPressed(object? sender, PointerPressedEventArgs e) { if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) { Activate(); e.Handled = true; } }
     void OnKeyDown(object? sender, KeyEventArgs e) { if (e.Key is Key.Enter or Key.Space or Key.Right) { Activate(); e.Handled = true; } }

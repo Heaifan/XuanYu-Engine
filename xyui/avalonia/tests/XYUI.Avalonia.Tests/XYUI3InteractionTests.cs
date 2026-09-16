@@ -55,7 +55,7 @@ public sealed class XYUI3InteractionTests : IClassFixture<XyuiHeadlessFixture>
 
     [Fact] public void SubMenu_trigger_opens_and_escape_closes() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var trigger = new XYMenuItem { HasSubMenu = true }; var submenu = new XYSubMenu { ParentMenu = new XYMenu(trigger), ChildMenu = new XYMenu() };
+        XyuiBatchTestHost.Prepare(); var trigger = new XYMenuItem { HasSubMenu = true }; var submenu = new XYSubMenu { ParentMenu = new XYMenu(trigger), ChildMenu = new XYMenu(), Trigger = trigger }; trigger.SubMenu = submenu;
         submenu.Close(); trigger.Activate(); Assert.True(trigger.IsSelected); Assert.True(submenu.IsOpen); trigger.Activate(); Assert.False(trigger.IsSelected); Assert.False(submenu.IsOpen);
     });
 }

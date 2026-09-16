@@ -17,15 +17,17 @@ public static partial class XYUI3LiveExamplesFactory
             XYMenu.Separator(),
             SubAction("批量资产包 (ZIP)...", feedback, sub: true)
         );
+        var export = SubAction("导出为...", feedback, sub: true);
         var parent = new XYMenu(
             SubAction("打开工程", feedback),
             SubAction("保存工程", feedback),
-            SubAction("导出为...", feedback, sub: true),
+            export,
             XYMenu.Separator(),
             SubAction("关闭工程", feedback)
         );
 
-        var subMenu = new XYSubMenu { ParentMenu = parent, ChildMenu = child };
+        var subMenu = new XYSubMenu { ParentMenu = parent, ChildMenu = child, Trigger = export };
+        export.SubMenu = subMenu;
         var modeToggle = new XYButton { Content = "切换展开方向：当前 OpenRight", Margin = new(0, 0, 0, 6) };
         modeToggle.Click += (_, _) =>
         {
@@ -35,7 +37,9 @@ public static partial class XYUI3LiveExamplesFactory
 
         var panel = new StackPanel { Spacing = 8 };
         panel.Children.Add(modeToggle);
-        panel.Children.Add(subMenu);
+        var menuHost = new Grid { ColumnDefinitions = new ColumnDefinitions("270,300") };
+        menuHost.Children.Add(parent); menuHost.Children.Add(subMenu); Grid.SetColumn(subMenu, 1);
+        panel.Children.Add(menuHost);
         panel.Children.Add(feedback);
         return WrapCard(panel, "层级连接型子菜单 · 父子关联与镜像展开");
     }
