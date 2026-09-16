@@ -37,7 +37,7 @@ public sealed partial class MapEditSession
     {
         if (locked) return Fail("FeatureLocked", "要素已锁定。");
         if (MapLayerRules.Find(_currentMap.Layers, layerId)?.IsLocked == true) return Fail("FeatureLayerLocked", "要素所属图层已锁定。");
-        if (MapLayerRules.ValidateName(name) is { } error) return Fail("InvalidFeatureName", error);
+        if (MapFeatureNameRules.ValidateName(name) is { } error) return Fail("InvalidFeatureName", error);
         return CommitMapChange(mutation, reason);
     }
 }

@@ -7,6 +7,7 @@ static class InspectorDescriptors
         InspectorObjectKind.Entity => [D("Entity.Basic.Name", kind, "基础", "名称", "名称"), D("Entity.Geometry.Position", kind, "几何", "变换", "位置"),
             D("Entity.Geometry.Rotation", kind, "几何", "变换", "旋转"), D("Entity.Geometry.Scale", kind, "几何", "变换", "缩放")],
         InspectorObjectKind.Map => [D("Map.Basic.Name", kind, "基础", "地图", "地图名称"), D("Map.Geometry.Size", kind, "几何", "尺寸", "地图尺寸")],
+        InspectorObjectKind.Dataset => [D("Dataset.Basic.Name", kind, "基础", "标识", "数据集名称"), D("Dataset.Basic.Type", kind, "基础", "标识", "数据集类型"), D("Dataset.Basic.Id", kind, "基础", "标识", "数据集 ID")],
         InspectorObjectKind.Road => Feature(kind, "道路"),
         InspectorObjectKind.Region => Feature(kind, "区域"),
         InspectorObjectKind.Marker => Feature(kind, "点"),
@@ -27,6 +28,10 @@ static class InspectorDescriptors
         "Entity.Geometry.Scale" => $"X {vm.InspectorScaleX:0.##}  Y {vm.InspectorScaleY:0.##}  Z {vm.InspectorScaleZ:0.##}",
         "Map.Basic.Name" => vm.MapName,
         "Map.Geometry.Size" => vm.MapSizeText,
+        "Dataset.Basic.Name" => vm.SelectedDataset?.Name ?? "",
+        "Dataset.Basic.Type" => vm.SelectedDataset?.TypeDisplay ?? "",
+        "Dataset.Basic.Id" => vm.SelectedDataset?.Id ?? "",
+        "Road.Basic.Name" or "Region.Basic.Name" or "Marker.Basic.Name" => vm.InspectorFeatureNameText,
         _ when key.Contains(".Geometry.Points", StringComparison.Ordinal) => vm.InspectorFeaturePointCountText,
         _ when key.Contains(".Status.State", StringComparison.Ordinal) => vm.InspectorFeatureStatusText,
         _ => vm.InspectorSelectionTitle

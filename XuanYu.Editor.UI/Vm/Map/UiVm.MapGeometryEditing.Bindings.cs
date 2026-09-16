@@ -19,7 +19,7 @@ public sealed partial class UiVm
     {
         OnPropertyChanged(nameof(SelectedMapGeometryText)); OnPropertyChanged(nameof(IsMapGeometryDragActive));
         OnPropertyChanged(nameof(SelectedMapGeometryVertexIndex)); OnPropertyChanged(nameof(IsMapGeometrySelected));
-        OnPropertyChanged(nameof(InspectorSelectionTitle)); OnPropertyChanged(nameof(InspectorFeatureTypeText));
+        OnPropertyChanged(nameof(InspectorSelectionTitle)); OnPropertyChanged(nameof(InspectorFeatureNameText)); OnPropertyChanged(nameof(InspectorFeatureTypeText));
         OnPropertyChanged(nameof(InspectorFeatureIdText)); OnPropertyChanged(nameof(InspectorFeaturePointCountText));
         OnPropertyChanged(nameof(InspectorFeatureClosedText)); OnPropertyChanged(nameof(InspectorFeatureStatusText));
         RefreshInspectorNavigation();

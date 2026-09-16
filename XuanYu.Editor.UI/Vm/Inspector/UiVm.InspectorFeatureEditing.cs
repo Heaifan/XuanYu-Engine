@@ -13,7 +13,7 @@ public sealed partial class UiVm
         else if (_selectedMapGeometry is { Kind: MapGeometryFeatureKind.Region } region && MapRegionId.TryParse(region.FeatureId, out var regionId)) result = MapSession.RenameRegion(regionId, text);
         else if (_selectedMapGeometry is { Kind: MapGeometryFeatureKind.Marker } marker && MapMarkerId.TryParse(marker.FeatureId, out var markerId)) result = MapSession.RenameMarker(markerId, text);
         FooterMessage = result is { IsSuccess: true } ? "要素名称已提交。" : result?.Error?.Message ?? "要素名称提交失败。";
-        if (result?.IsSuccess == true) RaiseMapGeometryBindings();
+        RaiseMapGeometryBindings();
         return result?.IsSuccess == true;
     }
 }
