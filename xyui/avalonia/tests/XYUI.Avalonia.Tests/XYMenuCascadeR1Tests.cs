@@ -29,6 +29,16 @@ public sealed class XYMenuCascadeR1Tests : IClassFixture<XyuiHeadlessFixture>
         Assert.Contains(zip.SubMenu!.ChildMenu.Items.OfType<XYMenuItem>(), x => x.Label == "增量资产清单");
     });
 
+    [Fact] public void Nested_submenu_is_mounted_into_visual_tree() => _fx.Run(() =>
+    {
+        var root = XYMenu.FromModels([M("a", "A", [M("b", "B", [M("c", "C")])])]);
+        var first = root.Items.OfType<XYMenuItem>().Single(); var firstSubMenu = first.SubMenu!; var host = new Grid { Children = { root, firstSubMenu } };
+        var window = XyuiBatchTestHost.Show(host); Dispatcher.UIThread.RunJobs();
+        Assert.NotNull(firstSubMenu.GetVisualDescendants().OfType<XYSubMenu>().SingleOrDefault());
+        var second = firstSubMenu.ChildMenu.Items.OfType<XYMenuItem>().Single(); firstSubMenu.Open(); second.Activate(); Dispatcher.UIThread.RunJobs();
+        Assert.True(second.SubMenu!.IsOpen); Assert.True(second.SubMenu.ChildMenu.IsVisible); Assert.NotNull(second.SubMenu.GetVisualParent()); window.Close();
+    });
+
     [Fact] public void Fixed_root_has_three_sibling_submenus() => _fx.Run(() =>
     { var t = Tree(); Assert.Equal(3, t.Root.SubMenusForTest().Count); Assert.All(t.Items, x => Assert.Same(t.Root, x.SubMenu!.ParentMenu)); });
 
@@ -64,6 +74,7 @@ public sealed class XYMenuCascadeR1Tests : IClassFixture<XyuiHeadlessFixture>
     static (XYMenu Root, XYMenuItem Item) Single() { var root = new XYMenu(); var item = new XYMenuItem { Label = "线" }; root.Items = [item]; Link(root, item, "道路"); return (root, item); }
     static XYSubMenu Link(XYMenu root, XYMenuItem trigger, string label, Action? action = null) { var leaf = new XYMenuItem { Label = label, Command = action }; var submenu = new XYSubMenu { ParentMenu = root, ChildMenu = new XYMenu(leaf), Trigger = trigger }; trigger.SubMenu = submenu; return submenu; }
     static IReadOnlyList<XYMenuItemModel> Models() => [new("point", "点", Children: [new("marker", "地图标记")]), new("line", "线", Children: [new("road", "道路")]), new("surface", "面", Children: [new("region", "区域面")])];
+    static XYMenuItemModel M(string id, string label, IReadOnlyList<XYMenuItemModel>? children = null) => new(id, label, Children: children);
 }
 
 static class XYMenuCascadeTestExtensions

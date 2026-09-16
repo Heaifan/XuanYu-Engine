@@ -25,12 +25,12 @@ public sealed partial class XYSubMenu
         var siblings = _parentSubMenu?.ChildSubMenus ?? ParentMenu.SubMenus;
         foreach (var sibling in siblings.Where(x => !ReferenceEquals(x, this))) sibling.Close();
         if (IsOpen) { SyncVisibility(); return; }
-        IsOpen = true; ChildMenu.IsVisible = true; ChildMenu.Open(); SyncVisibility(); Opened?.Invoke(this, EventArgs.Empty);
+        IsOpen = true; ChildMenu.IsVisible = true; ChildMenu.Open(); SyncVisibility(); _parentSubMenu?.RefreshCascadeLayout(); Opened?.Invoke(this, EventArgs.Empty);
     }
     public void Close()
     {
         if (_closing) return; _closing = true; var wasOpen = IsOpen || ChildMenu.IsOpen || _children.Any(x => x.IsOpen);
-        IsOpen = false; foreach (var child in _children.ToArray()) child.Close(); ChildMenu.IsVisible = false; ChildMenu.Close(); ClearTriggerState(); SyncVisibility(); _closing = false;
+        IsOpen = false; foreach (var child in _children.ToArray()) child.Close(); ChildMenu.IsVisible = false; ChildMenu.Close(); ClearTriggerState(); SyncVisibility(); _parentSubMenu?.RefreshCascadeLayout(); _closing = false;
         if (wasOpen) Closed?.Invoke(this, EventArgs.Empty);
     }
     bool EffectiveParentVisible() => _parentSubMenu?.EffectiveVisible ?? true;
@@ -40,6 +40,7 @@ public sealed partial class XYSubMenu
         _grid.ColumnDefinitions[0].Width = new GridLength(0);
         _grid.ColumnDefinitions[1].Width = visible && ShowParentMenu ? new GridLength(40) : new GridLength(0);
         _grid.ColumnDefinitions[2].Width = !OpenLeft && !visible ? new GridLength(0) : new GridLength(260);
+        _grid.ColumnDefinitions[3].Width = _children.Any(x => x.EffectiveVisible) ? new GridLength(300) : new GridLength(0);
         foreach (var child in _children) child.SyncVisibility();
     }
     void OnTriggerRequested(object? sender, EventArgs e) { if (IsOpen) Close(); else Open(); }
