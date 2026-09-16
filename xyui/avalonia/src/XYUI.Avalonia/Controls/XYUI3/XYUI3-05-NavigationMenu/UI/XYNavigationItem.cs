@@ -35,7 +35,7 @@ public sealed partial class XYNavigationItem : Border
     }
     Grid CompactVisual() => new() { ColumnDefinitions = new ColumnDefinitions("3,*,3"), Children = { new Border { Classes = { "xyui-navigation-accent" } }, IconView() } };
     Grid FullVisual() => new() { ColumnDefinitions = new ColumnDefinitions("3,Auto,*,Auto"), Children = { new Border { Classes = { "xyui-navigation-accent" } }, IconView(), Content(Label, false), StatusView() } };
-    XYIcon IconView() => new() { Icon = Icon, Size = XyuiIconSize.Small, Classes = { "xyui-navigation-icon" }, [Grid.ColumnProperty] = 1 };
+    XYIcon IconView() => new() { Icon = Icon, Size = XyuiIconSize.Small, Classes = { "xyui-navigation-icon" }, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, [Grid.ColumnProperty] = 1 };
     TextBlock Content(string? text, bool centered) => new() { Text = text, Classes = { "xyui-navigation-label" }, [Grid.ColumnProperty] = centered ? 1 : 2, HorizontalAlignment = centered ? HorizontalAlignment.Center : HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center };
     Grid WorkspaceVisual()
     {

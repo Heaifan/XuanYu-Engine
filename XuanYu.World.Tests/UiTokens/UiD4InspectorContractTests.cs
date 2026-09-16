@@ -48,7 +48,7 @@ public sealed class UiD4InspectorContractTests
     [Fact]
     public void Inspector_group_uses_full_width_header_with_separator()
     {
-        Assert.Contains("InspectorCategoryItems", Panel);
+        Assert.Contains("XYNavigationRail", Panel);
         Assert.Contains("SearchBox", Panel);
         Assert.DoesNotContain("XYPager", Panel);
     }

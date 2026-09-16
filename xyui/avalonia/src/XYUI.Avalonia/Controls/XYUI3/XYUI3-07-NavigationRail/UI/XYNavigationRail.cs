@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
 using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
@@ -46,8 +47,11 @@ public sealed partial class XYNavigationRail : Border
     void AddItem(XYNavigationEntry entry)
     {
         var item = Items.FirstOrDefault(x => x.Id == entry.Id) ?? new XYNavigationItem { Id = entry.Id };
-        item.Label = entry.Label; item.Icon = entry.Icon; item.Badge = entry.Badge; item.Status = entry.Status; item.IsEnabled = entry.IsEnabled; item.IsSelected = entry.Id == _state.SelectedId; item.LayoutVariant = LayoutVariant; item.IsIconOnly = LayoutVariant == XyuiNavigationLayoutVariant.Default; item.Classes.Set("xyui-rail-item", LayoutVariant == XyuiNavigationLayoutVariant.Default); item.Classes.Set("xyui-rail-workspace-item", LayoutVariant == XyuiNavigationLayoutVariant.Workspace); item.SetValue(AutomationProperties.NameProperty, entry.Label); ToolTip.SetTip(item, entry.Label); item.Selected -= OnSelected; item.Selected += OnSelected; item.KeyDown -= OnItemKeyDown; item.KeyDown += OnItemKeyDown;
-        if (!Items.Contains(item)) Items.Add(item); _itemViews[entry.Id] = item; _panel.Children.Add(item);
+        item.Label = entry.Label; item.Icon = entry.Icon; item.Badge = entry.Badge; item.Status = entry.Status; item.IsEnabled = entry.IsEnabled; item.IsSelected = entry.Id == _state.SelectedId; item.LayoutVariant = LayoutVariant; item.IsIconOnly = LayoutVariant == XyuiNavigationLayoutVariant.Default;
+        if (LayoutVariant == XyuiNavigationLayoutVariant.Default) { item.Width = 36; item.Height = 36; item.HorizontalAlignment = HorizontalAlignment.Center; }
+        else { item.ClearValue(Border.WidthProperty); item.ClearValue(Border.HeightProperty); item.ClearValue(Border.HorizontalAlignmentProperty); }
+        item.Classes.Set("xyui-rail-item", LayoutVariant == XyuiNavigationLayoutVariant.Default); item.Classes.Set("xyui-rail-workspace-item", LayoutVariant == XyuiNavigationLayoutVariant.Workspace); item.SetValue(AutomationProperties.NameProperty, entry.Label); ToolTip.SetTip(item, entry.Label); item.Selected -= OnSelected; item.Selected += OnSelected; item.KeyDown -= OnItemKeyDown; item.KeyDown += OnItemKeyDown;
+        item.Classes.Set("xyui-rail-item", LayoutVariant == XyuiNavigationLayoutVariant.Default); if (!Items.Contains(item)) Items.Add(item); _itemViews[entry.Id] = item; _panel.Children.Add(item);
     }
     static XYNavigationState CreateState(IEnumerable<XYNavigationItem> items) => new(items.Select(x => new XYNavigationEntry(x.Id, x.Label, x.Icon, x.Badge, x.Status, x.IsEnabled)), items.FirstOrDefault(x => x.IsSelected)?.Id);
     void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) { if (_building) return; if (_state.Entries.Count == 0 && Items.Count > 0) NavigationState = CreateState(Items); else Build(); }

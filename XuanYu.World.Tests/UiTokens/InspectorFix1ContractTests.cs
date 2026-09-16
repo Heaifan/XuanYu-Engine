@@ -24,7 +24,7 @@ public sealed class InspectorFix1ContractTests
     [Fact]
     public void Navigation_uses_semantic_rail_item_and_keeps_recent_entry_stable()
     {
-        Assert.Contains("inspectorNavigationItem", Panel);
+        Assert.Contains("XYNavigationRail", Panel);
         Assert.DoesNotContain("<xy:XYButton Content=\"{Binding}\"", Panel);
         Assert.Contains("IsInspectorRecentEmpty", Panel);
     }

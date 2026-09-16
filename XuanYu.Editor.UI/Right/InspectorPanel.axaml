@@ -3,16 +3,9 @@
              x:Class="XuanYu.Editor.UI.InspectorPanel" x:DataType="local:UiVm">
   <UserControl.Styles>
     <Style Selector="Grid.inspectorProperty"><Setter Property="MinHeight" Value="30"/><Setter Property="Margin" Value="0,2"/></Style>
-    <Style Selector="xy|XYToggleButton.inspectorNavigationItem">
-      <Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="HorizontalContentAlignment" Value="Left"/>
-      <Setter Property="Margin" Value="0,1"/><Setter Property="MinHeight" Value="30"/>
-    </Style>
-    <Style Selector="xy|XYToggleButton.inspectorNavigationItem:checked">
-      <Setter Property="FontWeight" Value="Bold"/>
-    </Style>
   </UserControl.Styles>
-  <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="108,*" ColumnSpacing="8">
-    <Grid Grid.ColumnSpan="2" ColumnDefinitions="*,Auto" ColumnSpacing="8" IsVisible="{Binding HasInspectorSelection}" x:Name="EntityHeader">
+  <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="40,8,*" ColumnSpacing="0">
+    <Grid Grid.ColumnSpan="3" ColumnDefinitions="*,Auto" ColumnSpacing="8" IsVisible="{Binding HasInspectorSelection}" x:Name="EntityHeader">
       <StackPanel Spacing="1">
       <xy:XYHeading x:Name="EntityHeaderTitle" Text="{Binding InspectorSelectionTitle}" Variant="PanelTitle"/>
       <xy:XYCaption x:Name="EntityHeaderSubtitle" Text="{Binding InspectorSelectionSubtitle}"/>
@@ -21,19 +14,10 @@
       <xy:XYToggleButton Grid.Column="1" Content="编辑几何" IsVisible="{Binding IsMapGeometrySelected}"
                          IsChecked="{Binding IsGeometryEditingActive}" Command="{Binding ToggleGeometryEditingCommand}"/>
     </Grid>
-    <xy:XYTextField Grid.Row="1" Grid.ColumnSpan="2" x:Name="SearchBox" PlaceholderText="搜索全部属性…"
+    <xy:XYTextField Grid.Row="1" Grid.ColumnSpan="3" x:Name="SearchBox" PlaceholderText="搜索全部属性…"
                     Text="{Binding InspectorSearchText, Mode=TwoWay}" Margin="0,8,0,8"/>
-    <Border Grid.Row="2" Padding="0,4,0,0">
-      <ItemsControl ItemsSource="{Binding InspectorCategoryItems}" x:Name="InspectorCategories">
-        <ItemsControl.ItemTemplate><DataTemplate>
-          <xy:XYToggleButton Content="{Binding Category}" IsChecked="{Binding IsSelected, Mode=OneWay}"
-                             Classes="inspectorNavigationItem"
-                             Command="{Binding $parent[UserControl].DataContext.SelectInspectorCategoryCommand}"
-                             CommandParameter="{Binding Category}"/>
-        </DataTemplate></ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </Border>
-    <ScrollViewer Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Auto">
+    <xy:XYNavigationRail Grid.Row="2" x:Name="InspectorNavigationRail" Width="40" IsVisible="{Binding HasInspectorSelection}"/>
+    <ScrollViewer Grid.Row="2" Grid.Column="2" x:Name="InspectorContentScrollHost" VerticalScrollBarVisibility="Auto">
       <StackPanel Spacing="4">
         <xy:XYSectionTitle Text="{Binding InspectorCategory}" IsVisible="{Binding !IsInspectorSearchMode}"/>
         <ItemsControl ItemsSource="{Binding InspectorProperties}" IsVisible="{Binding IsInspectorPropertyListVisible}" x:Name="InspectorPropertyRows">
@@ -53,7 +37,7 @@
         <xy:XYEmptyText Text="未找到匹配属性。" IsVisible="{Binding IsInspectorNoResults}"/>
       </StackPanel>
     </ScrollViewer>
-    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" IsVisible="{Binding IsInspectorEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <StackPanel Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{Binding IsInspectorEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center">
       <xy:XYEmptyText Text="未选择对象"/>
       <xy:XYCaption Text="选择地图、点、道路或区域以查看属性。"/>
     </StackPanel>

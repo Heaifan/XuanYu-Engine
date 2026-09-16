@@ -21,8 +21,7 @@ public sealed class UiR1VisualContractTests
             vm.MapSession.SelectMap();
             var tabs = new EditorRightTabs { DataContext = vm };
             host.Show(tabs, 640, 700); tabs.UpdateLayout();
-            return (Count: UiRuntimeTestHost.Descendants<XYToggleButton>(tabs)
-                    .Count(x => x.Classes.Contains("inspectorNavigationItem")), Text: vm.InspectorCategory);
+            return (Count: UiRuntimeTestHost.Descendants<XYNavigationItem>(tabs).Count(), Text: vm.InspectorCategory);
         });
 
         Assert.True(state.Count > 0); Assert.Equal("最近", state.Text);

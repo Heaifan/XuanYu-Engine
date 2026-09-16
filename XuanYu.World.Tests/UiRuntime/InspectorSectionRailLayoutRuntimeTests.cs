@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia;
+using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
 using XYUI.Avalonia.Controls;
 
@@ -31,7 +32,7 @@ public sealed class InspectorSectionRailLayoutRuntimeTests
             var subtitle = UiRuntimeTestHost.Descendants<XYCaption>(tabs).Single(x => x.Text == "Cube · Entity");
             return (Rows: rows.ItemCount, Presenters: UiRuntimeTestHost.Descendants<InspectorReadOnlyValuePresenter>(panel).Count(),
                 Selectable: UiRuntimeTestHost.Descendants<XYSelectableText>(panel).Count(),
-                Navigation: UiRuntimeTestHost.Descendants<XYToggleButton>(panel).Count(x => x.Classes.Contains("inspectorNavigationItem")),
+                Navigation: UiRuntimeTestHost.Descendants<XYNavigationItem>(panel).Count(),
                 Title: title.Text, Subtitle: subtitle.Text);
         });
 
@@ -40,5 +41,32 @@ public sealed class InspectorSectionRailLayoutRuntimeTests
         Assert.Equal(0, result.Selectable);
         Assert.True(result.Navigation >= 3);
         Assert.Equal("立方体", result.Title); Assert.Equal("Cube · Entity", result.Subtitle);
+    }
+
+    [Fact]
+    public void Entity_inspector_uses_compact_icon_rail_with_centered_icons()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(() =>
+        {
+            var vm = new UiVm(null, seedInitialScene: false); vm.AddCubeEntity();
+            var tabs = new EditorRightTabs { DataContext = vm }; host.Show(tabs, 360, 420); tabs.UpdateLayout();
+            var panel = tabs.FindControl<InspectorPanel>("InspectorWorkspace")!;
+            var rail = panel.FindControl<XYNavigationRail>("InspectorNavigationRail")!;
+            Assert.Equal(40, rail.Bounds.Width, 1);
+            Assert.All(rail.Items, item =>
+            {
+                Assert.Equal(36, item.Bounds.Width, 1); Assert.Equal(36, item.Bounds.Height, 1);
+                var icon = item.GetVisualDescendants().OfType<XYIcon>().Single();
+                var iconCenter = icon.TranslatePoint(new Point(icon.Bounds.Width / 2, icon.Bounds.Height / 2), item)!.Value;
+                Assert.InRange(Math.Abs(iconCenter.X - item.Bounds.Size.Width / 2), 0, 1);
+                Assert.InRange(Math.Abs(iconCenter.Y - item.Bounds.Size.Height / 2), 0, 1);
+                Assert.Empty(item.GetVisualDescendants().OfType<XyuiActionEdge>());
+                Assert.NotNull(ToolTip.GetTip(item));
+            });
+            Assert.Contains("最近", rail.Items.Select(item => ToolTip.GetTip(item)?.ToString()));
+            Assert.DoesNotContain(rail.GetVisualDescendants().OfType<TextBlock>(), x => x.Classes.Contains("xyui-navigation-label"));
+            Assert.Single(rail.Items, item => item.IsSelected);
+        });
     }
 }

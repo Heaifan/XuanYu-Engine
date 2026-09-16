@@ -2,6 +2,9 @@ using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using System.ComponentModel;
+using XYUI.Avalonia.Controls;
+using XYUI.Avalonia.Vector;
 
 namespace XuanYu.Editor.UI;
 
@@ -9,6 +12,7 @@ namespace XuanYu.Editor.UI;
 // 无模式切换（可编辑表单的 <360 上下布局仅适用于真实输入控件，见 EditableFormLayoutModel）。
 public partial class InspectorPanel : UserControl
 {
+    XYNavigationState? _inspectorRailState;
     public static FuncValueConverter<string?, bool> IsTechnicalField { get; } =
         new(label => label is "数据集 ID" or "实体编号" or "路径");
 
@@ -18,8 +22,45 @@ public partial class InspectorPanel : UserControl
     public InspectorPanel()
     {
         InitializeComponent();
+        DataContextChanged += (_, _) => AttachInspectorViewModel();
         AddHandler(KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
     }
+
+    void AttachInspectorViewModel()
+    {
+        if (DataContext is UiVm vm) { vm.PropertyChanged += OnInspectorViewModelChanged; RefreshInspectorRail(vm); }
+    }
+
+    void OnInspectorViewModelChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is UiVm vm && e.PropertyName is nameof(UiVm.InspectorCategories) or nameof(UiVm.InspectorCategory))
+            RefreshInspectorRail(vm);
+    }
+
+    void RefreshInspectorRail(UiVm vm)
+    {
+        var entries = vm.InspectorCategories.Select(category => new XYNavigationEntry(category, category, IconFor(category))).ToArray();
+        if (_inspectorRailState is null || !_inspectorRailState.Entries.Select(x => x.Id).SequenceEqual(entries.Select(x => x.Id)))
+        {
+            _inspectorRailState = new XYNavigationState(entries, vm.InspectorCategory);
+            _inspectorRailState.NavigationRequested += OnRailNavigationRequested;
+            InspectorNavigationRail.NavigationState = _inspectorRailState;
+        }
+        else _inspectorRailState.Select(vm.InspectorCategory);
+    }
+
+    void OnRailNavigationRequested(object? sender, XYNavigationRequest request)
+    {
+        if (DataContext is UiVm vm) vm.SelectInspectorCategoryCommand.Execute(request.Destination.Id);
+    }
+
+    static XyuiVectorIcon IconFor(string category) => category switch
+    {
+        "最近" => XyuiVectorIcon.Clock, "基础" => XyuiVectorIcon.Section,
+        "几何" => XyuiVectorIcon.Move, "状态" => XyuiVectorIcon.StatusDot,
+        "关联" => XyuiVectorIcon.Tag, "其他" => XyuiVectorIcon.MoreHorizontal,
+        _ => XyuiVectorIcon.Section
+    };
 
     void OnKeyDown(object? sender, KeyEventArgs e)
     {
