@@ -14,9 +14,7 @@
       <xy:XYToggleButton Content="框选" IsEnabled="False"
                          IsChecked="{Binding IsBoxSelectTool, Mode=OneWay}"/>
       <xy:XYSplitButton x:Name="DrawSplitButton" Content="{Binding DrawButtonLabel}" />
-      <Popup x:Name="DrawMenuPopup" Placement="Bottom" IsLightDismissEnabled="True">
-        <xy:XYMenu x:Name="DrawMenu" />
-      </Popup>
+      <xy:XYMenuHost x:Name="DrawMenuHost" />
 
       <StackPanel IsVisible="{Binding IsDrawingTransactionActive}" Orientation="Horizontal" Spacing="4">
         <xy:XYSeparator Variant="Section" />

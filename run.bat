@@ -1,7 +1,7 @@
 @echo off
 setlocal
-set VERSION=0.2.28.77-fix5
-title XuanYu Engine Editor v0.2.28.77-fix5
+set VERSION=0.2.28.77-fix6
+title XuanYu Engine Editor v0.2.28.77-fix6
 
 cd /d "%~dp0"
 if errorlevel 1 (

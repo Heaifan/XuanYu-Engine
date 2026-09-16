@@ -11,6 +11,7 @@ public partial class ContextToolBar : UserControl
         InitializeComponent();
         DrawSplitButton.MainCommand = new RelayCommand(_ => RunMainDrawAction());
         DrawSplitButton.MenuCommand = new RelayCommand(_ => OpenDrawingMenu());
+        DrawMenuHost.Target = DrawSplitButton;
         BuildDrawingMenu();
     }
     void BuildDrawingMenu()
@@ -21,9 +22,9 @@ public partial class ContextToolBar : UserControl
             new XYMenuItemModel("line", "线", Children: [new("road", "道路")]),
             new XYMenuItemModel("surface", "面", Children: [new("region", "区域")])
         };
-        DrawMenu = XYMenu.FromModels(models);
-        BindLeafCommands(DrawMenu);
-        DrawMenuPopup.Child = DrawMenu;
+        var menu = XYMenu.FromModels(models);
+        BindLeafCommands(menu);
+        DrawMenuHost.Menu = menu;
     }
     void BindLeafCommands(XYMenu menu)
     {
@@ -39,7 +40,7 @@ public partial class ContextToolBar : UserControl
         if (tool is not null && DataContext is UiVm vm) await vm.BeginContextDrawingAsync(tool);
     }
     void RunMainDrawAction() { if ((DataContext as UiVm)?.LastDrawTool is null) OpenDrawingMenu(); else _ = (DataContext as UiVm)?.BeginLastDrawToolAsync(); }
-    void OpenDrawingMenu() { DrawMenuPopup.PlacementTarget = DrawSplitButton; DrawMenuPopup.IsOpen = true; DrawMenu.Open(); }
+    void OpenDrawingMenu() => DrawMenuHost.Toggle();
     void UndoDrawingVertex_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.UndoRoadDrawingVertex(); else vm.UndoRegionDrawingVertex(); } }
     void CompleteDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.CompleteRoadDrawing(); else vm.CompleteRegionDrawing(); } }
     void CancelDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.CancelRoadDrawing(); else vm.CancelRegionDrawing(); } }

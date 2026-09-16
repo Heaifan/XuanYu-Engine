@@ -1,7 +1,5 @@
 using System.IO;
-using System.Reflection;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
@@ -26,6 +24,11 @@ public sealed class ContextToolbarR2Rework2RuntimeTests : IClassFixture<UiHeadle
         Assert.Contains("框选", axaml);
         Assert.Contains("XYMenu.FromModels", code);
         Assert.Contains("XYMenuItemModel", code);
+        Assert.Contains("XYMenuHost", axaml);
+        Assert.DoesNotContain("<Popup", axaml);
+        Assert.DoesNotContain("DrawMenuPopup", axaml);
+        Assert.DoesNotContain("PlacementTarget", code);
+        Assert.DoesNotContain("IsOpen", code);
         Assert.DoesNotContain("new XYSubMenu", code);
         Assert.DoesNotContain("Grid.Children.Add", code);
     }
@@ -59,8 +62,7 @@ public sealed class ContextToolbarR2Rework2RuntimeTests : IClassFixture<UiHeadle
         host.Run(() =>
         {
             var toolbar = new ContextToolBar(); host.Show(toolbar, 640, 120); toolbar.UpdateLayout();
-            var menu = (XYMenu)typeof(ContextToolBar).GetField("DrawMenu",
-                BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(toolbar)!;
+            var menu = toolbar.FindControl<XYMenuHost>("DrawMenuHost")!.Menu!;
             Assert.Equal(3, menu.Items.OfType<XYMenuItem>().Count());
             Assert.All(menu.Items.OfType<XYMenuItem>(), item => Assert.NotNull(item.SubMenu));
             Assert.All(menu.Items.OfType<XYMenuItem>(), item =>
@@ -71,7 +73,7 @@ public sealed class ContextToolbarR2Rework2RuntimeTests : IClassFixture<UiHeadle
     }
 
     [Fact]
-    public void Opened_engine_menu_mounts_recursive_submenus_in_popup_host()
+    public void Opened_engine_menu_mounts_recursive_submenus_in_xyui_host()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         host.Run(() =>
@@ -79,9 +81,14 @@ public sealed class ContextToolbarR2Rework2RuntimeTests : IClassFixture<UiHeadle
             var toolbar = new ContextToolBar(); host.Show(toolbar, 640, 120); toolbar.UpdateLayout();
             var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
             split.MenuCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
-            var popup = toolbar.FindControl<Popup>("DrawMenuPopup")!;
-            var root = Assert.IsType<XYMenu>(popup.Child);
+            var menuHost = toolbar.FindControl<XYMenuHost>("DrawMenuHost")!;
+            var root = Assert.IsType<XYMenu>(menuHost.Menu);
             Assert.Equal(3, root.GetVisualDescendants().OfType<XYSubMenu>().Count());
+            Assert.True(menuHost.IsOpen);
+            var leaf = root.Items.OfType<XYMenuItem>().First().SubMenu!.ChildMenu
+                .Items.OfType<XYMenuItem>().Single();
+            leaf.Activate(); Dispatcher.UIThread.RunJobs();
+            Assert.False(menuHost.IsOpen);
         });
     }
 }

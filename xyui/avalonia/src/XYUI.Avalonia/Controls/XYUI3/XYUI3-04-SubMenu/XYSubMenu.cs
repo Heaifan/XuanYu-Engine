@@ -40,7 +40,8 @@ public sealed partial class XYSubMenu : Border
     internal void RefreshCascadeLayout() => _grid.ColumnDefinitions[3].Width = _children.Any(x => x.EffectiveVisible) ? new GridLength(300) : new GridLength(0);
     void AttachChild() { foreach (var item in ChildMenu.Items.OfType<XYMenuItem>()) { item.Invoked -= OnChildInvoked; item.Invoked += OnChildInvoked; if (item.SubMenu is { } submenu) submenu.ParentSubMenu = this; } Build(); }
     void DetachChild() { foreach (var item in ChildMenu.Items.OfType<XYMenuItem>()) item.Invoked -= OnChildInvoked; }
-    void OnChildInvoked(object? sender, EventArgs e) => Close();
+    void OnChildInvoked(object? sender, EventArgs e) => RootMenu().Close();
+    XYMenu RootMenu() => _parentSubMenu is null ? ParentMenu : _parentSubMenu.RootMenu();
     void OnParentClosed(object? sender, EventArgs e) => Close();
     void OnTriggerPointerEntered(object? sender, global::Avalonia.Input.PointerEventArgs e) => Open();
 }
