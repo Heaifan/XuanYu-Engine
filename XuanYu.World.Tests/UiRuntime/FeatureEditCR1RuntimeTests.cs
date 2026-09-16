@@ -20,7 +20,7 @@ public sealed class FeatureEditCR1RuntimeTests
     public FeatureEditCR1RuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Non_feature_edit_mode_hides_feature_tools()
+    public void Manage_mode_hides_context_tools()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var isVisible = host.Run(() =>
@@ -37,23 +37,18 @@ public sealed class FeatureEditCR1RuntimeTests
     }
 
     [Fact]
-    public void Feature_edit_mode_shows_tools_and_breadcrumb()
+    public void Map_edit_mode_shows_context_tools_and_root_menu()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
-            vm.ToggleFeatureEditingCommand.Execute(null);
+            vm.ToggleEditorModeCommand.Execute(null);
             var toolbar = new ContextToolBar { DataContext = vm };
             host.Show(toolbar, 800, 100); toolbar.UpdateLayout();
             
             var root = toolbar.FindControl<Border>("ContextRoot");
             Assert.True(root?.IsVisible ?? false);
-            
-            var logicals = toolbar.GetLogicalDescendants().ToList();
-            var breadcrumbs = logicals.OfType<XYBreadcrumbItem>().Select(x => x.Label).ToArray();
-            Assert.Contains("地图编辑", breadcrumbs);
-            Assert.Contains("要素编辑", breadcrumbs);
             
             var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton");
             Assert.NotNull(split);
@@ -63,6 +58,28 @@ public sealed class FeatureEditCR1RuntimeTests
             var labels = (popup!.Child as XYMenu)!.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
             Assert.Equal(["点", "线", "面"], labels);
             Assert.All((popup.Child as XYMenu)!.Items.OfType<XYMenuItem>(), item => Assert.True(item.HasSubMenu));
+        });
+    }
+
+    [Fact]
+    public void Root_line_then_road_leaf_starts_real_drawing_transaction()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(async () =>
+        {
+            var vm = new UiVm(null, seedInitialScene: false);
+            vm.ToggleEditorModeCommand.Execute(null);
+            var toolbar = new ContextToolBar { DataContext = vm };
+            host.Show(toolbar, 800, 100); toolbar.UpdateLayout();
+            var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
+            split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
+            var root = (toolbar.FindControl<Popup>("DrawMenuPopup")!.Child as XYMenu)!;
+            root.Items.OfType<XYMenuItem>().Single(x => x.Label == "线").Activate();
+            var submenu = Assert.IsType<XYSubMenu>(toolbar.FindControl<Popup>("DrawMenuPopup")!.Child);
+            submenu.ChildMenu.Items.OfType<XYMenuItem>().Single().Activate();
+            await Task.Delay(1);
+            Assert.True(vm.IsDrawingTransactionActive);
+            Assert.True(vm.IsRoadDrawingTool);
         });
     }
 }

@@ -36,7 +36,7 @@ public sealed class AreaCR1ContextToolbarRuntimeTests
         });
 
         Assert.False(state.startup);
-        Assert.False(state.mapEdit);
+        Assert.True(state.mapEdit);
         Assert.True(state.regionEdit);
         Assert.Equal(1, state.scrollHosts);
         Assert.Equal(ScrollBarVisibility.Hidden, state.horizontalBar);

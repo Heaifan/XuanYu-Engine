@@ -1,10 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Interactivity;
+using Avalonia.Threading;
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
 using XuanYu.Editor.Workspace;
+using XYUI.Avalonia.Controls;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -39,10 +40,14 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
         {
             top = new Top { DataContext = vm };
             host.Show(top, 900, 160);
-            var button = UiRuntimeTestHost.Descendants<Button>(top).Single(item =>
-                UiRuntimeTestHost.Descendants<TextBlock>(item).Any(text => text.Text == "开始绘制"));
-            var state = button.IsVisible && button.IsEnabled;
-            button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            var toolbar = UiRuntimeTestHost.Descendants<ContextToolBar>(top).Single();
+            var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
+            split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
+            var menu = (toolbar.FindControl<Popup>("DrawMenuPopup")!.Child as XYMenu)!;
+            menu.Items.OfType<XYMenuItem>().Single(item => item.Label == "面").Activate();
+            var submenu = Assert.IsType<XYSubMenu>(toolbar.FindControl<Popup>("DrawMenuPopup")!.Child);
+            submenu.ChildMenu.Items.OfType<XYMenuItem>().Single().Activate();
+            var state = vm.IsRegionEditMode && vm.CanStartRegionDrawing;
             return state;
         });
 
@@ -51,16 +56,13 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
         var result = host.Run(() =>
         {
             top.UpdateLayout();
-            var button = UiRuntimeTestHost.Descendants<Button>(top).Single(item =>
-                UiRuntimeTestHost.Descendants<TextBlock>(item).Any(text => text.Text == "开始绘制"));
             var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
             var hit = FindHit(vm, viewport);
             var handled = vm.RegionDrawingPointerPressed(hit.X, hit.Y, viewport);
-            return (vm.IsRegionDrawingTool, button.IsEnabled, handled, vm.RegionDrawingDraftVertexCount);
+            return (vm.IsRegionDrawingTool, handled, vm.RegionDrawingDraftVertexCount);
         });
 
-        Assert.True(result.IsRegionDrawingTool, $"active={vm.ActiveTool}, enabled={result.IsEnabled}, handled={result.handled}");
-        Assert.True(result.IsEnabled);
+        Assert.True(result.IsRegionDrawingTool, $"active={vm.ActiveTool}, handled={result.handled}");
         Assert.True(result.handled);
         Assert.Equal(1, result.RegionDrawingDraftVertexCount);
     }

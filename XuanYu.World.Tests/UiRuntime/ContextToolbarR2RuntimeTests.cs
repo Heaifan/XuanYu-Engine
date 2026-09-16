@@ -24,7 +24,7 @@ public sealed class ContextToolbarR2RuntimeTests
     public async Task Selecting_road_directly_enters_drawing_without_manual_mode_setup()
     {
         var vm = new UiVm(null, () => true, seedInitialScene: false);
-        vm.ToggleFeatureEditingCommand.Execute(null);
+        vm.ToggleEditorModeCommand.Execute(null);
         Assert.True(await vm.BeginContextDrawingAsync("道路"));
         Assert.True(vm.IsRoadDrawingTool);
         Assert.Equal("道路", vm.LastDrawTool);
@@ -35,7 +35,7 @@ public sealed class ContextToolbarR2RuntimeTests
     public async Task Active_transaction_rejects_second_tool_and_cancel_preserves_memory()
     {
         var vm = new UiVm(null, () => true, seedInitialScene: false);
-        vm.ToggleFeatureEditingCommand.Execute(null);
+        vm.ToggleEditorModeCommand.Execute(null);
         Assert.True(await vm.BeginContextDrawingAsync("道路"));
         Assert.False(await vm.BeginContextDrawingAsync("区域面"));
         Assert.True(vm.CancelRoadDrawing());

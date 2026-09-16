@@ -16,7 +16,7 @@ public sealed class AreaCR1ContextToolbarContractTests
         var inspector = Read("Right/InspectorPanel.axaml");
 
         Assert.Contains("<local:ContextToolBar", top);
-        Assert.Contains("BeginLastDrawToolCommand", toolbar);
+        Assert.Contains("DrawButtonLabel", toolbar);
         Assert.Contains("BeginContextDrawingAsync", code);
         Assert.Contains("UndoDrawingVertex_Click", code);
         Assert.Contains("CompleteDrawing_Click", code);
@@ -34,7 +34,8 @@ public sealed class AreaCR1ContextToolbarContractTests
         var code = Read("Top/ContextToolBar.axaml.cs");
         Assert.Contains("XYSplitButton", toolbar);
         Assert.Contains("DrawButtonLabel", toolbar);
-        Assert.Contains("DrawSubMenuPopup", code);
+        Assert.Contains("XYSubMenu", code);
+        Assert.DoesNotContain("DrawSubMenuPopup", code);
         Assert.Contains("道路", code);
         Assert.Contains("区域", code);
         Assert.Contains("Content=\"完成\"", toolbar);
@@ -58,10 +59,12 @@ public sealed class AreaCR1ContextToolbarContractTests
     }
 
     [Fact]
-    public void Context_toolbar_is_present_only_in_region_edit_context()
+    public void Context_toolbar_is_present_in_editor_mode_without_duplicate_breadcrumb()
     {
         var toolbar = Read("Top/ContextToolBar.axaml");
-        Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsFeatureEditingActive}\"", toolbar);
+        Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsEditMode}\"", toolbar);
+        Assert.DoesNotContain("地图编辑", toolbar);
+        Assert.DoesNotContain("要素编辑", toolbar);
     }
 
     [Fact]

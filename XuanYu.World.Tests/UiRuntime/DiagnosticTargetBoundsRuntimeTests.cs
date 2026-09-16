@@ -23,7 +23,7 @@ public sealed class DiagnosticTargetBoundsRuntimeTests : IDisposable
         _fixture.Run(() =>
         {
             var vm = new UiVm(new HeadlessBridgeFactory(), () => true, seedInitialScene: false);
-            vm.ToggleFeatureEditingCommand.Execute(null);
+            vm.ToggleEditorModeCommand.Execute(null);
             var target = new ContextToolBar { DataContext = vm };
             XYDiagnostic.SetDebugId(target, FeatureDiagnosticIds.ContextToolbar);
             DiagnosticRegistry.Register(target);
@@ -44,7 +44,7 @@ public sealed class DiagnosticTargetBoundsRuntimeTests : IDisposable
         _fixture.Run(() =>
         {
             var vm = new UiVm(new HeadlessBridgeFactory(), () => true, seedInitialScene: false);
-            vm.ToggleFeatureEditingCommand.Execute(null);
+            vm.ToggleEditorModeCommand.Execute(null);
             var root = new UiRoot { DataContext = vm };
             var window = new Window { Width = 1200, Height = 800, Content = root };
             window.Show(); window.UpdateLayout(); Dispatcher.UIThread.RunJobs();

@@ -4,39 +4,14 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.ContextToolBar"
              x:DataType="local:UiVm">
-  <Border x:Name="ContextRoot" IsVisible="{Binding IsFeatureEditingActive}"
+  <Border x:Name="ContextRoot" IsVisible="{Binding IsEditMode}"
+          MinWidth="220"
           BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
           CornerRadius="{StaticResource Radius.Standard}" Padding="8,4">
     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-      <xy:XYBreadcrumb VerticalAlignment="Center">
-        <xy:XYBreadcrumbItem Label="地图编辑"
-                             Invoked="MapEditorBreadcrumb_Invoked"/>
-        <xy:XYBreadcrumbItem Label="要素编辑" IsCurrent="True"/>
-      </xy:XYBreadcrumb>
-      <xy:XYSeparator Variant="Section" />
-
-      <xy:XYToggleButton IsChecked="{Binding IsSelectTool, Mode=OneWay}"
-                         Command="{Binding SelectToolCommand}"
-                         CommandParameter="选择"
-                         ToolTip.Tip="选择">
-        <TextBlock Text="选择"/>
-      </xy:XYToggleButton>
-      <xy:XYToggleButton IsChecked="{Binding IsBoxSelectTool, Mode=OneWay}"
-                         Command="{Binding SelectToolCommand}"
-                         CommandParameter="框选"
-                         ToolTip.Tip="框选">
-        <TextBlock Text="框选"/>
-      </xy:XYToggleButton>
-
-      <xy:XYSeparator Variant="Section" />
-
-      <xy:XYSplitButton x:Name="DrawSplitButton" Content="{Binding DrawButtonLabel}"
-                        MainCommand="{Binding BeginLastDrawToolCommand}" />
+      <xy:XYSplitButton x:Name="DrawSplitButton" Content="{Binding DrawButtonLabel}" />
       <Popup x:Name="DrawMenuPopup" Placement="Bottom" IsLightDismissEnabled="True">
         <xy:XYMenu x:Name="DrawMenu" />
-      </Popup>
-      <Popup x:Name="DrawSubMenuPopup" Placement="Right" IsLightDismissEnabled="True">
-        <xy:XYMenu x:Name="DrawSubMenu" />
       </Popup>
 
       <StackPanel IsVisible="{Binding IsDrawingTransactionActive}" Orientation="Horizontal" Spacing="4">

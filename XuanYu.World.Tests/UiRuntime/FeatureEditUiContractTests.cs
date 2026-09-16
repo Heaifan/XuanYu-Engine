@@ -9,13 +9,14 @@ public sealed class FeatureEditUiContractTests
         System.AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
 
     [Fact]
-    public void Feature_edit_mode_shows_tools_and_breadcrumb()
+    public void Context_toolbar_shows_draw_categories_without_breadcrumb_duplication()
     {
         var toolbar = Read("Top/ContextToolBar.axaml");
         var code = Read("Top/ContextToolBar.axaml.cs");
         
-        Assert.Contains("地图编辑", toolbar);
-        Assert.Contains("要素编辑", toolbar);
+        Assert.Contains("IsVisible=\"{Binding IsEditMode}\"", toolbar);
+        Assert.DoesNotContain("地图编辑", toolbar);
+        Assert.DoesNotContain("要素编辑", toolbar);
         Assert.Contains("XYSplitButton", toolbar);
         Assert.Contains("Category(\"点\"", code);
         Assert.Contains("Category(\"线\"", code);
