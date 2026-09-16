@@ -18,6 +18,7 @@ public sealed partial class UiVm
 
     public void SelectRegionAuthoringMode(string? displayName)
     {
+        if (IsDrawingTransactionActive) return;
         if (!IsRegionEditMode || !TryParseRegionAuthoringMode(displayName, out var mode)) return;
         ApplyRegionAuthoringMode(mode);
     }

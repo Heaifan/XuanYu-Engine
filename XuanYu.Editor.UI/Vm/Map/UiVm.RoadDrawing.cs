@@ -34,7 +34,7 @@ public sealed partial class UiVm
     public bool CancelRoadDrawingFromEscape()
     {
         if (!_roadDrawing.IsActive && !IsRoadDrawingTool) return false;
-        _roadDrawing.Cancel(); RaiseRoadDrawingBindings(); if (IsRoadDrawingTool) SelectTool("选择");
+        _roadDrawing.Cancel(); RaiseRoadDrawingBindings(); EndDrawingTransaction(); if (IsRoadDrawingTool) SelectTool("选择");
         FooterMessage = "已取消道路绘制"; FooterState = "状态：就绪"; LogRoadDrawingCanceled(); PublishSceneRenderSnapshot(); return true;
     }
 }

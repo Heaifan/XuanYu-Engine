@@ -81,7 +81,7 @@ public sealed partial class UiVm
     {
         if (!_regionDrawing.IsActive && !IsRegionDrawingTool) return false;
         _regionDrawing.Cancel();
-        RaiseRegionDrawingBindings();
+        RaiseRegionDrawingBindings(); EndDrawingTransaction();
         if (IsRegionDrawingTool) SelectTool("选择");
         FooterMessage = "已取消区域绘制";
         FooterState = "状态：就绪";

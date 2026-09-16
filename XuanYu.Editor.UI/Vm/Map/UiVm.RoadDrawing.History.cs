@@ -14,5 +14,6 @@ public sealed partial class UiVm
     {
         OnPropertyChanged(nameof(IsRoadDrawingDraftActive)); OnPropertyChanged(nameof(RoadDrawingDraftPointCount)); OnPropertyChanged(nameof(RoadDrawingDraftStatus));
         OnPropertyChanged(nameof(CanUndoRoadDrawingVertex)); OnPropertyChanged(nameof(CanRedoRoadDrawingVertex)); OnPropertyChanged(nameof(CanCompleteRoadDrawing)); OnPropertyChanged(nameof(CanCancelRoadDrawing)); OnPropertyChanged(nameof(RoadContentCount));
+        RaiseContextToolbarDrawingBindings();
     }
 }

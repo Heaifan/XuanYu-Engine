@@ -12,20 +12,37 @@ public sealed class AreaCR1ContextToolbarContractTests
     {
         var top = Read("Top/Top.axaml");
         var toolbar = Read("Top/ContextToolBar.axaml");
+        var code = Read("Top/ContextToolBar.axaml.cs");
         var inspector = Read("Right/InspectorPanel.axaml");
 
         Assert.Contains("<local:ContextToolBar", top);
-        Assert.Contains("SelectRegionAuthoringModeCommand", toolbar);
-        Assert.Contains("BeginRegionDrawing_Click", toolbar);
-        Assert.Contains("UndoRegionDrawingVertex", toolbar);
-        Assert.Contains("CompleteRegionDrawing", toolbar);
-        Assert.Contains("CancelRegionDrawing", toolbar);
-        Assert.Contains("BeginRoadDrawing_Click", Read("Top/ContextToolBar.axaml.cs"));
-        Assert.Contains("BeginMarkerPlacement_Click", Read("Top/ContextToolBar.axaml.cs"));
+        Assert.Contains("BeginLastDrawToolCommand", toolbar);
+        Assert.Contains("BeginContextDrawingAsync", code);
+        Assert.Contains("UndoDrawingVertex_Click", code);
+        Assert.Contains("CompleteDrawing_Click", code);
+        Assert.Contains("CancelDrawing_Click", code);
         Assert.DoesNotContain("RegionalAuthoringPanel", inspector);
         Assert.DoesNotContain("RegionPanel", inspector);
         Assert.DoesNotContain("RoadPanel", inspector);
         Assert.DoesNotContain("MarkerPanel", inspector);
+    }
+
+    [Fact]
+    public void Context_toolbar_r2_uses_split_draw_entry_and_unified_transaction_labels()
+    {
+        var toolbar = Read("Top/ContextToolBar.axaml");
+        var code = Read("Top/ContextToolBar.axaml.cs");
+        Assert.Contains("XYSplitButton", toolbar);
+        Assert.Contains("DrawButtonLabel", toolbar);
+        Assert.Contains("DrawSubMenuPopup", code);
+        Assert.Contains("道路", code);
+        Assert.Contains("区域", code);
+        Assert.Contains("Content=\"完成\"", toolbar);
+        Assert.Contains("CanCompleteDrawing", toolbar);
+        Assert.DoesNotContain("Content=\"完成道路\"", toolbar);
+        Assert.DoesNotContain("Content=\"完成闭合\"", toolbar);
+        Assert.DoesNotContain("Content=\"绘制道路\"", toolbar);
+        Assert.DoesNotContain("Content=\"开始绘制\"", toolbar);
     }
 
     [Fact]

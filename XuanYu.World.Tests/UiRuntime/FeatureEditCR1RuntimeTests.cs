@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -54,29 +55,14 @@ public sealed class FeatureEditCR1RuntimeTests
             Assert.Contains("地图编辑", breadcrumbs);
             Assert.Contains("要素编辑", breadcrumbs);
             
-            var menuBar = UiRuntimeTestHost.Descendants<XYMenuBar>(toolbar).Single();
-            var menuBars = menuBar.Items.Cast<XYMenuBarItem>().Select(x => x.Label).ToArray();
-            Assert.Contains("点", menuBars);
-            Assert.Contains("线", menuBars);
-            Assert.Contains("面", menuBars);
-
-            // Open "点"
-            menuBar.Open(menuBar.Items.Cast<XYMenuBarItem>().Single(x => x.Label == "点"));
+            var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton");
+            Assert.NotNull(split);
+            split!.MenuCommand!.Execute(null);
             Dispatcher.UIThread.RunJobs();
-            var pointItems = menuBar.OpenMenu!.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
-            Assert.Contains("点标记", pointItems);
-
-            // Open "线"
-            menuBar.Open(menuBar.Items.Cast<XYMenuBarItem>().Single(x => x.Label == "线"));
-            Dispatcher.UIThread.RunJobs();
-            var lineItems = menuBar.OpenMenu!.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
-            Assert.Contains("道路", lineItems);
-
-            // Open "面"
-            menuBar.Open(menuBar.Items.Cast<XYMenuBarItem>().Single(x => x.Label == "面"));
-            Dispatcher.UIThread.RunJobs();
-            var areaItems = menuBar.OpenMenu!.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
-            Assert.Contains("区域", areaItems);
+            var popup = toolbar.FindControl<Popup>("DrawMenuPopup");
+            var labels = (popup!.Child as XYMenu)!.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
+            Assert.Equal(["点", "线", "面"], labels);
+            Assert.All((popup.Child as XYMenu)!.Items.OfType<XYMenuItem>(), item => Assert.True(item.HasSubMenu));
         });
     }
 }

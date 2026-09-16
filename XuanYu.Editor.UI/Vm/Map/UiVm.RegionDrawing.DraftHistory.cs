@@ -38,5 +38,6 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(CanCompleteRegionDrawing));
         OnPropertyChanged(nameof(CanCancelRegionDrawing));
         OnPropertyChanged(nameof(RegionContentCount));
+        RaiseContextToolbarDrawingBindings();
     }
 }

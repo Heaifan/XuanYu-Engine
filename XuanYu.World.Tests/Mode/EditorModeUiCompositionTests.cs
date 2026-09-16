@@ -63,13 +63,15 @@ public sealed class EditorModeUiCompositionTests
         var inspector = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
         var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
         var toolbar = Read("XuanYu.Editor.UI", "Top", "ContextToolBar.axaml");
+        var toolbarCode = Read("XuanYu.Editor.UI", "Top", "ContextToolBar.axaml.cs");
         Assert.DoesNotContain("RegionalAuthoringPanel", rightShell);
         Assert.DoesNotContain("RegionalAuthoringPanel", inspector);
         Assert.Equal(1, Count(inspector, "<ScrollViewer"));
         Assert.Contains("<local:ContextToolBar", top);
-        Assert.Contains("区域面", toolbar);
-        Assert.Contains("CanUndoRegionDrawingVertex", toolbar);
-        Assert.Contains("CanCompleteRegionDrawing", toolbar);
+        Assert.Contains("DrawButtonLabel", toolbar);
+        Assert.Contains("区域面", toolbarCode);
+        Assert.Contains("CanUndoDrawingVertex", toolbar);
+        Assert.Contains("CanCompleteDrawing", toolbar);
         Assert.DoesNotContain("Header=\"地图编辑器\"", right);
     }
 

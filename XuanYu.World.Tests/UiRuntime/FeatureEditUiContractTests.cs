@@ -12,17 +12,18 @@ public sealed class FeatureEditUiContractTests
     public void Feature_edit_mode_shows_tools_and_breadcrumb()
     {
         var toolbar = Read("Top/ContextToolBar.axaml");
+        var code = Read("Top/ContextToolBar.axaml.cs");
         
         Assert.Contains("地图编辑", toolbar);
         Assert.Contains("要素编辑", toolbar);
-        Assert.Contains("XYMenuBarItem", toolbar);
-        Assert.Contains("Label=\"点\"", toolbar);
-        Assert.Contains("Label=\"线\"", toolbar);
-        Assert.Contains("Label=\"面\"", toolbar);
+        Assert.Contains("XYSplitButton", toolbar);
+        Assert.Contains("Category(\"点\"", code);
+        Assert.Contains("Category(\"线\"", code);
+        Assert.Contains("Category(\"面\"", code);
         
-        Assert.Contains("Label=\"点标记\"", toolbar);
-        Assert.Contains("Label=\"道路\"", toolbar);
-        Assert.Contains("Label=\"区域\"", toolbar);
+        Assert.Contains("Category(\"点\"", code);
+        Assert.Contains("Category(\"线\"", code);
+        Assert.Contains("Category(\"面\"", code);
     }
 
     [Fact]

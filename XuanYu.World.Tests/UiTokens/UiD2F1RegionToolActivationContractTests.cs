@@ -18,10 +18,9 @@ public sealed class UiD2F1RegionToolActivationContractTests
         var inspector = File.ReadAllText(Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
         Assert.DoesNotContain("RegionalAuthoringPanel", inspector);
-        Assert.Contains("IsEnabled=\"{Binding CanRequestRegionDrawing}\"", toolbar);
-        Assert.Contains("Click=\"BeginRegionDrawing_Click\"", toolbar);
-        Assert.Contains("CanUndoRegionDrawingVertex", toolbar);
-        Assert.Contains("CanCompleteRegionDrawing", toolbar);
-        Assert.Contains("CanCancelRegionDrawing", toolbar);
+        Assert.Contains("IsVisible=\"{Binding IsDrawingTransactionActive}\"", toolbar);
+        Assert.Contains("CanUndoDrawingVertex", toolbar);
+        Assert.Contains("CanCompleteDrawing", toolbar);
+        Assert.Contains("CanCancelDrawing", toolbar);
     }
 }
