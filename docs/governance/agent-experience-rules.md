@@ -158,4 +158,39 @@ Static Check / Runtime Gate / Architecture Gate
 
 ## 当前规则
 
-当前尚未由 ChatGPT 基于正式 ERR 创建 EXP。后续只从真实错误证据提炼，不以理论推演填充规则数量。
+## EXP-UI-001 稳定 Inspector 编辑目标
+
+状态：ACTIVE
+适用范围：Editor / Inspector / 属性提交 / Recent MRU
+触发条件：属性编辑可能在提交前经历 Selection 切换，或同一属性存在 Entity 与 Feature 多条提交入口。
+Occurrences：1
+
+规则：
+编辑开始时必须捕获 `InspectorEditTarget = ObjectKind + ObjectId + PropertyKey`。Identity、Commit、Recent 必须消费同一个目标；提交不得重新读取当前 Selection 决定目标。
+
+根因模式：
+把当前 Selection 当作编辑会话身份，导致 A 开始编辑、切换到 B 后提交到 B；Recent 只按类型而不按对象身份隔离；专用入口重新进入统一入口造成递归。
+
+禁止：
+- 用提交瞬间的 `_selectedMapGeometry` 覆盖已捕获目标；
+- 只按 `ObjectKind` 存储 Recent；
+- 让领域 Commit Core 反向调用统一 Dispatcher；
+- 只用单一 Road Happy Path 测试代表全部 Inspector 对象类型。
+
+正确做法：
+- 行编辑器或输入框获得焦点时捕获稳定目标；
+- Commit 按目标 `ObjectId` 调用对应领域操作；
+- Recent 按对象身份隔离；
+- 覆盖 Entity、Road、Region、Marker 以及 A→B Selection 切换回归。
+
+来源 ERR：
+- ERR-20260916-001
+
+任务注入：
+涉及 Inspector、属性提交、Recent 或 Selection 切换时，在 Knowledge Preflight 中加载本规则。
+
+验证 / 自动化：
+`InspectorEntityEditTargetTests`、`InspectorPropertyTargetTests` 与 Inspector 专项回归；当前已通过 16/16。后续可继续评估静态检查或更高层运行时门禁。
+
+Superseded by：
+无

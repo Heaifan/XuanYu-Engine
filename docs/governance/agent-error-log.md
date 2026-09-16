@@ -147,4 +147,34 @@ ERR 进入 `已验证` 前至少必须满足：
 
 ## 当前记录
 
-当前尚未由 ChatGPT 正式录入 ERR。后续只在有真实、可核验证据时新增。
+## ERR-20260916-001
+
+Agent：Codex（前序 Inspector 实现）
+任务：INSPECTOR-2.0-R1 属性提交与 Recent 身份契约
+类型：LOGIC
+严重度：High
+
+错误：
+属性提交路径使用提交瞬间的 `_selectedMapGeometry` 解析目标，Recent 只按 `InspectorObjectKind` 存储；Entity 名称提交还通过统一入口递归回调自身。Selection 在编辑开始后切换时，提交可能修改错误对象，Recent 也会落入当前对象。
+
+根因：
+缺少由编辑行为持有的稳定 `ObjectKind + ObjectId + PropertyKey` 目标；提交、Recent 与当前 Inspector Identity 没有共享同一目标身份。Entity 专用入口没有下沉到领域 Rename Core，而是重新进入统一提交入口。
+
+后果：
+Road A 编辑后切换到 Road B 可观察到 Recent 错误归属；Entity 名称提交存在无限递归风险；原有仅覆盖 Road Happy Path 的测试未能发现跨 Selection 和 Entity 路径缺口。
+
+正确做法：
+在编辑行或 Entity 输入获得焦点时捕获 `InspectorEditTarget`；Commit 按目标 ID 执行；Recent 按 `ObjectKind + ObjectId` 隔离；统一入口只路由，Entity Rename Core 不得反向调用统一入口。
+
+经验规则：
+EXP-UI-001
+EXP-LOGIC-001
+
+发现方式：
+ChatGPT Code Audit / 失败回归 / 自动测试
+
+验证证据：
+Inspector/Entity 专项回归 16/16；受影响 UI Build 0W/0E；ARCH-A、5+100、git diff --check PASS；修复提交 `a7472917866df357f3d3694b183d21672f7fbabc` 已推送并远端复核 0/0。
+
+状态：
+已验证

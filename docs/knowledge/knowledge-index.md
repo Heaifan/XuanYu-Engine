@@ -14,7 +14,7 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 | 空间 / 几何 | Camera、Screen↔World、Geometry、Snap、Topology | K-SPA-001、K-SPA-002、K-GEO-001、K-GEO-002；相关 DEC / EXP |
 | Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan | K-REN-001～K-REN-004、K-NATIVE-001、L-REN-001、L-REN-002；相关 EXP |
 | Input | Pointer、Capture、手势 Owner | K-INP-001、K-INP-002；相关 EXP |
-| UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互 | K-UI-001；相关 `decisions/`；UI 类 ACTIVE EXP |
+| UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标 | K-UI-001；相关 `decisions/`；`EXP-UI-001`；其他 UI 类 ACTIVE EXP |
 | Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
 | Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
 | Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
