@@ -79,7 +79,7 @@ public partial class InspectorPanel : UserControl
     void PropertyEditor_LostFocus(object? sender, RoutedEventArgs e)
     {
         if (sender is XYUI.Avalonia.Controls.XYTextField field && field.DataContext is InspectorPropertyRow row && DataContext is UiVm vm)
-            vm.CommitInspectorProperty(row.Key, field.Text ?? "");
+            vm.CommitInspectorProperty(row.EditTarget, field.Text ?? "");
     }
 
     void PropertyEditor_KeyDown(object? sender, KeyEventArgs e)

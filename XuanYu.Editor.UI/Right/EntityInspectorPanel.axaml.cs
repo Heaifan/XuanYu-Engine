@@ -11,7 +11,11 @@ public partial class EntityInspectorPanel : UserControl
     public EntityInspectorPanel()
     {
         InitializeComponent();
-        NameBox.GotFocus += (_, _) => _nameEditStart = NameBox.Text ?? "";
+        NameBox.GotFocus += (_, _) =>
+        {
+            _nameEditStart = NameBox.Text ?? "";
+            (DataContext as UiVm)?.BeginInspectorEntityNameEdit();
+        };
         NameBox.KeyDown += NameBox_KeyDown;
         NameBox.LostFocus += (_, _) => CommitName();
         PositionProperty.ValueChanged += (_, _) => CommitVector("位置", PositionProperty);

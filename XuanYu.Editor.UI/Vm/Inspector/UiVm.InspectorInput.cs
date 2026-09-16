@@ -30,7 +30,7 @@ public sealed partial class UiVm
         if (!commit.Changed)
         {
             FooterMessage = "检查器数值未变化。";
-            RecordInspectorCommit(InspectorPropertyKey(group), false);
+            RecordInspectorCommit(CreateInspectorEditTarget(InspectorPropertyKey(group)), false);
             return false;
         }
         RecordTransformHistory(commit);
@@ -41,7 +41,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(TransformHistoryCount));
         OnPropertyChanged(nameof(TransformRedoCount));
         PublishSceneRenderSnapshot();
-        RecordInspectorCommit(InspectorPropertyKey(group), true);
+        RecordInspectorCommit(CreateInspectorEditTarget(InspectorPropertyKey(group)), true);
         return true;
     }
 

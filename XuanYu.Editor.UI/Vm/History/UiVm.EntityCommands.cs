@@ -32,7 +32,13 @@ public sealed partial class UiVm
     public bool RenameSelectedEntity(string requestedName)
     {
         if (HasBlockingInput || !TrySelectedEntityKey(out var key) ||
-            !_sceneState.TryGetEntity(key, out var before)) return false;
+            !_sceneState.TryGetEntity(key, out _)) return false;
+        return RenameEntity(key, requestedName);
+    }
+
+    bool RenameEntity(EntityId key, string requestedName)
+    {
+        if (HasBlockingInput || !_sceneState.TryGetEntity(key, out var before)) return false;
         if (!_sceneState.RenameEntity(key, requestedName, out var finalName)) return false;
         _historyOwner.PushEntry(new RenameEntityHistoryEntry(key, before.Name, finalName));
         SelectEntity(key, "重命名实体");

@@ -36,20 +36,23 @@ public sealed partial class UiVm
     }
 
     public bool CommitInspectorProperty(string key, string text)
+        => CommitInspectorProperty(CreateInspectorEditTarget(key), text);
+
+    public bool CommitInspectorProperty(InspectorEditTarget target, string text)
     {
-        var succeeded = key switch
+        var succeeded = target.PropertyKey switch
         {
-            "Entity.Basic.Name" => CommitEntityName(text),
-            "Road.Basic.Name" or "Region.Basic.Name" or "Marker.Basic.Name" => CommitSelectedFeatureName(text),
+            "Entity.Basic.Name" => CommitEntityName(target, text),
+            "Road.Basic.Name" or "Region.Basic.Name" or "Marker.Basic.Name" => CommitFeatureName(target, text),
             _ => false
         };
-        RecordInspectorCommit(key, succeeded);
+        RecordInspectorCommit(target, succeeded);
         return succeeded;
     }
 
-    bool CommitEntityName(string text)
+    bool CommitEntityName(InspectorEditTarget target, string text)
     {
         InspectorEntityNameText = text;
-        return CommitInspectorEntityName();
+        return TryEntityKey(target.ObjectId, out var key) && RenameEntity(key, text);
     }
 }

@@ -5,6 +5,7 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     string _inspectorEntityNameText = "";
+    InspectorEditTarget? _entityNameEditTarget;
 
     public bool IsEntityInspector => SelectedDataset is null &&
         TrySelectedEntityKey(out var key) && _sceneState.TryGetEntity(key, out _);
@@ -28,7 +29,15 @@ public sealed partial class UiVm
     public double InspectorScaleY => InspectorVector("缩放").Y;
     public double InspectorScaleZ => InspectorVector("缩放").Z;
 
-    public bool CommitInspectorEntityName() => CommitInspectorProperty("Entity.Basic.Name", InspectorEntityNameText);
+    public void BeginInspectorEntityNameEdit() =>
+        _entityNameEditTarget = CreateInspectorEditTarget("Entity.Basic.Name");
+
+    public bool CommitInspectorEntityName()
+    {
+        var target = _entityNameEditTarget ?? CreateInspectorEditTarget("Entity.Basic.Name");
+        _entityNameEditTarget = null;
+        return CommitInspectorProperty(target, InspectorEntityNameText);
+    }
 
     public void CommitInspectorVector(string group, double x, double y, double z)
     {

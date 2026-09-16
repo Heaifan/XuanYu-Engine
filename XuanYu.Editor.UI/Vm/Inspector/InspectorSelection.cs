@@ -14,6 +14,18 @@ public sealed partial class UiVm
     public bool IsRegionInspector => InspectorIdentity == InspectorObjectKind.Region;
     public bool IsFeatureInspector => IsRoadInspector || IsRegionInspector;
 
+    public InspectorEditTarget CreateInspectorEditTarget(string propertyKey) =>
+        new(InspectorIdentity, InspectorObjectId(), propertyKey);
+
+    string InspectorObjectId() => InspectorIdentity switch
+    {
+        InspectorObjectKind.Entity => SelectionKey,
+        InspectorObjectKind.Dataset => SelectedDataset?.Id ?? "",
+        InspectorObjectKind.Marker or InspectorObjectKind.Road or InspectorObjectKind.Region =>
+            _selectedMapGeometry?.FeatureId ?? "",
+        _ => ""
+    };
+
     InspectorObjectKind ResolveInspectorSelection()
     {
         if (_selectedMapGeometry is { Kind: MapGeometryFeatureKind.Marker }) return InspectorObjectKind.Marker;

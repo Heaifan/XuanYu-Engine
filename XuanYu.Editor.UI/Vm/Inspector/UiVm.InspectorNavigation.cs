@@ -70,7 +70,7 @@ public sealed partial class UiVm
 
     IReadOnlyList<InspectorPropertyRow> RowsFor(string category)
     {
-        if (category == "最近") return _inspectorRecent.KeysFor(InspectorIdentity)
+        if (category == "最近") return _inspectorRecent.KeysFor(CreateInspectorEditTarget("" ).Identity)
             .Select(key => AllDescriptors().FirstOrDefault(item => item.Key == key)).OfType<InspectorPropertyDescriptor>()
             .Select(Row).ToArray();
         return AllDescriptors().Where(item => item.Category == category).Select(Row).ToArray();
@@ -85,9 +85,14 @@ public sealed partial class UiVm
     }
 
     InspectorPropertyRow Row(InspectorPropertyDescriptor descriptor) =>
-        new(descriptor, ValueFor(descriptor.Key), descriptor.IsEditable || descriptor.Key == "Entity.Basic.Name");
+        new(descriptor, ValueFor(descriptor.Key), descriptor.IsEditable || descriptor.Key == "Entity.Basic.Name",
+            CreateInspectorEditTarget(descriptor.Key));
 
     IReadOnlyList<InspectorPropertyDescriptor> AllDescriptors() => InspectorDescriptors.For(this, InspectorIdentity);
     string ValueFor(string key) => InspectorDescriptors.ValueFor(this, key);
-    public void RecordInspectorCommit(string key, bool succeeded) { _inspectorRecent.RecordCommit(InspectorIdentity, key, succeeded); RefreshInspectorNavigation(); }
+    public void RecordInspectorCommit(InspectorEditTarget target, bool succeeded)
+    {
+        _inspectorRecent.RecordCommit(target, succeeded);
+        RefreshInspectorNavigation();
+    }
 }
