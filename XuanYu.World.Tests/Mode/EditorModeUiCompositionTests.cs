@@ -88,9 +88,9 @@ public sealed class EditorModeUiCompositionTests
     {
         var selector = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml");
         var code = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml.cs");
-        Assert.Contains("Command=\"{Binding SelectFeatureWorkspaceCommand}\"", selector);
+        Assert.Contains("XYWorkspaceSwitcher", selector + code);
         Assert.DoesNotContain("Command=\"{Binding ToggleEditorModeCommand}\"", selector);
-        Assert.Contains("CheckKind=\"Radio\"", selector);
+        Assert.DoesNotContain("XYMenuBarItem", selector);
         Assert.DoesNotContain("DoubleTapped", selector);
         Assert.DoesNotContain("DoubleTapped", code);
         Assert.DoesNotContain("ToggleEditorMode", code);

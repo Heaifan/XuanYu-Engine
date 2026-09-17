@@ -68,7 +68,7 @@ public sealed class EditorWorkspaceUiCompositionTests
         var snap = Read("XuanYu.Editor.UI", "Top", "SnapModule.axaml");
         Assert.Contains("<local:WorkspaceSelector", top);
         Assert.Contains("IsEnabled=\"{Binding IsMapEditMode}\"", snap);
-        Assert.Contains("SelectFeatureWorkspaceCommand", Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml"));
+        Assert.Contains("SelectFeatureWorkspaceCommand", Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml.cs"));
     }
 
     static int Count(string text, string value) => text.Split(value).Length - 1;

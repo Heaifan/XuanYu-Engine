@@ -17,11 +17,11 @@ public sealed class WorkspaceSelectorR2ContractTests
     [Fact]
     public void Selector_has_one_workspace_selection_control()
     {
-        var source = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml");
-        Assert.Equal(0, Count(source, "<xy:XYButton"));
-        Assert.Contains("Text=\"工作区\"", source);
-        Assert.Contains("Label=\"{Binding CurrentEditorModeText}\"", source);
-        Assert.Equal(1, Count(source, "Command=\"{Binding SelectFeatureWorkspaceCommand}\""));
+        var source = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml") +
+                     Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml.cs");
+        Assert.Contains("XYWorkspaceSwitcher", source);
+        Assert.DoesNotContain("XYMenuBarItem", source);
+        Assert.DoesNotContain("Shortcut=\"暂未开放\"", source);
         Assert.DoesNotContain("ToggleEditorModeCommand", source);
         Assert.DoesNotContain("SwitchWorkspaceCommand", source);
         Assert.DoesNotContain("DoubleTapped=", source);
@@ -36,17 +36,18 @@ public sealed class WorkspaceSelectorR2ContractTests
             var vm = new UiVm(null, seedInitialScene: false);
             var selector = new WorkspaceSelector { DataContext = vm };
             host.Show(selector, 420, 48);
-            selector.UpdateLayout(); var bar = selector.GetVisualDescendants().OfType<XYMenuBar>().Single();
-            var trigger = bar.Items.Single(); bar.Open(trigger); Dispatcher.UIThread.RunJobs();
-            var items = bar.OpenMenu!.Items.OfType<XYMenuItem>().ToArray();
+            selector.UpdateLayout(); var switcher = selector.GetVisualDescendants().OfType<XYWorkspaceSwitcher>().Single();
+            switcher.Open(); Dispatcher.UIThread.RunJobs();
+            var items = switcher.WorkspaceMenu.Items.OfType<XYMenuItem>().ToArray();
             var feature = items.Single(x => x.Label == "要素编辑"); feature.Activate();
-            bar.Close(); bar.Open(trigger); Dispatcher.UIThread.RunJobs();
-            var final = bar.OpenMenu!.Items.OfType<XYMenuItem>().ToArray();
+            switcher.Open(); Dispatcher.UIThread.RunJobs();
+            var final = switcher.WorkspaceMenu.Items.OfType<XYMenuItem>().ToArray();
             return (final.Select(x => x.Label).ToArray(), final.Single(x => x.Label == "要素编辑").IsChecked,
-                final.Single(x => x.Label == "场景编辑").IsEnabled, final.Single(x => x.Label == "调试").IsEnabled);
+                final.Single(x => x.Label == "场景编辑（暂未开放）").IsEnabled,
+                final.Single(x => x.Label == "调试（暂未开放）").IsEnabled);
         });
 
-        Assert.Equal(["要素编辑", "场景编辑", "调试"], states.Item1);
+        Assert.Equal(["要素编辑", "场景编辑（暂未开放）", "调试（暂未开放）", "管理工作区..."], states.Item1);
         Assert.True(states.Item2);
         Assert.False(states.Item3);
         Assert.False(states.Item4);
@@ -67,7 +68,8 @@ public sealed class WorkspaceSelectorR2ContractTests
         var view = Read("XuanYu.Editor.UI", "Top", "ViewModule.axaml");
         var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
 
-        Assert.Equal(3, Count(workspace, "CheckKind=\"Radio\""));
+        Assert.Contains("XYWorkspaceSwitcher", workspace + Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml.cs"));
+        Assert.DoesNotContain("XYMenuBarItem", workspace);
         Assert.DoesNotContain("点要素编辑", workspace);
         Assert.DoesNotContain("OpenPointFeatureEditorCommand", workspace);
         Assert.DoesNotContain("ToggleType=", workspace);
@@ -80,4 +82,5 @@ public sealed class WorkspaceSelectorR2ContractTests
         AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(path)));
 
     static int Count(string text, string value) => text.Split(value).Length - 1;
+
 }

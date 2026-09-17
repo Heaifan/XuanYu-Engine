@@ -19,14 +19,13 @@ public sealed partial class AreaAR4MenuRuntimeTests
             var selector = new WorkspaceSelector { DataContext = vm };
             host.Show(selector, 640, 80);
             selector.UpdateLayout();
-            var bar = selector.GetVisualDescendants().OfType<XYMenuBar>().Single();
-            var trigger = bar.Items.Single();
-            bar.Open(trigger);
+            var switcher = selector.GetVisualDescendants().OfType<XYWorkspaceSwitcher>().Single();
+            switcher.Open();
             Dispatcher.UIThread.RunJobs();
-            var menu = bar.OpenMenu!;
+            var menu = switcher.WorkspaceMenu;
             Assert.True(menu.IsOpen);
             Assert.Single(menu.Styles);
-            foreach (var item in menu.Items.OfType<XYMenuItem>())
+            foreach (var item in menu.Items.OfType<XYMenuItem>().Where(x => x.Classes.Contains("xyui-workspace-item")))
             {
                 var ring = item.GetVisualDescendants().OfType<Ellipse>().Single(x => x.Classes.Contains("xyui-menu-radio-ring"));
                 var dot = item.GetVisualDescendants().OfType<Ellipse>().Single(x => x.Classes.Contains("xyui-menu-radio-dot"));

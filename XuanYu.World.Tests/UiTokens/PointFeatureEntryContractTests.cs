@@ -10,7 +10,7 @@ public sealed class PointFeatureEntryContractTests
     [Fact]
     public void Workspace_selector_exposes_a_point_feature_entry()
     {
-        var selector = Read("Workspace/WorkspaceSelector.axaml");
+        var selector = Read("Workspace/WorkspaceSelector.axaml") + Read("Workspace/WorkspaceSelector.axaml.cs");
 
         Assert.DoesNotContain("点要素编辑", selector);
         Assert.DoesNotContain("OpenPointFeatureEditorCommand", selector);
@@ -19,7 +19,7 @@ public sealed class PointFeatureEntryContractTests
     [Fact]
     public void Point_feature_entry_projects_to_existing_marker_authoring_chain()
     {
-        var selector = Read("Workspace/WorkspaceSelector.axaml");
+        var selector = Read("Workspace/WorkspaceSelector.axaml") + Read("Workspace/WorkspaceSelector.axaml.cs");
         var workspace = Read("Vm/Workspace/UiVm.Workspace.cs");
         var authoring = Read("Vm/Workspace/UiVm.RegionAuthoring.cs");
 

@@ -17,11 +17,11 @@ public sealed partial class AreaAR4MenuRuntimeTests
         host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false); var selector = new WorkspaceSelector { DataContext = vm }; host.Show(selector, 640, 80); selector.UpdateLayout();
-            var bar = selector.GetVisualDescendants().OfType<XYMenuBar>().Single(); var barItem = bar.Items.Single(); bar.Open(barItem); Dispatcher.UIThread.RunJobs();
-            var feature = bar.OpenMenu!.Items.OfType<XYMenuItem>().Single(x => x.Label == "要素编辑");
-            AssertRadio(feature, false); Assert.True(vm.IsMapWorkspace); Assert.False(vm.IsRegionWorkspace);
-            Assert.True(feature.Activate()); bar.Open(barItem); Dispatcher.UIThread.RunJobs();
-            feature = bar.OpenMenu!.Items.OfType<XYMenuItem>().Single(x => x.Label == "要素编辑");
+            var switcher = selector.GetVisualDescendants().OfType<XYWorkspaceSwitcher>().Single(); switcher.Open(); Dispatcher.UIThread.RunJobs();
+            var feature = switcher.WorkspaceMenu.Items.OfType<XYMenuItem>().Single(x => x.Label == "要素编辑");
+            AssertRadio(feature, true); Assert.True(vm.IsMapWorkspace); Assert.False(vm.IsRegionWorkspace);
+            Assert.True(feature.Activate()); switcher.Open(); Dispatcher.UIThread.RunJobs();
+            feature = switcher.WorkspaceMenu.Items.OfType<XYMenuItem>().Single(x => x.Label == "要素编辑");
             AssertRadio(feature, true); Assert.False(vm.IsMapWorkspace); Assert.True(vm.IsRegionWorkspace);
         });
     }
