@@ -1,5 +1,7 @@
 using System.IO;
 using Avalonia.Controls;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
 using XYUI.Avalonia.Controls;
 
@@ -13,19 +15,20 @@ public sealed class WorkspaceSelectorR2ContractTests
     public WorkspaceSelectorR2ContractTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Selector_separates_workspace_and_editor_mode()
+    public void Selector_has_one_workspace_selection_control()
     {
         var source = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml");
-        Assert.Equal(1, Count(source, "<xy:XYButton"));
+        Assert.Equal(0, Count(source, "<xy:XYButton"));
         Assert.Contains("Text=\"工作区\"", source);
-        Assert.Contains("Content=\"{Binding CurrentEditorModeText}\"", source);
-        Assert.Equal(1, Count(source, "Command=\"{Binding ToggleEditorModeCommand}\""));
-        Assert.Contains("Command=\"{Binding SwitchWorkspaceCommand}\"", source);
+        Assert.Contains("Label=\"{Binding CurrentEditorModeText}\"", source);
+        Assert.Equal(1, Count(source, "Command=\"{Binding SelectFeatureWorkspaceCommand}\""));
+        Assert.DoesNotContain("ToggleEditorModeCommand", source);
+        Assert.DoesNotContain("SwitchWorkspaceCommand", source);
         Assert.DoesNotContain("DoubleTapped=", source);
     }
 
     [Fact]
-    public void Manage_and_edit_states_expose_a_visible_xyui_mode_control()
+    public void Workspace_menu_exposes_current_and_disabled_options()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var states = host.Run(() =>
@@ -33,17 +36,20 @@ public sealed class WorkspaceSelectorR2ContractTests
             var vm = new UiVm(null, seedInitialScene: false);
             var selector = new WorkspaceSelector { DataContext = vm };
             host.Show(selector, 420, 48);
-            selector.UpdateLayout();
-            var manage = VisibleButtons(selector).Select(ContentOf).ToArray();
-            vm.ToggleEditorMode();
-            selector.UpdateLayout();
-            var edit = VisibleButtons(selector).Select(ContentOf).ToArray();
-            return (manage, edit);
+            selector.UpdateLayout(); var bar = selector.GetVisualDescendants().OfType<XYMenuBar>().Single();
+            var trigger = bar.Items.Single(); bar.Open(trigger); Dispatcher.UIThread.RunJobs();
+            var items = bar.OpenMenu!.Items.OfType<XYMenuItem>().ToArray();
+            var feature = items.Single(x => x.Label == "要素编辑"); feature.Activate();
+            bar.Close(); bar.Open(trigger); Dispatcher.UIThread.RunJobs();
+            var final = bar.OpenMenu!.Items.OfType<XYMenuItem>().ToArray();
+            return (final.Select(x => x.Label).ToArray(), final.Single(x => x.Label == "要素编辑").IsChecked,
+                final.Single(x => x.Label == "场景编辑").IsEnabled, final.Single(x => x.Label == "调试").IsEnabled);
         });
 
-        Assert.Contains("管理模式", states.manage);
-        Assert.Contains("地图编辑", states.edit);
-        Assert.DoesNotContain("管理模式", states.edit);
+        Assert.Equal(["要素编辑", "场景编辑", "调试"], states.Item1);
+        Assert.True(states.Item2);
+        Assert.False(states.Item3);
+        Assert.False(states.Item4);
     }
 
     [Fact]
@@ -61,7 +67,7 @@ public sealed class WorkspaceSelectorR2ContractTests
         var view = Read("XuanYu.Editor.UI", "Top", "ViewModule.axaml");
         var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
 
-        Assert.Equal(2, Count(workspace, "CheckKind=\"Radio\""));
+        Assert.Equal(3, Count(workspace, "CheckKind=\"Radio\""));
         Assert.DoesNotContain("点要素编辑", workspace);
         Assert.DoesNotContain("OpenPointFeatureEditorCommand", workspace);
         Assert.DoesNotContain("ToggleType=", workspace);
@@ -69,11 +75,6 @@ public sealed class WorkspaceSelectorR2ContractTests
         Assert.DoesNotContain("<Style Selector=\"Menu\"", top);
         Assert.DoesNotContain("<Style Selector=\"MenuItem\"", top);
     }
-
-    static IEnumerable<XYButton> VisibleButtons(Control root) =>
-        UiRuntimeTestHost.Descendants<XYButton>(root).Where(button => button.IsVisible);
-
-    static string ContentOf(XYButton button) => button.Content?.ToString() ?? string.Empty;
 
     static string Read(params string[] path) => File.ReadAllText(Path.Combine(
         AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(path)));

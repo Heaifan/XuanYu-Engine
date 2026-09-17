@@ -21,29 +21,29 @@
                 VerticalAlignment="Center">
       <xy:XYCaption Text="工作区"
                     VerticalAlignment="Center"/>
-      <xy:XYButton Variant="Secondary"
-                   MinHeight="34"
-                   Padding="{StaticResource Padding.Compact}"
-                   Content="{Binding CurrentEditorModeText}"
-                   Command="{Binding ToggleEditorModeCommand}"
-                   ToolTip.Tip="点击切换管理模式与编辑模式"/>
       <xy:XYMenuBar Classes="compact"
                     ShowDivider="False"
                     VerticalAlignment="Center">
-        <xy:XYMenuBarItem Label="{Binding CurrentWorkspaceDisplayName}"
+        <xy:XYMenuBarItem Label="{Binding CurrentEditorModeText}"
+                          Width="224"
                           ShowChevron="True"
                           ToolTip.Tip="切换工作区">
-          <xy:XYMenu>
-            <xy:XYMenuItem Label="地图编辑"
-                            CheckKind="Radio"
-                           IsChecked="{Binding IsMapWorkspace, Mode=OneWay}"
-                           Command="{Binding SwitchWorkspaceCommand}"
-                           CommandParameter="MapEditor"/>
-            <xy:XYMenuItem Label="要素编辑"
-                            CheckKind="Radio"
-                           IsChecked="{Binding IsRegionWorkspace, Mode=OneWay}"
-                           Command="{Binding SwitchWorkspaceCommand}"
-                           CommandParameter="RegionEditor"/>
+          <xy:XYMenu Classes="xyui-workspace-menu">
+            <xy:XYMenuItem Classes="xyui-workspace-item"
+                           Label="要素编辑"
+                           CheckKind="Radio"
+                           IsChecked="{Binding IsRegionEditMode, Mode=OneWay}"
+                           Command="{Binding SelectFeatureWorkspaceCommand}"/>
+            <xy:XYMenuItem Classes="xyui-workspace-item"
+                           Label="场景编辑"
+                           Shortcut="暂未开放"
+                           CheckKind="Radio"
+                           IsEnabled="False"/>
+            <xy:XYMenuItem Classes="xyui-workspace-item"
+                           Label="调试"
+                           Shortcut="暂未开放"
+                           CheckKind="Radio"
+                           IsEnabled="False"/>
           </xy:XYMenu>
         </xy:XYMenuBarItem>
       </xy:XYMenuBar>

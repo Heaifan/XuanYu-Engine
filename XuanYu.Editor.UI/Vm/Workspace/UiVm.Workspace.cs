@@ -13,8 +13,17 @@ public sealed partial class UiVm
     public string CurrentWorkspaceDisplayName => CurrentWorkspace.DisplayName;
     public bool IsMapWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.MapEditor;
     public bool IsRegionWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.RegionEditor;
+    ICommand? _selectFeatureWorkspaceCommand;
+    public ICommand SelectFeatureWorkspaceCommand => _selectFeatureWorkspaceCommand ??=
+        new RelayCommand(_ => SelectFeatureWorkspace());
     public ICommand OpenPointFeatureEditorCommand => _openPointFeatureEditorCommand ??=
         new RelayCommand(OpenPointFeatureEditor);
+
+    void SelectFeatureWorkspace()
+    {
+        if (!IsRegionWorkspace) SwitchWorkspace(EditorWorkspaceId.RegionEditor);
+        if (!IsEditMode) ToggleEditorMode();
+    }
 
     void OpenPointFeatureEditor(object? value)
     {

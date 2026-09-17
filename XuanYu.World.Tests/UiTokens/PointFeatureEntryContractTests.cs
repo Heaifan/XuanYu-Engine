@@ -23,7 +23,7 @@ public sealed class PointFeatureEntryContractTests
         var workspace = Read("Vm/Workspace/UiVm.Workspace.cs");
         var authoring = Read("Vm/Workspace/UiVm.RegionAuthoring.cs");
 
-        Assert.Contains("RegionEditor", selector);
+        Assert.Contains("SelectFeatureWorkspaceCommand", selector);
         Assert.Contains("SelectRegionAuthoringMode(\"地图标记\")", workspace);
         Assert.Contains("BeginMarkerPlacementAsync", Read("Vm/Map/UiVm.MapDataset.MarkerBootstrap.cs"));
         Assert.Contains("MarkerPlacementPointerPressed", Read("Vm/Map/UiVm.MapMarkerPlacement.cs"));
