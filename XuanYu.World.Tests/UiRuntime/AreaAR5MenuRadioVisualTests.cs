@@ -19,10 +19,10 @@ public sealed partial class AreaAR4MenuRuntimeTests
             var vm = new UiVm(null, seedInitialScene: false); var selector = new WorkspaceSelector { DataContext = vm }; host.Show(selector, 640, 80); selector.UpdateLayout();
             var switcher = selector.GetVisualDescendants().OfType<XYWorkspaceSwitcher>().Single(); switcher.Open(); Dispatcher.UIThread.RunJobs();
             var feature = switcher.WorkspaceMenu.Items.OfType<XYMenuItem>().Single(x => x.Label == "要素编辑");
-            AssertRadio(feature, true); Assert.True(vm.IsMapWorkspace); Assert.False(vm.IsRegionWorkspace);
+            AssertRadio(feature, false); Assert.True(vm.IsManageMode); Assert.False(vm.IsEditMode);
             Assert.True(feature.Activate()); switcher.Open(); Dispatcher.UIThread.RunJobs();
             feature = switcher.WorkspaceMenu.Items.OfType<XYMenuItem>().Single(x => x.Label == "要素编辑");
-            AssertRadio(feature, true); Assert.False(vm.IsMapWorkspace); Assert.True(vm.IsRegionWorkspace);
+            AssertRadio(feature, true); Assert.True(vm.IsEditMode); Assert.True(vm.IsRegionWorkspace);
         });
     }
 

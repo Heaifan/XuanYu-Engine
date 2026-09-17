@@ -13,6 +13,7 @@ public sealed class TopWorkspaceSelectorR1Tests
             AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml.cs"));
         Assert.Contains("XYWorkspaceSwitcher", selector);
+        Assert.Contains("管理模式", selector);
         Assert.DoesNotContain("XYMenuBarItem", selector);
         Assert.DoesNotContain("Shortcut=\"暂未开放\"", selector);
     }

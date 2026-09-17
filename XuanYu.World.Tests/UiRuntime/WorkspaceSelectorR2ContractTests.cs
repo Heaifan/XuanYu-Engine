@@ -11,7 +11,6 @@ namespace XuanYu.World.Tests.UiRuntime;
 public sealed class WorkspaceSelectorR2ContractTests
 {
     readonly UiHeadlessFixture _fixture;
-
     public WorkspaceSelectorR2ContractTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
@@ -27,8 +26,7 @@ public sealed class WorkspaceSelectorR2ContractTests
         Assert.DoesNotContain("DoubleTapped=", source);
     }
 
-    [Fact]
-    public void Workspace_menu_exposes_current_and_disabled_options()
+    [Fact] public void Workspace_menu_starts_in_management_mode()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var states = host.Run(() =>
@@ -39,29 +37,46 @@ public sealed class WorkspaceSelectorR2ContractTests
             selector.UpdateLayout(); var switcher = selector.GetVisualDescendants().OfType<XYWorkspaceSwitcher>().Single();
             switcher.Open(); Dispatcher.UIThread.RunJobs();
             var items = switcher.WorkspaceMenu.Items.OfType<XYMenuItem>().ToArray();
-            var feature = items.Single(x => x.Label == "要素编辑"); feature.Activate();
-            switcher.Open(); Dispatcher.UIThread.RunJobs();
-            var final = switcher.WorkspaceMenu.Items.OfType<XYMenuItem>().ToArray();
-            return (final.Select(x => x.Label).ToArray(), final.Single(x => x.Label == "要素编辑").IsChecked,
-                final.Single(x => x.Label == "场景编辑（暂未开放）").IsEnabled,
-                final.Single(x => x.Label == "调试（暂未开放）").IsEnabled);
+            return (switcher.CurrentWorkspace, vm.IsEditMode,
+                items.Single(x => x.Label == "管理模式").IsChecked,
+                items.Single(x => x.Label == "要素编辑").IsChecked,
+                items.Single(x => x.Label == "场景编辑（暂未开放）").IsEnabled,
+                items.Single(x => x.Label == "调试（暂未开放）").IsEnabled);
         });
 
-        Assert.Equal(["要素编辑", "场景编辑（暂未开放）", "调试（暂未开放）", "管理工作区..."], states.Item1);
-        Assert.True(states.Item2);
-        Assert.False(states.Item3);
+        Assert.Equal("管理模式", states.Item1);
+        Assert.False(states.Item2);
+        Assert.True(states.Item3);
         Assert.False(states.Item4);
+        Assert.False(states.Item5);
+        Assert.False(states.Item6);
     }
 
-    [Fact]
-    public void Top_declares_one_environment_menu()
+    [Fact] public void Workspace_menu_commits_only_after_engine_transitions()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(() =>
+        {
+            var vm = new UiVm(null, seedInitialScene: false);
+            var selector = new WorkspaceSelector { DataContext = vm };
+            host.Show(selector, 420, 48); selector.UpdateLayout();
+            var switcher = selector.GetVisualDescendants().OfType<XYWorkspaceSwitcher>().Single();
+            switcher.SelectWorkspace("feature-editing");
+            Assert.True(vm.IsEditMode); Assert.True(vm.IsRegionWorkspace);
+            Assert.Equal("要素编辑", switcher.CurrentWorkspace);
+            switcher.SelectWorkspace("management");
+            Assert.False(vm.IsEditMode); Assert.True(vm.IsManageMode);
+            Assert.Equal("管理模式", switcher.CurrentWorkspace);
+        });
+    }
+
+    [Fact] public void Top_declares_one_environment_menu()
     {
         var source = Read("XuanYu.Editor.UI", "Top", "ViewModule.axaml");
         Assert.Equal(1, Count(source, "Label=\"环境\""));
     }
 
-    [Fact]
-    public void Area_a_uses_canonical_xyui_menu_apis()
+    [Fact] public void Area_a_uses_canonical_xyui_menu_apis()
     {
         var workspace = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml");
         var file = Read("XuanYu.Editor.UI", "Top", "FileModule.axaml");
@@ -82,5 +97,4 @@ public sealed class WorkspaceSelectorR2ContractTests
         AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(path)));
 
     static int Count(string text, string value) => text.Split(value).Length - 1;
-
 }

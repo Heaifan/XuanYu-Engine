@@ -93,7 +93,7 @@ public sealed class EditorModeUiCompositionTests
         Assert.DoesNotContain("XYMenuBarItem", selector);
         Assert.DoesNotContain("DoubleTapped", selector);
         Assert.DoesNotContain("DoubleTapped", code);
-        Assert.DoesNotContain("ToggleEditorMode", code);
+        Assert.Contains("ToggleEditorMode", code); Assert.Contains("IsManageMode", code);
     }
 
     static int Count(string text, string value) => text.Split(value).Length - 1;
