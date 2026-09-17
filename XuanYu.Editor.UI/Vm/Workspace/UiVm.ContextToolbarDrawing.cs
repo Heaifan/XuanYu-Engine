@@ -42,9 +42,7 @@ public sealed partial class UiVm
         if (tool == "地图标记")
         {
             SelectRegionAuthoringMode("地图标记");
-            var started = await BeginMarkerPlacementAsync();
-            if (started) SetLastDrawTool("地图标记");
-            return started;
+            return await BeginMarkerPlacementAsync();
         }
         return false;
     }

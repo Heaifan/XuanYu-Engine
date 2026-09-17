@@ -44,7 +44,6 @@ public sealed class DiagnosticTargetBoundsRuntimeTests : IDisposable
         _fixture.Run(() =>
         {
             var vm = new UiVm(new HeadlessBridgeFactory(), () => true, seedInitialScene: false);
-            vm.SwitchWorkspaceCommand.Execute("RegionEditor");
             vm.ToggleEditorModeCommand.Execute(null);
             var root = new UiRoot { DataContext = vm };
             var window = new Window { Width = 1200, Height = 800, Content = root };

@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
@@ -42,9 +43,9 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
             var toolbar = UiRuntimeTestHost.Descendants<ContextToolBar>(top).Single();
             var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
             split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
-            var menu = toolbar.FindControl<XYMenuHost>("DrawMenuHost")!.Menu!;
+            var menu = (toolbar.FindControl<Popup>("DrawMenuPopup")!.Child as XYMenu)!;
             menu.Items.OfType<XYMenuItem>().Single(item => item.Label == "面").Activate();
-            var submenu = menu.Items.OfType<XYMenuItem>().Single(item => item.Label == "面").SubMenu!;
+            var submenu = Assert.IsType<XYSubMenu>(toolbar.FindControl<Popup>("DrawMenuPopup")!.Child);
             submenu.ChildMenu.Items.OfType<XYMenuItem>().Single().Activate();
             var state = vm.IsRegionEditMode && vm.CanStartRegionDrawing;
             return state;

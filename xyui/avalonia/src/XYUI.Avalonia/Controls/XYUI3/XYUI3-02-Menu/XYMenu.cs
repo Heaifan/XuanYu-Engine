@@ -11,7 +11,6 @@ public sealed partial class XYMenu : Border
     readonly AvaloniaList<Control> _items = [];
     readonly List<XYSubMenu> _subMenus = [];
     bool _embedded;
-    internal bool AutoMountSubMenus { get; set; }
     bool _overlayStylesApplied;
     public bool IsOpen { get; private set; }
     public int FocusedIndex { get; private set; } = -1;
@@ -31,19 +30,12 @@ public sealed partial class XYMenu : Border
     public XYMenu(params Control[] items) : this() => _items.AddRange(items);
     public static XYMenu FromModels(IEnumerable<XYMenuItemModel> models)
     {
-        var menu = new XYMenu { AutoMountSubMenus = true }; var controls = new List<Control>();
-        return BuildFromModels(menu, models);
-    }
-    static XYMenu BuildFromModels(XYMenu menu, IEnumerable<XYMenuItemModel> models)
-    {
-        var controls = new List<Control>();
+        var menu = new XYMenu(); var controls = new List<Control>();
         foreach (var model in models)
         {
             if (model.Children is { Count: > 0 })
             {
-                var item = Item(model); item.HasSubMenu = true;
-                item.SubMenu = new XYSubMenu { ParentMenu = menu, ChildMenu = BuildFromModels(new XYMenu(), model.Children) };
-                controls.Add(item);
+                var item = Item(model); item.HasSubMenu = true; item.SubMenu = new XYSubMenu { ParentMenu = menu, ChildMenu = FromModels(model.Children) }; controls.Add(item);
             }
             else controls.Add(Item(model));
         }
@@ -65,7 +57,7 @@ public sealed partial class XYMenu : Border
             if (item is XYMenuItem menuItem) Attach(menuItem);
             panel.Children.Add(item);
         }
-        Child = BuildVisualHost(panel); ApplyMode();
+        ApplyMode();
     }
     public XYMenuItem? SelectedItem => Items.OfType<XYMenuItem>().FirstOrDefault(x => x.IsSelected);
     public void ClearSelection() { foreach (var item in Items.OfType<XYMenuItem>()) { item.CloseSubMenu(); item.ClearInteractionState(); } }

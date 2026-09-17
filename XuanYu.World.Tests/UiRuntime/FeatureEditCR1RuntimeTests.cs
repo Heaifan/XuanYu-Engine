@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -36,13 +37,12 @@ public sealed class FeatureEditCR1RuntimeTests
     }
 
     [Fact]
-    public void Feature_edit_mode_shows_context_tools_and_root_menu()
+    public void Map_edit_mode_shows_context_tools_and_root_menu()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
-            vm.SwitchWorkspaceCommand.Execute("RegionEditor");
             vm.ToggleEditorModeCommand.Execute(null);
             var toolbar = new ContextToolBar { DataContext = vm };
             host.Show(toolbar, 800, 100); toolbar.UpdateLayout();
@@ -54,10 +54,10 @@ public sealed class FeatureEditCR1RuntimeTests
             Assert.NotNull(split);
             split!.MenuCommand!.Execute(null);
             Dispatcher.UIThread.RunJobs();
-            var menuHost = toolbar.FindControl<XYMenuHost>("DrawMenuHost")!;
-            var labels = menuHost.Menu!.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
+            var popup = toolbar.FindControl<Popup>("DrawMenuPopup");
+            var labels = (popup!.Child as XYMenu)!.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
             Assert.Equal(["点", "线", "面"], labels);
-            Assert.All(menuHost.Menu.Items.OfType<XYMenuItem>(), item => Assert.True(item.HasSubMenu));
+            Assert.All((popup.Child as XYMenu)!.Items.OfType<XYMenuItem>(), item => Assert.True(item.HasSubMenu));
         });
     }
 
@@ -73,9 +73,9 @@ public sealed class FeatureEditCR1RuntimeTests
             host.Show(toolbar, 800, 100); toolbar.UpdateLayout();
             var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
             split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
-            var root = toolbar.FindControl<XYMenuHost>("DrawMenuHost")!.Menu!;
+            var root = (toolbar.FindControl<Popup>("DrawMenuPopup")!.Child as XYMenu)!;
             root.Items.OfType<XYMenuItem>().Single(x => x.Label == "线").Activate();
-            var submenu = root.Items.OfType<XYMenuItem>().Single(x => x.Label == "线").SubMenu!;
+            var submenu = Assert.IsType<XYSubMenu>(toolbar.FindControl<Popup>("DrawMenuPopup")!.Child);
             submenu.ChildMenu.Items.OfType<XYMenuItem>().Single().Activate();
             await Task.Delay(1);
             Assert.True(vm.IsDrawingTransactionActive);
