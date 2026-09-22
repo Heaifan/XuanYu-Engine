@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using System.Globalization;
 using XYUI.Avalonia;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Typography;
@@ -39,6 +40,22 @@ public sealed class XYUI1TextRuntimeTests : IClassFixture<XyuiHeadlessFixture>
         var window = XyuiBatchTestHost.Show(new StackPanel { Children = { heading, section } });
         Assert.Equal(XyuiTypographyTokens.FontSizePageTitle, heading.FontSize);
         Assert.Equal(14, section.GetVisualDescendants().OfType<TextBlock>().Single(x => x.Classes.Contains("xyui-section-title-text")).FontSize);
+        window.Close();
+    });
+
+    [Fact]
+    public void Text_centers_single_line_ink_inside_a_tall_host() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare();
+        var text = new XYText { Text = "5", Width = 124, Height = 34 };
+        var window = XyuiBatchTestHost.Show(text);
+        var origin = text.TranslatePoint(new Point(0, 0), window)!.Value;
+        var font = new Typeface(text.FontFamily, text.FontStyle, text.FontWeight);
+        var geometry = new FormattedText(text.Text, CultureInfo.CurrentUICulture,
+            FlowDirection.LeftToRight, font, text.FontSize, Brushes.Black).BuildGeometry(new Point(0, 0));
+        var transform = Assert.IsType<TranslateTransform>(text.RenderTransform);
+        var inkCenter = origin.Y + geometry!.Bounds.Center.Y + transform.Y;
+        Assert.InRange(inkCenter - (origin.Y + text.Bounds.Height / 2), -0.5, 0.5);
         window.Close();
     });
 
