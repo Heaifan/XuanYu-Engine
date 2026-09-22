@@ -55,9 +55,13 @@ public sealed class FeatureEditCR1RuntimeTests
             split!.MenuCommand!.Execute(null);
             Dispatcher.UIThread.RunJobs();
             var popup = toolbar.FindControl<Popup>("DrawMenuPopup");
-            var labels = (popup!.Child as XYMenu)!.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
+            var hostPanel = Assert.IsType<Grid>(popup!.Child);
+            var rootMenu = Assert.IsType<XYMenu>(toolbar.FindControl<XYMenu>("DrawMenu"));
+            Assert.Same(hostPanel, rootMenu.GetVisualParent());
+            Assert.True(rootMenu.Bounds.Width > 0 && rootMenu.Bounds.Height > 0);
+            var labels = rootMenu.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
             Assert.Equal(["点", "线", "面"], labels);
-            Assert.All((popup.Child as XYMenu)!.Items.OfType<XYMenuItem>(), item => Assert.True(item.HasSubMenu));
+            Assert.All(rootMenu.Items.OfType<XYMenuItem>(), item => Assert.True(item.HasSubMenu));
         });
     }
 
@@ -73,13 +77,20 @@ public sealed class FeatureEditCR1RuntimeTests
             host.Show(toolbar, 800, 100); toolbar.UpdateLayout();
             var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
             split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
-            var root = (toolbar.FindControl<Popup>("DrawMenuPopup")!.Child as XYMenu)!;
+            var root = toolbar.FindControl<XYMenu>("DrawMenu")!;
             root.Items.OfType<XYMenuItem>().Single(x => x.Label == "线").Activate();
-            var submenu = Assert.IsType<XYSubMenu>(toolbar.FindControl<Popup>("DrawMenuPopup")!.Child);
+            Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout();
+            var popup = toolbar.FindControl<Popup>("DrawMenuPopup")!;
+            var submenu = Assert.IsType<XYSubMenu>(toolbar.FindControl<XYSubMenu>("DrawSubMenu"));
+            Assert.Same(popup.Child, submenu.GetVisualParent());
+            Assert.True(submenu.Bounds.Width > 0 && submenu.Bounds.Height > 0);
+            Assert.NotNull(submenu.ChildMenu.GetVisualParent());
+            Assert.True(submenu.ChildMenu.Bounds.Width > 0 && submenu.ChildMenu.Bounds.Height > 0);
             submenu.ChildMenu.Items.OfType<XYMenuItem>().Single().Activate();
             await Task.Delay(1);
             Assert.True(vm.IsDrawingTransactionActive);
             Assert.True(vm.IsRoadDrawingTool);
         });
     }
+
 }

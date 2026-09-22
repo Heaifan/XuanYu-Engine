@@ -6,10 +6,12 @@ namespace XuanYu.Editor.UI;
 
 public partial class ContextToolBar : UserControl
 {
-    XYSubMenu? _drawSubMenu;
+    XYSubMenu _drawSubMenu;
     public ContextToolBar()
     {
         InitializeComponent();
+        _drawSubMenu = DrawSubMenu;
+        DrawMenuPopup.Closed += (_, _) => ResetDrawingMenu();
         DrawSplitButton.MainCommand = new RelayCommand(_ => RunMainDrawAction());
         DrawSplitButton.MenuCommand = new RelayCommand(_ => OpenDrawingMenu());
         BuildDrawingMenu();
@@ -32,13 +34,17 @@ public partial class ContextToolBar : UserControl
         item.Invoked += (_, _) => _ = (DataContext as UiVm)?.BeginContextDrawingAsync(value);
         var parent = new XYMenu(new XYMenuItem { Label = label, HasSubMenu = true });
         var child = new XYMenu(item);
-        _drawSubMenu?.Close();
-        _drawSubMenu = new XYSubMenu { ParentMenu = parent, ChildMenu = child };
-        _drawSubMenu.Close(); DrawMenuPopup.Child = _drawSubMenu;
+        _drawSubMenu.Close();
+        _drawSubMenu.ParentMenu = parent;
+        _drawSubMenu.ChildMenu = child;
+        DrawMenu.IsVisible = false;
+        _drawSubMenu.IsVisible = true;
+        DrawMenuPopup.IsOpen = true;
         _drawSubMenu.Open(); child.Open();
     }
     void RunMainDrawAction() { if ((DataContext as UiVm)?.LastDrawTool is null) OpenDrawingMenu(); else _ = (DataContext as UiVm)?.BeginLastDrawToolAsync(); }
-    void OpenDrawingMenu() { _drawSubMenu?.Close(); DrawMenuPopup.Child = DrawMenu; DrawMenuPopup.PlacementTarget = DrawSplitButton; DrawMenuPopup.IsOpen = true; DrawMenu.Open(); }
+    void OpenDrawingMenu() { ResetDrawingMenu(); DrawMenuPopup.PlacementTarget = DrawSplitButton; DrawMenuPopup.IsOpen = true; DrawMenu.Open(); }
+    void ResetDrawingMenu() { _drawSubMenu.Close(); _drawSubMenu.IsVisible = false; DrawMenu.IsVisible = true; }
     void UndoDrawingVertex_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.UndoRoadDrawingVertex(); else vm.UndoRegionDrawingVertex(); } }
     void CompleteDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.CompleteRoadDrawing(); else vm.CompleteRegionDrawing(); } }
     void CancelDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.CancelRoadDrawing(); else vm.CancelRegionDrawing(); } }

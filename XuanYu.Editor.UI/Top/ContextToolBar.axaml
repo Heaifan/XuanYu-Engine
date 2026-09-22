@@ -11,7 +11,10 @@
     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
       <xy:XYSplitButton x:Name="DrawSplitButton" Content="{Binding DrawButtonLabel}" />
       <Popup x:Name="DrawMenuPopup" Placement="Bottom" IsLightDismissEnabled="True">
-        <xy:XYMenu x:Name="DrawMenu" />
+        <Grid x:Name="DrawMenuHost">
+          <xy:XYMenu x:Name="DrawMenu" />
+          <xy:XYSubMenu x:Name="DrawSubMenu" IsVisible="False" />
+        </Grid>
       </Popup>
 
       <StackPanel IsVisible="{Binding IsDrawingTransactionActive}" Orientation="Horizontal" Spacing="4">
