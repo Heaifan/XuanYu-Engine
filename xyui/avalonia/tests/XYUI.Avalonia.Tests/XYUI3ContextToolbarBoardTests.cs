@@ -2,6 +2,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Gallery;
@@ -19,6 +21,9 @@ public sealed class XYUI3ContextToolbarBoardTests : IClassFixture<XyuiHeadlessFi
     [Fact] public void Repeated_open_close_has_no_visual_residue() => _fx.Run(() => { XyuiBatchTestHost.Prepare(); var board = TestData.Board(); var child = board.Popup.Child; board.Open(); board.Close(); board.Open(); Assert.Same(child, board.Popup.Child); Assert.Same(board, board.Popup.PlacementTarget); });
     [Fact] public void Dropdown_board_does_not_use_cascading_popup() => _fx.Run(() => { XyuiBatchTestHost.Prepare(); var board = TestData.Board(); Assert.NotNull(board.Popup); Assert.Empty(board.GetVisualDescendants().OfType<XYMenu>()); Assert.Empty(board.GetVisualDescendants().OfType<XYSubMenu>()); });
     [Fact] public void Gallery_context_toolbar_section_uses_real_components() => _fx.Run(() => { XyuiBatchTestHost.Prepare(); var preview = XYUI3GalleryCatalog.CreatePreview(XYUI3GalleryCatalog.ContextToolbarId); var document = XYUI3DocumentationCatalog.ContextToolbarDocument(); Assert.Equal(3, preview.GetVisualDescendants().OfType<XYContextToolbar>().Count()); Assert.True(document.HasLiveExamples); Assert.Contains(preview.GetVisualDescendants().OfType<XYContextDropdownBoard>(), board => board.Popup.IsLightDismissEnabled); });
+    [Fact] public void Gallery_live_and_composition_do_not_duplicate_demos() => _fx.Run(() => { XyuiBatchTestHost.Prepare(); var document = XYUI3DocumentationCatalog.ContextToolbarDocument(); var live = document.LiveExamplesFactory!(); var composition = document.CompositionFactory!(); Assert.Equal(3, live.GetVisualDescendants().OfType<XYContextToolbar>().Count()); Assert.Single(composition.GetVisualDescendants().OfType<XYContextToolbar>()); });
+    [Fact] public void Gallery_open_demo_shows_board_after_layout() => _fx.Run(() => { XyuiBatchTestHost.Prepare(); var preview = XYUI3GalleryCatalog.CreatePreview(XYUI3GalleryCatalog.ContextToolbarId); var window = XyuiBatchTestHost.Show(preview); Dispatcher.UIThread.RunJobs(); var boards = preview.GetVisualDescendants().OfType<XYContextDropdownBoard>().ToArray(); Assert.True(boards[1].IsOpen); window.Close(); });
+    [Fact] public void Toolbar_groups_fit_inside_toolbar_bounds() => _fx.Run(() => { XyuiBatchTestHost.Prepare(); var toolbar = new XYContextToolbar(new XYContextGroup("编辑", new XYButton { Content = "选择", Height = 32 })); var window = XyuiBatchTestHost.Show(toolbar); Dispatcher.UIThread.RunJobs(); var group = toolbar.GetVisualDescendants().OfType<XYContextGroup>().Single(); var button = group.GetVisualDescendants().OfType<XYButton>().Single(); Assert.True(group.Bounds.Bottom <= toolbar.Bounds.Height + 0.1); Assert.True(button.Bounds.Bottom <= group.Bounds.Height + 0.1); window.Close(); });
 }
 
 static class TestData

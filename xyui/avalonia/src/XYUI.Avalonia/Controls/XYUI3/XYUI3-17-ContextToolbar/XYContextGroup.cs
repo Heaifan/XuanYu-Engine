@@ -6,7 +6,7 @@ namespace XYUI.Avalonia.Controls;
 
 public sealed class XYContextGroup : ContentControl
 {
-    readonly StackPanel _stack = new() { Spacing = 4 };
+    readonly StackPanel _stack = new() { Spacing = 1 };
     readonly TextBlock _headerText = new() { Classes = { "xyui-context-group-header" } };
     object? _content;
     public static readonly StyledProperty<string?> HeaderProperty = AvaloniaProperty.Register<XYContextGroup, string?>(nameof(Header));

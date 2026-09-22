@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using XYUI.Avalonia.Controls;
 
 namespace XYUI.Avalonia.Gallery;
@@ -16,9 +17,9 @@ public static partial class XYUI3GalleryCatalog
     }
     static Control CreateToolbar(bool open)
     {
-        var board = Board(); var split = new XYSplitButton { Content = "道路 ▼", Height = 32, MenuCommand = new BoardCommand(board) }; var groups = new[] { Group("编辑", "选择", "框选", "移动", "旋转", "缩放"), Group("绘制", split), Group("视图", "聚焦", "全览", "平移", "环绕"), Group("环境", "环境", "视图"), Group("吸附", "吸附：关闭") };
+        var board = ContextToolbarBoard(); var split = new XYSplitButton { Content = "道路 ▼", Height = 32, MenuCommand = new BoardCommand(board) }; var groups = new[] { Group("编辑", "选择", "框选", "移动", "旋转", "缩放"), Group("绘制", split), Group("视图", "聚焦", "全览", "平移", "环绕"), Group("环境", "环境", "视图"), Group("吸附", "吸附：关闭") };
         var root = new StackPanel { Spacing = 8, Children = { new XYContextToolbar(groups), board, new TextBlock { Text = open ? "默认打开 Board，验证 A3 + A4" : "道路 Dropdown 默认关闭", Classes = { "xyui-text-caption" } } } };
-        if (open) root.AttachedToVisualTree += (_, _) => board.Open(split); return root;
+        if (open) root.AttachedToVisualTree += (_, _) => Dispatcher.UIThread.Post(() => board.Open(split), DispatcherPriority.Loaded); return root;
     }
     static Control CreateDynamicToolbar()
     {
@@ -26,7 +27,7 @@ public static partial class XYUI3GalleryCatalog
     }
     static XYContextGroup Group(string title, params object[] controls) { var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 }; foreach (var control in controls) panel.Children.Add(control as Control ?? new XYButton { Content = control }); return new XYContextGroup(title, panel); }
     static Border Card(string title, Control child) => new() { Classes = { "xyui-surface-panel" }, Padding = new Thickness(12), Child = new StackPanel { Spacing = 7, Children = { new TextBlock { Text = title, Classes = { "xyui-text-section" } }, child } } };
-    static XYContextDropdownBoard Board() => new("绘制", [new("point", "点"), new("line", "线"), new("area", "面")], new Dictionary<string, IReadOnlyList<XYContextAction>> { ["point"] = [new("marker", "点标记"), new("poi", "兴趣点")], ["line"] = [new("road", "道路"), new("boundary", "边界线"), new("river", "河流")], ["area"] = [new("region", "区域"), new("blocked", "禁行区"), new("parcel", "地块")] });
+    internal static XYContextDropdownBoard ContextToolbarBoard() => new("绘制", [new("point", "点"), new("line", "线"), new("area", "面")], new Dictionary<string, IReadOnlyList<XYContextAction>> { ["point"] = [new("marker", "点标记"), new("poi", "兴趣点")], ["line"] = [new("road", "道路"), new("boundary", "边界线"), new("river", "河流")], ["area"] = [new("region", "区域"), new("blocked", "禁行区"), new("parcel", "地块")] });
     static XYButton Mode(string text, Action action) { var button = new XYButton { Content = text, Variant = XyuiButtonVariant.Secondary }; button.Click += (_, _) => action(); return button; }
     sealed class BoardCommand(XYContextDropdownBoard board) : System.Windows.Input.ICommand { public event EventHandler? CanExecuteChanged { add { } remove { } } public bool CanExecute(object? p) => true; public void Execute(object? p) => board.Toggle(); }
 }
@@ -34,7 +35,14 @@ public static partial class XYUI3GalleryCatalog
 public static partial class XYUI3LiveExamplesFactory
 {
     internal static Control CreateContextToolbarLiveExamples() => XYUI3GalleryCatalog.ContextToolbarPreview();
-    internal static Control CreateContextToolbarComposition() => XYUI3GalleryCatalog.ContextToolbarPreview();
+    internal static Control CreateContextToolbarComposition() => CreateContextComposition();
+    static Control CreateContextComposition()
+    {
+        var board = XYUI3GalleryCatalog.ContextToolbarBoard(); var split = new XYSplitButton { Content = "道路 ▼", Height = 32, MenuCommand = new ContextBoardCommand(board) };
+        var toolbar = new XYContextToolbar(new XYContextGroup("绘制", new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { split } }));
+        return new StackPanel { Spacing = 8, Children = { new TextBlock { Text = "A3 + A4 · 单 Board 组合", Classes = { "xyui-text-section" } }, toolbar, board } };
+    }
+    sealed class ContextBoardCommand(XYContextDropdownBoard board) : System.Windows.Input.ICommand { public event EventHandler? CanExecuteChanged { add { } remove { } } public bool CanExecute(object? p) => true; public void Execute(object? p) => board.Toggle(); }
 }
 
 public static partial class XYUI3DocumentationCatalog
