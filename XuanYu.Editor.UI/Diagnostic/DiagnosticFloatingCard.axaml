@@ -1,0 +1,22 @@
+<Border xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="XuanYu.Editor.UI.DiagnosticFloatingCard"
+        Width="330" Padding="12" Background="{StaticResource Color.Bg.Panel}"
+        BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
+        CornerRadius="{StaticResource Radius.Standard}">
+  <StackPanel Spacing="8">
+    <StackPanel Orientation="Horizontal" Spacing="8">
+      <TextBlock x:Name="Title" Foreground="White" FontWeight="SemiBold"/>
+      <TextBlock x:Name="Locked" Text="● 已锁定" Foreground="{StaticResource Color.Success}"/>
+    </StackPanel>
+    <TextBlock x:Name="Identity" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
+    <TextBlock x:Name="Details" Foreground="{StaticResource Color.Text.Secondary}" TextWrapping="Wrap"/>
+    <StackPanel x:Name="Actions" Orientation="Horizontal" Spacing="6">
+      <Button x:Name="CopyIndex" Content="复制索引"/>
+      <Button x:Name="CopySummary" Content="复制摘要"/>
+      <Button x:Name="CopyAi" Content="复制AI诊断"/>
+      <Button x:Name="Expand" Content="展开"/>
+      <Button x:Name="Close" Content="关闭"/>
+    </StackPanel>
+  </StackPanel>
+</Border>

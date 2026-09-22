@@ -1,0 +1,20 @@
+<Border xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="XuanYu.Editor.UI.DiagnosticDetailPanel"
+        Width="420" Padding="14" Background="{StaticResource Color.Bg.Panel}"
+        BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
+        CornerRadius="{StaticResource Radius.Standard}">
+  <StackPanel Spacing="8">
+    <StackPanel Orientation="Horizontal" Spacing="6">
+      <TextBlock x:Name="Title" Foreground="White" FontWeight="SemiBold"/>
+      <TextBlock Text="● 已锁定" Foreground="{StaticResource Color.Success}"/>
+      <Button x:Name="Close" Content="关闭" HorizontalAlignment="Right"/>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" Spacing="4">
+      <Button x:Name="Element" Content="元素"/><Button x:Name="Layout" Content="布局"/>
+      <Button x:Name="State" Content="状态"/><Button x:Name="Style" Content="样式"/>
+    </StackPanel>
+    <TextBlock x:Name="Content" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
+    <Button x:Name="CopyAi" Content="一键复制 AI 诊断" HorizontalAlignment="Right"/>
+  </StackPanel>
+</Border>
