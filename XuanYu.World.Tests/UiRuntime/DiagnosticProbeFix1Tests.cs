@@ -56,7 +56,7 @@ public sealed class DiagnosticProbeFix1Tests
             var field = typeof(DiagnosticOverlayHost).GetField("_probeCard",
                 BindingFlags.Instance | BindingFlags.NonPublic);
             var card = field?.GetValue(host) as Control;
-            Assert.NotNull(card); Assert.Equal("OverlayLayer", card!.Parent?.GetType().Name); window.Close();
+            Assert.NotNull(card); Assert.Equal("Canvas", card!.Parent?.GetType().Name); window.Close();
         });
     }
 

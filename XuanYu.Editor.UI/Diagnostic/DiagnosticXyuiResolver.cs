@@ -26,6 +26,8 @@ public static class DiagnosticXyuiResolver
         return DiagnosticXyuiIdentity.None(Source(visual));
     }
 
+    public static bool IsMapped(Visual visual) => Types.ContainsKey(visual.GetType().Name);
+
     static string Source(Visual visual)
     {
         var ns = visual.GetType().Namespace ?? string.Empty;

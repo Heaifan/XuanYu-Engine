@@ -4,7 +4,6 @@ using XuanYu.Core.Space;
 using XuanYu.Render.Abstractions;
 using XuanYu.World.Scene;
 namespace XuanYu.Editor.UI;
-
 public sealed partial class UiVm
 {
     int _renderSnapshotPublishCount;
@@ -43,6 +42,7 @@ public sealed partial class UiVm
     {
         if (TryToggleDiagnosticMode(name)) return;
         if (TryToggleDiagnosticProbe(name)) return;
+        if (TryToggleDiagnosticRegionBounds(name)) return;
         if (TryToggleViewportAssist(name)) return;
         if (TryRouteMapCommand(name)) return; // F1：地图面板命令真实路由（兜底之前）
         if (name is "聚焦") { FrameSelectedCamera(); return; }

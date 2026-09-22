@@ -5,8 +5,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
-
-public static class DiagnosticProbeResolver
+public static partial class DiagnosticProbeResolver
 {
     const string Missing = "N/A";
 
@@ -33,12 +32,14 @@ public static class DiagnosticProbeResolver
 
     static (Visual Control, int Rank) Candidate(Visual visual)
     {
-        if (HasDebugId(visual)) return (visual, 0);
+        if (IsTemplateInternal(visual)) return (visual, 4);
+        if (DiagnosticXyuiResolver.IsMapped(visual)) return (visual, 0);
+        if (HasDebugId(visual)) return (visual, 1);
         if (visual is Control control && !string.IsNullOrEmpty(NameValue(control)) && IsInteractive(control))
-            return (visual, 1);
-        if (visual is Control known && IsInteractive(known)) return (visual, 2);
-        if (visual is Control named && !string.IsNullOrEmpty(NameValue(named))) return (visual, 3);
-        return (visual, 4);
+            return (visual, 2);
+        if (visual is Control known && IsInteractive(known)) return (visual, 3);
+        if (visual is Control named && !string.IsNullOrEmpty(NameValue(named))) return (visual, 4);
+        return (visual, 5);
     }
 
     static bool IsInteractive(Control control) => control is Button or ToggleButton or TextBox or

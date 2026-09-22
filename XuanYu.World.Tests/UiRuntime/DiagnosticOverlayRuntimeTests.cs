@@ -5,7 +5,6 @@ using Avalonia.Headless;
 using Avalonia.Input;
 using Avalonia.Threading;
 using XuanYu.Editor.UI;
-
 namespace XuanYu.World.Tests.UiRuntime;
 [Collection("UiRuntime")]
 public sealed class DiagnosticOverlayRuntimeTests : IDisposable
@@ -36,7 +35,8 @@ public sealed class DiagnosticOverlayRuntimeTests : IDisposable
             var window = new Window { Width = 320, Height = 200, DataContext = vm,
                 Content = new Grid { Children = { scroll, host } } };
             window.Show(); window.UpdateLayout(); var bounds = target.Bounds; var extent = scroll.Extent;
-            vm.RunCommand.Execute("诊断模式"); Dispatcher.UIThread.RunJobs(); window.UpdateLayout();
+            vm.RunCommand.Execute("诊断模式"); vm.RunCommand.Execute("区域边界");
+            Dispatcher.UIThread.RunJobs(); window.UpdateLayout();
             Assert.Equal(bounds, target.Bounds); Assert.Equal(extent, scroll.Extent);
             var popup = UiRuntimeTestHost.Descendants<Avalonia.Controls.Primitives.Popup>(host).Single();
             Assert.True(popup.ShouldUseOverlayLayer); Assert.False(popup.TakesFocusFromNativeControl);
@@ -74,7 +74,7 @@ public sealed class DiagnosticOverlayRuntimeTests : IDisposable
                 Content = new Grid { Children = { panel, host } } };
             window.Show(); window.UpdateLayout(); vm.RunCommand.Execute("诊断模式");
             Dispatcher.UIThread.RunJobs(); Click(window, button, RawInputModifiers.None);
-            Assert.Equal(1, command.Count); Assert.Equal(1, host.ActivePopupCount);
+            Assert.Equal(1, command.Count); Assert.Equal(0, host.ActivePopupCount);
             vm.RunCommand.Execute("诊断模式"); Dispatcher.UIThread.RunJobs();
             Assert.Equal((0, 0), (host.ActivePopupCount, host.ActiveBadgeCount)); window.Close();
         });

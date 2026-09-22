@@ -56,7 +56,7 @@ public partial class DiagnosticOverlayHost
             _probePopup.HorizontalOffset = CardLeft;
             _probePopup.VerticalOffset = CardTop;
         }
-        if (_probeCard?.Parent is OverlayLayer)
+        if (_probeCard?.Parent is Canvas)
             _probeCard.Margin = new Thickness(CardLeft, CardTop, 0, 0);
     }
 }

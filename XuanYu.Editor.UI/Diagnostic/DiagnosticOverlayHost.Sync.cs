@@ -14,6 +14,7 @@ public partial class DiagnosticOverlayHost
             return;
         }
         if (_vm?.IsDiagnosticMode != true) ClearProbeVisuals();
+        if (_vm?.IsDiagnosticRegionBoundsMode != true) return;
         foreach (var target in DiagnosticRegistry.Targets.Values)
         {
             if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is null) continue;

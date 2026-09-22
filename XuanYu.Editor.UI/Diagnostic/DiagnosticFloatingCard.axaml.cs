@@ -16,7 +16,8 @@ public partial class DiagnosticFloatingCard : Border
     public DiagnosticFloatingCard(DiagnosticElementSnapshot snapshot, Func<string, Task> copy, bool locked = true)
     {
         InitializeComponent(); _snapshot = snapshot; _copy = copy;
-        Title.Text = snapshot.Identity.DisplayIndex;
+        Title.Text = snapshot.Identity.IsMapped ? snapshot.Identity.DisplayIndex :
+            snapshot.InstanceName != "N/A" ? snapshot.InstanceName : snapshot.ComponentType;
         Locked.IsVisible = locked; Width = locked ? 330 : 250;
         Pin.Content = locked ? "解除" : "锁定"; CopyAi.Content = locked ? "一键复制给 AI" : "复制";
         CopyIndex.IsVisible = locked; CopySummary.IsVisible = locked; Expand.IsVisible = locked; Close.IsVisible = locked;

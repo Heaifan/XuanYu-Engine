@@ -14,7 +14,8 @@ public partial class DiagnosticDetailPanel : Border
     public DiagnosticDetailPanel(DiagnosticElementSnapshot snapshot, Func<string, Task> copy, Action closed)
     {
         _snapshot = snapshot; _copy = copy; _closed = closed; InitializeComponent();
-        Title.Text = snapshot.Identity.DisplayIndex; Show("元素");
+        Title.Text = snapshot.Identity.IsMapped ? snapshot.Identity.DisplayIndex :
+            snapshot.InstanceName != "N/A" ? snapshot.InstanceName : snapshot.ComponentType; Show("元素");
         Element.Click += (_, _) => Show("元素"); Layout.Click += (_, _) => Show("布局");
         State.Click += (_, _) => Show("状态"); Style.Click += (_, _) => Show("样式");
         Close.Click += (_, _) => _closed(); CopyAi.Click += async (_, _) => await _copy(DiagnosticReportFormatter.FormatAi(_snapshot));

@@ -18,6 +18,8 @@
         <xy:XYSeparator Variant="Section" Classes="xyui-menu-separator"/>
         <xy:XYMenuItem Label="诊断模式" CheckKind="Check" IsChecked="{Binding IsDiagnosticMode}"
                        Command="{Binding RunCommand}" CommandParameter="诊断模式"/>
+        <xy:XYMenuItem Label="区域边界" CheckKind="Check" IsChecked="{Binding IsDiagnosticRegionBoundsMode}"
+                       Command="{Binding RunCommand}" CommandParameter="区域边界"/>
       </xy:XYMenu>
     </xy:XYMenuBarItem>
   </xy:XYMenuBar>

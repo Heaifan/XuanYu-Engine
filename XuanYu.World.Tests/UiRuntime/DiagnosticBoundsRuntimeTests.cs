@@ -22,6 +22,7 @@ public sealed class DiagnosticBoundsRuntimeTests
             var window = new Window { Width = 320, Height = 160, DataContext = vm,
                 Content = new Grid { Children = { target, host } } };
             window.Show(); window.UpdateLayout(); vm.RunCommand.Execute("诊断模式");
+            vm.RunCommand.Execute("区域边界");
             Dispatcher.UIThread.RunJobs(); window.UpdateLayout();
             Assert.Contains(host.GetVisualDescendants().OfType<Border>(), x => x.BorderThickness == new Thickness(2));
             Assert.Equal(1, host.ActiveRectangleCount);

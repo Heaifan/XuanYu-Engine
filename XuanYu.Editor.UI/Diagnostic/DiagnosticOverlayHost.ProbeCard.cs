@@ -16,12 +16,11 @@ public partial class DiagnosticOverlayHost
 
     void ShowLockedCard()
     {
-        _overlayLayer = OverlayLayer.GetOverlayLayer(this);
-        if (_overlayLayer is null || _probeCard is null) return;
+        if (_floatingLayer is null || _probeCard is null) return;
         _probeCard.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
         _probeCard.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
         _probeCard.Margin = new Thickness(CardLeft, CardTop, 0, 0);
-        _overlayLayer.Children.Add(_probeCard);
+        _floatingLayer.Children.Add(_probeCard);
     }
 
     void OpenDetails(DiagnosticElementSnapshot snapshot, Control? target)
@@ -37,9 +36,8 @@ public partial class DiagnosticOverlayHost
     {
         ProbeOwner.Children.Clear();
         if (_probePopup is not null) { _probePopup.IsOpen = false; PopupOwner.Children.Remove(_probePopup); }
-        if (_overlayLayer is not null && _probeCard is not null)
-            _overlayLayer.Children.Remove(_probeCard);
+        if (_floatingLayer is not null && _probeCard is not null)
+            _floatingLayer.Children.Remove(_probeCard);
         _probePopup = null; _probeHighlight = null; _probeCard = null;
-        _overlayLayer = null;
     }
 }

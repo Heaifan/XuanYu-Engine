@@ -12,7 +12,6 @@ public partial class DiagnosticOverlayHost
     Border? _probeHighlight;
     Border? _probeCard;
     Popup? _probePopup;
-    OverlayLayer? _overlayLayer;
 
     public int ActiveProbeHighlightCount => _probeHighlight is null ? 0 : 1;
     public int ActiveProbeCardCount => _probeCard is null ? 0 : 1;

@@ -45,7 +45,7 @@ public partial class DiagnosticOverlayHost
 
     void OnProbePointerMoved(object? sender, PointerEventArgs e)
     {
-        if (!ProbeEnabled || e.Source is not Visual hit || IsOverlayVisual(hit)) return;
+        if (!ProbeEnabled || e.Source is not Visual hit || IsOverlayVisual(hit) || ReferenceEquals(hit, _floatingLayer)) return;
         ProbeHover(hit, e.KeyModifiers.HasFlag(KeyModifiers.Alt));
     }
 
