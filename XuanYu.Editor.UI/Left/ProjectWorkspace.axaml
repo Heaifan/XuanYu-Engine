@@ -14,6 +14,13 @@
              ItemsSource="{Binding ProjectItems}"
              SelectedItem="{Binding SelectedProjectItem, Mode=TwoWay}"
              KeyDown="SelectionList_KeyDown">
+    <ListBox.Styles>
+      <Style Selector="ListBoxItem">
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+      </Style>
+    </ListBox.Styles>
     <ListBox.ItemsPanel>
       <ItemsPanelTemplate>
         <StackPanel/>
