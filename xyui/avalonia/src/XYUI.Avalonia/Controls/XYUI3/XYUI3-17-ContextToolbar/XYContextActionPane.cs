@@ -11,6 +11,7 @@ public sealed class XYContextActionPane : Border
     public event EventHandler<XYContextAction>? ActionExecuted;
     public XYContextActionPane() { Classes.Add("xyui-context-action-pane"); Child = _panel; }
     public void SetActions(IEnumerable<XYContextAction> actions) { Actions = actions.ToArray(); SelectedAction = Actions.FirstOrDefault(); Refresh(); }
+    public void SelectAction(string id) { SelectedAction = Actions.FirstOrDefault(x => x.Id == id) ?? SelectedAction; Refresh(); }
     public void Move(int delta)
     {
         if (Actions.Count == 0) return; var index = Math.Max(0, Array.IndexOf(Actions.ToArray(), SelectedAction) + delta); index = Math.Min(index, Actions.Count - 1); SelectedAction = Actions[index]; Refresh();

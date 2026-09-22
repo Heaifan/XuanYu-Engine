@@ -15,13 +15,14 @@ public sealed partial class XYSubMenu : Border
     public bool EffectiveVisible => IsOpen && (_parentSubMenu?.EffectiveVisible ?? true);
     public XYSubMenuConnector Connector => _connector;
     public bool OpenLeft { get => _openLeft; set { _openLeft = value; Build(); } }
+    public double ChildMenuWidth { get; set; } = 260;
     public bool ShowParentMenu { get; set; } = true;
     public event EventHandler? Opened;
     public event EventHandler? Closed;
     public XYSubMenu() { Classes.Add("xyui-sub-menu"); Child = _grid; Build(); InitializeInteraction(); AttachTriggers(); }
     void Build()
     {
-        _child.MinWidth = 260; _connector.IsMirrored = OpenLeft;
+        _child.MinWidth = ChildMenuWidth; _connector.IsMirrored = OpenLeft;
         _grid.Children.Clear(); _grid.ColumnDefinitions = new ColumnDefinitions("0,40,260,300");
         if (OpenLeft) { _grid.Children.Add(_child); _grid.Children.Add(_connector); Grid.SetColumn(_connector, 1); }
         else { _grid.Children.Add(_connector); _grid.Children.Add(_child); Grid.SetColumn(_connector, 1); Grid.SetColumn(_child, 2); }
