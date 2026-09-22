@@ -39,8 +39,8 @@ public sealed partial class XYSubMenu
         var visible = EffectiveVisible; _child.IsVisible = visible; _connector.IsVisible = visible && ParentMenu.IsVisible && _child.IsVisible;
         _grid.ColumnDefinitions[0].Width = new GridLength(0);
         _grid.ColumnDefinitions[1].Width = visible && ShowParentMenu ? new GridLength(40) : new GridLength(0);
-        _grid.ColumnDefinitions[2].Width = !OpenLeft && !visible ? new GridLength(0) : new GridLength(260);
-        _grid.ColumnDefinitions[3].Width = _children.Any(x => x.EffectiveVisible) ? new GridLength(300) : new GridLength(0);
+        _grid.ColumnDefinitions[2].Width = !OpenLeft && visible ? new GridLength(ChildMenuWidth) : new GridLength(0);
+        _grid.ColumnDefinitions[3].Width = _children.Any(x => x.EffectiveVisible) ? GridLength.Auto : new GridLength(0);
         foreach (var child in _children) child.SyncVisibility();
     }
     void OnTriggerRequested(object? sender, EventArgs e) { if (IsOpen) Close(); else Open(); }

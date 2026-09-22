@@ -32,7 +32,7 @@ public sealed class XYUI3ContextToolbarCoreTests : IClassFixture<XyuiHeadlessFix
     [Fact] public void DropdownBoard_opens_from_split_button() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var board = TestData.Board();
-        var split = new XYSplitButton { Content = "道路", MenuCommand = new TestData.Command(_ => board.Toggle()) };
+        var split = new XYSplitButton { Content = "道路" }; board.AttachTrigger(split); split.MenuCommand = new TestData.Command(_ => board.Toggle());
         split.MenuCommand!.Execute(null);
         Assert.True(board.IsOpen); Assert.True(board.Popup.IsLightDismissEnabled);
     });
