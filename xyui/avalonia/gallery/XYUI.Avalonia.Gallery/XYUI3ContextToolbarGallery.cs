@@ -1,0 +1,43 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Layout;
+using XYUI.Avalonia.Controls;
+
+namespace XYUI.Avalonia.Gallery;
+
+public static partial class XYUI3GalleryCatalog
+{
+    public const string ContextToolbarId = "XYUI-3-3.17-context";
+    public static Control ContextToolbarPreview() => BuildDemos();
+    static Control BuildDemos()
+    {
+        var standard = CreateToolbar(false); var open = CreateToolbar(true); var dynamic = CreateDynamicToolbar();
+        return new StackPanel { Spacing = 12, Children = { Card("Demo 1 · 标准状态", standard), Card("Demo 2 · Dropdown 展开状态", open), Card("Demo 3 · 动态模式", dynamic) } };
+    }
+    static Control CreateToolbar(bool open)
+    {
+        var board = Board(); var split = new XYSplitButton { Content = "道路 ▼", Height = 32, MenuCommand = new BoardCommand(board) }; var groups = new[] { Group("编辑", "选择", "框选", "移动", "旋转", "缩放"), Group("绘制", split), Group("视图", "聚焦", "全览", "平移", "环绕"), Group("环境", "环境", "视图"), Group("吸附", "吸附：关闭") };
+        var root = new StackPanel { Spacing = 8, Children = { new XYContextToolbar(groups), board, new TextBlock { Text = open ? "默认打开 Board，验证 A3 + A4" : "道路 Dropdown 默认关闭", Classes = { "xyui-text-caption" } } } };
+        if (open) root.AttachedToVisualTree += (_, _) => board.Open(split); return root;
+    }
+    static Control CreateDynamicToolbar()
+    {
+        var edit = Group("编辑", "选择", "移动"); var draw = Group("绘制", "道路", "区域"); var view = Group("视图", "聚焦", "全览"); var env = Group("环境", "环境", "视图"); var snap = Group("吸附", "吸附：关闭"); var bar = new XYContextToolbar(edit, draw, view, env, snap); var modes = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, Children = { Mode("普通模式", () => Set(false, false, true, false, false)), Mode("区域编辑", () => Set(true, true, true, true, true)), Mode("道路编辑", () => Set(true, true, true, false, true)) } }; void Set(bool e, bool d, bool v, bool n, bool s) { edit.IsVisible = e; draw.IsVisible = d; view.IsVisible = v; env.IsVisible = n; snap.IsVisible = s; } Set(true, false, true, false, false); return new StackPanel { Spacing = 8, Children = { modes, bar } };
+    }
+    static XYContextGroup Group(string title, params object[] controls) { var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 }; foreach (var control in controls) panel.Children.Add(control as Control ?? new XYButton { Content = control }); return new XYContextGroup(title, panel); }
+    static Border Card(string title, Control child) => new() { Classes = { "xyui-surface-panel" }, Padding = new Thickness(12), Child = new StackPanel { Spacing = 7, Children = { new TextBlock { Text = title, Classes = { "xyui-text-section" } }, child } } };
+    static XYContextDropdownBoard Board() => new("绘制", [new("point", "点"), new("line", "线"), new("area", "面")], new Dictionary<string, IReadOnlyList<XYContextAction>> { ["point"] = [new("marker", "点标记"), new("poi", "兴趣点")], ["line"] = [new("road", "道路"), new("boundary", "边界线"), new("river", "河流")], ["area"] = [new("region", "区域"), new("blocked", "禁行区"), new("parcel", "地块")] });
+    static XYButton Mode(string text, Action action) { var button = new XYButton { Content = text, Variant = XyuiButtonVariant.Secondary }; button.Click += (_, _) => action(); return button; }
+    sealed class BoardCommand(XYContextDropdownBoard board) : System.Windows.Input.ICommand { public event EventHandler? CanExecuteChanged { add { } remove { } } public bool CanExecute(object? p) => true; public void Execute(object? p) => board.Toggle(); }
+}
+
+public static partial class XYUI3LiveExamplesFactory
+{
+    internal static Control CreateContextToolbarLiveExamples() => XYUI3GalleryCatalog.ContextToolbarPreview();
+    internal static Control CreateContextToolbarComposition() => XYUI3GalleryCatalog.ContextToolbarPreview();
+}
+
+public static partial class XYUI3DocumentationCatalog
+{
+    public static XYUI1ComponentDocument ContextToolbarDocument() => new(XYUI3GalleryCatalog.ContextToolbarId, "上下文工具栏", "Context Toolbar", "分组卡片式上下文工具栏与一体展开 Board。", "用于编辑器上下文模式的紧凑工具组与单层级下拉操作。", XYUI3GalleryCatalog.ContextToolbarPreview, ["<c:XYContextToolbar />", "<c:XYContextDropdownBoard />"], [new("A + A3 + A4", "48 DIP toolbar / compact board", "Editor context")], [new("Open", "单 Popup Board"), new("Keyboard", "Esc / arrows / Enter")], [], [], "XYUI.Avalonia.Controls.XYContextToolbar") { CanonicalIdentity = "XYUI-3-3.17~3.22 · Context Toolbar Gallery", Category = "XYUI-3 · Context Toolbar", Acceptance = "GALLERY IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE", LiveExamplesFactory = XYUI3LiveExamplesFactory.CreateContextToolbarLiveExamples, CompositionFactory = XYUI3LiveExamplesFactory.CreateContextToolbarComposition };
+}

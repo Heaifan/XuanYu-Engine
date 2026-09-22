@@ -69,7 +69,7 @@ public sealed partial class GalleryLayoutArchitectureTests
         XyuiBatchTestHost.Prepare(); var vm = new XYUI1DocumentationViewModel();
         Assert.Equal(24, vm.Items.Skip(1).Count());
         Assert.Equal(24, vm.XYUI2Items.Skip(1).Count());
-        Assert.Equal(24, vm.XYUI3Items.Skip(1).Count());
-        Assert.Equal("24/24", vm.XYUI3CountText);
+        Assert.Equal(25, vm.XYUI3Items.Skip(1).Count());
+        Assert.Equal("25/25", vm.XYUI3CountText);
     });
 }

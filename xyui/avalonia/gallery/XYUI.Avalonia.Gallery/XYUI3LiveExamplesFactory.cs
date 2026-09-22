@@ -32,6 +32,7 @@ public static partial class XYUI3LiveExamplesFactory
         "XYUI-3-3.22" => CreateTableOfContentsLiveExamples(),
         "XYUI-3-3.23" => CreateBottomNavigationLiveExamples(),
         "XYUI-3-3.24" => CreateNavigationDrawerLiveExamples(),
+        XYUI3GalleryCatalog.ContextToolbarId => CreateContextToolbarLiveExamples(),
         _ => null
     };
 
@@ -61,6 +62,7 @@ public static partial class XYUI3LiveExamplesFactory
         "XYUI-3-3.22" => CreateTableOfContentsComposition(),
         "XYUI-3-3.23" => CreateBottomNavigationComposition(),
         "XYUI-3-3.24" => CreateNavigationDrawerComposition(),
+        XYUI3GalleryCatalog.ContextToolbarId => CreateContextToolbarComposition(),
         _ => null
     };
 
