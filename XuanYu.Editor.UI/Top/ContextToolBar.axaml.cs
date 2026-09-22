@@ -6,15 +6,25 @@ namespace XuanYu.Editor.UI;
 
 public partial class ContextToolBar : UserControl
 {
-    XYSubMenu _drawSubMenu;
     public ContextToolBar()
     {
         InitializeComponent();
-        _drawSubMenu = DrawSubMenu;
+        DataContextChanged += (_, _) => SyncDiagnosticHosts();
+        DrawMenuPopup.Opened += (_, _) => DrawMenuPopupHost.SetPopupOpen(true);
         DrawMenuPopup.Closed += (_, _) => ResetDrawingMenu();
+        DrawSubMenuPopup.Opened += (_, _) => DrawSubMenuPopupHost.SetPopupOpen(true);
+        DrawSubMenuPopup.Closed += (_, _) => DrawChildMenu.Close();
+        DrawSubMenuPopup.Closed += (_, _) => DrawSubMenuPopupHost.SetPopupOpen(false);
+        DrawMenuPopup.Closed += (_, _) => DrawMenuPopupHost.SetPopupOpen(false);
         DrawSplitButton.MainCommand = new RelayCommand(_ => RunMainDrawAction());
         DrawSplitButton.MenuCommand = new RelayCommand(_ => OpenDrawingMenu());
         BuildDrawingMenu();
+    }
+    void SyncDiagnosticHosts()
+    {
+        DrawMenuPopupHost.DataContext = DataContext; DrawSubMenuPopupHost.DataContext = DataContext;
+        var enabled = (DataContext as UiVm)?.IsDiagnosticMode == true;
+        DrawMenuPopupHost.SetDiagnosticEnabled(enabled); DrawSubMenuPopupHost.SetDiagnosticEnabled(enabled);
     }
     void BuildDrawingMenu()
     {
@@ -25,25 +35,22 @@ public partial class ContextToolBar : UserControl
     XYMenuItem Category(string label, string display, string value)
     {
         var item = new XYMenuItem { Label = label, HasSubMenu = true };
-        item.SubMenuRequested += (_, _) => OpenDrawingSubMenu(label, display, value);
+        item.SubMenuRequested += (_, _) => OpenDrawingSubMenu(item, label, display, value);
         return item;
     }
-    void OpenDrawingSubMenu(string label, string display, string value)
+    void OpenDrawingSubMenu(Control anchor, string label, string display, string value)
     {
+        SyncDiagnosticHosts();
         var item = new XYMenuItem { Label = display };
-        item.Invoked += (_, _) => _ = (DataContext as UiVm)?.BeginContextDrawingAsync(value);
-        var parent = new XYMenu(new XYMenuItem { Label = label, HasSubMenu = true });
-        var child = new XYMenu(item);
-        _drawSubMenu.Close();
-        _drawSubMenu.ParentMenu = parent;
-        _drawSubMenu.ChildMenu = child;
-        _drawSubMenu.IsVisible = true;
-        DrawMenuPopup.IsOpen = true;
-        _drawSubMenu.Open(); child.Open();
+        item.Invoked += (_, _) => { DrawSubMenuPopup.IsOpen = false; _ = (DataContext as UiVm)?.BeginContextDrawingAsync(value); };
+        DrawChildMenu.Items = [item];
+        DrawSubMenuPopup.PlacementTarget = anchor;
+        DrawSubMenuPopup.IsOpen = true;
+        DrawChildMenu.Open();
     }
     void RunMainDrawAction() { if ((DataContext as UiVm)?.LastDrawTool is null) OpenDrawingMenu(); else _ = (DataContext as UiVm)?.BeginLastDrawToolAsync(); }
-    void OpenDrawingMenu() { ResetDrawingMenu(); DrawMenuPopup.PlacementTarget = DrawSplitButton; DrawMenuPopup.IsOpen = true; DrawMenu.Open(); }
-    void ResetDrawingMenu() { _drawSubMenu.Close(); _drawSubMenu.IsVisible = false; DrawMenu.IsVisible = true; }
+    void OpenDrawingMenu() { SyncDiagnosticHosts(); ResetDrawingMenu(); DrawMenuPopup.PlacementTarget = DrawSplitButton; DrawMenuPopup.IsOpen = true; DrawMenu.Open(); }
+    void ResetDrawingMenu() { DrawSubMenuPopup.IsOpen = false; DrawChildMenu.Close(); DrawMenu.Close(); }
     void UndoDrawingVertex_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.UndoRoadDrawingVertex(); else vm.UndoRegionDrawingVertex(); } }
     void CompleteDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.CompleteRoadDrawing(); else vm.CompleteRegionDrawing(); } }
     void CancelDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.CancelRoadDrawing(); else vm.CancelRegionDrawing(); } }

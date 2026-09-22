@@ -6,6 +6,10 @@
              IsHitTestVisible="False">
   <Grid>
     <Canvas x:Name="PopupOwner" Width="0" Height="0"/>
+    <Canvas x:Name="BoundsOwner"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            IsHitTestVisible="False"/>
     <Canvas x:Name="ProbeOwner"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"

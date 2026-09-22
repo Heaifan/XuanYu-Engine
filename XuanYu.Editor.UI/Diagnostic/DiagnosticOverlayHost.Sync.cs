@@ -30,6 +30,7 @@ public partial class DiagnosticOverlayHost
             _popups.Add(popup);
             popup.IsOpen = true;
         }
+        RenderTargetBounds();
     }
 
     void CloseAll()
@@ -37,5 +38,6 @@ public partial class DiagnosticOverlayHost
         foreach (var popup in _popups) popup.IsOpen = false;
         PopupOwner.Children.Clear();
         _popups.Clear();
+        ClearTargetBounds();
     }
 }
