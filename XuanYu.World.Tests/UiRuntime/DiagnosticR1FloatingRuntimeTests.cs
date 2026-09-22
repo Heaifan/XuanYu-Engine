@@ -15,7 +15,8 @@ public sealed class DiagnosticR1FloatingRuntimeTests
         host.SetProbeResult(DiagnosticProbeResolver.Resolve(first));
         host.LockProbe();
         host.SetProbeResult(DiagnosticProbeResolver.Resolve(second));
-        Assert.Same(first, host.CurrentProbeResult?.DeepVisual);
+        Assert.Same(second, host.CurrentProbeResult?.DeepVisual);
+        Assert.Same(first, host.LockedProbeResult?.DeepVisual);
         Assert.True(host.IsProbeLocked);
         host.UnlockProbe();
         Assert.False(host.IsProbeLocked);

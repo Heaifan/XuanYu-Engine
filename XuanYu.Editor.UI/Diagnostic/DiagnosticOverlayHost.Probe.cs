@@ -12,6 +12,7 @@ public partial class DiagnosticOverlayHost
     Border? _probeHighlight;
     Border? _probeCard;
     Popup? _probePopup;
+    OverlayLayer? _overlayLayer;
 
     public int ActiveProbeHighlightCount => _probeHighlight is null ? 0 : 1;
     public int ActiveProbeCardCount => _probeCard is null ? 0 : 1;
@@ -31,7 +32,6 @@ public partial class DiagnosticOverlayHost
 
     public void SetProbeResult(DiagnosticProbeResult? result)
     {
-        if (IsProbeLocked) return;
         _probeResult = result;
         RenderProbe();
     }
@@ -53,31 +53,16 @@ public partial class DiagnosticOverlayHost
         var card = new DiagnosticFloatingCard(snapshot,
             text => target is null ? Task.CompletedTask : _clipboard.SetTextAsync(target, text), IsProbeLocked);
         card.IsHitTestVisible = true;
+        AttachCardDrag(card);
         card.Expanded += () => OpenDetails(snapshot, target);
         card.Closed += () => { UnlockProbe(); SetProbeResult(null); };
+        card.PinToggled += () => { if (IsProbeLocked) UnlockProbe(); else LockProbe(); };
         _probeCard = new Border { Child = card, IsHitTestVisible = true };
         Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
         Canvas.SetLeft(_probeCard, bounds.X); Canvas.SetTop(_probeCard, Math.Max(0, bounds.Y - 24));
         _probeHighlight.SetValue(Panel.ZIndexProperty, 200); _probeCard.SetValue(Panel.ZIndexProperty, 201);
         ProbeOwner.Children.Add(_probeHighlight);
-        _probePopup = new Popup { Child = _probeCard, PlacementTarget = this,
-            Placement = PlacementMode.BottomEdgeAlignedLeft, HorizontalOffset = 12,
-            VerticalOffset = 12, ShouldUseOverlayLayer = true, IsLightDismissEnabled = false };
-        PopupOwner.Children.Add(_probePopup); _probePopup.IsOpen = true;
-    }
-
-    void OpenDetails(DiagnosticElementSnapshot snapshot, Control? target)
-    {
-        if (_probePopup is null) return;
-        _probePopup.Child = new DiagnosticDetailPanel(snapshot,
-            text => target is null ? Task.CompletedTask : _clipboard.SetTextAsync(target, text),
-            () => { UnlockProbe(); SetProbeResult(null); });
-    }
-
-    void ClearProbeVisuals()
-    {
-        ProbeOwner.Children.Clear();
-        if (_probePopup is not null) { _probePopup.IsOpen = false; PopupOwner.Children.Remove(_probePopup); }
-        _probePopup = null; _probeHighlight = null; _probeCard = null;
+        if (IsProbeLocked) ShowLockedCard();
+        else ShowPreviewCard();
     }
 }

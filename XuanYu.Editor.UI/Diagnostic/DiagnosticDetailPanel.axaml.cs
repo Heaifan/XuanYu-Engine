@@ -7,6 +7,7 @@ public partial class DiagnosticDetailPanel : Border
     DiagnosticElementSnapshot _snapshot = null!;
     Func<string, Task> _copy = _ => Task.CompletedTask;
     Action _closed = () => { };
+    public Control DragSurface => Header;
 
     public DiagnosticDetailPanel() => InitializeComponent();
 

@@ -7,7 +7,6 @@ using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.UiRuntime;
-
 [Collection("UiRuntime")]
 public sealed class DiagnosticProbeOverlayRuntimeTests
 {
@@ -53,6 +52,7 @@ public sealed class DiagnosticProbeOverlayRuntimeTests
             Assert.Equal(topLevels, TopLevel.GetTopLevel(host) is null ? 0 : 1); window.Close();
         });
     }
+
     [Fact]
     public void Probe_hides_when_window_is_minimized_and_recovers_on_activation()
     {

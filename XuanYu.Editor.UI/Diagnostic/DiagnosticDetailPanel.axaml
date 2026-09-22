@@ -5,7 +5,7 @@
         BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
         CornerRadius="{StaticResource Radius.Standard}">
   <StackPanel Spacing="8">
-    <StackPanel Orientation="Horizontal" Spacing="6">
+    <StackPanel x:Name="Header" Orientation="Horizontal" Spacing="6">
       <TextBlock x:Name="Title" Foreground="White" FontWeight="SemiBold"/>
       <TextBlock Text="● 已锁定" Foreground="{StaticResource Color.Success}"/>
       <Button x:Name="Close" Content="关闭" HorizontalAlignment="Right"/>
