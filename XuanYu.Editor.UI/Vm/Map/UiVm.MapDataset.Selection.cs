@@ -44,9 +44,9 @@ public sealed partial class UiVm
         if (_datasetRegistry is null) return;
         var states = _datasetRegistry.CurrentManifest.DatasetLayerStates.OrderBy(item => item.Order).ToList();
         var state = states.FirstOrDefault(item => item.DatasetId == id);
-        if (state is null) return;
+        if (state is null || targetIndex < 0 || targetIndex >= states.Count) return;
         states.Remove(state);
-        states.Insert(Math.Clamp(targetIndex, 0, states.Count), state);
+        states.Insert(targetIndex, state);
         await UpdateLayersAsync(states);
     }
 
