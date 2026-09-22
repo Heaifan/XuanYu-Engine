@@ -19,25 +19,24 @@ public partial class ContextToolBar : UserControl
     void BuildDrawingMenu()
     {
         var menu = new XYMenu();
-        menu.Items = [Category("点", "地图标记"), Category("线", "道路"), Category("面", "区域面")];
+        menu.Items = [Category("点", "点标记", "地图标记"), Category("线", "道路", "道路"), Category("面", "区域", "区域面")];
         DrawMenu.Items = menu.Items;
     }
-    XYMenuItem Category(string label, string value)
+    XYMenuItem Category(string label, string display, string value)
     {
         var item = new XYMenuItem { Label = label, HasSubMenu = true };
-        item.SubMenuRequested += (_, _) => OpenDrawingSubMenu(label, value);
+        item.SubMenuRequested += (_, _) => OpenDrawingSubMenu(label, display, value);
         return item;
     }
-    void OpenDrawingSubMenu(string label, string value)
+    void OpenDrawingSubMenu(string label, string display, string value)
     {
-        var item = new XYMenuItem { Label = label };
+        var item = new XYMenuItem { Label = display };
         item.Invoked += (_, _) => _ = (DataContext as UiVm)?.BeginContextDrawingAsync(value);
         var parent = new XYMenu(new XYMenuItem { Label = label, HasSubMenu = true });
         var child = new XYMenu(item);
         _drawSubMenu.Close();
         _drawSubMenu.ParentMenu = parent;
         _drawSubMenu.ChildMenu = child;
-        DrawMenu.IsVisible = false;
         _drawSubMenu.IsVisible = true;
         DrawMenuPopup.IsOpen = true;
         _drawSubMenu.Open(); child.Open();

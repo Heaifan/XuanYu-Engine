@@ -55,7 +55,7 @@ public sealed class FeatureEditCR1RuntimeTests
             split!.MenuCommand!.Execute(null);
             Dispatcher.UIThread.RunJobs();
             var popup = toolbar.FindControl<Popup>("DrawMenuPopup");
-            var hostPanel = Assert.IsType<Grid>(popup!.Child);
+            var hostPanel = Assert.IsType<StackPanel>(popup!.Child);
             var rootMenu = Assert.IsType<XYMenu>(toolbar.FindControl<XYMenu>("DrawMenu"));
             Assert.Same(hostPanel, rootMenu.GetVisualParent());
             Assert.True(rootMenu.Bounds.Width > 0 && rootMenu.Bounds.Height > 0);
