@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
+             x:Class="XuanYu.Editor.UI.RegionPanel"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/>
+  </UserControl.Styles>
+  <StackPanel Spacing="8" Margin="2,8">
+      <xy:XYSectionTitle Text="区域面"/>
+      <xy:XYSectionTitle Text="当前绘制目标"/>
+      <xy:XYText Text="{Binding RegionDrawingTargetName}"/>
+      <xy:XYSelectableText Text="{Binding RegionDrawingTargetId}" Variant="Technical"/>
+      <xy:XYCaption Text="{Binding RegionDrawingTargetStatus}" TextWrapping="Wrap"/>
+      <xy:XYSeparator Variant="Section"/>
+      <xy:XYSectionTitle Text="绘制"/>
+      <xy:XYButton Content="绘制区域" Click="RegionDrawing_Click" IsEnabled="{Binding CanRequestRegionDrawing}" AutomationProperties.Name="绘制区域"/>
+      <xy:XYSectionTitle Text="草稿"/>
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+        <xy:XYLabel Text="顶点"/>
+        <xy:XYText Grid.Column="1" Text="{Binding RegionDrawingDraftVertexCount}"/>
+        <xy:XYLabel Grid.Row="1" Text="状态"/>
+        <xy:XYText Grid.Row="1" Grid.Column="1" Text="{Binding RegionDrawingDraftStatus}"/>
+        <xy:XYLabel Grid.Row="2" Text="吸附"/>
+        <xy:XYText Grid.Row="2" Grid.Column="1" Text="{Binding RegionDrawingSnapStatus}"/>
+      </Grid>
+      <UniformGrid Columns="2" ColumnSpacing="6" RowSpacing="6">
+        <xy:XYButton Content="撤销顶点" Click="UndoRegionDrawingVertex_Click" IsEnabled="{Binding CanUndoRegionDrawingVertex}"/>
+        <xy:XYButton Content="重做顶点" Click="RedoRegionDrawingVertex_Click" IsEnabled="{Binding CanRedoRegionDrawingVertex}"/>
+        <xy:XYButton Content="完成区域" Click="CompleteRegionDrawing_Click" IsEnabled="{Binding CanCompleteRegionDrawing}"/>
+        <xy:XYButton Content="取消绘制" Click="CancelRegionDrawing_Click" IsEnabled="{Binding CanCancelRegionDrawing}"/>
+      </UniformGrid>
+      <xy:XYSeparator Variant="Section"/>
+      <xy:XYSectionTitle Text="区域内容"/>
+      <xy:XYText Text="已有区域：{Binding RegionContentCount}"/>
+  </StackPanel>
+</UserControl>
