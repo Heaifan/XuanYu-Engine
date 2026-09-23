@@ -130,6 +130,7 @@ else {
 # ARCH-WORLD-R5 Render projection boundary guards live in a separate file.
 . "$PSScriptRoot/arch-a-guard-render.ps1"
 . "$PSScriptRoot/arch-a-guard-warcore.ps1"
+. "$PSScriptRoot/arch-a-guard-viewport.ps1"
 
 foreach ($file in Get-TrackedHandwrittenFiles) {
     $lines = Get-PhysicalLineCount $file.FullName
