@@ -4,7 +4,8 @@
         Width="330" Padding="12" Background="{StaticResource Color.Bg.Panel}"
         BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
         CornerRadius="{StaticResource Radius.Standard}">
-  <StackPanel Spacing="8">
+  <ScrollViewer MaxHeight="420" VerticalScrollBarVisibility="Auto">
+   <StackPanel Spacing="8">
     <StackPanel x:Name="Header" Orientation="Horizontal" Spacing="8">
       <TextBlock x:Name="Title" Foreground="White" FontWeight="SemiBold"/>
       <TextBlock x:Name="Locked" Text="● 已锁定" Foreground="{StaticResource Color.Success}"/>
@@ -17,5 +18,6 @@
       <Button x:Name="Expand" Content="展开"/>
       <Button x:Name="Close" Content="关闭"/>
     </StackPanel>
-  </StackPanel>
+   </StackPanel>
+  </ScrollViewer>
 </Border>

@@ -12,6 +12,7 @@ public partial class DiagnosticOverlayHost : UserControl
     UiVm? _vm;
     bool _loaded;
     Canvas? _floatingLayer;
+    readonly List<TopLevel> _probeRoots = [];
 
     public DiagnosticOverlayHost() : this(new DiagnosticClipboard()) { }
 
@@ -29,7 +30,8 @@ public partial class DiagnosticOverlayHost : UserControl
 
     void AttachFloatingLayer(Window window)
     {
-        if (window.Content is not Panel root) return;
+        var root = EnsureWindowRoot(window);
+        if (root is null) return;
         if (_floatingLayer?.Parent is Panel) return;
         _floatingLayer = new Canvas { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch, IsHitTestVisible = true };
@@ -45,6 +47,7 @@ public partial class DiagnosticOverlayHost : UserControl
     void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         _loaded = true;
+        DiagnosticPopupHost.PopupRootChanged += OnPopupRootChanged;
         AttachTopLevel();
         if (_topLevel is Window window) AttachFloatingLayer(window);
         AttachVm();
@@ -55,6 +58,7 @@ public partial class DiagnosticOverlayHost : UserControl
     {
         _loaded = false;
         DetachTopLevel();
+        DiagnosticPopupHost.PopupRootChanged -= OnPopupRootChanged;
         DetachVm();
         CloseAll();
         ClearProbeVisuals();
@@ -87,4 +91,5 @@ public partial class DiagnosticOverlayHost : UserControl
             nameof(UiVm.IsDiagnosticRegionBoundsMode) or nameof(UiVm.InspectorIdentity))
             Reconcile();
     }
+
 }

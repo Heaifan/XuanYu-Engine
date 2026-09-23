@@ -23,7 +23,7 @@ public partial class ContextToolBar : UserControl
     void SyncDiagnosticHosts()
     {
         DrawMenuPopupHost.DataContext = DataContext; DrawSubMenuPopupHost.DataContext = DataContext;
-        var enabled = (DataContext as UiVm)?.IsDiagnosticMode == true;
+        var enabled = (DataContext as UiVm)?.IsDiagnosticRegionBoundsMode == true;
         DrawMenuPopupHost.SetDiagnosticEnabled(enabled); DrawSubMenuPopupHost.SetDiagnosticEnabled(enabled);
     }
     void BuildDrawingMenu()

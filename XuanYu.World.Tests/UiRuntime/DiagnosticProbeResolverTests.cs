@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
+using XYUI.Avalonia.Controls;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -64,5 +65,13 @@ public sealed class DiagnosticProbeResolverTests
         });
         Assert.Equal("TextBlock", result.SemanticTarget?.GetType().Name);
         Assert.Equal("XYE.INSPECTOR.ROAD.STATE", result.ParentDebugId); Assert.Equal("N/A", result.DebugId);
+    }
+
+    [Fact]
+    public void XYUI3_menu_controls_have_stable_diagnostic_indices()
+    {
+        Assert.Equal("XYUI3", DiagnosticXyuiResolver.Resolve(new XYMenu()).Number);
+        Assert.Equal("XYUI3", DiagnosticXyuiResolver.Resolve(new XYSubMenu()).Number);
+        Assert.Equal("XYUI3", DiagnosticXyuiResolver.Resolve(new XYContextToolbar()).Number);
     }
 }

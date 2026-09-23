@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
 
@@ -29,7 +30,11 @@ public partial class DiagnosticOverlayHost
 
     public void SetProbeResult(DiagnosticProbeResult? result)
     {
+        if (result is not null && _probeResult is { } current &&
+            ReferenceEquals(current.SemanticTarget ?? current.DeepVisual, result.SemanticTarget ?? result.DeepVisual) &&
+            current.ProbeMode == result.ProbeMode) return;
         _probeResult = result;
+        if (IsProbeLocked && result is not null) return;
         RenderProbe();
     }
 
@@ -38,8 +43,7 @@ public partial class DiagnosticOverlayHost
         ClearProbeVisuals();
         var result = IsProbeLocked ? _lockedProbeResult : _probeResult;
         if (result is null || !_loaded || _floatingLayer is null) return;
-        if (result.DeepVisual.TranslatePoint(default, _floatingLayer) is not { } origin) return;
-        var bounds = new Rect(origin, result.DeepVisual.Bounds.Size);
+        if (!TryGetFloatingBounds(result.DeepVisual, out var bounds)) return;
         _probeHighlight = new Border
         {
             Width = bounds.Width, Height = bounds.Height,
@@ -60,12 +64,24 @@ public partial class DiagnosticOverlayHost
         Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
         _floatingLayer.Children.Add(_probeHighlight);
         _floatingLayer.Children.Add(_probeCard);
+        ClampCardToWindow();
         if (!IsProbeLocked)
         {
-            CardLeft = bounds.X + bounds.Width + 12;
-            CardTop = Math.Max(12, bounds.Y);
+            PlacePreviewCard(bounds);
         }
         ClampCardToWindow();
         _probeHighlight.SetValue(Panel.ZIndexProperty, 200); _probeCard.SetValue(Panel.ZIndexProperty, 201);
+    }
+
+    bool TryGetFloatingBounds(Visual visual, out Rect bounds)
+    {
+        if (_floatingLayer is not null && visual.TranslatePoint(default, _floatingLayer) is { } local)
+        { bounds = new Rect(local, visual.Bounds.Size); return true; }
+        if (_floatingLayer is null) { bounds = default; return false; }
+        var scale = _topLevel?.RenderScaling ?? 1d;
+        var layer = _floatingLayer.PointToScreen(default);
+        var origin = visual.PointToScreen(default);
+        var point = new Point((origin.X - layer.X) / scale, (origin.Y - layer.Y) / scale);
+        bounds = new Rect(point, visual.Bounds.Size); return true;
     }
 }

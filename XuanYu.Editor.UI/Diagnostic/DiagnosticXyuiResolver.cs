@@ -15,7 +15,10 @@ public static class DiagnosticXyuiResolver
             ["XYToggleButton"] = ("XYUI2", "XYUI-2-03"),
             ["XYSplitButton"] = ("XYUI2", "XYUI-2-04"),
             ["XYTextField"] = ("XYUI2", "XYUI-2-09"),
-            ["XYComboBox"] = ("XYUI2", "XYUI-2-12")
+            ["XYComboBox"] = ("XYUI2", "XYUI-2-12"),
+            ["XYContextToolbar"] = ("XYUI3", "XYUI-3-17"),
+            ["XYMenu"] = ("XYUI3", "XYUI-3-02"),
+            ["XYSubMenu"] = ("XYUI3", "XYUI-3-04")
         };
 
     public static DiagnosticXyuiIdentity Resolve(Visual visual)

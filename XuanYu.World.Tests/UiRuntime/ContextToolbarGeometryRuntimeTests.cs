@@ -46,6 +46,7 @@ public sealed class ContextToolbarGeometryRuntimeTests
         {
             var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
             vm.RunCommand.Execute("诊断模式");
+            vm.RunCommand.Execute("区域边界");
             var toolbar = new ContextToolBar { DataContext = vm }; host.Show(toolbar, 1000, 180);
             var rootHost = toolbar.FindControl<DiagnosticPopupHost>("DrawMenuPopupHost")!;
             var childHost = toolbar.FindControl<DiagnosticPopupHost>("DrawSubMenuPopupHost")!;

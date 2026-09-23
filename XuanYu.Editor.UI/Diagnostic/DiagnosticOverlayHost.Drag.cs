@@ -55,12 +55,33 @@ public partial class DiagnosticOverlayHost
     void ClampCardToWindow()
     {
         if (_floatingLayer is null || _probeCard is null) return;
+        var available = new Size(Math.Max(0, _floatingLayer.Bounds.Width - 24),
+            Math.Max(0, _floatingLayer.Bounds.Height - 24));
+        _probeCard.MaxWidth = available.Width; _probeCard.MaxHeight = available.Height;
         var size = _probeCard.Bounds.Size;
-        var width = size.Width > 0 ? size.Width : _probeCard.DesiredSize.Width;
-        var height = size.Height > 0 ? size.Height : _probeCard.DesiredSize.Height;
+        var width = Math.Min(available.Width, size.Width > 0 ? size.Width : _probeCard.DesiredSize.Width);
+        var height = Math.Min(available.Height, size.Height > 0 ? size.Height : _probeCard.DesiredSize.Height);
         var maxX = Math.Max(12, _floatingLayer.Bounds.Width - width - 12);
         var maxY = Math.Max(12, _floatingLayer.Bounds.Height - height - 12);
         CardLeft = Math.Clamp(CardLeft, 12, maxX); CardTop = Math.Clamp(CardTop, 12, maxY);
         Canvas.SetLeft(_probeCard, CardLeft); Canvas.SetTop(_probeCard, CardTop);
+    }
+
+    void PlacePreviewCard(Rect target)
+    {
+        if (_floatingLayer is null || _probeCard is null) return;
+        var size = _probeCard.DesiredSize; var gap = 12d;
+        var candidates = new[]
+        {
+            new Rect(target.Right + gap, target.Top, size.Width, size.Height),
+            new Rect(target.Left - gap - size.Width, target.Top, size.Width, size.Height),
+            new Rect(target.Left, target.Bottom + gap, size.Width, size.Height),
+            new Rect(target.Left, target.Top - gap - size.Height, size.Width, size.Height)
+        };
+        var area = new Rect(12, 12, Math.Max(0, _floatingLayer.Bounds.Width - 24),
+            Math.Max(0, _floatingLayer.Bounds.Height - 24));
+        var choice = candidates.FirstOrDefault(x => area.Contains(x.Position) && area.Contains(x.BottomRight) && !x.Intersects(target));
+        if (choice == default) choice = candidates[0];
+        CardLeft = choice.X; CardTop = choice.Y;
     }
 }

@@ -6,11 +6,13 @@ namespace XuanYu.Editor.UI;
 
 public sealed class DiagnosticPopupHost : Panel
 {
+    internal static event Action<TopLevel, bool>? PopupRootChanged;
     readonly Border _bounds = new() { BorderBrush = Brushes.Gold, BorderThickness = new Thickness(2), IsHitTestVisible = false };
     readonly Border _label = new() { Background = Brushes.Black, Padding = new Thickness(4, 1), IsHitTestVisible = false };
     UiVm? _vm;
     bool _popupOpen;
     bool _diagnosticEnabled;
+    TopLevel? _popupRoot;
 
     public static readonly StyledProperty<string> DebugIdProperty =
         AvaloniaProperty.Register<DiagnosticPopupHost, string>(nameof(DebugId), "N/A");
@@ -27,7 +29,14 @@ public sealed class DiagnosticPopupHost : Panel
         Refresh();
     }
 
-    public void SetPopupOpen(bool open) { _popupOpen = open; Refresh(); }
+    public void SetPopupOpen(bool open)
+    {
+        _popupOpen = open;
+        if (open) _popupRoot = TopLevel.GetTopLevel(this);
+        if ((_popupRoot ?? TopLevel.GetTopLevel(this)) is { } root) PopupRootChanged?.Invoke(root, open);
+        if (!open) _popupRoot = null;
+        Refresh();
+    }
     public void SetDiagnosticEnabled(bool enabled) { _diagnosticEnabled = enabled; Refresh(); }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -57,11 +66,11 @@ public sealed class DiagnosticPopupHost : Panel
     }
 
     void OnVmChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    { if (e.PropertyName == nameof(UiVm.IsDiagnosticMode)) Refresh(); }
+    { if (e.PropertyName is nameof(UiVm.IsDiagnosticMode) or nameof(UiVm.IsDiagnosticRegionBoundsMode)) Refresh(); }
 
     void Refresh()
     {
-        var visible = _popupOpen && (_diagnosticEnabled || _vm?.IsDiagnosticMode == true);
+        var visible = _popupOpen && (_diagnosticEnabled || _vm?.IsDiagnosticRegionBoundsMode == true);
         _bounds.IsVisible = visible; _label.IsVisible = visible;
         if (_label.Child is TextBlock text) text.Text = DebugId;
     }
