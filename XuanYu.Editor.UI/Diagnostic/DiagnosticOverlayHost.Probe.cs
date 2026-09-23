@@ -65,8 +65,7 @@ public partial class DiagnosticOverlayHost
         _previewTargetBounds = IsProbeLocked ? null : bounds;
         _probeCard.SizeChanged += (_, _) => ReflowPreviewCard();
         Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
-        _floatingLayer.Children.Add(_probeHighlight);
-        _floatingLayer.Children.Add(_probeCard);
+        ShowNativeProbeOverlay(_probeHighlight, _probeCard, bounds);
         ClampCardToWindow();
         if (!IsProbeLocked)
         {

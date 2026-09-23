@@ -9,7 +9,7 @@ public partial class DiagnosticOverlayHost
 {
     double CardLeft { get; set; } = 12;
     double CardTop { get; set; } = 12;
-    Point _lastDragPoint;
+    Point _lastDragScreenPoint;
     bool _dragging;
 
     void AttachCardDrag(Control card)
@@ -29,14 +29,17 @@ public partial class DiagnosticOverlayHost
     void CardPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.Source is Visual source && source.GetVisualAncestors().Any(x => x is Button)) return;
-        if (_floatingLayer is null || sender is not Control surface || !e.GetCurrentPoint(surface).Properties.IsLeftButtonPressed) return;
-        _dragging = true; _lastDragPoint = e.GetPosition(_floatingLayer); e.Pointer.Capture(surface); e.Handled = true;
+        if (sender is not Control surface || !e.GetCurrentPoint(surface).Properties.IsLeftButtonPressed) return;
+        _dragging = true; _lastDragScreenPoint = ScreenPoint(surface, e.GetPosition(surface));
+        e.Pointer.Capture(surface); e.Handled = true;
     }
 
     void CardPointerMoved(object? sender, PointerEventArgs e)
     {
-        if (!_dragging || _floatingLayer is null) return;
-        var point = e.GetPosition(_floatingLayer); MoveCard(point - _lastDragPoint); _lastDragPoint = point; e.Handled = true;
+        if (!_dragging || sender is not Control surface) return;
+        var point = ScreenPoint(surface, e.GetPosition(surface));
+        MoveCard((point - _lastDragScreenPoint) / (_topLevel?.RenderScaling ?? 1d));
+        _lastDragScreenPoint = point; e.Handled = true;
     }
 
     void CardPointerReleased(object? sender, PointerReleasedEventArgs e) => EndCardDrag(e.Pointer);
@@ -65,7 +68,12 @@ public partial class DiagnosticOverlayHost
         var maxY = Math.Max(12, _floatingLayer.Bounds.Height - height - 12);
         CardLeft = Math.Clamp(CardLeft, 12, maxX); CardTop = Math.Clamp(CardTop, 12, maxY);
         Canvas.SetLeft(_probeCard, CardLeft); Canvas.SetTop(_probeCard, CardTop);
+        PositionNativeProbe(_probeHighlight is null ? default : new Rect(Canvas.GetLeft(_highlightAnchor!),
+            Canvas.GetTop(_highlightAnchor!), _probeHighlight.Bounds.Width, _probeHighlight.Bounds.Height));
     }
+
+    static Point ScreenPoint(Control source, Point point)
+    { var pixel = source.PointToScreen(point); return new Point(pixel.X, pixel.Y); }
 
     void PlacePreviewCard(Rect target)
     {

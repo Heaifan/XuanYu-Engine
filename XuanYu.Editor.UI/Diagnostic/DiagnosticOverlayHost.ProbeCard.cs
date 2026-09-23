@@ -23,6 +23,7 @@ public partial class DiagnosticOverlayHost
             if (_probeHighlight is not null) _floatingLayer.Children.Remove(_probeHighlight);
             if (_probeCard is not null) _floatingLayer.Children.Remove(_probeCard);
         }
+        CloseNativeProbeOverlay();
         _probeHighlight = null; _probeCard = null;
     }
 }
