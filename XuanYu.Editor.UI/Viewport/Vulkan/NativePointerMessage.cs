@@ -27,6 +27,7 @@ public readonly record struct NativePointerMessage(
     public bool IsRightButtonDown => (Buttons & 0x0002) != 0;
     public bool IsMiddleButtonDown => (Buttons & 0x0010) != 0;
     public bool IsShiftDown => (Buttons & 0x0004) != 0;
+    public bool IsControlDown => (Buttons & 0x0008) != 0;
     public bool IsAltDown => AltDown;
     public int WheelDelta => Buttons >> 16;
 }

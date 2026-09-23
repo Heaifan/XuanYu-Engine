@@ -20,6 +20,8 @@ public static class NativePointerEventAdapter
         NativePointerMessage.Move => EditorPointerEventKind.Move,
         NativePointerMessage.LeftDown or NativePointerMessage.RightDown => EditorPointerEventKind.Pressed,
         NativePointerMessage.LeftUp or NativePointerMessage.RightUp => EditorPointerEventKind.Released,
+        NativePointerMessage.MiddleDown => EditorPointerEventKind.Pressed,
+        NativePointerMessage.MiddleUp => EditorPointerEventKind.Released,
         NativePointerMessage.Wheel => EditorPointerEventKind.Wheel,
         NativePointerMessage.CaptureChanged => EditorPointerEventKind.CaptureLost,
         NativePointerMessage.KillFocus => EditorPointerEventKind.FocusLost,
@@ -34,5 +36,6 @@ public static class NativePointerEventAdapter
 
     static EditorPointerModifiers MapModifiers(NativePointerMessage message) =>
         (message.IsShiftDown ? EditorPointerModifiers.Shift : EditorPointerModifiers.None) |
+        (message.IsControlDown ? EditorPointerModifiers.Control : EditorPointerModifiers.None) |
         (message.IsAltDown ? EditorPointerModifiers.Alt : EditorPointerModifiers.None);
 }

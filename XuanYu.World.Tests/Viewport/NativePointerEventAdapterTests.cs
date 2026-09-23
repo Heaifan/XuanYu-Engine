@@ -13,6 +13,8 @@ public sealed class NativePointerEventAdapterTests
     [InlineData(NativePointerMessage.LeftUp, EditorPointerEventKind.Released)]
     [InlineData(NativePointerMessage.RightDown, EditorPointerEventKind.Pressed)]
     [InlineData(NativePointerMessage.RightUp, EditorPointerEventKind.Released)]
+    [InlineData(NativePointerMessage.MiddleDown, EditorPointerEventKind.Pressed)]
+    [InlineData(NativePointerMessage.MiddleUp, EditorPointerEventKind.Released)]
     [InlineData(NativePointerMessage.Wheel, EditorPointerEventKind.Wheel)]
     [InlineData(NativePointerMessage.CaptureChanged, EditorPointerEventKind.CaptureLost)]
     [InlineData(NativePointerMessage.KillFocus, EditorPointerEventKind.FocusLost)]
@@ -40,5 +42,18 @@ public sealed class NativePointerEventAdapterTests
         Assert.Equal(EditorPointerModifiers.Shift | EditorPointerModifiers.Alt, result.Modifiers);
         Assert.Equal(1, result.WheelDelta);
         Assert.Equal(1.5, result.DpiScale);
+    }
+
+    [Fact]
+    public void Native_ctrl_modifier_and_middle_button_are_preserved()
+    {
+        var native = new NativePointerMessage(NativePointerMessage.MiddleDown,
+            0x0018, 150, 300, 0, 0, 0, 0, true);
+
+        var result = NativePointerEventAdapter.Convert(native, Source, 1.5);
+
+        Assert.Equal(EditorPointerEventKind.Pressed, result.Kind);
+        Assert.Equal(EditorPointerButtons.Middle, result.Buttons);
+        Assert.Equal(EditorPointerModifiers.Control | EditorPointerModifiers.Alt, result.Modifiers);
     }
 }
