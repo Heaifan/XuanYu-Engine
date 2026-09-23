@@ -13,7 +13,7 @@ namespace XYUI.Avalonia.Controls;
 public sealed class XYContextDropdownBoard : Border
 {
     readonly IReadOnlyDictionary<string, IReadOnlyList<XYContextAction>> _actions;
-    readonly Border _rootSurface = new() { Classes = { "xyui-context-board-surface" }, Padding = new Thickness(0), Width = 156 };
+    readonly Border _rootSurface = new() { Classes = { "xyui-context-board-surface" }, Padding = new Thickness(0), Width = 128, CornerRadius = new CornerRadius(6) };
     readonly List<Border> _childSurfaces = [];
     readonly Border _compatPopupChild = new() { Width = 1, Height = 1 };
     readonly List<ScrollViewer> _scrollHosts = [];
@@ -50,12 +50,12 @@ public sealed class XYContextDropdownBoard : Border
     void RefreshActions(XYContextCategory category) => ActionPane.SetActions(_actions.TryGetValue(category.Id, out var actions) ? actions : []);
     void BuildSurface()
     {
-        _rootSurface.Child = new StackPanel { Spacing = 4, Children = { new TextBlock { Text = Header, Height = 22, Classes = { "xyui-context-board-header" } }, Menu, new XYSeparator(), HintBar } };
+        _rootSurface.Child = new StackPanel { Spacing = 4, Children = { new TextBlock { Text = Header, Height = 32, Padding = new Thickness(8, 4), Classes = { "xyui-context-board-header" } }, Menu, new XYSeparator(), HintBar } };
         for (var i = 0; i < SubMenus.Count; i++) BuildChildSurface(i, SubMenus[i]);
     }
     void BuildChildSurface(int index, XYSubMenu submenu)
     {
-        var surface = new Border { Width = 142, IsVisible = false, Classes = { "xyui-context-menu-surface" }, Child = new StackPanel { Spacing = 4, Children = { new TextBlock { Text = ((XYMenuItem)Menu.Items[index]).Label, Height = 22, Classes = { "xyui-context-board-header" } }, submenu.ChildMenu } } };
+        var surface = new Border { Width = 128, CornerRadius = new CornerRadius(6), IsVisible = false, Classes = { "xyui-context-menu-surface" }, Child = new StackPanel { Spacing = 4, Children = { new TextBlock { Text = ((XYMenuItem)Menu.Items[index]).Label, Height = 32, Padding = new Thickness(8, 4), Classes = { "xyui-context-board-header" } }, submenu.ChildMenu } } };
         _childSurfaces.Add(surface); submenu.Opened += (_, _) => { surface.IsVisible = true; Dispatcher.UIThread.Post(() => PlaceChild(index, true), DispatcherPriority.Render); }; submenu.Closed += (_, _) => surface.IsVisible = false;
     }
     void PlaceRoot()
@@ -70,8 +70,8 @@ public sealed class XYContextDropdownBoard : Border
     }
     void PlaceChild(int index, bool opening = false)
     {
-        if (!_open || !_rootSurface.IsVisible || _overlayHost is null || index >= _childSurfaces.Count) return; var surface = _childSurfaces[index]; var owner = _overlayHost.Bounds; var size = surface.Bounds.Size; var x = _rootPosition.X + _rootSurface.Bounds.Width + 5;
-        if (x + size.Width > owner.Width) x = _rootPosition.X - size.Width - 5; var trigger = Menu.Items.OfType<XYMenuItem>().ElementAt(index); var y = _rootPosition.Y + 1 + 22 + 4 + 4 + trigger.Bounds.Top + (opening ? 5 : 0); x = Math.Clamp(x, 0, Math.Max(0, owner.Width - size.Width)); y = Math.Clamp(y, 0, Math.Max(0, owner.Height - size.Height)); Canvas.SetLeft(surface, x); Canvas.SetTop(surface, y);
+        if (!_open || !_rootSurface.IsVisible || _overlayHost is null || index >= _childSurfaces.Count) return; var surface = _childSurfaces[index]; var owner = _overlayHost.Bounds; var size = surface.Bounds.Size; var x = _rootPosition.X + _rootSurface.Bounds.Width + 4;
+        if (x + size.Width > owner.Width) x = _rootPosition.X - size.Width - 4; var trigger = Menu.Items.OfType<XYMenuItem>().ElementAt(index); var triggerPoint = trigger.TranslatePoint(new Point(0, 0), _overlayHost); var y = triggerPoint?.Y ?? _rootPosition.Y; x = Math.Clamp(x, 0, Math.Max(0, owner.Width - size.Width)); y = Math.Clamp(y, 0, Math.Max(0, owner.Height - size.Height)); Canvas.SetLeft(surface, x); Canvas.SetTop(surface, y);
     }
     void OnOverlaySizeChanged(object? sender, SizeChangedEventArgs e) { PlaceRoot(); for (var i = 0; i < _childSurfaces.Count; i++) if (_childSurfaces[i].IsVisible) PlaceChild(i, true); }
     void OnAnchorLayoutUpdated(object? sender, EventArgs e) { if (!_open) return; PlaceRoot(); for (var i = 0; i < _childSurfaces.Count; i++) if (_childSurfaces[i].IsVisible) PlaceChild(i); }
@@ -82,11 +82,11 @@ public sealed class XYContextDropdownBoard : Border
     static bool IsInside(Visual source, Control? target) => target is not null && (ReferenceEquals(source, target) || source.GetVisualAncestors().Contains(target));
     XYMenu BuildMenu(IEnumerable<XYContextCategory> categories)
     {
-        var menu = new XYMenu { Width = 156, Classes = { "xyui-context-menu-body" } };
-        foreach (var category in categories) { var item = new XYMenuItem { Id = category.Id, Label = category.Label, Icon = CategoryIcon(category.Id), HasSubMenu = true, Height = 30 }; var child = new XYMenu((_actions.TryGetValue(category.Id, out var actions) ? actions.Select(ActionItem) : []).Cast<Control>().ToArray()) { Width = 142, MinWidth = 0, Classes = { "xyui-context-submenu-body" } }; var submenu = new XYSubMenu { ChildMenuWidth = 142, ParentMenu = menu, ChildMenu = child, Trigger = item, ShowParentMenu = false, OverlayHosted = true }; item.SubMenu = submenu; menu.Items.Add(item); }
+        var menu = new XYMenu { Width = 128, Classes = { "xyui-context-menu-body" } };
+        foreach (var category in categories) { var item = new XYMenuItem { Id = category.Id, Label = category.Label, Icon = CategoryIcon(category.Id), HasSubMenu = true, Height = 32, Padding = new Thickness(8, 4) }; var child = new XYMenu((_actions.TryGetValue(category.Id, out var actions) ? actions.Select(ActionItem) : []).Cast<Control>().ToArray()) { Width = 128, MinWidth = 0, Classes = { "xyui-context-submenu-body" } }; var submenu = new XYSubMenu { ChildMenuWidth = 128, ParentMenu = menu, ChildMenu = child, Trigger = item, ShowParentMenu = false, OverlayHosted = true }; item.SubMenu = submenu; menu.Items.Add(item); }
         return menu;
     }
-    XYMenuItem ActionItem(XYContextAction action) { var item = new XYMenuItem { Id = action.Id, Label = action.Label, Icon = ActionIcon(action.Id), IsEnabled = action.IsEnabled, Height = 30 }; item.Invoked += (_, _) => { ActionPane.SelectAction(action.Id); ActionExecuted?.Invoke(this, action); }; return item; }
+    XYMenuItem ActionItem(XYContextAction action) { var item = new XYMenuItem { Id = action.Id, Label = action.Label, Icon = ActionIcon(action.Id), IsEnabled = action.IsEnabled, Height = 32, Padding = new Thickness(8, 4) }; item.Invoked += (_, _) => { ActionPane.SelectAction(action.Id); ActionExecuted?.Invoke(this, action); }; return item; }
     static XyuiVectorIcon? CategoryIcon(string id) => id switch { "point" => XyuiVectorIcon.Select, "line" => XyuiVectorIcon.Move, "area" => XyuiVectorIcon.BoxSelect, _ => null };
     static XyuiVectorIcon? ActionIcon(string id) => id switch { "marker" => XyuiVectorIcon.Locate, "poi" => XyuiVectorIcon.Tag, "road" => XyuiVectorIcon.Move, "boundary" => XyuiVectorIcon.BoxSelect, "river" => XyuiVectorIcon.Pan, "region" => XyuiVectorIcon.Section, "blocked" => XyuiVectorIcon.Stop, "parcel" => XyuiVectorIcon.Browse, _ => null };
 }
