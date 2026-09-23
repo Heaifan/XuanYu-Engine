@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:spike="using:XuanYu.Viewport.CompositionSpike"
+             x:Class="XuanYu.Viewport.CompositionSpike.CompositionSpikeControl">
+  <Grid>
+    <spike:CompositionSurfaceHost x:Name="Surface" />
+    <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+            Background="#E6FFFFFF" BorderBrush="#64B5F6" BorderThickness="2"
+            CornerRadius="8" Padding="16">
+      <StackPanel Spacing="8">
+        <TextBlock Text="Avalonia Overlay" FontSize="18" Foreground="#102027" />
+        <Button x:Name="OverlayButton" Content="Hover / Click" HorizontalContentAlignment="Center" />
+        <TextBlock x:Name="Status" Text="初始化…" Foreground="#263238" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

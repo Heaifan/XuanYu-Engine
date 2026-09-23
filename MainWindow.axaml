@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:spike="using:XuanYu.Viewport.CompositionSpike"
+        x:Class="XuanYu.Viewport.CompositionSpike.MainWindow"
+        Width="960" Height="620" Title="A1.5 Vulkan GPU Composition Spike">
+  <Grid RowDefinitions="Auto,*" Background="#172027">
+    <TextBlock Text="A1.5 · Vulkan GPU → Avalonia Composition" Foreground="White" Margin="16" />
+    <Border Grid.Row="1" Margin="16" Background="#26343B" CornerRadius="8">
+      <spike:CompositionSpikeControl />
+    </Border>
+  </Grid>
+</Window>
