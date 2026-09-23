@@ -31,6 +31,7 @@ public sealed class DiagnosticPlacementPolicyFallbackTests
         var result = DiagnosticPlacementPolicy.Place(request);
 
         Assert.True(result.DoesNotFit);
+        Assert.False(result.WasClamped);
         Assert.True(result.UsedFallback);
         Assert.Equal(220, result.CardBounds.Width);
         Assert.Equal(120, result.CardBounds.Height);

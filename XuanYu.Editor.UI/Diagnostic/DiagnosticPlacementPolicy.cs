@@ -55,7 +55,7 @@ public static class DiagnosticPlacementPolicy
 
     static DiagnosticPlacementResult Result(Constrained value,
         DiagnosticPlacementKind kind, bool usedFallback, bool doesNotFit = false) =>
-        new(value.Bounds, kind, value.WasClamped || doesNotFit, usedFallback, doesNotFit);
+        new(value.Bounds, kind, value.WasClamped, usedFallback, doesNotFit);
 
     static bool Fits(Rect value, Rect available) => value.Left >= available.Left &&
         value.Top >= available.Top && value.Right <= available.Right &&

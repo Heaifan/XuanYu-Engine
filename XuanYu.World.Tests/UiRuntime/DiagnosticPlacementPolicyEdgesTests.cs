@@ -10,10 +10,11 @@ public sealed class DiagnosticPlacementPolicyEdgesTests
     [Fact]
     public void Toolbar_target_uses_a_non_overlapping_candidate_after_clamp()
     {
+        var target = new Rect(490, 20, 300, 40);
         var result = Place(DiagnosticPlacementTargetKind.SmallControl,
-            new Rect(490, 20, 300, 40), new Size(220, 120));
+            target, new Size(220, 120));
 
-        Assert.False(result.CardBounds.Intersects(new Rect(680, 20, 300, 40)));
+        Assert.False(result.CardBounds.Intersects(target));
         Assert.False(result.UsedFallback);
         Assert.Equal(DiagnosticPlacementKind.Left, result.Placement);
     }
