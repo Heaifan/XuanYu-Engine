@@ -62,10 +62,11 @@ public sealed class ContextToolbarPopupHostRuntimeTests
     }
 
     [Fact]
-    public void Split_label_is_not_clipped_for_three_character_action()
+    public async Task Split_label_is_not_clipped_for_three_character_action()
     {
         using var host = new UiRuntimeTestHost(_fixture);
-        host.Run(() => { var toolbar = new ContextToolBar { DataContext = NewVm() }; var window = host.Show(toolbar, 900, 220); var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single(); var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!; board.SubMenus[0].ChildMenu.Items.OfType<XYMenuItem>().First().Activate(); Dispatcher.UIThread.RunJobs(); Assert.Equal("点标记", split.Content); Assert.Equal(112, split.Width, 0.5); Assert.True(split.Bounds.Width >= 112); window.Close(); });
+        var vm = NewVm(); Assert.True(await vm.BeginContextDrawingAsync("地图标记"));
+        host.Run(() => { var toolbar = new ContextToolBar { DataContext = vm }; var window = host.Show(toolbar, 900, 220); var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!; Dispatcher.UIThread.RunJobs(); Assert.Equal("点标记", split.Content); Assert.Equal(112, split.Width, 0.5); Assert.True(split.Bounds.Width >= 112); window.Close(); });
     }
 
     static void AssertInside(Rect inner, Rect owner) { Assert.True(inner.Left >= owner.Left - 0.5); Assert.True(inner.Top >= owner.Top - 0.5); Assert.True(inner.Right <= owner.Right + 0.5); Assert.True(inner.Bottom <= owner.Bottom + 0.5); }
