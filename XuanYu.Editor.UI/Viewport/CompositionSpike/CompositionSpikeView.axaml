@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.CompositionSpikeView">
+  <Grid ClipToBounds="True">
+    <local:VulkanNativeHost />
+    <Border x:Name="OverlayCard" Width="260" Padding="16"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            Background="#E6192633" BorderBrush="#B8D8FF" BorderThickness="1">
+      <StackPanel Spacing="10">
+        <TextBlock Text="Avalonia Overlay" Foreground="White"
+                   HorizontalAlignment="Center" />
+        <Button x:Name="OverlayButton" Content="Avalonia Button"
+                HorizontalAlignment="Center" Click="OnButtonClick" />
+        <TextBlock x:Name="PointerState" Text="Hover: 未触发"
+                   Foreground="White" HorizontalAlignment="Center" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>
