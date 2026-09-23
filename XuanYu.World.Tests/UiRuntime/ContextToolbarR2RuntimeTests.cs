@@ -28,7 +28,16 @@ public sealed class ContextToolbarR2RuntimeTests
         Assert.True(await vm.BeginContextDrawingAsync("道路"));
         Assert.True(vm.IsRoadDrawingTool);
         Assert.Equal("道路", vm.LastDrawTool);
+        Assert.Equal("道路", vm.DrawButtonLabel);
         Assert.True(vm.IsDrawingTransactionActive);
+    }
+
+    [Fact]
+    public async Task Selecting_region_updates_real_draw_label()
+    {
+        var vm = new UiVm(null, () => true, seedInitialScene: false); vm.ToggleEditorMode();
+        Assert.True(await vm.BeginContextDrawingAsync("区域面"));
+        Assert.Equal("区域面", vm.LastDrawTool); Assert.Equal("区域", vm.DrawButtonLabel);
     }
 
     [Fact]
@@ -41,5 +50,28 @@ public sealed class ContextToolbarR2RuntimeTests
         Assert.True(vm.CancelRoadDrawing());
         Assert.False(vm.IsDrawingTransactionActive);
         Assert.Equal("道路", vm.LastDrawTool);
+    }
+
+    [Fact]
+    public async Task Main_split_repeats_last_real_tool()
+    {
+        var vm = new UiVm(null, () => true, seedInitialScene: false); vm.ToggleEditorMode();
+        Assert.True(await vm.BeginContextDrawingAsync("道路")); Assert.True(vm.CancelRoadDrawing());
+        Assert.True(await vm.BeginLastDrawToolAsync()); Assert.True(vm.IsRoadDrawingTool); Assert.Equal("道路", vm.LastDrawTool);
+    }
+
+    [Fact]
+    public async Task Selecting_marker_updates_real_draw_label()
+    {
+        var vm = new UiVm(null, () => true, seedInitialScene: false); vm.ToggleEditorMode();
+        Assert.True(await vm.BeginContextDrawingAsync("地图标记"));
+        Assert.Equal("地图标记", vm.LastDrawTool); Assert.Equal("点标记", vm.DrawButtonLabel);
+    }
+
+    [Fact]
+    public void Draw_button_label_maps_real_domain_tools()
+    {
+        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        Assert.Equal("绘制", vm.DrawButtonLabel);
     }
 }

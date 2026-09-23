@@ -7,7 +7,7 @@ public sealed partial class UiVm
 {
     string? _contextDrawingKind;
     public string? LastDrawTool { get; private set; }
-    public string DrawButtonLabel => LastDrawTool is null ? "绘制" : LastDrawTool switch { "区域面" => "区域", _ => LastDrawTool };
+    public string DrawButtonLabel => LastDrawTool is null ? "绘制" : LastDrawTool switch { "地图标记" => "点标记", "区域面" => "区域", _ => LastDrawTool };
     public bool IsDrawingTransactionActive => _contextDrawingKind is not null;
     public string DrawingTransactionLabel => _contextDrawingKind == "道路"
         ? $"道路绘制中 · {RoadDrawingDraftPointCount}"
@@ -42,7 +42,9 @@ public sealed partial class UiVm
         if (tool == "地图标记")
         {
             SelectRegionAuthoringMode("地图标记");
-            return await BeginMarkerPlacementAsync();
+            var started = await BeginMarkerPlacementAsync();
+            if (started) SetLastDrawTool("地图标记");
+            return started;
         }
         return false;
     }

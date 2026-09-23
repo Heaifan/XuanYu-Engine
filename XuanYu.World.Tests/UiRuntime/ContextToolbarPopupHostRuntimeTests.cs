@@ -1,8 +1,9 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
+using XuanYu.Render.Abstractions;
 using XYUI.Avalonia.Controls;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -14,72 +15,61 @@ public sealed class ContextToolbarPopupHostRuntimeTests
     public ContextToolbarPopupHostRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Cascading_menu_reopens_and_switches_siblings_without_zero_layout()
+    public void Engine_context_toolbar_uses_XYContextDropdownBoard()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(() => { var toolbar = new ContextToolBar { DataContext = NewVm() }; host.Show(toolbar); Assert.Single(UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar)); Assert.Null(toolbar.FindControl<Popup>("DrawMenuPopup")); Assert.Null(toolbar.FindControl<Popup>("DrawSubMenuPopup")); });
+    }
+
+    [Fact]
+    public void Engine_context_board_contains_only_supported_actions()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(() => { var toolbar = new ContextToolBar { DataContext = NewVm() }; host.Show(toolbar); var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single(); Assert.Equal(["点标记", "道路", "区域"], board.SubMenus.SelectMany(x => x.ChildMenu.Items.OfType<XYMenuItem>()).Select(x => x.Label)); });
+    }
+
+    [Fact]
+    public void Engine_window_has_real_context_overlay_host()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(() => { var window = new UiWin { DataContext = NewVm() }; window.Show(); window.UpdateLayout(); var overlay = UiRuntimeTestHost.Descendants<XYContextOverlayHost>(window).Single(); Assert.True(overlay.Bounds.Width > 0 && overlay.Bounds.Height > 0); window.Close(); });
+    }
+
+    [Fact]
+    public void Context_board_remains_inside_engine_window()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(() => { var toolbar = new ContextToolBar { DataContext = NewVm() }; var window = host.Show(toolbar, 420, 220); var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single(); var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!; split.MenuCommand!.Execute(null); board.SubMenus[2].Open(); Dispatcher.UIThread.RunJobs(); AssertInside(board.RootMenuSurface.Bounds, board.OverlayHost!.Bounds); Assert.All(board.ChildMenuSurfaces, x => AssertInside(x.Bounds, board.OverlayHost.Bounds)); window.Close(); });
+    }
+
+    [Fact]
+    public void Diagnostic_probe_resolves_open_context_menu_surface()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         host.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
+            var vm = NewVm(); vm.RunCommand.Execute("诊断模式");
             var toolbar = new ContextToolBar { DataContext = vm };
-            host.Show(toolbar, 800, 100);
+            var diagnostic = new DiagnosticOverlayHost { DataContext = vm };
+            var window = host.Show(new Grid { Children = { toolbar, diagnostic } }, 900, 220);
+            var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single();
             var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
-            var root = toolbar.FindControl<XYMenu>("DrawMenu")!;
-            var submenuPopup = toolbar.FindControl<Popup>("DrawSubMenuPopup")!;
-            var submenu = toolbar.FindControl<XYMenu>("DrawChildMenu")!;
-            for (var i = 0; i < 10; i++)
-            {
-                split.MenuCommand!.Execute(null); Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout();
-                root.Items.OfType<XYMenuItem>().Single(x => x.Label == (i % 2 == 0 ? "点" : "线")).Activate();
-                Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout();
-                Assert.True(submenuPopup.IsOpen);
-                Assert.Same(submenuPopup.Child, submenu.GetVisualParent());
-                Assert.True(submenu.Bounds.Width > 0 && submenu.Bounds.Height > 0);
-                toolbar.FindControl<Popup>("DrawMenuPopup")!.IsOpen = false;
-                Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout();
-                Assert.False(toolbar.FindControl<Popup>("DrawMenuPopup")!.IsOpen);
-                Assert.False(submenuPopup.IsOpen);
-            }
+            split.MenuCommand!.Execute(null); board.SubMenus[0].Open(); Dispatcher.UIThread.RunJobs();
+            diagnostic.ProbeHover(board.ChildMenuSurfaces.First(), false); Dispatcher.UIThread.RunJobs();
+            Assert.NotNull(diagnostic.CurrentProbeResult); Assert.Equal(1, diagnostic.ActiveProbeHighlightCount);
+            window.Close();
         });
     }
 
     [Fact]
-    public void Root_menu_keeps_three_visible_vertical_items_while_submenu_is_open()
+    public void Split_label_is_not_clipped_for_three_character_action()
     {
         using var host = new UiRuntimeTestHost(_fixture);
-        host.Run(() =>
-        {
-            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
-            var toolbar = new ContextToolBar { DataContext = vm };
-            host.Show(toolbar, 1000, 180);
-            var popup = toolbar.FindControl<Popup>("DrawMenuPopup")!;
-            toolbar.FindControl<XYSplitButton>("DrawSplitButton")!.MenuCommand!.Execute(null);
-            Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout();
-            var root = toolbar.FindControl<XYMenu>("DrawMenu")!;
-            var items = root.Items.OfType<XYMenuItem>().ToArray();
-            Assert.Equal(["点", "线", "面"], items.Select(x => x.Label));
-            AssertRootItemsAreVisibleAndVertical(items);
-            foreach (var (index, leaf) in new[] { (0, "点标记"), (1, "道路"), (2, "区域") })
-            {
-                items[index].Activate(); Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout();
-                Assert.True(popup.IsOpen);
-                Assert.True(root.IsVisible);
-                AssertRootItemsAreVisibleAndVertical(items);
-                var childItems = toolbar.FindControl<XYMenu>("DrawChildMenu")!.Items.OfType<XYMenuItem>();
-                Assert.Equal(leaf, childItems.Single().Label);
-            }
-        });
+        host.Run(() => { var toolbar = new ContextToolBar { DataContext = NewVm() }; var window = host.Show(toolbar, 900, 220); var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single(); var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!; board.SubMenus[0].ChildMenu.Items.OfType<XYMenuItem>().First().Activate(); Dispatcher.UIThread.RunJobs(); Assert.Equal("点标记", split.Content); Assert.Equal(112, split.Width, 0.5); Assert.True(split.Bounds.Width >= 112); window.Close(); });
     }
 
-    static void AssertRootItemsAreVisibleAndVertical(IReadOnlyList<XYMenuItem> items)
-    {
-        Assert.All(items, item =>
-        {
-            Assert.True(item.IsVisible);
-            Assert.True(item.Bounds.Width > 0 && item.Bounds.Height > 0);
-        });
-        Assert.True(items[0].Bounds.Bottom <= items[1].Bounds.Top);
-        Assert.True(items[1].Bounds.Bottom <= items[2].Bounds.Top);
-        Assert.NotEqual(items[0].Bounds, items[1].Bounds);
-        Assert.NotEqual(items[1].Bounds, items[2].Bounds);
-    }
+    static void AssertInside(Rect inner, Rect owner) { Assert.True(inner.Left >= owner.Left - 0.5); Assert.True(inner.Top >= owner.Top - 0.5); Assert.True(inner.Right <= owner.Right + 0.5); Assert.True(inner.Bottom <= owner.Bottom + 0.5); }
+    static UiVm NewVm() { var vm = new UiVm(new HeadlessBridgeFactory(), () => true, seedInitialScene: false); vm.ToggleEditorMode(); return vm; }
+    sealed class HeadlessBridgeFactory : INativeHostSurfaceBridgeFactory { public INativeHostSurfaceBridge Create(Action<string>? log = null, IRenderProjectionSource? source = null) => new HeadlessBridge(); }
+    sealed class HeadlessBridge : INativeHostSurfaceBridge { public bool Attach(NativeHostSurfaceHandle handle) => false; public void Resize(int width, int height) { } public void Detach() { } public void Dispose() { } }
 }
