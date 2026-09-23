@@ -41,7 +41,6 @@ public sealed partial class UiVm
     void ApplyRunCommand(string name)
     {
         if (TryToggleDiagnosticMode(name)) return;
-        if (TryToggleDiagnosticProbe(name)) return;
         if (TryToggleDiagnosticRegionBounds(name)) return;
         if (TryToggleViewportAssist(name)) return;
         if (TryRouteMapCommand(name)) return; // F1：地图面板命令真实路由（兜底之前）

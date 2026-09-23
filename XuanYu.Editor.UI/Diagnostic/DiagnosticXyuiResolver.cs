@@ -33,6 +33,7 @@ public static class DiagnosticXyuiResolver
         var ns = visual.GetType().Namespace ?? string.Empty;
         if (ns.StartsWith("Avalonia", StringComparison.Ordinal)) return "Avalonia 原生";
         if (ns.StartsWith("XuanYu", StringComparison.Ordinal)) return "XYEngine 自定义";
+        if (ns.StartsWith("XYUI", StringComparison.Ordinal) || ns.Contains("XYUI", StringComparison.Ordinal)) return "XYUI";
         return "未知";
     }
 }

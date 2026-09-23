@@ -16,6 +16,7 @@ public partial class DiagnosticOverlayHost
             window.Activated += OnWindowActivated;
             window.Deactivated += OnWindowDeactivated;
             window.PropertyChanged += OnWindowPropertyChanged;
+            window.SizeChanged += OnWindowSizeChanged;
         }
     }
 
@@ -25,6 +26,7 @@ public partial class DiagnosticOverlayHost
         window.Activated -= OnWindowActivated;
         window.Deactivated -= OnWindowDeactivated;
         window.PropertyChanged -= OnWindowPropertyChanged;
+        window.SizeChanged -= OnWindowSizeChanged;
         DetachProbeHandlers(window);
         _topLevel = null;
     }
@@ -49,4 +51,6 @@ public partial class DiagnosticOverlayHost
             ClearProbeVisuals();
         }
     }
+
+    void OnWindowSizeChanged(object? sender, SizeChangedEventArgs e) => ClampCardToWindow();
 }

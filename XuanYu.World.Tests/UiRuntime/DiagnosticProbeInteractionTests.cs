@@ -14,25 +14,23 @@ public sealed class DiagnosticProbeInteractionTests
     public DiagnosticProbeInteractionTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Element_probe_command_toggles_probe_mode()
+    public void Diagnostic_mode_enables_probe_without_second_mode()
     {
         var state = _fixture.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
-            vm.RunCommand.Execute("诊断模式"); vm.RunCommand.Execute("元素拾取");
-            return vm.IsDiagnosticProbeMode;
+            vm.RunCommand.Execute("诊断模式"); return vm.IsDiagnosticMode;
         });
         Assert.True(state);
     }
 
     [Fact]
-    public void Turning_diagnostic_mode_off_exits_probe_mode()
+    public void Turning_diagnostic_mode_off_disables_probe()
     {
         var state = _fixture.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
-            vm.RunCommand.Execute("诊断模式"); vm.RunCommand.Execute("元素拾取");
-            vm.RunCommand.Execute("诊断模式"); return vm.IsDiagnosticProbeMode;
+            vm.RunCommand.Execute("诊断模式"); vm.RunCommand.Execute("诊断模式"); return vm.IsDiagnosticMode;
         });
         Assert.False(state);
     }
@@ -44,7 +42,7 @@ public sealed class DiagnosticProbeInteractionTests
         {
             var button = new Button { Content = new TextBlock { Text = "保存" } };
             var host = new DiagnosticOverlayHost(); var vm = new UiVm(null, seedInitialScene: false);
-            vm.RunCommand.Execute("诊断模式"); vm.RunCommand.Execute("元素拾取");
+            vm.RunCommand.Execute("诊断模式");
             host.DataContext = vm; var window = Show(button, host);
             var text = button.GetVisualDescendants().OfType<TextBlock>().Single();
             host.ProbeHover(text, false); var semantic = host.CurrentProbeResult;
@@ -64,13 +62,13 @@ public sealed class DiagnosticProbeInteractionTests
         {
             var button = new Button { Content = "保存" }; var host = new DiagnosticOverlayHost(clipboard);
             var vm = new UiVm(null, seedInitialScene: false); vm.RunCommand.Execute("诊断模式");
-            vm.RunCommand.Execute("元素拾取"); host.DataContext = vm; var window = Show(button, host);
+            host.DataContext = vm; var window = Show(button, host);
             host.ProbeHover(button, false); host.ProbeClick().GetAwaiter().GetResult(); host.ExitProbe();
-            return (clipboard.Text, vm.IsDiagnosticProbeMode, host.ActiveProbeHighlightCount);
+            return (clipboard.Text, host.ActiveProbeHighlightCount);
         });
-        Assert.Contains("[XYengine Element Diagnostic]", state.Text);
-        Assert.Contains("ProbeMode: Semantic", state.Text);
-        Assert.False(state.IsDiagnosticProbeMode); Assert.Equal(0, state.ActiveProbeHighlightCount);
+        Assert.Contains("[XYEngine UI 诊断报告]", state.Text);
+        Assert.Contains("XYUI索引：", state.Text);
+        Assert.Equal(0, state.ActiveProbeHighlightCount);
     }
 
     [Fact]
@@ -80,7 +78,7 @@ public sealed class DiagnosticProbeInteractionTests
         {
             var button = new Button { Width = 120, Height = 32 }; var host = new DiagnosticOverlayHost();
             var vm = new UiVm(null, seedInitialScene: false); vm.RunCommand.Execute("诊断模式");
-            vm.RunCommand.Execute("元素拾取"); host.DataContext = vm; var window = Show(button, host);
+            host.DataContext = vm; var window = Show(button, host);
             var before = button.Bounds; host.ProbeHover(button, false); return (before, button.Bounds);
         });
         Assert.Equal(bounds.before, bounds.Item2);

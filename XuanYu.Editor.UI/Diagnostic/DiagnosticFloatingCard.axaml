@@ -13,9 +13,7 @@
     <TextBlock x:Name="Identity" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
     <TextBlock x:Name="Details" Foreground="{StaticResource Color.Text.Secondary}" TextWrapping="Wrap"/>
     <StackPanel x:Name="Actions" Orientation="Horizontal" Spacing="6">
-      <Button x:Name="CopyIndex" Content="复制索引"/>
-      <Button x:Name="CopySummary" Content="复制摘要"/>
-      <Button x:Name="CopyAi" Content="复制AI诊断"/>
+      <Button x:Name="CopyAi" Content="一键复制给 AI"/>
       <Button x:Name="Expand" Content="展开"/>
       <Button x:Name="Close" Content="关闭"/>
     </StackPanel>

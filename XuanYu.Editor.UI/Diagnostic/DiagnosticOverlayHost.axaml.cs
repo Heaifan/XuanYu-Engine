@@ -83,7 +83,7 @@ public partial class DiagnosticOverlayHost : UserControl
 
     void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(UiVm.IsDiagnosticMode) or nameof(UiVm.IsDiagnosticProbeMode) or
+        if (e.PropertyName is nameof(UiVm.IsDiagnosticMode) or
             nameof(UiVm.IsDiagnosticRegionBoundsMode) or nameof(UiVm.InspectorIdentity))
             Reconcile();
     }

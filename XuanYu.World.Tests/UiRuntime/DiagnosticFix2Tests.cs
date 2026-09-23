@@ -58,6 +58,7 @@ public sealed class DiagnosticFix2Tests
         Assert.Equal("FileButton", result.Name); Assert.Equal("Button", result.SemanticTarget?.GetType().Name);
     }
 
+
     [Fact]
     public void Locked_card_overlay_covers_the_window_root()
     {
@@ -73,4 +74,5 @@ public sealed class DiagnosticFix2Tests
             Assert.NotNull(layer); Assert.Equal(window.ClientSize, layer!.Bounds.Size); window.Close();
         });
     }
+
 }

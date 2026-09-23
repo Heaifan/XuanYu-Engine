@@ -34,7 +34,7 @@ public sealed class DiagnosticProbeFix1Tests
         {
             var command = new ProbeCommand(); var button = new Button { Content = "保存", Command = command };
             var host = new DiagnosticOverlayHost(); var vm = new UiVm(null, seedInitialScene: false);
-            vm.RunCommand.Execute("诊断模式"); vm.RunCommand.Execute("元素拾取"); host.DataContext = vm;
+            vm.RunCommand.Execute("诊断模式"); host.DataContext = vm;
             var window = Show(button, host); var point = button.TranslatePoint(new Point(4, 4), window)!.Value;
             window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left);
             Dispatcher.UIThread.RunJobs(); window.Close(); return command.Count;

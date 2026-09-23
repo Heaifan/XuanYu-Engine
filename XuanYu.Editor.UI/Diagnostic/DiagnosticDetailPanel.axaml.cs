@@ -18,7 +18,10 @@ public partial class DiagnosticDetailPanel : Border
             snapshot.InstanceName != "N/A" ? snapshot.InstanceName : snapshot.ComponentType; Show("元素");
         Element.Click += (_, _) => Show("元素"); Layout.Click += (_, _) => Show("布局");
         State.Click += (_, _) => Show("状态"); Style.Click += (_, _) => Show("样式");
-        Close.Click += (_, _) => _closed(); CopyAi.Click += async (_, _) => await _copy(DiagnosticReportFormatter.FormatAi(_snapshot));
+        Close.Click += (_, _) => _closed();
+        CopyIndex.Click += async (_, _) => await _copy(DiagnosticReportFormatter.FormatIndex(_snapshot));
+        CopySummary.Click += async (_, _) => await _copy(DiagnosticReportFormatter.FormatSummary(_snapshot));
+        CopyAi.Click += async (_, _) => await _copy(DiagnosticReportFormatter.FormatAi(_snapshot));
     }
 
     void Show(string page)

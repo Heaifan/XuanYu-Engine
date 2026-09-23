@@ -15,6 +15,10 @@
       <Button x:Name="State" Content="状态"/><Button x:Name="Style" Content="样式"/>
     </StackPanel>
     <TextBlock x:Name="Content" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
-    <Button x:Name="CopyAi" Content="一键复制 AI 诊断" HorizontalAlignment="Right"/>
+    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+      <Button x:Name="CopyIndex" Content="复制索引"/>
+      <Button x:Name="CopySummary" Content="复制摘要"/>
+      <Button x:Name="CopyAi" Content="一键复制 AI 诊断"/>
+    </StackPanel>
   </StackPanel>
 </Border>

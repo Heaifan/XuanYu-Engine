@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
 
@@ -28,15 +28,15 @@ public partial class DiagnosticOverlayHost
 
     void CardPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (e.Source is Button) return;
-        if (e.Source is not Control card || !e.GetCurrentPoint(card).Properties.IsLeftButtonPressed) return;
-        _dragging = true; _lastDragPoint = e.GetPosition(card); e.Pointer.Capture(card); e.Handled = true;
+        if (e.Source is Visual source && source.GetVisualAncestors().Any(x => x is Button)) return;
+        if (sender is not Control surface || !e.GetCurrentPoint(surface).Properties.IsLeftButtonPressed) return;
+        _dragging = true; _lastDragPoint = e.GetPosition(surface); e.Pointer.Capture(surface); e.Handled = true;
     }
 
     void CardPointerMoved(object? sender, PointerEventArgs e)
     {
-        if (!_dragging || e.Source is not Control card) return;
-        var point = e.GetPosition(card); MoveCard(point - _lastDragPoint); _lastDragPoint = point; e.Handled = true;
+        if (!_dragging || sender is not Control surface) return;
+        var point = e.GetPosition(surface); MoveCard(point - _lastDragPoint); _lastDragPoint = point; e.Handled = true;
     }
 
     void CardPointerReleased(object? sender, PointerReleasedEventArgs e) => EndCardDrag(e.Pointer);
@@ -49,14 +49,18 @@ public partial class DiagnosticOverlayHost
 
     void MoveCard(Vector delta)
     {
-        CardLeft = Math.Clamp(CardLeft + delta.X, 0, Math.Max(0, Bounds.Width - 300));
-        CardTop = Math.Clamp(CardTop + delta.Y, 0, Math.Max(0, Bounds.Height - 180));
-        if (_probePopup is not null)
-        {
-            _probePopup.HorizontalOffset = CardLeft;
-            _probePopup.VerticalOffset = CardTop;
-        }
-        if (_probeCard?.Parent is Canvas)
-            _probeCard.Margin = new Thickness(CardLeft, CardTop, 0, 0);
+        CardLeft += delta.X; CardTop += delta.Y; ClampCardToWindow();
+    }
+
+    void ClampCardToWindow()
+    {
+        if (_floatingLayer is null || _probeCard is null) return;
+        var size = _probeCard.Bounds.Size;
+        var width = size.Width > 0 ? size.Width : _probeCard.DesiredSize.Width;
+        var height = size.Height > 0 ? size.Height : _probeCard.DesiredSize.Height;
+        var maxX = Math.Max(12, _floatingLayer.Bounds.Width - width - 12);
+        var maxY = Math.Max(12, _floatingLayer.Bounds.Height - height - 12);
+        CardLeft = Math.Clamp(CardLeft, 12, maxX); CardTop = Math.Clamp(CardTop, 12, maxY);
+        Canvas.SetLeft(_probeCard, CardLeft); Canvas.SetTop(_probeCard, CardTop);
     }
 }

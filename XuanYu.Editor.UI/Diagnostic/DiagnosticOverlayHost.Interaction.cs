@@ -20,14 +20,14 @@ public partial class DiagnosticOverlayHost
     public async Task ProbeClick()
     {
         if (!ProbeEnabled || _probeResult?.DeepVisual is not Control target) return;
+        var snapshot = DiagnosticElementSnapshot.Capture(_probeResult);
         LockProbe();
-        await _clipboard.SetTextAsync(target, DiagnosticElementFormatter.Format(_probeResult));
+        await _clipboard.SetTextAsync(target, DiagnosticReportFormatter.FormatAi(snapshot));
     }
 
     public void ExitProbe()
     {
         UnlockProbe();
-        _vm?.ExitDiagnosticProbe();
         SetProbeResult(null);
     }
 
@@ -45,11 +45,15 @@ public partial class DiagnosticOverlayHost
 
     void OnProbePointerMoved(object? sender, PointerEventArgs e)
     {
-        if (!ProbeEnabled || e.Source is not Visual hit || IsOverlayVisual(hit) || ReferenceEquals(hit, _floatingLayer)) return;
+        if (!ProbeEnabled || e.Source is not Visual hit || IsOverlayVisual(hit)) return;
         ProbeHover(hit, e.KeyModifiers.HasFlag(KeyModifiers.Alt));
     }
 
-    static bool IsOverlayVisual(Visual hit) => hit is DiagnosticFloatingCard or DiagnosticDetailPanel or DiagnosticBadge;
+    bool IsOverlayVisual(Visual hit) => hit is DiagnosticFloatingCard or DiagnosticDetailPanel or DiagnosticBadge ||
+        ReferenceEquals(hit, _floatingLayer) || hit.GetVisualAncestors().Any(IsOverlayAncestor);
+
+    bool IsOverlayAncestor(Visual visual) => visual is DiagnosticFloatingCard or DiagnosticDetailPanel or DiagnosticBadge ||
+        ReferenceEquals(visual, _floatingLayer);
 
     async void OnProbeKeyDown(object? sender, KeyEventArgs e)
     {

@@ -12,9 +12,8 @@ public static partial class DiagnosticProbeResolver
     public static DiagnosticProbeResult Resolve(Visual hit, bool deepVisual = false)
     {
         var chain = Chain(hit).ToArray();
-        var semantic = deepVisual ? null : chain
-            .Where(x => ReferenceEquals(x, hit) || !HasDebugId(x))
-            .Select(Candidate).OrderBy(x => x.Rank).First().Control as Control;
+        var semantic = deepVisual ? null : chain.Select(Candidate)
+            .OrderBy(x => x.Rank).First().Control as Control;
         var selected = deepVisual ? hit : semantic ?? hit;
         var parentId = ParentDebugId(selected);
         if (parentId == Missing && !ReferenceEquals(selected, hit)) parentId = ParentDebugId(hit);
@@ -29,21 +28,6 @@ public static partial class DiagnosticProbeResolver
         for (Visual? current = hit; current is not null; current = current.GetVisualParent())
             yield return current;
     }
-
-    static (Visual Control, int Rank) Candidate(Visual visual)
-    {
-        if (IsTemplateInternal(visual)) return (visual, 4);
-        if (DiagnosticXyuiResolver.IsMapped(visual)) return (visual, 0);
-        if (HasDebugId(visual)) return (visual, 1);
-        if (visual is Control control && !string.IsNullOrEmpty(NameValue(control)) && IsInteractive(control))
-            return (visual, 2);
-        if (visual is Control known && IsInteractive(known)) return (visual, 3);
-        if (visual is Control named && !string.IsNullOrEmpty(NameValue(named))) return (visual, 4);
-        return (visual, 5);
-    }
-
-    static bool IsInteractive(Control control) => control is Button or ToggleButton or TextBox or
-        ComboBox or TreeViewItem or TabItem || control.GetType().Namespace?.StartsWith("XYUI", StringComparison.Ordinal) == true;
 
     static bool HasDebugId(Visual visual) => LocalDebugId(visual) is not null;
     static string? DebugId(Visual visual) => LocalDebugId(visual);

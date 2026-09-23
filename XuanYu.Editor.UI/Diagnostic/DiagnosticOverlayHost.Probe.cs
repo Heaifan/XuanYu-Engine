@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 
 namespace XuanYu.Editor.UI;
@@ -11,7 +10,6 @@ public partial class DiagnosticOverlayHost
     DiagnosticProbeResult? _lockedProbeResult;
     Border? _probeHighlight;
     Border? _probeCard;
-    Popup? _probePopup;
 
     public int ActiveProbeHighlightCount => _probeHighlight is null ? 0 : 1;
     public int ActiveProbeCardCount => _probeCard is null ? 0 : 1;
@@ -38,8 +36,9 @@ public partial class DiagnosticOverlayHost
     void RenderProbe()
     {
         ClearProbeVisuals();
-        if (_probeResult is not { } result || !_loaded) return;
-        if (result.DeepVisual.TranslatePoint(default, ProbeOwner) is not { } origin) return;
+        var result = IsProbeLocked ? _lockedProbeResult : _probeResult;
+        if (result is null || !_loaded || _floatingLayer is null) return;
+        if (result.DeepVisual.TranslatePoint(default, _floatingLayer) is not { } origin) return;
         var bounds = new Rect(origin, result.DeepVisual.Bounds.Size);
         _probeHighlight = new Border
         {
@@ -57,11 +56,16 @@ public partial class DiagnosticOverlayHost
         card.Closed += () => { UnlockProbe(); SetProbeResult(null); };
         card.PinToggled += () => { if (IsProbeLocked) UnlockProbe(); else LockProbe(); };
         _probeCard = new Border { Child = card, IsHitTestVisible = true };
+        _probeCard.SizeChanged += (_, _) => ClampCardToWindow();
         Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
-        Canvas.SetLeft(_probeCard, bounds.X); Canvas.SetTop(_probeCard, Math.Max(0, bounds.Y - 24));
+        _floatingLayer.Children.Add(_probeHighlight);
+        _floatingLayer.Children.Add(_probeCard);
+        if (!IsProbeLocked)
+        {
+            CardLeft = bounds.X + bounds.Width + 12;
+            CardTop = Math.Max(12, bounds.Y);
+        }
+        ClampCardToWindow();
         _probeHighlight.SetValue(Panel.ZIndexProperty, 200); _probeCard.SetValue(Panel.ZIndexProperty, 201);
-        ProbeOwner.Children.Add(_probeHighlight);
-        if (IsProbeLocked) ShowLockedCard();
-        else ShowPreviewCard();
     }
 }
