@@ -6,8 +6,10 @@ public sealed partial class VulkanNativeHost
     bool _nativeDragActive;
     bool _mapGeometryDragActive;
     bool _expectedCaptureRelease;
+    DiagnosticNativePointerSnapshot? _lastNativePointerProbe;
     void OnNativePointerMessage(NativePointerMessage message)
     {
+        _lastNativePointerProbe = DiagnosticNativePointerProbe.Capture(message);
         var dpi = GetDpiScale();
         var x = message.PhysicalX / dpi;
         var y = message.PhysicalY / dpi;

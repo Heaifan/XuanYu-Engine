@@ -37,4 +37,29 @@ public sealed class DiagnosticNativeOverlayRuntimeTests
             window.Close();
         });
     }
+
+    [Fact]
+    public void Popup_probe_records_native_window_policy_facts()
+    {
+        _fixture.Run(() =>
+        {
+            var target = new Button { Width = 120, Height = 30 };
+            var host = new DiagnosticOverlayHost();
+            var window = new Window { Width = 320, Height = 200,
+                Content = new Grid { Children = { target, host } } };
+            window.Show(); window.UpdateLayout(); Dispatcher.UIThread.RunJobs();
+            host.SetProbeResult(new DiagnosticProbeResult(target, target, "N/A", "N/A",
+                "Button", "N/A", "N/A", "N/A", true, true, target.Bounds,
+                DiagnosticProbeMode.Semantic));
+            var field = typeof(DiagnosticOverlayHost).GetField("_lastNativeWindowProbe",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            var snapshot = field!.GetValue(host)!;
+            var text = snapshot.GetType().GetMethod("Format")!.Invoke(snapshot, null) as string;
+            Assert.Contains("PopupHwnd=", text);
+            Assert.Contains("OwnerHwnd=", text);
+            Assert.Contains("TopMost=", text);
+            Assert.Contains("ForegroundHwnd=", text);
+            window.Close();
+        });
+    }
 }

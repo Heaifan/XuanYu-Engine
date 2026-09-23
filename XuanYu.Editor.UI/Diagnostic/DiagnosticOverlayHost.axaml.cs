@@ -12,6 +12,7 @@ public partial class DiagnosticOverlayHost : UserControl
     UiVm? _vm;
     bool _loaded;
     Canvas? _floatingLayer;
+    DiagnosticNativeWindowSnapshot? _lastNativeWindowProbe;
     readonly List<TopLevel> _probeRoots = [];
 
     public DiagnosticOverlayHost() : this(new DiagnosticClipboard()) { }

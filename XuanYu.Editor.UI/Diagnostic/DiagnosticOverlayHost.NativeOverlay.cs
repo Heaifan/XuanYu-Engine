@@ -22,6 +22,8 @@ public partial class DiagnosticOverlayHost
         _nativeCardPopup.OverlayInputPassThroughElement = passThrough;
         _nativeHighlightPopup.OverlayInputPassThroughElement = passThrough;
         _nativeCardPopup.IsOpen = true; _nativeHighlightPopup.IsOpen = true;
+        if (TopLevel.GetTopLevel(this) is Window window)
+            _lastNativeWindowProbe = DiagnosticNativeWindowProbe.Capture(_nativeCardPopup, window);
         PositionNativeProbe(bounds);
     }
 
