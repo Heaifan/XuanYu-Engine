@@ -6,7 +6,7 @@
   <Border Classes="xyui-surface-panel" Padding="16,14" CornerRadius="6">
     <StackPanel Spacing="6">
       <Grid ColumnDefinitions="Auto,*,Auto">
-        <TextBlock Text="{Binding Id}" Classes="xyui-text-code" FontWeight="Bold" />
+        <TextBlock Text="{Binding DisplayId}" Classes="xyui-text-code" FontWeight="Bold" />
         <TextBlock Grid.Column="2" Text="{Binding Category}" Classes="xyui-text-caption" />
       </Grid>
       <StackPanel Orientation="Horizontal" Spacing="8">

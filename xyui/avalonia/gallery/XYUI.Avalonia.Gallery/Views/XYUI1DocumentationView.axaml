@@ -6,7 +6,7 @@
   <UserControl.Resources>
     <DataTemplate x:Key="NavItemTemplate" x:DataType="g:XYUI1NavigationItem">
       <StackPanel Spacing="1">
-        <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
+        <TextBlock Text="{Binding DisplayChineseName}" Classes="xyui-text-label" />
         <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
       </StackPanel>
     </DataTemplate>

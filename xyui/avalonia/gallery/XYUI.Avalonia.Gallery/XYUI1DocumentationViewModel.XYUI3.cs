@@ -31,7 +31,7 @@ public sealed partial class XYUI1DocumentationViewModel
     {
         var items = XYUI3DocumentationCatalog.Build().Select(x => new XYUI1NavigationItem(x.Id, x.ChineseName, x.EnglishName, x)).ToArray();
         var overview = new XYUI1NavigationItem("XYUI-3", "模块概览", "Navigation & Switching", null);
-        var context = new XYUI1NavigationItem(XYUI3GalleryCatalog.ContextToolbarId, "Context Toolbar · 上下文工具栏", "A + A3 + A4", XYUI3DocumentationCatalog.ContextToolbarDocument());
+        var context = new XYUI1NavigationItem(XYUI3GalleryCatalog.ContextToolbarId, "上下文工具栏", "Context Toolbar", XYUI3DocumentationCatalog.ContextToolbarDocument());
         XYUI3Items = new[] { overview }.Concat(items).Append(context).ToArray();
         // 遵循 Catalog 契约：默认落点跟随当前清单末项（3.24）。
         SelectedXYUI3Item = context;
