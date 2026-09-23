@@ -1,7 +1,7 @@
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="XuanYu.Editor.UI.DiagnosticDetailPanel"
-        Width="420" Padding="14" Background="{StaticResource Color.Bg.Panel}"
+        MaxWidth="420" Padding="14" Background="{StaticResource Color.Bg.Panel}"
         BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
         CornerRadius="{StaticResource Radius.Standard}">
   <ScrollViewer MaxHeight="500" VerticalScrollBarVisibility="Auto">
@@ -16,11 +16,11 @@
       <Button x:Name="State" Content="状态"/><Button x:Name="Style" Content="样式"/>
     </StackPanel>
     <TextBlock x:Name="Content" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
-    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right">
       <Button x:Name="CopyIndex" Content="复制索引"/>
       <Button x:Name="CopySummary" Content="复制摘要"/>
       <Button x:Name="CopyAi" Content="一键复制 AI 诊断"/>
-    </StackPanel>
+    </WrapPanel>
    </StackPanel>
   </ScrollViewer>
 </Border>

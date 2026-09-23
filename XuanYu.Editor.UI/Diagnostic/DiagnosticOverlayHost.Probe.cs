@@ -11,6 +11,8 @@ public partial class DiagnosticOverlayHost
     DiagnosticProbeResult? _lockedProbeResult;
     Border? _probeHighlight;
     Border? _probeCard;
+    Rect? _previewTargetBounds;
+    bool _placingPreview;
 
     public int ActiveProbeHighlightCount => _probeHighlight is null ? 0 : 1;
     public int ActiveProbeCardCount => _probeCard is null ? 0 : 1;
@@ -60,7 +62,8 @@ public partial class DiagnosticOverlayHost
         card.Closed += () => { UnlockProbe(); SetProbeResult(null); };
         card.PinToggled += () => { if (IsProbeLocked) UnlockProbe(); else LockProbe(); };
         _probeCard = new Border { Child = card, IsHitTestVisible = true };
-        _probeCard.SizeChanged += (_, _) => ClampCardToWindow();
+        _previewTargetBounds = IsProbeLocked ? null : bounds;
+        _probeCard.SizeChanged += (_, _) => ReflowPreviewCard();
         Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
         _floatingLayer.Children.Add(_probeHighlight);
         _floatingLayer.Children.Add(_probeCard);
@@ -73,15 +76,15 @@ public partial class DiagnosticOverlayHost
         _probeHighlight.SetValue(Panel.ZIndexProperty, 200); _probeCard.SetValue(Panel.ZIndexProperty, 201);
     }
 
-    bool TryGetFloatingBounds(Visual visual, out Rect bounds)
+    void ReflowPreviewCard()
     {
-        if (_floatingLayer is not null && visual.TranslatePoint(default, _floatingLayer) is { } local)
-        { bounds = new Rect(local, visual.Bounds.Size); return true; }
-        if (_floatingLayer is null) { bounds = default; return false; }
-        var scale = _topLevel?.RenderScaling ?? 1d;
-        var layer = _floatingLayer.PointToScreen(default);
-        var origin = visual.PointToScreen(default);
-        var point = new Point((origin.X - layer.X) / scale, (origin.Y - layer.Y) / scale);
-        bounds = new Rect(point, visual.Bounds.Size); return true;
+        if (_placingPreview || _probeCard is null) return;
+        _placingPreview = true;
+        ClampCardToWindow();
+        if (!IsProbeLocked && _previewTargetBounds is { } target)
+            PlacePreviewCard(target);
+        ClampCardToWindow();
+        _placingPreview = false;
     }
+
 }

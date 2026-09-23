@@ -22,6 +22,7 @@ public partial class DiagnosticOverlayHost
         if (_topLevel is Window window)
         {
             AttachProbeRoot(window);
+            AttachProbePopups(window);
             window.Activated += OnWindowActivated;
             window.Deactivated += OnWindowDeactivated;
             window.PropertyChanged += OnWindowPropertyChanged;
@@ -37,6 +38,7 @@ public partial class DiagnosticOverlayHost
         window.PropertyChanged -= OnWindowPropertyChanged;
         window.SizeChanged -= OnWindowSizeChanged;
         foreach (var root in _probeRoots.ToArray()) DetachProbeRoot(root);
+        foreach (var popup in _probePopups.ToArray()) DetachProbePopup(popup);
         _topLevel = null;
     }
 
@@ -75,5 +77,12 @@ public partial class DiagnosticOverlayHost
     void OnWindowSizeChanged(object? sender, SizeChangedEventArgs e) => ClampCardToWindow();
 
     void OnPopupRootChanged(TopLevel root, bool open)
-    { if (open) AttachProbeRoot(root); else if (!ReferenceEquals(root, _topLevel)) DetachProbeRoot(root); }
+    {
+        if (open) AttachProbeRoot(root);
+        else
+        {
+            ClearProbeForRoot(root);
+            if (!ReferenceEquals(root, _topLevel)) DetachProbeRoot(root);
+        }
+    }
 }

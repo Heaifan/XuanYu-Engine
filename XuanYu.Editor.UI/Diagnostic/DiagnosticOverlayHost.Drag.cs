@@ -29,14 +29,14 @@ public partial class DiagnosticOverlayHost
     void CardPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.Source is Visual source && source.GetVisualAncestors().Any(x => x is Button)) return;
-        if (sender is not Control surface || !e.GetCurrentPoint(surface).Properties.IsLeftButtonPressed) return;
-        _dragging = true; _lastDragPoint = e.GetPosition(surface); e.Pointer.Capture(surface); e.Handled = true;
+        if (_floatingLayer is null || sender is not Control surface || !e.GetCurrentPoint(surface).Properties.IsLeftButtonPressed) return;
+        _dragging = true; _lastDragPoint = e.GetPosition(_floatingLayer); e.Pointer.Capture(surface); e.Handled = true;
     }
 
     void CardPointerMoved(object? sender, PointerEventArgs e)
     {
-        if (!_dragging || sender is not Control surface) return;
-        var point = e.GetPosition(surface); MoveCard(point - _lastDragPoint); _lastDragPoint = point; e.Handled = true;
+        if (!_dragging || _floatingLayer is null) return;
+        var point = e.GetPosition(_floatingLayer); MoveCard(point - _lastDragPoint); _lastDragPoint = point; e.Handled = true;
     }
 
     void CardPointerReleased(object? sender, PointerReleasedEventArgs e) => EndCardDrag(e.Pointer);
@@ -70,7 +70,9 @@ public partial class DiagnosticOverlayHost
     void PlacePreviewCard(Rect target)
     {
         if (_floatingLayer is null || _probeCard is null) return;
-        var size = _probeCard.DesiredSize; var gap = 12d;
+        var size = _probeCard.Bounds.Size;
+        if (size.Width <= 0 || size.Height <= 0) size = _probeCard.DesiredSize;
+        var gap = 12d;
         var candidates = new[]
         {
             new Rect(target.Right + gap, target.Top, size.Width, size.Height),

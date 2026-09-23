@@ -1,7 +1,7 @@
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="XuanYu.Editor.UI.DiagnosticFloatingCard"
-        Width="330" Padding="12" Background="{StaticResource Color.Bg.Panel}"
+        MaxWidth="330" Padding="12" Background="{StaticResource Color.Bg.Panel}"
         BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
         CornerRadius="{StaticResource Radius.Standard}">
   <ScrollViewer MaxHeight="420" VerticalScrollBarVisibility="Auto">
@@ -13,11 +13,11 @@
     </StackPanel>
     <TextBlock x:Name="Identity" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
     <TextBlock x:Name="Details" Foreground="{StaticResource Color.Text.Secondary}" TextWrapping="Wrap"/>
-    <StackPanel x:Name="Actions" Orientation="Horizontal" Spacing="6">
+    <WrapPanel x:Name="Actions" Orientation="Horizontal">
       <Button x:Name="CopyAi" Content="一键复制给 AI"/>
       <Button x:Name="Expand" Content="展开"/>
       <Button x:Name="Close" Content="关闭"/>
-    </StackPanel>
+    </WrapPanel>
    </StackPanel>
   </ScrollViewer>
 </Border>
