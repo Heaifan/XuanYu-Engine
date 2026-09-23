@@ -4,7 +4,7 @@
 
 - Implementation Base: `51b81251` (`test(map): cover snapped region persistence`)
 - FIX1 Commit: `5e758f63e29aca4ec30890b0999ac93778e967e5`
-- Final Audit HEAD: `pending audit packaging commit`
+- Final Audit HEAD: `the closeout commit containing this manifest; see the final Git report for its SHA`
 - Branch: `feat/XYUI-ENGINE-AREA-A-CD`
 - Scope: Native Alt state, Native RegionPreview propagation, RegionPanel row layout, and Undo/Redo exact-coordinate regression.
 
