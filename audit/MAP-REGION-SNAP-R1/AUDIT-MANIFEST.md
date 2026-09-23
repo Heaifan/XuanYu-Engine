@@ -7,10 +7,10 @@
 - Implementation commit: `d46e8d20fbdbdf830333a05161fce8b6c449851d`
 - Branch: `feat/XYUI-ENGINE-AREA-A-CD`
 - Package contents: complete copies of every source, test, UI/config, and plan file changed in this round.
-- Original changed files: 17
-- Original additions/deletions/net: 332 / 24 / +308 lines. Counts use `git diff --numstat`; new files use their complete physical line count.
+- Original changed files: 18
+- Original additions/deletions/net: 393 / 25 / +368 lines. Counts use `git diff --numstat`; new files use their complete physical line count.
 - Production files: 12
-- Test files: 3
+- Test files: 4
 - Plan/governance files: 1
 - UI/config files: 1
 
@@ -32,13 +32,14 @@
 | `XuanYu.Editor/MapEditing/RegionVertexSnapResolver.cs` | C# | Yes | Expose stable screen distance in result | 9 | 5 | +4 |
 | `XuanYu.Editor/MapEditing/RegionVertexSnapResult.cs` | C# | Yes | Add ScreenDistance diagnostic field | 3 | 2 | +1 |
 | `XuanYu.World.Tests/MapEditing/RegionVertexSnapResolverTests.cs` | C# | No | Assert screen-distance contract | 1 | 0 | +1 |
-| `XuanYu.World.Tests/UiRuntime/RegionDrawingSnapRuntimeTests.cs` | C# | No | Drawing snap, Alt, exact coordinate, status regression | 72 | 0 | +72 |
+| `XuanYu.World.Tests/UiRuntime/RegionDrawingSnapRuntimeTests.cs` | C# | No | Drawing snap, Alt, exact coordinate, status regression | 74 | 1 | +73 |
+| `XuanYu.World.Tests/UiRuntime/RegionDrawingSnapRuntimeTests.Persistence.cs` | C# | No | Exact snapped coordinate Save/Reload regression | 59 | 0 | +59 |
 | `XuanYu.World.Tests/Viewport/RegionDrawingInputModifierTests.cs` | C# | No | Avalonia/Native modifier forwarding contract | 24 | 0 | +24 |
 | `docs/superpowers/plans/2026-09-23-map-region-snap-r1.md` | Markdown | No | Approved execution plan and scope ledger | 104 | 0 | +104 |
 
 ## Verification
 
-- Snap focused tests: PASS, 21/21.
+- Snap focused tests: PASS, 22/22.
 - Snap result self-review tests after `ScreenDistance`: PASS, 8/8.
 - World test suite: 1618 passed, 17 failed, 0 skipped. The 17 failures are pre-existing XYUI/Inspector/Workspace/Diagnostic contract baseline failures; no failure names the Region Snap implementation.
 - Solution Build: PASS, 0 warnings, 0 errors.

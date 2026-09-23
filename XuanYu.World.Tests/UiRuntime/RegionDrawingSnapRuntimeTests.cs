@@ -1,12 +1,13 @@
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
+using XuanYu.Editor.Workspace;
 using XuanYu.World.Map;
 using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
-public sealed class RegionDrawingSnapRuntimeTests
+public sealed partial class RegionDrawingSnapRuntimeTests
 {
     static readonly ViewportState Viewport = new(0, 0, 800, 600, 800, 600, 1, 1);
 
