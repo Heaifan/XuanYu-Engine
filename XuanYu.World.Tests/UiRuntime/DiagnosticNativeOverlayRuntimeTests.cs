@@ -28,6 +28,12 @@ public sealed class DiagnosticNativeOverlayRuntimeTests
             var highlightField = typeof(DiagnosticOverlayHost).GetField("_nativeHighlightPopup", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.True(((Avalonia.Controls.Primitives.Popup)cardField!.GetValue(host)!).IsOpen);
             Assert.True(((Avalonia.Controls.Primitives.Popup)highlightField!.GetValue(host)!).IsOpen);
+            var popup = (Avalonia.Controls.Primitives.Popup)cardField.GetValue(host)!;
+            var placement = popup.PlacementRect!.Value;
+            Assert.Equal(Avalonia.Controls.PlacementMode.AnchorAndGravity, popup.Placement);
+            Assert.True(placement.Left >= 12 && placement.Top >= 12);
+            Assert.True(placement.Right <= window.ClientSize.Width - 12);
+            Assert.True(placement.Bottom <= window.ClientSize.Height - 12);
             window.Close();
         });
     }
