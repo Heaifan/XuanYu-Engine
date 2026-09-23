@@ -24,7 +24,7 @@ public sealed partial class VulkanNativeHost
         }
         else if (route == NativePointerRoute.RegionPreview)
         {
-            PreviewDrawing(vm, x, y);
+            PreviewDrawing(vm, x, y, NativePointerRoutePolicy.ShouldSuppressRegionSnap(message, route));
             return;
         }
         else if (route == NativePointerRoute.LeftDown)

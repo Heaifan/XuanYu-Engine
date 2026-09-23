@@ -17,7 +17,7 @@
       <xy:XYSectionTitle Text="绘制"/>
       <xy:XYButton Content="绘制区域" Click="RegionDrawing_Click" IsEnabled="{Binding CanRequestRegionDrawing}" AutomationProperties.Name="绘制区域"/>
       <xy:XYSectionTitle Text="草稿"/>
-      <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="4">
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
         <xy:XYLabel Text="顶点"/>
         <xy:XYText Grid.Column="1" Text="{Binding RegionDrawingDraftVertexCount}"/>
         <xy:XYLabel Grid.Row="1" Text="状态"/>

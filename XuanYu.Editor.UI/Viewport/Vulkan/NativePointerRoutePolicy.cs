@@ -18,6 +18,9 @@ public enum NativePointerRoute
 
 public static class NativePointerRoutePolicy
 {
+    public static bool ShouldSuppressRegionSnap(NativePointerMessage message, NativePointerRoute route) =>
+        route == NativePointerRoute.RegionPreview && message.IsAltDown;
+
     public static NativePointerRoute Resolve(
         NativePointerMessage message, bool cameraActive, bool regionPreviewActive,
         bool navGizmoPressed = false)

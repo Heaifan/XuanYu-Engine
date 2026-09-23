@@ -8,7 +8,8 @@ public readonly record struct NativePointerMessage(
     nint Hwnd,
     nint CaptureBefore,
     nint CaptureAfter,
-    nint CaptureTarget)
+    nint CaptureTarget,
+    bool AltDown = false)
 {
     public const uint Move = 0x0200;
     public const uint LeftDown = 0x0201;
@@ -23,6 +24,6 @@ public readonly record struct NativePointerMessage(
     public bool IsLeftButtonDown => (Buttons & 0x0001) != 0;
     public bool IsMiddleButtonDown => (Buttons & 0x0010) != 0;
     public bool IsShiftDown => (Buttons & 0x0004) != 0;
-    public bool IsAltDown => (Buttons & 0x0020) != 0;
+    public bool IsAltDown => AltDown;
     public int WheelDelta => Buttons >> 16;
 }
