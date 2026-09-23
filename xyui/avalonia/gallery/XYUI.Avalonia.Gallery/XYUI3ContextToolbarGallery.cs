@@ -17,7 +17,7 @@ public static partial class XYUI3GalleryCatalog
     }
     static Control CreateToolbar(bool open)
     {
-        var board = ContextToolbarBoard(); var split = new XYSplitButton { Content = "道路", Height = 32 }; board.ActionExecuted += (_, action) => split.Content = action.Label; board.AttachTrigger(split); split.MenuCommand = new BoardCommand(board, split); var groups = new[] { Group("编辑", "选择", "框选", "移动", "旋转", "缩放"), Group("绘制", split), Group("视图", "聚焦", "全览", "平移", "环绕"), Group("环境", "环境", "视图"), Group("吸附", "吸附：关闭") };
+        var board = ContextToolbarBoard(); var split = new XYSplitButton { Content = "道路", Height = 32, MinWidth = 96 }; board.ActionExecuted += (_, action) => split.Content = action.Label; board.AttachTrigger(split); split.MenuCommand = new BoardCommand(board, split); var groups = new[] { Group("编辑", "选择", "框选", "移动", "旋转", "缩放"), Group("绘制", split), Group("视图", "聚焦", "全览", "平移", "环绕"), Group("环境", "环境", "视图"), Group("吸附", "吸附：关闭") };
         var root = new StackPanel { Spacing = 8, Children = { new XYContextToolbar(groups), board, new TextBlock { Text = open ? "默认打开 Board，验证 A3 + A4" : "道路 Dropdown 默认关闭", Classes = { "xyui-text-caption" } } } };
         if (open) root.AttachedToVisualTree += (_, _) => Dispatcher.UIThread.Post(() => board.Open(split), DispatcherPriority.Loaded); return root;
     }
@@ -38,7 +38,7 @@ public static partial class XYUI3LiveExamplesFactory
     internal static Control CreateContextToolbarComposition() => CreateContextComposition();
     static Control CreateContextComposition()
     {
-        var board = XYUI3GalleryCatalog.ContextToolbarBoard(); var split = new XYSplitButton { Content = "道路", Height = 32 }; board.ActionExecuted += (_, action) => split.Content = action.Label; board.AttachTrigger(split); split.MenuCommand = new ContextBoardCommand(board, split);
+        var board = XYUI3GalleryCatalog.ContextToolbarBoard(); var split = new XYSplitButton { Content = "道路", Height = 32, MinWidth = 96 }; board.ActionExecuted += (_, action) => split.Content = action.Label; board.AttachTrigger(split); split.MenuCommand = new ContextBoardCommand(board, split);
         var toolbar = new XYContextToolbar(new XYContextGroup("绘制", new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { split } }));
         return new StackPanel { Spacing = 8, Children = { new TextBlock { Text = "A3 + A4 · 单 Board 组合", Classes = { "xyui-text-section" } }, toolbar, board } };
     }
