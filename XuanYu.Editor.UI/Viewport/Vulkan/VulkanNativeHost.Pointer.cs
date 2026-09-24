@@ -7,7 +7,7 @@ public sealed partial class VulkanNativeHost
     bool _mapGeometryDragActive;
     bool _expectedCaptureRelease;
     DiagnosticNativePointerSnapshot? _lastNativePointerProbe;
-    internal event Action<VulkanNativeHost, double, double>? NativePointerMoved;
+    internal static event Action<VulkanNativeHost, double, double>? NativePointerMoved;
     void OnNativePointerMessage(NativePointerMessage message)
     {
         _lastNativePointerProbe = DiagnosticNativePointerProbe.Capture(message);
