@@ -7,24 +7,21 @@ namespace XuanYu.Editor.UI;
 
 public partial class DiagnosticOverlayHost
 {
-    readonly List<VulkanNativeHost> _nativeViewportProbeHosts = [];
+    bool _nativeViewportProbeAttached;
     Point _lastProbePointer;
 
     void AttachNativeViewportProbe(Window window)
     {
-        DetachNativeViewportProbe();
-        foreach (var host in window.GetVisualDescendants().OfType<VulkanNativeHost>())
-        {
-            host.NativePointerMoved += OnNativeViewportPointerMoved;
-            _nativeViewportProbeHosts.Add(host);
-        }
+        if (_nativeViewportProbeAttached) return;
+        VulkanNativeHost.NativePointerMoved += OnNativeViewportPointerMoved;
+        _nativeViewportProbeAttached = true;
     }
 
     void DetachNativeViewportProbe()
     {
-        foreach (var host in _nativeViewportProbeHosts)
-            host.NativePointerMoved -= OnNativeViewportPointerMoved;
-        _nativeViewportProbeHosts.Clear();
+        if (!_nativeViewportProbeAttached) return;
+        VulkanNativeHost.NativePointerMoved -= OnNativeViewportPointerMoved;
+        _nativeViewportProbeAttached = false;
     }
 
     void OnNativeViewportPointerMoved(VulkanNativeHost host, double x, double y)
