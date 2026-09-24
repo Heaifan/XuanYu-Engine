@@ -40,10 +40,9 @@ public sealed class ViewportGestureTerminalTests
     }
 
     static ViewportGestureLifecycle NewLifecycle(LifecycleProbe probe) =>
-        new(probe, context => probe.Order.Add("ReleaseCapture"),
-            context => probe.Order.Add("ClearTemporary"));
+        new(probe, probe, context => probe.Order.Add("ClearTemporary"));
 
     static ViewportGestureContext Context(long pointerId = 7) =>
-        new("TransformDrag", "TransformGizmo", pointerId,
+        new("TransformDrag", GestureOwner.Gizmo, pointerId,
             ViewportGestureCapture.Pointer, Input with { PointerId = pointerId });
 }

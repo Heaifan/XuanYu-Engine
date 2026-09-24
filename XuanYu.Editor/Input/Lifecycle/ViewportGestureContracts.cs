@@ -10,7 +10,7 @@ public enum ViewportGestureCapture { None, Pointer }
 
 public sealed record ViewportGestureContext(
     string Gesture,
-    string Owner,
+    GestureOwner Owner,
     long PointerId,
     ViewportGestureCapture Capture,
     EditorPointerEvent Input);

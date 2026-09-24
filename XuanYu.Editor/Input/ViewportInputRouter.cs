@@ -1,17 +1,22 @@
+using XuanYu.Editor.Input.Lifecycle;
+
 namespace XuanYu.Editor.Input;
 
 public sealed class ViewportInputRouter
 {
     readonly IReadOnlyList<IViewportInputConsumer> _consumers;
-    readonly IViewportPointerCaptureCoordinator _capture;
-    public ViewportGestureState State { get; private set; } = ViewportGestureState.Idle;
+    readonly RouterLifecycleConsumer _activeConsumer;
+    readonly ViewportGestureLifecycle _lifecycle;
+    public ViewportGestureState State => ViewportGestureState.From(_lifecycle.Current);
 
     public ViewportInputRouter(IEnumerable<IViewportInputConsumer> consumers,
         IViewportPointerCaptureCoordinator capture)
     {
-        _consumers = consumers.ToArray(); _capture = capture;
+        _consumers = consumers.ToArray();
         if (_consumers.Any(x => x.Owner == GestureOwner.None) || _consumers.Select(x => x.Owner).Distinct().Count() != _consumers.Count)
             throw new ArgumentException("Each viewport consumer must have one unique GestureOwner.", nameof(consumers));
+        _activeConsumer = new();
+        _lifecycle = new(_activeConsumer, capture, _ => { });
     }
 
     public ViewportInputDispatchResult Dispatch(EditorPointerEvent pointer) => State.IsActive
@@ -24,8 +29,10 @@ public sealed class ViewportInputRouter
         {
             var result = consumer.Handle(pointer, State);
             if (!result.ClaimsGesture) continue;
-            State = new(ViewportGesturePhase.Active, consumer.Owner, pointer.PointerId, result.Kind == ViewportInputDispatchKind.Captured);
-            if (State.IsCaptured) _capture.Capture(pointer.PointerId, consumer.Owner);
+            _activeConsumer.Set(consumer);
+            _lifecycle.Begin(new("ViewportGesture", consumer.Owner, pointer.PointerId,
+                result.Kind == ViewportInputDispatchKind.Captured
+                    ? ViewportGestureCapture.Pointer : ViewportGestureCapture.None, pointer));
             return result;
         }
         return ViewportInputDispatchResult.Ignored;
@@ -33,6 +40,9 @@ public sealed class ViewportInputRouter
 
     ViewportInputDispatchResult DispatchIdle(EditorPointerEvent pointer)
     {
+        if (pointer.Kind is EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost
+            or EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated)
+            return ViewportInputDispatchResult.Ignored;
         var observed = false;
         foreach (var consumer in _consumers)
         {
@@ -46,18 +56,40 @@ public sealed class ViewportInputRouter
     ViewportInputDispatchResult DispatchActive(EditorPointerEvent pointer)
     {
         if (pointer.PointerId != State.PointerId && pointer.Kind != EditorPointerEventKind.CaptureLost) return ViewportInputDispatchResult.Ignored;
-        var consumer = _consumers.Single(x => x.Owner == State.Owner);
-        consumer.Handle(pointer, State);
+        _lifecycle.Update(pointer);
         if (pointer.Kind is EditorPointerEventKind.Released) return End(ViewportInputDispatchKind.Released);
         if (pointer.Kind is EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost or EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated)
-            return End(ViewportInputDispatchKind.Cancelled);
+            return Cancel(pointer.Kind);
         return ViewportInputDispatchResult.Handled;
     }
 
     ViewportInputDispatchResult End(ViewportInputDispatchKind kind)
     {
-        if (State.IsCaptured) _capture.Release(State.PointerId, State.Owner);
-        State = ViewportGestureState.Idle;
+        _lifecycle.Commit(); _activeConsumer.Clear();
         return new(kind);
+    }
+
+    ViewportInputDispatchResult Cancel(EditorPointerEventKind kind)
+    {
+        _lifecycle.Cancel(kind switch
+        {
+            EditorPointerEventKind.CaptureLost => ViewportCancellationReason.CaptureLost,
+            EditorPointerEventKind.FocusLost => ViewportCancellationReason.FocusLost,
+            EditorPointerEventKind.WindowDeactivated => ViewportCancellationReason.WindowDeactivated,
+            _ => ViewportCancellationReason.ExplicitCancel,
+        });
+        _activeConsumer.Clear();
+        return ViewportInputDispatchResult.Cancelled;
+    }
+
+    sealed class RouterLifecycleConsumer : IViewportGestureConsumer
+    {
+        IViewportInputConsumer? _current;
+        public void Set(IViewportInputConsumer consumer) => _current = consumer;
+        public void Clear() => _current = null;
+        public void Begin(ViewportGestureContext context) => _current?.Begin(context);
+        public void Update(ViewportGestureContext context) => _current?.Handle(context.Input, ViewportGestureState.From(context));
+        public void Commit(ViewportGestureContext context) => _current?.Commit(context);
+        public void Cancel(ViewportCancellationContext context) => _current?.Cancel(context);
     }
 }

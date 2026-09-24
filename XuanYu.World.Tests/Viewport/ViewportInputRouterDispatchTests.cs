@@ -1,4 +1,5 @@
 using XuanYu.Editor.Input;
+using XuanYu.Editor.Input.Lifecycle;
 
 namespace XuanYu.World.Tests.Viewport;
 
@@ -40,6 +41,10 @@ public sealed class ViewportInputRouterDispatchTests
         public List<EditorPointerEventKind> Calls { get; } = [];
         public ViewportInputDispatchResult Handle(EditorPointerEvent pointer, ViewportGestureState state)
         { Calls.Add(pointer.Kind); return result; }
+        public void Begin(ViewportGestureContext context) { }
+        public void Update(ViewportGestureContext context) { }
+        public void Commit(ViewportGestureContext context) { }
+        public void Cancel(ViewportCancellationContext context) { }
     }
 
     sealed class CaptureSpy : IViewportPointerCaptureCoordinator

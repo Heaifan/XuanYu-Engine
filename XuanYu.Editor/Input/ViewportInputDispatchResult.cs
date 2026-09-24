@@ -9,4 +9,5 @@ public readonly record struct ViewportInputDispatchResult(ViewportInputDispatchK
     public static ViewportInputDispatchResult Observed => new(ViewportInputDispatchKind.Observed);
     public static ViewportInputDispatchResult Handled => new(ViewportInputDispatchKind.Handled);
     public static ViewportInputDispatchResult Captured => new(ViewportInputDispatchKind.Captured);
+    public static ViewportInputDispatchResult Cancelled => new(ViewportInputDispatchKind.Cancelled);
 }

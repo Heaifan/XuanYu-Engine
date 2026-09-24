@@ -43,7 +43,7 @@ public sealed class ViewportGestureLifecycleTests
         var result = lifecycle.Cancel(ViewportCancellationReason.CaptureLost);
 
         Assert.Equal(context, probe.CanceledContext);
-        Assert.Equal(new[] { "Begin", "Cancel", "ReleaseCapture", "ClearTemporary" }, probe.Order);
+        Assert.Equal(new[] { "Capture", "Begin", "Cancel", "ReleaseCapture", "ClearTemporary" }, probe.Order);
         Assert.True(result.CaptureReleased);
         Assert.True(result.TemporaryStateCleared);
         Assert.Null(lifecycle.Current);
@@ -76,15 +76,14 @@ public sealed class ViewportGestureLifecycleTests
         var moved = Input with { Kind = EditorPointerEventKind.Move, Position = new(20, 30) };
 
         Assert.True(lifecycle.Update(moved));
-        Assert.Equal("TransformGizmo", lifecycle.Current!.Owner);
+        Assert.Equal(GestureOwner.Gizmo, lifecycle.Current!.Owner);
         Assert.Equal(moved, lifecycle.Current.Input);
     }
 
     static ViewportGestureLifecycle NewLifecycle(LifecycleProbe probe) =>
-        new(probe, context => probe.Order.Add("ReleaseCapture"),
-            context => probe.Order.Add("ClearTemporary"));
+        new(probe, probe, context => probe.Order.Add("ClearTemporary"));
 
     static ViewportGestureContext Context(long pointerId = 7) =>
-        new("TransformDrag", "TransformGizmo", pointerId,
+        new("TransformDrag", GestureOwner.Gizmo, pointerId,
             ViewportGestureCapture.Pointer, Input with { PointerId = pointerId });
 }

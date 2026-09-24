@@ -3,7 +3,7 @@ using XuanYu.Editor.Input.Lifecycle;
 
 namespace XuanYu.World.Tests.Viewport.InputLifecycle;
 
-sealed class LifecycleProbe : IViewportGestureConsumer
+sealed class LifecycleProbe : IViewportGestureConsumer, IViewportPointerCaptureCoordinator
 {
     public readonly List<string> Order = [];
     public ViewportGestureContext? CanceledContext { get; private set; }
@@ -19,6 +19,9 @@ sealed class LifecycleProbe : IViewportGestureConsumer
     }
 
     public void Update(ViewportGestureContext context) => Order.Add("Update");
+
+    public void Capture(long pointerId, GestureOwner owner) => Order.Add("Capture");
+    public void Release(long pointerId, GestureOwner owner) => Order.Add("ReleaseCapture");
 
     public void Commit(ViewportGestureContext context)
     {
