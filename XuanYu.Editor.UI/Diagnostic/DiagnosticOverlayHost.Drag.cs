@@ -69,8 +69,9 @@ public partial class DiagnosticOverlayHost
         var maxY = Math.Max(12, _floatingLayer.Bounds.Height - height - 12);
         CardLeft = Math.Clamp(CardLeft, 12, maxX); CardTop = Math.Clamp(CardTop, 12, maxY);
         Canvas.SetLeft(_probeCard, CardLeft); Canvas.SetTop(_probeCard, CardTop);
-        PositionNativeProbe(_probeHighlight is null ? default : new Rect(
-            _probeHighlight.Bounds.Position, _probeHighlight.Bounds.Size));
+        var target = _previewTargetBounds ?? (_probeHighlight is null ? default :
+            new Rect(_probeHighlight.Bounds.Position, _probeHighlight.Bounds.Size));
+        PositionNativeProbe(target);
     }
 
     static Point ScreenPoint(Control source, Point point)
