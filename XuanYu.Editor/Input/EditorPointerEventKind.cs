@@ -9,4 +9,5 @@ public enum EditorPointerEventKind
     CaptureLost,
     Cancel,
     FocusLost,
+    WindowDeactivated,
 }

@@ -59,6 +59,20 @@ public sealed partial class MoveTransformUiTests
     }
 
     [Fact]
+    public void Window_deactivation_cancels_move_session_without_history()
+    {
+        var vm = MoveVm();
+        var hit = AxisHit(vm, MoveGizmoAxis.X);
+        Assert.True(vm.TryBeginMoveGizmoCapture(7, hit.X, hit.Y, hit.Viewport, true));
+        Assert.True(vm.PreviewViewportPointer(7, hit.EndX, hit.EndY));
+
+        vm.CancelInteractionFromWindowDeactivated();
+
+        Assert.False(vm.CommitViewportPointer(7, hit.EndX, hit.EndY));
+        Assert.Equal(0, HistoryOf(vm).Count);
+    }
+
+    [Fact]
     public void Move_session_blocks_camera_picking_tool_switch_and_second_move()
     {
         var vm = MoveVm();
