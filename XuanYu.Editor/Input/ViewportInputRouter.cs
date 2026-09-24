@@ -8,6 +8,8 @@ public sealed partial class ViewportInputRouter
     readonly RouterLifecycleConsumer _activeConsumer;
     readonly ViewportGestureLifecycle _lifecycle;
     public ViewportGestureState State => ViewportGestureState.From(_lifecycle.Current);
+    public ViewportGestureLifecycle Lifecycle => _lifecycle;
+    public IViewportPointerCaptureCoordinator CaptureCoordinator { get; }
 
     public ViewportInputRouter(IEnumerable<IViewportInputConsumer> consumers,
         IViewportPointerCaptureCoordinator capture)
@@ -16,6 +18,7 @@ public sealed partial class ViewportInputRouter
         if (_consumers.Any(x => x.Owner == GestureOwner.None) || _consumers.Select(x => x.Owner).Distinct().Count() != _consumers.Count)
             throw new ArgumentException("Each viewport consumer must have one unique GestureOwner.", nameof(consumers));
         _activeConsumer = new();
+        CaptureCoordinator = capture;
         _lifecycle = new(_activeConsumer, capture, _ => { });
     }
 
