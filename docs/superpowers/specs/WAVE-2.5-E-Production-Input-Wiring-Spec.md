@@ -109,4 +109,3 @@ The implementation plan is authoritative for sequencing. The expected file famil
 - Integration: Native and Avalonia source events converge to equivalent consumer/lifecycle results.
 - Static: no forbidden direct Host/Window -> viewport VM calls; no Diagnostic -> Router path; one production Router composition root.
 - Runtime: run.bat Native, Avalonia, wheel, capture loss, focus loss, deactivation, Escape, tool/mode changes, and disposal.
-
