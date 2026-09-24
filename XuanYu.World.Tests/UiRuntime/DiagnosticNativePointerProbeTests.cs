@@ -31,12 +31,19 @@ public sealed class DiagnosticNativePointerProbeTests
         Action<VulkanNativeHost, double, double> handler = (_, x, y) =>
             observed = x == 428 && y == 251;
         var eventInfo = typeof(VulkanNativeHost).GetEvent("NativePointerMoved",
-            BindingFlags.Instance | BindingFlags.NonPublic)!;
-        eventInfo.GetAddMethod(true)!.Invoke(host, [handler]);
-        var message = new NativePointerMessage(NativePointerMessage.Move, 0,
-            428, 251, (nint)123, 0, 0, 0);
-        typeof(VulkanNativeHost).GetMethod("OnNativePointerMessage",
-            BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(host, [message]);
-        Assert.True(observed);
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        eventInfo.GetAddMethod(true)!.Invoke(null, [handler]);
+        try
+        {
+            var message = new NativePointerMessage(NativePointerMessage.Move, 0,
+                428, 251, (nint)123, 0, 0, 0);
+            typeof(VulkanNativeHost).GetMethod("OnNativePointerMessage",
+                BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(host, [message]);
+            Assert.True(observed);
+        }
+        finally
+        {
+            eventInfo.GetRemoveMethod(true)!.Invoke(null, [handler]);
+        }
     }
 }
