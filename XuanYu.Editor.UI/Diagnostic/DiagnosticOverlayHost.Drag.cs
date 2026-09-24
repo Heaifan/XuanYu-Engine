@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.VisualTree;
+using XuanYu.Editor.UI.Diagnostic;
 
 namespace XuanYu.Editor.UI;
 
@@ -80,18 +81,13 @@ public partial class DiagnosticOverlayHost
         if (_floatingLayer is null || _probeCard is null) return;
         var size = _probeCard.Bounds.Size;
         if (size.Width <= 0 || size.Height <= 0) size = _probeCard.DesiredSize;
-        var gap = 12d;
-        var candidates = new[]
-        {
-            new Rect(target.Right + gap, target.Top, size.Width, size.Height),
-            new Rect(target.Left - gap - size.Width, target.Top, size.Width, size.Height),
-            new Rect(target.Left, target.Bottom + gap, size.Width, size.Height),
-            new Rect(target.Left, target.Top - gap - size.Height, size.Width, size.Height)
-        };
         var area = new Rect(12, 12, Math.Max(0, _floatingLayer.Bounds.Width - 24),
             Math.Max(0, _floatingLayer.Bounds.Height - 24));
-        var choice = candidates.FirstOrDefault(x => area.Contains(x.Position) && area.Contains(x.BottomRight) && !x.Intersects(target));
-        if (choice == default) choice = candidates[0];
-        CardLeft = choice.X; CardTop = choice.Y;
+        var visual = (IsProbeLocked ? _lockedProbeResult : _probeResult)?.DeepVisual;
+        var kind = visual is VulkanViewport or VulkanNativeHost
+            ? DiagnosticPlacementTargetKind.Viewport : DiagnosticPlacementTargetKind.SmallControl;
+        var placement = DiagnosticPlacementPolicy.Place(new(
+            kind, target, _lastProbePointer, size, area, 12));
+        CardLeft = placement.CardBounds.X; CardTop = placement.CardBounds.Y;
     }
 }
