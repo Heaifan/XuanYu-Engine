@@ -32,7 +32,7 @@ public sealed class DiagnosticNativePointerProbeTests
             observed = x == 428 && y == 251;
         var eventInfo = typeof(VulkanNativeHost).GetEvent("NativePointerMoved",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
-        eventInfo.AddEventHandler(host, handler);
+        eventInfo.GetAddMethod(true)!.Invoke(host, [handler]);
         var message = new NativePointerMessage(NativePointerMessage.Move, 0,
             428, 251, (nint)123, 0, 0, 0);
         typeof(VulkanNativeHost).GetMethod("OnNativePointerMessage",
