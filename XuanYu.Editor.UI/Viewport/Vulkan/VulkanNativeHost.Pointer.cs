@@ -7,12 +7,14 @@ public sealed partial class VulkanNativeHost
     bool _mapGeometryDragActive;
     bool _expectedCaptureRelease;
     DiagnosticNativePointerSnapshot? _lastNativePointerProbe;
+    internal event Action<VulkanNativeHost, double, double>? NativePointerMoved;
     void OnNativePointerMessage(NativePointerMessage message)
     {
         _lastNativePointerProbe = DiagnosticNativePointerProbe.Capture(message);
         var dpi = GetDpiScale();
         var x = message.PhysicalX / dpi;
         var y = message.PhysicalY / dpi;
+        if (message.Message == NativePointerMessage.Move) NativePointerMoved?.Invoke(this, x, y);
         if (DataContext is not UiVm vm) return;
         var route = NativePointerRoutePolicy.Resolve(
             message, _nativeCameraActive, vm.IsRegionDrawingTool || (vm.IsRoadDrawingTool && vm.IsRoadDrawingDraftActive),
@@ -31,7 +33,6 @@ public sealed partial class VulkanNativeHost
         }
         else if (route == NativePointerRoute.LeftDown)
         {
-            // F3-F1：导航 Gizmo 优先（右上角区域）；否则进入变换 Gizmo / Picking。
             if (TryNavGizmoPress(vm, x, y)) return;
             if (vm.TryBeginMapGeometryVertexPointer(x, y, CaptureViewportState()))
             {
