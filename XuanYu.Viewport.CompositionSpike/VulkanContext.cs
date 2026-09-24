@@ -27,7 +27,13 @@ unsafe sealed class VulkanContext : IDisposable
 
     public static (VulkanContext? Context, string Info) Create(ICompositionGpuInterop interop)
     {
-        if (!interop.SupportedImageHandleTypes.Contains(KnownPlatformGraphicsExternalImageHandleTypes.VulkanOpaqueNtHandle))
+        var imageTypes = string.Join(",", interop.SupportedImageHandleTypes);
+        var semaphoreTypes = string.Join(",", interop.SupportedSemaphoreTypes);
+        var supported = interop.SupportedImageHandleTypes.Contains(KnownPlatformGraphicsExternalImageHandleTypes.VulkanOpaqueNtHandle);
+        Console.WriteLine($"[A1.5] SupportedImageHandleTypes={imageTypes}");
+        Console.WriteLine($"[A1.5] SupportedSemaphoreTypes={semaphoreTypes}");
+        Console.WriteLine($"[A1.5] VulkanOpaqueNtHandle={(supported ? "YES" : "NO")}");
+        if (!supported)
             return (null, "Avalonia 不支持 VulkanOpaqueNtHandle");
         var api = Vk.GetApi();
         using var app = new VulkanStrings(new[] { "A1.5" });
@@ -39,6 +45,10 @@ unsafe sealed class VulkanContext : IDisposable
         var physicals = new PhysicalDevice[count]; fixed (PhysicalDevice* p = physicals) api.EnumeratePhysicalDevices(instance, ref count, p).Ensure();
         foreach (var physical in physicals)
         {
+            var ids = new PhysicalDeviceIDProperties { SType = StructureType.PhysicalDeviceIDProperties };
+            var details = new PhysicalDeviceProperties2 { SType = StructureType.PhysicalDeviceProperties2, PNext = &ids };
+            api.GetPhysicalDeviceProperties2(physical, &details);
+            if (!MatchesAvaloniaDevice(ids, interop)) continue;
             uint families = 0; api.GetPhysicalDeviceQueueFamilyProperties(physical, ref families, null);
             var props = new QueueFamilyProperties[families]; fixed (QueueFamilyProperties* p = props) api.GetPhysicalDeviceQueueFamilyProperties(physical, ref families, p);
             for (uint family = 0; family < families; family++)
@@ -53,10 +63,20 @@ unsafe sealed class VulkanContext : IDisposable
                 var props2 = new PhysicalDeviceProperties(); api.GetPhysicalDeviceProperties(physical, out props2);
                 var name = Marshal.PtrToStringAnsi((nint)props2.DeviceName) ?? "unknown";
                 var driver = $"{props2.DriverVersion} / Vulkan {props2.ApiVersion}";
+                Console.WriteLine($"[A1.5] PhysicalDevice={name}; Driver={driver}; QueueFamily={family}");
                 return (new VulkanContext(api, instance, physical, device, mainQueue, family, new VulkanCommandPool(api, device, mainQueue, family), name, driver), $"GPU={name}; Driver={driver}");
             }
         }
         api.DestroyInstance(instance, null); return (null, "未找到支持外部内存的 Vulkan graphics queue");
+    }
+
+    static bool MatchesAvaloniaDevice(PhysicalDeviceIDProperties ids, ICompositionGpuInterop interop)
+    {
+        if (interop.DeviceLuid is { Length: > 0 } && ids.DeviceLuidvalid)
+            return new ReadOnlySpan<byte>(ids.DeviceLuid, 8).SequenceEqual(interop.DeviceLuid);
+        if (interop.DeviceUuid is { Length: > 0 })
+            return new ReadOnlySpan<byte>(ids.DeviceUuid, 16).SequenceEqual(interop.DeviceUuid);
+        return true;
     }
 
     public void Dispose() { Api.DeviceWaitIdle(Device); Commands.Dispose(); Api.DestroyDevice(Device, null); Api.DestroyInstance(Instance, null); }

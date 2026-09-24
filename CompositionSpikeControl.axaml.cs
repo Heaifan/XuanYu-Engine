@@ -21,5 +21,5 @@ public sealed class CompositionSpikeControl : UserControl
         surface.StatusChanged += (_, text) => SetStatus(text);
     }
 
-    void SetStatus(string text) => _status.Text = text;
+    void SetStatus(string text) { _status.Text = text; Console.WriteLine("[A1.5] " + text); }
 }

@@ -44,6 +44,9 @@ public sealed class CompositionSurfaceHost : Control
         ElementComposition.SetElementChildVisual(this, _visual);
         _interop = await _compositor.TryGetCompositionGpuInterop();
         if (_interop is null) { Report("FAIL：当前 Avalonia backend 没有 GPU interop"); return; }
+        Console.WriteLine($"[A1.5] CompositionGpuInterop={_interop.GetType().FullName}");
+        if (Bounds.Width <= 0 || Bounds.Height <= 0)
+        { Report("SPIKE：Composition 等待有效尺寸"); return; }
         try
         {
             var size = PixelSizeForBounds();
