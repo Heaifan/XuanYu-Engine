@@ -68,6 +68,19 @@ public sealed class NativeViewportInputForwarderTests
         Assert.Empty(sink.Events);
     }
 
+    [Fact]
+    public void Native_viewport_dispose_cancels_the_real_production_lifecycle()
+    {
+        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        var source = new ViewportPointerSource("native-hwnd");
+        new NativeViewportInputForwarder(vm.ViewportInput.Sink, source).Forward(Message(NativePointerMessage.LeftDown));
+
+        NativeViewportInputForwarder.ForwardLifecycle(vm.ViewportInput.Sink,
+            EditorPointerEventKind.ViewportDisposed, source);
+
+        Assert.Equal(ViewportGestureState.Idle, vm.ViewportInput.Router.State);
+    }
+
     static NativePointerMessage Message(uint kind, int wheel = 0) =>
         new(kind, 1 | (wheel << 16), 150, 300, 0, 0, 0, 0, false, 7);
 

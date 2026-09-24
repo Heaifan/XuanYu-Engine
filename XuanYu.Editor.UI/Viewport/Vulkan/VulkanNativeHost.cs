@@ -65,7 +65,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         ExitDiagnosticPointer();
-        if (DataContext is UiVm vm) CancelNativeInput(vm, "HostDetached");
+        ForwardViewportDisposed();
         _resizer.Cancel();
         UnhookLayoutSync();
         Report(NativeHostLifecycleState.Detached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
@@ -76,6 +76,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
         ExitDiagnosticPointer();
+        ForwardViewportDisposed();
         _resizer.Cancel();
         UnhookLayoutSync();
         Report(NativeHostLifecycleState.Disposed, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
@@ -96,5 +97,4 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         ViewportNativeHostRoute.Report(DataContext as UiVm, snapshot);
         return snapshot;
     }
-    double GetDpiScale() => TopLevel.GetTopLevel(this)?.RenderScaling ?? 1d;
 }

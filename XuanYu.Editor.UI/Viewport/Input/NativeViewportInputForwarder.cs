@@ -20,4 +20,11 @@ public sealed class NativeViewportInputForwarder(
         if (message.Message == NativePointerMessage.MouseLeave) return;
         sink.Handle(NativePointerEventAdapter.Convert(message, source, dpiScale));
     }
+
+    public static void ForwardLifecycle(
+        IViewportInputSink sink, EditorPointerEventKind kind, ViewportPointerSource source)
+    {
+        sink.Handle(new(kind, new(0, 0), EditorPointerButtons.None,
+            EditorPointerModifiers.None, 0, 1, source, 1));
+    }
 }
