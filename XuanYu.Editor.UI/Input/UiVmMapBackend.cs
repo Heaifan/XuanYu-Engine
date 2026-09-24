@@ -30,7 +30,8 @@ sealed class UiVmMapBackend(UiVm vm, GestureOwner owner, Func<ViewportState> vie
     {
         var (x, y) = (c.Input.Position.X, c.Input.Position.Y);
         if (_owner == GestureOwner.MapEdit) _vm.PreviewMapGeometryPointer(x, y, _viewport());
-        if (_owner == GestureOwner.Region) _vm.RegionDrawingPointerMoved(x, y, _viewport());
+        if (_owner == GestureOwner.Region) _vm.RegionDrawingPointerMoved(x, y, _viewport(),
+            c.Input.Modifiers.HasFlag(EditorPointerModifiers.Alt));
         if (_owner == GestureOwner.Road) _vm.RoadDrawingPointerMoved(x, y, _viewport());
     }
     public void Commit(ViewportGestureContext c)

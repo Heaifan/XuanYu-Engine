@@ -20,7 +20,10 @@ public sealed class RegionDrawingInputModifierTests
         var pointer = File.ReadAllText(Path.Combine(root, "Viewport", "Vulkan", "VulkanNativeHost.AvaloniaPointer.cs"));
         var native = File.ReadAllText(Path.Combine(root, "Viewport", "Vulkan", "VulkanNativeHost.Pointer.cs"));
         Assert.Contains("KeyModifiers.Alt", pointer);
-        Assert.Contains("message.IsAltDown", native);
+        Assert.Contains("NativeViewportInputForwarder.Forward", native);
+        var adapted = NativePointerEventAdapter.Convert(
+            new NativePointerMessage(NativePointerMessage.Move, 0, 0, 0, 0, 0, 0, 0, true), new("native"), 1);
+        Assert.True(adapted.Modifiers.HasFlag(XuanYu.Editor.Input.EditorPointerModifiers.Alt));
     }
 
     [Theory]
