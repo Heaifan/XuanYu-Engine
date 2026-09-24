@@ -12,7 +12,7 @@ public static class NativePointerEventAdapter
             new(message.PhysicalX / scale, message.PhysicalY / scale),
             MapButtons(message.Buttons), MapModifiers(message),
             message.Message == NativePointerMessage.Wheel ? message.WheelDelta / 120d : 0,
-            1, source, scale);
+            message.PointerId > 0 ? message.PointerId : 1, source, scale);
     }
 
     static EditorPointerEventKind MapKind(uint message) => message switch
@@ -37,5 +37,6 @@ public static class NativePointerEventAdapter
     static EditorPointerModifiers MapModifiers(NativePointerMessage message) =>
         (message.IsShiftDown ? EditorPointerModifiers.Shift : EditorPointerModifiers.None) |
         (message.IsControlDown ? EditorPointerModifiers.Control : EditorPointerModifiers.None) |
-        (message.IsAltDown ? EditorPointerModifiers.Alt : EditorPointerModifiers.None);
+        (message.IsAltDown ? EditorPointerModifiers.Alt : EditorPointerModifiers.None) |
+        (message.IsMetaDown ? EditorPointerModifiers.Meta : EditorPointerModifiers.None);
 }

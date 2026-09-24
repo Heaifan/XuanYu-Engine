@@ -5,10 +5,11 @@ namespace XuanYu.Editor.UI;
 static partial class Win32ViewportHost
 {
     const uint WM_MOUSEMOVE = 0x0200, WM_LBUTTONDOWN = 0x0201, WM_LBUTTONUP = 0x0202;
+    const uint WM_RBUTTONDOWN = 0x0204, WM_RBUTTONUP = 0x0205;
     const uint WM_MBUTTONDOWN = 0x0207, WM_MBUTTONUP = 0x0208, WM_MOUSEWHEEL = 0x020a;
     const uint WM_CAPTURECHANGED = 0x0215, WM_KILLFOCUS = 0x0008;
     const uint WM_CANCELMODE = 0x001f;
-    const int VK_MENU = 0x12;
+    const int VK_MENU = 0x12, VK_LWIN = 0x5b, VK_RWIN = 0x5c;
     static readonly ConcurrentDictionary<nint, Action<NativePointerMessage>> InputSinks = new();
 
     public static void SetInputSink(nint hwnd, Action<NativePointerMessage>? sink)
@@ -26,17 +27,22 @@ static partial class Win32ViewportHost
             if (msg is WM_LBUTTONDOWN or WM_MBUTTONDOWN) SetCapture(hWnd);
             var after = GetCapture();
             var target = msg == WM_CAPTURECHANGED ? lParam : 0;
+            var point = ReadPoint(hWnd, msg, lParam);
             sink(new NativePointerMessage(
-                msg, (int)wParam, LoWord(lParam), HiWord(lParam), hWnd, before, after, target,
-                IsAltDown()));
+                msg, (int)wParam, point.X, point.Y, hWnd, before, after, target,
+                IsAltDown(), 1, IsMetaDown()));
         }
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
 
-    static bool IsPointerMessage(uint msg) =>
-        msg is WM_LBUTTONDOWN or WM_MOUSEMOVE or WM_LBUTTONUP or
-            WM_MBUTTONDOWN or WM_MBUTTONUP or WM_MOUSEWHEEL or
-            WM_CAPTURECHANGED or WM_KILLFOCUS or WM_CANCELMODE;
+    static bool IsPointerMessage(uint msg) => NativePointerSourceBoundary.IsPointerMessage(msg);
+
+    static (int X, int Y) ReadPoint(nint hWnd, uint msg, nint lParam)
+    {
+        var point = new POINT { X = LoWord(lParam), Y = HiWord(lParam) };
+        if (msg == WM_MOUSEWHEEL) ScreenToClient(hWnd, ref point);
+        return (point.X, point.Y);
+    }
 
     public static bool HasMouseCapture(nint hwnd) => hwnd != 0 && GetCapture() == hwnd;
 
@@ -48,6 +54,8 @@ static partial class Win32ViewportHost
     static int LoWord(nint value) => unchecked((short)((long)value & 0xffff));
     static int HiWord(nint value) => unchecked((short)(((long)value >> 16) & 0xffff));
     static bool IsAltDown() => (GetKeyState(VK_MENU) & 0x8000) != 0;
+    static bool IsMetaDown() => (GetKeyState(VK_LWIN) & 0x8000) != 0 ||
+        (GetKeyState(VK_RWIN) & 0x8000) != 0;
 
     [System.Runtime.InteropServices.DllImport("user32")]
     static extern nint SetCapture(nint hWnd);
@@ -58,4 +66,14 @@ static partial class Win32ViewportHost
     static extern bool ReleaseCapture();
     [System.Runtime.InteropServices.DllImport("user32")]
     static extern short GetKeyState(int key);
+    [System.Runtime.InteropServices.DllImport("user32")]
+    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+    static extern bool ScreenToClient(nint hWnd, ref POINT point);
+
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    struct POINT
+    {
+        public int X;
+        public int Y;
+    }
 }
