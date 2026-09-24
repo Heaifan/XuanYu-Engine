@@ -50,7 +50,11 @@ public partial class DiagnosticOverlayHost : UserControl
         _loaded = true;
         DiagnosticPopupHost.PopupRootChanged += OnPopupRootChanged;
         AttachTopLevel();
-        if (_topLevel is Window window) AttachFloatingLayer(window);
+        if (_topLevel is Window window)
+        {
+            AttachFloatingLayer(window);
+            AttachNativeViewportProbe(window);
+        }
         AttachVm();
         Reconcile();
     }
@@ -58,6 +62,7 @@ public partial class DiagnosticOverlayHost : UserControl
     void OnUnloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         _loaded = false;
+        DetachNativeViewportProbe();
         DetachTopLevel();
         DiagnosticPopupHost.PopupRootChanged -= OnPopupRootChanged;
         DetachVm();
