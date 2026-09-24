@@ -38,12 +38,10 @@ public sealed class NativeViewportInputForwarderTests
     {
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
         var source = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.Pointer.cs"));
-        var body = source[..source.IndexOf("    void PreviewNativePointer", StringComparison.Ordinal)];
-
-        Assert.Contains("NativeViewportInputForwarder.Forward", body);
-        Assert.Contains("Win32ViewportHost.ReleaseMouseCapture", body);
-        Assert.DoesNotContain("NativePointerRoutePolicy.Resolve", body);
-        Assert.DoesNotContain("ReportPointerPicking", body);
+        Assert.Contains("NativeViewportInputForwarder.Forward", source);
+        Assert.Contains("Win32ViewportHost.ReleaseMouseCapture", source);
+        Assert.DoesNotContain("NativePointerRoutePolicy.Resolve", source);
+        Assert.DoesNotContain("ReportPointerPicking", source);
     }
 
     [Fact]
