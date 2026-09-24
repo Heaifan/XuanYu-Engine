@@ -22,10 +22,12 @@ public sealed class ViewportInputComposition
     public ViewportGestureLifecycle Lifecycle => Router.Lifecycle;
     public IViewportInputSink Sink => _sink;
     public ViewportInputDispatchResult Dispatch(EditorPointerEvent pointer) => Router.Dispatch(pointer);
+    public ViewportInputDispatchResult Dispatch(EditorKeyEvent key) => Router.Dispatch(key);
 
     sealed class RouterSink(ViewportInputRouter router) : IViewportInputSink
     {
         readonly ViewportInputRouter _router = router;
         public void Handle(EditorPointerEvent pointer) => _router.Dispatch(pointer);
+        public void Handle(EditorKeyEvent key) => _router.Dispatch(key);
     }
 }

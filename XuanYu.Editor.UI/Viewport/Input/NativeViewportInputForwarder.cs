@@ -24,7 +24,7 @@ public sealed class NativeViewportInputForwarder(
     public static void ForwardLifecycle(
         IViewportInputSink sink, EditorPointerEventKind kind, ViewportPointerSource source)
     {
-        sink.Handle(new(kind, new(0, 0), EditorPointerButtons.None,
+        sink.Handle(new EditorPointerEvent(kind, new(0, 0), EditorPointerButtons.None,
             EditorPointerModifiers.None, 0, 1, source, 1));
     }
 }

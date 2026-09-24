@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-
 namespace XuanYu.Editor.UI;
 
 static partial class Win32ViewportHost
@@ -33,6 +32,7 @@ static partial class Win32ViewportHost
                 msg, (int)wParam, point.X, point.Y, hWnd, before, after, target,
                 IsAltDown(), 1, IsMetaDown()));
         }
+        RouteKeyboardMessage(hWnd, msg, wParam, lParam);
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
 

@@ -8,4 +8,6 @@ public interface IViewportInputConsumer : IViewportGestureConsumer
     int BeginPriority => 0;
     bool CanBegin(EditorPointerEvent pointer, ViewportGestureState state) => true;
     ViewportInputDispatchResult Handle(EditorPointerEvent pointer, ViewportGestureState state);
+    ViewportInputDispatchResult Handle(EditorKeyEvent key, ViewportGestureState state) =>
+        ViewportInputDispatchResult.Ignored;
 }

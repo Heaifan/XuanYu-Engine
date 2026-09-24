@@ -22,9 +22,12 @@ public sealed partial class ViewportInputRouter
         _lifecycle = new(_activeConsumer, capture, _ => { });
     }
 
-    public ViewportInputDispatchResult Dispatch(EditorPointerEvent pointer) => State.IsActive
-        ? DispatchActive(pointer) : pointer.Kind == EditorPointerEventKind.Pressed
+    public ViewportInputDispatchResult Dispatch(EditorPointerEvent pointer)
+    {
+        ResetKeyboardState(pointer.Kind);
+        return State.IsActive ? DispatchActive(pointer) : pointer.Kind == EditorPointerEventKind.Pressed
             ? Begin(pointer) : DispatchIdle(pointer);
+    }
 
     ViewportInputDispatchResult Begin(EditorPointerEvent pointer)
     {

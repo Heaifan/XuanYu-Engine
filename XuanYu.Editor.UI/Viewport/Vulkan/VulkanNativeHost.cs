@@ -42,7 +42,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         _hwnd = Win32ViewportHost.CreateChild(parent.Handle);
-        Win32ViewportHost.SetInputSink(_hwnd, OnNativePointerMessage);
+        Win32ViewportHost.SetInputSinks(_hwnd, OnNativePointerMessage, OnNativeKeyMessage);
         Report(NativeHostLifecycleState.HandleAvailable, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), true);
         return new PlatformHandle(_hwnd, "HWND");
     }
@@ -86,7 +86,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         IsRendererReady = false;
         if (_hwnd != 0)
         {
-            Win32ViewportHost.SetInputSink(_hwnd, null);
+            Win32ViewportHost.ClearInputSinks(_hwnd);
             Win32ViewportHost.Destroy(_hwnd);
         }
         _hwnd = 0;
