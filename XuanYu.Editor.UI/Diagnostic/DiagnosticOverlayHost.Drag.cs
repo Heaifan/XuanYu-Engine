@@ -84,8 +84,7 @@ public partial class DiagnosticOverlayHost
         if (size.Width <= 0 || size.Height <= 0) size = _probeCard.DesiredSize;
         var area = new Rect(12, 12, Math.Max(0, _floatingLayer.Bounds.Width - 24),
             Math.Max(0, _floatingLayer.Bounds.Height - 24));
-        var visual = (IsProbeLocked ? _lockedProbeResult : _probeResult)?.DeepVisual;
-        var kind = visual is VulkanViewport or VulkanNativeHost
+        var kind = IsViewportDiagnosticTarget((IsProbeLocked ? _lockedProbeResult : _probeResult))
             ? DiagnosticPlacementTargetKind.Viewport : DiagnosticPlacementTargetKind.SmallControl;
         var placement = DiagnosticPlacementPolicy.Place(new(
             kind, target, _lastProbePointer, size, area, 12));

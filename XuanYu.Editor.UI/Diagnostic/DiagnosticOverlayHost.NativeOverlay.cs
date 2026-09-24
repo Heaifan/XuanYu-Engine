@@ -9,19 +9,24 @@ public partial class DiagnosticOverlayHost
 {
     Popup? _nativeCardPopup;
     Popup? _nativeHighlightPopup;
-    void ShowNativeProbeOverlay(Border highlight, Border card, Rect bounds)
+    void ShowNativeProbeOverlay(Border? highlight, Border card, Rect bounds)
     {
         if (_floatingLayer is null) return;
-        _nativeCardPopup ??= CreatePopup(); _nativeHighlightPopup ??= CreatePopup();
-        _nativeHighlightPopup.IsHitTestVisible = false;
-        AddPopup(_nativeCardPopup); AddPopup(_nativeHighlightPopup);
-        _nativeCardPopup.Child = card; _nativeHighlightPopup.Child = highlight;
+        _nativeCardPopup ??= CreatePopup(); AddPopup(_nativeCardPopup);
+        _nativeCardPopup.Child = card;
         _nativeCardPopup.PlacementTarget = _floatingLayer;
-        _nativeHighlightPopup.PlacementTarget = _floatingLayer;
         var passThrough = _floatingLayer.Parent as Control;
         _nativeCardPopup.OverlayInputPassThroughElement = passThrough;
-        _nativeHighlightPopup.OverlayInputPassThroughElement = passThrough;
-        _nativeCardPopup.IsOpen = true; _nativeHighlightPopup.IsOpen = true;
+        _nativeCardPopup.IsOpen = true;
+        if (highlight is not null)
+        {
+            _nativeHighlightPopup ??= CreatePopup(); AddPopup(_nativeHighlightPopup);
+            _nativeHighlightPopup.IsHitTestVisible = false;
+            _nativeHighlightPopup.Child = highlight;
+            _nativeHighlightPopup.PlacementTarget = _floatingLayer;
+            _nativeHighlightPopup.OverlayInputPassThroughElement = passThrough;
+            _nativeHighlightPopup.IsOpen = true;
+        }
         if (TopLevel.GetTopLevel(this) is Window window)
             _lastNativeWindowProbe = DiagnosticNativeWindowProbe.Capture(_nativeCardPopup, window);
         PositionNativeProbe(bounds);
@@ -48,6 +53,9 @@ public partial class DiagnosticOverlayHost
         if (_nativeHighlightPopup is not null)
             _nativeHighlightPopup.PlacementRect = new Rect(target.X, target.Y, 0, 0);
     }
+
+    static bool IsViewportDiagnosticTarget(DiagnosticProbeResult? result) =>
+        result?.DebugId == "XYE.VIEWPORT" || result?.DeepVisual is VulkanViewport or VulkanNativeHost;
 
     void CloseNativeProbeOverlay()
     {

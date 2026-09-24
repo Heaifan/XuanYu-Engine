@@ -46,7 +46,8 @@ public partial class DiagnosticOverlayHost
         var result = IsProbeLocked ? _lockedProbeResult : _probeResult;
         if (result is null || !_loaded || _floatingLayer is null) return;
         if (!TryGetFloatingBounds(result.DeepVisual, out var bounds)) return;
-        _probeHighlight = new Border
+        var viewportTarget = IsViewportDiagnosticTarget(result);
+        _probeHighlight = viewportTarget ? null : new Border
         {
             Width = bounds.Width, Height = bounds.Height,
             BorderBrush = Brushes.Orange,
@@ -64,7 +65,10 @@ public partial class DiagnosticOverlayHost
         _probeCard = new Border { Child = card, IsHitTestVisible = true };
         _previewTargetBounds = IsProbeLocked ? null : bounds;
         _probeCard.SizeChanged += (_, _) => ReflowPreviewCard();
-        Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
+        if (_probeHighlight is not null)
+        {
+            Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
+        }
         ShowNativeProbeOverlay(_probeHighlight, _probeCard, bounds);
         ClampCardToWindow();
         if (!IsProbeLocked)
@@ -72,7 +76,8 @@ public partial class DiagnosticOverlayHost
             PlacePreviewCard(bounds);
         }
         ClampCardToWindow();
-        _probeHighlight.SetValue(Panel.ZIndexProperty, 200); _probeCard.SetValue(Panel.ZIndexProperty, 201);
+        if (_probeHighlight is not null) _probeHighlight.SetValue(Panel.ZIndexProperty, 200);
+        _probeCard.SetValue(Panel.ZIndexProperty, 201);
     }
 
     void ReflowPreviewCard()

@@ -35,7 +35,7 @@ public partial class DiagnosticOverlayHost : UserControl
         if (root is null) return;
         if (_floatingLayer?.Parent is Panel) return;
         _floatingLayer = new Canvas { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch, IsHitTestVisible = true };
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch, IsHitTestVisible = false };
         _floatingLayer.SetValue(Panel.ZIndexProperty, 80); root.Children.Add(_floatingLayer);
     }
 
