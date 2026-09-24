@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using XuanYu.Editor.Input;
 
 namespace XuanYu.Editor.UI;
 
@@ -19,7 +20,14 @@ public partial class UiWin : Window
         InitializeComponent();
         AddHandler(KeyDownEvent, Window_KeyDown, RoutingStrategies.Tunnel);
         DataContextChanged += (_, _) => AttachVm();
-        Deactivated += (_, _) => (DataContext as UiVm)?.CancelInteractionFromWindowDeactivated();
+        Deactivated += (_, _) => ForwardWindowDeactivated();
+    }
+
+    void ForwardWindowDeactivated()
+    {
+        if (DataContext is UiVm vm)
+            AvaloniaViewportInputForwarder.ForwardLifecycle(vm.ViewportInput.Sink,
+                EditorPointerEventKind.WindowDeactivated, new("ui-window"));
     }
 
     async Task<bool> CopySelectedLogs(UiVm vm)

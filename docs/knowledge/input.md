@@ -121,3 +121,29 @@ Probe 至少记录：来源、按钮、owner HWND、GetCapture 当前值、释�
 
 **关联 Incident**：INC-2026-06-26-001
 **关联 Knowledge**：K-INP-001
+
+---
+
+## WAVE-2.5 Production Input Final Freeze
+
+WAVE-2.5 E5 的最终生产输入拓扑为：
+
+```text
+Native HWND / Avalonia fallback
+            ↓
+         Adapter
+            ↓
+   Production Input Sink
+            ↓
+ ViewportInputComposition ×1
+            ↓
+    ViewportInputRouter ×1
+            ↓
+Camera / Picking / Gizmo / MapEdit / Region / Road / Marker
+```
+
+Native HWND 存在时 Native 是 authoritative source；没有 Native HWND 时 Avalonia 是 authoritative source。两者不得对同一物理事件双投递。`ViewportInputComposition` 是生产唯一 Composition Root，统一持有 Router、Lifecycle、CaptureCoordinator 和七个 Canonical Consumer；Snap 只作为 Helper / Constraint，不拥有手势。
+
+生产 Host 只能进入 Production Input Sink，不得直接调用 Consumer、UiVm 输入业务方法或创建第二套 Router、Lifecycle、CaptureCoordinator、Composition。Canonical Consumer 层不得依赖 HWND、WndProc、Avalonia event args、Native message 或 Host control 类型。
+
+E5 验收基线：World.Tests 22 个已登记 baseline failure，New Regression = 0；最终验收 HEAD 记录于 E5 freeze 提交报告。
