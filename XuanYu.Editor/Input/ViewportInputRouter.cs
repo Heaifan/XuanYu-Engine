@@ -2,7 +2,7 @@ using XuanYu.Editor.Input.Lifecycle;
 
 namespace XuanYu.Editor.Input;
 
-public sealed class ViewportInputRouter
+public sealed partial class ViewportInputRouter
 {
     readonly IReadOnlyList<IViewportInputConsumer> _consumers;
     readonly RouterLifecycleConsumer _activeConsumer;
@@ -25,8 +25,9 @@ public sealed class ViewportInputRouter
 
     ViewportInputDispatchResult Begin(EditorPointerEvent pointer)
     {
-        foreach (var consumer in _consumers)
+        foreach (var consumer in _consumers.OrderByDescending(x => x.BeginPriority))
         {
+            if (!consumer.CanBegin(pointer, State)) continue;
             var result = consumer.Handle(pointer, State);
             if (!result.ClaimsGesture) continue;
             _activeConsumer.Set(consumer);
@@ -40,7 +41,7 @@ public sealed class ViewportInputRouter
 
     ViewportInputDispatchResult DispatchIdle(EditorPointerEvent pointer)
     {
-        if (pointer.Kind is EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost
+        if (pointer.Kind is EditorPointerEventKind.Escape or EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost
             or EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated)
             return ViewportInputDispatchResult.Ignored;
         var observed = false;
@@ -55,10 +56,10 @@ public sealed class ViewportInputRouter
 
     ViewportInputDispatchResult DispatchActive(EditorPointerEvent pointer)
     {
-        if (pointer.PointerId != State.PointerId && pointer.Kind != EditorPointerEventKind.CaptureLost) return ViewportInputDispatchResult.Ignored;
+        if (pointer.PointerId != State.PointerId && !IsGlobalCancel(pointer.Kind)) return ViewportInputDispatchResult.Ignored;
         _lifecycle.Update(pointer);
         if (pointer.Kind is EditorPointerEventKind.Released) return End(ViewportInputDispatchKind.Released);
-        if (pointer.Kind is EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost or EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated)
+        if (IsGlobalCancel(pointer.Kind))
             return Cancel(pointer.Kind);
         return ViewportInputDispatchResult.Handled;
     }
@@ -67,19 +68,6 @@ public sealed class ViewportInputRouter
     {
         _lifecycle.Commit(); _activeConsumer.Clear();
         return new(kind);
-    }
-
-    ViewportInputDispatchResult Cancel(EditorPointerEventKind kind)
-    {
-        _lifecycle.Cancel(kind switch
-        {
-            EditorPointerEventKind.CaptureLost => ViewportCancellationReason.CaptureLost,
-            EditorPointerEventKind.FocusLost => ViewportCancellationReason.FocusLost,
-            EditorPointerEventKind.WindowDeactivated => ViewportCancellationReason.WindowDeactivated,
-            _ => ViewportCancellationReason.ExplicitCancel,
-        });
-        _activeConsumer.Clear();
-        return ViewportInputDispatchResult.Cancelled;
     }
 
     sealed class RouterLifecycleConsumer : IViewportGestureConsumer
