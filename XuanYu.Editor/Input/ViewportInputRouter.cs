@@ -2,7 +2,7 @@ using XuanYu.Editor.Input.Lifecycle;
 
 namespace XuanYu.Editor.Input;
 
-public sealed class ViewportInputRouter
+public sealed partial class ViewportInputRouter
 {
     readonly IReadOnlyList<IViewportInputConsumer> _consumers;
     readonly RouterLifecycleConsumer _activeConsumer;
@@ -64,33 +64,10 @@ public sealed class ViewportInputRouter
         return ViewportInputDispatchResult.Handled;
     }
 
-    static bool IsGlobalCancel(EditorPointerEventKind kind) => kind is
-        EditorPointerEventKind.Escape or EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost or
-        EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated or
-        EditorPointerEventKind.ToolChanged or EditorPointerEventKind.ModeChanged or
-        EditorPointerEventKind.ViewportDisposed;
-
     ViewportInputDispatchResult End(ViewportInputDispatchKind kind)
     {
         _lifecycle.Commit(); _activeConsumer.Clear();
         return new(kind);
-    }
-
-    ViewportInputDispatchResult Cancel(EditorPointerEventKind kind)
-    {
-        _lifecycle.Cancel(kind switch
-        {
-            EditorPointerEventKind.Escape => ViewportCancellationReason.Escape,
-            EditorPointerEventKind.CaptureLost => ViewportCancellationReason.CaptureLost,
-            EditorPointerEventKind.FocusLost => ViewportCancellationReason.FocusLost,
-            EditorPointerEventKind.WindowDeactivated => ViewportCancellationReason.WindowDeactivated,
-            EditorPointerEventKind.ToolChanged => ViewportCancellationReason.ToolChanged,
-            EditorPointerEventKind.ModeChanged => ViewportCancellationReason.ModeChanged,
-            EditorPointerEventKind.ViewportDisposed => ViewportCancellationReason.ViewportDisposed,
-            _ => ViewportCancellationReason.ExplicitCancel,
-        });
-        _activeConsumer.Clear();
-        return ViewportInputDispatchResult.Cancelled;
     }
 
     sealed class RouterLifecycleConsumer : IViewportGestureConsumer
