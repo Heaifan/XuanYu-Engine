@@ -25,8 +25,9 @@ public sealed class ViewportInputRouter
 
     ViewportInputDispatchResult Begin(EditorPointerEvent pointer)
     {
-        foreach (var consumer in _consumers)
+        foreach (var consumer in _consumers.OrderByDescending(x => x.BeginPriority))
         {
+            if (!consumer.CanBegin(pointer, State)) continue;
             var result = consumer.Handle(pointer, State);
             if (!result.ClaimsGesture) continue;
             _activeConsumer.Set(consumer);
