@@ -6,8 +6,12 @@ public enum EditorPointerEventKind
     Pressed,
     Released,
     Wheel,
+    Escape,
     CaptureLost,
     Cancel,
     FocusLost,
     WindowDeactivated,
+    ToolChanged,
+    ModeChanged,
+    ViewportDisposed,
 }

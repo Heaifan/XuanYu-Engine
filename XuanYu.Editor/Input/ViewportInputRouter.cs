@@ -41,7 +41,7 @@ public sealed class ViewportInputRouter
 
     ViewportInputDispatchResult DispatchIdle(EditorPointerEvent pointer)
     {
-        if (pointer.Kind is EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost
+        if (pointer.Kind is EditorPointerEventKind.Escape or EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost
             or EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated)
             return ViewportInputDispatchResult.Ignored;
         var observed = false;
@@ -56,13 +56,19 @@ public sealed class ViewportInputRouter
 
     ViewportInputDispatchResult DispatchActive(EditorPointerEvent pointer)
     {
-        if (pointer.PointerId != State.PointerId && pointer.Kind != EditorPointerEventKind.CaptureLost) return ViewportInputDispatchResult.Ignored;
+        if (pointer.PointerId != State.PointerId && !IsGlobalCancel(pointer.Kind)) return ViewportInputDispatchResult.Ignored;
         _lifecycle.Update(pointer);
         if (pointer.Kind is EditorPointerEventKind.Released) return End(ViewportInputDispatchKind.Released);
-        if (pointer.Kind is EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost or EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated)
+        if (IsGlobalCancel(pointer.Kind))
             return Cancel(pointer.Kind);
         return ViewportInputDispatchResult.Handled;
     }
+
+    static bool IsGlobalCancel(EditorPointerEventKind kind) => kind is
+        EditorPointerEventKind.Escape or EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost or
+        EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated or
+        EditorPointerEventKind.ToolChanged or EditorPointerEventKind.ModeChanged or
+        EditorPointerEventKind.ViewportDisposed;
 
     ViewportInputDispatchResult End(ViewportInputDispatchKind kind)
     {
@@ -74,9 +80,13 @@ public sealed class ViewportInputRouter
     {
         _lifecycle.Cancel(kind switch
         {
+            EditorPointerEventKind.Escape => ViewportCancellationReason.Escape,
             EditorPointerEventKind.CaptureLost => ViewportCancellationReason.CaptureLost,
             EditorPointerEventKind.FocusLost => ViewportCancellationReason.FocusLost,
             EditorPointerEventKind.WindowDeactivated => ViewportCancellationReason.WindowDeactivated,
+            EditorPointerEventKind.ToolChanged => ViewportCancellationReason.ToolChanged,
+            EditorPointerEventKind.ModeChanged => ViewportCancellationReason.ModeChanged,
+            EditorPointerEventKind.ViewportDisposed => ViewportCancellationReason.ViewportDisposed,
             _ => ViewportCancellationReason.ExplicitCancel,
         });
         _activeConsumer.Clear();
