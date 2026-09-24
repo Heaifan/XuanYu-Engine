@@ -2,7 +2,6 @@ using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
-
 namespace XuanYu.Editor.UI;
 
 public partial class DiagnosticOverlayHost : UserControl
@@ -97,5 +96,4 @@ public partial class DiagnosticOverlayHost : UserControl
             nameof(UiVm.IsDiagnosticRegionBoundsMode) or nameof(UiVm.InspectorIdentity))
             Reconcile();
     }
-
 }
