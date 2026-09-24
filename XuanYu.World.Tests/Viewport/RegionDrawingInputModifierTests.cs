@@ -1,4 +1,5 @@
 using XuanYu.Editor.UI;
+using XuanYu.Editor.Input;
 
 namespace XuanYu.World.Tests.Viewport;
 
@@ -19,11 +20,15 @@ public sealed class RegionDrawingInputModifierTests
         var root = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI");
         var pointer = File.ReadAllText(Path.Combine(root, "Viewport", "Vulkan", "VulkanNativeHost.AvaloniaPointer.cs"));
         var native = File.ReadAllText(Path.Combine(root, "Viewport", "Vulkan", "VulkanNativeHost.Pointer.cs"));
-        Assert.Contains("KeyModifiers.Alt", pointer);
+        Assert.Contains("AvaloniaViewportInputForwarder", pointer);
         Assert.Contains("NativeViewportInputForwarder.Forward", native);
         var adapted = NativePointerEventAdapter.Convert(
             new NativePointerMessage(NativePointerMessage.Move, 0, 0, 0, 0, 0, 0, 0, true), new("native"), 1);
         Assert.True(adapted.Modifiers.HasFlag(XuanYu.Editor.Input.EditorPointerModifiers.Alt));
+        var avalonia = AvaloniaPointerEventAdapter.Convert(new AvaloniaPointerSample(
+            EditorPointerEventKind.Move, new(0, 0), EditorPointerButtons.None,
+            EditorPointerModifiers.Alt, 0, 1), new("avalonia"), 1);
+        Assert.True(avalonia.Modifiers.HasFlag(XuanYu.Editor.Input.EditorPointerModifiers.Alt));
     }
 
     [Theory]

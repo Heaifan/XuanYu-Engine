@@ -21,7 +21,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
             _bridge?.Resize(snap.Width, snap.Height);
             ViewportNativeHostRoute.ReportMerged(DataContext as UiVm, snap, count);
         });
-        DataContextChanged += (_, _) => HookLayoutSync();
+        DataContextChanged += (_, _) => HookLayoutSync(); LostFocus += OnAvaloniaLostFocus;
     }
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {

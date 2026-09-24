@@ -37,6 +37,9 @@ public sealed partial class VulkanNativeHost
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
     {
         base.OnPointerWheelChanged(e);
-        if (DataContext is UiVm vm && vm.DollyCamera(e.Delta.Y)) e.Handled = true;
+        if (DataContext is UiVm vm)
+            AvaloniaViewportInputForwarder.ForwardWheel(vm.ViewportInput.Sink, e, this,
+                AvaloniaSource, GetDpiScale());
+        e.Handled = true;
     }
 }
