@@ -8,6 +8,14 @@ public partial class DiagnosticOverlayHost
 {
     bool TryGetFloatingBounds(Visual visual, out Rect bounds)
     {
+        if (visual is VulkanNativeHost && _floatingLayer is not null)
+        {
+            var scale = _topLevel?.RenderScaling ?? 1d;
+            var origin = visual.PointToScreen(default);
+            var layer = _floatingLayer.PointToScreen(default);
+            var point = DiagnosticNativeCoordinateMapping.ToLayer(origin, layer, scale);
+            bounds = new Rect(point, visual.Bounds.Size); return true;
+        }
         if (_floatingLayer is not null && visual.TranslatePoint(default, _floatingLayer) is { } local)
         { bounds = new Rect(local, visual.Bounds.Size); return true; }
         if (_floatingLayer is null) { bounds = default; return false; }

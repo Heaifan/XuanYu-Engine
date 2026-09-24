@@ -34,8 +34,12 @@ public partial class DiagnosticOverlayHost
             return;
         }
         if (_floatingLayer is not null)
-            _lastProbePointer = host.TranslatePoint(new Point(change.X, change.Y), _floatingLayer)
-                ?? _lastProbePointer;
+        {
+            var scale = _topLevel?.RenderScaling ?? 1d;
+            var screen = host.PointToScreen(new Point(change.X, change.Y));
+            var layer = _floatingLayer.PointToScreen(default);
+            _lastProbePointer = DiagnosticNativeCoordinateMapping.ToLayer(screen, layer, scale);
+        }
         _nativeViewportHost = host;
         var target = DiagnosticNativeViewportTarget.Create(host);
         if (CurrentIsNativeViewport(host)) RepositionNativeViewportProbe(host);
