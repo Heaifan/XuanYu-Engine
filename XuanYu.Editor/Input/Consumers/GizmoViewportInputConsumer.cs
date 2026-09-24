@@ -4,4 +4,5 @@ public sealed class GizmoViewportInputConsumer(IViewportD1ConsumerHandler handle
     : ViewportD1InputConsumer(handler, ViewportInputDispatchKind.Captured)
 {
     public override GestureOwner Owner => GestureOwner.Gizmo;
+    public override int BeginPriority => 400;
 }

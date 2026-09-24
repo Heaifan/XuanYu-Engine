@@ -7,7 +7,7 @@ public abstract class MapEditingInputConsumer(GestureOwner owner, IMapEditingInp
 {
     readonly IMapEditingInputBackend _backend = backend;
     public GestureOwner Owner { get; } = owner;
-    public int BeginPriority => 100;
+    public int BeginPriority => 200;
     public bool CanBegin(EditorPointerEvent pointer, ViewportGestureState state) =>
         pointer.Kind == EditorPointerEventKind.Pressed && _backend.CanBegin(pointer, state);
     public ViewportInputDispatchResult Handle(EditorPointerEvent pointer, ViewportGestureState state)

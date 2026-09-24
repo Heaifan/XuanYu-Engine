@@ -9,6 +9,9 @@ public abstract class ViewportD1InputConsumer(
     readonly IViewportD1ConsumerHandler _handler = handler;
     readonly ViewportInputDispatchKind _claimKind = claimKind;
     public abstract GestureOwner Owner { get; }
+    public virtual int BeginPriority => 0;
+    public bool CanBegin(EditorPointerEvent pointer, ViewportGestureState state) =>
+        pointer.Kind == EditorPointerEventKind.Pressed && _handler.CanClaim(pointer);
 
     public ViewportInputDispatchResult Handle(EditorPointerEvent pointer, ViewportGestureState state)
     {

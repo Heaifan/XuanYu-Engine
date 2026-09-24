@@ -25,18 +25,18 @@ public sealed partial class ViewportInputRouter
 
     ViewportInputDispatchResult Begin(EditorPointerEvent pointer)
     {
-        foreach (var consumer in _consumers.OrderByDescending(x => x.BeginPriority))
-        {
-            if (!consumer.CanBegin(pointer, State)) continue;
-            var result = consumer.Handle(pointer, State);
-            if (!result.ClaimsGesture) continue;
-            _activeConsumer.Set(consumer);
-            _lifecycle.Begin(new("ViewportGesture", consumer.Owner, pointer.PointerId,
-                result.Kind == ViewportInputDispatchKind.Captured
-                    ? ViewportGestureCapture.Pointer : ViewportGestureCapture.None, pointer));
-            return result;
-        }
-        return ViewportInputDispatchResult.Ignored;
+        var candidate = _consumers.Where(x => x.CanBegin(pointer, State))
+            .OrderByDescending(x => x.BeginPriority)
+            .ThenBy(x => x.Owner)
+            .FirstOrDefault();
+        if (candidate is null) return ViewportInputDispatchResult.Ignored;
+        var result = candidate.Handle(pointer, State);
+        if (!result.ClaimsGesture) return ViewportInputDispatchResult.Ignored;
+        _activeConsumer.Set(candidate);
+        _lifecycle.Begin(new("ViewportGesture", candidate.Owner, pointer.PointerId,
+            result.Kind == ViewportInputDispatchKind.Captured
+                ? ViewportGestureCapture.Pointer : ViewportGestureCapture.None, pointer));
+        return result;
     }
 
     ViewportInputDispatchResult DispatchIdle(EditorPointerEvent pointer)
