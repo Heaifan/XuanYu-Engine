@@ -41,16 +41,21 @@ public static class DiagnosticPlacementPolicy
 
     static Candidate[] PointerCandidates(DiagnosticPlacementRequest r) => new[]
     {
-        C(new Point(r.Pointer.X + r.SafeDistance, r.Pointer.Y + r.SafeDistance),
+        C(new Point(r.Pointer.X + PointerGap(r), r.Pointer.Y + PointerGap(r)),
             DiagnosticPlacementKind.RightBottom, r.CardSize),
-        C(new Point(r.Pointer.X + r.SafeDistance, r.Pointer.Y - r.SafeDistance - r.CardSize.Height),
+        C(new Point(r.Pointer.X + PointerGap(r),
+            r.Pointer.Y - PointerGap(r) - r.CardSize.Height + 1),
             DiagnosticPlacementKind.RightTop, r.CardSize),
-        C(new Point(r.Pointer.X - r.SafeDistance - r.CardSize.Width, r.Pointer.Y + r.SafeDistance),
+        C(new Point(r.Pointer.X - PointerGap(r) - r.CardSize.Width,
+            r.Pointer.Y + PointerGap(r)),
             DiagnosticPlacementKind.LeftBottom, r.CardSize),
-        C(new Point(r.Pointer.X - r.SafeDistance - r.CardSize.Width,
-            r.Pointer.Y - r.SafeDistance - r.CardSize.Height),
+        C(new Point(r.Pointer.X - PointerGap(r) - r.CardSize.Width,
+            r.Pointer.Y - PointerGap(r) - r.CardSize.Height + 1),
             DiagnosticPlacementKind.LeftTop, r.CardSize)
     };
+
+    static double PointerGap(DiagnosticPlacementRequest request) =>
+        Math.Max(16, request.SafeDistance) + 1;
 
     static bool AvoidsPointerHotZone(DiagnosticPlacementRequest request) =>
         request.TargetKind is DiagnosticPlacementTargetKind.Viewport or
@@ -58,7 +63,7 @@ public static class DiagnosticPlacementPolicy
 
     static Rect PointerHotZone(DiagnosticPlacementRequest request)
     {
-        var radius = Math.Max(16, request.SafeDistance);
+        var radius = Math.Max(8, request.SafeDistance - 2);
         return new Rect(request.Pointer.X - radius, request.Pointer.Y - radius,
             radius * 2, radius * 2);
     }

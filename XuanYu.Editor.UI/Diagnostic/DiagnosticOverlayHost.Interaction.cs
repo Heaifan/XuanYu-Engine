@@ -14,6 +14,7 @@ public partial class DiagnosticOverlayHost
 
     public void ProbeHover(Visual hit, bool deepVisual)
     {
+        if (HasNativeViewportOverride) return;
         if (ProbeEnabled) SetProbeResult(DiagnosticProbeResolver.Resolve(hit, deepVisual));
     }
 

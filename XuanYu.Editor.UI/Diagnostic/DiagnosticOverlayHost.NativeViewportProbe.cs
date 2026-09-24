@@ -60,13 +60,15 @@ public partial class DiagnosticOverlayHost
 
     void ClearNativeViewportOverride(VulkanNativeHost host)
     {
-        if (!ReferenceEquals(_nativeViewportHost, host)) return;
+        if (!ReferenceEquals(_nativeViewportHost, host) &&
+            !ReferenceEquals(_probeResult?.DeepVisual, host)) return;
         _nativeViewportHost = null;
         if (!IsProbeLocked && _probeResult?.DeepVisual is VulkanNativeHost)
             SetProbeResult(null);
     }
 
-    bool HasNativeViewportOverride => _nativeViewportHost is not null;
+    bool HasNativeViewportOverride => _nativeViewportHost is not null ||
+        _probeResult?.DeepVisual is VulkanNativeHost;
 
     void RememberProbePointer(PointerEventArgs e)
     {
