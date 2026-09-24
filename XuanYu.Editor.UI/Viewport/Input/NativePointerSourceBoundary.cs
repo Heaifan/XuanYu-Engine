@@ -3,7 +3,8 @@ namespace XuanYu.Editor.UI;
 public static class NativePointerSourceBoundary
 {
     public static bool IsPointerMessage(uint message) => message is
-        NativePointerMessage.Move or NativePointerMessage.LeftDown or
+        NativePointerMessage.Move or NativePointerMessage.MouseLeave or
+        NativePointerMessage.LeftDown or
         NativePointerMessage.LeftUp or NativePointerMessage.RightDown or
         NativePointerMessage.RightUp or NativePointerMessage.MiddleDown or
         NativePointerMessage.MiddleUp or NativePointerMessage.Wheel or

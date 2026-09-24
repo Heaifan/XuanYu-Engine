@@ -47,6 +47,7 @@ public partial class DiagnosticOverlayHost
     {
         if (!ProbeEnabled || e.Source is not Visual hit || IsOverlayVisual(hit)) return;
         RememberProbePointer(e);
+        if (HasNativeViewportOverride) return;
         if (TryRepositionViewportProbe(hit)) return;
         ProbeHover(hit, e.KeyModifiers.HasFlag(KeyModifiers.Alt));
     }

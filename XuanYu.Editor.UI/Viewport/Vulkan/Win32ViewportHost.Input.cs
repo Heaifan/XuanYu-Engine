@@ -23,6 +23,7 @@ static partial class Win32ViewportHost
     {
         if (InputSinks.TryGetValue(hWnd, out var sink) && IsPointerMessage(msg))
         {
+            if (msg == WM_MOUSEMOVE) TrackMouseLeave(hWnd);
             var before = GetCapture();
             if (msg is WM_LBUTTONDOWN or WM_MBUTTONDOWN) SetCapture(hWnd);
             var after = GetCapture();
@@ -36,6 +37,13 @@ static partial class Win32ViewportHost
     }
 
     static bool IsPointerMessage(uint msg) => NativePointerSourceBoundary.IsPointerMessage(msg);
+
+    static void TrackMouseLeave(nint hwnd)
+    {
+        var request = new TRACKMOUSEEVENT(
+            (uint)System.Runtime.InteropServices.Marshal.SizeOf<TRACKMOUSEEVENT>(), 2, hwnd);
+        TrackMouseEvent(ref request);
+    }
 
     static (int X, int Y) ReadPoint(nint hWnd, uint msg, nint lParam)
     {
@@ -69,11 +77,24 @@ static partial class Win32ViewportHost
     [System.Runtime.InteropServices.DllImport("user32")]
     [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
     static extern bool ScreenToClient(nint hWnd, ref POINT point);
+    [System.Runtime.InteropServices.DllImport("user32")]
+    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+    static extern bool TrackMouseEvent(ref TRACKMOUSEEVENT request);
 
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     struct POINT
     {
         public int X;
         public int Y;
+    }
+
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    struct TRACKMOUSEEVENT(uint cbSize, uint dwFlags, nint hwndTrack)
+    {
+        public uint cbSize = cbSize;
+        public uint dwFlags = dwFlags;
+        public nint hwndTrack = hwndTrack;
+        public nint hwndHover;
+        public uint dwHoverTime;
     }
 }

@@ -11,6 +11,8 @@ public partial class DiagnosticOverlayHost
         if (_vm is not null && !_vm.IsDiagnosticMode)
         {
             ClearProbeVisuals();
+            _probeResult = null;
+            _lockedProbeResult = null;
             return;
         }
         if (_vm?.IsDiagnosticMode != true) ClearProbeVisuals();

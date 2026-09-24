@@ -7,13 +7,15 @@ public sealed partial class VulkanNativeHost
     bool _mapGeometryDragActive;
     bool _expectedCaptureRelease;
     DiagnosticNativePointerSnapshot? _lastNativePointerProbe;
+    bool _nativeDiagnosticInside;
+    internal static event Action<VulkanNativeHost, DiagnosticNativeViewportEvent>? NativeViewportDiagnosticChanged;
     internal static event Action<VulkanNativeHost, double, double>? NativePointerMoved;
     void OnNativePointerMessage(NativePointerMessage message)
     {
-        _lastNativePointerProbe = DiagnosticNativePointerProbe.Capture(message);
         var dpi = GetDpiScale();
         var x = message.PhysicalX / dpi;
         var y = message.PhysicalY / dpi;
+        ObserveDiagnosticPointer(message, x, y);
         if (message.Message == NativePointerMessage.Move) NativePointerMoved?.Invoke(this, x, y);
         if (DataContext is not UiVm vm) return;
         var route = NativePointerRoutePolicy.Resolve(

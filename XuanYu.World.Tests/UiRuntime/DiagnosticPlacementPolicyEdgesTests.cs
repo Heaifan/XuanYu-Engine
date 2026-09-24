@@ -60,6 +60,18 @@ public sealed class DiagnosticPlacementPolicyEdgesTests
         }
     }
 
+    [Fact]
+    public void Viewport_card_avoids_pointer_hot_zone()
+    {
+        var pointer = new Point(400, 300);
+        var result = Place(DiagnosticPlacementTargetKind.Viewport,
+            new Rect(20, 20, 760, 560), new Size(220, 120), pointer);
+        var hotZone = new Rect(pointer.X - 16, pointer.Y - 16, 32, 32);
+
+        Assert.False(result.CardBounds.Intersects(hotZone));
+        AssertInside(result.CardBounds);
+    }
+
     static DiagnosticPlacementResult Place(DiagnosticPlacementTargetKind kind,
         Rect target, Size card, Point pointer = default) =>
         DiagnosticPlacementPolicy.Place(new(kind, target, pointer, card, Client));

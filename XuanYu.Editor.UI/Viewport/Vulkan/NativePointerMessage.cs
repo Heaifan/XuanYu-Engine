@@ -14,6 +14,7 @@ public readonly record struct NativePointerMessage(
     bool MetaDown = false)
 {
     public const uint Move = 0x0200;
+    public const uint MouseLeave = 0x02a3;
     public const uint LeftDown = 0x0201;
     public const uint LeftUp = 0x0202;
     public const uint RightDown = 0x0204;

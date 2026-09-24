@@ -13,6 +13,8 @@ public static class DiagnosticPlacementPolicy
             var constrained = Constrain(candidate.Bounds, request.AvailableBounds);
             if (request.TargetKind == DiagnosticPlacementTargetKind.SmallControl &&
                 constrained.Bounds.Intersects(request.TargetBounds)) continue;
+            if (AvoidsPointerHotZone(request) &&
+                constrained.Bounds.Intersects(PointerHotZone(request))) continue;
             if (tooLarge || !Fits(constrained.Bounds, request.AvailableBounds)) continue;
             return Result(constrained, candidate.Kind, false);
         }
@@ -49,6 +51,17 @@ public static class DiagnosticPlacementPolicy
             r.Pointer.Y - r.SafeDistance - r.CardSize.Height),
             DiagnosticPlacementKind.LeftTop, r.CardSize)
     };
+
+    static bool AvoidsPointerHotZone(DiagnosticPlacementRequest request) =>
+        request.TargetKind is DiagnosticPlacementTargetKind.Viewport or
+            DiagnosticPlacementTargetKind.PointerAnchored;
+
+    static Rect PointerHotZone(DiagnosticPlacementRequest request)
+    {
+        var radius = Math.Max(16, request.SafeDistance);
+        return new Rect(request.Pointer.X - radius, request.Pointer.Y - radius,
+            radius * 2, radius * 2);
+    }
 
     static Candidate C(Point location, DiagnosticPlacementKind kind, Size size) =>
         new(new Rect(location, size), kind);

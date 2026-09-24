@@ -16,6 +16,7 @@ public partial class DiagnosticOverlayHost
 
     void ClearProbeVisuals()
     {
+        _nativeViewportHost = null;
         _previewTargetBounds = null;
         ProbeOwner.Children.Clear();
         if (_floatingLayer is not null)

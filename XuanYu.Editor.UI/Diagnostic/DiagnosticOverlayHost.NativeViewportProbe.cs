@@ -13,24 +13,56 @@ public partial class DiagnosticOverlayHost
     void AttachNativeViewportProbe(Window window)
     {
         if (_nativeViewportProbeAttached) return;
-        VulkanNativeHost.NativePointerMoved += OnNativeViewportPointerMoved;
+        VulkanNativeHost.NativeViewportDiagnosticChanged += OnNativeViewportDiagnosticChanged;
         _nativeViewportProbeAttached = true;
     }
 
     void DetachNativeViewportProbe()
     {
         if (!_nativeViewportProbeAttached) return;
-        VulkanNativeHost.NativePointerMoved -= OnNativeViewportPointerMoved;
+        VulkanNativeHost.NativeViewportDiagnosticChanged -= OnNativeViewportDiagnosticChanged;
         _nativeViewportProbeAttached = false;
     }
 
-    void OnNativeViewportPointerMoved(VulkanNativeHost host, double x, double y)
+    void OnNativeViewportDiagnosticChanged(
+        VulkanNativeHost host, DiagnosticNativeViewportEvent change)
     {
-        if (!ProbeEnabled || _floatingLayer is null) return;
-        _lastProbePointer = host.TranslatePoint(new Point(x, y), _floatingLayer) ?? _lastProbePointer;
-        var target = host.GetVisualAncestors().OfType<VulkanViewport>().FirstOrDefault() as Visual ?? host;
-        if (!TryRepositionViewportProbe(target)) ProbeHover(target, false);
+        if (!ProbeEnabled) return;
+        if (change.Phase == DiagnosticNativeViewportPhase.Exited)
+        {
+            ClearNativeViewportOverride(host);
+            return;
+        }
+        if (_floatingLayer is not null)
+            _lastProbePointer = host.TranslatePoint(new Point(change.X, change.Y), _floatingLayer)
+                ?? _lastProbePointer;
+        _nativeViewportHost = host;
+        var target = DiagnosticNativeViewportTarget.Create(host);
+        if (CurrentIsNativeViewport(host)) RepositionNativeViewportProbe(host);
+        else SetProbeResult(target);
     }
+
+    bool CurrentIsNativeViewport(VulkanNativeHost host) =>
+        ReferenceEquals(_nativeViewportHost, host) &&
+        ReferenceEquals(_probeResult?.DeepVisual, host);
+
+    void RepositionNativeViewportProbe(VulkanNativeHost host)
+    {
+        if (!TryGetFloatingBounds(host, out var bounds)) return;
+        _previewTargetBounds = bounds;
+        PlacePreviewCard(bounds);
+        ClampCardToWindow();
+    }
+
+    void ClearNativeViewportOverride(VulkanNativeHost host)
+    {
+        if (!ReferenceEquals(_nativeViewportHost, host)) return;
+        _nativeViewportHost = null;
+        if (!IsProbeLocked && _probeResult?.DeepVisual is VulkanNativeHost)
+            SetProbeResult(null);
+    }
+
+    bool HasNativeViewportOverride => _nativeViewportHost is not null;
 
     void RememberProbePointer(PointerEventArgs e)
     {

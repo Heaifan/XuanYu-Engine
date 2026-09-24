@@ -2,9 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using XuanYu.Render.Abstractions;
-
 namespace XuanYu.Editor.UI;
-
 public sealed partial class VulkanNativeHost : NativeControlHost
 {
     readonly NativeHostLifecycleProbe _probe = new();
@@ -66,6 +64,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     }
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        ExitDiagnosticPointer();
         if (DataContext is UiVm vm) CancelNativeInput(vm, "HostDetached");
         _resizer.Cancel();
         UnhookLayoutSync();
@@ -76,6 +75,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     }
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
+        ExitDiagnosticPointer();
         _resizer.Cancel();
         UnhookLayoutSync();
         Report(NativeHostLifecycleState.Disposed, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
