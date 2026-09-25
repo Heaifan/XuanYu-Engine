@@ -9,6 +9,7 @@ public readonly record struct EditorViewportAssistState(
     int NavGizmoHoverIndex = -1,
     int NavGizmoActiveIndex = -1,
     int NavGizmoPressedIndex = -1,
+    bool NavGizmoCenterHover = false,
     EditorViewPlaneGridKind ViewPlaneGrid = EditorViewPlaneGridKind.None)
 {
     public static EditorViewportAssistState Default { get; } = new(true, true, false, true);

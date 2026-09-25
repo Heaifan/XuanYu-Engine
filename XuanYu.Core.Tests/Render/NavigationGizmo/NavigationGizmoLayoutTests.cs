@@ -5,7 +5,7 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.Core.Tests.Render;
 
-// F3-D2/D3/F3-F3：导航 Gizmo 布局投影与命中测试（96 DIP 区域；正对合同见 .Facing.cs）。
+// Navigation Gizmo：六方向投影、深度层级与视觉/命中尺寸分离。
 public sealed partial class NavigationGizmoLayoutTests
 {
     static readonly Point Center = new(48.0, 48.0);
@@ -55,7 +55,9 @@ public sealed partial class NavigationGizmoLayoutTests
         Assert.All(endpoints, e => Assert.True(e.IsVisible));
         for (var i = 1; i < endpoints.Count; i++)
             Assert.True(endpoints[i - 1].Depth <= endpoints[i].Depth, "端点应按深度升序排列");
-        Assert.All(endpoints, e => Assert.Equal(9.0, e.Radius));
+        Assert.Equal(6, endpoints.Count);
+        Assert.Contains(endpoints, e => !e.IsPositive && e.Radius < 9.0);
+        Assert.Contains(endpoints, e => e.IsPositive && e.Radius >= 8.0);
     }
 
     // 命中：正方向端点命中；中心命中中心球（不误触端点）；负方向可点击；区域外不捕获。
@@ -70,10 +72,10 @@ public sealed partial class NavigationGizmoLayoutTests
         Assert.True(hit.IsEndpoint && hit.Endpoint == front.Name, "前方端点中心应命中");
         var hitCenter = NavigationGizmoHitTest.Hit(endpoints, Center, Center);
         Assert.True(hitCenter.HitCenter && !hitCenter.IsEndpoint, "中心应命中中心球且不误触端点");
-        Assert.All(endpoints, e => Assert.True(e.IsPositive));
+        Assert.Equal(6, endpoints.Count);
         var nearEdge = new Point(front.Screen.X + 11.0, front.Screen.Y);
         Assert.True(NavigationGizmoHitTest.Hit(endpoints, nearEdge, Center).IsEndpoint,
-            "视觉 9 DIP 端点应使用更大的命中热区");
+            "端点应使用独立命中热区");
         Assert.False(NavigationGizmoHitTest.IsInsideGizmo(new Point(-5, -5)));
         Assert.False(NavigationGizmoHitTest.IsInsideGizmo(new Point(100, 100)));
     }

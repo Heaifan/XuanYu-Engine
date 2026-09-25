@@ -53,7 +53,7 @@ public sealed class NavigationGizmoOverlayContractTests
         Assert.Contains("cameraUp", frag);
         Assert.Contains("cameraForward", frag);
         Assert.Contains("gl_FragCoord", frag);
-        Assert.Contains("hoverIndex", frag);
+        Assert.Contains("hover=int", frag);
         Assert.Contains("drawAxis", frag);    // 前后分层绘制（背向先、朝向后的结构）
         Assert.Contains("compositeOver", frag); // 预乘合成（SrcAlpha 混合管线）
     }
@@ -63,13 +63,13 @@ public sealed class NavigationGizmoOverlayContractTests
     public void Nav_gizmo_shader_f3_f3_contract()
     {
         var frag = ShaderFile("editor_nav_gizmo.frag");
-        Assert.Contains("PANEL_RADIUS_DIP = 16.0", frag);
+        Assert.DoesNotContain("roundedPanel", frag);
+        Assert.Contains("TRANSPARENT_BACKGROUND", frag);
+        Assert.Contains("ENDPOINT_COUNT = 6", frag);
         Assert.Contains("drawAxis", frag);         // 轴线从球边缘开始（startRadius=HUB+1.6）
-        Assert.Contains("#D65252", frag);
-        Assert.Contains("#4FAE72", frag);
-        Assert.Contains("#6FA4F0", frag);
-        Assert.Contains("HUB_RADIUS_DIP = 14.0", frag);
-        Assert.Contains("ACTIVE_INDEX", frag);
+        Assert.Contains("AXIS_COLOR", frag);
+        Assert.Contains("HUB_RADIUS_DIP=14.", frag);
+        Assert.Contains("interactionParams", frag);
     }
 
     // 4. 悬停索引默认 -1 且流转到 RenderProjection。
@@ -78,8 +78,10 @@ public sealed class NavigationGizmoOverlayContractTests
     {
         var assist = EditorViewportAssistState.Default;
         Assert.Equal(-1, assist.NavGizmoHoverIndex);
-        var withHover = assist with { NavGizmoHoverIndex = 1, NavGizmoActiveIndex = 2 };
+        var withHover = assist with { NavGizmoHoverIndex = 1, NavGizmoActiveIndex = 4,
+            NavGizmoCenterHover = true };
         Assert.Equal(1, withHover.NavGizmoHoverIndex);
-        Assert.Equal(2, withHover.NavGizmoActiveIndex);
+        Assert.Equal(4, withHover.NavGizmoActiveIndex);
+        Assert.True(withHover.NavGizmoCenterHover);
     }
 }

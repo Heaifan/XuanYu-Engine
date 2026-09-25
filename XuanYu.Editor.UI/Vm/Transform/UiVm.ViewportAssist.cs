@@ -10,6 +10,7 @@ public sealed partial class UiVm
     bool _showEditorBackground = true;
     int _navGizmoHoverIndex = -1;
     int _navGizmoPressedIndex = -1;
+    bool _navGizmoCenterHover;
 
     public bool ShowGrid => _showGrid;
     public bool ShowOrigin => _showOrigin;
@@ -25,6 +26,7 @@ public sealed partial class UiVm
         _navGizmoHoverIndex,
         NavigationGizmoLayout.ActiveIndexFor(_activeViewFace),
         _navGizmoPressedIndex,
+        _navGizmoCenterHover,
         ViewPlaneGrid: StandardViewResolver.ViewPlaneGridFor(_activeViewFace));
 
     public void SetNavigationGizmoHover(int index)
@@ -38,6 +40,13 @@ public sealed partial class UiVm
     {
         if (_navGizmoPressedIndex == index) return;
         _navGizmoPressedIndex = index;
+        PublishSceneRenderSnapshot();
+    }
+
+    public void SetNavigationGizmoCenterHover(bool value)
+    {
+        if (_navGizmoCenterHover == value) return;
+        _navGizmoCenterHover = value;
         PublishSceneRenderSnapshot();
     }
 

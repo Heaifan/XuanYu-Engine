@@ -8,7 +8,7 @@ namespace XuanYu.Render.Vulkan.Render;
 //   vec4 cameraRight @0    vec4 cameraUp @16    vec4 cameraForward @32
 //   vec4 viewportAndDpi @48 (xy=视口尺寸 px; z=DPI; w=未用)
 //   vec4 gizmoParams @64 (x=区域尺寸 DIP 96; y=边距 DIP 14; z=悬停端点索引; w=DPI)
-//   vec4 interactionParams @80 (x=Active; y=Pressed 端点索引)
+//   vec4 interactionParams @80 (x=Active; y=Pressed 端点索引; z=中心 Hover)
 public sealed unsafe partial class VulkanClearFrameOwner
 {
     const uint NavGizmoPushFloatCount = 24;
@@ -41,12 +41,13 @@ public sealed unsafe partial class VulkanClearFrameOwner
         scene[12] = _extent.Width;
         scene[13] = _extent.Height;
         scene[14] = (float)_renderProjection.ViewportDpiScale;
-        scene[16] = 96.0f; // 区域尺寸 DIP（A 版）
-        scene[17] = 14.0f; // 边距 DIP（A 版）
+        scene[16] = 96.0f; // 区域尺寸 DIP
+        scene[17] = 14.0f; // 边距 DIP
         scene[18] = _renderProjection.AssistState.NavGizmoHoverIndex;
         scene[19] = (float)_renderProjection.ViewportDpiScale;
         scene[20] = _renderProjection.AssistState.NavGizmoActiveIndex;
         scene[21] = _renderProjection.AssistState.NavGizmoPressedIndex;
+        scene[22] = _renderProjection.AssistState.NavGizmoCenterHover ? 1.0f : 0.0f;
         fixed (float* pScene = scene)
         {
             var range = new PushConstantRange

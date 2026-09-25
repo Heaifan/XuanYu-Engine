@@ -21,11 +21,12 @@ public sealed class NavigationGizmoDipContractTests
     public void Shader_computes_geometry_in_dip_space()
     {
         var shader = Read("XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag");
-        Assert.Contains("w = RenderScaling", shader);
-        Assert.Contains("float dpi = max(pc.gizmoParams.w, 0.5)", shader);
-        Assert.Contains("AXIS_RADIUS_DIP = 24.0", shader);
-        Assert.Contains("HUB_RADIUS_DIP = 14.0", shader);
-        Assert.Contains("ENDPOINT_RADIUS_DIP = 9.0", shader);
+        Assert.Contains("gizmoParams", shader);
+        Assert.Contains("dpi=max(pc.gizmoParams.w", shader);
+        Assert.Contains("AXIS_RADIUS_DIP=24.", shader);
+        Assert.Contains("HUB_RADIUS_DIP=14.", shader);
+        Assert.Contains("POSITIVE_RADIUS_DIP = 8.5", shader);
+        Assert.Contains("NEGATIVE_RADIUS_DIP = 5.0", shader);
     }
 
     [Fact]
@@ -35,8 +36,8 @@ public sealed class NavigationGizmoDipContractTests
         Assert.Equal(14.0, NavigationGizmoLayout.Margin);
         Assert.Equal(24.0, NavigationGizmoLayout.AxisRadius);
         Assert.Equal(14.0, NavigationGizmoLayout.CenterRadius);
-        Assert.Equal(9.0, NavigationGizmoLayout.PositiveEndpointRadius);
-        Assert.Equal(3.0, NavigationGizmoLayout.AxisWidth);
+        Assert.Equal(8.5, NavigationGizmoLayout.PositiveEndpointRadius);
+        Assert.Equal(5.0, NavigationGizmoLayout.AxisWidth);
         Assert.InRange(NavigationGizmoLayout.HitRadius, 11.0, 12.0);
     }
 
@@ -44,12 +45,12 @@ public sealed class NavigationGizmoDipContractTests
     public void Frozen_a_shader_contract_contains_light_panel_and_active_state()
     {
         var shader = Read("XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag");
-        Assert.Contains("PANEL_RADIUS_DIP = 16.0", shader);
-        Assert.Contains("ACTIVE_INDEX", shader);
-        Assert.Contains("#D65252", shader);
-        Assert.Contains("#4FAE72", shader);
-        Assert.Contains("#6FA4F0", shader);
-        Assert.Contains("HOVER_RADIUS_DIP = 10.5", shader);
-        Assert.Contains("PRESSED_RADIUS_DIP = 11.0", shader);
+        Assert.DoesNotContain("PANEL_RADIUS_DIP", shader);
+        Assert.Contains("TRANSPARENT_BACKGROUND", shader);
+        Assert.Contains("ENDPOINT_COUNT = 6", shader);
+        Assert.Contains("interactionParams", shader);
+        Assert.Contains("AXIS_COLOR", shader);
+        Assert.Contains("HOVER_RADIUS_DIP=10.5", shader);
+        Assert.Contains("PRESSED_RADIUS_DIP=11.", shader);
     }
 }

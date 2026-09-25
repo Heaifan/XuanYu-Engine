@@ -17,17 +17,17 @@ public static class NavigationGizmoHitTest
 {
     const double AxisHitRadius = 4.0;
 
-    // 端点命中：按绘制深度倒序（最靠前优先）；命中半径 HitRadius。
+    // 端点命中：按绘制深度倒序（最靠前优先）；命中大小独立于视觉大小。
     public static GizmoHitResult Hit(IReadOnlyList<GizmoEndpoint> endpoints, Point point, Point center)
     {
         for (var i = endpoints.Count - 1; i >= 0; i--)
         {
             var e = endpoints[i];
             if (!e.IsVisible) continue;
-            if (Distance(point, e.Screen) <= NavigationGizmoLayout.HitRadius)
+            if (Distance(point, e.Screen) <= NavigationGizmoLayout.HitRadiusFor(e))
                 return new GizmoHitResult(e.Name, false, true);
         }
-        var hitCenter = Distance(point, center) <= NavigationGizmoLayout.CenterRadius;
+        var hitCenter = Distance(point, center) <= NavigationGizmoLayout.OrbitHitRadius;
         if (hitCenter) return new GizmoHitResult(null, true, true);
         foreach (var e in endpoints)
         {
