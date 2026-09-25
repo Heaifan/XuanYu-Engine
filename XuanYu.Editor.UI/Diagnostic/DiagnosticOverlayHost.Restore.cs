@@ -1,33 +1,46 @@
 using Avalonia.Controls;
+using Avalonia.Threading;
 
 namespace XuanYu.Editor.UI;
 
 public partial class DiagnosticOverlayHost
 {
-    void RestoreAfterOwnerActivation() => RestoreLockedToolWindow("OwnerActivated");
+    int _ownerActivationRestoreAttempt;
 
-    void RestoreLockedToolWindow(string reason)
+    void RestoreAfterOwnerActivation() => TryRestoreAfterOwnerActivation(false);
+
+    void TryRestoreAfterOwnerActivation(bool retry)
     {
         if (!ProbeEnabled || !IsProbeLocked || TrackedSnapshot is null) return;
+        if (RestoreLockedToolWindow(retry ? "OwnerActivatedRetry" : "OwnerActivated")) return;
+        if (_ownerActivationRestoreAttempt >= 2) return;
+        _ownerActivationRestoreAttempt++;
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(75) };
+        timer.Tick += (_, _) => { timer.Stop(); TryRestoreAfterOwnerActivation(true); };
+        timer.Start();
+    }
+
+    bool RestoreLockedToolWindow(string reason)
+    {
+        if (!ProbeEnabled || !IsProbeLocked || TrackedSnapshot is null) return false;
         if (_topLevel is not Window owner || !owner.IsActive || owner.WindowState == WindowState.Minimized)
         {
             LogNativeDialog("RestoreDeferred", false);
-            return;
+            return false;
         }
-        if (_lockedProbeResult is null || !TryGetTrackedBounds(_lockedProbeResult, out var bounds)) return;
+        if (_lockedProbeResult is null || !TryGetTrackedBounds(_lockedProbeResult, out var bounds)) return false;
         LogNativeDialog($"{reason}Restore", true);
         _restoreOnOwnerActivation = false;
         _cardPlacementMode = DiagnosticCardPlacementMode.Auto;
         _toolWindow?.Show();
-        LogProbeState("RestoreShow", _lockedProbeResult);
         if (_toolWindow is null)
         {
             RenderProbe();
-            return;
+            return true;
         }
         PlaceToolWindow(bounds);
         ApplyToolPosition();
-        var zOrder = _toolWindow.ReassertOwnedZOrderForProbe();
-        LogProbeState($"RestoreReassert(success={zOrder})", _lockedProbeResult);
+        _toolWindow.ReassertOwnedZOrder();
+        return true;
     }
 }

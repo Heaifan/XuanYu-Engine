@@ -18,7 +18,6 @@ public partial class DiagnosticOverlayHost
         var kind = IsViewportDiagnosticTarget(_probeResult)
             ? DiagnosticPlacementTargetKind.Viewport : DiagnosticPlacementTargetKind.SmallControl;
         var placement = DiagnosticPlacementPolicy.Place(new(kind, target, _lastProbePointer, size, area, 12));
-        LogProbeState("Placement", _probeResult, kind);
         CardLeft = placement.CardBounds.X; CardTop = placement.CardBounds.Y;
         ApplyToolPosition();
     }

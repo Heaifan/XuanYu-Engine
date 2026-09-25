@@ -47,8 +47,17 @@ public static partial class DiagnosticProbeResolver
         TextBlock text => Value(text.Text),
         TextBox text => Value(text.Text),
         MenuItem menu => Value(menu.Header?.ToString()),
-        ContentControl content => content.Content?.ToString() ?? Missing,
+        ContentControl content => ContentText(content.Content),
         ContentPresenter presenter => presenter.Content?.ToString() ?? Missing,
+        _ => Missing
+    };
+
+    static string ContentText(object? content) => content switch
+    {
+        null => Missing,
+        string text => Value(text),
+        Visual visual => visual.GetVisualDescendants().OfType<TextBlock>()
+            .Select(text => text.Text).FirstOrDefault(text => !string.IsNullOrWhiteSpace(text)) ?? Missing,
         _ => Missing
     };
 

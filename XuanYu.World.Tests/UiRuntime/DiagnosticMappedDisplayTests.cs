@@ -21,4 +21,19 @@ public sealed class DiagnosticMappedDisplayTests
             Assert.Equal("SaveAction", card.FindControl<TextBlock>("Title")?.Text);
         });
     }
+
+    [Fact]
+    public void Nested_button_content_uses_visible_text_instead_of_panel_type()
+    {
+        _fixture.Run(() =>
+        {
+            var target = new XYButton
+            {
+                Content = new StackPanel { Children = { new TextBlock { Text = "打开" } } }
+            };
+            var snapshot = DiagnosticElementSnapshot.Capture(DiagnosticProbeResolver.Resolve(target));
+            Assert.Equal("打开", snapshot.TargetDisplayName);
+            Assert.Equal("打开", snapshot.Text);
+        });
+    }
 }

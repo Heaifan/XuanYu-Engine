@@ -34,13 +34,8 @@ public sealed class DiagnosticFloatingToolWindow : Window
 
     public void ReassertOwnedZOrder()
     {
-        ReassertOwnedZOrderForProbe();
-    }
-
-    internal bool ReassertOwnedZOrderForProbe()
-    {
-        if (!OperatingSystem.IsWindows() || TryGetPlatformHandle() is not { Handle: var handle }) return false;
-        return SetWindowPos(handle, HwndTop, 0, 0, 0, 0, NoActivate | NoMove | NoSize | ShowWindow);
+        if (!OperatingSystem.IsWindows() || TryGetPlatformHandle() is not { Handle: var handle }) return;
+        SetWindowPos(handle, HwndTop, 0, 0, 0, 0, NoActivate | NoMove | NoSize | ShowWindow);
     }
 
     void OnDragPressed(object? sender, PointerPressedEventArgs e)
