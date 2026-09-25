@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.LogicalTree;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
@@ -32,6 +33,8 @@ public partial class DiagnosticOverlayHost
     {
         if (sender is not Popup popup || popup.Child is not Visual child || TopLevel.GetTopLevel(child) is not { } root) return;
         _probePopupRoots[popup] = root; AttachProbeRoot(root);
+        if (_vm?.IsDiagnosticRegionBoundsMode == true) Reconcile();
+        Dispatcher.UIThread.Post(() => _toolWindow?.ReassertOwnedZOrder(), DispatcherPriority.ApplicationIdle);
     }
 
     void OnProbePopupClosed(object? sender, EventArgs e)

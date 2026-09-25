@@ -49,6 +49,7 @@ public partial class DiagnosticOverlayHost
         if (_toolWindow is null) return;
         if (!_restoringNativeDialog) _cardPlacementMode = DiagnosticCardPlacementMode.Auto;
         _toolWindow.Show();
+        _toolWindow.ReassertOwnedZOrder();
         Dispatcher.UIThread.Post(() => PlaceToolWindow(target));
     }
 

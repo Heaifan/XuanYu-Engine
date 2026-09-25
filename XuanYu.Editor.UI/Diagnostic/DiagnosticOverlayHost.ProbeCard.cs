@@ -1,3 +1,5 @@
+using Avalonia.Controls;
+
 namespace XuanYu.Editor.UI;
 
 public partial class DiagnosticOverlayHost
@@ -12,7 +14,7 @@ public partial class DiagnosticOverlayHost
     void ClearProbeHighlight()
     {
         if (_probeHighlight is null) return;
-        ProbeOwner.Children.Remove(_probeHighlight);
+        if (_probeHighlight.Parent is Panel panel) panel.Children.Remove(_probeHighlight);
         _probeHighlight = null;
     }
 }

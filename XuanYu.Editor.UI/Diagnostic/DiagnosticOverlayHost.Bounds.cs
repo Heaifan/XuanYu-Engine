@@ -15,17 +15,20 @@ public partial class DiagnosticOverlayHost
         ClearTargetBounds();
         foreach (var target in DiagnosticRegistry.Targets.Values)
         {
-            if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) != _topLevel) continue;
-            if (target.TranslatePoint(default, BoundsOwner) is not { } origin) continue;
+            if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is not { } root) continue;
+            var owner = GetProbeLayer(root);
+            if (owner is null || target.TranslatePoint(default, owner) is not { } origin) continue;
             var border = new Border { Width = target.Bounds.Width, Height = target.Bounds.Height,
                 BorderBrush = Brushes.Gold, BorderThickness = new Thickness(2), IsHitTestVisible = false };
             Canvas.SetLeft(border, origin.X); Canvas.SetTop(border, origin.Y);
-            BoundsOwner.Children.Add(border); _targetBounds.Add(border);
+            owner.Children.Add(border); _targetBounds.Add(border);
         }
     }
 
     void ClearTargetBounds()
     {
-        BoundsOwner.Children.Clear(); _targetBounds.Clear();
+        foreach (var border in _targetBounds.ToArray())
+            if (border.Parent is Panel panel) panel.Children.Remove(border);
+        _targetBounds.Clear();
     }
 }

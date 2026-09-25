@@ -45,12 +45,12 @@ public partial class DiagnosticOverlayHost
     void AttachProbeRoot(TopLevel root)
     {
         if (_probeRoots.Contains(root)) return;
-        _probeRoots.Add(root); AttachProbeHandlers(root);
+        _probeRoots.Add(root); AttachProbeHandlers(root); GetProbeLayer(root);
     }
 
     void DetachProbeRoot(TopLevel root)
     {
-        DetachProbeHandlers(root); _probeRoots.Remove(root);
+        DetachProbeHandlers(root); _probeRoots.Remove(root); RemoveProbeLayer(root);
     }
 
     void OnWindowActivated(object? sender, EventArgs e)
@@ -82,7 +82,11 @@ public partial class DiagnosticOverlayHost
 
     void OnPopupRootChanged(TopLevel root, bool open)
     {
-        if (open) AttachProbeRoot(root);
+        if (open)
+        {
+            AttachProbeRoot(root);
+            if (_vm?.IsDiagnosticRegionBoundsMode == true) RenderTargetBounds();
+        }
         else
         {
             ClearProbeForRoot(root);

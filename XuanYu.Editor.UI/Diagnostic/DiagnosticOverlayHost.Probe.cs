@@ -64,18 +64,24 @@ public partial class DiagnosticOverlayHost
         {
             ClearProbeHighlight(); HideToolWindow(); return;
         }
+        var root = TopLevel.GetTopLevel(result.DeepVisual);
+        var rootLayer = root is null ? null : GetProbeLayer(root);
         if (!TryGetTrackedBounds(result, out var bounds)) return;
+        var highlightBounds = bounds;
+        if (root is not null && !ReferenceEquals(root, _topLevel) && rootLayer is not null &&
+            result.DeepVisual.TranslatePoint(default, rootLayer) is { } local)
+            highlightBounds = new Rect(local, result.DeepVisual.Bounds.Size);
         ClearProbeHighlight();
-        if (TopLevel.GetTopLevel(result.DeepVisual) is not null && !IsViewportDiagnosticTarget(result))
+        if (rootLayer is not null && !IsViewportDiagnosticTarget(result))
         {
             _probeHighlight = new Border
             {
-                Width = bounds.Width, Height = bounds.Height,
+                Width = highlightBounds.Width, Height = highlightBounds.Height,
                 BorderBrush = Brushes.Orange, BorderThickness = new Thickness(2),
                 IsHitTestVisible = false,
             };
-            Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
-            ProbeOwner.Children.Add(_probeHighlight);
+            Canvas.SetLeft(_probeHighlight, highlightBounds.X); Canvas.SetTop(_probeHighlight, highlightBounds.Y);
+            rootLayer.Children.Add(_probeHighlight);
         }
         var snapshot = IsProbeLocked ? TrackedSnapshot ?? DiagnosticElementSnapshot.Capture(result) :
             DiagnosticElementSnapshot.Capture(result);
