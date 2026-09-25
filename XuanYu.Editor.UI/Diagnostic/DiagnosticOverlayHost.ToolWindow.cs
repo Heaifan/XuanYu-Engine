@@ -65,6 +65,7 @@ public partial class DiagnosticOverlayHost
         _toolWindow = null; _toolCard = null; _toolTarget = null;
         _nativeDialogSuspended = false;
         _restoreAfterNativeDialog = false;
+        _restoreOnOwnerActivation = false;
         _suspendedPlacementMode = null;
         tool.Close();
     }
@@ -79,6 +80,7 @@ public partial class DiagnosticOverlayHost
         _toolWindow = null;
         _nativeDialogSuspended = false;
         _restoreAfterNativeDialog = false;
+        _restoreOnOwnerActivation = false;
         _suspendedPlacementMode = null;
     }
     void CloseToolWindow() => ExitProbe();

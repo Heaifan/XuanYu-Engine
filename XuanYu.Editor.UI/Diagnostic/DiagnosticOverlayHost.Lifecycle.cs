@@ -57,6 +57,7 @@ public partial class DiagnosticOverlayHost
     {
         Reconcile();
         if (_vm is null || _vm.IsDiagnosticMode) RenderProbe();
+        RestoreAfterOwnerActivation();
     }
 
     void OnWindowDeactivated(object? sender, EventArgs e)

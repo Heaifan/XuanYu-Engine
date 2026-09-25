@@ -6,6 +6,7 @@ public partial class DiagnosticOverlayHost
 {
     bool _nativeDialogSuspended;
     bool _restoreAfterNativeDialog;
+    bool _restoreOnOwnerActivation;
     DiagnosticCardPlacementMode? _suspendedPlacementMode;
     bool _restoringNativeDialog;
 
@@ -25,6 +26,7 @@ public partial class DiagnosticOverlayHost
         var placement = _suspendedPlacementMode ?? DiagnosticCardPlacementMode.Auto;
         _nativeDialogSuspended = false;
         _restoreAfterNativeDialog = false;
+        _restoreOnOwnerActivation = restore && ProbeEnabled && IsProbeLocked;
         _suspendedPlacementMode = null;
         if (!restore || !ProbeEnabled) return;
         if (IsProbeLocked && TrackedSnapshot is null) return;
@@ -35,5 +37,15 @@ public partial class DiagnosticOverlayHost
         {
             _restoringNativeDialog = false;
         }
+    }
+
+    void RestoreAfterOwnerActivation()
+    {
+        if (!_restoreOnOwnerActivation || !ProbeEnabled || !IsProbeLocked) return;
+        _restoreOnOwnerActivation = false;
+        if (_lockedProbeResult is null || !TryGetTrackedBounds(_lockedProbeResult, out var bounds)) return;
+        _restoringNativeDialog = true;
+        try { ShowToolWindow(bounds); }
+        finally { _restoringNativeDialog = false; }
     }
 }

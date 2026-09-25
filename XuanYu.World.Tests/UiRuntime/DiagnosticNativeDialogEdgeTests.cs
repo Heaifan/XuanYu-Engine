@@ -59,6 +59,24 @@ public sealed class DiagnosticNativeDialogEdgeTests
     }
 
     [Fact]
+    public void Owner_activation_reasserts_locked_tool_window_visibility()
+    {
+        _fixture.Run(() =>
+        {
+            var (window, host, target, _) = Open();
+            host.TrackProbe(DiagnosticProbeResolver.Resolve(target));
+            host.SuspendForNativeDialog(); host.RestoreAfterNativeDialog();
+            var field = typeof(DiagnosticOverlayHost).GetField("_toolWindow",
+                BindingFlags.Instance | BindingFlags.NonPublic)!;
+            ((Window)field.GetValue(host)!).Hide();
+            typeof(DiagnosticOverlayHost).GetMethod("OnWindowActivated",
+                BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(host, [window, EventArgs.Empty]);
+            Assert.Equal(1, host.ActiveProbeCardCount);
+            window.Close();
+        });
+    }
+
+    [Fact]
     public void Ten_suspend_restore_cycles_reuse_one_tool_window()
     {
         _fixture.Run(() =>
