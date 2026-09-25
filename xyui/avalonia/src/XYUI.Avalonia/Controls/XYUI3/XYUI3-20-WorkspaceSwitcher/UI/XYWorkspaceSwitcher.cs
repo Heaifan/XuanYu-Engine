@@ -28,6 +28,8 @@ public sealed class XYWorkspaceChangeRequest : EventArgs
 
 public sealed partial class XYWorkspaceSwitcher : Border
 {
+    internal const double CompactWidth = 168;
+    internal const double PopupMaxWidth = 240;
     readonly Popup _popup = new() { Placement = PlacementMode.Bottom, IsLightDismissEnabled = true };
     readonly XYMenu _menu = new() { Classes = { "xyui-workspace-menu" } };
     IActivatableLifetime? _applicationLifetime;

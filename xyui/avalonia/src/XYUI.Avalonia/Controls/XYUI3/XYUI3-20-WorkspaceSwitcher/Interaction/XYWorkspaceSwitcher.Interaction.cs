@@ -12,9 +12,9 @@ public sealed partial class XYWorkspaceSwitcher
     {
         var triggerGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), VerticalAlignment = VerticalAlignment.Center };
         triggerGrid.Children.Add(new TextBlock { Text = "工作区", Classes = { "xyui-workspace-secondary" }, VerticalAlignment = VerticalAlignment.Center });
-        var current = new TextBlock { Text = CurrentWorkspace, Classes = { "xyui-workspace-current" }, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 8, 0) }; Grid.SetColumn(current, 1); triggerGrid.Children.Add(current);
+        var current = new TextBlock { Text = CurrentWorkspace, Classes = { "xyui-workspace-current" }, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 6, 0) }; Grid.SetColumn(current, 1); triggerGrid.Children.Add(current);
         var chevron = new XYIcon { Icon = XyuiVectorIcon.ChevronDown, Size = XyuiIconSize.Tiny, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center }; Grid.SetColumn(chevron, 2); triggerGrid.Children.Add(chevron); Trigger.Content = triggerGrid;
-        var items = Workspaces.Select(WorkspaceItem).Cast<Control>().Append(XYMenu.Separator()).Append(ManageItem()).ToArray(); _menu.Items = items; _menu.Width = Width > 0 ? Width : 224; _menu.ApplyOverlayStyling();
+        var items = Workspaces.Select(WorkspaceItem).Cast<Control>().Append(XYMenu.Separator()).Append(ManageItem()).ToArray(); _menu.Items = items; _menu.Width = double.NaN; _menu.MinWidth = CompactWidth; _menu.MaxWidth = PopupMaxWidth; _menu.ApplyOverlayStyling();
     }
     XYMenuItem WorkspaceItem(XYWorkspaceItem workspace)
     {
@@ -39,7 +39,7 @@ public sealed partial class XYWorkspaceSwitcher
     }
     public void Open()
     {
-        _popup.PlacementTarget = Trigger; _popup.Width = Trigger.Bounds.Width > 0 ? Trigger.Bounds.Width : Width > 0 ? Width : 224; _menu.Width = _popup.Width; _popup.IsOpen = true; _menu.Open(); foreach (var item in _menu.Items.OfType<XYMenuItem>()) { var selected = Workspaces.Any(x => x.Label == item.Label && x.Id == State.CurrentWorkspaceId); item.IsChecked = selected; item.IsSelected = selected; }
+        var triggerWidth = Trigger.Bounds.Width > 0 ? Trigger.Bounds.Width : Width > 0 ? Width : CompactWidth; _popup.PlacementTarget = Trigger; _popup.Width = double.NaN; _popup.MinWidth = triggerWidth; _popup.MaxWidth = PopupMaxWidth; _menu.Width = double.NaN; _menu.MinWidth = triggerWidth; _menu.MaxWidth = PopupMaxWidth; _popup.IsOpen = true; _menu.Open(); foreach (var item in _menu.Items.OfType<XYMenuItem>()) { var selected = Workspaces.Any(x => x.Label == item.Label && x.Id == State.CurrentWorkspaceId); item.IsChecked = selected; item.IsSelected = selected; }
     }
     void Toggle() { if (_popup.IsOpen) ClosePopup(); else Open(); }
     public void ClosePopup() { if (_popup.IsOpen) _popup.IsOpen = false; _menu.Close(); }

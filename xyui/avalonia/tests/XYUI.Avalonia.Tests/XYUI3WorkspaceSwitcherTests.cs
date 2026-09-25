@@ -18,7 +18,7 @@ public sealed class XYUI3WorkspaceSwitcherTests : IClassFixture<XyuiHeadlessFixt
 
     [Fact] public void Trigger_and_popup_share_width_and_trigger_stretches() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var switcher = new XYWorkspaceSwitcher(new XYWorkspaceState("map-edit"), Items); var window = XyuiBatchTestHost.Show(switcher); switcher.Open(); Dispatcher.UIThread.RunJobs(); Assert.IsType<XYButton>(switcher.Trigger); Assert.Equal(switcher.Trigger.Bounds.Width, switcher.WorkspacePopup.Width); Assert.Equal(224, switcher.Trigger.Bounds.Width); Assert.Equal(HorizontalAlignment.Stretch, switcher.Trigger.HorizontalAlignment); window.Close();
+        XyuiBatchTestHost.Prepare(); var switcher = new XYWorkspaceSwitcher(new XYWorkspaceState("map-edit"), Items); var window = XyuiBatchTestHost.Show(switcher); switcher.Open(); Dispatcher.UIThread.RunJobs(); Assert.IsType<XYButton>(switcher.Trigger); Assert.Equal(168, switcher.Trigger.Bounds.Width); Assert.True(switcher.WorkspacePopup.Bounds.Width >= switcher.Trigger.Bounds.Width); Assert.True(switcher.WorkspaceMenu.Bounds.Width >= switcher.Trigger.Bounds.Width); Assert.Equal(HorizontalAlignment.Stretch, switcher.Trigger.HorizontalAlignment); window.Close();
     });
 
     [Fact] public void Items_are_menu_rows_with_right_aligned_selected_radio() => _fx.Run(() =>
