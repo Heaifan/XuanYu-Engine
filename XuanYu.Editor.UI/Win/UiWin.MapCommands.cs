@@ -17,24 +17,24 @@ public partial class UiWin
         if (command == "聚焦地图") { vm.FocusMap(); return; }
         if (command == "打开地图")
         {
-            var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            var files = await RunNativePicker(() => StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = "打开玄域地图 Manifest",
                 AllowMultiple = false,
                 FileTypeFilter = [MapManifestFileType]
-            });
+            }));
             var path = files.FirstOrDefault()?.TryGetLocalPath();
             if (!string.IsNullOrWhiteSpace(path)) await vm.OpenMapManifestAsync(path);
             return;
         }
         if (command == "保存地图")
         {
-            var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            var file = await RunNativePicker(() => StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "保存玄域地图 Manifest",
                 SuggestedFileName = "map.json",
                 FileTypeChoices = [MapManifestFileType]
-            });
+            }));
             var path = file?.TryGetLocalPath();
             if (!string.IsNullOrWhiteSpace(path)) await vm.SaveMapManifestAsync(path);
         }

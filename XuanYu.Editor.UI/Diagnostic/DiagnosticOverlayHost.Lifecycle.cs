@@ -64,7 +64,11 @@ public partial class DiagnosticOverlayHost
         ClearProbeHighlight();
     }
 
-    void OnWindowClosed(object? sender, EventArgs e) => ClearProbeVisuals();
+    void OnWindowClosed(object? sender, EventArgs e)
+    {
+        ClearProbeVisuals();
+        DisposeToolWindow();
+    }
 
     void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {

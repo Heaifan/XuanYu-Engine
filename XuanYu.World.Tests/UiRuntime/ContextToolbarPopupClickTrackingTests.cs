@@ -28,6 +28,7 @@ public sealed class ContextToolbarPopupClickTrackingTests
             var item = board.SubMenus[0].ChildMenu.GetVisualDescendants().OfType<XYMenuItem>().First(); var executed = false;
             board.ActionExecuted += (_, _) => executed = true; diagnostic.ProbeClick(item); item.Activate();
             Assert.Same(item, diagnostic.LockedProbeResult?.DeepVisual); Assert.True(executed); window.Close();
+            Assert.Equal("XYE.CONTEXT_ACTION.MARKER", diagnostic.LockedProbeResult?.DebugId);
         });
     }
 
