@@ -22,6 +22,7 @@ public partial class DiagnosticOverlayHost
     {
         if (!ProbeEnabled || IsOverlayVisual(hit)) return;
         var result = DiagnosticProbeResolver.Resolve(hit, deepVisual);
+        LogProbeHit(hit, result);
         if (result.SemanticTarget is Panel) return;
         TrackProbe(result);
     }
@@ -68,6 +69,7 @@ public partial class DiagnosticOverlayHost
     {
         if (!ProbeEnabled || e.Source is not Visual hit || IsOverlayVisual(hit)) return;
         RememberProbePointer(e);
+        LogProbeState("PointerMoved", _probeResult);
         if (HasNativeViewportOverride) return;
         if (TryRepositionViewportProbe(hit)) return;
         ProbeHover(hit, e.KeyModifiers.HasFlag(KeyModifiers.Alt));

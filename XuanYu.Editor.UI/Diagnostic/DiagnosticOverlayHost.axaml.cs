@@ -55,7 +55,7 @@ public partial class DiagnosticOverlayHost : UserControl
             AttachFloatingLayer(window);
             AttachNativeViewportProbe(window);
         }
-        AttachVm();
+        AttachVm(); if (ProbeEnabled) LogProbeVersion();
         Reconcile();
     }
 
@@ -95,6 +95,6 @@ public partial class DiagnosticOverlayHost : UserControl
 
     void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(UiVm.IsDiagnosticMode) or nameof(UiVm.IsDiagnosticRegionBoundsMode) or nameof(UiVm.InspectorIdentity)) Reconcile();
+        if (e.PropertyName == nameof(UiVm.IsDiagnosticMode) && ProbeEnabled) LogProbeVersion(); if (e.PropertyName is nameof(UiVm.IsDiagnosticMode) or nameof(UiVm.IsDiagnosticRegionBoundsMode) or nameof(UiVm.InspectorIdentity)) Reconcile();
     }
 }

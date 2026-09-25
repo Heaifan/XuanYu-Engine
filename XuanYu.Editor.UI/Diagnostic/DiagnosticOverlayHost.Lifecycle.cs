@@ -55,6 +55,7 @@ public partial class DiagnosticOverlayHost
 
     void OnWindowActivated(object? sender, EventArgs e)
     {
+        LogProbeState("OwnerActivated", _lockedProbeResult);
         Reconcile();
         if (_vm is null || _vm.IsDiagnosticMode) RenderProbe();
         RestoreAfterOwnerActivation();
@@ -62,6 +63,7 @@ public partial class DiagnosticOverlayHost
 
     void OnWindowDeactivated(object? sender, EventArgs e)
     {
+        LogProbeState("OwnerDeactivated", _lockedProbeResult);
         ClearProbeHighlight();
     }
 

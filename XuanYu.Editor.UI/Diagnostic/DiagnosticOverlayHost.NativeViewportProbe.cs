@@ -28,6 +28,7 @@ public partial class DiagnosticOverlayHost
         VulkanNativeHost host, DiagnosticNativeViewportEvent change)
     {
         if (!ProbeEnabled) return;
+        LogProbeState($"NativeViewport{change.Phase}", _lockedProbeResult);
         if (change.Phase == DiagnosticNativeViewportPhase.Exited)
         {
             ClearNativeViewportOverride(host);

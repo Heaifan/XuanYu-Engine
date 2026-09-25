@@ -19,6 +19,7 @@ public partial class DiagnosticOverlayHost
         _restoreOnOwnerActivation = false;
         _cardPlacementMode = DiagnosticCardPlacementMode.Auto;
         _toolWindow?.Show();
+        LogProbeState("RestoreShow", _lockedProbeResult);
         if (_toolWindow is null)
         {
             RenderProbe();
@@ -26,6 +27,7 @@ public partial class DiagnosticOverlayHost
         }
         PlaceToolWindow(bounds);
         ApplyToolPosition();
-        _toolWindow.ReassertOwnedZOrder();
+        var zOrder = _toolWindow.ReassertOwnedZOrderForProbe();
+        LogProbeState($"RestoreReassert(success={zOrder})", _lockedProbeResult);
     }
 }

@@ -21,6 +21,7 @@ public partial class DiagnosticOverlayHost
         _suspendedPlacementMode = _cardPlacementMode;
         if (_restoreAfterNativeDialog) HideToolWindow();
         LogNativeDialog("Suspend", _restoreAfterNativeDialog);
+        LogProbeState("NativeDialogSuspend", _lockedProbeResult);
     }
 
     public void RestoreAfterNativeDialog()
@@ -33,6 +34,7 @@ public partial class DiagnosticOverlayHost
         _restoreOnOwnerActivation = restore && ProbeEnabled && IsProbeLocked;
         _suspendedPlacementMode = null;
         LogNativeDialog("Restore", restore);
+        LogProbeState("NativeDialogRestore", _lockedProbeResult);
         if (!restore || !ProbeEnabled) return;
         if (IsProbeLocked && TrackedSnapshot is null) return;
         _restoringNativeDialog = true;

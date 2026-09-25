@@ -8,6 +8,9 @@ namespace XuanYu.Editor.UI;
 
 public static partial class DiagnosticProbeResolver
 {
+    internal static IReadOnlyList<(Visual Visual, int Rank)> TraceCandidates(Visual hit) =>
+        Chain(hit).Select(visual => (visual, Candidate(visual).Rank)).ToArray();
+
     static (Visual Control, int Rank) Candidate(Visual visual)
     {
         if (HasDebugId(visual) && visual is Control debug && IsInteractive(debug)) return (visual, 0);

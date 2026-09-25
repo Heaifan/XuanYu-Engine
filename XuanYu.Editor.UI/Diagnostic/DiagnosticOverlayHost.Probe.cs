@@ -54,12 +54,14 @@ public partial class DiagnosticOverlayHost
         _probeResult = result;
         _lockedProbeResult = result;
         CaptureTrackedTarget(result);
+        LogProbeState("TrackProbe", result);
         RenderProbe();
     }
 
     void RenderProbe()
     {
         var result = IsProbeLocked ? _lockedProbeResult : _probeResult;
+        LogProbeState("RenderProbe", result);
         if (result is null || !_loaded || _floatingLayer is null)
         {
             ClearProbeHighlight(); HideToolWindow(); return;
