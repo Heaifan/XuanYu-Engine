@@ -50,6 +50,17 @@ public sealed class DiagnosticNativeTargetOwnershipTests
     }
 
     [Fact]
+    public void Native_click_switches_to_locked_viewport_target()
+    {
+        var overlay = new DiagnosticOverlayHost();
+        var vm = new UiVm(null, seedInitialScene: false);
+        vm.RunCommand.Execute("诊断模式"); overlay.DataContext = vm; AttachVm(overlay);
+        var native = new VulkanNativeHost(); SendDiagnostic(overlay, native, "Clicked", 40, 30);
+        Assert.Equal("XYE.VIEWPORT", overlay.LockedProbeResult?.DebugId);
+        Assert.True(overlay.IsProbeLocked);
+    }
+
+    [Fact]
     public void Turning_diagnostic_mode_off_clears_native_probe_state()
     {
         var overlay = new DiagnosticOverlayHost();

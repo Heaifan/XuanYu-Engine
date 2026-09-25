@@ -36,6 +36,20 @@ public partial class DiagnosticOverlayHost
         RenderProbe();
     }
 
+    public void PreviewProbe(DiagnosticProbeResult? result)
+    {
+        if (IsProbeLocked && result is not null) return;
+        SetProbeResult(result);
+    }
+
+    public void TrackProbe(DiagnosticProbeResult result)
+    {
+        _nativeViewportHost = result.DeepVisual as VulkanNativeHost;
+        _probeResult = result;
+        _lockedProbeResult = result;
+        RenderProbe();
+    }
+
     void RenderProbe()
     {
         var result = IsProbeLocked ? _lockedProbeResult : _probeResult;
