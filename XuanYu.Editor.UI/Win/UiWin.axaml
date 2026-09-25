@@ -31,7 +31,7 @@
   </Window.Styles>
   <Grid>
     <local:UiRoot/>
-    <local:DiagnosticOverlayHost ZIndex="80"/>
+    <local:DiagnosticOverlayHost x:Name="DiagnosticOverlay" ZIndex="80"/>
     <!-- D5 弹窗宿主：遮罩 + 卡片（Enter=默认按钮[非危险]，Escape=取消） -->
     <Border x:Name="DialogOverlay" ZIndex="90" IsVisible="False"
             Background="{StaticResource Color.Bg.Overlay}" Opacity="0.55"/>

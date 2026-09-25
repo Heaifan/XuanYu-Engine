@@ -44,24 +44,24 @@ public partial class UiWin
     }
     async Task ImportGlb(UiVm vm)
     {
-        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        var files = await RunNativePicker(() => StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "导入 GLB 模型",
             AllowMultiple = false,
             FileTypeFilter = [GlbFileType]
-        });
+        }));
         var path = files.FirstOrDefault()?.TryGetLocalPath();
         if (string.IsNullOrWhiteSpace(path)) return;
         vm.ImportStaticModel(path);
     }
     async Task OpenScene(UiVm vm)
     {
-        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        var files = await RunNativePicker(() => StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "打开玄域场景",
             AllowMultiple = false,
             FileTypeFilter = [SceneFileType]
-        });
+        }));
         var path = files.FirstOrDefault()?.TryGetLocalPath();
         if (!string.IsNullOrWhiteSpace(path)) await vm.OpenSceneAsync(path);
     }
@@ -82,12 +82,12 @@ public partial class UiWin
     }
     async Task<bool> SaveSceneAs(UiVm vm)
     {
-        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        var file = await RunNativePicker(() => StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "保存玄域场景",
             SuggestedFileName = "untitled.xyscene",
             FileTypeChoices = [SceneFileType]
-        });
+        }));
         var path = file?.TryGetLocalPath();
         return !string.IsNullOrWhiteSpace(path) && await vm.SaveSceneAsync(path, saveAs: true);
     }

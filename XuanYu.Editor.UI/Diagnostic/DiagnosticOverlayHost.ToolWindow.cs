@@ -47,7 +47,7 @@ public partial class DiagnosticOverlayHost
     void ShowToolWindow(Rect target)
     {
         if (_toolWindow is null) return;
-        _cardPlacementMode = DiagnosticCardPlacementMode.Auto;
+        if (!_restoringNativeDialog) _cardPlacementMode = DiagnosticCardPlacementMode.Auto;
         _toolWindow.Show();
         Dispatcher.UIThread.Post(() => PlaceToolWindow(target));
     }
@@ -61,10 +61,21 @@ public partial class DiagnosticOverlayHost
     void DisposeToolWindow()
     {
         if (_toolWindow is null) return;
-        _toolWindow.Close(); _toolWindow = null; _toolCard = null; _toolTarget = null;
+        var tool = _toolWindow;
+        _toolWindow = null; _toolCard = null; _toolTarget = null;
+        _nativeDialogSuspended = false;
+        _restoreAfterNativeDialog = false;
+        _suspendedPlacementMode = null;
+        tool.Close();
     }
 
-    void OnToolWindowClosed(object? sender, EventArgs e) => _toolWindow = null;
+    void OnToolWindowClosed(object? sender, EventArgs e)
+    {
+        _toolWindow = null;
+        _nativeDialogSuspended = false;
+        _restoreAfterNativeDialog = false;
+        _suspendedPlacementMode = null;
+    }
     void CloseToolWindow() => ExitProbe();
     void ToggleToolLock() { if (IsProbeLocked) UnlockProbe(); else LockProbe(); }
     Task CopyToolText(string text) => _toolTarget is null ? Task.CompletedTask : _clipboard.SetTextAsync(_toolTarget, text);
