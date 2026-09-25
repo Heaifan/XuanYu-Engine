@@ -4,7 +4,8 @@ internal enum DiagnosticNativeViewportPhase
 {
     Entered,
     Moved,
-    Exited
+    Exited,
+    Clicked
 }
 
 internal sealed record DiagnosticNativeViewportEvent(

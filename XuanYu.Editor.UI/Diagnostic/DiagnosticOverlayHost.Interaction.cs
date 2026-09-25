@@ -14,8 +14,26 @@ public partial class DiagnosticOverlayHost
 
     public void ProbeHover(Visual hit, bool deepVisual)
     {
-        if (HasNativeViewportOverride) return;
-        if (ProbeEnabled) SetProbeResult(DiagnosticProbeResolver.Resolve(hit, deepVisual));
+        if (HasNativeViewportOverride || IsOverlayVisual(hit)) return;
+        if (ProbeEnabled) PreviewProbe(DiagnosticProbeResolver.Resolve(hit, deepVisual));
+    }
+
+    public void PreviewProbe(DiagnosticProbeResult? result)
+    {
+        if (IsProbeLocked && result is not null) return;
+        SetProbeResult(result);
+    }
+
+    public void TrackProbe(DiagnosticProbeResult result)
+    {
+        _nativeViewportHost = result.DeepVisual as VulkanNativeHost;
+        _probeResult = result; _lockedProbeResult = result; RenderProbe();
+    }
+
+    public void ProbeClick(Visual hit, bool deepVisual = false)
+    {
+        if (!ProbeEnabled || IsOverlayVisual(hit)) return;
+        TrackProbe(DiagnosticProbeResolver.Resolve(hit, deepVisual));
     }
 
     public async Task ProbeClick()
@@ -35,13 +53,22 @@ public partial class DiagnosticOverlayHost
     void AttachProbeHandlers(TopLevel topLevel)
     {
         topLevel.AddHandler(InputElement.PointerMovedEvent, OnProbePointerMoved, RoutingStrategies.Tunnel, true);
+        topLevel.AddHandler(InputElement.PointerPressedEvent, OnProbePointerPressed, RoutingStrategies.Tunnel, true);
         topLevel.AddHandler(InputElement.KeyDownEvent, OnProbeKeyDown, RoutingStrategies.Tunnel, true);
     }
 
     void DetachProbeHandlers(TopLevel topLevel)
     {
         topLevel.RemoveHandler(InputElement.PointerMovedEvent, OnProbePointerMoved);
+        topLevel.RemoveHandler(InputElement.PointerPressedEvent, OnProbePointerPressed);
         topLevel.RemoveHandler(InputElement.KeyDownEvent, OnProbeKeyDown);
+    }
+
+    void OnProbePointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!ProbeEnabled || HasNativeViewportOverride || e.Source is not Visual hit || IsOverlayVisual(hit)) return;
+        if (!e.GetCurrentPoint(hit).Properties.IsLeftButtonPressed) return;
+        ProbeClick(hit, e.KeyModifiers.HasFlag(KeyModifiers.Alt));
     }
 
     void OnProbePointerMoved(object? sender, PointerEventArgs e)

@@ -12,6 +12,10 @@ public sealed partial class VulkanNativeHost
             _nativeDiagnosticInside = true;
             PublishDiagnosticPointer(message, phase, x, y);
         }
+        else if (message.Message == NativePointerMessage.LeftDown)
+        {
+            PublishDiagnosticPointer(message, DiagnosticNativeViewportPhase.Clicked, x, y);
+        }
         else if (message.Message == NativePointerMessage.MouseLeave)
         {
             _nativeDiagnosticInside = false;
