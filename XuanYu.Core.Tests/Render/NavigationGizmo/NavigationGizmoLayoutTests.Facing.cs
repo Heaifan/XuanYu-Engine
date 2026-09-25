@@ -16,8 +16,8 @@ public sealed partial class NavigationGizmoLayoutTests
             new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, -1), FacingCenter);
         Assert.Equal(6, endpoints.Count);
         Assert.All(endpoints, e => Assert.True(e.IsVisible));
-        Assert.NotEqual(FacingCenter, endpoints.First(e => e.Name == "+Z").Screen);
-        Assert.NotEqual(FacingCenter, endpoints.First(e => e.Name == "-Z").Screen);
+        Assert.Contains(endpoints, e => e.Screen == FacingCenter && e.Depth > 0);
+        Assert.Contains(endpoints, e => e.Name == "-Z" && e.Screen != FacingCenter);
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public sealed partial class NavigationGizmoLayoutTests
         var endpoints = NavigationGizmoLayout.Compute(
             new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, -1), FacingCenter);
         var hit = NavigationGizmoHitTest.Hit(endpoints, FacingCenter, FacingCenter);
-        Assert.True(hit.HitCenter, "中心仍应命中 Orbit 区");
+        Assert.True(hit.IsEndpoint, "正对相机的轴端点应在中心优先命中");
     }
 
     [Fact]

@@ -24,9 +24,9 @@ public sealed class NavigationGizmoDipContractTests
         Assert.Contains("gizmoParams", shader);
         Assert.Contains("dpi=max(pc.gizmoParams.w", shader);
         Assert.Contains("AXIS_RADIUS_DIP=24.", shader);
-        Assert.Contains("HUB_RADIUS_DIP=14.", shader);
+        Assert.Contains("HUB_RADIUS_DIP=11.", shader);
         Assert.Contains("POSITIVE_RADIUS_DIP = 8.5", shader);
-        Assert.Contains("NEGATIVE_RADIUS_DIP = 5.0", shader);
+        Assert.Contains("NEGATIVE_RADIUS_DIP = 7.5", shader);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public sealed class NavigationGizmoDipContractTests
         Assert.Equal(96.0, NavigationGizmoLayout.GizmoSize);
         Assert.Equal(14.0, NavigationGizmoLayout.Margin);
         Assert.Equal(24.0, NavigationGizmoLayout.AxisRadius);
-        Assert.Equal(14.0, NavigationGizmoLayout.CenterRadius);
+        Assert.Equal(11.0, NavigationGizmoLayout.CenterRadius);
         Assert.Equal(8.5, NavigationGizmoLayout.PositiveEndpointRadius);
         Assert.Equal(5.0, NavigationGizmoLayout.AxisWidth);
         Assert.InRange(NavigationGizmoLayout.HitRadius, 11.0, 12.0);

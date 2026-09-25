@@ -68,7 +68,7 @@ public sealed class NavigationGizmoOverlayContractTests
         Assert.Contains("ENDPOINT_COUNT = 6", frag);
         Assert.Contains("drawAxis", frag);         // 轴线从球边缘开始（startRadius=HUB+1.6）
         Assert.Contains("AXIS_COLOR", frag);
-        Assert.Contains("HUB_RADIUS_DIP=14.", frag);
+        Assert.Contains("HUB_RADIUS_DIP=11.", frag);
         Assert.Contains("interactionParams", frag);
     }
 

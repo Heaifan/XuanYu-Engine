@@ -20,7 +20,7 @@ public static class NavigationGizmoLayout
     public const double GizmoSize = 96.0;
     public const double Margin = 14.0;
     public const double AxisRadius = 24.0;
-    public const double CenterRadius = 14.0;
+    public const double CenterRadius = 11.0;
     public const double OrbitHitRadius = 19.0;
     public const double PositiveEndpointRadius = 8.5;
     public const double NegativeEndpointRadius = 7.5;
@@ -57,12 +57,13 @@ public static class NavigationGizmoLayout
         return new Point(center.X + (sx * AxisRadius), center.Y + (sy * AxisRadius));
     }
 
-    static Point ProjectStable(Vector3d d, Vector3d right, Vector3d up, Point center, int axis)
+    static Point ProjectStable(Vector3d d, Vector3d right, Vector3d up, Point center, int axis, double depth)
     {
         var sx = d.Dot(right);
         var sy = -d.Dot(up);
         if (Math.Sqrt((sx * sx) + (sy * sy)) < 0.2)
         {
+            if (depth > 0.0) return center;
             var fallback = axis switch
             {
                 0 => new Vector(1, 0), 1 => new Vector(-1, 0),
@@ -75,7 +76,6 @@ public static class NavigationGizmoLayout
     }
 
     public static double Depth(Vector3d d, Vector3d forward) => -d.Dot(forward);
-
     public static double HitRadiusFor(GizmoEndpoint endpoint) =>
         endpoint.IsPositive ? PositiveHitRadius : NegativeHitRadius;
 
@@ -91,7 +91,7 @@ public static class NavigationGizmoLayout
             var alpha = positive ? 0.55 + (0.45 * front) : 0.40 + (0.38 * front);
             var radius = positive ? PositiveEndpointRadius : NegativeEndpointRadius;
             var axis = name switch { "+X" or "-X" => 0, "+Y" or "-Y" => 1, _ => 2 };
-            var screen = ProjectStable(direction, right, up, center, axis);
+            var screen = ProjectStable(direction, right, up, center, axis, depth);
             list.Add(new GizmoEndpoint(name, positive, screen, depth, alpha, radius, visible));
         }
         list.Sort((a, b) => a.Depth.CompareTo(b.Depth));
