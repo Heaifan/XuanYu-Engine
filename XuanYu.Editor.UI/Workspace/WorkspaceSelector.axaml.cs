@@ -17,6 +17,10 @@ public partial class WorkspaceSelector : UserControl
             new XYWorkspaceItem(FeatureId, "要素编辑"),
             new XYWorkspaceItem("scene-editing", "场景编辑（暂未开放）", false),
             new XYWorkspaceItem("debug", "调试（暂未开放）", false));
+        _switcher.Name = "WorkspaceSelector";
+        _switcher.Trigger.Name = "WorkspaceSelectorButton";
+        XYDiagnostic.SetDebugId(_switcher, "XYE.TOP.WORKSPACE");
+        XYDiagnostic.SetDebugId(_switcher.Trigger, "XYE.TOP.WORKSPACE.SELECTOR");
         _switcher.WorkspaceChangeRequested += OnWorkspaceChangeRequested;
         SwitcherHost.Children.Add(_switcher);
     }
