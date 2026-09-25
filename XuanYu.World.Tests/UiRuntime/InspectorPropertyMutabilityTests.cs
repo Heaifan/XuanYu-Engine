@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
-public sealed class InspectorPropertyMutabilityTests
+public sealed partial class InspectorPropertyMutabilityTests
 {
     [Fact]
     public void Road_name_is_editable_but_geometry_result_is_readonly()

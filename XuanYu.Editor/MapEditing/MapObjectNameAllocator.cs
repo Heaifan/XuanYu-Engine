@@ -15,7 +15,7 @@ public static class MapObjectNameAllocator
 
     static string Allocate(IEnumerable<string> existing, string requested, string placeholder, string prefix)
     {
-        if (!string.IsNullOrWhiteSpace(requested) && requested.Trim() != placeholder) return requested.Trim();
+        if (!string.IsNullOrWhiteSpace(requested) && !IsPlaceholder(requested.Trim(), placeholder)) return requested.Trim();
         var names = existing.ToHashSet(StringComparer.Ordinal);
         for (var index = 1; ; index++)
         {
@@ -23,4 +23,7 @@ public static class MapObjectNameAllocator
             if (!names.Contains(candidate)) return candidate;
         }
     }
+
+    static bool IsPlaceholder(string requested, string placeholder) =>
+        requested == placeholder || requested == $"未命名{placeholder}";
 }

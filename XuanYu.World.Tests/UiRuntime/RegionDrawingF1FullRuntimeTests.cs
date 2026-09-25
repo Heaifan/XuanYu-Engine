@@ -4,7 +4,7 @@ using XuanYu.Editor.UI;
 using XuanYu.World.Tests;
 namespace XuanYu.World.Tests.UiRuntime;
 
-public sealed class RegionDrawingF1FullRuntimeTests
+public sealed partial class RegionDrawingF1FullRuntimeTests
 {
     static readonly ViewportState Viewport = new(0, 0, 800, 600, 800, 600, 1, 1);
 

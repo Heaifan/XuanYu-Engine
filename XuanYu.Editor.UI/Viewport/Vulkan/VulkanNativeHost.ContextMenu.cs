@@ -1,3 +1,6 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.VisualTree;
 using XYUI.Avalonia.Controls;
 using XuanYu.Editor.MapEditing;
 using XuanYu.World.Map;
@@ -19,7 +22,9 @@ public sealed partial class VulkanNativeHost
         var items = MapGeometryContextMenuSpec.Build(vm.MapSession.CurrentMap, hit)
             .Select(item => MenuItem(vm, item, hit)).ToArray();
         _mapContextMenu.Menu = new XYMenu(items);
-        _mapContextMenu.OpenAt(this, new Avalonia.Point(x, y));
+        if (TopLevel.GetTopLevel(this) is not { } topLevel) return;
+        if (this.TranslatePoint(new Point(x, y), topLevel) is not { } topLevelPoint) return;
+        _mapContextMenu.OpenAtTopLevel(this, topLevelPoint);
     }
 
     static string DisplayName(MapDefinition map, MapGeometryContextHit hit) => hit.Selection.Kind switch

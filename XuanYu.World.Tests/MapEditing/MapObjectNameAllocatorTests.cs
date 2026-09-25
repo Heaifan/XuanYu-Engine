@@ -21,4 +21,14 @@ public sealed class MapObjectNameAllocatorTests
         Assert.Equal("道路2", MapObjectNameAllocator.Road(map, "道路"));
         Assert.Equal("标记2", MapObjectNameAllocator.Marker(map, "地图标记"));
     }
+
+    [Fact]
+    public void Runtime_placeholders_become_domain_names()
+    {
+        var map = MapDefaultDefinition.CreateDefault();
+
+        Assert.Equal("区域1", MapObjectNameAllocator.Region(map, "未命名区域"));
+        Assert.Equal("道路1", MapObjectNameAllocator.Road(map, "未命名道路"));
+        Assert.Equal("标记1", MapObjectNameAllocator.Marker(map, "地图标记"));
+    }
 }

@@ -5,6 +5,8 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Avalonia.Controls.Primitives;
+using System.Reflection;
 using XYUI.Avalonia.Controls;
 
 namespace XYUI.Avalonia.Tests;
@@ -47,6 +49,18 @@ public sealed class XYUI3InteractionTests : IClassFixture<XyuiHeadlessFixture>
         var target = new Border { Width = 100, Height = 40, Background = Brushes.Transparent }; var window = XyuiBatchTestHost.Show(target);
         context.OpenAt(target, new Point(20, 12)); Dispatcher.UIThread.RunJobs();
         Assert.True(context.IsOpen); Assert.Contains("xyui-context-menu", context.Classes); Assert.Contains(context.GetVisualDescendants().OfType<TextBlock>(), x => x.Text == "区域1");
+        context.Close(); window.Close();
+    });
+
+    [Fact] public void ContextMenu_top_level_position_contract_anchors_popup_in_same_space() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var context = new XYContextMenu { Menu = new XYMenu(new XYMenuItem { Label = "删除" }) };
+        var target = new Border { Width = 100, Height = 40, Background = Brushes.Transparent }; var window = XyuiBatchTestHost.Show(target);
+        context.OpenAtTopLevel(target, new Point(120, 80)); Dispatcher.UIThread.RunJobs();
+        var field = typeof(XYContextMenu).GetField("_popup", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var popup = Assert.IsType<Popup>(field.GetValue(context));
+        Assert.Same(window, popup.PlacementTarget);
+        Assert.Equal(new Rect(120, 80, 0, 0), popup.PlacementRect);
         context.Close(); window.Close();
     });
 

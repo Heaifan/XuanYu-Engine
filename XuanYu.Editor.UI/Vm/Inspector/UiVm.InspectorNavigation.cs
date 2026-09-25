@@ -41,7 +41,7 @@ public sealed partial class UiVm
         if (kind != _navigationKind)
         {
             _navigationKind = kind;
-            InspectorCategory = CategoriesFor(kind).FirstOrDefault() ?? "基础";
+            InspectorCategory = CategoriesFor(kind).FirstOrDefault(category => category != "最近") ?? "基础";
         }
         OnPropertyChanged(nameof(InspectorCategories)); OnPropertyChanged(nameof(InspectorProperties));
         OnPropertyChanged(nameof(IsInspectorSearchMode)); OnPropertyChanged(nameof(IsInspectorBasicPage));

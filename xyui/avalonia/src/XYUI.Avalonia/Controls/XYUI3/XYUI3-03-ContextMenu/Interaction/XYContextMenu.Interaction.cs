@@ -21,7 +21,16 @@ public sealed partial class XYContextMenu
     public void DetachFrom(Control source) { source.PointerPressed -= OnSourcePointerPressed; if (ReferenceEquals(Target, source)) Target = null; }
     public void Open() { if (Target is not null) Open(Target); }
     public void Open(Control target) => OpenAt(target, null);
-    public void OpenAt(Control target, Point pointerDip) => OpenAt(target, (Point?)pointerDip);
+    public void OpenAt(Control target, Point pointerDip)
+    {
+        var topLevel = TopLevel.GetTopLevel(target);
+        var topLevelPoint = topLevel is null ? pointerDip : target.TranslatePoint(pointerDip, topLevel) ?? pointerDip;
+        OpenAtTopLevel(target, topLevelPoint);
+    }
+    public void OpenAtTopLevel(Control target, Point topLevelDip)
+    {
+        if (TopLevel.GetTopLevel(target) is { } topLevel) OpenAt(target, topLevel, topLevelDip);
+    }
     void OpenAt(Control target, Point? pointerDip)
     {
         if (!IsEnabled) return; Target = target; Close(); Menu.ClearSelection(); Menu.FocusRestoreTarget = target; XyuiOverlayResourceBridge.Attach(this);
@@ -31,6 +40,20 @@ public sealed partial class XYContextMenu
             Placement = pointerDip is null ? PlacementMode.Pointer : PlacementMode.AnchorAndGravity,
             PlacementRect = pointerDip is { } point ? new Rect(point, new Size(0, 0)) : default,
             PlacementAnchor = PopupAnchor.BottomLeft,
+            PlacementGravity = PopupGravity.BottomLeft,
+            PlacementConstraintAdjustment = PopupPositionerConstraintAdjustment.SlideX |
+                PopupPositionerConstraintAdjustment.SlideY | PopupPositionerConstraintAdjustment.FlipY,
+            IsLightDismissEnabled = true, Child = this
+        };
+        _popup.Closed += OnPopupClosed; IsOpen = true; _popup.IsOpen = true; Menu.ApplyOverlayStyling(); Menu.Open(); Opened?.Invoke(this, EventArgs.Empty);
+    }
+    void OpenAt(Control target, TopLevel topLevel, Point topLevelDip)
+    {
+        if (!IsEnabled) return; Target = target; Close(); Menu.ClearSelection(); Menu.FocusRestoreTarget = target; XyuiOverlayResourceBridge.Attach(this);
+        _popup = new Popup
+        {
+            PlacementTarget = topLevel, Placement = PlacementMode.AnchorAndGravity,
+            PlacementRect = new Rect(topLevelDip, new Size(0, 0)), PlacementAnchor = PopupAnchor.BottomLeft,
             PlacementGravity = PopupGravity.BottomLeft,
             PlacementConstraintAdjustment = PopupPositionerConstraintAdjustment.SlideX |
                 PopupPositionerConstraintAdjustment.SlideY | PopupPositionerConstraintAdjustment.FlipY,
