@@ -22,6 +22,7 @@ public partial class DiagnosticOverlayHost
         if (_vm?.IsDiagnosticRegionBoundsMode != true) return;
         foreach (var target in DiagnosticRegistry.Targets.Values)
         {
+            if (!ReferenceEquals(TopLevel.GetTopLevel(target), _topLevel)) continue;
             if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is null) continue;
             var popup = new Popup
             {

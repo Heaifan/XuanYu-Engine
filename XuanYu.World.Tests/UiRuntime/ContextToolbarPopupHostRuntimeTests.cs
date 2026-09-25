@@ -80,6 +80,26 @@ public sealed class ContextToolbarPopupHostRuntimeTests
     }
 
     [Fact]
+    public void Diagnostic_region_bounds_does_not_open_overlay_popup_inside_native_menu()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(() =>
+        {
+            var vm = NewVm(); vm.RunCommand.Execute("诊断模式"); vm.RunCommand.Execute("区域边界");
+            var toolbar = new ContextToolBar { DataContext = vm };
+            var diagnostic = new DiagnosticOverlayHost { DataContext = vm };
+            var window = host.Show(new Grid { Children = { toolbar, diagnostic } }, 900, 220);
+            var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single();
+            toolbar.FindControl<XYSplitButton>("DrawSplitButton")!.MenuCommand!.Execute(null);
+            board.SubMenus[0].Open(); Dispatcher.UIThread.RunJobs();
+            Assert.True(board.Popup.IsOpen);
+            Assert.All(UiRuntimeTestHost.Descendants<Popup>(diagnostic), popup =>
+                Assert.Same(window, TopLevel.GetTopLevel(popup.PlacementTarget)));
+            window.Close();
+        });
+    }
+
+    [Fact]
     public async Task Split_label_is_not_clipped_for_three_character_action()
     {
         using var host = new UiRuntimeTestHost(_fixture);

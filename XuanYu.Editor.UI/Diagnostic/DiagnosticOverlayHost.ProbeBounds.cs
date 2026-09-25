@@ -8,6 +8,7 @@ public partial class DiagnosticOverlayHost
 {
     bool TryGetFloatingBounds(Visual visual, out Rect bounds)
     {
+        if (TopLevel.GetTopLevel(visual) is null) { bounds = default; return false; }
         if (visual is VulkanNativeHost && _floatingLayer is not null)
         {
             var nativeScale = _topLevel?.RenderScaling ?? 1d;
