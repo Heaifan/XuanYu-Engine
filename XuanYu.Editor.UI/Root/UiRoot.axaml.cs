@@ -47,6 +47,7 @@ public partial class UiRoot : UserControl
     void RefreshDiagnosticRegistry()
     {
         DiagnosticRegistry.Clear();
+        DiagnosticAutoBinder.Bind(this);
         foreach (var target in this.GetVisualDescendants().OfType<Control>())
             if (XYDiagnostic.GetDebugId(target) is not null) DiagnosticRegistry.Register(target);
     }

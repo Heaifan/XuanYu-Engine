@@ -28,4 +28,21 @@ public sealed class DiagnosticWorkspaceSelectorIdentityTests
             window.Close();
         });
     }
+
+    [Fact]
+    public void New_named_xyui_button_gets_generated_diagnostic_id_without_manual_binding()
+    {
+        _fixture.Run(() =>
+        {
+            var root = new Grid();
+            XYDiagnostic.SetDebugId(root, "XYE.TEST.ROOT");
+            var button = new XYButton { Name = "NewActionButton", Content = "新按钮" };
+            root.Children.Add(button);
+            var window = new Window { Width = 300, Height = 120, Content = root };
+            window.Show(); window.UpdateLayout();
+            DiagnosticAutoBinder.Bind(root);
+            Assert.Equal("XYE.TEST.ROOT.NEW_ACTION_BUTTON", XYDiagnostic.GetDebugId(button));
+            window.Close();
+        });
+    }
 }
