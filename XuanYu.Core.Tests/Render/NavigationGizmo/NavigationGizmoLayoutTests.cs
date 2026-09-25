@@ -55,8 +55,7 @@ public sealed partial class NavigationGizmoLayoutTests
         Assert.All(endpoints, e => Assert.True(e.IsVisible));
         for (var i = 1; i < endpoints.Count; i++)
             Assert.True(endpoints[i - 1].Depth <= endpoints[i].Depth, "端点应按深度升序排列");
-        Assert.True(endpoints[0].Alpha < endpoints[^1].Alpha, "背向端点应比朝向端点更淡");
-        Assert.Equal(0.30, endpoints[0].Alpha, 2); // F3-F3 背向 Alpha 合同
+        Assert.All(endpoints, e => Assert.Equal(9.0, e.Radius));
     }
 
     // 命中：正方向端点命中；中心命中中心球（不误触端点）；负方向可点击；区域外不捕获。
@@ -71,8 +70,10 @@ public sealed partial class NavigationGizmoLayoutTests
         Assert.True(hit.IsEndpoint && hit.Endpoint == front.Name, "前方端点中心应命中");
         var hitCenter = NavigationGizmoHitTest.Hit(endpoints, Center, Center);
         Assert.True(hitCenter.HitCenter && !hitCenter.IsEndpoint, "中心应命中中心球且不误触端点");
-        var negative = endpoints.First(e => !e.IsPositive);
-        Assert.True(NavigationGizmoHitTest.Hit(endpoints, negative.Screen, Center).IsEndpoint, "负方向端点应可点击");
+        Assert.All(endpoints, e => Assert.True(e.IsPositive));
+        var nearEdge = new Point(front.Screen.X + 11.0, front.Screen.Y);
+        Assert.True(NavigationGizmoHitTest.Hit(endpoints, nearEdge, Center).IsEndpoint,
+            "视觉 9 DIP 端点应使用更大的命中热区");
         Assert.False(NavigationGizmoHitTest.IsInsideGizmo(new Point(-5, -5)));
         Assert.False(NavigationGizmoHitTest.IsInsideGizmo(new Point(100, 100)));
     }

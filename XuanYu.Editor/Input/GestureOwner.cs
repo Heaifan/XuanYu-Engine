@@ -6,6 +6,7 @@ public enum GestureOwner
     Camera,
     Picking,
     Gizmo,
+    Navigation,
     MapEdit,
     Region,
     Road,

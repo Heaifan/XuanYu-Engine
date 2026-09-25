@@ -63,14 +63,13 @@ public sealed class NavigationGizmoOverlayContractTests
     public void Nav_gizmo_shader_f3_f3_contract()
     {
         var frag = ShaderFile("editor_nav_gizmo.frag");
-        Assert.Contains("FACING_LIMIT_DIP", frag); // 正对相机判定
+        Assert.Contains("PANEL_RADIUS_DIP = 16.0", frag);
         Assert.Contains("drawAxis", frag);         // 轴线从球边缘开始（startRadius=HUB+1.6）
-        Assert.Contains("#C66A5E", frag);          // X 低饱和珊瑚红（注释即合同）
-        Assert.Contains("#6B9F84", frag);          // Y 低饱和豆青
-        Assert.Contains("#628EC2", frag);          // Z 钢蓝
-        Assert.Contains("HUB_RADIUS_DIP = 9.5", frag); // 轻量球心（不再是大白圆盘）
-        Assert.Contains("e.visible = !facing || front", frag); // 正对只显示朝向端点
-        Assert.Contains("bool showLabel = e.positive || e.facing", frag); // 标签：正方向或正对
+        Assert.Contains("#D65252", frag);
+        Assert.Contains("#4FAE72", frag);
+        Assert.Contains("#6FA4F0", frag);
+        Assert.Contains("HUB_RADIUS_DIP = 14.0", frag);
+        Assert.Contains("ACTIVE_INDEX", frag);
     }
 
     // 4. 悬停索引默认 -1 且流转到 RenderProjection。
@@ -79,7 +78,8 @@ public sealed class NavigationGizmoOverlayContractTests
     {
         var assist = EditorViewportAssistState.Default;
         Assert.Equal(-1, assist.NavGizmoHoverIndex);
-        var withHover = assist with { NavGizmoHoverIndex = 3 };
-        Assert.Equal(3, withHover.NavGizmoHoverIndex);
+        var withHover = assist with { NavGizmoHoverIndex = 1, NavGizmoActiveIndex = 2 };
+        Assert.Equal(1, withHover.NavGizmoHoverIndex);
+        Assert.Equal(2, withHover.NavGizmoActiveIndex);
     }
 }

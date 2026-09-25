@@ -1,8 +1,7 @@
 #version 450
 
 // 玄域编辑器：Blender 风格导航 Gizmo
-// 保持现有 80B Push Constant、96 DIP 区域、14 DIP 边距和 CPU 命中布局。
-// 视觉原则：小中心球、细轴线、前后分层、正对轴只显示一个端点、文字写在端点内部。
+// A 版冻结：96 DIP 清透底板、14 DIP 右上边距、三轴端点和独立交互态。
 
 layout(push_constant) uniform GizmoPush
 {
@@ -11,23 +10,24 @@ layout(push_constant) uniform GizmoPush
     vec4 cameraForward;    // xyz
     vec4 viewportAndDpi;   // xy = viewport px, z = DPI
     vec4 gizmoParams;      // x = size DIP, y = margin DIP, z = hover index, w = RenderScaling
+    vec4 interactionParams; // x = active; y = pressed endpoint index (ACTIVE_INDEX)
 } pc;
 
 layout(location = 0) in vec2 vNdc;
 layout(location = 0) out vec4 outColor;
 
-const float AXIS_RADIUS_DIP = 27.0;
-const float HUB_RADIUS_DIP = 9.5;
-const float FRONT_RADIUS_DIP = 7.5;
-const float BACK_RADIUS_DIP = 3.8;
-const float FACING_RADIUS_DIP = 8.5;
-const float AXIS_WIDTH_DIP = 1.25;
-const float FACING_LIMIT_DIP = 6.0;
+const float AXIS_RADIUS_DIP = 24.0;
+const float HUB_RADIUS_DIP = 14.0;
+const float ENDPOINT_RADIUS_DIP = 9.0;
+const float HOVER_RADIUS_DIP = 10.5;
+const float PRESSED_RADIUS_DIP = 11.0;
+const float AXIS_WIDTH_DIP = 3.0;
+const float PANEL_RADIUS_DIP = 16.0;
 
 const vec3 AXIS_COLOR[3] = vec3[3](
-    vec3(0.776, 0.416, 0.369), // X #C66A5E：低饱和珊瑚红
-    vec3(0.420, 0.624, 0.518), // Y #6B9F84：低饱和豆青
-    vec3(0.384, 0.557, 0.761)  // Z #628EC2：钢蓝
+    vec3(0.929, 0.420, 0.420), // X #D65252
+    vec3(0.310, 0.682, 0.447), // Y #4FAE72
+    vec3(0.435, 0.643, 0.941)  // Z #6FA4F0
 );
 
 const vec3 HUB_LIGHT = vec3(0.925, 0.945, 0.965);
@@ -69,6 +69,14 @@ float ringMask(vec2 p, vec2 center, float radius, float width, float dpi)
     return 1.0 - smoothstep(-aa, aa, d);
 }
 
+float roundedPanel(vec2 p, vec2 center, vec2 halfSize, float radius, float dpi)
+{
+    vec2 q = abs(p - center) - halfSize + vec2(radius);
+    float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - radius;
+    float aa = aaWidth(d, dpi);
+    return 1.0 - smoothstep(-aa, aa, d);
+}
+
 float segmentMask(vec2 p, vec2 a, vec2 b, float width, float dpi)
 {
     vec2 ab = b - a;
@@ -89,12 +97,9 @@ void compositeOver(inout vec4 acc, vec3 color, float alpha)
 
 vec3 axisDirection(int index)
 {
-    if (index == 0) return vec3( 1.0,  0.0,  0.0);
-    if (index == 1) return vec3(-1.0,  0.0,  0.0);
-    if (index == 2) return vec3( 0.0,  1.0,  0.0);
-    if (index == 3) return vec3( 0.0, -1.0,  0.0);
-    if (index == 4) return vec3( 0.0,  0.0,  1.0);
-    return vec3(0.0, 0.0, -1.0);
+    if (index == 0) return vec3(1.0, 0.0, 0.0);
+    if (index == 1) return vec3(0.0, 1.0, 0.0);
+    return vec3(0.0, 0.0, 1.0);
 }
 
 Endpoint buildEndpoint(
@@ -106,11 +111,16 @@ Endpoint buildEndpoint(
 {
     vec3 direction = axisDirection(index);
     vec2 projection = vec2(dot(direction, right), -dot(direction, up));
+    if (length(projection) < 0.2)
+    {
+        projection = index == 0 ? vec2(1.0, 0.0) :
+            (index == 1 ? vec2(-0.75, 0.66) : vec2(0.0, -1.0));
+    }
     float projectedLength = length(projection) * AXIS_RADIUS_DIP;
     float depth = dot(direction, forward);
-    bool facing = projectedLength < FACING_LIMIT_DIP;
+    bool facing = false;
     bool front = depth > 0.0;
-    bool positive = (index % 2) == 0;
+    bool positive = true;
 
     Endpoint e;
     e.position = facing && front
@@ -118,27 +128,14 @@ Endpoint buildEndpoint(
         : center + projection * AXIS_RADIUS_DIP;
     e.depth = depth;
     e.projectedLength = projectedLength;
-    e.axis = index / 2;
+    e.axis = index;
     e.index = index;
     e.positive = positive;
-    e.visible = !facing || front;
+    e.visible = true;
     e.facing = facing;
 
-    if (facing && front)
-    {
-        e.radius = FACING_RADIUS_DIP;
-        e.alpha = positive ? 1.0 : 0.82;
-    }
-    else if (front)
-    {
-        e.radius = positive ? FRONT_RADIUS_DIP : BACK_RADIUS_DIP + 0.8;
-        e.alpha = positive ? 1.0 : 0.62;
-    }
-    else
-    {
-        e.radius = BACK_RADIUS_DIP;
-        e.alpha = positive ? 0.30 : 0.22;
-    }
+    e.radius = ENDPOINT_RADIUS_DIP;
+    e.alpha = 1.0;
 
     return e;
 }
@@ -274,17 +271,22 @@ void main()
     vec3 up = normalize(pc.cameraUp.xyz);
     vec3 forward = normalize(pc.cameraForward.xyz);
 
-    Endpoint endpoints[6];
-    for (int i = 0; i < 6; ++i)
+    Endpoint endpoints[3];
+    for (int i = 0; i < 3; ++i)
     {
         endpoints[i] = buildEndpoint(i, center, right, up, forward);
     }
 
     vec4 acc = vec4(0.0);
+    float panel = roundedPanel(p, vec2(sizeDip * 0.5), vec2(sizeDip * 0.5), PANEL_RADIUS_DIP, dpi);
+    float shadow = roundedPanel(p + vec2(0.0, -2.0), vec2(sizeDip * 0.5),
+        vec2(sizeDip * 0.5), PANEL_RADIUS_DIP, dpi);
+    compositeOver(acc, vec3(0.14, 0.19, 0.23), (shadow - panel) * 0.18);
+    compositeOver(acc, vec3(0.96, 0.98, 0.99), panel * 0.90);
 
     // 第一层：背向轴和小端点。
-    for (int i = 0; i < 6; ++i) drawAxis(acc, p, center, endpoints[i], dpi, false);
-    for (int i = 0; i < 6; ++i) drawEndpoint(acc, p, endpoints[i], dpi, false);
+    for (int i = 0; i < 3; ++i) drawAxis(acc, p, center, endpoints[i], dpi, false);
+    for (int i = 0; i < 3; ++i) drawEndpoint(acc, p, endpoints[i], dpi, false);
 
     // 第二层：小型中心球。使用轻微径向和左上高光，不再画成大白圆盘。
     float hub = circleMask(p, center, HUB_RADIUS_DIP, dpi);
@@ -301,18 +303,34 @@ void main()
         2.15,
         dpi);
     compositeOver(acc, vec3(1.0), highlight * 0.20);
+    float centerDot = circleMask(p, center, 4.0, dpi);
+    compositeOver(acc, vec3(0.54, 0.63, 0.68), centerDot * 0.92);
 
     // 第三层：朝向轴、端点和端点内部标签。
-    for (int i = 0; i < 6; ++i) drawAxis(acc, p, center, endpoints[i], dpi, true);
-    for (int i = 0; i < 6; ++i) drawEndpoint(acc, p, endpoints[i], dpi, true);
-    for (int i = 0; i < 6; ++i) drawEndpointLabel(acc, p, endpoints[i], dpi);
+    for (int i = 0; i < 3; ++i) drawAxis(acc, p, center, endpoints[i], dpi, true);
+    for (int i = 0; i < 3; ++i) drawEndpoint(acc, p, endpoints[i], dpi, true);
+    for (int i = 0; i < 3; ++i) drawEndpointLabel(acc, p, endpoints[i], dpi);
 
     // 最后一层：单一 Hover 环。
-    if (hoverIndex >= 0 && hoverIndex < 6 && endpoints[hoverIndex].visible)
+    if (hoverIndex >= 0 && hoverIndex < 3 && endpoints[hoverIndex].visible)
     {
         Endpoint hovered = endpoints[hoverIndex];
-        float ring = ringMask(p, hovered.position, hovered.radius + 2.0, 1.35, dpi);
+        float ring = ringMask(p, hovered.position, HOVER_RADIUS_DIP, 1.35, dpi);
         compositeOver(acc, vec3(0.98), ring * 0.92);
+    }
+
+    int activeIndex = int(round(pc.interactionParams.x));
+    if (activeIndex >= 0 && activeIndex < 3 && endpoints[activeIndex].visible)
+    {
+        float ring = ringMask(p, endpoints[activeIndex].position, ENDPOINT_RADIUS_DIP + 2.4, 1.15, dpi);
+        compositeOver(acc, vec3(1.0, 0.92, 0.62), ring * 0.78);
+    }
+
+    int pressedIndex = int(round(pc.interactionParams.y));
+    if (pressedIndex >= 0 && pressedIndex < 3 && endpoints[pressedIndex].visible)
+    {
+        float ring = ringMask(p, endpoints[pressedIndex].position, PRESSED_RADIUS_DIP, 1.8, dpi);
+        compositeOver(acc, vec3(0.72, 0.22, 0.22), ring * 0.95);
     }
 
     if (acc.a <= 0.001) discard;

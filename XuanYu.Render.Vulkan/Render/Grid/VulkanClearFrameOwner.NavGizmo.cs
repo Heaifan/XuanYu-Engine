@@ -4,13 +4,14 @@ using XuanYu.Render.Abstractions;
 namespace XuanYu.Render.Vulkan.Render;
 
 // MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 屏幕空间、深度测试/写入关闭、最后绘制。
-// PushConstant 80B（20 float）：
+// PushConstant 96B（24 float）：
 //   vec4 cameraRight @0    vec4 cameraUp @16    vec4 cameraForward @32
 //   vec4 viewportAndDpi @48 (xy=视口尺寸 px; z=DPI; w=未用)
-//   vec4 gizmoParams @64 (x=区域尺寸 DIP 88; y=边距 DIP 12; z=悬停端点索引 -1=无; w=未用)
+//   vec4 gizmoParams @64 (x=区域尺寸 DIP 96; y=边距 DIP 14; z=悬停端点索引; w=DPI)
+//   vec4 interactionParams @80 (x=Active; y=Pressed 端点索引)
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    const uint NavGizmoPushFloatCount = 20;
+    const uint NavGizmoPushFloatCount = 24;
     public const uint NavGizmoPushSize = NavGizmoPushFloatCount * 4;
 
     Silk.NET.Vulkan.Pipeline _navGizmoPipeline;
@@ -40,10 +41,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
         scene[12] = _extent.Width;
         scene[13] = _extent.Height;
         scene[14] = (float)_renderProjection.ViewportDpiScale;
-        scene[16] = 96.0f; // 区域尺寸 DIP（F3-F3）
-        scene[17] = 14.0f; // 边距 DIP（F3-F3）
+        scene[16] = 96.0f; // 区域尺寸 DIP（A 版）
+        scene[17] = 14.0f; // 边距 DIP（A 版）
         scene[18] = _renderProjection.AssistState.NavGizmoHoverIndex;
         scene[19] = (float)_renderProjection.ViewportDpiScale;
+        scene[20] = _renderProjection.AssistState.NavGizmoActiveIndex;
+        scene[21] = _renderProjection.AssistState.NavGizmoPressedIndex;
         fixed (float* pScene = scene)
         {
             var range = new PushConstantRange

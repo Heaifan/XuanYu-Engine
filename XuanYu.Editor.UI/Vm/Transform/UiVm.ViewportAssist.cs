@@ -8,6 +8,8 @@ public sealed partial class UiVm
     bool _showOrigin = true;
     bool _showWorldAxes;
     bool _showEditorBackground = true;
+    int _navGizmoHoverIndex = -1;
+    int _navGizmoPressedIndex = -1;
 
     public bool ShowGrid => _showGrid;
     public bool ShowOrigin => _showOrigin;
@@ -20,7 +22,24 @@ public sealed partial class UiVm
 
     EditorViewportAssistState ViewportAssistState => new(
         _showGrid, _showOrigin, _showWorldAxes, _showEditorBackground,
+        _navGizmoHoverIndex,
+        NavigationGizmoLayout.ActiveIndexFor(_activeViewFace),
+        _navGizmoPressedIndex,
         ViewPlaneGrid: StandardViewResolver.ViewPlaneGridFor(_activeViewFace));
+
+    public void SetNavigationGizmoHover(int index)
+    {
+        if (_navGizmoHoverIndex == index) return;
+        _navGizmoHoverIndex = index;
+        PublishSceneRenderSnapshot();
+    }
+
+    public void SetNavigationGizmoPressed(int index)
+    {
+        if (_navGizmoPressedIndex == index) return;
+        _navGizmoPressedIndex = index;
+        PublishSceneRenderSnapshot();
+    }
 
     bool TryToggleViewportAssist(string name)
     {

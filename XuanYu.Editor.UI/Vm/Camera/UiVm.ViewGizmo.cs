@@ -12,6 +12,13 @@ public sealed partial class UiVm
 
     public string ActiveViewFace => _activeViewFace;
 
+    public void ApplyNavigationGizmoEndpoint(string endpoint) =>
+        ApplyViewFaceCommand(StandardViewResolver.EndpointToViewName(endpoint));
+
+    public bool BeginNavigationGizmoOrbit(long pointerId, double x, double y) =>
+        BeginCameraNavigation(pointerId, x, y, false,
+            (int)CurrentViewport.LogicalWidth, (int)CurrentViewport.LogicalHeight);
+
     bool TryApplyViewFaceCommand(string name)
     {
         if (!name.StartsWith("视角-", StringComparison.Ordinal)) return false;

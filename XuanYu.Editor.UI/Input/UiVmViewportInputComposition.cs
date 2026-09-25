@@ -12,6 +12,7 @@ public static class UiVmViewportInputComposition
         var viewport = () => vm.CurrentViewport;
         var consumers = new IViewportInputConsumer[]
         {
+            new NavigationViewportInputConsumer(new UiVmNavigationViewportInputHandler(vm)),
             new GizmoViewportInputConsumer(new UiVmD1Handler(vm, GestureOwner.Gizmo, viewport)),
             new CameraViewportInputConsumer(new UiVmD1Handler(vm, GestureOwner.Camera, viewport)),
             new PickingViewportInputConsumer(new UiVmD1Handler(vm, GestureOwner.Picking, viewport)),
