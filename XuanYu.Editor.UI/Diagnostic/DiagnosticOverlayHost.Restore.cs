@@ -5,19 +5,42 @@ namespace XuanYu.Editor.UI;
 
 public partial class DiagnosticOverlayHost
 {
-    int _ownerActivationRestoreAttempt;
+    DispatcherTimer? _ownerActivationRestoreTimer;
 
     void RestoreAfterOwnerActivation() => TryRestoreAfterOwnerActivation(false);
 
     void TryRestoreAfterOwnerActivation(bool retry)
     {
-        if (!ProbeEnabled || !IsProbeLocked || TrackedSnapshot is null) return;
-        if (RestoreLockedToolWindow(retry ? "OwnerActivatedRetry" : "OwnerActivated")) return;
-        if (_ownerActivationRestoreAttempt >= 2) return;
-        _ownerActivationRestoreAttempt++;
+        if (!ProbeEnabled || !IsProbeLocked || TrackedSnapshot is null)
+        {
+            StopOwnerActivationRestore();
+            return;
+        }
+        if (RestoreLockedToolWindow(retry ? "OwnerActivatedRetry" : "OwnerActivated"))
+        {
+            StopOwnerActivationRestore();
+            return;
+        }
+        if (_topLevel is not Window owner || owner.WindowState == WindowState.Minimized)
+        {
+            StopOwnerActivationRestore();
+            return;
+        }
+        _ownerActivationRestoreTimer ??= CreateOwnerActivationRestoreTimer();
+        if (!_ownerActivationRestoreTimer.IsEnabled) _ownerActivationRestoreTimer.Start();
+    }
+
+    DispatcherTimer CreateOwnerActivationRestoreTimer()
+    {
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(75) };
-        timer.Tick += (_, _) => { timer.Stop(); TryRestoreAfterOwnerActivation(true); };
-        timer.Start();
+        timer.Tick += (_, _) => TryRestoreAfterOwnerActivation(true);
+        return timer;
+    }
+
+    void StopOwnerActivationRestore()
+    {
+        _ownerActivationRestoreTimer?.Stop();
+        _ownerActivationRestoreTimer = null;
     }
 
     bool RestoreLockedToolWindow(string reason)

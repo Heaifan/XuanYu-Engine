@@ -60,6 +60,7 @@ public partial class DiagnosticOverlayHost
 
     void DisposeToolWindow()
     {
+        StopOwnerActivationRestore();
         if (_toolWindow is null) return;
         var tool = _toolWindow;
         _toolWindow = null; _toolCard = null; _toolTarget = null;
