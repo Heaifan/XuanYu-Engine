@@ -7,7 +7,7 @@ using XuanYu.World.Map;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
-public sealed class MapVectorOverlayV1Tests
+public sealed partial class MapVectorOverlayV1Tests
 {
     [Fact]
     public void V1_R01_one_draft_point_is_a_marker()

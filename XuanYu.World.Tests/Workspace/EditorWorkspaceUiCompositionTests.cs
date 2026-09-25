@@ -49,6 +49,14 @@ public sealed class EditorWorkspaceUiCompositionTests
     }
 
     [Fact]
+    public void Read_only_inspector_values_wrap_and_keep_full_value_available()
+    {
+        var presenter = Read("XuanYu.Editor.UI", "Right", "InspectorReadOnlyValuePresenter.axaml");
+        Assert.Contains("TextWrapping=\"Wrap\"", presenter);
+        Assert.Contains("TextTrimming=\"None\"", presenter);
+    }
+
+    [Fact]
     public void Region_context_contains_the_drawing_target_and_declared_inspector_placeholder()
     {
         var region = Read("XuanYu.Editor.UI", "Top", "ContextToolBar.axaml");
