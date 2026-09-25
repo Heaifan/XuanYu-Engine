@@ -56,7 +56,11 @@ public partial class DiagnosticOverlayHost
         _restoreOnOwnerActivation = false;
         if (_lockedProbeResult is null || !TryGetTrackedBounds(_lockedProbeResult, out var bounds)) return;
         _restoringNativeDialog = true;
-        try { ShowToolWindow(bounds); }
+        try
+        {
+            _toolWindow?.Hide();
+            ShowToolWindow(bounds);
+        }
         finally { _restoringNativeDialog = false; }
     }
 }
