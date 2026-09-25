@@ -48,7 +48,7 @@ public sealed class XYUI3InteractionTests : IClassFixture<XyuiHeadlessFixture>
         XyuiBatchTestHost.Prepare(); var context = new XYContextMenu { ContextName = "区域1", Menu = new XYMenu(new XYMenuItem { Label = "删除" }) };
         var target = new Border { Width = 100, Height = 40, Background = Brushes.Transparent }; var window = XyuiBatchTestHost.Show(target);
         context.OpenAt(target, new Point(20, 12)); Dispatcher.UIThread.RunJobs();
-        Assert.True(context.IsOpen); Assert.Contains("xyui-context-menu", context.Classes); Assert.Contains(context.GetVisualDescendants().OfType<TextBlock>(), x => x.Text == "区域1");
+        Assert.True(context.IsOpen); Assert.Contains("xyui-context-menu", context.Classes); Assert.Contains(context.GetVisualDescendants().OfType<TextBlock>(), x => x.Text == "区域1"); Assert.Equal(new Thickness(1), context.BorderThickness); Assert.Equal(new CornerRadius(6), context.CornerRadius);
         context.Close(); window.Close();
     });
 
@@ -59,11 +59,9 @@ public sealed class XYUI3InteractionTests : IClassFixture<XyuiHeadlessFixture>
         context.OpenAtTopLevel(target, new Point(120, 80)); Dispatcher.UIThread.RunJobs();
         var field = typeof(XYContextMenu).GetField("_popup", BindingFlags.Instance | BindingFlags.NonPublic)!;
         var popup = Assert.IsType<Popup>(field.GetValue(context));
-        Assert.Same(target, popup.PlacementTarget);
-        Assert.Equal(PlacementMode.Custom, popup.Placement);
-        var actualTopLevelPoint = target.TranslatePoint(popup.PlacementRect!.Value.Position, window);
-        Assert.NotNull(actualTopLevelPoint);
-        Assert.Equal(new Point(120, 80), actualTopLevelPoint!.Value);
+        Assert.Same(window, popup.PlacementTarget);
+        Assert.Equal(PlacementMode.AnchorAndGravity, popup.Placement);
+        Assert.Equal(new Point(120, 80), popup.PlacementRect!.Value.Position);
         context.Close(); window.Close();
     });
 
