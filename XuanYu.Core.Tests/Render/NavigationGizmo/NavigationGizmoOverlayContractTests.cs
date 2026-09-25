@@ -84,4 +84,22 @@ public sealed class NavigationGizmoOverlayContractTests
         Assert.Equal(4, withHover.NavGizmoActiveIndex);
         Assert.True(withHover.NavGizmoCenterHover);
     }
+
+    [Fact]
+    public void Router_updates_the_active_consumer_during_drag()
+    {
+        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var source = File.ReadAllText(Path.Combine(root, "XuanYu.Editor", "Input", "ViewportInputRouter.cs"));
+        var navigation = File.ReadAllText(Path.Combine(root, "XuanYu.Editor", "Input", "Consumers", "NavigationViewportInputConsumer.cs"));
+        Assert.Contains("_handler.Update(new ViewportGestureContext", navigation);
+    }
+
+    [Fact]
+    public void Gizmo_shader_draws_positive_and_negative_labels()
+    {
+        var frag = ShaderFile("editor_nav_gizmo.frag");
+        Assert.Contains("glyphMinus", frag);
+        Assert.Contains("!e.positive", frag);
+        Assert.Contains("drawLabel(acc", frag);
+    }
 }

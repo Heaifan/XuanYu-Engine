@@ -23,9 +23,9 @@ public static class NavigationGizmoLayout
     public const double CenterRadius = 14.0;
     public const double OrbitHitRadius = 19.0;
     public const double PositiveEndpointRadius = 8.5;
-    public const double NegativeEndpointRadius = 5.0;
+    public const double NegativeEndpointRadius = 7.5;
     public const double PositiveHitRadius = 12.0;
-    public const double NegativeHitRadius = 9.0;
+    public const double NegativeHitRadius = 12.0;
     public const double HitRadius = PositiveHitRadius;
     public const double AxisWidth = 5.0;
 
@@ -74,7 +74,7 @@ public static class NavigationGizmoLayout
         return new Point(center.X + (sx * AxisRadius), center.Y + (sy * AxisRadius));
     }
 
-    public static double Depth(Vector3d d, Vector3d forward) => d.Dot(forward);
+    public static double Depth(Vector3d d, Vector3d forward) => -d.Dot(forward);
 
     public static double HitRadiusFor(GizmoEndpoint endpoint) =>
         endpoint.IsPositive ? PositiveHitRadius : NegativeHitRadius;

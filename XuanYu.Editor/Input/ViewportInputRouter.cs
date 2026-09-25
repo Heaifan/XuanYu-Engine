@@ -82,7 +82,8 @@ public sealed partial class ViewportInputRouter
         public void Set(IViewportInputConsumer consumer) => _current = consumer;
         public void Clear() => _current = null;
         public void Begin(ViewportGestureContext context) => _current?.Begin(context);
-        public void Update(ViewportGestureContext context) => _current?.Handle(context.Input, ViewportGestureState.From(context));
+        public void Update(ViewportGestureContext context) => _current?.Handle(
+            context.Input, ViewportGestureState.From(context));
         public void Commit(ViewportGestureContext context) => _current?.Commit(context);
         public void Cancel(ViewportCancellationContext context) => _current?.Cancel(context);
     }

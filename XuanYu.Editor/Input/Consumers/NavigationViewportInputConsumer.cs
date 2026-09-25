@@ -12,6 +12,10 @@ public sealed class NavigationViewportInputConsumer(
         pointer.Kind == EditorPointerEventKind.Pressed && _handler.CanClaim(pointer);
     public ViewportInputDispatchResult Handle(EditorPointerEvent pointer, ViewportGestureState state)
     {
+        if (state.IsActive) _handler.Update(new ViewportGestureContext(
+            "ViewportGesture", Owner, state.PointerId,
+            state.IsCaptured ? ViewportGestureCapture.Pointer : ViewportGestureCapture.None,
+            pointer));
         if (!state.IsActive) _handler.Observe(pointer);
         return CanBegin(pointer, state) ? ViewportInputDispatchResult.Captured :
             state.IsActive ? ViewportInputDispatchResult.Ignored : ViewportInputDispatchResult.Observed;

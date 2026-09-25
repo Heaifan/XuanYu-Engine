@@ -28,4 +28,13 @@ public sealed partial class NavigationGizmoLayoutTests
         var hit = NavigationGizmoHitTest.Hit(endpoints, FacingCenter, FacingCenter);
         Assert.True(hit.HitCenter, "中心仍应命中 Orbit 区");
     }
+
+    [Fact]
+    public void Positive_y_is_front_after_positive_y_view()
+    {
+        var endpoints = NavigationGizmoLayout.Compute(
+            new Vector3d(1, 0, 0), new Vector3d(0, 0, 1), new Vector3d(0, -1, 0), FacingCenter);
+        Assert.True(endpoints.First(e => e.Name == "+Y").Depth >
+            endpoints.First(e => e.Name == "-Y").Depth);
+    }
 }
