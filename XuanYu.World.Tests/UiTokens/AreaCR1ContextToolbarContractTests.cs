@@ -36,7 +36,7 @@ public sealed class AreaCR1ContextToolbarContractTests
         Assert.Contains("DrawButtonLabel", toolbar);
         Assert.Contains("XYContextDropdownBoard", code);
         Assert.Contains("AttachTrigger", code);
-        Assert.Contains("XYContextOverlayHost", Read("Win/UiWin.axaml"));
+        Assert.DoesNotContain("XYContextOverlayHost", Read("Win/UiWin.axaml"));
         Assert.DoesNotContain("DrawSubMenuPopup", code);
         Assert.Contains("道路", code);
         Assert.Contains("区域", code);

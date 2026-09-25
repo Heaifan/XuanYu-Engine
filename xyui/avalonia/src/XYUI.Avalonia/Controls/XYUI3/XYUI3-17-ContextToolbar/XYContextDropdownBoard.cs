@@ -15,15 +15,15 @@ public sealed class XYContextDropdownBoard : Border
     readonly IReadOnlyDictionary<string, IReadOnlyList<XYContextAction>> _actions;
     readonly Border _rootSurface = new() { Classes = { "xyui-context-board-surface" }, Padding = new Thickness(0), Width = 128, CornerRadius = new CornerRadius(6) };
     readonly List<Border> _childSurfaces = [];
-    readonly Border _compatPopupChild = new() { Width = 1, Height = 1 };
     readonly List<ScrollViewer> _scrollHosts = [];
-    XYContextOverlayHost? _overlayHost; Window? _ownerWindow; Control? _anchor; Point _rootPosition; bool _open;
-    public Popup Popup { get; } = new() { Placement = PlacementMode.Bottom, IsLightDismissEnabled = true, Height = 0, IsVisible = false };
+    readonly XYContextPopupHost _popupHost = new();
+    Window? _ownerWindow; Control? _anchor; bool _open;
+    public Popup Popup => _popupHost.Popup;
+    public XYContextOverlayHost? OverlayHost => null;
     public XYMenu Menu { get; }
     public IReadOnlyList<XYSubMenu> SubMenus { get; }
     public IReadOnlyList<Border> ChildMenuSurfaces => _childSurfaces;
     public Border RootMenuSurface => _rootSurface;
-    public XYContextOverlayHost? OverlayHost => _overlayHost;
     public Control? Anchor => _anchor;
     public XYContextCategoryList CategoryList { get; }
     public XYContextActionPane ActionPane { get; } = new();
@@ -35,12 +35,12 @@ public sealed class XYContextDropdownBoard : Border
     public event EventHandler<XYContextAction>? ActionExecuted;
     public XYContextDropdownBoard(string header, IEnumerable<XYContextCategory> categories, IReadOnlyDictionary<string, IReadOnlyList<XYContextAction>> actions)
     {
-        Header = header; _actions = actions; Classes.Add("xyui-context-dropdown-board"); CategoryList = new XYContextCategoryList(categories); CategoryList.SelectionChanged += (_, category) => RefreshActions(category); ActionPane.ActionExecuted += (_, action) => ActionExecuted?.Invoke(this, action); Menu = BuildMenu(categories); SubMenus = Menu.Items.OfType<XYMenuItem>().Select(x => x.SubMenu!).ToArray(); Popup.Child = _compatPopupChild; Popup.Closed += (_, _) => Close(); Child = new Border { Width = 1, Height = 1 }; BuildSurface(); CategoryList.Select(CategoryList.Categories.FirstOrDefault()?.Id ?? "");
+        Header = header; _actions = actions; Classes.Add("xyui-context-dropdown-board"); CategoryList = new XYContextCategoryList(categories); CategoryList.SelectionChanged += (_, category) => RefreshActions(category); ActionPane.ActionExecuted += (_, action) => ActionExecuted?.Invoke(this, action); Menu = BuildMenu(categories); SubMenus = Menu.Items.OfType<XYMenuItem>().Select(x => x.SubMenu!).ToArray(); Popup.Closed += (_, _) => Close(); LogicalChildren.Add(Popup); Child = new Border { Width = 1, Height = 1 }; BuildSurface(); CategoryList.Select(CategoryList.Categories.FirstOrDefault()?.Id ?? "");
     }
     public void AttachTrigger(Control trigger) { if (IsOpen && !ReferenceEquals(_anchor, trigger)) Close(); _anchor = trigger; Popup.PlacementTarget = trigger; }
-    public void Open() { if (_anchor is null) return; _open = true; Popup.PlacementTarget = _anchor; Menu.ApplyOverlayStyling(); foreach (var submenu in SubMenus) submenu.ChildMenu.ApplyOverlayStyling(); _overlayHost = XYContextOverlayHost.Attach(_anchor); Menu.Open(); if (_overlayHost is null) return; _ownerWindow = TopLevel.GetTopLevel(_anchor) as Window; _ownerWindow?.AddHandler(InputElement.PointerPressedEvent, OnWindowPointerPressed, RoutingStrategies.Tunnel); _overlayHost.AddOverlay(_rootSurface); foreach (var child in _childSurfaces) _overlayHost.AddOverlay(child); _overlayHost.SizeChanged += OnOverlaySizeChanged; _anchor.LayoutUpdated += OnAnchorLayoutUpdated; AttachScrollHosts(); Dispatcher.UIThread.Post(PlaceRoot, DispatcherPriority.Render); Focus(); }
+    public void Open() { if (_anchor is null) return; _open = true; Menu.ApplyOverlayStyling(); foreach (var submenu in SubMenus) submenu.ChildMenu.ApplyOverlayStyling(); Menu.Open(); _popupHost.Attach(_anchor, _rootSurface, _childSurfaces); _popupHost.Open(); _ownerWindow = TopLevel.GetTopLevel(_anchor) as Window; if (_ownerWindow is not null) { _ownerWindow.PositionChanged += OnOwnerPositionChanged; _ownerWindow.SizeChanged += OnOwnerSizeChanged; _ownerWindow.AddHandler(InputElement.PointerPressedEvent, OnWindowPointerPressed, RoutingStrategies.Tunnel); } _anchor.LayoutUpdated += OnAnchorLayoutUpdated; AttachScrollHosts(); Dispatcher.UIThread.Post(PlaceRoot, DispatcherPriority.Render); Focus(); }
     public void Open(Control target) { AttachTrigger(target); Open(); }
-    public void Close() { if (!_open && _overlayHost is null) return; _open = false; if (_anchor is not null) _anchor.LayoutUpdated -= OnAnchorLayoutUpdated; DetachScrollHosts(); _ownerWindow?.RemoveHandler(InputElement.PointerPressedEvent, OnWindowPointerPressed); _ownerWindow = null; foreach (var submenu in SubMenus) submenu.Close(); Menu.Close(); if (_overlayHost is not null) { _overlayHost.SizeChanged -= OnOverlaySizeChanged; _overlayHost.RemoveOverlay(_rootSurface); foreach (var child in _childSurfaces) _overlayHost.RemoveOverlay(child); _overlayHost.IsHitTestVisible = _overlayHost.Children.Count > 0; } _overlayHost = null; Popup.IsOpen = false; Popup.IsVisible = false; }
+    public void Close() { if (!_open && !_popupHost.IsOpen) return; _open = false; if (_anchor is not null) _anchor.LayoutUpdated -= OnAnchorLayoutUpdated; DetachScrollHosts(); if (_ownerWindow is not null) { _ownerWindow.PositionChanged -= OnOwnerPositionChanged; _ownerWindow.SizeChanged -= OnOwnerSizeChanged; _ownerWindow.RemoveHandler(InputElement.PointerPressedEvent, OnWindowPointerPressed); } _ownerWindow = null; foreach (var submenu in SubMenus) submenu.Close(); Menu.Close(); _popupHost.Close(); }
     public void Toggle() { if (IsOpen) Close(); else Open(); }
     public void Toggle(Control target) { AttachTrigger(target); Toggle(); }
     public void DismissOutside() => Close();
@@ -56,28 +56,23 @@ public sealed class XYContextDropdownBoard : Border
     void BuildChildSurface(int index, XYSubMenu submenu)
     {
         var surface = new Border { Width = 128, CornerRadius = new CornerRadius(6), IsVisible = false, Classes = { "xyui-context-menu-surface" }, Child = new StackPanel { Spacing = 4, Children = { new TextBlock { Text = ((XYMenuItem)Menu.Items[index]).Label, Height = 32, Padding = new Thickness(8, 4), Classes = { "xyui-context-board-header" } }, submenu.ChildMenu } } };
-        _childSurfaces.Add(surface); submenu.Opened += (_, _) => { surface.IsVisible = true; Dispatcher.UIThread.Post(() => PlaceChild(index, true), DispatcherPriority.Render); }; submenu.Closed += (_, _) => surface.IsVisible = false;
+        _childSurfaces.Add(surface); submenu.Opened += (_, _) => { surface.IsVisible = true; Dispatcher.UIThread.Post(() => PlaceChild(index), DispatcherPriority.Render); }; submenu.Closed += (_, _) => { surface.IsVisible = false; Dispatcher.UIThread.Post(PlaceRoot, DispatcherPriority.Render); };
     }
     void PlaceRoot()
     {
-        if (!_open || _overlayHost is null || _anchor is null) return; var point = _anchor.TranslatePoint(new Point(0, _anchor.Bounds.Height), _overlayHost); if (point is null) return;
-        if (_ownerWindow is not null) _overlayHost.SyncToOwner(_ownerWindow.ClientSize);
-        var owner = _overlayHost.Bounds; var anchorRect = new Rect(_anchor.TranslatePoint(new Point(0, 0), _overlayHost)!.Value, _anchor.Bounds.Size);
-        if (!new Rect(owner.Size).Intersects(anchorRect)) { _rootSurface.IsVisible = false; foreach (var child in _childSurfaces) child.IsVisible = false; return; }
-        _rootSurface.IsVisible = true; var size = _rootSurface.Bounds.Size; var x = Math.Clamp(point.Value.X, 0, Math.Max(0, owner.Width - size.Width)); var y = point.Value.Y;
-        if (y + size.Height > owner.Height) y = point.Value.Y - _anchor.Bounds.Height - size.Height; _rootPosition = new Point(x, Math.Clamp(y, 0, Math.Max(0, owner.Height - size.Height))); Canvas.SetLeft(_rootSurface, _rootPosition.X); Canvas.SetTop(_rootSurface, _rootPosition.Y);
+        if (!_open || _anchor is null) return; _rootSurface.IsVisible = true; _popupHost.RefreshBounds();
         for (var i = 0; i < SubMenus.Count; i++) if (SubMenus[i].EffectiveVisible) { _childSurfaces[i].IsVisible = true; PlaceChild(i); }
     }
-    void PlaceChild(int index, bool opening = false)
+    void PlaceChild(int index)
     {
-        if (!_open || !_rootSurface.IsVisible || _overlayHost is null || index >= _childSurfaces.Count) return; var surface = _childSurfaces[index]; var owner = _overlayHost.Bounds; var size = surface.Bounds.Size; var x = _rootPosition.X + _rootSurface.Bounds.Width + 4;
-        if (x + size.Width > owner.Width) x = _rootPosition.X - size.Width - 4; var trigger = Menu.Items.OfType<XYMenuItem>().ElementAt(index); var triggerPoint = trigger.TranslatePoint(new Point(0, 0), _overlayHost); var y = triggerPoint?.Y ?? _rootPosition.Y; x = Math.Clamp(x, 0, Math.Max(0, owner.Width - size.Width)); y = Math.Clamp(y, 0, Math.Max(0, owner.Height - size.Height)); Canvas.SetLeft(surface, x); Canvas.SetTop(surface, y);
+        if (!_open || !_rootSurface.IsVisible || index >= _childSurfaces.Count) return; var surface = _childSurfaces[index]; var size = surface.Bounds.Size; var x = _rootSurface.Bounds.Width + 4; var trigger = Menu.Items.OfType<XYMenuItem>().ElementAt(index); var triggerPoint = trigger.TranslatePoint(new Point(0, 0), _popupHost.Surface); var y = triggerPoint?.Y ?? 0; _popupHost.SetChildPosition(surface, x, y); _popupHost.RefreshBounds();
     }
-    void OnOverlaySizeChanged(object? sender, SizeChangedEventArgs e) { PlaceRoot(); for (var i = 0; i < _childSurfaces.Count; i++) if (_childSurfaces[i].IsVisible) PlaceChild(i, true); }
     void OnAnchorLayoutUpdated(object? sender, EventArgs e) { if (!_open) return; PlaceRoot(); for (var i = 0; i < _childSurfaces.Count; i++) if (_childSurfaces[i].IsVisible) PlaceChild(i); }
     void AttachScrollHosts() { DetachScrollHosts(); if (_anchor is null) return; foreach (var scroll in _anchor.GetVisualAncestors().OfType<ScrollViewer>()) { scroll.ScrollChanged += OnAnchorScrollChanged; _scrollHosts.Add(scroll); } }
     void DetachScrollHosts() { foreach (var scroll in _scrollHosts) scroll.ScrollChanged -= OnAnchorScrollChanged; _scrollHosts.Clear(); }
     void OnAnchorScrollChanged(object? sender, ScrollChangedEventArgs e) => Dispatcher.UIThread.Post(() => OnAnchorLayoutUpdated(sender, EventArgs.Empty), DispatcherPriority.Render);
+    void OnOwnerPositionChanged(object? sender, PixelPointEventArgs e) => _popupHost.RefreshPlacement();
+    void OnOwnerSizeChanged(object? sender, SizeChangedEventArgs e) => _popupHost.RefreshPlacement();
     void OnWindowPointerPressed(object? sender, PointerPressedEventArgs e) { if (e.Source is not Visual source || IsInside(source, _anchor) || IsInside(source, _rootSurface) || _childSurfaces.Any(x => x.IsVisible && IsInside(source, x))) return; Close(); }
     static bool IsInside(Visual source, Control? target) => target is not null && (ReferenceEquals(source, target) || source.GetVisualAncestors().Contains(target));
     XYMenu BuildMenu(IEnumerable<XYContextCategory> categories)

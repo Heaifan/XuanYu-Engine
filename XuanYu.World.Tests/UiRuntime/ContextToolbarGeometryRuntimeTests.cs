@@ -41,7 +41,7 @@ public sealed class ContextToolbarGeometryRuntimeTests
             var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single(); var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
             split.MenuCommand!.Execute(null); Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout(); var first = board.RootMenuSurface.Bounds;
             board.Close(); split.MenuCommand.Execute(null); Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout(); var second = board.RootMenuSurface.Bounds;
-            Assert.Equal(first.X, second.X, 1); Assert.Equal(first.Y, second.Y, 1); Assert.True(board.OverlayHost is not null);
+            Assert.Equal(first.X, second.X, 1); Assert.Equal(first.Y, second.Y, 1); Assert.True(board.Popup.IsOpen); Assert.False(board.Popup.ShouldUseOverlayLayer);
         });
     }
 }

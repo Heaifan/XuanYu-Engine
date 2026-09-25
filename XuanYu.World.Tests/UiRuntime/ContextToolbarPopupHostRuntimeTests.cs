@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
 using XuanYu.Render.Abstractions;
 using XYUI.Avalonia.Controls;
@@ -29,17 +30,34 @@ public sealed class ContextToolbarPopupHostRuntimeTests
     }
 
     [Fact]
-    public void Engine_window_has_real_context_overlay_host()
+    public void Engine_context_board_uses_native_popup_surface()
     {
         using var host = new UiRuntimeTestHost(_fixture);
-        host.Run(() => { var window = new UiWin { DataContext = NewVm() }; window.Show(); window.UpdateLayout(); var overlay = UiRuntimeTestHost.Descendants<XYContextOverlayHost>(window).Single(); Assert.True(overlay.Bounds.Width > 0 && overlay.Bounds.Height > 0); window.Close(); });
+        host.Run(() =>
+        {
+            var toolbar = new ContextToolBar { DataContext = NewVm() };
+            var window = host.Show(toolbar, 420, 220);
+            var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single();
+            board.Open(toolbar.FindControl<XYSplitButton>("DrawSplitButton")!);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(board.Popup.IsOpen);
+            Assert.Contains(board.RootMenuSurface, board.Popup.Child!.GetVisualDescendants());
+            window.Close();
+        });
+    }
+
+    [Fact]
+    public void Engine_window_has_native_context_popup_host()
+    {
+        using var host = new UiRuntimeTestHost(_fixture);
+        host.Run(() => { var toolbar = new ContextToolBar { DataContext = NewVm() }; var window = host.Show(toolbar); var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single(); board.Open(toolbar.FindControl<XYSplitButton>("DrawSplitButton")!); Dispatcher.UIThread.RunJobs(); Assert.True(board.Popup.IsOpen); Assert.False(board.Popup.ShouldUseOverlayLayer); Assert.Contains(board.RootMenuSurface, board.Popup.Child!.GetVisualDescendants()); window.Close(); });
     }
 
     [Fact]
     public void Context_board_remains_inside_engine_window()
     {
         using var host = new UiRuntimeTestHost(_fixture);
-        host.Run(() => { var toolbar = new ContextToolBar { DataContext = NewVm() }; var window = host.Show(toolbar, 420, 220); var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single(); var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!; split.MenuCommand!.Execute(null); board.SubMenus[2].Open(); Dispatcher.UIThread.RunJobs(); AssertInside(board.RootMenuSurface.Bounds, board.OverlayHost!.Bounds); Assert.All(board.ChildMenuSurfaces, x => AssertInside(x.Bounds, board.OverlayHost.Bounds)); window.Close(); });
+        host.Run(() => { var toolbar = new ContextToolBar { DataContext = NewVm() }; var window = host.Show(toolbar, 420, 220); var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single(); var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!; split.MenuCommand!.Execute(null); board.SubMenus[2].Open(); Dispatcher.UIThread.RunJobs(); var surface = (Canvas)board.Popup.Child!; var owner = new Rect(surface.Bounds.Size); AssertInside(board.RootMenuSurface.Bounds, owner); Assert.All(board.ChildMenuSurfaces, x => AssertInside(x.Bounds, owner)); window.Close(); });
     }
 
     [Fact]
