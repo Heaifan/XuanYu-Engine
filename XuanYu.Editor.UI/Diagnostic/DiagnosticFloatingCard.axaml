@@ -7,18 +7,21 @@
         CornerRadius="{StaticResource Radius.Standard}">
   <ScrollViewer MaxHeight="420" VerticalScrollBarVisibility="Auto">
    <StackPanel Spacing="8">
-    <StackPanel x:Name="Header" Orientation="Horizontal" Spacing="8"
-                Background="Transparent" IsHitTestVisible="True">
-      <xy:XYText x:Name="Title" Foreground="White" FontWeight="SemiBold"/>
-      <xy:XYStatusBadge x:Name="Locked" Text="已锁定" State="Success"/>
-      <xy:XYButton x:Name="Pin" Content="锁定" Variant="Secondary"/>
-    </StackPanel>
+    <Grid x:Name="Header" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8"
+          Background="Transparent" IsHitTestVisible="True">
+      <xy:XYText x:Name="Title" Grid.Column="0" Foreground="{StaticResource Color.Text.Primary}"
+                 FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+      <xy:XYStatusBadge x:Name="Locked" Grid.Column="1" Text="已锁定" State="Success"
+                        VerticalAlignment="Center"/>
+      <xy:XYButton x:Name="Pin" Grid.Column="2" Content="锁定" Variant="Secondary"
+                   Padding="10,4"/>
+    </Grid>
     <xy:XYText x:Name="Identity" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
     <xy:XYText x:Name="Details" Foreground="{StaticResource Color.Text.Secondary}" TextWrapping="Wrap"/>
     <WrapPanel x:Name="Actions" Orientation="Horizontal">
-      <xy:XYButton x:Name="CopyAi" Content="一键复制给 AI" Variant="Primary"/>
-      <xy:XYButton x:Name="Expand" Content="展开" Variant="Secondary"/>
-      <xy:XYButton x:Name="Close" Content="关闭" Variant="Secondary"/>
+      <xy:XYButton x:Name="CopyAi" Content="一键复制给 AI" Variant="Primary" Padding="10,4"/>
+      <xy:XYButton x:Name="Expand" Content="展开" Variant="Secondary" Padding="10,4"/>
+      <xy:XYButton x:Name="Close" Content="关闭" Variant="Secondary" Padding="10,4"/>
     </WrapPanel>
    </StackPanel>
   </ScrollViewer>

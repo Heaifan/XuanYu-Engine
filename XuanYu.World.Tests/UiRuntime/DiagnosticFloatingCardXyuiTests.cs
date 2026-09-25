@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
 using XYUI.Avalonia.Controls;
@@ -40,6 +41,20 @@ public sealed class DiagnosticFloatingCardXyuiTests
             Assert.Equal("点标记", snapshot.TargetDisplayName);
             Assert.Equal("XYUI3", snapshot.Identity.Number);
             Assert.Equal("XYUI-3-02", snapshot.Identity.CatalogId);
+        });
+    }
+
+    [Fact]
+    public void Floating_card_title_uses_dark_xyui_layout_on_light_panel()
+    {
+        _fixture.Run(() =>
+        {
+            var snapshot = DiagnosticElementSnapshot.Capture(
+                DiagnosticProbeResolver.Resolve(new XYMenuItem { Label = "点标记" }));
+            var card = new DiagnosticFloatingCard(snapshot, _ => Task.CompletedTask);
+            var title = card.FindControl<XYText>("Title")!;
+            Assert.IsType<Grid>(card.FindControl<Grid>("Header"));
+            Assert.NotEqual(Colors.White, ((SolidColorBrush)title.Foreground!).Color);
         });
     }
 }
