@@ -20,8 +20,10 @@ public partial class DiagnosticOverlayHost
 
     public void ProbeClick(Visual hit, bool deepVisual = false)
     {
-        if (!ProbeEnabled || IsProbeLocked || IsOverlayVisual(hit)) return;
-        TrackProbe(DiagnosticProbeResolver.Resolve(hit, deepVisual));
+        if (!ProbeEnabled || IsOverlayVisual(hit)) return;
+        var result = DiagnosticProbeResolver.Resolve(hit, deepVisual);
+        if (result.SemanticTarget is Panel) return;
+        TrackProbe(result);
     }
 
     public async Task ProbeClick()

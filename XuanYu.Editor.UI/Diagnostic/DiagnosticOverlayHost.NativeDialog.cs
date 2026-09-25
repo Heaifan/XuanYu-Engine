@@ -51,35 +51,4 @@ public partial class DiagnosticOverlayHost
         Console.WriteLine($"{DateTime.Now:HH:mm:ss} 【诊断悬浮窗】{phase}；恢复={restore}");
     }
 
-    void RestoreAfterOwnerActivation()
-    {
-        if (!_restoreOnOwnerActivation || !ProbeEnabled || !IsProbeLocked) return;
-        if (_topLevel is not Window owner || !owner.IsActive)
-        {
-            LogNativeDialog("RestoreDeferred", false);
-            return;
-        }
-        LogNativeDialog("OwnerActivatedRestore", true);
-        _restoreOnOwnerActivation = false;
-        if (_lockedProbeResult is null || !TryGetTrackedBounds(_lockedProbeResult, out var bounds)) return;
-        _restoringNativeDialog = true;
-        try
-        {
-            _toolWindow?.Hide();
-            ShowToolWindow(bounds);
-        }
-        finally { _restoringNativeDialog = false; }
-        Dispatcher.UIThread.Post(() => VerifyToolWindowRestore(bounds, 0), DispatcherPriority.Background);
-    }
-
-    void VerifyToolWindowRestore(Rect bounds, int attempt)
-    {
-        if (!ProbeEnabled || !IsProbeLocked || _toolWindow is null) return;
-        if (!_toolWindow.IsVisible) _toolWindow.Show();
-        ApplyToolPosition();
-        _toolWindow.ReassertOwnedZOrder();
-        Console.WriteLine($"{DateTime.Now:HH:mm:ss} 【诊断悬浮窗】RestoreState；可见={_toolWindow.IsVisible}；位置={_toolWindow.Position}；尺寸={_toolWindow.Bounds.Size}；次数={attempt + 1}");
-        if (attempt < 2)
-            Dispatcher.UIThread.Post(() => VerifyToolWindowRestore(bounds, attempt + 1), DispatcherPriority.Background);
-    }
 }

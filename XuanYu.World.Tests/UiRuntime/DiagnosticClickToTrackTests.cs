@@ -36,6 +36,15 @@ public sealed class DiagnosticClickToTrackTests
     }
 
     [Fact]
+    public void Real_probe_click_switches_an_existing_locked_target()
+    {
+        var overlay = EnabledOverlay(); var first = new Button { Name = "A" }; var second = new Button { Name = "B" };
+        overlay.ProbeClick(first);
+        overlay.ProbeClick(second);
+        Assert.Same(second, overlay.LockedProbeResult?.SemanticTarget);
+    }
+
+    [Fact]
     public void Locked_target_ignores_blank_viewport_click()
     {
         var overlay = EnabledOverlay(); var first = new Button { Name = "A" };
