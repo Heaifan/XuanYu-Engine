@@ -41,6 +41,24 @@ public sealed class DiagnosticNativeDialogEdgeTests
     }
 
     [Fact]
+    public void Tool_window_close_during_suspend_recreates_from_frozen_snapshot()
+    {
+        _fixture.Run(() =>
+        {
+            var (window, host, target, _) = Open();
+            host.TrackProbe(DiagnosticProbeResolver.Resolve(target));
+            host.SuspendForNativeDialog();
+            var field = typeof(DiagnosticOverlayHost).GetField("_toolWindow",
+                BindingFlags.Instance | BindingFlags.NonPublic)!;
+            ((Window)field.GetValue(host)!).Close();
+            host.RestoreAfterNativeDialog();
+            Assert.Equal(1, host.ActiveProbeCardCount);
+            Assert.Equal("Target", host.TrackedSnapshot?.TargetDisplayName);
+            window.Close();
+        });
+    }
+
+    [Fact]
     public void Ten_suspend_restore_cycles_reuse_one_tool_window()
     {
         _fixture.Run(() =>

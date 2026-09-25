@@ -71,6 +71,11 @@ public partial class DiagnosticOverlayHost
 
     void OnToolWindowClosed(object? sender, EventArgs e)
     {
+        if (_nativeDialogSuspended)
+        {
+            _toolWindow = null; _toolCard = null;
+            return;
+        }
         _toolWindow = null;
         _nativeDialogSuspended = false;
         _restoreAfterNativeDialog = false;

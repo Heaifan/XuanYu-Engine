@@ -26,7 +26,7 @@ public partial class DiagnosticOverlayHost
         _nativeDialogSuspended = false;
         _restoreAfterNativeDialog = false;
         _suspendedPlacementMode = null;
-        if (!restore || !ProbeEnabled || _toolWindow is null) return;
+        if (!restore || !ProbeEnabled) return;
         if (IsProbeLocked && TrackedSnapshot is null) return;
         _restoringNativeDialog = true;
         _cardPlacementMode = placement;
