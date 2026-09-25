@@ -32,6 +32,26 @@ public sealed class ContextToolbarPopupClickTrackingTests
         });
     }
 
+    [Fact]
+    public void Popup_category_opens_menu_but_does_not_lock_as_target()
+    {
+        _fixture.Run(() =>
+        {
+            var vm = new UiVm(new BridgeFactory(), () => true, seedInitialScene: false);
+            vm.ToggleEditorMode(); vm.RunCommand.Execute("诊断模式");
+            var toolbar = new ContextToolBar { DataContext = vm }; var diagnostic = new DiagnosticOverlayHost { DataContext = vm };
+            var window = new Window { Width = 900, Height = 220, Content = new Grid { Children = { toolbar, diagnostic } } };
+            window.Show(); window.UpdateLayout();
+            var board = toolbar.GetVisualDescendants().OfType<XYContextDropdownBoard>().Single();
+            board.Open(toolbar.FindControl<XYSplitButton>("DrawSplitButton")!); Dispatcher.UIThread.RunJobs();
+            var category = board.Menu.Items.OfType<XYMenuItem>().First();
+            var action = board.SubMenus[0].ChildMenu.Items.OfType<XYMenuItem>().First();
+            diagnostic.ProbeClick(category); Assert.Null(diagnostic.LockedProbeResult);
+            diagnostic.ProbeClick(action); Assert.Same(action, diagnostic.LockedProbeResult?.DeepVisual);
+            window.Close();
+        });
+    }
+
     sealed class BridgeFactory : INativeHostSurfaceBridgeFactory
     {
         public INativeHostSurfaceBridge Create(Action<string>? log = null, IRenderProjectionSource? source = null) => new Bridge();

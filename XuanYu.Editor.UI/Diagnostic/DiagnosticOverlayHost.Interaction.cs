@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using XYUI.Avalonia.Controls;
 
 namespace XuanYu.Editor.UI;
 
@@ -22,6 +23,7 @@ public partial class DiagnosticOverlayHost
     {
         if (!ProbeEnabled || IsOverlayVisual(hit)) return;
         var result = DiagnosticProbeResolver.Resolve(hit, deepVisual);
+        if (result.SemanticTarget is XYMenuItem { HasSubMenu: true }) return;
         if (result.SemanticTarget is Panel) return;
         TrackProbe(result);
     }
