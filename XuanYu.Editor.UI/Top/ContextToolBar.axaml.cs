@@ -10,6 +10,7 @@ public partial class ContextToolBar : UserControl
     {
         InitializeComponent();
         var board = new XYContextDropdownBoard("绘制", [new("point", "点"), new("line", "线"), new("area", "面")], new Dictionary<string, IReadOnlyList<XYContextAction>> { ["point"] = [new("marker", "点标记")], ["line"] = [new("road", "道路")], ["area"] = [new("region", "区域")] });
+        ContextToolbarDiagnosticBridge.Attach(board);
         DrawBoardHost.Children.Add(board); board.AttachTrigger(DrawSplitButton); board.ActionExecuted += OnDrawActionExecuted;
         DrawSplitButton.MainCommand = new RelayCommand(_ => RunMainDrawAction());
         DrawSplitButton.MenuCommand = new RelayCommand(_ => board.Toggle(DrawSplitButton));

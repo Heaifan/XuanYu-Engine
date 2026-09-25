@@ -13,6 +13,13 @@ public sealed class DiagnosticIdentityTests : IDisposable
     [InlineData("XYE.INSPECTOR.ROAD.STATE")]
     [InlineData("XYE.AREA.RIGHT")]
     [InlineData("XYE.CONTEXT_TOOLBAR")]
+    [InlineData("XYE.CONTEXT_MENU")]
+    [InlineData("XYE.CONTEXT_MENU.POINT")]
+    [InlineData("XYE.CONTEXT_ACTION.MARKER")]
+    [InlineData("XYE.CONTEXT_MENU.LINE")]
+    [InlineData("XYE.CONTEXT_MENU.AREA")]
+    [InlineData("XYE.CONTEXT_ACTION.ROAD")]
+    [InlineData("XYE.CONTEXT_ACTION.REGION")]
     public void Validate_accepts_uppercase_semantic_ids(string value)
     {
         var error = Record.Exception(() => DiagnosticId.Validate(value));
