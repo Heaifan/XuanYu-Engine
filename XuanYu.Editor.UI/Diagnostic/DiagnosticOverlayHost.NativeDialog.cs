@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using XuanYu.Editor.UI.Diagnostic;
 
 namespace XuanYu.Editor.UI;
@@ -39,6 +40,8 @@ public partial class DiagnosticOverlayHost
         {
             _restoringNativeDialog = false;
         }
+        if (_restoreOnOwnerActivation)
+            Dispatcher.UIThread.Post(RestoreAfterOwnerActivation, DispatcherPriority.ApplicationIdle);
     }
 
     static void LogNativeDialog(string phase, bool restore)
