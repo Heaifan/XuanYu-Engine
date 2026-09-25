@@ -36,6 +36,16 @@ public sealed class DiagnosticClickToTrackTests
     }
 
     [Fact]
+    public void Locked_target_ignores_blank_viewport_click()
+    {
+        var overlay = EnabledOverlay(); var first = new Button { Name = "A" };
+        overlay.TrackProbe(DiagnosticProbeResolver.Resolve(first));
+        overlay.ProbeClick(new Avalonia.Controls.Panel());
+        Assert.Same(first, overlay.LockedProbeResult?.SemanticTarget);
+        Assert.True(overlay.IsProbeLocked);
+    }
+
+    [Fact]
     public void Native_left_down_is_a_clicked_diagnostic_phase()
     {
         var host = new VulkanNativeHost();

@@ -20,7 +20,7 @@ public partial class DiagnosticOverlayHost
 
     public void ProbeClick(Visual hit, bool deepVisual = false)
     {
-        if (!ProbeEnabled || IsOverlayVisual(hit)) return;
+        if (!ProbeEnabled || IsProbeLocked || IsOverlayVisual(hit)) return;
         TrackProbe(DiagnosticProbeResolver.Resolve(hit, deepVisual));
     }
 

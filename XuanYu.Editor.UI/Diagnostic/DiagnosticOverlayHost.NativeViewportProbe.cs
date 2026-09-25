@@ -42,7 +42,7 @@ public partial class DiagnosticOverlayHost
         }
         _nativeViewportHost = host;
         var target = DiagnosticNativeViewportTarget.Create(host);
-        if (change.Phase == DiagnosticNativeViewportPhase.Clicked)
+        if (change.Phase == DiagnosticNativeViewportPhase.Clicked && !IsProbeLocked)
         {
             TrackProbe(target); return;
         }
