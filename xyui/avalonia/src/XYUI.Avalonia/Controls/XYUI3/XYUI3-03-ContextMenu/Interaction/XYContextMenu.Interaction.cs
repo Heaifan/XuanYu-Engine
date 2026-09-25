@@ -20,40 +20,36 @@ public sealed partial class XYContextMenu
     public void AttachTo(Control source) { Target = source; source.PointerPressed -= OnSourcePointerPressed; source.PointerPressed += OnSourcePointerPressed; }
     public void DetachFrom(Control source) { source.PointerPressed -= OnSourcePointerPressed; if (ReferenceEquals(Target, source)) Target = null; }
     public void Open() { if (Target is not null) Open(Target); }
-    public void Open(Control target) => OpenAt(target, null);
+    public void Open(Control target) => OpenCore(target, null);
     public void OpenAt(Control target, Point pointerDip)
     {
         var topLevel = TopLevel.GetTopLevel(target);
         var topLevelPoint = topLevel is null ? pointerDip : target.TranslatePoint(pointerDip, topLevel) ?? pointerDip;
-        OpenAtTopLevel(target, topLevelPoint);
+        OpenCore(target, topLevelPoint);
     }
     public void OpenAtTopLevel(Control target, Point topLevelDip)
     {
-        if (TopLevel.GetTopLevel(target) is { } topLevel) OpenAt(target, topLevel, topLevelDip);
+        if (TopLevel.GetTopLevel(target) is { } topLevel &&
+            topLevel.TranslatePoint(topLevelDip, target) is { } targetPoint)
+            OpenCore(target, targetPoint);
     }
-    void OpenAt(Control target, Point? pointerDip)
+    void OpenCore(Control target, Point? pointerDip)
     {
+        var anchor = pointerDip;
         if (!IsEnabled) return; Target = target; Close(); Menu.ClearSelection(); Menu.FocusRestoreTarget = target; XyuiOverlayResourceBridge.Attach(this);
         _popup = new Popup
         {
             PlacementTarget = target,
-            Placement = pointerDip is null ? PlacementMode.Pointer : PlacementMode.AnchorAndGravity,
-            PlacementRect = pointerDip is { } point ? new Rect(point, new Size(0, 0)) : default,
+            Placement = pointerDip is null ? PlacementMode.Pointer : PlacementMode.Custom,
+            PlacementRect = anchor is { } point ? new Rect(point, new Size(0, 0)) : default,
+            CustomPopupPlacementCallback = anchor is { } placementPoint ? placement =>
+            {
+                placement.AnchorRectangle = new Rect(placementPoint, new Size(0, 0));
+                placement.Anchor = PopupAnchor.BottomLeft; placement.Gravity = PopupGravity.BottomLeft;
+                placement.ConstraintAdjustment = PopupPositionerConstraintAdjustment.SlideX |
+                    PopupPositionerConstraintAdjustment.SlideY | PopupPositionerConstraintAdjustment.FlipY;
+            } : null,
             PlacementAnchor = PopupAnchor.BottomLeft,
-            PlacementGravity = PopupGravity.BottomLeft,
-            PlacementConstraintAdjustment = PopupPositionerConstraintAdjustment.SlideX |
-                PopupPositionerConstraintAdjustment.SlideY | PopupPositionerConstraintAdjustment.FlipY,
-            IsLightDismissEnabled = true, Child = this
-        };
-        _popup.Closed += OnPopupClosed; IsOpen = true; _popup.IsOpen = true; Menu.ApplyOverlayStyling(); Menu.Open(); Opened?.Invoke(this, EventArgs.Empty);
-    }
-    void OpenAt(Control target, TopLevel topLevel, Point topLevelDip)
-    {
-        if (!IsEnabled) return; Target = target; Close(); Menu.ClearSelection(); Menu.FocusRestoreTarget = target; XyuiOverlayResourceBridge.Attach(this);
-        _popup = new Popup
-        {
-            PlacementTarget = topLevel, Placement = PlacementMode.AnchorAndGravity,
-            PlacementRect = new Rect(topLevelDip, new Size(0, 0)), PlacementAnchor = PopupAnchor.BottomLeft,
             PlacementGravity = PopupGravity.BottomLeft,
             PlacementConstraintAdjustment = PopupPositionerConstraintAdjustment.SlideX |
                 PopupPositionerConstraintAdjustment.SlideY | PopupPositionerConstraintAdjustment.FlipY,
