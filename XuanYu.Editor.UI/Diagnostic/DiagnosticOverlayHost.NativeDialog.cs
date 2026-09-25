@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Threading;
 using XuanYu.Editor.UI.Diagnostic;
 
@@ -52,6 +53,11 @@ public partial class DiagnosticOverlayHost
     void RestoreAfterOwnerActivation()
     {
         if (!_restoreOnOwnerActivation || !ProbeEnabled || !IsProbeLocked) return;
+        if (_topLevel is not Window owner || !owner.IsActive)
+        {
+            LogNativeDialog("RestoreDeferred", false);
+            return;
+        }
         LogNativeDialog("OwnerActivatedRestore", true);
         _restoreOnOwnerActivation = false;
         if (_lockedProbeResult is null || !TryGetTrackedBounds(_lockedProbeResult, out var bounds)) return;
