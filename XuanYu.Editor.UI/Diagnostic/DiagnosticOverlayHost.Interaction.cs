@@ -34,8 +34,11 @@ public partial class DiagnosticOverlayHost
 
     public void ExitProbe()
     {
-        UnlockProbe();
-        SetProbeResult(null);
+        _lockedProbeResult = null;
+        TrackedSnapshot = null;
+        LastKnownBounds = null;
+        _probeResult = null;
+        ClearProbeVisuals();
     }
 
     void AttachProbeHandlers(TopLevel topLevel)
@@ -83,6 +86,6 @@ public partial class DiagnosticOverlayHost
             await ProbeClick(); e.Handled = true; return;
         }
         if (e.Key != Key.Escape) return;
-        if (IsProbeLocked) UnlockProbe(); else ExitProbe(); e.Handled = true;
+        ExitProbe(); e.Handled = true;
     }
 }

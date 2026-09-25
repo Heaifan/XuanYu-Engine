@@ -25,6 +25,7 @@ public partial class DiagnosticOverlayHost
             AttachProbePopups(window);
             window.Activated += OnWindowActivated;
             window.Deactivated += OnWindowDeactivated;
+            window.Closed += OnWindowClosed;
             window.PropertyChanged += OnWindowPropertyChanged;
         }
     }
@@ -34,6 +35,7 @@ public partial class DiagnosticOverlayHost
         if (_topLevel is not Window window) return;
         window.Activated -= OnWindowActivated;
         window.Deactivated -= OnWindowDeactivated;
+        window.Closed -= OnWindowClosed;
         window.PropertyChanged -= OnWindowPropertyChanged;
         foreach (var root in _probeRoots.ToArray()) DetachProbeRoot(root);
         foreach (var popup in _probePopups.ToArray()) DetachProbePopup(popup);
@@ -59,9 +61,10 @@ public partial class DiagnosticOverlayHost
 
     void OnWindowDeactivated(object? sender, EventArgs e)
     {
-        CloseAll();
-        ClearProbeVisuals();
+        ClearProbeHighlight();
     }
+
+    void OnWindowClosed(object? sender, EventArgs e) => ClearProbeVisuals();
 
     void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {

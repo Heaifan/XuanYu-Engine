@@ -20,7 +20,7 @@ public static partial class DiagnosticProbeResolver
         return (visual, 5);
     }
 
-    static bool IsInteractive(Control control) => control is Button or ToggleButton or TextBox or
+    static bool IsInteractive(Control control) => control is Button or ToggleButton or MenuItem or TextBox or
         ComboBox or TreeViewItem or TabItem || control.GetType().Namespace?.StartsWith("XYUI", StringComparison.Ordinal) == true;
 
     static bool IsTemplateInternal(Visual visual)

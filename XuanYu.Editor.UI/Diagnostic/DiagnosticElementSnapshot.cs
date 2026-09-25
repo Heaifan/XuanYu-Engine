@@ -13,6 +13,7 @@ public sealed record DiagnosticElementSnapshot(
     string VisualPath,
     string DebugId,
     string InstanceName,
+    string TargetDisplayName,
     string Text,
     string ActualSize,
     string DesiredSize,
@@ -38,13 +39,20 @@ public sealed record DiagnosticElementSnapshot(
         var position = control is not null && top is not null
             ? control.TranslatePoint(default, top)?.ToString() ?? "不可用" : "不可用";
         return new(result, DiagnosticXyuiResolver.Resolve(target), target.GetType().Name,
-            Path(target), result.DebugId, result.Name, result.Text, Size(target.Bounds.Size),
+            Path(target), result.DebugId, result.Name, DisplayName(result, target), result.Text, Size(target.Bounds.Size),
             Size(control?.DesiredSize ?? target.Bounds.Size), position,
             control is null ? "不可用" : control.Margin.ToString(), GetPadding(control),
             control?.HorizontalAlignment.ToString() ?? "不可用", control?.VerticalAlignment.ToString() ?? "不可用",
             Bool(target.IsEffectivelyVisible), Bool(control?.IsEffectivelyEnabled), Bool(control?.IsFocused),
             Bool(control?.IsPointerOver), GetPressed(control), GetSelected(control), GetExpanded(control),
             "不可用");
+    }
+
+    static string DisplayName(DiagnosticProbeResult result, Visual target)
+    {
+        if (!string.IsNullOrWhiteSpace(result.Name) && result.Name != "N/A") return result.Name;
+        if (!string.IsNullOrWhiteSpace(result.Text) && result.Text != "N/A") return result.Text;
+        return result.DebugId != "N/A" ? result.DebugId : target.GetType().Name;
     }
 
     static string Path(Visual target) => string.Join(Environment.NewLine + "> ", Chain(target).Reverse().Select(TypeOrName));

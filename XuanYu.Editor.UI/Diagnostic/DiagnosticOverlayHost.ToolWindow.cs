@@ -15,9 +15,17 @@ public partial class DiagnosticOverlayHost
     {
         var owner = _topLevel as Window;
         if (owner is null) return;
-        _toolTarget = target;
+        _toolTarget = target is not null && TopLevel.GetTopLevel(target) is not null ? target : this;
         if (_toolWindow is null) CreateToolWindow(owner, snapshot);
-        else _toolCard!.UpdateSnapshot(snapshot, CopyToolText, IsProbeLocked);
+        else
+        {
+            _toolCard!.UpdateSnapshot(snapshot, CopyToolText, IsProbeLocked);
+            if (!ReferenceEquals(_toolWindow.Content, _toolCard))
+            {
+                _toolWindow.ReplaceContent(_toolCard);
+                _toolWindow.SetDragSurface(_toolCard.DragSurface, BeginToolDrag, EndToolDrag);
+            }
+        }
         if (!_toolWindow!.IsVisible) ShowToolWindow(bounds);
         var key = $"{snapshot.DebugId}|{snapshot.InstanceName}|{snapshot.Probe.ProbeMode}";
         if (_lastToolTarget == key) return;
@@ -57,7 +65,7 @@ public partial class DiagnosticOverlayHost
     }
 
     void OnToolWindowClosed(object? sender, EventArgs e) => _toolWindow = null;
-    void CloseToolWindow() { UnlockProbe(); SetProbeResult(null); HideToolWindow(); }
+    void CloseToolWindow() => ExitProbe();
     void ToggleToolLock() { if (IsProbeLocked) UnlockProbe(); else LockProbe(); }
     Task CopyToolText(string text) => _toolTarget is null ? Task.CompletedTask : _clipboard.SetTextAsync(_toolTarget, text);
 }
