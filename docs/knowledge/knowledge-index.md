@@ -9,16 +9,16 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 
 | 任务域 | 典型触发 | 优先读取 |
 |---|---|---|
-| 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001、K-GOV-002；再检查相关 ACTIVE EXP |
-| 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；`decisions/` 中相关 DEC；相关 ACTIVE EXP |
+| 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-003；EXP-GOVERNANCE-001；再检查其他相关 ACTIVE EXP |
+| 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；EXP-ARCH-001；`decisions/` 中相关 DEC；其他相关 ACTIVE EXP |
 | 空间 / 几何 | Camera、Screen↔World、Geometry、Snap、Topology | K-SPA-001、K-SPA-002、K-GEO-001、K-GEO-002；相关 DEC / EXP |
-| Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan | K-REN-001～K-REN-004、K-NATIVE-001～K-NATIVE-002、L-REN-001、L-REN-002、L-NATIVE-001；相关 EXP |
-| Input | Pointer、Capture、手势 Owner、真实生产输入接线、平台输入 | K-INP-001～K-INP-004；相关 EXP |
-| UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标、Diagnostic | K-UI-001、K-DIAG-001；相关 `decisions/`；`EXP-UI-001`；其他 UI 类 ACTIVE EXP |
+| Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan | K-REN-001～K-REN-004、K-NATIVE-001～K-NATIVE-002、L-REN-001、L-REN-002、L-NATIVE-001；EXP-ARCH-001；其他相关 ACTIVE EXP |
+| Input | Pointer、Capture、手势 Owner、真实生产输入接线、平台输入 | K-INP-001～K-INP-004；EXP-TEST-001；其他相关 ACTIVE EXP |
+| UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标、Diagnostic | K-UI-001、K-DIAG-001；相关 `decisions/`；EXP-UI-001、EXP-UI-002；其他 UI 类 ACTIVE EXP |
 | Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
 | Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
 | Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
-| Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-004、K-DIAG-001、L-VAL-001、L-NATIVE-001；相关 ACTIVE EXP |
+| Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-004、K-DIAG-001、K-GOV-003、L-VAL-001、L-NATIVE-001、L-TEST-001；EXP-ARCH-001、EXP-TEST-001、EXP-UI-002、EXP-GOVERNANCE-001 |
 
 任务若横跨多个域，只加载与当前 Scope 直接相关条目，不机械全文读取。
 

@@ -194,3 +194,167 @@ Occurrences：1
 
 Superseded by：
 无
+
+
+---
+
+## EXP-ARCH-001 连续局部修复停止线
+
+状态：ACTIVE
+适用范围：Architecture / Native UI / Rendering / Viewport / Diagnostic / Hosting
+触发条件：同一真机问题已经连续两个针对性 FIX 仍未解决，或多个子系统同时出现相近症状。
+Occurrences：2
+
+规则：
+同一问题连续两个针对性局部修复仍未收口时，禁止默认进入第三次参数/Placement/Offset/ZIndex/Host 微调。必须先停止实现，重新审计 Ownership、Runtime Route、Coordinate Space、Hosting/Airspace 与 Shared Dependency。
+
+根因模式：
+Agent 把症状变化误当成接近根因，在错误承载前提上持续追加 workaround；真正共同依赖被延后审计。
+
+禁止：
+- 第三次继续调 Offset、Gravity、ZIndex、Bias、TopMost、Anchor 等参数而不重审承载；
+- A/B 两个组件同时异常时分别堆 workaround，不审 Shared Dependency；
+- 在 NativeControlHost/Avalonia Airspace 问题上扩建新的长期 Native UI Owner。
+
+正确做法：
+1. 列出 UI/Input/Render/Host 的 Owner；
+2. 画真实 Runtime Route；
+3. 标明每个坐标的 Source/Target Space；
+4. 检查 Airspace/Native HWND/Composition 边界；
+5. 用一次只排除一个共同变量的实验重新验证前提，再决定是否继续局部修复。
+
+来源 ERR：
+- ERR-20260925-001
+- ERR-20260925-002
+
+任务注入：
+涉及 Diagnostic、Viewport、NativeControlHost、Popup、Overlay、复杂 Rendering 或连续第二次修复失败时，在 Knowledge Preflight 中加载本规则。
+
+验证 / 自动化：
+当前已有 Viewport Legacy Allowlist、A1/A1.5 架构治理与相关回归；“连续两次修复失败自动停线”仍主要依赖任务治理，尚无通用机器 Gate。
+
+Superseded by：
+无
+
+---
+
+## EXP-TEST-001 平台与生产链测试必须从权威边界进入
+
+状态：ACTIVE
+适用范围：Input Adapter / Native / Avalonia / Runtime Wiring / Platform Contract / Production Path
+触发条件：测试涉及平台消息、键值、Pointer、Adapter、Router、生产接线或以源码字符串/Helper 证明行为。
+Occurrences：2
+
+规则：
+平台边界测试必须从真实平台 Enum / Message Contract 开始；生产链测试必须覆盖真实 Adapter → Unified Model → Router → Consumer。Helper PASS、源码 `Assert.Contains`、人工构造理想统一值只能作为 L1/L2 证据，不能单独证明 Production Runtime 行为。
+
+根因模式：
+测试输入复制了实现假设，导致错误实现和错误测试共同全绿；或测试绕过 Adapter/生产 Source，只证明内部 helper 自洽。
+
+禁止：
+- 用 Win32 `0x12` 冒充 Avalonia Alt 输入；
+- 用错误平台常量构造测试再断言实现正确；
+- 仅用 `Assert.Contains("message.IsAltDown", source)` 证明实际参数已贯穿运行链；
+- Router/Consumer 可实例化就宣布生产接线完成。
+
+正确做法：
+- 平台事实 → Adapter → Editor Semantic Model；
+- Editor Event → Production Router → Arbitration → Owner → Consumer；
+- 对真机相关问题继续保留 Runtime UI / Real-machine 层级验收。
+
+来源 ERR：
+- ERR-20260925-001
+- ERR-20260925-003
+- ERR-20260925-004
+
+任务注入：
+涉及 Native/Avalonia Input、Adapter、Production Router、平台常量、Source Contract 或 Runtime Wiring 时必须加载本规则。
+
+验证 / 自动化：
+优先建立 `PlatformKeyNormalization`、`ProductionInputNoBypass`、`ProductionPathTestRule`；已有 ProductionInputComposition/E5 输入冻结测试作为基础，但不能替代所有真机输入验收。
+
+Superseded by：
+无
+
+---
+
+## EXP-UI-002 Diagnostic Observer Rule
+
+状态：ACTIVE
+适用范围：Diagnostic Mode / Element Probe / Overlay / Highlight / Native Viewport
+触发条件：诊断系统观察 Pointer、显示 Highlight/Card、读取 Native HWND/Bounds 或接入 Viewport。
+Occurrences：1
+
+规则：
+Diagnostic 的身份固定为 Observer。它可以观察、记录、格式化和可视化诊断信息，但不得改变被诊断对象的输入所有权、Capture、业务状态或 Window Ownership。
+
+根因模式：
+为了解决 Native/Avalonia 可见性、Placement 或点击跟踪，把 Diagnostic 逐步扩成第二套输入/窗口系统，最终诊断工具本身改变产品行为。
+
+禁止：
+- Diagnostic 抢 Pointer Capture；
+- Diagnostic 将生产 Pointer 标记 handled 从而阻断 Viewport；
+- Diagnostic 注册独立 Gesture Owner/业务 Consumer；
+- 为覆盖 Native Viewport 持续扩建长期 Native UI Window/Popup 架构；
+- 高频诊断同步阻塞 UI/Input/Render。
+
+正确做法：
+- Avalonia 使用 tunnel/observer 方式观察而不消费；
+- Native 使用旁路 Probe 观察并保持 Production forwarding；
+- Highlight 必须 input-transparent；
+- Popup/Window 仅在已批准边界内使用，长期目标服从 Avalonia 唯一 UI Owner；
+- Diagnostic 关闭后不得留下 Capture/Owner/临时状态。
+
+来源 ERR：
+- ERR-20260925-002
+
+任务注入：
+所有 Diagnostic、Element Probe、Viewport Highlight、Native Probe、点击跟踪任务必须加载本规则及 K-DIAG-001。
+
+验证 / 自动化：
+建立/强化 `DiagnosticInputTransparency` Runtime Gate；保留 Viewport passthrough、self-exclusion、click observation 不 handled 等回归。
+
+Superseded by：
+无
+
+---
+
+## EXP-GOVERNANCE-001 Repository Authority First
+
+状态：ACTIVE
+适用范围：SDK / Build / Run / Toolchain / Output Path / Acceptance Entry / 多机器开发环境
+触发条件：Agent 需要判断当前机器工具链路径、启动入口、编译器、产物目录或“环境是否缺失”。
+Occurrences：1
+
+规则：
+当前仓库中的权威入口和 Resolver 高于 Agent 历史记忆。事实优先级固定为：
+`Repository Current Files → Current Machine Resolver → Git Current State → Agent Memory`。
+记忆只能帮助找到权威入口，不能直接作为当前环境结论。
+
+根因模式：
+Agent 将另一台电脑或旧阶段的绝对路径当成当前事实，绕过仓库已经建立的多环境解析机制。
+
+禁止：
+- 只检查记忆中的 D:/E: 固定路径后宣布 NO SDK；
+- 未读取 `run.bat` / Resolver 就判断 Build/Run 环境；
+- 用历史输出目录替代当前启动脚本解析出的产物路径；
+- 当前仓库规则与记忆冲突时优先相信记忆。
+
+正确做法：
+1. 读取 canonical run/build entry；
+2. 执行项目 Resolver；
+3. 记录 Resolver 实际选择的工具与版本；
+4. 再核对当前 Git HEAD / branch / worktree；
+5. Resolver 真实失败后才允许报告环境 BLOCKED。
+
+来源 ERR：
+- ERR-20260925-005
+
+任务注入：
+所有 Build、Run、SDK、Toolchain、环境诊断、交付验收任务必须加载本规则及 K-GOV-003。
+
+验证 / 自动化：
+候选 Gate：`CanonicalRunResolver`。玄域引擎当前权威链为 `run.bat → scripts/resolve-dotnet.ps1`。
+
+Superseded by：
+无

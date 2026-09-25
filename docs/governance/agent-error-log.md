@@ -178,3 +178,173 @@ Inspector/Entity 专项回归 16/16；受影响 UI Build 0W/0E；ARCH-A、5+100�
 
 状态：
 已验证
+
+
+---
+
+## ERR-20260925-001
+
+Agent：Codex（Viewport 输入统一前序实现）
+任务：WAVE-2.5 Production Input / Input Convergence
+类型：ARCH
+严重度：High
+
+错误：
+仓库已经存在 `ViewportInputRouter`、`GestureOwner`、Consumer 与 Lifecycle，并有对应测试，但真实 Native HWND 与 Avalonia Pointer 生产入口仍长期存在直接调用 `UiVm.*` 的 bypass。实现层把“架构类型存在、测试可实例化”误当成“生产输入已经统一”。
+
+根因：
+验收边界停留在 Router/Consumer 类型和局部测试，没有从真实平台 Source 反向审计完整生产链，也没有把“Real Platform Event → Adapter → Router → Arbitration → Owner → Consumer → Domain/Core”作为完成合同。
+
+后果：
+Camera、Picking、Gizmo、Region/Road/Marker 等输入仍可能由旧 Host 路径直接消费，Owner、Capture 与 Cancel 语义无法真正统一；后续必须通过 WAVE-2.5 E0/E5 再做生产接线审计和迁移。
+
+正确做法：
+任何 Input Architecture 完成声明都必须证明真实 Native/Avalonia Source 已接入统一 Adapter/Router，并审计旧 Host 是否仍直接调用业务 Consumer/UiVm。架构“存在”与生产“接线完成”必须分开验收。
+
+经验规则：
+EXP-ARCH-001
+EXP-TEST-001
+
+发现方式：
+WAVE-2.5 E0 Production Input Audit / ChatGPT 架构复盘
+
+验证证据：
+当前仓库已有 `ProductionInputCompositionTests` 与 `E5ProductionInputFreezeTests`，并建立单一 Router/Lifecycle/Consumer Composition 与 WindowDeactivated 正式 Sink 约束；后续仍由正式输入收口门禁持续防回潮。
+
+状态：
+已验证
+
+---
+
+## ERR-20260925-002
+
+Agent：Codex（Diagnostic 多轮实现）
+任务：DIAG-R1 / Native Viewport Diagnostic
+类型：UI
+严重度：High
+
+错误：
+Diagnostic Highlight / Overlay 在 Native Viewport 上方一度成为实际输入阻挡层，导致诊断系统从“观察者”滑向第二套交互层，破坏 Viewport 原有 Pointer 所有权。
+
+根因：
+Diagnostic 的承载、Placement、Highlight 与 Native/Avalonia Airspace 问题被连续局部修补，但没有始终把“Diagnostic 必须输入透明、不得成为 Owner/Consumer”作为第一约束；观察能力与交互承载边界混在一起。
+
+后果：
+开启 Diagnostic 后可能影响真实 Viewport 点击/悬浮/拖拽，诊断工具本身改变被诊断系统行为；同时扩大 Popup/Window/Native ownership 复杂度。
+
+正确做法：
+Diagnostic 只能 Observer：允许观察 Routed/Native Pointer、读取 HWND/Bounds、绘制不抢输入的 Highlight；不得抢 Capture、标记生产 Pointer handled、建立第二套 Gesture Owner，或为了显示诊断卡长期扩建 Native UI Ownership。
+
+经验规则：
+EXP-UI-002
+EXP-ARCH-001
+
+发现方式：
+用户真机验收 / Diagnostic Viewport 回归 / Code Audit
+
+验证证据：
+已有提交 `edc2acc41ae43f64ac09b4ab6111aa4942c3533b`（`fix(diag): remove viewport highlight input blocker`）及 Diagnostic Viewport input passthrough 回归；本条长期规则仍需由后续 DiagnosticInputTransparency Gate 固化。
+
+状态：
+已修复
+
+---
+
+## ERR-20260925-003
+
+Agent：Codex
+任务：MAP-REGION-SNAP-R1 Native Alt
+类型：LOGIC
+严重度：High
+
+错误：
+将 Win32 鼠标消息 `wParam` 的 `0x0020` 解释为 Alt。该位实际是 `MK_XBUTTON1`，不是 Alt；因此真实 Alt 可能无法取消吸附，而鼠标侧键 XBUTTON1 反而可能被误判为 Alt。
+
+根因：
+没有从 Win32 平台合同确认按钮位含义，把熟悉的数值/假设直接带入实现；对应测试也最初重复了同一错误前提。
+
+后果：
+Native/Vulkan Region Snap 的 Alt 临时取消语义失真，并产生“错误实现 + 错误测试 = 全绿”的假安全感。
+
+正确做法：
+Win32 Alt 必须从真实键盘状态（如 `VK_MENU`）或平台 Adapter 获取；鼠标 `wParam` 只解释其正式定义的 mouse key state。平台编码必须在 Adapter 边界正规化。
+
+经验规则：
+EXP-TEST-001
+
+发现方式：
+ChatGPT Code Audit
+
+验证证据：
+`5e758f63e29aca4ec30890b0999ac93778e967e5` 将 Alt 独立为 `AltDown`，使用 `GetKeyState(VK_MENU)`，并新增 XBUTTON1 不得识别为 Alt 的回归；当轮 Snap 专项曾报告 25/25 PASS。
+
+状态：
+已验证
+
+---
+
+## ERR-20260925-004
+
+Agent：Codex
+任务：MAP-REGION-SNAP-R1-REVALIDATE Avalonia Alt
+类型：TEST
+严重度：High
+
+错误：
+Avalonia Alt 回归最初直接构造 `AvaloniaKeySample(0x12, ...)`，把 Win32 `VK_MENU` 值伪装成 Avalonia 键值，绕过了真实 `Key.LeftAlt / Key.RightAlt` 到 Editor Key 的映射，因此测试可以 PASS，而真实 Avalonia Alt 仍可能不触发 Router 刷新。
+
+根因：
+测试从“期望的统一结果”开始，而不是从权威平台输入开始；Adapter 本身没有被真实平台 Enum 契约覆盖。
+
+后果：
+形成平台边界假阳性，掩盖真实 Avalonia Alt 与 Router `0x12` 语义不一致的问题。
+
+正确做法：
+平台边界回归必须从真实平台 Enum / Message Contract 开始，再经过 Adapter → Unified Model → Router → Consumer。禁止用手工构造的“理想统一值”证明 Adapter 正确。
+
+经验规则：
+EXP-TEST-001
+
+发现方式：
+ChatGPT Code Audit
+
+验证证据：
+生产代码已将 `Key.LeftAlt / Key.RightAlt` 正规化为 Editor `0x12`，测试也已改用真实 Avalonia 键值；但当前工作环境的实际 Build/专项测试尚未完成，因此不提升为“已验证”。
+
+状态：
+已修复
+
+---
+
+## ERR-20260925-005
+
+Agent：Codex / ChatGPT 前序环境判断
+任务：MAP-REGION-SNAP-R1-REVALIDATE 环境门禁
+类型：GOVERNANCE
+严重度：Medium
+
+错误：
+判断当前机器没有 .NET SDK 时，优先使用历史记忆中的固定 SDK 路径并检查系统 PATH，没有先读取并执行仓库权威入口 `run.bat → scripts/resolve-dotnet.ps1`，从而错误宣布环境 BLOCKED。
+
+根因：
+把 Agent 历史记忆当成当前机器事实，优先级高于 Repository Current Files 与当前 Resolver；同时忽略项目已经专门解决多机器/多盘符差异的环境发现机制。
+
+后果：
+把本可继续执行的 Build/Test 错误标记为 NO SDK，浪费开发轮次，并可能在私人电脑 D 盘、工作电脑 E 盘等环境间持续产生错误判断。
+
+正确做法：
+涉及 SDK、Build、Run、Toolchain、Output Path、Acceptance Entry 时，事实优先级固定为：
+`Repository Current Files → Current Machine Resolver → Git Current State → Agent Memory`。
+玄域引擎必须先读取/执行 `run.bat` 与 `scripts/resolve-dotnet.ps1`；只有 Resolver 真实失败后才允许报告 NO SDK。
+
+经验规则：
+EXP-GOVERNANCE-001
+
+发现方式：
+用户纠正 / ChatGPT Repository Audit
+
+验证证据：
+已确认当前 `run.bat` 调用 `scripts/resolve-dotnet.ps1`；Resolver 支持 `XUANYU_DOTNET`、repo-local SDK、A:～Z: 的 `MyApp\sdk-dotnet` / `DevTools\dotnet` 与 PATH。自动 CanonicalRunResolver Gate 尚未建立。
+
+状态：
+已修复
