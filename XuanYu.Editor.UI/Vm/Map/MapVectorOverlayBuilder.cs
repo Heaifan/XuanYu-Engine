@@ -8,8 +8,8 @@ namespace XuanYu.Editor.UI;
 
 sealed partial class MapVectorOverlayBuilder(double height)
 {
-    static readonly RenderStaticModelColor RegionFill = new(.91, .95, .96, .44);
-    static readonly RenderStaticModelColor RegionStroke = new(.20, .42, .48, .95);
+    static readonly RenderStaticModelColor RegionFill = new(.20, .55, .90, .32);
+    static readonly RenderStaticModelColor RegionStroke = new(.12, .38, .70, .92);
     readonly List<RenderVectorOverlayVertex> _vertices = [];
     readonly List<uint> _indices = [];
     readonly List<RenderVectorOverlayPrimitive> _primitives = [];

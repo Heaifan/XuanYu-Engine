@@ -16,6 +16,7 @@ public sealed partial class VulkanNativeHost
         var y = message.PhysicalY / dpi;
         ObserveDiagnosticPointer(message, x, y);
         if (message.Message == NativePointerMessage.Move) NativePointerMoved?.Invoke(this, x, y);
+        if (message.Message == NativePointerMessage.LeftDown) _mapContextMenu?.Close();
         if (message.Message is NativePointerMessage.LeftDown or NativePointerMessage.RightDown or NativePointerMessage.MiddleDown)
             XYContextDropdownBoard.NotifyOwnerPointerDown();
         if (DataContext is UiVm vm)
