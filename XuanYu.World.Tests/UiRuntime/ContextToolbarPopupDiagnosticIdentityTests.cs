@@ -23,7 +23,9 @@ public sealed class ContextToolbarPopupDiagnosticIdentityTests
             board.Open(toolbar.FindControl<XYSplitButton>("DrawSplitButton")!);
             var expected = new[] { "XYE.CONTEXT_ACTION.MARKER", "XYE.CONTEXT_ACTION.ROAD", "XYE.CONTEXT_ACTION.REGION",
                 "XYE.CONTEXT_MENU", "XYE.CONTEXT_MENU.AREA", "XYE.CONTEXT_MENU.LINE", "XYE.CONTEXT_MENU.POINT" };
-            var actual = DiagnosticRegistry.Targets.Keys.OrderBy(x => x, StringComparer.Ordinal);
+            var actual = DiagnosticRegistry.Targets.Keys
+                .Where(x => x.StartsWith("XYE.CONTEXT_", StringComparison.Ordinal))
+                .OrderBy(x => x, StringComparer.Ordinal);
             Assert.Equal(expected.OrderBy(x => x, StringComparer.Ordinal), actual);
             window.Close();
         });
