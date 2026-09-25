@@ -60,8 +60,8 @@ public sealed class XYUI3InteractionTests : IClassFixture<XyuiHeadlessFixture>
         var field = typeof(XYContextMenu).GetField("_popup", BindingFlags.Instance | BindingFlags.NonPublic)!;
         var popup = Assert.IsType<Popup>(field.GetValue(context));
         Assert.Same(window, popup.PlacementTarget);
-        Assert.Equal(PlacementMode.AnchorAndGravity, popup.Placement);
-        Assert.Equal(new Point(120, 80), popup.PlacementRect!.Value.Position);
+        Assert.Equal(PlacementMode.Custom, popup.Placement);
+        Assert.NotNull(popup.CustomPopupPlacementCallback);
         context.Close(); window.Close();
     });
 

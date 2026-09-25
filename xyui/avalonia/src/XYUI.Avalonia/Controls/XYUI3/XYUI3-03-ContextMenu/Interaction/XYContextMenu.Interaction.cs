@@ -38,8 +38,14 @@ public sealed partial class XYContextMenu
         _popup = new Popup
         {
             PlacementTarget = placementTarget,
-            Placement = pointerDip is null ? PlacementMode.Pointer : PlacementMode.AnchorAndGravity,
-            PlacementRect = pointerDip is { } point ? new Rect(point, new Size(0, 0)) : default,
+            Placement = pointerDip is null ? PlacementMode.Pointer : PlacementMode.Custom,
+            CustomPopupPlacementCallback = pointerDip is { } point ? placement =>
+            {
+                placement.AnchorRectangle = new Rect(point, new Size(0, 0));
+                placement.Anchor = PopupAnchor.BottomLeft; placement.Gravity = PopupGravity.BottomLeft;
+                placement.ConstraintAdjustment = PopupPositionerConstraintAdjustment.SlideX |
+                    PopupPositionerConstraintAdjustment.SlideY | PopupPositionerConstraintAdjustment.FlipY;
+            } : null,
             PlacementAnchor = PopupAnchor.BottomLeft,
             PlacementGravity = PopupGravity.BottomLeft,
             PlacementConstraintAdjustment = PopupPositionerConstraintAdjustment.SlideX |
