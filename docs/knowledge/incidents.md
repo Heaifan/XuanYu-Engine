@@ -207,3 +207,42 @@
 World Reference Grid 被重新定义为独立 Editor Environment Layer：不属于 Map Surface，不读取 Map BaseHeight，不依赖 Ground Depth；LOD/Step 只由 CPU 全帧统一决定，Fragment 的 `fwidth` 只用于 AA。
 
 **经验提升**：L-REN-001、K-REN-004（并关联 K-REN-001、K-REN-002）。
+
+---
+
+## INC-2026-09-25-001 Diagnostic + Viewport 长周期开发复盘 R1
+
+**确认时间**：2026-09-25（UTC+08:00）
+**范围**：Diagnostic Mode、Native Viewport、Input Router、Vulkan-Avalonia Composition、Region Snap Revalidation。
+**证据基线**：A1.5 PASS `f67210debb3a4f201662933b0d549a3939d8850d`；WAVE-2.5 E0/E5 审计与收口材料；Region Snap R1 复盘材料。
+
+### 总结
+
+本轮问题不是单一 Popup、坐标或 Alt 修补，而是 UI Ownership、Airspace、Input Ownership、Coordinate Space 与 Runtime Route 长期混在一起，并叠加“自动测试不等于生产链路、源码正确不等于用户运行正确、Helper PASS 不等于 Runtime PASS”。
+
+### 已确认的长期结论
+
+- Avalonia 是唯一 Editor UI / Window Owner；NativeControlHost/HWND 只能作为迁移期遗留路径。
+- A1.5 GPU Composition 技术可行性已由 `f67210de` 证明，但生产迁移仍未完成。
+- Diagnostic 只能观察，不能抢 Pointer、Capture 或建立第二套输入 Owner。
+- Native 与 Avalonia 坐标必须通过 Screen Space 等显式空间转换。
+- Input Router 只有接入真实生产 Source 才算完成；一次 Gesture 只能有一个 Owner，Cancel 是生命周期终态。
+- 平台差异必须止步于 Adapter；测试不能用错误平台前提制造假阳性。
+- 同类真机问题连续两次局部修复无效后，必须审查共同依赖和承载架构。
+- 仓库当前入口和 Resolver 高于 Agent 历史环境记忆。
+
+### 本轮已落库
+
+`K-NATIVE-002`、`K-INP-003`、`K-INP-004`、`K-DIAG-001`、`K-GOV-003`、`L-NATIVE-001`、`L-TEST-001` 已加入知识库与 Preflight 索引；架构文档已把 A1.5 从 pending 修正为 PASS，同时保留“生产迁移未完成”的事实边界。
+
+### 待 ChatGPT 正式治理入库的候选
+
+受 `AGENTS.md` 权限规则约束，以下内容由 Codex 登记为候选，不冒充正式 ERR/EXP：
+
+ERR 候选：`ERR-20260925-001` 至 `ERR-20260925-005`，分别对应生产 Router bypass、Diagnostic 阻塞输入、`0x0020` 错判 Alt、Avalonia Alt 测试伪造 Win32 值、绕过仓库 Resolver 判断 SDK。
+
+EXP 候选：`EXP-ARCH-001` 连续局部修复停止线、`EXP-TEST-001` 生产链测试原则、`EXP-UI-002` Diagnostic Observer Rule、`EXP-GOVERNANCE-001` Repository Authority First。
+
+### 后续机器 Gate 候选
+
+`ProductionInputNoBypass`、`DiagnosticInputTransparency`、`NativeCoordinateRoundTrip`、`PlatformKeyNormalization`、`ProductionPathTestRule`、`ViewportLegacyAllowlist`、`CanonicalRunResolver`。本记录不把尚未执行的 Gate 宣布为已通过。

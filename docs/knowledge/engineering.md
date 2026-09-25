@@ -225,6 +225,26 @@ Codex 接手一个“基于 v0.2.30.4-fix 修复”的任务时，如果用户�
 
 ---
 
+## K-GOV-003 当前仓库入口/Resolver 高于 Agent 历史环境记忆
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Repository Authority、SDK、Build、Run、Toolchain、Resolver
+**适用范围**：SDK、Build、Run、Toolchain、Output Path、验收入口。
+
+涉及工具链或运行入口时，事实优先级固定为：
+
+```text
+Repository Current Files → Current Machine Resolver → Git Current State → Agent Memory
+```
+
+必须先核对 `run.bat`、`scripts/resolve-dotnet.ps1` 和当前 Git 状态。历史记忆只能帮助寻找入口，不能作为最终环境结论。
+
+**验证方法**：记录 Resolver 选择的 SDK 路径/版本、当前分支、HEAD 与远端关系；不得仅凭记忆宣布“无 SDK”或“运行的是某个输出目录”。
+
+---
+
 ## K-GOV-002 治理成果必须建立自动防回潮门禁
 
 **状态**：Active

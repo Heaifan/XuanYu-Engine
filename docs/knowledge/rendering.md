@@ -267,3 +267,21 @@ WM_PAINT Count
 Layer Delete Confirmation 的 DialogCard 状态正常却被 Vulkan HWND 压住；最终采用 Editor Owned Avalonia Window，并修正 Dataset-backed 路由后真机显示成功。
 
 **关联 Incident**：INC-2026-08-12-001
+
+---
+
+## K-NATIVE-002 Native↔Avalonia 坐标必须显式跨空间转换
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Native、Avalonia、Screen Space、DPI、Coordinate Contract
+**适用范围**：Native Viewport、Popup、Diagnostic、Overlay、Pointer、窗口布局。
+
+Native Client、Screen、Owner/TopLevel、Avalonia Logical/DIP 不是同一坐标空间。任何跨 Native/Avalonia 的点都必须声明 Source Space 和 Target Space，并沿明确链路转换：
+
+```text
+Native Client → Screen → Owner/TopLevel → Avalonia Logical/DIP
+```
+
+禁止把只有 `X/Y` 的数值直接当作另一宿主的坐标。验证至少包含 DPI、窗口移动、Owner 偏移和往返误差。

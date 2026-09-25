@@ -72,3 +72,17 @@ Measure constraint
 
 **关联 Incident**：INC-2026-08-09-001
 **关联 Knowledge**：K-VAL-002
+
+---
+
+## K-DIAG-001 Diagnostic 必须保持观察者与输入透明
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Diagnostic、Observer、Pointer、Capture、Overlay、Viewport
+**适用范围**：Diagnostic、Viewport、Native Probe、Overlay、Highlight、Input Router。
+
+Diagnostic 的身份是 Observer：可以观察 Pointer、读取 HWND、报告坐标和绘制不阻塞的 Highlight，但不得抢 Capture、阻塞目标 Pointer、成为新的 Input Owner、调用 Router 作为第二入口或创建长期 Native UI Owner。
+
+Diagnostic 开启与关闭不应改变目标 Viewport 的输入可用性。任何新增 Diagnostic 交互都必须先证明不会改变生产输入仲裁和生命周期。

@@ -179,3 +179,25 @@ Region Drawing 同时跨 Pointer、Picking、MapPoint、Draft、Vector Overlay�
 
 **关联 Incident**：INC-2026-08-10-006
 **关联 Knowledge**：K-REN-001、K-REN-002、K-REN-004
+
+---
+
+## L-NATIVE-001 Native/Avalonia UI 问题连续两次局部 Placement 修复失败后审查 Airspace 与 Ownership
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**适用范围**：NativeControlHost、Popup、TopLevel、HWND、Diagnostic Overlay、Viewport。
+
+同类视觉问题连续两次针对性 Placement、Offset、Gravity、ZIndex 或 Window 修复仍未解决，必须停止参数修补，转入 Window Ownership、Airspace、Coordinate Space、Input Ownership 和 Runtime Route 审查。该停止线适用于 Rendering 之外的 Native/Avalonia UI 问题。
+
+---
+
+## L-TEST-001 测试使用自己制造的错误平台前提时绿灯更危险
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**适用范围**：平台 Adapter、Input Router、Source Contract、Runtime Wiring。
+
+人工构造的错误平台值、把 Source Contains 当成 Runtime Wiring、或只验证 Helper PASS，都可能让错误实现稳定绿灯。跨平台行为测试必须从真实平台 Enum / Message Contract 开始，随后覆盖 Adapter、统一模型、Router、Consumer 和领域结果。

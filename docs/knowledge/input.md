@@ -147,3 +147,33 @@ Native HWND 存在时 Native 是 authoritative source；没有 Native HWND 时 A
 生产 Host 只能进入 Production Input Sink，不得直接调用 Consumer、UiVm 输入业务方法或创建第二套 Router、Lifecycle、CaptureCoordinator、Composition。Canonical Consumer 层不得依赖 HWND、WndProc、Avalonia event args、Native message 或 Host control 类型。
 
 E5 验收基线：World.Tests 22 个已登记 baseline failure，New Regression = 0；最终验收 HEAD 记录于 E5 freeze 提交报告。
+
+---
+
+## K-INP-003 Input Router 只有接入真实生产 Source 才算完成
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**适用范围**：Native HWND、Avalonia Pointer、Production Input Sink、ViewportInputRouter、Consumer 装配。
+
+Router、Consumer 和测试可以独立存在，但这不等于生产输入已经统一。完成判定必须证明：
+
+```text
+Real Platform Event → Real Adapter → Editor Event → Production Router → Arbitration → Owner → Consumer → Domain/Core
+```
+
+禁止以“Router 可实例化”“Helper PASS”或“测试有 Router”代替生产接线证据；必须审计真实 Native/Avalonia Source 是否仍直接调用 UiVm 或 Consumer。
+
+---
+
+## K-INP-004 平台输入编码必须在 Adapter 边界正规化
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**适用范围**：Win32/Avalonia 键盘、修饰键、鼠标按钮、滚轮、Pointer ID、DPI、坐标。
+
+平台编码只能在 Adapter 内解释；Router、Consumer 和领域 Core 只消费统一语义，例如 `EditorKey.Alt` 与 `EditorPointerModifiers.Alt`。`0x0020` 不得凭经验映射为 Alt，必须依据平台合同区分 XBUTTON1 等真实含义。
+
+验证必须覆盖真实平台 Enum / Message Contract，再验证 Adapter 输出的统一语义。

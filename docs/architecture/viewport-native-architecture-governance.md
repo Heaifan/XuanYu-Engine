@@ -1,6 +1,6 @@
 # Viewport Native Architecture Governance
 
-状态：D1-FIX1 冻结（2026-09-23）
+状态：D1-FIX1 冻结；A1.5 可行性已验证（2026-09-24）
 
 本文件修正 D1 对 NativeControlHost、Win32 child HWND 和 Diagnostic Native Popup 的治理定义。它只更新架构事实与守卫，不执行生产迁移。
 
@@ -65,9 +65,9 @@ Avalonia MainWindow
 - Avalonia 继续是唯一 Editor UI / Window Owner。
 - `XYViewportControl` 拥有 Viewport UI 生命周期、布局、输入与 Overlay 组合。
 - Vulkan 只提供 Renderer、Render Target 或可组合 GPU 结果，不创建 Editor UI。
-- 旧 NativeControlHost 路线必须先经过 `A1.5 Vulkan Offscreen + Avalonia GPU Composition Spike`，成功后才能逐项退休旧 allowlist。
+- 旧 NativeControlHost 路线已经完成 `A1.5 Vulkan Offscreen + Avalonia GPU Composition Spike` 可行性验证，后续按独立迁移计划逐项退休旧 allowlist；A1.5 PASS 不等于生产 Viewport 已迁移。
 
-## A1 决策记录
+## A1 / A1.5 决策记录
 
 ```yaml
 spike: A1 Composition Spike
@@ -77,7 +77,15 @@ reason: NativeControlHost + WS_CHILD cannot satisfy reliable Avalonia overlay co
 next: A1.5 Vulkan Offscreen + Avalonia GPU Composition Spike
 ```
 
-结论：禁止继续以 NativeControlHost airspace 修补作为长期方案。A1 失败不等于当前生产路径已迁移；它只冻结了当前路径的 Transitional 语义和下一条验证路线。
+```yaml
+spike: A1.5 Vulkan Offscreen + Avalonia GPU Composition
+commit: f67210debb3a4f201662933b0d549a3939d8850d
+result: PASS
+proved: Vulkan GPU Image -> Avalonia Vulkan Backend -> ImportImage -> CompositionDrawingSurface.UpdateWithSemaphoresAsync -> CompositionSurfaceVisual -> Avalonia Overlay
+scope: feasibility only; spike remains isolated and is not production migration
+```
+
+结论：禁止继续以 NativeControlHost airspace 修补作为长期方案。A1.5 已解除 GPU Composition 技术可行性阻塞，但当前生产路径仍是 Transitional，必须继续完成输入、承载和真机验收迁移。
 
 ## Native Window Inventory：CURRENT 与 TARGET 分离
 
@@ -140,6 +148,6 @@ The guard distinguishes renderer interop (`VkSurfaceKHR`, Swapchain, Device, Pre
 
 ## Integration boundary
 
-Allowed for WAVE-1 only as documented transitional debt: current production rendering may continue to use the exact allowlist while A1.5 is pending. New features must not depend on it, extend it, or add UI over it as a long-term solution. A1.5 must prove the target composited route before the legacy paths can be retired.
+Allowed for WAVE-1 only as documented transitional debt: current production rendering may continue to use the exact allowlist while migration is incomplete. New features must not depend on it, extend it, or add UI over it as a long-term solution. A1.5 has proved the target composited route is feasible; each legacy path still requires its own migration and verification before retirement.
 
-明确未完成：生产迁移、A1.5 Spike、删除旧 Native 路径、删除 migration-only probes、Camera/Picking/Gizmo/Region/Road/Marker/Snap 行为修改、真机视觉验收。
+明确未完成：生产迁移、删除旧 Native 路径、删除 migration-only probes、Camera/Picking/Gizmo/Region/Road/Marker/Snap 行为修改、真机视觉验收。
