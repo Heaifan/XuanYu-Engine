@@ -5,7 +5,6 @@
              x:Class="XuanYu.Editor.UI.ContextToolBar"
              x:DataType="local:UiVm">
   <Border x:Name="ContextRoot" IsVisible="{Binding IsEditMode}"
-          MinWidth="220"
           BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
           CornerRadius="{StaticResource Radius.Standard}" Padding="8,4">
     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">

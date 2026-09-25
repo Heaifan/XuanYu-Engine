@@ -25,6 +25,12 @@ public sealed class RegionDrawingState
     public bool AddVertex(MapPoint point)
     {
         if (Draft is null) return false;
+        if (!Draft.Vertices.IsDefaultOrEmpty && Draft.Vertices[^1] == point)
+        {
+            Cursor = point;
+            IsCloseCandidate = false;
+            return false;
+        }
         _undo.Push(Draft.Vertices);
         _redo.Clear();
         Draft = Draft with { Vertices = Draft.Vertices.Add(point) };

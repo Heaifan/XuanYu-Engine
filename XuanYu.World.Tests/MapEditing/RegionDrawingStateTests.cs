@@ -31,4 +31,17 @@ public sealed class RegionDrawingStateTests
         Assert.False(state.IsActive);
         Assert.Null(state.Cursor);
     }
+
+    [Fact]
+    public void Repeated_last_vertex_does_not_increase_draft_count()
+    {
+        var state = new RegionDrawingState();
+        state.Start(MapLayerId.New(), "区域", MapRegionKind.Generic);
+        state.AddVertex(new MapPoint(1, 1));
+        state.AddVertex(new MapPoint(2, 1));
+
+        Assert.False(state.AddVertex(new MapPoint(2, 1)));
+        Assert.Equal(2, state.Draft!.Vertices.Length);
+        Assert.Equal(new MapPoint(2, 1), state.Cursor);
+    }
 }

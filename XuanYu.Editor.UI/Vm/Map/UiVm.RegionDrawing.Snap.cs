@@ -19,9 +19,9 @@ public sealed partial class UiVm
 
     MapPoint ResolveRegionDrawingPoint(MapPoint raw, double x, double y, ViewportState viewport, bool suppressed)
     {
-        if (suppressed)
+        if (suppressed || !IsSnapEnabled)
         {
-            _regionDrawingSnapSuppressed = true;
+            _regionDrawingSnapSuppressed = suppressed;
             _regionDrawingSnap.Clear();
             return raw;
         }

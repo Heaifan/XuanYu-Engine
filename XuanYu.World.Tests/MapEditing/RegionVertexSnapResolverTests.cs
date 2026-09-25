@@ -22,6 +22,12 @@ public sealed class RegionVertexSnapResolverTests
     }
 
     [Fact]
+    public void Editor_snap_starts_enabled()
+    {
+        Assert.True(XuanYu.Editor.UI.EditorToolSnapshot.Initial.IsSnapEnabled);
+    }
+
+    [Fact]
     public void Nearby_vertex_snaps_within_enter_radius()
     {
         var map = Map(); var target = map.Regions[1]; var projection = Projection();

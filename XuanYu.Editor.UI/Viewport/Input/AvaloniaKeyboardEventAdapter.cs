@@ -14,7 +14,7 @@ public readonly record struct AvaloniaKeySample(
 public static class AvaloniaKeyboardEventAdapter
 {
     public static EditorKeyEvent Convert(AvaloniaKeySample sample, ViewportKeySource source) =>
-        new(new(sample.Key), sample.Action == AvaloniaKeyAction.Down ? EditorKeyAction.Down : EditorKeyAction.Up,
+        new(new(MapKey(sample.Key)), sample.Action == AvaloniaKeyAction.Down ? EditorKeyAction.Down : EditorKeyAction.Up,
             MapModifiers(sample.Modifiers), sample.IsRepeat, source);
 
     public static EditorKeyEvent Convert(KeyEventArgs args, ViewportKeySource source) =>
@@ -22,6 +22,8 @@ public static class AvaloniaKeyboardEventAdapter
 
     static AvaloniaKeyAction Action(KeyEventArgs args) => args.RoutedEvent == InputElement.KeyUpEvent
         ? AvaloniaKeyAction.Up : AvaloniaKeyAction.Down;
+
+    static int MapKey(int key) => key is (int)Key.LeftAlt or (int)Key.RightAlt ? 0x12 : key;
 
     static AvaloniaKeyModifiers MapModifiers(KeyModifiers modifiers) =>
         (modifiers.HasFlag(KeyModifiers.Shift) ? AvaloniaKeyModifiers.Shift : 0) |

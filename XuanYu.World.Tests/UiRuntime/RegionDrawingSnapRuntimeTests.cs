@@ -50,6 +50,27 @@ public sealed partial class RegionDrawingSnapRuntimeTests
         Assert.Equal("吸附中", vm.RegionDrawingSnapStatus);
     }
 
+    [Fact]
+    public void Turning_snap_off_suppresses_region_vertex_snap()
+    {
+        var vm = CreateWithExistingRegion(out var target);
+        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.MapEditor);
+        vm.ToggleSnapCommand.Execute(null);
+        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
+        vm.SelectToolCommand.Execute("区域绘制");
+        var start = FindHit(vm, 500, 500);
+        vm.RegionDrawingPointerPressed(start.X, start.Y, Viewport);
+        var projection = ViewProjectionState.Create(vm.RenderSnapshot.Camera!.Value, Viewport);
+        var screen = projection.ProjectWorldPoint(new(target.X, target.Y,
+            vm.MapSession.CurrentMap.Surface.BaseHeightMeters));
+
+        vm.RegionDrawingPointerMoved(screen.X + 4, screen.Y, Viewport);
+
+        Assert.False(vm.IsSnapEnabled);
+        Assert.False(vm.IsRegionDrawingSnapActive);
+        Assert.NotEqual(target, vm.RegionDrawingCursor);
+    }
+
     static UiVm CreateWithExistingRegion(out MapPoint target)
     {
         var vm = RegionDrawingTestVm.Create();
