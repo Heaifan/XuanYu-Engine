@@ -32,6 +32,12 @@ public sealed class DiagnosticFloatingToolWindow : Window
 
     public void ReplaceContent(Control content) => Content = content;
 
+    public void ReassertOwnedZOrder()
+    {
+        if (!OperatingSystem.IsWindows() || TryGetPlatformHandle() is not { Handle: var handle }) return;
+        SetWindowPos(handle, HwndTop, 0, 0, 0, 0, NoActivate | NoMove | NoSize | ShowWindow);
+    }
+
     void OnDragPressed(object? sender, PointerPressedEventArgs e)
     {
         if (IsButtonHit(e.Source)) return;
@@ -56,4 +62,10 @@ public sealed class DiagnosticFloatingToolWindow : Window
         if (_dragSurface is not null) DetachDragSurface();
         base.OnClosed(e);
     }
+
+    const uint NoSize = 0x0001, NoMove = 0x0002, ShowWindow = 0x0040, NoActivate = 0x0010;
+    static readonly nint HwndTop = 0;
+    [System.Runtime.InteropServices.DllImport("user32")]
+    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+    static extern bool SetWindowPos(nint hWnd, nint after, int x, int y, int cx, int cy, uint flags);
 }
