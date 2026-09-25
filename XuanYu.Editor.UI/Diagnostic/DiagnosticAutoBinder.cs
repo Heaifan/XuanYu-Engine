@@ -8,8 +8,10 @@ public static class DiagnosticAutoBinder
 {
     public static void Bind(Control root)
     {
-        var used = new HashSet<string>(DiagnosticRegistry.Targets.Keys, StringComparer.Ordinal);
-        foreach (var target in root.GetVisualDescendants().OfType<Control>().Prepend(root))
+        var targets = root.GetVisualDescendants().OfType<Control>().Prepend(root).ToArray();
+        var used = targets.Select(XYDiagnostic.GetDebugId).OfType<string>()
+            .ToHashSet(StringComparer.Ordinal);
+        foreach (var target in targets)
         {
             if (XYDiagnostic.GetDebugId(target) is not null || !IsCandidate(target)) continue;
             var token = Token(target); var scope = Scope(target) ?? "XYE.AUTO";
