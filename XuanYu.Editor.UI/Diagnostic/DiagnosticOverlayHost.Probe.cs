@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
 
@@ -10,12 +9,9 @@ public partial class DiagnosticOverlayHost
     DiagnosticProbeResult? _probeResult;
     DiagnosticProbeResult? _lockedProbeResult;
     Border? _probeHighlight;
-    Border? _probeCard;
-    Rect? _previewTargetBounds;
-    bool _placingPreview;
 
     public int ActiveProbeHighlightCount => _probeHighlight is null ? 0 : 1;
-    public int ActiveProbeCardCount => _probeCard is null ? 0 : 1;
+    public int ActiveProbeCardCount => _toolWindow?.IsVisible == true ? 1 : 0;
     public bool IsProbeLocked => _lockedProbeResult is not null;
 
     public void LockProbe()
@@ -42,53 +38,25 @@ public partial class DiagnosticOverlayHost
 
     void RenderProbe()
     {
-        ClearProbeVisuals();
         var result = IsProbeLocked ? _lockedProbeResult : _probeResult;
-        if (result is null || !_loaded || _floatingLayer is null) return;
+        if (result is null || !_loaded || _floatingLayer is null)
+        {
+            ClearProbeHighlight(); HideToolWindow(); return;
+        }
         if (!TryGetFloatingBounds(result.DeepVisual, out var bounds)) return;
-        var viewportTarget = IsViewportDiagnosticTarget(result);
-        _probeHighlight = viewportTarget ? null : new Border
+        ClearProbeHighlight();
+        if (!IsViewportDiagnosticTarget(result))
         {
-            Width = bounds.Width, Height = bounds.Height,
-            BorderBrush = Brushes.Orange,
-            BorderThickness = new Thickness(2), IsHitTestVisible = false,
-        };
-        var snapshot = DiagnosticElementSnapshot.Capture(result);
-        var target = result.SemanticTarget as Control ?? result.DeepVisual as Control;
-        var card = new DiagnosticFloatingCard(snapshot,
-            text => target is null ? Task.CompletedTask : _clipboard.SetTextAsync(target, text), IsProbeLocked);
-        card.IsHitTestVisible = true;
-        AttachCardDrag(card);
-        card.Expanded += () => OpenDetails(snapshot, target);
-        card.Closed += () => { UnlockProbe(); SetProbeResult(null); };
-        card.PinToggled += () => { if (IsProbeLocked) UnlockProbe(); else LockProbe(); };
-        _probeCard = new Border { Child = card, IsHitTestVisible = true };
-        _previewTargetBounds = IsProbeLocked ? null : bounds;
-        _probeCard.SizeChanged += (_, _) => ReflowPreviewCard();
-        if (_probeHighlight is not null)
-        {
+            _probeHighlight = new Border
+            {
+                Width = bounds.Width, Height = bounds.Height,
+                BorderBrush = Brushes.Orange, BorderThickness = new Thickness(2),
+                IsHitTestVisible = false,
+            };
             Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
+            ProbeOwner.Children.Add(_probeHighlight);
         }
-        ShowNativeProbeOverlay(_probeHighlight, _probeCard, bounds);
-        ClampCardToWindow();
-        if (!IsProbeLocked)
-        {
-            PlacePreviewCard(bounds);
-        }
-        ClampCardToWindow();
-        if (_probeHighlight is not null) _probeHighlight.SetValue(Panel.ZIndexProperty, 200);
-        _probeCard.SetValue(Panel.ZIndexProperty, 201);
+        var snapshot = DiagnosticElementSnapshot.Capture(result);
+        UpdateToolWindow(snapshot, result.SemanticTarget as Control ?? result.DeepVisual as Control, bounds);
     }
-
-    void ReflowPreviewCard()
-    {
-        if (_placingPreview || _probeCard is null) return;
-        _placingPreview = true;
-        ClampCardToWindow();
-        if (!IsProbeLocked && _previewTargetBounds is { } target)
-            PlacePreviewCard(target);
-        ClampCardToWindow();
-        _placingPreview = false;
-    }
-
 }

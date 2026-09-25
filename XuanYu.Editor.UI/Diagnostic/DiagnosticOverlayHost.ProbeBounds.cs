@@ -34,9 +34,4 @@ public partial class DiagnosticOverlayHost
         if (ReferenceEquals(lockedRoot, root)) ClearProbeHighlight();
     }
 
-    void ClearProbeHighlight()
-    {
-        if (_probeHighlight is null) return;
-        _floatingLayer?.Children.Remove(_probeHighlight); _probeHighlight = null;
-    }
 }

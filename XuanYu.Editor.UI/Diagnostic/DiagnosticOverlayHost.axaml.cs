@@ -11,7 +11,6 @@ public partial class DiagnosticOverlayHost : UserControl
     UiVm? _vm;
     bool _loaded;
     Canvas? _floatingLayer;
-    DiagnosticNativeWindowSnapshot? _lastNativeWindowProbe;
     VulkanNativeHost? _nativeViewportHost;
     readonly List<TopLevel> _probeRoots = [];
 
@@ -66,8 +65,9 @@ public partial class DiagnosticOverlayHost : UserControl
         DetachTopLevel();
         DiagnosticPopupHost.PopupRootChanged -= OnPopupRootChanged;
         DetachVm();
-        CloseAll();
+        CloseAll(); ResetCardPlacement();
         ClearProbeVisuals();
+        DisposeToolWindow();
         Dispatcher.UIThread.Post(DetachFloatingLayer);
     }
 
@@ -93,8 +93,6 @@ public partial class DiagnosticOverlayHost : UserControl
 
     void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(UiVm.IsDiagnosticMode) or
-            nameof(UiVm.IsDiagnosticRegionBoundsMode) or nameof(UiVm.InspectorIdentity))
-            Reconcile();
+        if (e.PropertyName is nameof(UiVm.IsDiagnosticMode) or nameof(UiVm.IsDiagnosticRegionBoundsMode) or nameof(UiVm.InspectorIdentity)) Reconcile();
     }
 }

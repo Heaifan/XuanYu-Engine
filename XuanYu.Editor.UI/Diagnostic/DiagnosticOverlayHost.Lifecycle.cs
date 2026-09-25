@@ -26,7 +26,6 @@ public partial class DiagnosticOverlayHost
             window.Activated += OnWindowActivated;
             window.Deactivated += OnWindowDeactivated;
             window.PropertyChanged += OnWindowPropertyChanged;
-            window.SizeChanged += OnWindowSizeChanged;
         }
     }
 
@@ -36,7 +35,6 @@ public partial class DiagnosticOverlayHost
         window.Activated -= OnWindowActivated;
         window.Deactivated -= OnWindowDeactivated;
         window.PropertyChanged -= OnWindowPropertyChanged;
-        window.SizeChanged -= OnWindowSizeChanged;
         foreach (var root in _probeRoots.ToArray()) DetachProbeRoot(root);
         foreach (var popup in _probePopups.ToArray()) DetachProbePopup(popup);
         _topLevel = null;
@@ -73,8 +71,6 @@ public partial class DiagnosticOverlayHost
             ClearProbeVisuals();
         }
     }
-
-    void OnWindowSizeChanged(object? sender, SizeChangedEventArgs e) => ClampCardToWindow();
 
     void OnPopupRootChanged(TopLevel root, bool open)
     {

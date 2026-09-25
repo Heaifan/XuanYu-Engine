@@ -46,17 +46,15 @@ public partial class DiagnosticOverlayHost
         else SetProbeResult(target);
     }
 
-    bool CurrentIsNativeViewport(VulkanNativeHost host) =>
-        ReferenceEquals(_nativeViewportHost, host) &&
-        ReferenceEquals(_probeResult?.DeepVisual, host);
-
     void RepositionNativeViewportProbe(VulkanNativeHost host)
     {
         if (!TryGetFloatingBounds(host, out var bounds)) return;
-        _previewTargetBounds = bounds;
-        PlacePreviewCard(bounds);
-        ClampCardToWindow();
+        PlaceToolWindow(bounds);
     }
+
+    bool CurrentIsNativeViewport(VulkanNativeHost host) =>
+        ReferenceEquals(_nativeViewportHost, host) &&
+        ReferenceEquals(_probeResult?.DeepVisual, host);
 
     void ClearNativeViewportOverride(VulkanNativeHost host)
     {
@@ -75,17 +73,7 @@ public partial class DiagnosticOverlayHost
         if (_floatingLayer is not null) _lastProbePointer = e.GetPosition(_floatingLayer);
     }
 
-    bool TryRepositionViewportProbe(Visual hit)
-    {
-        if (IsProbeLocked || _previewTargetBounds is not { } target || !IsViewportProbeTarget(hit))
-            return false;
-        var current = _probeResult?.SemanticTarget ?? _probeResult?.DeepVisual;
-        if (!ReferenceEquals(current, hit) && !ReferenceEquals(_probeResult?.DeepVisual, hit))
-            return false;
-        PlacePreviewCard(target);
-        ClampCardToWindow();
-        return true;
-    }
+    bool TryRepositionViewportProbe(Visual hit) => false;
 
     static bool IsViewportProbeTarget(Visual visual) =>
         visual is VulkanViewport or VulkanNativeHost;

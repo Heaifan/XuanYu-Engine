@@ -40,13 +40,10 @@ public sealed class DiagnosticR1FloatingRuntimeTests
             var window = new Window { Width = 320, Height = 180, Content = new Grid { Children = { target, host } } };
             window.Show(); window.UpdateLayout(); Dispatcher.UIThread.RunJobs();
             host.SetProbeResult(DiagnosticProbeResolver.Resolve(target)); Dispatcher.UIThread.RunJobs(); window.UpdateLayout();
-            var field = typeof(DiagnosticOverlayHost).GetField("_probeCard", BindingFlags.Instance | BindingFlags.NonPublic);
-            var card = (Control)field!.GetValue(host)!; var actual = (Control)((Border)card).Child!;
-            var left = Canvas.GetLeft(card); var top = Canvas.GetTop(card);
-            Assert.True(left >= 0 && top >= 0 && left + card.Bounds.Width <= window.ClientSize.Width &&
-                top + card.Bounds.Height <= window.ClientSize.Height);
-            Assert.True(actual.Bounds.Width <= window.ClientSize.Width - 24);
-            Assert.True(actual.Bounds.Height <= window.ClientSize.Height - 24); window.Close();
+            var tool = (DiagnosticFloatingToolWindow)typeof(DiagnosticOverlayHost)
+                .GetField("_toolWindow", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(host)!;
+            Assert.True(tool.IsVisible); Assert.IsType<DiagnosticFloatingCard>(tool.Content);
+            Assert.Equal(WindowDecorations.None, tool.WindowDecorations); window.Close();
         });
     }
 
@@ -60,9 +57,9 @@ public sealed class DiagnosticR1FloatingRuntimeTests
             var window = new Window { Width = 320, Height = 180, Content = new Grid { Children = { target, host } } };
             window.Show(); window.UpdateLayout(); host.SetProbeResult(DiagnosticProbeResolver.Resolve(target));
             Dispatcher.UIThread.RunJobs(); window.UpdateLayout();
-            var cardField = typeof(DiagnosticOverlayHost).GetField("_nativeCardPopup", BindingFlags.Instance | BindingFlags.NonPublic);
-            var popup = (Popup)cardField!.GetValue(host)!;
-            Assert.Same(window.Content, popup.OverlayInputPassThroughElement); window.Close();
+            var tool = (DiagnosticFloatingToolWindow)typeof(DiagnosticOverlayHost)
+                .GetField("_toolWindow", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(host)!;
+            Assert.True(tool.IsVisible); Assert.Empty(host.GetVisualDescendants().OfType<Popup>()); window.Close();
         });
     }
 

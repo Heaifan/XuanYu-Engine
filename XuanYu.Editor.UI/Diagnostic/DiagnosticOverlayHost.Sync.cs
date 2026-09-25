@@ -10,6 +10,7 @@ public partial class DiagnosticOverlayHost
         CloseAll();
         if (_vm is not null && !_vm.IsDiagnosticMode)
         {
+            ResetCardPlacement();
             ClearProbeVisuals();
             _probeResult = null;
             _lockedProbeResult = null;

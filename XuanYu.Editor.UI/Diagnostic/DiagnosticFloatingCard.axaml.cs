@@ -15,7 +15,21 @@ public partial class DiagnosticFloatingCard : Border
 
     public DiagnosticFloatingCard(DiagnosticElementSnapshot snapshot, Func<string, Task> copy, bool locked = true)
     {
-        InitializeComponent(); _snapshot = snapshot; _copy = copy;
+        InitializeComponent();
+        ApplySnapshot(snapshot, copy, locked);
+        CopyAi.Click += async (_, _) => await _copy(DiagnosticReportFormatter.FormatAi(_snapshot));
+        Expand.Click += (_, _) => Expanded?.Invoke(); Close.Click += (_, _) => Closed?.Invoke();
+        Pin.Click += (_, _) => PinToggled?.Invoke();
+    }
+
+    public void UpdateSnapshot(DiagnosticElementSnapshot snapshot, Func<string, Task> copy, bool locked)
+    {
+        ApplySnapshot(snapshot, copy, locked);
+    }
+
+    void ApplySnapshot(DiagnosticElementSnapshot snapshot, Func<string, Task> copy, bool locked)
+    {
+        _snapshot = snapshot; _copy = copy;
         Title.Text = snapshot.Identity.IsMapped ? snapshot.Identity.DisplayIndex :
             snapshot.InstanceName != "N/A" ? snapshot.InstanceName : snapshot.ComponentType;
         Locked.IsVisible = locked; Width = locked ? 330 : 250;
@@ -23,8 +37,5 @@ public partial class DiagnosticFloatingCard : Border
         Expand.IsVisible = locked; Close.IsVisible = locked;
         Identity.Text = $"实例名称：{snapshot.InstanceName}\n组件来源：{snapshot.Identity.Source}";
         Details.Text = $"调试编号：{snapshot.DebugId}\n实际尺寸：{snapshot.ActualSize}";
-        CopyAi.Click += async (_, _) => await _copy(DiagnosticReportFormatter.FormatAi(_snapshot));
-        Expand.Click += (_, _) => Expanded?.Invoke(); Close.Click += (_, _) => Closed?.Invoke();
-        Pin.Click += (_, _) => PinToggled?.Invoke();
     }
 }

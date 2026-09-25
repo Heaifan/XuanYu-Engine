@@ -6,7 +6,8 @@
         CornerRadius="{StaticResource Radius.Standard}">
   <ScrollViewer MaxHeight="500" VerticalScrollBarVisibility="Auto">
    <StackPanel Spacing="8">
-    <StackPanel x:Name="Header" Orientation="Horizontal" Spacing="6">
+    <StackPanel x:Name="Header" Orientation="Horizontal" Spacing="6"
+                Background="Transparent" IsHitTestVisible="True">
       <TextBlock x:Name="Title" Foreground="White" FontWeight="SemiBold"/>
       <TextBlock Text="● 已锁定" Foreground="{StaticResource Color.Success}"/>
       <Button x:Name="Close" Content="关闭" HorizontalAlignment="Right"/>

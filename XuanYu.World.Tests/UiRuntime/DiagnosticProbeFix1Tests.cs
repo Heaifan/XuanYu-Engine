@@ -53,10 +53,13 @@ public sealed class DiagnosticProbeFix1Tests
             window.Show(); window.UpdateLayout(); Dispatcher.UIThread.RunJobs();
             host.SetProbeResult(DiagnosticProbeResolver.Resolve(target));
             host.LockProbe();
-            var field = typeof(DiagnosticOverlayHost).GetField("_probeCard",
+            var field = typeof(DiagnosticOverlayHost).GetField("_toolCard",
                 BindingFlags.Instance | BindingFlags.NonPublic);
             var card = field?.GetValue(host) as Control;
-            Assert.NotNull(card); Assert.Equal("Canvas", card!.Parent?.GetType().Name); window.Close();
+            Assert.NotNull(card);
+            var tool = (DiagnosticFloatingToolWindow)typeof(DiagnosticOverlayHost)
+                .GetField("_toolWindow", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(host)!;
+            Assert.True(tool.IsVisible); Assert.Same(card, tool.Content); window.Close();
         });
     }
 

@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -15,7 +14,7 @@ public sealed class DiagnosticNativeOverlayRuntimeTests
     public DiagnosticNativeOverlayRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Probe_visuals_are_hosted_by_popup_roots()
+    public void Probe_card_is_hosted_by_one_owned_tool_window()
     {
         _fixture.Run(() =>
         {
@@ -25,22 +24,19 @@ public sealed class DiagnosticNativeOverlayRuntimeTests
             window.Show(); window.UpdateLayout(); Dispatcher.UIThread.RunJobs();
             host.SetProbeResult(new DiagnosticProbeResult(target, target, "N/A", "N/A",
                 "Button", "N/A", "N/A", "N/A", true, true, target.Bounds, DiagnosticProbeMode.Semantic));
-            var cardField = typeof(DiagnosticOverlayHost).GetField("_nativeCardPopup", BindingFlags.Instance | BindingFlags.NonPublic);
-            var highlightField = typeof(DiagnosticOverlayHost).GetField("_nativeHighlightPopup", BindingFlags.Instance | BindingFlags.NonPublic);
-            Assert.True(((Avalonia.Controls.Primitives.Popup)cardField!.GetValue(host)!).IsOpen);
-            Assert.True(((Avalonia.Controls.Primitives.Popup)highlightField!.GetValue(host)!).IsOpen);
-            var popup = (Avalonia.Controls.Primitives.Popup)cardField.GetValue(host)!;
-            var placement = popup.PlacementRect!.Value;
-            Assert.Equal(Avalonia.Controls.PlacementMode.AnchorAndGravity, popup.Placement);
-            Assert.True(placement.Left >= 12 && placement.Top >= 12);
-            Assert.True(placement.Right <= window.ClientSize.Width - 12);
-            Assert.True(placement.Bottom <= window.ClientSize.Height - 12);
+            var tool = (DiagnosticFloatingToolWindow)Field(host, "_toolWindow")!;
+            Assert.True(tool.IsVisible);
+            Assert.False(tool.CanResize);
+            Assert.False(tool.ShowInTaskbar);
+            Assert.Equal(WindowDecorations.None, tool.WindowDecorations);
+            Assert.IsType<DiagnosticFloatingCard>(tool.Content);
+            Assert.Empty(host.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.Popup>());
             window.Close();
         });
     }
 
     [Fact]
-    public void Popup_probe_records_native_window_policy_facts()
+    public void Target_changes_reuse_the_same_tool_window_and_card()
     {
         _fixture.Run(() =>
         {
@@ -49,19 +45,19 @@ public sealed class DiagnosticNativeOverlayRuntimeTests
             var window = new Window { Width = 320, Height = 200,
                 Content = new Grid { Children = { target, host } } };
             window.Show(); window.UpdateLayout(); Dispatcher.UIThread.RunJobs();
-            host.SetProbeResult(new DiagnosticProbeResult(target, target, "N/A", "N/A",
-                "Button", "N/A", "N/A", "N/A", true, true, target.Bounds,
-                DiagnosticProbeMode.Semantic));
-            var field = typeof(DiagnosticOverlayHost).GetField("_lastNativeWindowProbe",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-            var snapshot = field!.GetValue(host)!;
-            var text = snapshot.GetType().GetMethod("Format")!.Invoke(snapshot, null) as string;
-            Assert.Contains("PopupHwnd=", text);
-            Assert.Contains("OwnerHwnd=", text);
-            Assert.Contains("TopMost=", text);
-            Assert.Contains("ForegroundHwnd=", text);
+            host.SetProbeResult(DiagnosticProbeResolver.Resolve(target)); Dispatcher.UIThread.RunJobs();
+            var first = (DiagnosticFloatingToolWindow)Field(host, "_toolWindow")!;
+            var card = first.Content;
+            var second = new TextBlock { Text = "Second" };
+            ((Grid)window.Content!).Children.Add(second);
+            host.SetProbeResult(DiagnosticProbeResolver.Resolve(second));
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(first, Field(host, "_toolWindow"));
+            Assert.Same(card, first.Content);
             window.Close();
         });
     }
 
+    static object? Field(object target, string name) => typeof(DiagnosticOverlayHost)
+        .GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(target);
 }

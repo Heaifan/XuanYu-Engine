@@ -1,8 +1,8 @@
 using System.Reflection;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -14,7 +14,7 @@ public sealed class DiagnosticViewportInputPassthroughTests
     public DiagnosticViewportInputPassthroughTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Viewport_probe_uses_card_popup_without_native_highlight_popup()
+    public void Viewport_probe_uses_tool_window_without_native_popups()
     {
         _fixture.Run(() =>
         {
@@ -26,9 +26,8 @@ public sealed class DiagnosticViewportInputPassthroughTests
                 "N/A", "VulkanViewport", "N/A", "N/A", "XYE.VIEWPORT", true, true,
                 target.Bounds, DiagnosticProbeMode.Semantic));
             Dispatcher.UIThread.RunJobs();
-            var card = (Popup)Field(host, "_nativeCardPopup")!.GetValue(host)!;
-            var highlight = (Popup?)Field(host, "_nativeHighlightPopup")!.GetValue(host);
-            Assert.True(card.IsOpen); Assert.True(highlight is null || !highlight.IsOpen);
+            var tool = (DiagnosticFloatingToolWindow)Field(host, "_toolWindow")!.GetValue(host)!;
+            Assert.True(tool.IsVisible); Assert.Empty(host.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.Popup>());
             window.Close();
         });
     }
