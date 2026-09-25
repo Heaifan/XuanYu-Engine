@@ -46,6 +46,7 @@ public static partial class DiagnosticProbeResolver
     {
         TextBlock text => Value(text.Text),
         TextBox text => Value(text.Text),
+        MenuItem menu => Value(menu.Header?.ToString()),
         ContentControl content => content.Content?.ToString() ?? Missing,
         ContentPresenter presenter => presenter.Content?.ToString() ?? Missing,
         _ => Missing

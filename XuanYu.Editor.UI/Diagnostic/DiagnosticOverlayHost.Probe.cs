@@ -16,13 +16,19 @@ public partial class DiagnosticOverlayHost
 
     public void LockProbe()
     {
-        if (_probeResult is not null) _lockedProbeResult = _probeResult;
+        if (_probeResult is not null)
+        {
+            _lockedProbeResult = _probeResult;
+            CaptureTrackedTarget(_probeResult);
+        }
         RenderProbe();
     }
 
     public void UnlockProbe()
     {
         _lockedProbeResult = null;
+        TrackedSnapshot = null;
+        LastKnownBounds = null;
         RenderProbe();
     }
 
@@ -47,6 +53,7 @@ public partial class DiagnosticOverlayHost
         _nativeViewportHost = result.DeepVisual as VulkanNativeHost;
         _probeResult = result;
         _lockedProbeResult = result;
+        CaptureTrackedTarget(result);
         RenderProbe();
     }
 
@@ -57,9 +64,9 @@ public partial class DiagnosticOverlayHost
         {
             ClearProbeHighlight(); HideToolWindow(); return;
         }
-        if (!TryGetFloatingBounds(result.DeepVisual, out var bounds)) return;
+        if (!TryGetTrackedBounds(result, out var bounds)) return;
         ClearProbeHighlight();
-        if (!IsViewportDiagnosticTarget(result))
+        if (TopLevel.GetTopLevel(result.DeepVisual) is not null && !IsViewportDiagnosticTarget(result))
         {
             _probeHighlight = new Border
             {
@@ -70,7 +77,8 @@ public partial class DiagnosticOverlayHost
             Canvas.SetLeft(_probeHighlight, bounds.X); Canvas.SetTop(_probeHighlight, bounds.Y);
             ProbeOwner.Children.Add(_probeHighlight);
         }
-        var snapshot = DiagnosticElementSnapshot.Capture(result);
+        var snapshot = IsProbeLocked ? TrackedSnapshot ?? DiagnosticElementSnapshot.Capture(result) :
+            DiagnosticElementSnapshot.Capture(result);
         UpdateToolWindow(snapshot, result.SemanticTarget as Control ?? result.DeepVisual as Control, bounds);
     }
 }

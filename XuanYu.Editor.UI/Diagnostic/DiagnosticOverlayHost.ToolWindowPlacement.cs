@@ -43,7 +43,9 @@ public partial class DiagnosticOverlayHost
         if (_toolWindow is null) return;
         var result = IsProbeLocked ? _lockedProbeResult : _probeResult;
         if (result is null) return;
-        var panel = new DiagnosticDetailPanel(DiagnosticElementSnapshot.Capture(result), CopyToolText, CloseToolWindow);
+        var snapshot = IsProbeLocked ? TrackedSnapshot ?? DiagnosticElementSnapshot.Capture(result) :
+            DiagnosticElementSnapshot.Capture(result);
+        var panel = new DiagnosticDetailPanel(snapshot, CopyToolText, CloseToolWindow);
         _toolWindow.ReplaceContent(panel);
         _toolWindow.SetDragSurface(panel.DragSurface, BeginToolDrag, EndToolDrag);
     }

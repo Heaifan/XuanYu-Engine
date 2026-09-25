@@ -14,6 +14,8 @@ public partial class DiagnosticOverlayHost
             ClearProbeVisuals();
             _probeResult = null;
             _lockedProbeResult = null;
+            TrackedSnapshot = null;
+            LastKnownBounds = null;
             return;
         }
         if (_vm?.IsDiagnosticMode != true) ClearProbeVisuals();
