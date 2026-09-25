@@ -1,5 +1,6 @@
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xy="using:XYUI.Avalonia.Controls"
         x:Class="XuanYu.Editor.UI.DiagnosticFloatingCard"
         MaxWidth="330" Padding="12" Background="{StaticResource Color.Bg.Panel}"
         BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
@@ -8,16 +9,16 @@
    <StackPanel Spacing="8">
     <StackPanel x:Name="Header" Orientation="Horizontal" Spacing="8"
                 Background="Transparent" IsHitTestVisible="True">
-      <TextBlock x:Name="Title" Foreground="White" FontWeight="SemiBold"/>
-      <TextBlock x:Name="Locked" Text="● 已锁定" Foreground="{StaticResource Color.Success}"/>
-      <Button x:Name="Pin" Content="锁定"/>
+      <xy:XYText x:Name="Title" Foreground="White" FontWeight="SemiBold"/>
+      <xy:XYStatusBadge x:Name="Locked" Text="已锁定" State="Success"/>
+      <xy:XYButton x:Name="Pin" Content="锁定" Variant="Secondary"/>
     </StackPanel>
-    <TextBlock x:Name="Identity" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
-    <TextBlock x:Name="Details" Foreground="{StaticResource Color.Text.Secondary}" TextWrapping="Wrap"/>
+    <xy:XYText x:Name="Identity" Foreground="{StaticResource Color.Text.Primary}" TextWrapping="Wrap"/>
+    <xy:XYText x:Name="Details" Foreground="{StaticResource Color.Text.Secondary}" TextWrapping="Wrap"/>
     <WrapPanel x:Name="Actions" Orientation="Horizontal">
-      <Button x:Name="CopyAi" Content="一键复制给 AI"/>
-      <Button x:Name="Expand" Content="展开"/>
-      <Button x:Name="Close" Content="关闭"/>
+      <xy:XYButton x:Name="CopyAi" Content="一键复制给 AI" Variant="Primary"/>
+      <xy:XYButton x:Name="Expand" Content="展开" Variant="Secondary"/>
+      <xy:XYButton x:Name="Close" Content="关闭" Variant="Secondary"/>
     </WrapPanel>
    </StackPanel>
   </ScrollViewer>

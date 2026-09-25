@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.VisualTree;
+using XYUI.Avalonia.Controls;
 
 namespace XuanYu.Editor.UI;
 public static partial class DiagnosticProbeResolver
@@ -47,6 +48,7 @@ public static partial class DiagnosticProbeResolver
         TextBlock text => Value(text.Text),
         TextBox text => Value(text.Text),
         MenuItem menu => Value(menu.Header?.ToString()),
+        XYMenuItem item => Value(item.Label),
         ContentControl content => ContentText(content.Content),
         ContentPresenter presenter => presenter.Content?.ToString() ?? Missing,
         _ => Missing

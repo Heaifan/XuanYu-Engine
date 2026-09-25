@@ -18,6 +18,7 @@ public static class DiagnosticXyuiResolver
             ["XYComboBox"] = ("XYUI2", "XYUI-2-12"),
             ["XYContextToolbar"] = ("XYUI3", "XYUI-3-17"),
             ["XYMenu"] = ("XYUI3", "XYUI-3-02"),
+            ["XYMenuItem"] = ("XYUI3", "XYUI-3-02"),
             ["XYSubMenu"] = ("XYUI3", "XYUI-3-04")
         };
 
