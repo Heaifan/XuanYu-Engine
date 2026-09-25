@@ -15,6 +15,8 @@
       <xy:XYCaption Text="编辑"
                     VerticalAlignment="Center"/>
       <xy:XYToggleButton MinHeight="34"
+                         x:Name="SelectToolButton"
+                         local:XYDiagnostic.DebugId="XYE.TOP.EDIT.SELECT"
                          IsEnabled="{Binding IsEditMode}"
                          IsChecked="{Binding IsSelectTool, Mode=OneWay}"
                          Command="{Binding SelectToolCommand}"
@@ -26,6 +28,8 @@
         </StackPanel>
       </xy:XYToggleButton>
       <xy:XYToggleButton MinHeight="34"
+                         x:Name="BoxSelectToolButton"
+                         local:XYDiagnostic.DebugId="XYE.TOP.EDIT.BOX_SELECT"
                          IsEnabled="False"
                          IsChecked="{Binding IsBoxSelectTool, Mode=OneWay}"
                          ToolTip.Tip="框选功能尚未实装（即将推出）">
@@ -35,6 +39,8 @@
         </StackPanel>
       </xy:XYToggleButton>
       <xy:XYToggleButton MinHeight="34"
+                         x:Name="MoveToolButton"
+                         local:XYDiagnostic.DebugId="XYE.TOP.EDIT.MOVE"
                          IsEnabled="{Binding CanTransformSelectedEntity}"
                          IsChecked="{Binding IsMoveTool, Mode=OneWay}"
                          Command="{Binding SelectToolCommand}"
@@ -46,6 +52,8 @@
         </StackPanel>
       </xy:XYToggleButton>
       <xy:XYToggleButton MinHeight="34"
+                         x:Name="RotateToolButton"
+                         local:XYDiagnostic.DebugId="XYE.TOP.EDIT.ROTATE"
                          IsEnabled="{Binding CanTransformSelectedEntity}"
                          IsChecked="{Binding IsRotateTool, Mode=OneWay}"
                          Command="{Binding SelectToolCommand}"
@@ -57,6 +65,8 @@
         </StackPanel>
       </xy:XYToggleButton>
       <xy:XYToggleButton MinHeight="34"
+                         x:Name="ScaleToolButton"
+                         local:XYDiagnostic.DebugId="XYE.TOP.EDIT.SCALE"
                          IsEnabled="{Binding CanTransformSelectedEntity}"
                          IsChecked="{Binding IsScaleTool, Mode=OneWay}"
                          Command="{Binding SelectToolCommand}"

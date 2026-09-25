@@ -15,6 +15,8 @@
       <xy:XYCaption Text="视图"
                     VerticalAlignment="Center"/>
       <xy:XYButton Variant="Secondary"
+                   x:Name="FocusButton"
+                   local:XYDiagnostic.DebugId="XYE.TOP.VIEW.FOCUS"
                    MinHeight="34"
                    Command="{Binding RunCommand}"
                    CommandParameter="聚焦"
@@ -25,6 +27,8 @@
         </StackPanel>
       </xy:XYButton>
       <xy:XYButton Variant="Secondary"
+                   x:Name="ViewAllButton"
+                   local:XYDiagnostic.DebugId="XYE.TOP.VIEW.ALL"
                    MinHeight="34"
                    Command="{Binding RunCommand}"
                    CommandParameter="查看全部"
@@ -35,6 +39,8 @@
         </StackPanel>
       </xy:XYButton>
       <xy:XYButton Variant="Secondary"
+                   x:Name="PanButton"
+                   local:XYDiagnostic.DebugId="XYE.TOP.VIEW.PAN"
                    MinHeight="34"
                    Command="{Binding RunCommand}"
                    CommandParameter="平移"
@@ -45,6 +51,8 @@
         </StackPanel>
       </xy:XYButton>
       <xy:XYButton Variant="Secondary"
+                   x:Name="OrbitButton"
+                   local:XYDiagnostic.DebugId="XYE.TOP.VIEW.ORBIT"
                    MinHeight="34"
                    Command="{Binding RunCommand}"
                    CommandParameter="环绕"

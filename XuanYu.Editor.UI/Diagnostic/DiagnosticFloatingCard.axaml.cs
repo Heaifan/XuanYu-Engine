@@ -34,7 +34,13 @@ public partial class DiagnosticFloatingCard : Border
         Locked.IsVisible = locked; Width = locked ? 330 : 250;
         Pin.Content = locked ? "解除" : "锁定"; CopyAi.Content = "一键复制给 AI";
         Expand.IsVisible = locked; Close.IsVisible = locked;
-        Identity.Text = $"实例名称：{snapshot.InstanceName}\n组件来源：{snapshot.Identity.Source}";
-        Details.Text = $"调试编号：{snapshot.DebugId}\n实际尺寸：{snapshot.ActualSize}";
+        Identity.Text = $"实例名称：{snapshot.InstanceName}\n组件来源：{snapshot.Identity.Source}\n" +
+            $"组件类型：{Value(snapshot.Identity.ComponentName, snapshot.ComponentType)}\n" +
+            $"组件索引：{Value(snapshot.Identity.Number)}\n组件编号：{Value(snapshot.Identity.CatalogId)}";
+        Details.Text = $"调试编号：{snapshot.DebugId}\n所属区域：{Value(snapshot.Probe.ParentDebugId)}\n" +
+            $"实际尺寸：{snapshot.ActualSize}";
     }
+
+    static string Value(string value, string fallback = "—") =>
+        string.IsNullOrWhiteSpace(value) || value == "N/A" ? fallback : value;
 }
