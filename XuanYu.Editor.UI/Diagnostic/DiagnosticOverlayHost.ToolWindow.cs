@@ -74,6 +74,7 @@ public partial class DiagnosticOverlayHost
     {
         if (_nativeDialogSuspended)
         {
+            Console.WriteLine($"{DateTime.Now:HH:mm:ss} 【诊断悬浮窗】ToolWindowClosed；挂起中=是");
             _toolWindow = null; _toolCard = null;
             return;
         }

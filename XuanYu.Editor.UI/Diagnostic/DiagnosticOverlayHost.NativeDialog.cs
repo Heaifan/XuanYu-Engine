@@ -17,6 +17,7 @@ public partial class DiagnosticOverlayHost
         _restoreAfterNativeDialog = _toolWindow?.IsVisible == true;
         _suspendedPlacementMode = _cardPlacementMode;
         if (_restoreAfterNativeDialog) HideToolWindow();
+        LogNativeDialog("Suspend", _restoreAfterNativeDialog);
     }
 
     public void RestoreAfterNativeDialog()
@@ -28,6 +29,7 @@ public partial class DiagnosticOverlayHost
         _restoreAfterNativeDialog = false;
         _restoreOnOwnerActivation = restore && ProbeEnabled && IsProbeLocked;
         _suspendedPlacementMode = null;
+        LogNativeDialog("Restore", restore);
         if (!restore || !ProbeEnabled) return;
         if (IsProbeLocked && TrackedSnapshot is null) return;
         _restoringNativeDialog = true;
@@ -39,9 +41,15 @@ public partial class DiagnosticOverlayHost
         }
     }
 
+    static void LogNativeDialog(string phase, bool restore)
+    {
+        Console.WriteLine($"{DateTime.Now:HH:mm:ss} 【诊断悬浮窗】{phase}；恢复={restore}");
+    }
+
     void RestoreAfterOwnerActivation()
     {
         if (!_restoreOnOwnerActivation || !ProbeEnabled || !IsProbeLocked) return;
+        LogNativeDialog("OwnerActivatedRestore", true);
         _restoreOnOwnerActivation = false;
         if (_lockedProbeResult is null || !TryGetTrackedBounds(_lockedProbeResult, out var bounds)) return;
         _restoringNativeDialog = true;
