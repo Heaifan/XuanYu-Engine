@@ -15,6 +15,17 @@ public sealed class TerrainHeightLayer
         params (TerrainSampleCoordinate Coordinate, double Meters)[] values) =>
         new(false, values);
 
+    public static TerrainHeightLayer CreateBase(
+        int width, int height, IReadOnlyList<double> values, IReadOnlyList<bool> noDataMask)
+    {
+        if (values.Count != width * height || noDataMask.Count != values.Count)
+            throw new ArgumentException("高程样本与 NoData 掩码尺寸不一致。", nameof(values));
+        var samples = Enumerable.Range(0, values.Count)
+            .Where(index => !noDataMask[index])
+            .Select(index => (new TerrainSampleCoordinate(index % width, index / width), values[index]));
+        return new(false, samples);
+    }
+
     public static TerrainHeightLayer CreateEditDelta() => new(true, []);
 
     public bool IsEditable => _editable;

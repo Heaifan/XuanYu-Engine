@@ -6,5 +6,6 @@ public sealed record TerrainRenderResource(
     TerrainHeightfield Heightfield,
     double CellSizeMeters = 1.0)
 {
+    public TerrainRenderMetadata Metadata => Heightfield.Metadata;
     public int TriangleIndexCount => (Heightfield.Width - 1) * (Heightfield.Height - 1) * 6;
 }
