@@ -48,6 +48,7 @@ public sealed partial class UiVm
             FooterMessage = TerrainStatus; FooterState = "状态：就绪";
             OnPropertyChanged(nameof(TerrainSource)); OnPropertyChanged(nameof(TerrainWorld));
             OnPropertyChanged(nameof(TerrainStatus));
+            PublishSceneRenderSnapshot();
             return true;
         }
         catch (TerrainSourceReadException error) { return FailTerrainImport(error.Message); }

@@ -20,7 +20,8 @@ public readonly record struct RenderProjection(
     MapRenderSnapshot Map = default,
     double ViewportDpiScale = 1.0,
     ScaleIndicatorOverlayProjection ScaleIndicator = default,
-    TerrainRenderResource? Terrain = null)
+    TerrainRenderResource? Terrain = null,
+    TerrainRenderTransform TerrainTransform = default)
 {
     public int EntityCount => Entities.Count;
     public EditorViewportAssistState AssistState => Assist;
@@ -28,4 +29,6 @@ public readonly record struct RenderProjection(
     public IReadOnlyList<RenderVectorOverlayResource> VectorOverlayResources => VectorOverlays ?? [];
     public bool HasMap => Map.HasMap;
     public bool HasTerrain => Terrain is not null;
+    public TerrainRenderTransform EffectiveTerrainTransform =>
+        TerrainTransform.VerticalExaggeration > 0 ? TerrainTransform : TerrainRenderTransform.Default;
 }

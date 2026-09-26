@@ -19,9 +19,9 @@ public sealed class TerrainRenderContractTests
     {
         var transform = TerrainRenderTransform.Default;
 
-        Assert.Equal(500, transform.VisualHeight(100));
-        Assert.Equal(-125, transform.VisualHeight(-25));
-        Assert.Equal(100, transform.LogicalHeight(500));
+        Assert.Equal(100, transform.VisualHeight(100));
+        Assert.Equal(-25, transform.VisualHeight(-25));
+        Assert.Equal(100, transform.LogicalHeight(100));
     }
 
     [Fact]
@@ -34,9 +34,9 @@ public sealed class TerrainRenderContractTests
 
         Assert.Equal(4, mesh.Vertices.Count);
         Assert.Equal(6, mesh.Indices.Count);
-        Assert.Equal(500, mesh.Vertices[0].Z);
+        Assert.Equal(100, mesh.Vertices[0].Z);
         Assert.Equal(0, mesh.Vertices[1].Z);
-        Assert.Equal(-125, mesh.Vertices[2].Z);
+        Assert.Equal(-25, mesh.Vertices[2].Z);
         Assert.Equal(50, resource.Heightfield.ElevationAt(1, 1));
     }
 

@@ -22,7 +22,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         if (_terrainPipeline.Handle == 0 || _terrainPipelineLayout.Handle == 0 || !_renderProjection.HasTerrain) return;
         var resource = _terrainCache ??= new Terrain.VulkanTerrainGpuCache(_vk, _deviceOwner, _log);
-        var gpu = resource.GetOrCreate(_renderProjection.Terrain!, TerrainRenderTransform.Default);
+        var gpu = resource.GetOrCreate(_renderProjection.Terrain!, _renderProjection.EffectiveTerrainTransform);
         if (gpu is null) return;
         var vb = gpu.Vertices.Buffer; var ib = gpu.Indices.Buffer; ulong offset = 0;
         _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset);

@@ -2,6 +2,7 @@ using XuanYu.Core.Map;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Space;
 using XuanYu.Render.Abstractions;
+using XuanYu.World.Terrain;
 
 namespace XuanYu.Editor.UI;
 
@@ -16,6 +17,7 @@ public sealed partial class UiVm
             _roadDrawing, MapGeometryPreview, _viewportDpiScale, _mapLabelBitmapCache);
         IReadOnlyList<RenderVectorOverlayResource> overlays =
             vectorOverlay.Primitives.Count == 0 ? [] : [vectorOverlay];
+        var terrain = TerrainWorld?.ToRenderSnapshot("terrain", 1);
         return SceneRenderProjectionAdapter.TryCreate(
             snapshot,
             ComputeRotateGizmoWorldRadius(transform.Position),
@@ -29,6 +31,8 @@ public sealed partial class UiVm
             _viewportDpiScale,
             overlays,
             new ScaleIndicatorOverlayProjection(
-                IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip));
+                IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip),
+            terrain,
+            new TerrainRenderTransform(VerticalExaggeration));
     }
 }
