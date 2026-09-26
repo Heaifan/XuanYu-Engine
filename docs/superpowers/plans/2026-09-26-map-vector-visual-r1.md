@@ -130,4 +130,3 @@
 - [ ] Record Chinese IPO evidence for each runtime path.
 - [ ] Mark only code/automated gates supported by evidence; keep real-device acceptance open until observed.
 - [ ] Commit atomically, push the feature branch, and verify local/remote equality.
-
