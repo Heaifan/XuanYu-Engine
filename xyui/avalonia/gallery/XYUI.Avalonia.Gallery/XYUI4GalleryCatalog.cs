@@ -4,12 +4,13 @@ using XYUI.Avalonia.Controls;
 
 namespace XYUI.Avalonia.Gallery;
 
-public static class XYUI4GalleryCatalog
+public static partial class XYUI4GalleryCatalog
 {
     public static Control CreatePreview(string id) => id switch
     {
         "XYUI-4-4.14" => LoadingPreview(),
         "XYUI-4-4.15" => SpinnerPreview(),
+        "XYUI-4-4.16" => ProgressBarPreview(),
         _ => new TextBlock { Text = "未注册组件" }
     };
 
@@ -17,6 +18,7 @@ public static class XYUI4GalleryCatalog
     {
         "XYUI-4-4.14" => LoadingLiveExample(),
         "XYUI-4-4.15" => SpinnerLiveExample(),
+        "XYUI-4-4.16" => ProgressBarLiveExample(),
         _ => new TextBlock { Text = "未注册组件" }
     };
 

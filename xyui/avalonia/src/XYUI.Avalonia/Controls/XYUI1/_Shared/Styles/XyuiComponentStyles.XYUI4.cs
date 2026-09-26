@@ -9,7 +9,7 @@ namespace XYUI.Avalonia.Controls;
 
 public static partial class XyuiComponentStyles
 {
-    static void AddXYUI4(Styles styles) { Spinner(styles); LoadingIndicator(styles); }
+    static void AddXYUI4(Styles styles) { Spinner(styles); LoadingIndicator(styles); ProgressBar(styles); }
 
     static void Spinner(Styles styles)
     {
@@ -29,5 +29,12 @@ public static partial class XyuiComponentStyles
         var secondary = new Style(x => x.OfType<TextBlock>().Class("xyui-loading-indicator-secondary"));
         secondary.Setters.Add(new Setter(TextBlock.FontSizeProperty, XyuiTypographyTokens.FontSizeCaption));
         secondary.Setters.Add(new Setter(TextBlock.ForegroundProperty, new DynamicResourceExtension("XY.Brush.Text.Secondary"))); styles.Add(secondary);
+    }
+
+    static void ProgressBar(Styles styles)
+    {
+        var root = new Style(x => x.OfType<XYProgressBar>().Class("xyui-progress-bar"));
+        Brush(root, XYProgressBar.TrackProperty, "XY.Brush.Accent.Soft");
+        Brush(root, XYProgressBar.FillProperty, "XY.Brush.Accent.Default"); styles.Add(root);
     }
 }
