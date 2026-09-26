@@ -71,7 +71,13 @@ public sealed partial class XYMenu : Border
         item.IsSelected = true;
     }
     void OnItemInvoked(object? sender, EventArgs e) { if (sender is XYMenuItem { HasSubMenu: false, SubMenu: null }) Close(); }
-    void OnItemPointerEntered(object? sender, global::Avalonia.Input.PointerEventArgs e) { if (sender is XYMenuItem { SubMenu: { } submenu }) submenu.Open(); }
+    void OnItemPointerEntered(object? sender, global::Avalonia.Input.PointerEventArgs e)
+    {
+        if (sender is not XYMenuItem item) return;
+        var submenu = item.SubMenu;
+        foreach (var sibling in _subMenus.Where(x => !ReferenceEquals(x, submenu))) sibling.Close();
+        submenu?.Open();
+    }
     void OnSubMenuRequested(object? sender, EventArgs e) { if (sender is XYMenuItem item) SubMenuRequested?.Invoke(this, item); }
     void ApplyMode() { if (_embedded) Classes.Add("xyui-menu-embedded"); else Classes.Remove("xyui-menu-embedded"); }
 }
