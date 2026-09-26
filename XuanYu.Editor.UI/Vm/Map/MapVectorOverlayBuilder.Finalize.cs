@@ -23,6 +23,8 @@ sealed partial class MapVectorOverlayBuilder
         }
         foreach (var i in _indices) hash.Add(i);
         foreach (var p in _primitives) hash.Add(p);
+        foreach (var label in _labels)
+        { hash.Add(label.Text); hash.Add(label.CacheKey); hash.Add(label.Anchor); }
         return Math.Abs(hash.ToHashCode()) | 1;
     }
 }

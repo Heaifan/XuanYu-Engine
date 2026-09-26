@@ -6,17 +6,19 @@ using XuanYu.World.Map;
 
 namespace XuanYu.Editor.UI;
 
-sealed partial class MapVectorOverlayBuilder(double height)
+sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.0)
 {
     static readonly RenderStaticModelColor RegionStroke = new(.12, .38, .70, .92);
     readonly List<RenderVectorOverlayVertex> _vertices = [];
     readonly List<uint> _indices = [];
     readonly List<RenderVectorOverlayPrimitive> _primitives = [];
+    readonly List<RenderVectorOverlayLabel> _labels = [];
 
     public void AddRegion(MapRegion region, bool selected, IReadOnlyList<MapPoint>? preview)
     {
         var points = preview ?? region.Vertices;
         AddFill(points, MapRegionRenderStyle.FillColor(region));
+        AddLabel(region, points);
         AddStroke(points, true, selected ? new(.98, .75, .12, .98) : RegionStroke, selected ? 2.4 : 1.5, 0);
         if (selected) foreach (var point in points) AddMarker(point, 6.5);
     }
@@ -39,7 +41,7 @@ sealed partial class MapVectorOverlayBuilder(double height)
     public RenderVectorOverlayResource Build()
     {
         var bounds = Bounds();
-        return new(new("map-vector-overlay"), Revision(), _vertices, _indices, _primitives, bounds);
+        return new(new("map-vector-overlay"), Revision(), _vertices, _indices, _primitives, bounds, _labels);
     }
 
     void AddFill(IReadOnlyList<MapPoint> points, RenderStaticModelColor color)

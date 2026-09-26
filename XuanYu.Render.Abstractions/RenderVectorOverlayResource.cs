@@ -8,4 +8,8 @@ public sealed record RenderVectorOverlayResource(
     IReadOnlyList<RenderVectorOverlayVertex> Vertices,
     IReadOnlyList<uint> Indices,
     IReadOnlyList<RenderVectorOverlayPrimitive> Primitives,
-    SpatialAabb WorldBounds);
+    SpatialAabb WorldBounds,
+    IReadOnlyList<RenderVectorOverlayLabel>? Labels = null)
+{
+    public IReadOnlyList<RenderVectorOverlayLabel> LabelInstances => Labels ?? [];
+}
