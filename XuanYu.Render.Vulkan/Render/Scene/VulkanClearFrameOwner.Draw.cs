@@ -37,6 +37,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 BindFramePipeline(cb, draw.Kind);
                 if (draw.Kind == RenderDrawKind.MapGround && _mapSurfaceIndexBuffer is not null)
                     DrawMapSurface(cb, pScene);
+                else if (draw.Kind == RenderDrawKind.Terrain)
+                    DrawTerrain(cb, pScene);
                 else if (draw.Kind == RenderDrawKind.MapBounds && _mapBoundsVertexBuffer is not null)
                     DrawMapBounds(cb, pScene);
                 else if (draw.Kind == RenderDrawKind.MapVectorOverlay)

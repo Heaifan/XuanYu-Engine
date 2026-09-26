@@ -37,6 +37,8 @@ public static partial class RenderDrawPlan
         if (assist.ShowEditorBackground) plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
         // D5 Overlay 顺序：地形 → 网格/轴 → 实体 → 原点 → 变换 Gizmo → 导航 Gizmo。
         // 原点独立覆盖层不参与深度测试，并在实体之后绘制，避免模型或地面遮挡中心标记。
+        if (projection.HasTerrain)
+            plan.Add(new FrameEntry(RenderDrawKind.Terrain, projection.Terrain!.TriangleIndexCount));
         if (projection.HasMap)
         {
             if (projection.Map.ShowGround) plan.Add(new FrameEntry(RenderDrawKind.MapGround, MapGroundIndexCount));
@@ -78,6 +80,6 @@ public static partial class RenderDrawPlan
 public enum RenderDrawKind
 {
     EditorBackground, EditorReferenceGrid, WorldOrigin, WorldAxes, MapGround, MapBounds,
-    MapVectorOverlay, EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo,
+    Terrain, MapVectorOverlay, EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo,
     ScaleIndicatorOverlay, NavigationGizmo, EditorViewPlaneGrid
 }

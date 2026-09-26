@@ -80,6 +80,7 @@ public sealed partial class VulkanRenderSession : IDisposable
                 log);
             session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, skyPipeline, gridPipelines, log, surfaceHandle);
             session.AttachVectorOverlayPipeline(vk);
+            session.AttachTerrainPipeline(vk);
             if (!loop.Start()) throw new InvalidOperationException("Present 泵启动失败");
             return session;
         }

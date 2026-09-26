@@ -19,11 +19,13 @@ public readonly record struct RenderProjection(
     IReadOnlyList<RenderVectorOverlayResource>? VectorOverlays = null,
     MapRenderSnapshot Map = default,
     double ViewportDpiScale = 1.0,
-    ScaleIndicatorOverlayProjection ScaleIndicator = default)
+    ScaleIndicatorOverlayProjection ScaleIndicator = default,
+    TerrainRenderResource? Terrain = null)
 {
     public int EntityCount => Entities.Count;
     public EditorViewportAssistState AssistState => Assist;
     public IReadOnlyList<RenderStaticModelResource> StaticModelResources => StaticModels ?? [];
     public IReadOnlyList<RenderVectorOverlayResource> VectorOverlayResources => VectorOverlays ?? [];
     public bool HasMap => Map.HasMap;
+    public bool HasTerrain => Terrain is not null;
 }

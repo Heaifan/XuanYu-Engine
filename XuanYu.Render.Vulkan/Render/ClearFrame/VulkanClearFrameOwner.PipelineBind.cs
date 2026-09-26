@@ -7,6 +7,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     void BindFramePipeline(CommandBuffer cb, RenderDrawKind kind)
     {
+        if (kind == RenderDrawKind.Terrain)
+        {
+            if (_terrainPipeline.Handle != 0 && _terrainPipelineLayout.Handle != 0)
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _terrainPipeline);
+            return;
+        }
         if (kind == RenderDrawKind.MapVectorOverlay)
         {
             var pipeline = _vectorOverlayPipeline.Handle != 0 ? _vectorOverlayPipeline : _pipeline;
