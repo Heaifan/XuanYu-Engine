@@ -348,3 +348,37 @@ EXP-GOVERNANCE-001
 
 状态：
 已修复
+
+
+---
+
+## ERR-20260926-001
+
+Agent：Codex（工作站交接执行）/ ChatGPT（任务交接设计）
+任务：XYE-WORKSTATION-REHOME-V0300-R1 / Toolchain Handoff
+类型：GOVERNANCE
+严重度：Medium
+
+错误：
+仓库已存在 K-GOV-003、EXP-GOVERNANCE-001、ERR-20260925-005，且 run.bat 已通过 scripts/resolve-dotnet.ps1 解析多机器 SDK，但本次工作站交接仍未先执行 Repository Resolver，而把 PATH 中无法直接调用 dotnet 误判为“.NET SDK 未安装”，从而错误将版本基线任务标记为 BLOCKED。
+
+根因：
+交接流程仍停留在“知识库有规则、任务书人工提醒”的层级，没有把 Repository Bootstrap 和 Canonical Toolchain Resolver 做成所有 Build/Test/Run 之前的强制机器入口；同时旧 docs/dev-rules.md 示例仍使用裸 dotnet build/test/restore，给执行 Agent 留出了绕过 Resolver 的空间。
+
+后果：
+在 v0.3.0.0-r1 版本基线已经完成代码修改后产生一次假环境阻断，延迟 Build/Test、Commit 和 Push；若不机器化，会在不同电脑、不同盘符环境间持续重复同类错误。
+
+正确做法：
+所有 XYE 新会话、新机器、交接任务先执行 scripts/xye-bootstrap.ps1；所有正式 .NET 命令通过 scripts/xye-dotnet.ps1 或 scripts/resolve-dotnet.ps1 返回的绝对 DOTNET_EXE 执行。只有 Canonical Resolver 本身失败后，才允许报告 SDK / Toolchain BLOCKED。
+
+经验规则：
+EXP-GOVERNANCE-001
+
+发现方式：
+用户纠正 / ChatGPT Repository Audit / HANDOFF-BOOTSTRAP-R1 复盘
+
+验证证据：
+scripts/resolve-dotnet.ps1 实际解析到 D:\MyApp\sdk-dotnet\dotnet.exe，SDK 10.0.400；scripts/xye-bootstrap.ps1 返回 READY；Canonical Toolchain Contract T1–T7 PASS；Dogfood Build/Test PASS；完整 Solution Build 0 Warning / 0 Error；版本、治理、Terrain 专项 24/24 PASS。治理提交 1b29f197 与 ee17a281 已推送，最终远端为 ee17a281ffd3326253501cd3ec35c4df4effb996。
+
+状态：
+已验证
