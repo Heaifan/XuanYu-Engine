@@ -36,7 +36,25 @@ public partial class XYColorPicker
         SyncPanelValues(); SyncModeVisibility(); return new Border { Padding = new Thickness(10), Child = panel };
     }
     XYSlider Slider(double maximum) => new() { Minimum = 0, Maximum = maximum, Step = 1, LargeStep = 10, SmallStep = 1, DecimalPlaces = 0, IsNumberFieldVisible = false };
-    XYTextField Field(string label, Action commit) { var field = new XYTextField { Placeholder = label, MinWidth = 82, Height = 28 }; field.KeyDown += (_, e) => { if (e.Key == Key.Enter) { commit(); e.Handled = true; } }; field.LostFocus += (_, _) => commit(); return field; }
-    XYNumberField NumberField(string label, char channel) { var field = new XYNumberField { Placeholder = label, Minimum = 0, Maximum = 255, Step = 1, LargeStep = 10, SmallStep = 1, DecimalPlaces = 0, IsScrubEnabled = true, MinWidth = 82, Height = 28 }; field.PropertyChanged += (_, e) => OnNumberChanged(field, channel, e); return field; }
+    XYTextField Field(string label, Action commit)
+    {
+        var field = new XYTextField { Placeholder = label, MinWidth = 82, Height = 28 };
+        field.KeyDown += (_, e) =>
+        {
+            if (e.Key != Key.Enter) return;
+            commit();
+            if (ErrorPart?.IsVisible != true) CommitEditLifecycle();
+            e.Handled = true;
+        };
+        field.LostFocus += (_, _) => commit();
+        return field;
+    }
+    XYNumberField NumberField(string label, char channel)
+    {
+        var field = new XYNumberField { Placeholder = label, Minimum = 0, Maximum = 255, Step = 1, LargeStep = 10, SmallStep = 1, DecimalPlaces = 0, IsScrubEnabled = true, MinWidth = 82, Height = 28 };
+        field.PropertyChanged += (_, e) => OnNumberChanged(field, channel, e);
+        field.KeyDown += (_, e) => { if (e.Key == Key.Enter) { CommitByte(field, channel); CommitEditLifecycle(); e.Handled = true; } };
+        return field;
+    }
     static StackPanel Labeled(string label, Control field) => new() { Spacing = 2, Children = { new TextBlock { Text = label }, field } };
 }

@@ -6,6 +6,7 @@ public sealed partial class UiVm
 {
     public void ClearMapGeometrySelection()
     {
+        CancelRegionFillColorPreviewForSelection(null);
         IsGeometryEditingActive = false;
         var hadSelection = _selectedMapGeometry is not null || _selectedMapGeometryVertexIndex >= 0;
         _selectedMapGeometry = null; _selectedMapGeometryVertexIndex = -1; _mapGeometryPreview = null;
@@ -30,6 +31,7 @@ public sealed partial class UiVm
 
     public void SelectMapGeometry(MapGeometrySelection selection)
     {
+        CancelRegionFillColorPreviewForSelection(selection);
         _selectedMapGeometry = selection; _selectedMapGeometryVertexIndex = -1; IsGeometryEditingActive = false;
         MapSession.ClearSelection();
         _mapGeometryPreview = DisplayGeometry(); RaiseMapGeometryBindings(); PublishSceneRenderSnapshot();

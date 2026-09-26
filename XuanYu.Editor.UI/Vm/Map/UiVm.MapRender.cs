@@ -27,6 +27,7 @@ public sealed partial class UiVm
 
     void OnMapSelectionChanged(MapSelectionChangedEventArgs e)
     {
+        CancelRegionFillColorPreviewForMapSelection(e.Selection);
         if (e.Selection.Kind == MapSelectionKind.Region && e.Selection.RegionId is { } regionId)
         {
             _selectedMapGeometry = new(MapGeometryFeatureKind.Region, regionId.ToString());
@@ -61,6 +62,7 @@ public sealed partial class UiVm
 
     void OnMapContentChanged(MapContentChangedEventArgs e)
     {
+        CancelRegionFillColorPreviewForContentChange();
         RefreshMapGeometryDisplay();
         OnPropertyChanged(nameof(RegionContentCount));
         OnPropertyChanged(nameof(RoadContentCount));

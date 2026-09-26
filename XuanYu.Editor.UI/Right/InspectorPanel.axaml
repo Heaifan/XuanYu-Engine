@@ -32,9 +32,15 @@
               <xy:XYCaption Text="{Binding Path}"/>
                 <Grid Classes="inspectorProperty" ColumnDefinitions="80,*" ColumnSpacing="8">
                 <xy:XYLabel Text="{Binding DisplayName}" VerticalAlignment="Center"/>
-                <xy:XYTextField Grid.Column="1" Text="{Binding Value}" IsVisible="{Binding IsEditable}"
+                <xy:XYTextField Grid.Column="1" Text="{Binding Value}" IsVisible="{Binding IsTextEditor}"
                                 LostFocus="PropertyEditor_LostFocus" KeyDown="PropertyEditor_KeyDown"/>
-                <local:InspectorReadOnlyValuePresenter Grid.Column="1" IsVisible="{Binding !IsEditable}"/>
+                <xy:XYColorPicker Grid.Column="1" IsVisible="{Binding IsColorEditor}" Mode="RGB"
+                                  Color="{Binding EditorColor, Mode=OneWay}"
+                                  EditStarted="RegionColorPicker_EditStarted"
+                                  ColorChanged="RegionColorPicker_ColorChanged"
+                                  EditCommitted="RegionColorPicker_EditCommitted"
+                                  EditCanceled="RegionColorPicker_EditCanceled"/>
+                <local:InspectorReadOnlyValuePresenter Grid.Column="1" IsVisible="{Binding IsReadOnly}"/>
               </Grid>
             </StackPanel>
           </DataTemplate></ItemsControl.ItemTemplate>

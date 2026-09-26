@@ -26,14 +26,24 @@ public partial class XYColorPicker : TemplatedControl
     internal double Value { get; private set; }
 
     public XYColorPicker() { Classes.Add("xyui-color-picker"); Focusable = true; UpdateHsv(Color); }
-    protected override void OnKeyDown(KeyEventArgs e) { if (e.Key == Key.Escape && IsOpen) { IsOpen = false; e.Handled = true; return; } base.OnKeyDown(e); }
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape && IsOpen) { CancelEditLifecycle(); e.Handled = true; return; }
+        if (e.Key == Key.Enter && IsOpen) { CommitEditLifecycle(); e.Handled = true; return; }
+        base.OnKeyDown(e);
+    }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (change.Property == ColorProperty) { UpdateHsv(Color); SyncVisuals(); ColorChanged?.Invoke(this, EventArgs.Empty); }
         if (change.Property == ModeProperty) SyncVisuals();
-        if (change.Property == IsOpenProperty) { Classes.Set("xyui-color-open", IsOpen); if (IsOpen) OpenPanel(); else ClosePanel(); }
-        if (change.Property == IsEnabledProperty && !IsEnabled) IsOpen = false;
+        if (change.Property == IsOpenProperty)
+        {
+            Classes.Set("xyui-color-open", IsOpen);
+            if (IsOpen) { BeginEditLifecycle(); OpenPanel(); }
+            else { ClosePanel(); CompleteEditLifecycle(); }
+        }
+        if (change.Property == IsEnabledProperty && !IsEnabled) CancelEditLifecycle();
     }
     internal string DisplayValue() => Mode == XYColorPickerMode.RGBA ? $"{HexValue()} · {AlphaPercent()}%" : HexValue();
     internal string HexValue() => $"#{Color.R:X2}{Color.G:X2}{Color.B:X2}";
