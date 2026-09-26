@@ -55,6 +55,7 @@ public sealed partial class UiVm
         LastDrawTool = value;
         OnPropertyChanged(nameof(LastDrawTool));
         OnPropertyChanged(nameof(DrawButtonLabel));
+        OnPropertyChanged(nameof(ContextToolbarButtonLabel));
     }
 
     public bool CanUndoDrawingVertex => _contextDrawingKind == "道路" ? CanUndoRoadDrawingVertex : CanUndoRegionDrawingVertex;

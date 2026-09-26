@@ -39,6 +39,7 @@ public partial class UiWin
         if (command == "新建") { vm.NewBlankScene(); return; }
         if (command == "打开") { await OpenScene(vm); return; }
         if (command == "导入 GLB") { await ImportGlb(vm); return; }
+        if (command == "导入DEM") { await ImportTerrain(vm); return; }
         if (command == "保存" && await SaveExistingOrPick(vm)) return;
         if (command == "另存为") await SaveSceneAs(vm);
     }

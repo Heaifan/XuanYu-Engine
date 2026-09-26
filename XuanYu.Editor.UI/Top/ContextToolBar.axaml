@@ -8,7 +8,17 @@
           BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
           CornerRadius="{StaticResource Radius.Standard}" Padding="8,4">
     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-      <xy:XYSplitButton x:Name="DrawSplitButton" Width="112" Content="{Binding DrawButtonLabel}" />
+      <xy:XYButton IsVisible="{Binding IsTerrainContext}"
+                   Content="选择"
+                   Command="{Binding SelectToolCommand}"
+                   CommandParameter="选择"
+                   IsEnabled="{Binding IsEditMode}" />
+      <xy:XYButton IsVisible="{Binding IsTerrainContext}"
+                   Content="导入DEM"
+                   Command="{Binding ImportTerrainCommand}"
+                   IsEnabled="{Binding IsEditMode}" />
+      <xy:XYSplitButton x:Name="DrawSplitButton" Width="112" Content="{Binding ContextToolbarButtonLabel}"
+                        ToolTip.Tip="{Binding DrawButtonLabel}" />
       <Panel x:Name="DrawBoardHost" Width="1" Height="1" />
 
       <StackPanel IsVisible="{Binding IsDrawingTransactionActive}" Orientation="Horizontal" Spacing="4">
