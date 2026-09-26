@@ -66,14 +66,15 @@ public sealed partial class UiVm
     }
 
     IReadOnlyList<InspectorPropertyRow> SearchRows() => InspectorPropertySearch.Find(AllDescriptors(), _inspectorSearchText)
-        .Select(Row).ToArray();
+        .Select(descriptor => Row(descriptor, showContextPath: true)).ToArray();
 
     IReadOnlyList<InspectorPropertyRow> RowsFor(string category)
     {
         if (category == "最近") return _inspectorRecent.KeysFor(CreateInspectorEditTarget("" ).Identity)
             .Select(key => AllDescriptors().FirstOrDefault(item => item.Key == key)).OfType<InspectorPropertyDescriptor>()
-            .Select(Row).ToArray();
-        return AllDescriptors().Where(item => item.Category == category).Select(Row).ToArray();
+            .Select(descriptor => Row(descriptor, showContextPath: true)).ToArray();
+        return AllDescriptors().Where(item => item.Category == category)
+            .Select(descriptor => Row(descriptor)).ToArray();
     }
 
     IReadOnlyList<string> CategoriesFor(InspectorObjectKind kind)
@@ -84,9 +85,9 @@ public sealed partial class UiVm
         return categories;
     }
 
-    InspectorPropertyRow Row(InspectorPropertyDescriptor descriptor) =>
+    InspectorPropertyRow Row(InspectorPropertyDescriptor descriptor, bool showContextPath = false) =>
         new(descriptor, ValueFor(descriptor.Key), descriptor.IsEditable || descriptor.Key == "Entity.Basic.Name",
-            CreateInspectorEditTarget(descriptor.Key));
+            CreateInspectorEditTarget(descriptor.Key), showContextPath);
 
     IReadOnlyList<InspectorPropertyDescriptor> AllDescriptors() => InspectorDescriptors.For(this, InspectorIdentity);
     string ValueFor(string key) => InspectorDescriptors.ValueFor(this, key);

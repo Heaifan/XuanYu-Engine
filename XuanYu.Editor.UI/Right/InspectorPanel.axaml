@@ -29,7 +29,7 @@
         <ItemsControl ItemsSource="{Binding InspectorProperties}" IsVisible="{Binding IsInspectorPropertyListVisible}" x:Name="InspectorPropertyRows">
           <ItemsControl.ItemTemplate><DataTemplate x:DataType="local:InspectorPropertyRow">
             <StackPanel>
-              <xy:XYCaption Text="{Binding Path}"/>
+              <xy:XYCaption Text="{Binding Path}" IsVisible="{Binding ShowContextPath}"/>
                 <Grid Classes="inspectorProperty" ColumnDefinitions="80,*" ColumnSpacing="8">
                 <xy:XYLabel Text="{Binding DisplayName}" VerticalAlignment="Center"/>
                 <xy:XYTextField Grid.Column="1" Text="{Binding Value}" IsVisible="{Binding IsTextEditor}"

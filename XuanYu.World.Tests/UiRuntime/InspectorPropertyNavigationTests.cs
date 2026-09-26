@@ -52,4 +52,23 @@ public sealed class InspectorPropertyNavigationTests
         Assert.Contains("基础", vm.InspectorCategories);
         Assert.Contains("几何", vm.InspectorCategories);
     }
+
+    [Fact]
+    public void Property_context_path_is_hidden_on_categories_and_visible_in_search_and_recent()
+    {
+        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        var dataset = new MapDatasetRow("区域数据", "region", "region-dataset", "正常", "data/region.json");
+        typeof(UiVm).GetField("_datasetItems", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+            .SetValue(vm, new[] { dataset });
+        vm.DatasetSelectedId = dataset.Id;
+
+        Assert.All(vm.InspectorProperties, row => Assert.False(row.ShowContextPath));
+        vm.InspectorSearchText = "名称";
+        Assert.NotEmpty(vm.InspectorProperties);
+        Assert.All(vm.InspectorProperties, row => Assert.True(row.ShowContextPath));
+        vm.InspectorSearchText = "";
+        vm.RecordInspectorCommit(new(InspectorObjectKind.Dataset, dataset.Id, "Dataset.Basic.Name"), true);
+        vm.SelectInspectorCategoryCommand.Execute("最近");
+        Assert.All(vm.InspectorProperties, row => Assert.True(row.ShowContextPath));
+    }
 }
