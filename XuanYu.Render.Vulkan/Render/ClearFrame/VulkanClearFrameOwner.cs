@@ -43,6 +43,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
         {
             BuildRenderPass();
             CreateCommandPool(graphicsFamily);
+            InitializeMapLabelTextures();
             if (!RebuildFramebuffers()) throw new InvalidOperationException("Framebuffer 创建失败");
             Log(VulkanClearFrameLogFormatter.Created());
         }
@@ -96,5 +97,4 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
         if (!CreateFramebuffers()) return false;
         _log?.Invoke(VulkanResizeTracer.Stage(generation, "帧缓冲重建完成", $"物理尺寸={_extent.Width}x{_extent.Height}；帧缓冲={_framebuffers.Length} 张；命令缓冲已重录"));
         return RecordCommandBuffers(_views);
-    }
-}
+    } }

@@ -22,6 +22,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         ClearMapSurface();
         _staticModels.Dispose();
         _vectorOverlays.Dispose();
+        DisposeMapLabels();
         DestroyFramebuffers();
         if (_commandBuffers.Length > 0)
             _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)_commandBuffers.Length, _commandBuffers);

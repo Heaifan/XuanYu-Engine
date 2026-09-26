@@ -35,6 +35,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdDrawIndexed(cb, (uint)primitive.IndexCount, 1,
                 (uint)primitive.FirstIndex, primitive.BaseVertex, 0);
         }
+        DrawMapLabels(cb, scene, gpu);
         BindProceduralVertexBuffer(cb);
     }
 }

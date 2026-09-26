@@ -25,12 +25,13 @@ sealed class VulkanVectorOverlayCache : IDisposable
         if (old is not null && VulkanVectorOverlayBufferReusePolicy.CanReuse(old.VertexBuffer.CapacityBytes, vertexBytes)
             && VulkanVectorOverlayBufferReusePolicy.CanReuse(old.IndexBuffer.CapacityBytes, indexBytes)
             && old.VertexBuffer.TryUpdate(vertices) && old.IndexBuffer.TryUpdate(indices))
-        { old.Update(model.Revision, model.Primitives.ToArray()); return old; }
+        { old.Update(model.Revision, model.Primitives.ToArray(), model.LabelInstances.ToArray(), model.LabelBitmapResources.ToArray()); return old; }
         var vb = VulkanStaticModelBuffer.Create(_vk, _device, vertices, BufferUsageFlags.VertexBufferBit, out error);
         if (vb is null) { _log?.Invoke($"Vector Overlay 顶点缓冲创建失败：{error}"); return old; }
         var ib = VulkanStaticModelBuffer.Create(_vk, _device, indices, BufferUsageFlags.IndexBufferBit, out error);
         if (ib is null) { vb.Dispose(); _log?.Invoke($"Vector Overlay 索引缓冲创建失败：{error}"); return old; }
-        var next = new VulkanVectorOverlayResource(model.Key, model.Revision, vb, ib, model.Primitives.ToArray());
+        var next = new VulkanVectorOverlayResource(model.Key, model.Revision, vb, ib,
+            model.Primitives.ToArray(), model.LabelInstances.ToArray(), model.LabelBitmapResources.ToArray());
         _items[model.Key] = next; old?.Dispose(); return next;
     }
 

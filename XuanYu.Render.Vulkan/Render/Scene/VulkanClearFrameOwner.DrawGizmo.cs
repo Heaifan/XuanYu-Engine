@@ -41,4 +41,9 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk.CmdPushConstants(cb, _pipelineLayout, ShaderStageFlags.VertexBit, 0,
             VulkanScenePushConstants.SizeInBytes, scene);
     }
+
+    void PushLabelConstants(CommandBuffer cb, float* scene) =>
+        _vk.CmdPushConstants(cb, _mapLabelPipelineLayout,
+            ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit, 0,
+            VulkanScenePushConstants.SizeInBytes, scene);
 }

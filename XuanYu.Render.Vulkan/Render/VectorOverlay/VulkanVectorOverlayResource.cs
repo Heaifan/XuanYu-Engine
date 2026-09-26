@@ -7,10 +7,13 @@ sealed class VulkanVectorOverlayResource : IDisposable
 {
     public VulkanVectorOverlayResource(RenderVectorOverlayKey key, int revision,
         VulkanStaticModelBuffer vertices, VulkanStaticModelBuffer indices,
-        IReadOnlyList<RenderVectorOverlayPrimitive> primitives)
+        IReadOnlyList<RenderVectorOverlayPrimitive> primitives,
+        IReadOnlyList<RenderVectorOverlayLabel> labels,
+        IReadOnlyList<RenderLabelBitmap> labelBitmaps)
     {
         Key = key; Revision = revision; VertexBuffer = vertices; IndexBuffer = indices;
         Primitives = primitives;
+        Labels = labels; LabelBitmaps = labelBitmaps;
     }
 
     public RenderVectorOverlayKey Key { get; }
@@ -18,9 +21,12 @@ sealed class VulkanVectorOverlayResource : IDisposable
     public VulkanStaticModelBuffer VertexBuffer { get; }
     public VulkanStaticModelBuffer IndexBuffer { get; }
     public IReadOnlyList<RenderVectorOverlayPrimitive> Primitives { get; private set; }
+    public IReadOnlyList<RenderVectorOverlayLabel> Labels { get; private set; }
+    public IReadOnlyList<RenderLabelBitmap> LabelBitmaps { get; private set; }
 
-    public void Update(int revision, IReadOnlyList<RenderVectorOverlayPrimitive> primitives)
-    { Revision = revision; Primitives = primitives; }
+    public void Update(int revision, IReadOnlyList<RenderVectorOverlayPrimitive> primitives,
+        IReadOnlyList<RenderVectorOverlayLabel> labels, IReadOnlyList<RenderLabelBitmap> labelBitmaps)
+    { Revision = revision; Primitives = primitives; Labels = labels; LabelBitmaps = labelBitmaps; }
 
     public void Dispose() { VertexBuffer.Dispose(); IndexBuffer.Dispose(); }
 }

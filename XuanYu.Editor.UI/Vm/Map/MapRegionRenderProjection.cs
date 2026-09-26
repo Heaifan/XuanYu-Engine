@@ -13,9 +13,10 @@ public static class MapRegionRenderProjection
         => Build(map, drawing, roads, null);
 
     public static RenderVectorOverlayResource Build(MapDefinition map, RegionDrawingState drawing,
-        RoadDrawingState roads, MapGeometryPreview? geometry, double dpiScale = 1.0)
+        RoadDrawingState roads, MapGeometryPreview? geometry, double dpiScale = 1.0,
+        MapLabelBitmapCache? labelCache = null)
     {
-        var builder = new MapVectorOverlayBuilder(map.Surface.BaseHeightMeters, dpiScale);
+        var builder = new MapVectorOverlayBuilder(map.Surface.BaseHeightMeters, dpiScale, labelCache);
         var layers = map.Layers.ToDictionary(layer => layer.LayerId);
         foreach (var region in map.Regions.Where(region =>
                      region.IsVisible && layers.TryGetValue(region.LayerId, out var layer) && layer.IsVisible)
@@ -32,6 +33,8 @@ public static class MapRegionRenderProjection
         if (drawing.Draft is { } draft)
             builder.AddDraft(draft, drawing.Cursor, drawing.IsCloseCandidate);
         if (roads.Draft is { } roadDraft) builder.AddRoadDraft(roadDraft, roads.Cursor);
-        return builder.Build();
+        var resource = builder.Build();
+        labelCache?.Trim(bitmap => resource.LabelBitmapResources.Any(x => x.CacheKey == bitmap.CacheKey));
+        return resource;
     }
 }

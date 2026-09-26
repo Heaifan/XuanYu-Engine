@@ -80,6 +80,7 @@ public sealed partial class VulkanRenderSession : IDisposable
                 log);
             session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, skyPipeline, gridPipelines, log, surfaceHandle);
             session.AttachVectorOverlayPipeline(vk);
+            session.AttachMapLabelPipeline(vk);
             session.AttachTerrainPipeline(vk);
             if (!loop.Start()) throw new InvalidOperationException("Present 泵启动失败");
             return session;
@@ -95,7 +96,5 @@ public sealed partial class VulkanRenderSession : IDisposable
             return null;
         }
     }
-
     public bool IsFailed => Volatile.Read(ref _failed) != 0;
-    public string? FailureReason => Volatile.Read(ref _failureReason);
-}
+    public string? FailureReason => Volatile.Read(ref _failureReason); }

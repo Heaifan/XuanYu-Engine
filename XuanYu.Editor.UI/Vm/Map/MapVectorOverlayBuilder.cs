@@ -6,13 +6,15 @@ using XuanYu.World.Map;
 
 namespace XuanYu.Editor.UI;
 
-sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.0)
+sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.0,
+    MapLabelBitmapCache? labelCache = null)
 {
     static readonly RenderStaticModelColor RegionStroke = new(.12, .38, .70, .92);
     readonly List<RenderVectorOverlayVertex> _vertices = [];
     readonly List<uint> _indices = [];
     readonly List<RenderVectorOverlayPrimitive> _primitives = [];
     readonly List<RenderVectorOverlayLabel> _labels = [];
+    readonly List<RenderLabelBitmap> _labelBitmaps = [];
 
     public void AddRegion(MapRegion region, bool selected, IReadOnlyList<MapPoint>? preview)
     {
@@ -41,7 +43,8 @@ sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.
     public RenderVectorOverlayResource Build()
     {
         var bounds = Bounds();
-        return new(new("map-vector-overlay"), Revision(), _vertices, _indices, _primitives, bounds, _labels);
+        return new(new("map-vector-overlay"), Revision(), _vertices, _indices, _primitives,
+            bounds, _labels, _labelBitmaps);
     }
 
     void AddFill(IReadOnlyList<MapPoint> points, RenderStaticModelColor color)
@@ -93,6 +96,5 @@ sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.
 
     void AddPrimitive(int first, RenderStaticModelColor color, RenderVectorOverlayPrimitiveKind kind,
         double width, double radius) => _primitives.Add(new(
-            first, _indices.Count - first, 0, kind, color, width, radius));
-
+        first, _indices.Count - first, 0, kind, color, width, radius));
 }

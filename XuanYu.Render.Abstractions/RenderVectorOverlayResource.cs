@@ -9,7 +9,9 @@ public sealed record RenderVectorOverlayResource(
     IReadOnlyList<uint> Indices,
     IReadOnlyList<RenderVectorOverlayPrimitive> Primitives,
     SpatialAabb WorldBounds,
-    IReadOnlyList<RenderVectorOverlayLabel>? Labels = null)
+    IReadOnlyList<RenderVectorOverlayLabel>? Labels = null,
+    IReadOnlyList<RenderLabelBitmap>? LabelBitmaps = null)
 {
     public IReadOnlyList<RenderVectorOverlayLabel> LabelInstances => Labels ?? [];
+    public IReadOnlyList<RenderLabelBitmap> LabelBitmapResources => LabelBitmaps ?? [];
 }

@@ -39,6 +39,7 @@ public sealed partial class VulkanRenderSession
         _clearFrame.DisposeTerrain();
         _vectorOverlayPipeline?.Dispose();
         _vectorStrokePipeline?.Dispose();
+        _mapLabelPipeline?.Dispose();
         _skyPipeline?.Dispose();
         _gridPipelines?.Dispose();
         _clearFrame.Dispose();
