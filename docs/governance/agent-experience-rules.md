@@ -324,7 +324,7 @@ Superseded by：
 状态：ACTIVE
 适用范围：SDK / Build / Run / Toolchain / Output Path / Acceptance Entry / 多机器开发环境
 触发条件：Agent 需要判断当前机器工具链路径、启动入口、编译器、产物目录或“环境是否缺失”。
-Occurrences：1
+Occurrences：2
 
 规则：
 当前仓库中的权威入口和 Resolver 高于 Agent 历史记忆。事实优先级固定为：
@@ -349,12 +349,13 @@ Agent 将另一台电脑或旧阶段的绝对路径当成当前事实，绕过�
 
 来源 ERR：
 - ERR-20260925-005
+- ERR-20260926-001
 
 任务注入：
 所有 Build、Run、SDK、Toolchain、环境诊断、交付验收任务必须加载本规则及 K-GOV-003。
 
 验证 / 自动化：
-候选 Gate：`CanonicalRunResolver`。玄域引擎当前权威链为 `run.bat → scripts/resolve-dotnet.ps1`。
+`CanonicalRunResolver` 已由 HANDOFF-BOOTSTRAP-R1 正式落地为机器 Gate。当前权威链为 `run.bat → scripts/resolve-dotnet.ps1`；新会话/新机器先执行 `scripts/xye-bootstrap.ps1`，正式 .NET 命令通过 `scripts/xye-dotnet.ps1` 或 Resolver 返回的绝对 `DOTNET_EXE` 执行。Canonical Toolchain Contract T1–T7、Bootstrap Runtime、Dogfood Build/Test 均已 PASS；对应治理提交为 `1b29f197`、`ee17a281`。
 
 Superseded by：
 无
