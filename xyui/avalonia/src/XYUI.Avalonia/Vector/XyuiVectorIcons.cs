@@ -54,7 +54,7 @@ public static class XyuiVectorIcons
             [XyuiVectorIcon.Stop] = "M5 5H19V19H5Z",
             [XyuiVectorIcon.Select] = "M5 3L17 14L11.7 15.1L14.7 20.2L12.4 21.5L9.4 16.4L5.8 20.2Z",
             [XyuiVectorIcon.BoxSelect] = "M4 5H17V16H4ZM14.5 14L20 19.2L17.4 19.8L18.9 22L17.2 23L15.8 20.7L14.1 22.4Z",
-            [XyuiVectorIcon.RegionPolygon] = "M5 4 L13 3 L20 8 L17 18 L9 21 L3 14 Z",
+            [XyuiVectorIcon.RegionPolygon] = "M5 4 L14 3 L20 10 L16 19 L4 16 Z",
             [XyuiVectorIcon.TerrainRelief] = "M3 18 L7 12 L10 15 L14 7 L18 12 L21 9 M3 20 H21",
             [XyuiVectorIcon.Move] = "M12 3V21M12 3L9 6M12 3L15 6M12 21L9 18M12 21L15 18M3 12H21M3 12L6 9M3 12L6 15M21 12L18 9M21 12L18 15M12 10.5A1.5 1.5 0 1 0 12 13.5A1.5 1.5 0 1 0 12 10.5",
             [XyuiVectorIcon.Rotate] = "M12 10.5A1.5 1.5 0 1 0 12 13.5A1.5 1.5 0 1 0 12 10.5M6.2 9.5A6.6 6.6 0 0 1 15.8 5.3M15.8 5.3L15.2 2.8M15.8 5.3L13.2 5.9M17.8 14.5A6.6 6.6 0 0 1 8.2 18.7M8.2 18.7L8.8 21.2M8.2 18.7L10.8 18.1",
