@@ -1,9 +1,6 @@
 using System.Globalization;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
@@ -25,19 +22,31 @@ public static class MapLabelRasterizer
         var heightDip = Math.Max(1, Math.Ceiling(formatted.Height + PaddingDip * 2));
         var dpi = Math.Max(.5, label.DpiScale);
         var size = new PixelSize((int)Math.Ceiling(widthDip * dpi), (int)Math.Ceiling(heightDip * dpi));
-        using var source = new RenderTargetBitmap(size, new Vector(96 * dpi, 96 * dpi));
-        using (var context = source.CreateDrawingContext())
-        {
-            context.DrawRectangle(Brushes.Transparent, null, new Rect(0, 0, widthDip, heightDip));
-            context.DrawText(formatted, new(PaddingDip, PaddingDip));
-        }
-        using var target = new WriteableBitmap(size, new Vector(96 * dpi, 96 * dpi), PixelFormats.Bgra8888, AlphaFormat.Unpremul);
-        using var framebuffer = target.Lock();
-        source.CopyPixels(framebuffer);
-        var pixels = new byte[framebuffer.RowBytes * size.Height];
-        Marshal.Copy(framebuffer.Address, pixels, 0, pixels.Length);
+        var geometry = formatted.BuildGeometry(new(PaddingDip, PaddingDip)) ??
+            throw new InvalidOperationException("地图标签字形几何为空");
+        var pixels = RasterizeCoverage(geometry, size, dpi);
         if (!pixels.Any(value => value != 0)) throw new InvalidOperationException("地图标签栅格结果为空");
-        return new(label.CacheKey, size.Width, size.Height, framebuffer.RowBytes,
+        return new(label.CacheKey, size.Width, size.Height, size.Width * 4,
             RenderLabelPixelFormat.Bgra8888Unpremultiplied, pixels);
+    }
+
+    static byte[] RasterizeCoverage(Geometry geometry, PixelSize size, double dpi)
+    {
+        const int samples = 4;
+        var pixels = new byte[size.Width * size.Height * 4];
+        for (var y = 0; y < size.Height; y++)
+            for (var x = 0; x < size.Width; x++)
+            {
+                var hits = 0;
+                for (var sy = 0; sy < samples; sy++)
+                    for (var sx = 0; sx < samples; sx++)
+                        if (geometry.FillContains(new((x + (sx + .5) / samples) / dpi,
+                            (y + (sy + .5) / samples) / dpi))) hits++;
+                var coverage = (byte)Math.Round(hits * 255d / (samples * samples));
+                var index = (y * size.Width + x) * 4;
+                pixels[index] = pixels[index + 1] = pixels[index + 2] = coverage;
+                pixels[index + 3] = 255;
+            }
+        return pixels;
     }
 }

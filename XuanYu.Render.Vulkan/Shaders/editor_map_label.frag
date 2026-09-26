@@ -15,7 +15,7 @@ layout(location = 0) in vec2 vUv;
 layout(location = 0) out vec4 outColor;
 
 void main() {
-    float alpha = texture(labelTexture, vUv).a;
-    if (alpha <= 0.001) discard;
-    outColor = vec4(pc.entityRotation.xyz, pc.staticAlpha * alpha);
+    float coverage = texture(labelTexture, vUv).r;
+    if (coverage <= 0.001) discard;
+    outColor = vec4(pc.entityRotation.xyz, pc.staticAlpha * coverage);
 }
