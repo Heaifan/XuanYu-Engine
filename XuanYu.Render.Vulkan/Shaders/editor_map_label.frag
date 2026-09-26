@@ -16,5 +16,6 @@ layout(location = 0) out vec4 outColor;
 
 void main() {
     float alpha = texture(labelTexture, vUv).a;
+    if (alpha <= 0.001) discard;
     outColor = vec4(pc.entityRotation.xyz, pc.staticAlpha * alpha);
 }

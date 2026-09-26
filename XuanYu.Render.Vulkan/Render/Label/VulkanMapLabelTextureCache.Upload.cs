@@ -4,7 +4,7 @@ namespace XuanYu.Render.Vulkan.Render.Label;
 
 sealed unsafe partial class VulkanMapLabelTextureCache
 {
-    void Upload(Silk.NET.Vulkan.Buffer staging, Image image, uint width, uint height)
+    void Upload(Silk.NET.Vulkan.Buffer staging, Image image, uint width, uint height, uint rowLength)
     {
         var allocate = new CommandBufferAllocateInfo { SType = StructureType.CommandBufferAllocateInfo,
             CommandPool = _commandPool, Level = CommandBufferLevel.Primary, CommandBufferCount = 1 };
@@ -17,7 +17,8 @@ sealed unsafe partial class VulkanMapLabelTextureCache
             Transition(command, image, ImageLayout.Undefined, ImageLayout.TransferDstOptimal,
                 PipelineStageFlags.TopOfPipeBit, PipelineStageFlags.TransferBit);
             var copy = new BufferImageCopy { ImageSubresource = new ImageSubresourceLayers
-                { AspectMask = ImageAspectFlags.ColorBit, LayerCount = 1 }, ImageExtent = new(width, height, 1) };
+                { AspectMask = ImageAspectFlags.ColorBit, LayerCount = 1 }, BufferRowLength = rowLength,
+                BufferImageHeight = height, ImageExtent = new(width, height, 1) };
             _vk.CmdCopyBufferToImage(command, staging, image, ImageLayout.TransferDstOptimal, 1, &copy);
             Transition(command, image, ImageLayout.TransferDstOptimal, ImageLayout.ShaderReadOnlyOptimal,
                 PipelineStageFlags.TransferBit, PipelineStageFlags.FragmentShaderBit);

@@ -26,7 +26,11 @@ public static class MapLabelRasterizer
         var dpi = Math.Max(.5, label.DpiScale);
         var size = new PixelSize((int)Math.Ceiling(widthDip * dpi), (int)Math.Ceiling(heightDip * dpi));
         using var source = new RenderTargetBitmap(size, new Vector(96 * dpi, 96 * dpi));
-        using (var context = source.CreateDrawingContext()) context.DrawText(formatted, new(PaddingDip, PaddingDip));
+        using (var context = source.CreateDrawingContext())
+        {
+            context.DrawRectangle(Brushes.Transparent, null, new Rect(0, 0, widthDip, heightDip));
+            context.DrawText(formatted, new(PaddingDip, PaddingDip));
+        }
         using var target = new WriteableBitmap(size, new Vector(96 * dpi, 96 * dpi), PixelFormats.Bgra8888, AlphaFormat.Unpremul);
         using var framebuffer = target.Lock();
         source.CopyPixels(framebuffer);
