@@ -10,30 +10,13 @@ public static partial class XYUI4GalleryCatalog
     static Control ProgressBarPreview() => new StackPanel
     {
         Spacing = 12,
-        Children = { CleanLinear(), LabeledProgress(), SegmentedStages(), InlineCompact() }
+        Children = { CleanLinear(), LabeledProgress(), SegmentedStages(), InlineCompact(), FoundationBoundaries() }
     };
 
     static Control CleanLinear() => new StackPanel
     {
         Spacing = 4,
         Children = { Caption("Clean Linear · 25 / 50 / 75 / 100%"), Row(25, "25%"), Row(50, "50%"), Row(75, "75%"), Row(100, "100%") }
-    };
-
-    static Control LabeledProgress() => new StackPanel
-    {
-        Spacing = 4,
-        Children = { Caption("Labeled Progress · 正在导入 DEM"),
-            new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), Children =
-            { new XYProgressBar { Value = 68, StatusText = "正在导入 DEM", Variant = XyuiProgressBarVariant.Labeled, Width = 260 },
-              new TextBlock { Text = "68%", Classes = { "xyui-text-caption" }, [Grid.ColumnProperty] = 1 } } } }
-    };
-
-    static Control SegmentedStages() => new StackPanel
-    {
-        Spacing = 4,
-        Children = { Caption("Segmented Stage Progress"),
-            new TextBlock { Text = "准备   →   读取   →   解析   →   构建   →   完成", Classes = { "xyui-text-caption" } },
-            new XYProgressBar { Value = 60, Variant = XyuiProgressBarVariant.SegmentedStage, Width = 260 } }
     };
 
     static Control InlineCompact() => new StackPanel

@@ -1,6 +1,7 @@
 using XYUI.Avalonia.Gallery;
 using XYUI.Avalonia.Gallery.Views;
 using XYUI.Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.VisualTree;
 
 namespace XYUI.Avalonia.Tests;
@@ -38,5 +39,18 @@ public sealed class XYUI4GalleryTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Contains(bars, x => x.Variant == XyuiProgressBarVariant.InlineCompact);
         Assert.IsType<XYProgressBar>(XYUI4GalleryCatalog.CreateLiveExamples("XYUI-4-4.16")
             .GetVisualDescendants().OfType<XYProgressBar>().First());
+    });
+
+    [Fact]
+    public void Segmented_stage_gallery_maps_completed_current_and_pending() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare();
+        var preview = XYUI4GalleryCatalog.CreatePreview("XYUI-4-4.16");
+        var stages = preview.GetVisualDescendants().OfType<XYProgressBar>()
+            .Where(x => x.Variant == XyuiProgressBarVariant.SegmentedStage).ToArray();
+        Assert.Equal(5, stages.Length);
+        Assert.Equal(new[] { 100d, 100d, 40d, 0d, 0d }, stages.Select(x => x.Value));
+        Assert.Contains(preview.GetVisualDescendants().OfType<TextBlock>(), x => x.Text?.Contains("解析") == true);
+        Assert.Contains(preview.GetVisualDescendants().OfType<TextBlock>(), x => x.Text?.Contains("当前") == true);
     });
 }
