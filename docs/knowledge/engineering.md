@@ -241,7 +241,7 @@ Repository Current Files → Current Machine Resolver → Git Current State → 
 
 必须先核对 `run.bat`、`scripts/resolve-dotnet.ps1` 和当前 Git 状态。历史记忆只能帮助寻找入口，不能作为最终环境结论。
 
-**验证方法**：记录 Resolver 选择的 SDK 路径/版本、当前分支、HEAD 与远端关系；不得仅凭记忆宣布“无 SDK”或“运行的是某个输出目录”。
+**验证方法**：先执行 `scripts/xye-bootstrap.ps1`，记录 Resolver 选择的 SDK 路径/版本、当前分支、HEAD 与远端关系；正式 .NET 命令通过 `scripts/xye-dotnet.ps1` 或 Resolver 返回的绝对 `DOTNET_EXE` 执行。`CanonicalRunResolver` 已由 HANDOFF-BOOTSTRAP-R1 落地为机器 Gate；不得仅凭 PATH 或记忆宣布“无 SDK”或“运行的是某个输出目录”。
 
 ---
 
