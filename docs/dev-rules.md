@@ -102,17 +102,18 @@ HIGH、阶段可信基线、正式验收 / Release 前至少执行：
 
 ## 4. .NET 稳定执行模板
 
-`dotnet build` 和 `dotnet test` 必须串行。
+`scripts/xye-dotnet.ps1 build` 和 `scripts/xye-dotnet.ps1 test` 必须串行，并且先执行 `scripts/xye-bootstrap.ps1`。
 
 ```powershell
 Set-Location 'E:\MyDoc\project-VSCode\XuanYuEngine'
 
-dotnet build-server shutdown
+$dotnet = '.\\scripts\\xye-dotnet.ps1'
+& $dotnet build-server shutdown
 $env:MSBUILDDISABLENODEREUSE = "1"
 
-dotnet restore .\XuanYu.Engine.slnx
+& $dotnet restore .\XuanYu.Engine.slnx
 
-dotnet build .\XuanYu.Engine.slnx `
+& $dotnet build .\XuanYu.Engine.slnx `
   --no-restore `
   -m:1 `
   -nr:false `
@@ -121,7 +122,7 @@ dotnet build .\XuanYu.Engine.slnx `
 
 # 按 Gate 选择相关测试，全部串行，并优先 --no-build --no-restore
 
-dotnet build-server shutdown
+& $dotnet build-server shutdown
 ```
 
 规则：

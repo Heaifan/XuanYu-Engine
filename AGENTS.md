@@ -25,6 +25,7 @@
 ## 每轮入口
 
 ```text
+0. Repository Bootstrap：scripts/xye-bootstrap.ps1
 1. 接管核对 Git / 工作区
 2. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
 3. MEDIUM / HIGH 或已登记任务域 → Knowledge Preflight
@@ -34,6 +35,8 @@
 7. 原子 Commit → Push → 远端 tip 复核
 8. 需要真机时进入“待真机验收”
 ```
+
+任何 Build / Test / Run / SDK 判断前，必须先执行 Repository Bootstrap，遵守 Repository Bootstrap / Resolver First，或通过 `run.bat` 进入同一 Resolver Chain。只有 `scripts/resolve-dotnet.ps1` 实际失败后，才允许报告 .NET SDK 不可用；PATH 中没有 `dotnet` 不等于 SDK 不存在。正式 .NET 命令统一通过 `scripts/xye-dotnet.ps1`。
 
 不再强制“普通目标 ≤3”，也不要求每条中间报告重复完整 TODO。限制未解决依赖链、失控并行和 Scope Expansion。
 
@@ -68,7 +71,7 @@
 - `git diff --check`
 - 任务要求的运行 / 真机 / 数据闭环
 
-`dotnet build` / `dotnet test` 始终串行；完整门禁按风险和可信基线节点执行，而不是每个微编辑都重复执行。
+`scripts/xye-dotnet.ps1 build` / `scripts/xye-dotnet.ps1 test` 始终串行；完整门禁按风险和可信基线节点执行，而不是每个微编辑都重复执行。
 
 ## 两次失败规则
 
