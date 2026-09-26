@@ -16,7 +16,7 @@ public sealed partial class UiVm
     public event Action<string>? FileCommandRequested;
     public bool IsSceneDirty => _documentSession.IsDirty(_historyOwner.CurrentRevision);
     public string CurrentScenePath => _documentSession.CurrentPath ?? "";
-    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.28.77-fix3 - {DocumentTitle}";
+    public string DocumentWindowTitle => $"玄域引擎编辑器 {System.Reflection.CustomAttributeExtensions.GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(typeof(UiVm).Assembly)?.InformationalVersion ?? "未知版本"} - {DocumentTitle}";
     public string DocumentTitle => $"{DocumentFileName}{(IsSceneDirty ? "（未保存）" : "")}";
     public string DocumentFileName =>
         string.IsNullOrWhiteSpace(CurrentScenePath) ? "未命名场景" : Path.GetFileName(CurrentScenePath);

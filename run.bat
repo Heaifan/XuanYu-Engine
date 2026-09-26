@@ -1,7 +1,5 @@
 @echo off
 setlocal
-set VERSION=0.2.28.77-fix3
-title XuanYu Engine Editor v0.2.28.77-fix3
 
 cd /d "%~dp0"
 if errorlevel 1 (
@@ -9,6 +7,15 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
+
+set "VERSION="
+for /f "usebackq delims=" %%V in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\resolve-version.ps1"`) do if not defined VERSION set "VERSION=%%V"
+if not defined VERSION (
+    echo [ERROR] Product version source could not be read.
+    pause
+    exit /b 1
+)
+title XuanYu Engine Editor %VERSION%
 
 set "DOTNET_EXE="
 for /f "usebackq delims=" %%D in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\resolve-dotnet.ps1"`) do if not defined DOTNET_EXE set "DOTNET_EXE=%%D"
