@@ -88,6 +88,6 @@ public sealed class XYContextDropdownBoard : Border
         return menu;
     }
     XYMenuItem ActionItem(XYContextAction action) { var item = new XYMenuItem { Id = action.Id, Label = action.Label, Icon = ActionIcon(action.Id), IsEnabled = action.IsEnabled, Height = 32, Padding = new Thickness(8, 4) }; item.Invoked += (_, _) => { ActionPane.SelectAction(action.Id); ActionExecuted?.Invoke(this, action); }; return item; }
-    static XyuiVectorIcon? CategoryIcon(string id) => id switch { "point" => XyuiVectorIcon.Select, "line" => XyuiVectorIcon.Move, "area" => XyuiVectorIcon.BoxSelect, _ => null };
-    static XyuiVectorIcon? ActionIcon(string id) => id switch { "marker" => XyuiVectorIcon.Locate, "poi" => XyuiVectorIcon.Tag, "road" => XyuiVectorIcon.Move, "boundary" => XyuiVectorIcon.BoxSelect, "river" => XyuiVectorIcon.Pan, "region" => XyuiVectorIcon.Section, "blocked" => XyuiVectorIcon.Stop, "parcel" => XyuiVectorIcon.Browse, _ => null };
+    static XyuiVectorIcon? CategoryIcon(string id) => id switch { "point" => XyuiVectorIcon.Select, "line" => XyuiVectorIcon.Move, "area" => XyuiVectorIcon.RegionPolygon, "terrain" => XyuiVectorIcon.TerrainRelief, _ => null };
+    static XyuiVectorIcon? ActionIcon(string id) => id switch { "marker" => XyuiVectorIcon.Locate, "poi" => XyuiVectorIcon.Tag, "road" => XyuiVectorIcon.Move, "boundary" => XyuiVectorIcon.BoxSelect, "river" => XyuiVectorIcon.Pan, "region" => XyuiVectorIcon.RegionPolygon, "blocked" => XyuiVectorIcon.Stop, "parcel" => XyuiVectorIcon.Browse, _ => null };
 }
