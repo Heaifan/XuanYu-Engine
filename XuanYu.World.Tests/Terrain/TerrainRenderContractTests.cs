@@ -7,11 +7,11 @@ public sealed class TerrainRenderContractTests
     [Fact]
     public void Heightfield_preserves_positive_zero_and_negative_logic()
     {
-        var heightfield = new TerrainHeightfield(3, 1, [100, 0, -25]);
+        var heightfield = new TerrainHeightfield(2, 2, [100, 0, -25, 50]);
 
         Assert.Equal(100, heightfield.ElevationAt(0, 0));
         Assert.Equal(0, heightfield.ElevationAt(0, 1));
-        Assert.Equal(-25, heightfield.ElevationAt(0, 2));
+        Assert.Equal(-25, heightfield.ElevationAt(1, 0));
     }
 
     [Fact]
