@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="using:XuanYu.Editor.UI"
+        xmlns:xy="using:XYUI.Avalonia.Controls"
         x:Class="XuanYu.Editor.UI.UiWin"
         x:DataType="local:UiVm"
              Title="玄域引擎编辑器"
@@ -32,6 +33,34 @@
   <Grid>
     <local:UiRoot/>
     <local:DiagnosticOverlayHost x:Name="DiagnosticOverlay" ZIndex="80"/>
+    <Border ZIndex="70" IsVisible="{Binding IsTerrainImporting}"
+            Width="420" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,72,0,0"
+            Background="{StaticResource Color.Bg.Panel}" BorderBrush="{StaticResource Color.Border.Default}"
+            BorderThickness="1" CornerRadius="6" Padding="14">
+      <StackPanel Spacing="8">
+        <xy:XYHeading Text="正在导入 DEM" Variant="PanelTitle"/>
+        <xy:XYCaption Text="{Binding TerrainImportMessage}"/>
+        <xy:XYProgressBar Value="{Binding TerrainImportPercentage}" Maximum="100"
+                           Variant="Labeled" ShowPercentage="True"
+                           StatusText="{Binding TerrainImportMessage}"/>
+        <xy:XYButton Content="取消" Command="{Binding CancelTerrainImportCommand}"
+                     HorizontalAlignment="Right" IsEnabled="{Binding IsTerrainImporting}"/>
+      </StackPanel>
+    </Border>
+    <Border ZIndex="69" IsVisible="{Binding IsTerrainImportComplete}"
+            Width="420" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,72,0,0"
+            Background="{StaticResource Color.Bg.Panel}" BorderBrush="{StaticResource Color.Border.Default}"
+            BorderThickness="1" CornerRadius="6" Padding="14">
+      <StackPanel Spacing="4">
+        <xy:XYHeading Text="导入完成" Variant="PanelTitle"/>
+        <xy:XYCaption Text="{Binding TerrainTileId, StringFormat=Tile: {0}}"/>
+        <xy:XYCaption Text="{Binding TerrainResolutionText, StringFormat=Resolution: {0}}"/>
+        <xy:XYCaption Text="{Binding TerrainBoundsText, StringFormat=Bounds: {0}}"/>
+        <xy:XYCaption Text="{Binding TerrainSourceName, StringFormat=Source: {0}}"/>
+        <xy:XYCaption Text="{Binding TerrainDatumText, StringFormat=Vertical Datum: {0}}"/>
+        <xy:XYCaption Text="{Binding TerrainProbeText}" TextWrapping="Wrap"/>
+      </StackPanel>
+    </Border>
     <!-- D5 弹窗宿主：遮罩 + 卡片（Enter=默认按钮[非危险]，Escape=取消） -->
     <Border x:Name="DialogOverlay" ZIndex="90" IsVisible="False"
             Background="{StaticResource Color.Bg.Overlay}" Opacity="0.55"/>

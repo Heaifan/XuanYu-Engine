@@ -4,7 +4,7 @@ namespace XuanYu.Editor.UI;
 
 public partial class UiWin
 {
-    static readonly FilePickerFileType TerrainFileType = new("Terrain Source") { Patterns = ["*.asc", "*.txt"] };
+    static readonly FilePickerFileType TerrainFileType = new("HGT Terrain Source") { Patterns = ["*.hgt"] };
 
     async Task ImportTerrain(UiVm vm)
     {
@@ -13,6 +13,6 @@ public partial class UiWin
             Title = "导入 DEM 地形源", AllowMultiple = false, FileTypeFilter = [TerrainFileType]
         }));
         var path = files.FirstOrDefault()?.TryGetLocalPath();
-        if (!string.IsNullOrWhiteSpace(path)) vm.ImportTerrainSource(path);
+        if (!string.IsNullOrWhiteSpace(path)) await vm.ImportTerrainSourceAsync(path);
     }
 }
