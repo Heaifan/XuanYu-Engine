@@ -73,8 +73,8 @@ sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.
         if (a == b) return;
         var q = (uint)_vertices.Count;
         _vertices.Add(LineVertex(a, b, -1, -1)); _vertices.Add(LineVertex(a, b, 1, -1));
-        _vertices.Add(LineVertex(b, a, -1, 2)); _vertices.Add(LineVertex(b, a, -1, 2));
-        _vertices.Add(LineVertex(a, b, 1, -1)); _vertices.Add(LineVertex(b, a, 1, 2));
+        _vertices.Add(LineVertex(a, b, -1, 2)); _vertices.Add(LineVertex(a, b, -1, 2));
+        _vertices.Add(LineVertex(a, b, 1, -1)); _vertices.Add(LineVertex(a, b, 1, 2));
         _indices.AddRange([q, q + 1, q + 2, q + 2, q + 4, q + 5]);
     }
 
