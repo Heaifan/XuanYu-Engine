@@ -2,9 +2,9 @@
 
 ## Task State
 
-Risk: MEDIUM  
-Goal: 用 XYColorPicker 替换 Region 填充色文本输入，同时保持单次事务提交。  
-Base: `e1964f1193d15850f35b25aa0e3c17289a2cc1c0`  
+Risk: MEDIUM
+Goal: 用 XYColorPicker 替换 Region 填充色文本输入，同时保持单次事务提交。
+Base: `e1964f1193d15850f35b25aa0e3c17289a2cc1c0`
 Branch: `fix/region-inspector-color-picker-r1`
 
 ## Scope
