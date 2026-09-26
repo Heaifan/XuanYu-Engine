@@ -54,7 +54,7 @@ public sealed partial class UiVm
 
     void CancelRegionFillColorPreviewForMapSelection(MapSelection selection)
     {
-        var geometry = selection.Kind == MapSelectionKind.Region && selection.RegionId is { } regionId
+        MapGeometrySelection? geometry = selection.Kind == MapSelectionKind.Region && selection.RegionId is { } regionId
             ? new MapGeometrySelection(MapGeometryFeatureKind.Region, regionId.ToString())
             : null;
         CancelRegionFillColorPreviewForSelection(geometry);
