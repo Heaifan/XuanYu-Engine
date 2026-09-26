@@ -19,10 +19,10 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
     {
         _vk = vk; _deviceOwner = deviceOwner; _layout = layout; _pipeline = pipeline; _log = log;
     }
-    internal static VulkanGraphicsPipelineOwner? Create(Vk vk, VulkanDeviceOwner deviceOwner, VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, Action<string>? log, bool depthTest = true, bool depthWrite = true)
+    internal static VulkanGraphicsPipelineOwner? Create(Vk vk, VulkanDeviceOwner deviceOwner, VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, Action<string>? log, bool depthTest = true, bool depthWrite = true, bool analyticStroke = false)
     {
-        var vert = VulkanShaderModuleOwner.Create(vk, deviceOwner, ShaderBytecodeVert.Code);
-        var frag = VulkanShaderModuleOwner.Create(vk, deviceOwner, ShaderBytecodeFrag.Code);
+        var vert = VulkanShaderModuleOwner.Create(vk, deviceOwner, VertexShaderCode(analyticStroke));
+        var frag = VulkanShaderModuleOwner.Create(vk, deviceOwner, FragmentShaderCode(analyticStroke));
         if (vert.Handle == 0 || frag.Handle == 0)
         {
             VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);

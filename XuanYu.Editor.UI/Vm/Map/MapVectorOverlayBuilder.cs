@@ -67,9 +67,9 @@ sealed partial class MapVectorOverlayBuilder(double height)
     {
         if (a == b) return;
         var q = (uint)_vertices.Count;
-        _vertices.Add(LineVertex(a, b, -1)); _vertices.Add(LineVertex(a, b, 1));
-        _vertices.Add(LineVertex(b, a, -1)); _vertices.Add(LineVertex(b, a, -1));
-        _vertices.Add(LineVertex(a, b, 1)); _vertices.Add(LineVertex(b, a, 1));
+        _vertices.Add(LineVertex(a, b, -1, -1)); _vertices.Add(LineVertex(a, b, 1, -1));
+        _vertices.Add(LineVertex(b, a, -1, 2)); _vertices.Add(LineVertex(b, a, -1, 2));
+        _vertices.Add(LineVertex(a, b, 1, -1)); _vertices.Add(LineVertex(b, a, 1, 2));
         _indices.AddRange([q, q + 1, q + 2, q + 2, q + 4, q + 5]);
     }
 
@@ -85,9 +85,9 @@ sealed partial class MapVectorOverlayBuilder(double height)
 
     RenderVectorOverlayVertex Vertex(MapPoint p) =>
         new(MapCoordinateContract.MapToWorld(p, height), Vector3d.Zero, 0, 0);
-    RenderVectorOverlayVertex LineVertex(MapPoint p, MapPoint other, double side) =>
+    RenderVectorOverlayVertex LineVertex(MapPoint p, MapPoint other, double side, double along) =>
         new(MapCoordinateContract.MapToWorld(p, height),
-            MapCoordinateContract.MapToWorld(other, height), side, 0);
+            MapCoordinateContract.MapToWorld(other, height), side, along);
 
     void AddPrimitive(int first, RenderStaticModelColor color, RenderVectorOverlayPrimitiveKind kind,
         double width, double radius) => _primitives.Add(new(

@@ -16,10 +16,16 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk.CmdBindIndexBuffer(cb, gpu.IndexBuffer.Buffer, 0, IndexType.Uint32);
         foreach (var primitive in gpu.Primitives)
         {
+            var pipeline = primitive.Kind == RenderVectorOverlayPrimitiveKind.Stroke
+                ? _vectorStrokePipeline : _vectorOverlayPipeline;
+            if (pipeline.Handle == 0) continue;
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, pipeline);
             var size = primitive.Kind == RenderVectorOverlayPrimitiveKind.Marker
                 ? primitive.RadiusDip : primitive.WidthDip;
+            var strokeRadius = primitive.Kind == RenderVectorOverlayPrimitiveKind.Stroke
+                ? size * 0.5 : size;
             FillScenePushConstants(scene, _renderProjection, default, default, new(1, 1, 1),
-                (float)(size * _renderProjection.ViewportDpiScale), (float)primitive.Kind, -20.0f);
+                (float)(strokeRadius * _renderProjection.ViewportDpiScale), (float)primitive.Kind, -20.0f);
             scene[19] = (float)primitive.Color.R;
             scene[23] = (float)primitive.Color.A;
             scene[24] = (float)primitive.Color.R;
