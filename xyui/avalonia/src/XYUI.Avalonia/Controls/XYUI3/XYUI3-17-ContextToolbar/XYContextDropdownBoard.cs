@@ -13,6 +13,7 @@ namespace XYUI.Avalonia.Controls;
 public sealed class XYContextDropdownBoard : Border
 {
     readonly IReadOnlyDictionary<string, IReadOnlyList<XYContextAction>> _actions;
+    readonly IReadOnlySet<string> _leafCategories;
     readonly Border _rootSurface = new() { Classes = { "xyui-context-board-surface" }, Padding = new Thickness(0), Width = 128, CornerRadius = new CornerRadius(6) };
     readonly List<Border> _childSurfaces = [];
     readonly List<ScrollViewer> _scrollHosts = [];
@@ -38,9 +39,9 @@ public sealed class XYContextDropdownBoard : Border
     {
         foreach (var board in OpenBoards.ToArray()) board.Close();
     }
-    public XYContextDropdownBoard(string header, IEnumerable<XYContextCategory> categories, IReadOnlyDictionary<string, IReadOnlyList<XYContextAction>> actions)
+    public XYContextDropdownBoard(string header, IEnumerable<XYContextCategory> categories, IReadOnlyDictionary<string, IReadOnlyList<XYContextAction>> actions, IReadOnlySet<string>? leafCategories = null)
     {
-        Header = header; _actions = actions; Classes.Add("xyui-context-dropdown-board"); CategoryList = new XYContextCategoryList(categories); CategoryList.SelectionChanged += (_, category) => RefreshActions(category); ActionPane.ActionExecuted += (_, action) => ActionExecuted?.Invoke(this, action); Menu = BuildMenu(categories); SubMenus = Menu.Items.OfType<XYMenuItem>().Select(x => x.SubMenu!).ToArray(); Popup.Closed += (_, _) => Close(); LogicalChildren.Add(Popup); Child = new Border { Width = 1, Height = 1 }; BuildSurface(); CategoryList.Select(CategoryList.Categories.FirstOrDefault()?.Id ?? "");
+        Header = header; _actions = actions; _leafCategories = leafCategories ?? new HashSet<string>(); Classes.Add("xyui-context-dropdown-board"); CategoryList = new XYContextCategoryList(categories); CategoryList.SelectionChanged += (_, category) => RefreshActions(category); ActionPane.ActionExecuted += (_, action) => ActionExecuted?.Invoke(this, action); Menu = BuildMenu(categories); SubMenus = Menu.Items.OfType<XYMenuItem>().Where(x => x.SubMenu is not null).Select(x => x.SubMenu!).ToArray(); Popup.Closed += (_, _) => Close(); LogicalChildren.Add(Popup); Child = new Border { Width = 1, Height = 1 }; BuildSurface(); CategoryList.Select(CategoryList.Categories.FirstOrDefault()?.Id ?? "");
     }
     public void AttachTrigger(Control trigger) { if (IsOpen && !ReferenceEquals(_anchor, trigger)) Close(); _anchor = trigger; Popup.PlacementTarget = trigger; }
     public void Open() { if (_anchor is null) return; _open = true; OpenBoards.Add(this); Menu.ApplyOverlayStyling(); foreach (var submenu in SubMenus) submenu.ChildMenu.ApplyOverlayStyling(); Menu.Open(); _popupHost.Attach(_anchor, _rootSurface, _childSurfaces); _popupHost.Open(); _ownerWindow = TopLevel.GetTopLevel(_anchor) as Window; if (_ownerWindow is not null) { _ownerWindow.PositionChanged += OnOwnerPositionChanged; _ownerWindow.SizeChanged += OnOwnerSizeChanged; _ownerWindow.AddHandler(InputElement.PointerPressedEvent, OnWindowPointerPressed, RoutingStrategies.Tunnel); } _anchor.LayoutUpdated += OnAnchorLayoutUpdated; AttachScrollHosts(); Dispatcher.UIThread.Post(PlaceRoot, DispatcherPriority.Render); Focus(); }
@@ -83,7 +84,7 @@ public sealed class XYContextDropdownBoard : Border
     XYMenu BuildMenu(IEnumerable<XYContextCategory> categories)
     {
         var menu = new XYMenu { Width = 128, Classes = { "xyui-context-menu-body" } };
-        foreach (var category in categories) { var item = new XYMenuItem { Id = category.Id, Label = category.Label, Icon = CategoryIcon(category.Id), HasSubMenu = true, Height = 32, Padding = new Thickness(8, 4) }; var child = new XYMenu((_actions.TryGetValue(category.Id, out var actions) ? actions.Select(ActionItem) : []).Cast<Control>().ToArray()) { Width = 128, MinWidth = 0, Classes = { "xyui-context-submenu-body" } }; var submenu = new XYSubMenu { ChildMenuWidth = 128, ParentMenu = menu, ChildMenu = child, Trigger = item, ShowParentMenu = false, OverlayHosted = true }; item.SubMenu = submenu; menu.Items.Add(item); }
+        foreach (var category in categories) { var item = new XYMenuItem { Id = category.Id, Label = category.Label, Icon = CategoryIcon(category.Id), HasSubMenu = !_leafCategories.Contains(category.Id), Height = 32, Padding = new Thickness(8, 4) }; if (_leafCategories.Contains(category.Id)) item.Invoked += (_, _) => { CategoryList.Select(category.Id); Close(); }; else { var child = new XYMenu((_actions.TryGetValue(category.Id, out var actions) ? actions.Select(ActionItem) : []).Cast<Control>().ToArray()) { Width = 128, MinWidth = 0, Classes = { "xyui-context-submenu-body" } }; var submenu = new XYSubMenu { ChildMenuWidth = 128, ParentMenu = menu, ChildMenu = child, Trigger = item, ShowParentMenu = false, OverlayHosted = true }; item.SubMenu = submenu; } menu.Items.Add(item); }
         return menu;
     }
     XYMenuItem ActionItem(XYContextAction action) { var item = new XYMenuItem { Id = action.Id, Label = action.Label, Icon = ActionIcon(action.Id), IsEnabled = action.IsEnabled, Height = 32, Padding = new Thickness(8, 4) }; item.Invoked += (_, _) => { ActionPane.SelectAction(action.Id); ActionExecuted?.Invoke(this, action); }; return item; }

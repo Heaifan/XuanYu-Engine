@@ -5,7 +5,6 @@
              x:Class="XuanYu.Editor.UI.EditToolsModule"
              x:DataType="local:UiVm">
   <Border IsVisible="{Binding IsRegionContext}"
-          MinWidth="560"
           BorderBrush="{StaticResource Color.Border.Default}"
           BorderThickness="1"
           CornerRadius="{StaticResource Radius.Standard}"

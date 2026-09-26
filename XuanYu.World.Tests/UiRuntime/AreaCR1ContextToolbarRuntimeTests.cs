@@ -50,7 +50,7 @@ public sealed class AreaCR1ContextToolbarRuntimeTests
         {
             var vm = new UiVm(null, seedInitialScene: false);
             var top = new Top { DataContext = vm };
-            host.Show(top, 1200, 180); top.UpdateLayout();
+            host.Show(top, 700, 180); top.UpdateLayout();
             vm.ToggleEditorMode();
             vm.SwitchWorkspaceCommand.Execute("RegionEditor");
             Dispatcher.UIThread.RunJobs(); top.UpdateLayout();

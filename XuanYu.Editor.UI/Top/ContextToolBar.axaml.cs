@@ -9,7 +9,7 @@ public partial class ContextToolBar : UserControl
     public ContextToolBar()
     {
         InitializeComponent();
-        var board = new XYContextDropdownBoard("上下文", [new("point", "点"), new("line", "线"), new("area", "区域"), new("terrain", "地形")], new Dictionary<string, IReadOnlyList<XYContextAction>> { ["point"] = [new("marker", "点标记")], ["line"] = [new("road", "道路")], ["area"] = [new("region", "区域")], ["terrain"] = [] });
+        var board = new XYContextDropdownBoard("上下文", [new("point", "点"), new("line", "线"), new("area", "区域"), new("terrain", "地形")], new Dictionary<string, IReadOnlyList<XYContextAction>> { ["point"] = [new("marker", "点标记")], ["line"] = [new("road", "道路")], ["area"] = [new("region", "区域")], ["terrain"] = [] }, new HashSet<string> { "terrain" });
         ContextToolbarDiagnosticBridge.Attach(board);
         board.CategoryList.SelectionChanged += (_, category) =>
         {
