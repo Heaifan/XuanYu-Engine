@@ -6,6 +6,11 @@ public sealed partial class UiVm
 {
     IReadOnlyList<InspectorFieldRow> BuildInspectorFields()
     {
+        if (IsTerrainInspector)
+            return [new("网格", TerrainValue("Terrain.Data.Grid")), new("分辨率", TerrainValue("Terrain.Data.Resolution")),
+                new("最低高程", TerrainValue("Terrain.Data.MinElevation")), new("最高高程", TerrainValue("Terrain.Data.MaxElevation")),
+                new("NoData", TerrainValue("Terrain.Data.NoData")), new("显示", "", IsGroupHeader: true),
+                new("垂直夸张", VerticalExaggerationText)];
         if (SelectedDataset is { } dataset)
             return [new("名称", dataset.Name), new("类型", dataset.TypeDisplay), new("数据集 ID", dataset.Id),
                 new("状态", dataset.Status), new("可见", dataset.IsVisible ? "是" : "否"), new("锁定", dataset.IsLocked ? "是" : "否")];

@@ -25,6 +25,7 @@
     <xy:XYNavigationRail Grid.Row="2" x:Name="InspectorNavigationRail" Width="40" IsVisible="{Binding HasInspectorSelection}"/>
     <ScrollViewer Grid.Row="2" Grid.Column="2" x:Name="InspectorContentScrollHost" VerticalScrollBarVisibility="Auto">
       <StackPanel Spacing="4">
+        <!-- C1 Terrain: 网格、分辨率、最低高程、最高高程、NoData、垂直夸张 -->
         <xy:XYSectionTitle Text="{Binding InspectorCategory}" IsVisible="{Binding !IsInspectorSearchMode}"/>
         <ItemsControl ItemsSource="{Binding InspectorProperties}" IsVisible="{Binding IsInspectorPropertyListVisible}" x:Name="InspectorPropertyRows">
           <ItemsControl.ItemTemplate><DataTemplate x:DataType="local:InspectorPropertyRow">

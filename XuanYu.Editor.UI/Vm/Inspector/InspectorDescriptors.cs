@@ -8,6 +8,7 @@ static class InspectorDescriptors
             D("Entity.Geometry.Rotation", kind, "几何", "变换", "旋转"), D("Entity.Geometry.Scale", kind, "几何", "变换", "缩放")],
         InspectorObjectKind.Map => [D("Map.Basic.Name", kind, "基础", "地图", "地图名称"), D("Map.Geometry.Size", kind, "几何", "尺寸", "地图尺寸")],
         InspectorObjectKind.Dataset => [D("Dataset.Basic.Name", kind, "基础", "标识", "数据集名称"), D("Dataset.Basic.Type", kind, "基础", "标识", "数据集类型"), D("Dataset.Basic.Id", kind, "基础", "标识", "数据集 ID")],
+        InspectorObjectKind.Terrain => Terrain(kind),
         InspectorObjectKind.Road => Feature(kind, "道路"),
         InspectorObjectKind.Region => RegionFeature(kind),
         InspectorObjectKind.Marker => Feature(kind, "点"),
@@ -23,6 +24,14 @@ static class InspectorDescriptors
             D("Region.Geometry.Points", kind, "几何", "形状", "节点数量"),
             D("Region.Status.State", kind, "状态", "可见性", "状态")];
 
+    static IReadOnlyList<InspectorPropertyDescriptor> Terrain(InspectorObjectKind kind) =>
+        [D("Terrain.Data.Grid", kind, "数据", "地形", "网格"),
+            D("Terrain.Data.Resolution", kind, "数据", "地形", "分辨率"),
+            D("Terrain.Data.MinElevation", kind, "数据", "地形", "最低高程"),
+            D("Terrain.Data.MaxElevation", kind, "数据", "地形", "最高高程"),
+            D("Terrain.Data.NoData", kind, "数据", "地形", "NoData"),
+            D("Terrain.Display.VerticalExaggeration", kind, "显示", "地形", "垂直夸张", IsEditable: true)];
+
     static InspectorPropertyDescriptor D(string key, InspectorObjectKind kind, string category, string section, string name,
         string alias = "", bool IsEditable = false) => new(key, kind, category, section, name, alias, IsEditable);
 
@@ -37,6 +46,9 @@ static class InspectorDescriptors
         "Dataset.Basic.Name" => vm.SelectedDataset?.Name ?? "",
         "Dataset.Basic.Type" => vm.SelectedDataset?.TypeDisplay ?? "",
         "Dataset.Basic.Id" => vm.SelectedDataset?.Id ?? "",
+        "Terrain.Data.Grid" or "Terrain.Data.Resolution" or "Terrain.Data.MinElevation" or
+            "Terrain.Data.MaxElevation" or "Terrain.Data.NoData" or "Terrain.Display.VerticalExaggeration"
+            => vm.TerrainValue(key),
         "Road.Basic.Name" or "Region.Basic.Name" or "Marker.Basic.Name" => vm.InspectorFeatureNameText,
         "Region.Style.FillColor" => vm.InspectorRegionFillColorText,
         _ when key.Contains(".Geometry.Points", StringComparison.Ordinal) => vm.InspectorFeaturePointCountText,
