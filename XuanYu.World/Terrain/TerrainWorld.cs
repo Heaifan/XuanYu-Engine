@@ -6,21 +6,26 @@ public sealed class TerrainWorld
         : this(baseHeight, FallbackMetadata(), editDelta) { }
 
     public TerrainWorld(TerrainHeightLayer baseHeight, TerrainMetadata metadata,
-        TerrainHeightLayer? editDelta)
+        TerrainHeightLayer? editDelta, bool renderRowsSouthToNorth = false)
     {
         BaseHeight = baseHeight ?? throw new ArgumentNullException(nameof(baseHeight));
         EditDelta = editDelta ?? TerrainHeightLayer.CreateEditDelta();
         if (!EditDelta.IsEditable)
             throw new ArgumentException("EditDelta 必须是可编辑层。", nameof(editDelta));
         Metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
+        RenderRowsSouthToNorth = renderRowsSouthToNorth;
     }
 
     public TerrainHeightLayer BaseHeight { get; }
     public TerrainHeightLayer EditDelta { get; }
     public TerrainMetadata Metadata { get; }
+    public bool RenderRowsSouthToNorth { get; }
 
     public static TerrainWorld FromSource(Source.TerrainSourceData source) =>
         TerrainWorldFactory.FromSource(source);
+
+    public static TerrainWorld FromElevationTile(Source.TerrainElevationTile tile) =>
+        TerrainWorldFactory.FromElevationTile(tile);
 
     public double QueryHeight(TerrainSampleCoordinate coordinate) =>
         GetFinalHeight(coordinate).Meters;

@@ -5,6 +5,19 @@ namespace XuanYu.World.Terrain;
 
 public static class TerrainWorldFactory
 {
+    public static TerrainWorld FromElevationTile(Source.TerrainElevationTile tile)
+    {
+        ArgumentNullException.ThrowIfNull(tile);
+        var valid = tile.Raster.ElevationMeters.Where((_, i) => !tile.Raster.NoDataMask[i]).ToArray();
+        if (valid.Length == 0) throw new ArgumentException("Terrain Source 不包含有效高程。", nameof(tile));
+        var metadata = new TerrainMetadata(tile.Width, tile.Height, tile.Resolution,
+            valid.Min(), valid.Max(), short.MinValue, tile.Raster.NoDataMask.Count(item => item),
+            new(tile.Bounds.West, tile.Bounds.South, tile.Bounds.East, tile.Bounds.North));
+        var layer = TerrainHeightLayer.CreateBase(tile.Width, tile.Height,
+            tile.Raster.ElevationMeters.ToArray(), tile.Raster.NoDataMask.ToArray());
+        return new TerrainWorld(layer, metadata, null, renderRowsSouthToNorth: true);
+    }
+
     public static TerrainWorld FromSource(TerrainSourceData source)
     {
         ArgumentNullException.ThrowIfNull(source);
