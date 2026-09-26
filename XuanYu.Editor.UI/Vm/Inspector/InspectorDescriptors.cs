@@ -9,7 +9,7 @@ static class InspectorDescriptors
         InspectorObjectKind.Map => [D("Map.Basic.Name", kind, "基础", "地图", "地图名称"), D("Map.Geometry.Size", kind, "几何", "尺寸", "地图尺寸")],
         InspectorObjectKind.Dataset => [D("Dataset.Basic.Name", kind, "基础", "标识", "数据集名称"), D("Dataset.Basic.Type", kind, "基础", "标识", "数据集类型"), D("Dataset.Basic.Id", kind, "基础", "标识", "数据集 ID")],
         InspectorObjectKind.Road => Feature(kind, "道路"),
-        InspectorObjectKind.Region => Feature(kind, "区域"),
+        InspectorObjectKind.Region => RegionFeature(kind),
         InspectorObjectKind.Marker => Feature(kind, "点"),
         _ => []
     };
@@ -17,8 +17,14 @@ static class InspectorDescriptors
     static IReadOnlyList<InspectorPropertyDescriptor> Feature(InspectorObjectKind kind, string name) =>
         [D($"{kind}.Basic.Name", kind, "基础", "标识", $"{name}名称", IsEditable: true), D($"{kind}.Geometry.Points", kind, "几何", "形状", "节点数量"), D($"{kind}.Status.State", kind, "状态", "可见性", "状态")];
 
+    static IReadOnlyList<InspectorPropertyDescriptor> RegionFeature(InspectorObjectKind kind) =>
+        [D("Region.Basic.Name", kind, "基础", "标识", "区域名称", IsEditable: true),
+            D("Region.Style.FillColor", kind, "基础", "外观", "填充颜色", "颜色 色彩 #RRGGBB", IsEditable: true),
+            D("Region.Geometry.Points", kind, "几何", "形状", "节点数量"),
+            D("Region.Status.State", kind, "状态", "可见性", "状态")];
+
     static InspectorPropertyDescriptor D(string key, InspectorObjectKind kind, string category, string section, string name,
-        bool IsEditable = false) => new(key, kind, category, section, name, IsEditable: IsEditable);
+        string alias = "", bool IsEditable = false) => new(key, kind, category, section, name, alias, IsEditable);
 
     public static string ValueFor(UiVm vm, string key) => key switch
     {
@@ -32,6 +38,7 @@ static class InspectorDescriptors
         "Dataset.Basic.Type" => vm.SelectedDataset?.TypeDisplay ?? "",
         "Dataset.Basic.Id" => vm.SelectedDataset?.Id ?? "",
         "Road.Basic.Name" or "Region.Basic.Name" or "Marker.Basic.Name" => vm.InspectorFeatureNameText,
+        "Region.Style.FillColor" => vm.InspectorRegionFillColorText,
         _ when key.Contains(".Geometry.Points", StringComparison.Ordinal) => vm.InspectorFeaturePointCountText,
         _ when key.Contains(".Status.State", StringComparison.Ordinal) => vm.InspectorFeatureStatusText,
         _ => vm.InspectorSelectionTitle

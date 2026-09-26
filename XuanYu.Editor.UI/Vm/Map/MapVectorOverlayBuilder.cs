@@ -8,7 +8,6 @@ namespace XuanYu.Editor.UI;
 
 sealed partial class MapVectorOverlayBuilder(double height)
 {
-    static readonly RenderStaticModelColor RegionFill = new(.20, .55, .90, .32);
     static readonly RenderStaticModelColor RegionStroke = new(.12, .38, .70, .92);
     readonly List<RenderVectorOverlayVertex> _vertices = [];
     readonly List<uint> _indices = [];
@@ -17,7 +16,7 @@ sealed partial class MapVectorOverlayBuilder(double height)
     public void AddRegion(MapRegion region, bool selected, IReadOnlyList<MapPoint>? preview)
     {
         var points = preview ?? region.Vertices;
-        AddFill(points, RegionFill);
+        AddFill(points, MapRegionRenderStyle.FillColor(region));
         AddStroke(points, true, selected ? new(.98, .75, .12, .98) : RegionStroke, selected ? 2.4 : 1.5, 0);
         if (selected) foreach (var point in points) AddMarker(point, 6.5);
     }

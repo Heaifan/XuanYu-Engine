@@ -44,6 +44,7 @@ public sealed partial class UiVm
         {
             "Entity.Basic.Name" => CommitEntityName(target, text),
             "Road.Basic.Name" or "Region.Basic.Name" or "Marker.Basic.Name" => CommitFeatureName(target, text),
+            "Region.Style.FillColor" => CommitRegionFillColor(target, text),
             _ => false
         };
         RecordInspectorCommit(target, succeeded);

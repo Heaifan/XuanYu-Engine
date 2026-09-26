@@ -13,4 +13,8 @@ public sealed record MapRegion(
     MapRegionKind Kind,
     ImmutableArray<MapPoint> Vertices,
     bool IsVisible = true,
-    bool IsLocked = false);
+    bool IsLocked = false)
+{
+    public const uint DefaultFillColorRgb = 0x00338CE6;
+    public uint FillColorRgb { get; init; } = DefaultFillColorRgb;
+}

@@ -31,5 +31,6 @@ public enum MapEditReason
     RoadDeleted = 25,
     MarkerDeleted = 26,
     RegionVertexDeleted = 27,
-    RoadVertexDeleted = 28
+    RoadVertexDeleted = 28,
+    RegionStyleChanged = 29
 }
