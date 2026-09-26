@@ -22,7 +22,8 @@ $sdk = (& $dotnet --version).Trim()
 if ($LASTEXITCODE -ne 0) { Write-Error 'Resolved dotnet could not run.'; exit $LASTEXITCODE }
 $branch = (& git -C $repo branch --show-current).Trim()
 $head = (& git -C $repo rev-parse HEAD).Trim()
-$status = (& git -C $repo status --short).Trim()
+$statusOutput = & git -C $repo status --short
+$status = if ($null -eq $statusOutput) { '' } else { $statusOutput.Trim() }
 $origin = (& git -C $repo remote get-url origin).Trim()
 if ($LASTEXITCODE -ne 0) { Write-Error 'Git repository facts could not be read.'; exit $LASTEXITCODE }
 
