@@ -1,5 +1,115 @@
 # Rendering 渲染知识
 
+## K-REN-005 图形功能必须以语义正确的最终像素和 Runtime Visual Gate 收口
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：Vulkan、Visual Gate、Semantic Test、Analytic Stroke、Text Coverage、Runtime
+**适用范围**：地图 Vector Overlay、GPU 文字、Shader、Texture Upload、Screen-space 几何、任何“自动合同通过但最终画面仍可能错误”的图形功能。
+
+**首次确认**：2026-09-26（UTC+08:00）
+**来源任务**：MAP-VECTOR-VISUAL-R1
+**关键 Commit**：`0212fea4`（初版 analytic stroke）、`15812ae0`（修复退化 Stroke）、`8d83efc5`（Label alpha/upload 修复）、`ed3e0df5`（灰度 coverage 收口）
+**任务最终收口**：`12f86a6a`
+
+### 已确认事实
+
+本轮出现两类典型“自动合同成立，但用户画面错误”：
+
+1. Stroke 已有独立 Pipeline、Shader、Primitive 与定向合同，但终点侧顶点把同一线段的方向从 A→B 反成 B→A，导致屏幕空间 quad 退化；自动合同没有验证真实三角形面积和端点覆盖范围，真机只看到 Marker、看不到连线。
+2. Region Label 已完成 Raster、Bitmap、VkImage、Descriptor、Sampler 和 Screen-space Quad，测试也证明像素中同时存在 0 与非 0 coverage，但没有验证“背景必须为 0、字形必须为正 coverage”。真机因此出现整块浅色矩形和反相字形。
+
+这些失败证明：
+
+```text
+Pipeline Created
+Descriptor Bound
+Texture Uploaded
+Vertex Count Correct
+Contract PASS
+≠
+Final Pixels Semantically Correct
+```
+
+### 工程规则
+
+图形功能的 Definition of Done 必须同时覆盖“结构存在”和“视觉语义”：
+
+```text
+Resource / Pipeline Contract
+→ Geometry Semantic Test
+→ Coverage / Pixel Semantic Test
+→ Runtime Visual Gate
+→ User-visible Acceptance
+```
+
+对于几何：
+
+- 不只检查顶点/索引数量，还要验证三角形非退化、面积非零、端点/边界覆盖范围符合语义；
+- Screen-space Stroke 必须验证水平、斜线、闭合、多段、selected/unselected 和 DPI；
+- 同一 segment 的 CPU 顶点语义与 Shader 局部坐标语义必须保持一致。
+
+对于纹理/文字：
+
+- 不只检查“有像素”“有 Alpha”，还要验证背景与前景的 coverage 方向；
+- Padding/四角应验证为背景 coverage，字形 bounding box 不得覆盖整张纹理；
+- Upload 的 Stride / RowLength / PixelFormat 必须与 Raster DTO 一致；
+- 最终必须在真实 Vulkan Viewport 中检查文字是否可读、边缘是否正确、是否存在矩形底板或反相。
+
+### 当前推荐分层示例
+
+当 UI 框架具备成熟字体排版能力，但最终视觉必须出现在 Vulkan Native Viewport 中时，可采用：
+
+```text
+Editor.UI
+  Platform text raster / shaping
+        ↓
+Render.Abstractions
+  pure bitmap / label DTO
+        ↓
+Vulkan
+  texture cache / upload / draw
+```
+
+边界要求：
+
+- Vulkan 不反向依赖 Editor.UI；
+- Render DTO 不包含 Avalonia 类型；
+- 领域名称事实仍只有一份；
+- Camera Pan/Zoom 不应因为实例位置变化而重新栅格或重复上传相同 CacheKey。
+
+这是一种适用于当前 Native HWND 过渡架构的已验证模式，不自动推广为所有文字系统的唯一终局。
+
+### 禁止做法
+
+- 仅凭 Shader 编译、Pipeline 创建或 Descriptor 绑定成功宣布视觉功能 DONE；
+- 只断言“顶点数正确”而不验证几何非退化；
+- 只断言 coverage 中“有 0、有非 0”而不验证前景/背景方向；
+- 用全局 MSAA、FXAA、世界坐标偏移等大范围补偿掩盖局部几何/coverage 语义错误；
+- 把内部 Vulkan 资源步骤当成用户验收目标，导致任务偏离“用户最终看到什么”。
+
+### 正确做法
+
+1. 开工时先写用户可见验收句，例如“区域内能看到名称”“道路/区域斜线连续且平滑”；
+2. 再将其分解成资源、几何、coverage、runtime 四级证据；
+3. 自动测试至少覆盖一个会让错误实现失败的语义断言；
+4. 图形任务没有 Runtime Visual Gate 证据时，只能报 PARTIAL；
+5. 真机发现反例后，先更新遗漏的语义测试，再修实现，避免同类假绿灯复发。
+
+### 验证方法
+
+- 几何：非零面积、端点覆盖、闭合段数、斜线、多段、DPI；
+- Coverage：四角/背景=0、字形区域>0、非零 bounding box 与占比；
+- GPU：PixelFormat、Stride/RowLength、CacheKey、Upload 次数；
+- Runtime：正式 `run.bat`、真实 Vulkan Viewport、Pan/Zoom/Rename/Geometry edit；
+- 最终报告明确区分自动 PASS 与真机 PASS。
+
+**关联 Knowledge**：K-VAL-001、K-VAL-002、K-REN-001、K-REN-002
+**关联 Lesson**：L-REN-003
+
+---
+
 ## K-REN-004 Editor World Reference Grid 必须独立于 MapGround
 
 **状态**：Active

@@ -2,6 +2,72 @@
 
 > 教训记录“为什么会沿着错误前提持续投入”，并定义何时必须停止局部修补、回到共同依赖与承载架构审查。
 
+## L-REN-003 Contract PASS 但画面错误时必须验证几何与 Coverage 的语义方向
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：Rendering、False Green、Geometry Semantics、Coverage Mask、Runtime Visual
+**适用范围**：GPU Stroke、Shader、Texture、字体 Raster、任何“对象存在但最终像素错误”的渲染链。
+
+**确认时间**：2026-09-26（UTC+08:00）
+**来源**：MAP-VECTOR-VISUAL-R1
+
+### 已确认事实
+
+本轮先后出现：
+
+- Analytic Stroke 的 Pipeline/Shader/Primitive 合同通过，但实际 quad 因端点方向语义不一致而退化，真机只有 Marker 没有线；
+- Label 的 Raster/Upload/Draw 链已经连通，测试证明 Alpha 同时存在 0 和非 0，但真机显示成浅色矩形且字形反相。
+
+两次问题都不是“资源没创建”，而是测试只验证了存在性，没有验证最终语义。
+
+### 错误前提
+
+```text
+“有 6 个顶点” → 默认线一定可见
+“有 0 和非 0 Alpha” → 默认文字蒙版方向正确
+“Quad 已显示” → 默认文字已经完成
+```
+
+这些推导都不成立。
+
+### 停止条件
+
+当用户真机画面与自动合同结论矛盾时：
+
+1. 立即撤销 DONE/CLOSED；
+2. 不继续堆 Pipeline、Descriptor、Sampler 或参数微调；
+3. 先找到自动测试遗漏的“最终语义变量”：面积、方向、coverage、像素含义、runtime route；
+4. 新增能复现该反例的语义测试后再修实现。
+
+### 正确做法
+
+- 几何问题：检查每个顶点在同一坐标语义下的方向、局部参数、三角形面积与屏幕覆盖范围；
+- Mask 问题：检查明确位置像素，例如四角、Padding、字形内部，不用“集合中存在某值”替代方向判断；
+- 用户截图中“只有点没有线”“矩形底板 + 挖空字形”这类强视觉特征，应作为定位证据缩小故障层，而不是继续随机试错；
+- 自动合同要从“结构合同”升级为“语义合同”。
+
+### 禁止做法
+
+- 自动测试 PASS 后把用户真机验收降格为形式确认；
+- 真机出现反例仍保留 D1/D2 “DONE”状态；
+- 只修当前数值，不补能捕获该错误的回归；
+- 把内部资源链完成度当作最终用户目标。
+
+### 可复用原则
+
+```text
+Existence Test ≠ Semantic Test
+Semantic Test ≠ Runtime Visual Gate
+三者必须分层成立。
+```
+
+**关联 Knowledge**：K-REN-005、K-VAL-002
+**来源任务**：MAP-VECTOR-VISUAL-R1
+
+---
+
 ## L-VAL-001 修复存在但真机完全不变时先证明运行时实际路由
 
 **状态**：Active

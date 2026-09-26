@@ -1,6 +1,6 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-09-25
+> 最后治理更新：2026-09-26
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
 
 ## 任务域预检映射
@@ -12,7 +12,7 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 | 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-003；EXP-GOVERNANCE-001；再检查其他相关 ACTIVE EXP |
 | 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；EXP-ARCH-001；`decisions/` 中相关 DEC；其他相关 ACTIVE EXP |
 | 空间 / 几何 | Camera、Screen↔World、Geometry、Snap、Topology | K-SPA-001、K-SPA-002、K-GEO-001、K-GEO-002；相关 DEC / EXP |
-| Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan | K-REN-001～K-REN-004、K-NATIVE-001～K-NATIVE-002、L-REN-001、L-REN-002、L-NATIVE-001；EXP-ARCH-001；其他相关 ACTIVE EXP |
+| Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan、Shader、Texture、GPU Text、Vector Stroke | K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002、L-REN-001～L-REN-003、L-NATIVE-001；EXP-ARCH-001；其他相关 ACTIVE EXP |
 | Input | Pointer、Capture、手势 Owner、真实生产输入接线、平台输入 | K-INP-001～K-INP-004；EXP-TEST-001；其他相关 ACTIVE EXP |
 | UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标、Diagnostic | K-UI-001、K-DIAG-001；相关 `decisions/`；EXP-UI-001、EXP-UI-002；其他 UI 类 ACTIVE EXP |
 | Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
@@ -43,6 +43,8 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 | K-REN-002 | Knowledge | Rendering | 共面 Overlay 应由独立 Depth Policy 与 Draw Order 表达 | P0 | E2 | v0.2.25.15-stab · 2026-08-10 14:22:43 · 751da52 | Active |
 | K-REN-003 | Knowledge | Rendering | Background / Sky 必须具有明确且独立的 Depth 语义 | P0 | E2 | v0.2.21.21-fix · 2026-08-01 16:56:53 · e0a994a | Active |
 | K-REN-004 | Knowledge | Rendering | Editor World Reference Grid 必须独立于 MapGround | P0 | E3 | v0.2.25.28-fix → .29-fix · 2c57893 / 6154078 | Active |
+| K-REN-005 | Knowledge | Rendering | 图形功能必须以语义正确的最终像素和 Runtime Visual Gate 收口 | P0 | E1 | MAP-VECTOR-VISUAL-R1 · 2026-09-26 · 0212fea4→ed3e0df5 | Active |
+| L-REN-003 | Lesson | Rendering | Contract PASS 但画面错误时必须验证几何与 Coverage 的语义方向 | P0 | E1 | MAP-VECTOR-VISUAL-R1 · 2026-09-26 | Active |
 | K-NATIVE-001 | Knowledge | Rendering | Native Overlay 必须验证真实 HWND 层级与绘制状态 | P0 | E2 | v0.2.25.18-stab · 2026-08-10 16:51:42 · 06b26e9 | Active |
 | K-NATIVE-002 | Knowledge | Architecture | Native↔Avalonia 坐标必须显式跨空间转换 | P0 | E2 | Diagnostic + Viewport R1 · 2026-09-25 · screen-space 修复 | Active |
 | L-REN-002 | Lesson | Rendering | 双精度回退必须发生在第一次降精度之前 | P0 | E2 | F1-FAR-SAFE-01 · 2026-08-11 | Active |
@@ -68,13 +70,13 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 
 - `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001、K-GOV-002、K-GOV-003
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
-- `rendering.md`：K-REN-001、K-REN-002、K-REN-003、K-REN-004、K-NATIVE-001
+- `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004
 - `ui.md`：K-UI-001、K-DIAG-001
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
 - `incidents.md`：代表性事故记录与映射
-- `lessons.md`：L-ARCH-001、L-REN-001、L-REN-002、L-VAL-001、L-NATIVE-001、L-TEST-001 及后续复盘
+- `lessons.md`：L-ARCH-001、L-REN-001～L-REN-003、L-VAL-001、L-NATIVE-001、L-TEST-001 及后续复盘
 - `decisions/`：已批准并仍有长期约束价值的 DEC
 - `docs/governance/agent-error-log.md`：Agent 真实错误事实
 - `docs/governance/agent-experience-rules.md`：去重后的防复发经验规则
