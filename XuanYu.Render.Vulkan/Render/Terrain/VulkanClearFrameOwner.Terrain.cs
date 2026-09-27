@@ -18,11 +18,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
 
     internal void DisposeTerrain() { _terrainCache?.Dispose(); _terrainCache = null; }
 
-    void DrawTerrain(CommandBuffer cb, float* scene)
+    void DrawTerrain(CommandBuffer cb, float* scene, int terrainIndex)
     {
         if (_terrainPipeline.Handle == 0 || _terrainPipelineLayout.Handle == 0 || !_renderProjection.HasTerrain) return;
         var resource = _terrainCache ??= new Terrain.VulkanTerrainGpuCache(_vk, _deviceOwner, _log);
-        var gpu = resource.GetOrCreate(_renderProjection.Terrain!, _renderProjection.EffectiveTerrainTransform);
+        var gpu = resource.GetOrCreate(_renderProjection.TerrainResources[terrainIndex],
+            _renderProjection.EffectiveTerrainTransform);
         if (gpu is null) return;
         var vb = gpu.Vertices.Buffer; var ib = gpu.Indices.Buffer; ulong offset = 0;
         _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset);

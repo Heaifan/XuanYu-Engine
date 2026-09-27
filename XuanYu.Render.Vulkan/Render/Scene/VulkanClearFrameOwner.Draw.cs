@@ -30,6 +30,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdSetScissor(cb, 0, 1, pSc);
             BindProceduralVertexBuffer(cb);
             if (!_hasRenderProjection) return;
+            _terrainCache?.RetainOnly(_renderProjection.TerrainResources.Select(resource => resource.TerrainId));
             _staticModels.RetainOnly(_renderProjection.Entities.Select(e => e.StaticModelKey));
             _vectorOverlays.RetainOnly(_renderProjection.VectorOverlayResources.Select(r => r.Key));
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
@@ -38,7 +39,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 if (draw.Kind == RenderDrawKind.MapGround && _mapSurfaceIndexBuffer is not null)
                     DrawMapSurface(cb, pScene);
                 else if (draw.Kind == RenderDrawKind.Terrain)
-                    DrawTerrain(cb, pScene);
+                    DrawTerrain(cb, pScene, draw.EntityIndex);
                 else if (draw.Kind == RenderDrawKind.MapBounds && _mapBoundsVertexBuffer is not null)
                     DrawMapBounds(cb, pScene);
                 else if (draw.Kind == RenderDrawKind.MapVectorOverlay)

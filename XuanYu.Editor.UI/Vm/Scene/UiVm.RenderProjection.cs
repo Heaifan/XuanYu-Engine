@@ -17,7 +17,9 @@ public sealed partial class UiVm
             _roadDrawing, MapGeometryPreview, _viewportDpiScale, _mapLabelBitmapCache);
         IReadOnlyList<RenderVectorOverlayResource> overlays =
             vectorOverlay.Primitives.Count == 0 ? [] : [vectorOverlay];
-        var terrain = TerrainWorld?.ToRenderSnapshot("terrain", 1);
+        var terrains = _terrainTiles?.Tiles.Select(tile =>
+            tile.ToRenderSnapshot(tile.TileId, 1)).ToArray();
+        var terrain = terrains?.FirstOrDefault() ?? TerrainWorld?.ToRenderSnapshot("terrain", 1);
         return SceneRenderProjectionAdapter.TryCreate(
             snapshot,
             ComputeRotateGizmoWorldRadius(transform.Position),
@@ -33,6 +35,7 @@ public sealed partial class UiVm
             new ScaleIndicatorOverlayProjection(
                 IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip),
             terrain,
-            new TerrainRenderTransform(VerticalExaggeration));
+            new TerrainRenderTransform(VerticalExaggeration),
+            terrains);
     }
 }

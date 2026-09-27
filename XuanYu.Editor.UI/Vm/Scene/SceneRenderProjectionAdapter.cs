@@ -24,7 +24,8 @@ public static class SceneRenderProjectionAdapter
         IReadOnlyList<RenderVectorOverlayResource>? vectorOverlays = null,
         ScaleIndicatorOverlayProjection scaleIndicator = default,
         TerrainRenderResource? terrain = null,
-        TerrainRenderTransform terrainTransform = default)
+        TerrainRenderTransform terrainTransform = default,
+        IReadOnlyList<TerrainRenderResource>? terrains = null)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -81,7 +82,8 @@ public static class SceneRenderProjectionAdapter
             ViewportDpiScale: viewportDpiScale,
             ScaleIndicator: scaleIndicator,
             Terrain: terrain,
-            TerrainTransform: terrainTransform);
+            TerrainTransform: terrainTransform,
+            Terrains: terrains);
         return RenderProjectionResult.Ok(projection);
     }
 }

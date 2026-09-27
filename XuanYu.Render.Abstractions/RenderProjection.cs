@@ -21,14 +21,17 @@ public readonly record struct RenderProjection(
     double ViewportDpiScale = 1.0,
     ScaleIndicatorOverlayProjection ScaleIndicator = default,
     TerrainRenderResource? Terrain = null,
-    TerrainRenderTransform TerrainTransform = default)
+    TerrainRenderTransform TerrainTransform = default,
+    IReadOnlyList<TerrainRenderResource>? Terrains = null)
 {
     public int EntityCount => Entities.Count;
     public EditorViewportAssistState AssistState => Assist;
     public IReadOnlyList<RenderStaticModelResource> StaticModelResources => StaticModels ?? [];
     public IReadOnlyList<RenderVectorOverlayResource> VectorOverlayResources => VectorOverlays ?? [];
     public bool HasMap => Map.HasMap;
-    public bool HasTerrain => Terrain is not null;
+    public IReadOnlyList<TerrainRenderResource> TerrainResources =>
+        Terrains ?? (Terrain is null ? [] : [Terrain]);
+    public bool HasTerrain => TerrainResources.Count > 0;
     public TerrainRenderTransform EffectiveTerrainTransform =>
         TerrainTransform.VerticalExaggeration > 0 ? TerrainTransform : TerrainRenderTransform.Default;
 }
