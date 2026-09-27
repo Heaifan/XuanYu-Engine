@@ -20,17 +20,17 @@ public sealed partial class UiVm
         var camera = new RenderCameraProjection(_camera.Position, _camera.Forward, _camera.Up,
             _camera.VerticalFovDegrees, _camera.NearPlane, _camera.FarPlane, _camera.Revision,
             _camera.Mode, _camera.OrthographicScale);
-        if (!ViewportMetricScale.TryCreate(camera, viewport,
-                MapSession.CurrentMap.Surface.BaseHeightMeters, out var metric))
+        if (!ScaleBarGroundProjection.TryCreate(camera, viewport,
+                MapSession.CurrentMap.Surface.BaseHeightMeters, out var ground))
         {
             _lastScaleDistanceMeters = 0.0;
             SetScaleIndicator(false, "", 80.0);
             return;
         }
         var bar = ScaleIndicatorMetric.FromMetersPerDip(
-            metric.MetersPerDipX, _lastScaleDistanceMeters);
+            ground.MetersPerDip, _lastScaleDistanceMeters);
         _lastScaleDistanceMeters = bar.DistanceMeters;
-        SetScaleIndicator(bar.DistanceMeters > 0.0, bar.Label, bar.WidthDip);
+        SetScaleIndicator(bar.IsVisible, bar.Label, bar.WidthDip);
     }
 
     void SetScaleIndicator(bool visible, string text, double width)

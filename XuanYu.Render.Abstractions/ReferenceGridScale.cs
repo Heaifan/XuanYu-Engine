@@ -15,7 +15,7 @@ public static class ReferenceGridScale
 {
     public const double TargetCellDip = 48.0;
     public const double MinSpacing = 100.0;
-    public const double MaxSpacing = 10_000_000.0;
+    public const double MaxSpacing = 1_000_000_000_000.0;
 
     // idealSpacing → 1/2/5 序列相邻两级 + 对数域互补权重。
     // 边界连续：ideal 到达 coarse 时，旧 CoarseSpacing = 新 FineSpacing，
@@ -39,6 +39,11 @@ public static class ReferenceGridScale
     public static ReferenceGridLevels Compute(double referenceWorldPerDip)
     {
         return FromIdealSpacing(IdealSpacing(referenceWorldPerDip));
+    }
+
+    public static ReferenceGridLevels Compute(ViewportMetricScale metric)
+    {
+        return Compute(Math.Max(metric.MetersPerDipX, metric.MetersPerDipY));
     }
 
     // 序列中最大的 ≤ ideal 成员（1/2/5 十进制：...0.01, 0.02, 0.05, 0.1...）。

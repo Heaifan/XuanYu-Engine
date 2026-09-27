@@ -14,13 +14,28 @@ sealed class VulkanTerrainGpuResource : IDisposable
     public VulkanStaticModelBuffer Vertices => _vertices;
     public VulkanStaticModelBuffer Indices => _indices;
     public uint IndexCount { get; }
+    public ulong GpuBytes => _vertices.CapacityBytes + _indices.CapacityBytes;
 
     public static VulkanTerrainGpuResource? Create(Vk vk, VulkanDeviceOwner device,
-        TerrainRenderResource resource, TerrainRenderTransform transform, out string error)
+        TerrainRenderResource resource, TerrainChunkDescriptor chunk, TerrainLodLevel lod,
+        TerrainRenderTransform transform, out string error)
     {
-        var mesh = TerrainMeshBuilder.Build(resource, transform);
+        if (!chunk.Matches(resource.TerrainId, resource.Revision))
+        {
+            error = "Terrain Chunk 的 TerrainId 或 Revision 不匹配。";
+            return null;
+        }
+        if (!chunk.HasValidSampleRange(resource.Heightfield))
+        {
+            error = "Terrain Chunk 的采样范围不合法。";
+            return null;
+        }
+        var mesh = TerrainChunkMeshBuilder.Build(resource.Heightfield, chunk, lod,
+            transform.VerticalExaggeration);
         var vertices = mesh.Vertices.Select(v => new VulkanStaticModelVertex(
-            (float)v.X, (float)v.Y, (float)v.Z, (float)v.Nx, (float)v.Ny, (float)v.Nz, 0, 0)).ToArray();
+            (float)(v.X + chunk.StartSampleX * resource.CellSizeMeters),
+            (float)(v.Y + chunk.StartSampleY * resource.CellSizeMeters), (float)v.Z,
+            (float)v.Nx, (float)v.Ny, (float)v.Nz, 0, 0)).ToArray();
         var vb = VulkanStaticModelBuffer.Create(vk, device, vertices, BufferUsageFlags.VertexBufferBit, out error);
         if (vb is null) return null;
         var ib = VulkanStaticModelBuffer.Create(vk, device, mesh.Indices.ToArray(), BufferUsageFlags.IndexBufferBit, out error);

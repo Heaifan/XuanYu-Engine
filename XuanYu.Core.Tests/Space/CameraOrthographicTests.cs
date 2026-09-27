@@ -72,8 +72,8 @@ public sealed class CameraOrthographicTests
     {
         var state = ViewProjectionState.Create(OrthographicCamera(), TestViewport(800, 600));
 
-        Assert.True(state.TransformPointToWorld(0, 0, 0.0).DistanceTo(new Vector3d(0, 0, -4.9)) < 0.0001);
-        Assert.True(state.TransformPointToWorld(0, 0, 1.0).DistanceTo(new Vector3d(0, 0, 95.0)) < 0.0001);
+        Assert.True(state.TransformPointToWorld(0, 0, 1.0).DistanceTo(new Vector3d(0, 0, -4.9)) < 0.0001);
+        Assert.True(state.TransformPointToWorld(0, 0, 0.0).DistanceTo(new Vector3d(0, 0, 95.0)) < 0.0001);
     }
 
     [Fact]

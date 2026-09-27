@@ -40,13 +40,13 @@ public sealed partial class ViewProjectionState
         var view = Matrix4x4.CreateLookAt(eye, target, up);
         var aspect = (float)(viewport.LogicalWidth / viewport.LogicalHeight);
         var projection = camera.Mode == ProjectionMode.Orthographic
-            ? Matrix4x4.CreateOrthographic(
+            ? ReverseZProjection.CreateOrthographic(
                 (float)camera.OrthographicScale * aspect,
                 (float)camera.OrthographicScale,
                 (float)camera.NearPlane,
                 (float)camera.FarPlane)
-            : Matrix4x4.CreatePerspectiveFieldOfView(
-                (float)(camera.VerticalFovDegrees * global::System.Math.PI / 180.0),
+            : ReverseZProjection.CreatePerspective(
+                (float)camera.VerticalFovDegrees,
                 aspect,
                 (float)camera.NearPlane,
                 (float)camera.FarPlane);

@@ -17,8 +17,8 @@ public static class WorldRayFactory
         var ndcY = ToNdcY(state.Viewport, logicalY);
         if (!RequiresDoublePrecision(state))
         {
-            var near = state.TransformPointToWorld(ndcX, ndcY, 0.0);
-            var far = state.TransformPointToWorld(ndcX, ndcY, 1.0);
+            var near = state.TransformPointToWorld(ndcX, ndcY, 1.0);
+            var far = state.TransformPointToWorld(ndcX, ndcY, 0.0);
             return new WorldRay(near, far - near);
         }
 

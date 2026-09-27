@@ -38,7 +38,8 @@ void main() {
     float depth = clipPosition.z / clipPosition.w;
     if (!(depth >= 0.0 && depth <= 1.0)) discard;
     float bias = clamp(fwidth(depth) * DEPTH_BIAS_FACTOR, MIN_DEPTH_BIAS, MAX_DEPTH_BIAS);
-    gl_FragDepth = depth - bias;
+    // Reverse-Z: larger depth is closer, so the overlay bias moves toward Near.
+    gl_FragDepth = clamp(depth + bias, 0.0, 1.0);
 
     // 距离淡出 + 掠射角淡出（与网格 Pass 一致，地平线处平滑消失）。
     float distToCamera = length(worldPosition - pc.cameraPosition.xyz);

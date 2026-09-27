@@ -6,14 +6,14 @@ namespace XuanYu.World.Tests.UiRuntime;
 public sealed class ScaleIndicatorVisibilityRuntimeTests
 {
     [Fact]
-    public void Scale_indicator_hides_below_100m_when_inspector_tab_is_selected()
+    public void Scale_indicator_shows_small_valid_ground_scale_when_inspector_tab_is_selected()
     {
         var vm = new UiVm(null, seedInitialScene: false) { RightTabIndex = 0 };
         vm.UpdateViewportFrame(800, 600);
-        Assert.False(vm.IsScaleIndicatorVisible);
-        Assert.True(string.IsNullOrWhiteSpace(vm.ScaleIndicatorText));
+        Assert.True(vm.IsScaleIndicatorVisible);
+        Assert.Matches("^(1|2|5)( m| km)$", vm.ScaleIndicatorText);
         var projection = vm.RenderProjection.Projection.ScaleIndicator;
-        Assert.False(projection.Visible);
+        Assert.True(projection.Visible);
         Assert.Equal(vm.ScaleIndicatorText, projection.Label);
     }
 

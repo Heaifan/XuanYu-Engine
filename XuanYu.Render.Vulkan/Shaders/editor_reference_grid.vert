@@ -18,6 +18,7 @@ void main() {
     vec2 p[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
     vec2 ndc = p[gl_VertexIndex];
     gl_Position = vec4(ndc, 1.0, 1.0);
-    vFarWorld = pc.inverseViewProjection * vec4(ndc, 1.0, 1.0);
-    vNearWorld = pc.inverseViewProjection * vec4(ndc, 0.0, 1.0);
+    // Reverse-Z contract: NDC z=1 is Near and NDC z=0 is Far.
+    vFarWorld = pc.inverseViewProjection * vec4(ndc, 0.0, 1.0);
+    vNearWorld = pc.inverseViewProjection * vec4(ndc, 1.0, 1.0);
 }

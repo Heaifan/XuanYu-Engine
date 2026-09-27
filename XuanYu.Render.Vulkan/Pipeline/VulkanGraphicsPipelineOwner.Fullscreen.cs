@@ -7,7 +7,7 @@ using XuanYu.Render.Vulkan.Swapchain;
 namespace XuanYu.Render.Vulkan.Pipeline;
 
 // MAP-A-R1-D5-R1-F2-R2：全屏 Pass 管线通用创建（参考网格 / 世界轴 / 世界原点共用）。
-// 全屏三角形、DepthTest=On(LessOrEqual)、DepthWrite=Off、AlphaBlend=On；
+// 全屏三角形、DepthTest=On(GreaterOrEqual)、DepthWrite=Off、AlphaBlend=On；
 // 创建时校验设备 maxPushConstantsSize 支持 pushSize 独立 PushConstant。
 internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
@@ -69,7 +69,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             var depth = new PipelineDepthStencilStateCreateInfo
             {
                 SType = StructureType.PipelineDepthStencilStateCreateInfo, DepthTestEnable = depthTest, DepthWriteEnable = false,
-                DepthCompareOp = CompareOp.LessOrEqual
+                DepthCompareOp = CompareOp.GreaterOrEqual
             };
             var blendAttach = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.RBit | ColorComponentFlags.GBit | ColorComponentFlags.BBit | ColorComponentFlags.ABit, BlendEnable = true, SrcColorBlendFactor = BlendFactor.SrcAlpha, DstColorBlendFactor = BlendFactor.OneMinusSrcAlpha, ColorBlendOp = BlendOp.Add, SrcAlphaBlendFactor = BlendFactor.One, DstAlphaBlendFactor = BlendFactor.OneMinusSrcAlpha, AlphaBlendOp = BlendOp.Add };
             var colorBlend = new PipelineColorBlendStateCreateInfo { SType = StructureType.PipelineColorBlendStateCreateInfo, AttachmentCount = 1, PAttachments = &blendAttach, LogicOpEnable = false };

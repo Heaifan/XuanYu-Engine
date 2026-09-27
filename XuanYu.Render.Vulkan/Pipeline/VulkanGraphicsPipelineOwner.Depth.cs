@@ -10,6 +10,6 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             SType = StructureType.PipelineDepthStencilStateCreateInfo,
             DepthTestEnable = depthTest,
             DepthWriteEnable = depthWrite,
-            DepthCompareOp = CompareOp.LessOrEqual
+            DepthCompareOp = CompareOp.GreaterOrEqual
         };
 }

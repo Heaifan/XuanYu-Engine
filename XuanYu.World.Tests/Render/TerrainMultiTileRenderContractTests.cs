@@ -55,9 +55,10 @@ public sealed class TerrainMultiTileRenderContractTests
     public void Gpu_cache_uses_tile_id_and_retain_only_lifecycle_contract()
     {
         var source = File.ReadAllText(Find("XuanYu.Render.Vulkan", "Render", "Terrain", "VulkanTerrainGpuCache.cs"));
-        Assert.Contains("Dictionary<string,", source);
+        Assert.Contains("TerrainChunkGpuKey", source);
         Assert.Contains("RetainOnly", source);
         Assert.Contains("resource.TerrainId", source);
+        Assert.Contains("TerrainChunkPartitioner.Partition", source);
     }
 
     static RenderProjection Projection(IReadOnlyList<TerrainRenderResource> terrains) =>

@@ -18,7 +18,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_views.Length > 0 && !RecordCommandBuffers(_views)) throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
     }    void RecordDraw(CommandBuffer cb)
     {
-        if (_pipeline.Handle == 0 || _pipelineLayout.Handle == 0) return;
         var viewport = new[] { new Viewport { X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 } };
         var scissor = new[] { new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent } };
         var scene = new float[VulkanScenePushConstants.FloatCount];
@@ -30,11 +29,15 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdSetScissor(cb, 0, 1, pSc);
             BindProceduralVertexBuffer(cb);
             if (!_hasRenderProjection) return;
-            _terrainCache?.RetainOnly(_renderProjection.TerrainResources.Select(resource => resource.TerrainId));
+            TerrainStats = default;
+            _terrainCache?.RetainOnly(_renderProjection.TerrainResources);
             _staticModels.RetainOnly(_renderProjection.Entities.Select(e => e.StaticModelKey));
             _vectorOverlays.RetainOnly(_renderProjection.VectorOverlayResources.Select(r => r.Key));
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
+                var canRecord = CanRecordDraw(draw.Kind);
+                TraceGridDraw(draw.Kind, canRecord);
+                if (!canRecord) continue;
                 BindFramePipeline(cb, draw.Kind);
                 if (draw.Kind == RenderDrawKind.MapGround && _mapSurfaceIndexBuffer is not null)
                     DrawMapSurface(cb, pScene);
@@ -57,6 +60,17 @@ public sealed unsafe partial class VulkanClearFrameOwner
             }
         }
     }
+    bool CanRecordDraw(RenderDrawKind kind) => kind switch
+    {
+        RenderDrawKind.EditorReferenceGrid => _gridPipeline.Handle != 0 && _gridPipelineLayout.Handle != 0,
+        RenderDrawKind.WorldAxes => _axesPipeline.Handle != 0 && _axesPipelineLayout.Handle != 0,
+        RenderDrawKind.WorldOrigin => _originPipeline.Handle != 0 && _originPipelineLayout.Handle != 0,
+        RenderDrawKind.NavigationGizmo => _navGizmoPipeline.Handle != 0 && _navGizmoPipelineLayout.Handle != 0,
+        RenderDrawKind.ScaleIndicatorOverlay => _scaleIndicatorPipeline.Handle != 0 && _scaleIndicatorPipelineLayout.Handle != 0,
+        RenderDrawKind.EditorViewPlaneGrid => _viewPlaneGridPipeline.Handle != 0 && _viewPlaneGridPipelineLayout.Handle != 0,
+        RenderDrawKind.EditorBackground => _skyPipeline.Handle != 0 && _skyPipelineLayout.Handle != 0,
+        _ => _pipeline.Handle != 0 && _pipelineLayout.Handle != 0
+    };
     void BindProceduralVertexBuffer(CommandBuffer cb)
     {
         if (_proceduralVertexBuffer is null) return;

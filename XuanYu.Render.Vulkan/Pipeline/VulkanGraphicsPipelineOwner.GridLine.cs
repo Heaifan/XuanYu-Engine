@@ -9,7 +9,7 @@ namespace XuanYu.Render.Vulkan.Pipeline;
 // GRID-RW-1-CORR2：参考网格专用 Empty-input procedural LineList 管线。
 // 不再复用 CreateFullscreenPass（其声明 StaticModel VertexBinding/Attributes，与程序化顶点矛盾）。
 // Depth Bias 向相机偏移（负 ConstantFactor），消除与 MapGround 共面 Z=BaseHeight 的深度竞争；
-// DepthTest=On(LessOrEqual)、DepthWrite=Off、AlphaBlend=On。
+// DepthTest=On(GreaterOrEqual)、DepthWrite=Off、AlphaBlend=On。
 internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
     internal static VulkanGraphicsPipelineOwner? CreateReferenceGridLinePass(Vk vk,
@@ -70,7 +70,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             var depth = new PipelineDepthStencilStateCreateInfo
             {
                 SType = StructureType.PipelineDepthStencilStateCreateInfo, DepthTestEnable = true, DepthWriteEnable = false,
-                DepthCompareOp = CompareOp.LessOrEqual
+                DepthCompareOp = CompareOp.GreaterOrEqual
             };
             var blendAttach = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.RBit | ColorComponentFlags.GBit | ColorComponentFlags.BBit | ColorComponentFlags.ABit, BlendEnable = true, SrcColorBlendFactor = BlendFactor.SrcAlpha, DstColorBlendFactor = BlendFactor.OneMinusSrcAlpha, ColorBlendOp = BlendOp.Add, SrcAlphaBlendFactor = BlendFactor.One, DstAlphaBlendFactor = BlendFactor.OneMinusSrcAlpha, AlphaBlendOp = BlendOp.Add };
             var colorBlend = new PipelineColorBlendStateCreateInfo { SType = StructureType.PipelineColorBlendStateCreateInfo, AttachmentCount = 1, PAttachments = &blendAttach, LogicOpEnable = false };

@@ -5,12 +5,12 @@ namespace XuanYu.World.Tests.Render;
 public sealed class ReverseZDepthContractPrototypeTests
 {
     [Fact]
-    public void CurrentForwardDepthContractIsExplicit()
+    public void ReverseDepthContractIsExplicit()
     {
         var root = Root();
         var clear = Read(root, "XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Commands.cs");
-        Assert.Contains("Depth = 1.0f", clear);
-        foreach (var file in PipelineFiles(root)) Assert.Contains("CompareOp.LessOrEqual", Read(root, file));
+        Assert.Contains("Depth = 0.0f", clear);
+        foreach (var file in PipelineFiles(root)) Assert.Contains("CompareOp.GreaterOrEqual", Read(root, file));
     }
 
     [Fact]

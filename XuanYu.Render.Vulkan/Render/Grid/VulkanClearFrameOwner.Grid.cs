@@ -6,8 +6,8 @@ namespace XuanYu.Render.Vulkan.Render;
 // GRID-RW-2B：独立 World XY(Z=0) 参考网格，全屏射线求交；全帧统一 Step，Map 不参与定位。
 // PushConstant 192B（48 float）：
 //   mat4 viewProjection @0    mat4 inverseViewProjection @64
-//   vec4 cameraPosition @128  vec4 viewportAndFar @144 (xy=视口, z=Far, w=GridMaxDist)
-//   vec4 gridState @160 (x=Step, y=AnchorX, z=AnchorY, w=BaseHeight)
+//   vec4 cameraPosition @128  vec4 viewportAndFar @144 (xy=视口, z=Far, w=保留)
+//   vec4 gridState @160 (x=FineSpacing, y=CoarseSpacing, z=FineWeight, w=CoarseWeight)
 public sealed unsafe partial class VulkanClearFrameOwner
 {
     const uint GridPushFloatCount = 48;
@@ -25,11 +25,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
         var scene = new float[GridPushFloatCount];
         FillGridPushConstants(scene, _renderProjection);
-        scene[40] = (float)_referenceGridFrameState.StepMeters;
-        scene[41] = 0.0f;
-        scene[42] = 0.0f;
-        scene[43] = 0.0f;
+        scene[40] = (float)_referenceGridLevels.FineSpacing;
+        scene[41] = (float)_referenceGridLevels.CoarseSpacing;
+        scene[42] = (float)_referenceGridLevels.FineWeight;
+        scene[43] = (float)_referenceGridLevels.CoarseWeight;
         PushGridConstants(cb, scene);
+        _gridVkDrawIssued = true;
         _vk.CmdDraw(cb, RenderDrawPlan.FullscreenTriangleVertexCount, 1, 0, 0);
     }
 

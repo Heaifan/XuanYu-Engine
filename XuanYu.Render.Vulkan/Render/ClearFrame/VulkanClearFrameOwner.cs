@@ -95,6 +95,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
         _views = _swapchainOwner.ImageViews.ToArray();
         _framebuffers = new Framebuffer[_views.Length];
         if (!CreateFramebuffers()) return false;
+        _framebufferGeneration++;
         _log?.Invoke(VulkanResizeTracer.Stage(generation, "帧缓冲重建完成", $"物理尺寸={_extent.Width}x{_extent.Height}；帧缓冲={_framebuffers.Length} 张；命令缓冲已重录"));
         return RecordCommandBuffers(_views);
     } }

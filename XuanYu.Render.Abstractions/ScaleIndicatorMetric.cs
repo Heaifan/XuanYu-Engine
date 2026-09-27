@@ -2,11 +2,12 @@ using System.Globalization;
 
 namespace XuanYu.Render.Abstractions;
 
-// MAP-A-R3-D2-F1-V3：比例尺只消费 ViewportMetricScale，不参与命中或渲染事实。
+// 比例尺只消费地面端点测量结果，不参与命中、渲染事实或相机策略。
 public readonly record struct ScaleIndicatorMetric(
     double DistanceMeters, double WidthDip, string Label)
 {
     public const double FixedBarWidthDip = 104.0;
+    public bool IsVisible => DistanceMeters > 0.0 && WidthDip > 0.0 && !string.IsNullOrWhiteSpace(Label);
     public const double HysteresisRatio = 0.95;
 
     public static ScaleIndicatorMetric FromMetersPerDip(double metersPerDip)
@@ -17,9 +18,10 @@ public readonly record struct ScaleIndicatorMetric(
         if (!double.IsFinite(metersPerDip) || metersPerDip <= 0.0)
             return new ScaleIndicatorMetric(0.0, 0.0, "");
         var rawDistance = metersPerDip * FixedBarWidthDip;
-        if (rawDistance < 100.0)
-            return new ScaleIndicatorMetric(0.0, 0.0, "");
         var distance = ReferenceGridScale.LargestNiceSpacingAtMost(rawDistance);
+        var nextDistance = ReferenceGridScale.NextNiceSpacing(distance);
+        if (distance / metersPerDip < 80.0 && nextDistance / metersPerDip <= 160.0)
+            distance = nextDistance;
         var next = ReferenceGridScale.NextNiceSpacing(previousDistanceMeters);
         if (previousDistanceMeters >= 100.0 && next > previousDistanceMeters &&
             rawDistance >= previousDistanceMeters * HysteresisRatio && rawDistance < next)

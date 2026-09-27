@@ -31,6 +31,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _recordCommandDepth++;
         try
         {
+            if (!_gridTraceLogged) ResetGridTrace();
             var old = _commandBuffers;
             var next = new CommandBuffer[views.Length];
             var alloc = new CommandBufferAllocateInfo
@@ -53,6 +54,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             }
             if (old.Length > 0) _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)old.Length, old);
             _commandBuffers = next;
+            _commandBufferGeneration++;
             TraceRecordCommands(views.Length);
             return true;
         }
@@ -69,7 +71,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         ClearValue* clears = stackalloc ClearValue[2];
         // F5：ClearColor 仅作天空失败回退，改为浅蓝色，不再用灰色掩盖天空管线失败。
         clears[0] = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.35f, Float32_1 = 0.55f, Float32_2 = 0.80f, Float32_3 = 1.0f } };
-        clears[1] = new ClearValue { DepthStencil = new ClearDepthStencilValue { Depth = 1.0f, Stencil = 0 } };
+        clears[1] = new ClearValue { DepthStencil = new ClearDepthStencilValue { Depth = 0.0f, Stencil = 0 } };
         var rp = new RenderPassBeginInfo
         {
             SType = StructureType.RenderPassBeginInfo,

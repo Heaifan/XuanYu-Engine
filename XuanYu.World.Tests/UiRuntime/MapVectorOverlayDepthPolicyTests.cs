@@ -20,7 +20,7 @@ public sealed class MapVectorOverlayDepthPolicyTests
         Assert.Contains("DepthWriteEnable = depthWrite", depth);
         Assert.Contains("depthTest: false, depthWrite: false", overlay);
         Assert.Contains("kind == RenderDrawKind.MapVectorOverlay", bind);
-        Assert.Contains("DepthCompareOp = CompareOp.LessOrEqual", depth);
+        Assert.Contains("DepthCompareOp = CompareOp.GreaterOrEqual", depth);
         Assert.DoesNotContain("applyVectorOverlayDepthPolicy", shader);
         Assert.DoesNotContain("VECTOR_OVERLAY_FILL_DEPTH_BIAS", shader);
         Assert.DoesNotContain("VECTOR_OVERLAY_STROKE_DEPTH_BIAS", shader);

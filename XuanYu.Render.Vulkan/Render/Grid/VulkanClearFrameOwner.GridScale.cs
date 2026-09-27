@@ -1,3 +1,4 @@
+using System.Numerics;
 using Silk.NET.Vulkan;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
@@ -5,13 +6,11 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// MAP-A-R3-D2-F1-V2：参考网格每帧统一消费 ViewportMetricScale。
-// 求交失败时沿用上一帧合法尺度，禁止突然重置为 1。
+// GRID-UX-R1：地面网格每帧统一消费 ViewportMetricScale，并保留相邻 1/2/5 级。
 public sealed unsafe partial class VulkanClearFrameOwner
 {
     ViewportMetricScale _lastViewportMetric = new(1.0, 1.0, 1.0);
-    ReferenceGridFrameState _referenceGridFrameState =
-        new(ReferenceGridFrameState.MinStepMeters, 0.0, 0.0, 0.0);
+    ReferenceGridLevels _referenceGridLevels = ReferenceGridScale.Compute(1.0);
 
     public void UpdateReferenceGridScale(RenderProjection projection)
     {
@@ -24,8 +23,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (metricValid)
         {
             _lastViewportMetric = metric;
-            _referenceGridFrameState = ReferenceGridFrameState.Create(metric,
-                projection.Camera.Position.X, projection.Camera.Position.Y, height, _referenceGridFrameState);
+            _referenceGridLevels = ReferenceGridScale.Compute(metric);
         }
     }
 
@@ -39,6 +37,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var state = camera.ToViewProjection(viewport);
         var vulkanProjection = ToVulkanProjection(state.Projection);
         var viewProjection = state.View * vulkanProjection;
+        var inverseFinite = Matrix4x4.Invert(viewProjection, out var inverse);
+        var ray = WorldRayFactory.FromViewportPoint(state, _extent.Width * 0.5, _extent.Height * 0.5);
+        var planeT = -ray.Origin.Z / ray.Direction.Z;
+        TraceGridMath(IsFinite(viewProjection), inverseFinite && IsFinite(inverse),
+            double.IsFinite(planeT) && planeT > 0 && planeT <= camera.FarPlane);
         fixed (float* pScene = scene)
         {
             FillMatrixTranspose(pScene, viewProjection);
@@ -51,6 +54,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
         scene[36] = _extent.Width;
         scene[37] = _extent.Height;
         scene[38] = (float)camera.FarPlane;
-        scene[39] = (float)(camera.FarPlane * 0.75); // gridMaxDistance：不满强度到 Far
+        scene[39] = 0.0f; // Reverse-Z Grid 不使用距离硬截断；保留 PushConstant 布局兼容性。
     }
+
+    static bool IsFinite(Matrix4x4 m) =>
+        float.IsFinite(m.M11) && float.IsFinite(m.M12) && float.IsFinite(m.M13) && float.IsFinite(m.M14) &&
+        float.IsFinite(m.M21) && float.IsFinite(m.M22) && float.IsFinite(m.M23) && float.IsFinite(m.M24) &&
+        float.IsFinite(m.M31) && float.IsFinite(m.M32) && float.IsFinite(m.M33) && float.IsFinite(m.M34) &&
+        float.IsFinite(m.M41) && float.IsFinite(m.M42) && float.IsFinite(m.M43) && float.IsFinite(m.M44);
 }

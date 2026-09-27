@@ -24,6 +24,11 @@ public readonly record struct CameraFarProjectionDiagnostic(
         return new(distance, t, xMetric, yMetric, valid);
     }
 
+#if DEBUG
+    public static string DebugDepthText(CameraState camera, Vector3d target) =>
+        CameraDepthPrecisionDiagnostic.DebugText(CameraDepthPrecisionDiagnostic.Create(camera, target));
+#endif
+
     static (Vector3d Origin, Vector3d Direction) Ray(CameraState camera,
         ViewportState viewport, double ndcX, double ndcY)
     {

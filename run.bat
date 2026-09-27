@@ -49,12 +49,24 @@ if errorlevel 1 goto fail
 echo.
 echo [2/3] Building app...
 set "MSBUILDDISABLENODEREUSE=1"
-call "%DOTNET_EXE%" build "%PROJECT%" --no-restore -nologo -clp:Summary=false -m:1 -nr:false -p:UseSharedCompilation=false
+call "%DOTNET_EXE%" build "%PROJECT%" --no-restore -t:Rebuild -nologo -clp:Summary=false -m:1 -nr:false -p:UseSharedCompilation=false
 if errorlevel 1 goto fail
 
 echo.
 echo [3/3] Starting editor...
 echo.
+set "WT_DIRTY=false"
+for /f "delims=" %%S in ('git status --porcelain') do set "WT_DIRTY=true"
+set "GIT_HEAD="
+for /f "delims=" %%H in ('git rev-parse HEAD') do if not defined GIT_HEAD set "GIT_HEAD=%%H"
+set "APP_EXE=%CD%\XuanYu.Editor.App\bin\Debug\net10.0\XuanYu.Editor.App.exe"
+set "APP_TIME="
+for /f "usebackq delims=" %%T in (`powershell -NoProfile -Command "(Get-Item -LiteralPath '%APP_EXE%').LastWriteTime.ToString('o')"`) do if not defined APP_TIME set "APP_TIME=%%T"
+echo RuntimeBuildIdentity
+echo Git HEAD=%GIT_HEAD%
+echo WorkingTreeDirty=%WT_DIRTY%
+echo Assembly Build Timestamp=%APP_TIME%
+echo Executable Path=%APP_EXE%
 call "%DOTNET_EXE%" run --project "%PROJECT%" --no-build
 set "exitCode=%errorlevel%"
 
