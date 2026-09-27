@@ -3,7 +3,7 @@ param(
     [ValidateSet('prepare', 'join', 'status', 'close', 'advance', 'commit-lock', 'commit-unlock')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
     [ValidateSet('development', 'convergence')][string]$WaveMode = 'development',
-    [ValidateSet('xye', 'integration', 'governance')][AllowNull()][string]$CoordinatorScope = $null,
+    [AllowNull()][string]$CoordinatorScope = $null,
     [string]$Owner = $null,
     [string]$RepositoryRoot = $null,
     [switch]$AllowTestWorkspace
@@ -47,9 +47,23 @@ function Read-Config([string]$Path) {
     return $value
 }
 
+function Normalize-CoordinatorScope($Value) {
+    if ($null -eq $Value) { return $null }
+    $text = ([string]$Value).Trim()
+    if ([string]::IsNullOrWhiteSpace($text)) { return $null }
+    if ($text -notin @('xye', 'integration', 'governance')) {
+        Stop-Handoff 'STATE_INVALID' "非法 coordinatorScope：$text"
+    }
+    return $text
+}
+
 function Read-State {
     if (-not (Test-Path -LiteralPath $StatePath -PathType Leaf)) { return $null }
-    try { return (Get-Content -Raw -LiteralPath $StatePath | ConvertFrom-Json) }
+    try {
+        $state = Get-Content -Raw -LiteralPath $StatePath | ConvertFrom-Json
+        $state.coordinatorScope = Normalize-CoordinatorScope $state.coordinatorScope
+        return $state
+    }
     catch { Stop-Handoff 'STATE_INVALID' $_.Exception.Message }
 }
 
@@ -58,8 +72,9 @@ function Write-State($State) {
     if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
     $temp = Join-Path $dir ('state.' + [guid]::NewGuid().ToString('N') + '.tmp')
     try {
+        $State.coordinatorScope = Normalize-CoordinatorScope $State.coordinatorScope
         $json = $State | ConvertTo-Json -Depth 6
-        [IO.File]::WriteAllText($temp, $json, [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($temp, $json, (New-Object System.Text.UTF8Encoding -ArgumentList $false))
         Move-Item -LiteralPath $temp -Destination $StatePath -Force
     } finally {
         if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force }
@@ -71,7 +86,7 @@ function Write-JsonAtomic([string]$Path, $Value) {
     if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
     $temp = Join-Path $dir ([IO.Path]::GetFileName($Path) + '.' + [guid]::NewGuid().ToString('N') + '.tmp')
     try {
-        [IO.File]::WriteAllText($temp, ($Value | ConvertTo-Json -Depth 6), [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($temp, ($Value | ConvertTo-Json -Depth 6), (New-Object System.Text.UTF8Encoding -ArgumentList $false))
         Move-Item -LiteralPath $temp -Destination $Path -Force
     } finally {
         if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force }
@@ -88,7 +103,7 @@ function Try-CreateMutex($Mutex) {
     $dir = Split-Path -Parent $MutexPath
     if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
     $json = $Mutex | ConvertTo-Json -Depth 6
-    $bytes = [Text.UTF8Encoding]::new($false).GetBytes($json)
+    $bytes = (New-Object System.Text.UTF8Encoding -ArgumentList $false).GetBytes($json)
     $stream = $null
     try {
         $stream = [IO.File]::Open($MutexPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
@@ -342,8 +357,9 @@ if ($Mode -eq 'join') {
 if ($Mode -eq 'advance') {
     if ($null -eq $state) { Stop-Advance 'STATE_NOT_FOUND' 'handoff state.json 不存在。' }
     if (-not [bool]$state.active) { Stop-Advance 'NO_ACTIVE_WAVE' '不存在 Active Wave。' }
-    if ($null -ne $state.coordinatorScope -and $Scope -ne $state.coordinatorScope) {
-        Stop-Advance 'COORDINATOR_MISMATCH' "当前 scope $Scope 不是 Coordinator scope $($state.coordinatorScope)。"
+    $coordinatorScope = Normalize-CoordinatorScope $state.coordinatorScope
+    if (-not [string]::IsNullOrWhiteSpace([string]$coordinatorScope) -and $Scope -ne $coordinatorScope) {
+        Stop-Advance 'COORDINATOR_MISMATCH' "当前 scope $Scope 不是 Coordinator scope $coordinatorScope。"
     }
     if ($facts.Branch -ne $state.branch) { Stop-Advance 'BRANCH_MISMATCH' "Expected $($state.branch)，Current $($facts.Branch)。" }
     $remote = $Config.Remote
@@ -442,7 +458,7 @@ if ($Mode -eq 'prepare') {
         Invoke-Git @('switch', '--ignore-other-worktrees', '-C', $Config.ActiveBranch, $remoteRef) | Out-Null
     } elseif ($facts.Dirty.Count -gt 0) { Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异但工作区 dirty。' }
     $newFacts = Get-Facts
-    $state = [pscustomobject]@{ branch = $newFacts.Branch; baselineHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = $WaveMode; coordinatorScope = $CoordinatorScope; preparedAt = (Get-Date).ToUniversalTime().ToString('o') }
+    $state = [pscustomobject]@{ branch = $newFacts.Branch; baselineHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = $WaveMode; coordinatorScope = (Normalize-CoordinatorScope $CoordinatorScope); preparedAt = (Get-Date).ToUniversalTime().ToString('o') }
     Write-State $state
     $toolchain = Resolve-Dotnet
     Show-Header 'PREPARE' 'PASS' $newFacts $state $toolchain (Get-DirtyReport $newFacts $Scope)

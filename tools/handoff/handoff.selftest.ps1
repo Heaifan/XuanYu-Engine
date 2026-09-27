@@ -49,15 +49,17 @@ try {
 }
 "@ | Set-Content -LiteralPath (Join-Path $root 'HandoffConfig.psd1')
 
+    git -C $root add HandoffConfig.psd1 bootstrap.ps1 resolve-dotnet.ps1 dotnet.cmd
+    git -C $root commit -m fixture-config | Out-Null
+    git -C $root push | Out-Null
     $head = (git -C $root rev-parse HEAD).Trim()
     $stateDir = Join-Path $root '.git\xye-handoff'
-    New-Item -ItemType Directory -Path $stateDir -Force | Out-Null
-    $state = [ordered]@{
-        branch = 'main'; baselineHead = $head; workspace = $root; active = $true
-        mode = 'development'; coordinatorScope = $null
-    }
-    $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'prepare', '-WaveMode', 'development', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF PREPARE PASS'
     $stateBefore = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')
+    Assert-True $stateBefore.Contains('"coordinatorScope": null') 'prepare must write coordinatorScope null'
+    $state = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    Assert-True ($null -eq $state.coordinatorScope) 'prepare coordinatorScope must be null'
 
     $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'ADVANCE NOOP: BASELINE_ALREADY_CURRENT'
@@ -86,6 +88,8 @@ try {
     $result = Invoke-Handoff @('-Mode', 'commit-unlock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'HANDOFF COMMIT-UNLOCK PASS'
 
+    $state.coordinatorScope = ''
+    $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
     Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'B'
     git -C $root add committed.txt
     git -C $root commit -m B | Out-Null
@@ -107,6 +111,8 @@ try {
     $stateAfterB = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
     Assert-True ($stateAfterB.baselineHead -eq $headB) 'advance did not move baseline to B'
     Assert-True ($null -ne $stateAfterB.baselineAdvance) 'advance audit missing'
+    Assert-True ($null -eq $stateAfterB.coordinatorScope) 'legacy empty coordinatorScope must normalize to null'
+    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -match '"coordinatorScope"\s*:\s*null') 'advance must write coordinatorScope null'
     Assert-Output (Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF JOIN PASS'
 
     Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'C'
@@ -142,9 +148,11 @@ try {
     Assert-Output $result 1 'BRANCH_MISMATCH'
     $stateAfterC.branch = 'main'
     $stateAfterC.baselineHead = (git -C $root rev-list --max-parents=0 HEAD).Trim()
+    $stateAfterC.coordinatorScope = '   '
     $stateAfterC | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
     $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'HANDOFF ADVANCE PASS'
+    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -match '"coordinatorScope"\s*:\s*null') 'whitespace coordinatorScope must write null'
 
     $statusHead = (git -C $root rev-parse HEAD).Trim()
     $statusDirty = @(git -C $root status --porcelain=v1 --untracked-files=all)
@@ -158,6 +166,8 @@ try {
     $state = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
     $state.mode = 'convergence'; $state.coordinatorScope = 'xye'; $state.baselineHead = $statusHead
     $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'integration', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'COORDINATOR_MISMATCH'
     $result = Invoke-Handoff @('-Mode', 'join', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'CONVERGENCE_EXCLUSIVE'
 
