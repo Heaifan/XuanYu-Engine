@@ -15,6 +15,9 @@ public abstract class ViewportD1InputConsumer(
 
     public ViewportInputDispatchResult Handle(EditorPointerEvent pointer, ViewportGestureState state)
     {
+        if (!state.IsActive && pointer.Kind == EditorPointerEventKind.Wheel)
+            return _handler.HandleWheel(pointer) ? ViewportInputDispatchResult.Handled :
+                ViewportInputDispatchResult.Ignored;
         if (state.IsActive) _handler.Update(new ViewportGestureContext(
             "ViewportGesture", Owner, state.PointerId, state.IsCaptured
                 ? ViewportGestureCapture.Pointer : ViewportGestureCapture.None, pointer));
