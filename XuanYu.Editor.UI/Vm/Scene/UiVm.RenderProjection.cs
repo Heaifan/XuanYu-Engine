@@ -18,8 +18,10 @@ public sealed partial class UiVm
         IReadOnlyList<RenderVectorOverlayResource> overlays =
             vectorOverlay.Primitives.Count == 0 ? [] : [vectorOverlay];
         var terrains = _terrainTiles?.Tiles.Select(tile =>
-            tile.ToRenderSnapshot(tile.TileId, 1)).ToArray();
+            TerrainWorldPlacement.ToRenderResource(tile, _terrainTiles.Bounds)).ToArray();
         var terrain = terrains?.FirstOrDefault() ?? TerrainWorld?.ToRenderSnapshot("terrain", 1);
+        var map = IsTerrainContext && terrains is { Length: > 0 }
+            ? MapRenderSnapshot.Empty : _mapRenderSnapshot;
         return SceneRenderProjectionAdapter.TryCreate(
             snapshot,
             ComputeRotateGizmoWorldRadius(transform.Position),
@@ -29,7 +31,7 @@ public sealed partial class UiVm
             ComputeMoveGizmoWorldAxisLength(transform.Position),
             _staticModelCatalog,
             _staticModelResources,
-            _mapRenderSnapshot,
+            map,
             _viewportDpiScale,
             overlays,
             new ScaleIndicatorOverlayProjection(

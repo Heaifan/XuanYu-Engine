@@ -21,6 +21,8 @@ public sealed partial class TerrainAutoFrameD1Tests
         var vm = await ImportAsync([("n23e121.hgt", 10, 2), ("n23e122.hgt", 20, 3)]);
 
         Assert.Equal(2, vm.RenderProjection.Projection.TerrainResources.Count);
+        Assert.NotEqual(vm.RenderProjection.Projection.TerrainResources[0].WorldOrigin,
+            vm.RenderProjection.Projection.TerrainResources[1].WorldOrigin);
         AssertTerrainVisible(vm);
     }
 

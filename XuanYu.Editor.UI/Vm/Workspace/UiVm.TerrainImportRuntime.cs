@@ -37,6 +37,7 @@ public sealed partial class UiVm
         else ActivateMultiTerrain(tiles);
         OnTerrainRuntimeEstablished(tiles);
         EnterTerrainContext();
+        PublishSceneRenderSnapshot();
     }
 
     void ActivateSingleTerrain(TerrainElevationTile tile)

@@ -10,7 +10,7 @@ public sealed partial class UiVm
 {
     partial void OnTerrainRuntimeEstablished(TerrainTileSet tiles) =>
         FrameTerrainResources(tiles.Tiles.Select(tile =>
-            tile.ToRenderSnapshot(tile.TileId, 1)));
+            TerrainWorldPlacement.ToRenderResource(tile, tiles.Bounds)));
 
     void FrameTerrainResources(IEnumerable<TerrainRenderResource> resources)
     {

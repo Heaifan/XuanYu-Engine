@@ -28,7 +28,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var vb = gpu.Vertices.Buffer; var ib = gpu.Indices.Buffer; ulong offset = 0;
         _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset);
         _vk.CmdBindIndexBuffer(cb, ib, 0, IndexType.Uint32);
-        FillScenePushConstants(scene, _renderProjection, default, default, new(1, 1, 1), 0, gizmoModeOverride: -16);
+        FillScenePushConstants(scene, _renderProjection, _renderProjection.TerrainResources[terrainIndex].WorldOrigin,
+            default, new(1, 1, 1), 0, gizmoModeOverride: -16);
         PushSceneConstants(cb, scene); _vk.CmdDrawIndexed(cb, gpu.IndexCount, 1, 0, 0, 0);
         BindProceduralVertexBuffer(cb);
     }

@@ -58,4 +58,5 @@ public sealed partial class TerrainAutoFrameD1Tests
             vm.RenderProjection.Projection.Camera.Revision);
         Assert.True(vm.RenderProjection.Success);
     }
+
 }

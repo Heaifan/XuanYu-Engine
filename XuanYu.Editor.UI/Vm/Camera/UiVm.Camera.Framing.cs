@@ -2,6 +2,8 @@ using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Editor.Camera;
+using XuanYu.Render.Abstractions;
+using XuanYu.World.Terrain;
 
 namespace XuanYu.Editor.UI;
 
@@ -10,6 +12,11 @@ public sealed partial class UiVm
 {
     void FrameAllCamera(string source)
     {
+        if (IsTerrainContext && _terrainTiles is { Tiles.Count: > 0 })
+        {
+            FrameTerrainAndEntities(source);
+            return;
+        }
         if (IsMapEditorMode)
         {
             ApplyMapViewFraming(source);
@@ -27,6 +34,23 @@ public sealed partial class UiVm
         _observationCenter = frame.ObservationCenter;
         PublishSceneRenderSnapshot();
         FooterMessage = $"{source}：当前可见实体已进入视野。";
+    }
+
+    void FrameTerrainAndEntities(string source)
+    {
+        var terrain = _terrainTiles!.Tiles.SelectMany(tile =>
+            TerrainWorldBounds.Corners([TerrainWorldPlacement.ToRenderResource(tile, _terrainTiles.Bounds)],
+                new TerrainRenderTransform(VerticalExaggeration)));
+        var points = terrain.Concat(_sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position)).ToArray();
+        if (points.Length == 0) return;
+        var frame = _camera.Mode == ProjectionMode.Orthographic
+            ? EditorCameraFraming.FrameOrthographicWithCenter(points, _camera.Forward, _camera.Up,
+                _viewportAspect, _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision)
+            : EditorCameraFraming.FrameAllWithCenter(points, _viewportAspect, ++_cameraRevision);
+        _camera = frame.Camera;
+        _observationCenter = frame.ObservationCenter;
+        PublishSceneRenderSnapshot();
+        FooterMessage = $"{source}：地形与场景已进入视野。";
     }
 
     void FrameSelectedCamera()

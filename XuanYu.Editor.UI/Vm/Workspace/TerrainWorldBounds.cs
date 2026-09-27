@@ -28,6 +28,7 @@ static class TerrainWorldBounds
         if (heights.Length == 0) return null;
         var maxX = (field.Width - 1) * resource.CellSizeMeters;
         var maxY = (field.Height - 1) * resource.CellSizeMeters;
-        return (new(0, 0, heights.Min()), new(maxX, maxY, heights.Max()));
+        return (new(resource.WorldOrigin.X, resource.WorldOrigin.Y, heights.Min()),
+            new(resource.WorldOrigin.X + maxX, resource.WorldOrigin.Y + maxY, heights.Max()));
     }
 }

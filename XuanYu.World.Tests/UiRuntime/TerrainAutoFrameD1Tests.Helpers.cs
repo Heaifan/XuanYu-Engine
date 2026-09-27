@@ -84,10 +84,11 @@ public sealed partial class TerrainAutoFrameD1Tests
             var x = (field.Width - 1) * resource.CellSizeMeters;
             var y = (field.Height - 1) * resource.CellSizeMeters;
             var min = heights.Min(); var max = heights.Max();
-            yield return new(0, 0, min); yield return new(x, 0, min);
-            yield return new(0, y, min); yield return new(x, y, min);
-            yield return new(0, 0, max); yield return new(x, 0, max);
-            yield return new(0, y, max); yield return new(x, y, max);
+            var origin = resource.WorldOrigin;
+            yield return new(origin.X, origin.Y, min); yield return new(origin.X + x, origin.Y, min);
+            yield return new(origin.X, origin.Y + y, min); yield return new(origin.X + x, origin.Y + y, min);
+            yield return new(origin.X, origin.Y, max); yield return new(origin.X + x, origin.Y, max);
+            yield return new(origin.X, origin.Y + y, max); yield return new(origin.X + x, origin.Y + y, max);
         }
     }
 }
