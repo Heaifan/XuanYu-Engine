@@ -41,6 +41,37 @@ public sealed class TerrainRenderContractTests
     }
 
     [Fact]
+    public void Mesh_builder_keeps_world_origin_out_of_tile_local_vertices()
+    {
+        var resource = new TerrainRenderResource("origin", 1,
+            new TerrainHeightfield(2, 2, [1, 2, 3, 4]), 1000,
+            new(100000, 0, 0));
+
+        var mesh = TerrainMeshBuilder.Build(resource, TerrainRenderTransform.Default);
+
+        Assert.Equal(0, mesh.Vertices[0].X);
+        Assert.Equal(0, mesh.Vertices[0].Y);
+        Assert.Equal(1000, mesh.Vertices[1].X);
+    }
+
+    [Fact]
+    public void Adjacent_tile_world_range_applies_origin_once_at_instance_boundary()
+    {
+        var resource = new TerrainRenderResource("adjacent", 1,
+            new TerrainHeightfield(2, 2, [1, 2, 3, 4]), 100000,
+            new(100000, 0, 0));
+
+        var mesh = TerrainMeshBuilder.Build(resource, TerrainRenderTransform.Default);
+        var localMin = mesh.Vertices.Min(vertex => vertex.X);
+        var localMax = mesh.Vertices.Max(vertex => vertex.X);
+
+        Assert.Equal(0, localMin);
+        Assert.Equal(100000, localMax);
+        Assert.Equal(100000, resource.WorldOrigin.X + localMin);
+        Assert.Equal(200000, resource.WorldOrigin.X + localMax);
+    }
+
+    [Fact]
     public void Projection_and_draw_plan_expose_terrain_as_a_separate_pass()
     {
         var terrain = new TerrainRenderResource("r0", 1, new TerrainHeightfield(2, 2, [1, 2, 3, 4]));
