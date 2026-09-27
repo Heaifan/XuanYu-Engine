@@ -18,7 +18,17 @@ tools\handoff\handoff.cmd advance --scope xye
 
 `advance` 仅更新 `.git/xye-handoff/state.json` 的 handoff 字段，不提交、不推送 state.json，不清理 ForeignDirty，不创建新 Wave。它必须确认当前 branch 与 state 一致、远端 branch 存在、HEAD 与远端 tip 一致、Ahead/Behind 为 `0/0`，并确认旧 baseline 是当前 HEAD 的祖先；否则失败且保持旧 baseline。
 
-`join` 仍然严格禁止 `HEAD != baselineHead`，但会在安全条件满足时提示 Coordinator 执行 `advance`。`prepare` 在 Active Wave 存在时仍然阻止重复创建，并提示当前 Wave 不需要新的 prepare。任何 Agent 都不得手动编辑 state.json 来解锁。
+`join` 允许 `baselineHead == HEAD`，也允许 `baselineHead` 是当前 HEAD 的祖先；只有 branch 改变或历史分叉才阻断。这样一个 Session 合法 fast-forward 后，其他已 JOIN Session 仍可继续并行工作。
+
+Git 收口使用 Commit Mutex：
+
+```text
+handoff.cmd commit-lock --scope xye --owner <session>
+精确 git add <owned-paths> → git commit → git push
+handoff.cmd advance --scope xye --owner <session>
+```
+
+同一时间只允许一个 owner 持锁；其他 owner 必须等待。成功 `advance` 自动释放锁；无提交时使用同 owner 的 `commit-unlock`。禁止 `git add .`，ForeignDirty 永远保留。`prepare` 在 Active Wave 存在时仍然阻止重复创建，任何 Agent 都不得手动编辑 state.json 来解锁。
 
 ---
 

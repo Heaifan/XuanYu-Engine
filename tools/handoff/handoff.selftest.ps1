@@ -79,18 +79,28 @@ try {
     Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all) -join "`n" -eq ($statusBefore -join "`n")) 'join changed dirty files'
     Assert-True ((git -C $root rev-parse HEAD).Trim() -eq $head) 'join changed HEAD'
 
+    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
+    $result = Invoke-Handoff @('-Mode', 'commit-unlock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF COMMIT-UNLOCK PASS'
+
     Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'B'
     git -C $root add committed.txt
     git -C $root commit -m B | Out-Null
     git -C $root push | Out-Null
     $headB = (git -C $root rev-parse HEAD).Trim()
+    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
+    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-b', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'COMMIT_MUTEX_HELD'
     $result = Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'Resolution:'
-    Assert-Output $result 1 'handoff.cmd advance --scope xye'
+    Assert-Output $result 0 'HANDOFF JOIN PASS'
     $result = Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'ACTIVE_WAVE_EXISTS'
     Assert-Output $result 1 'Current wave does not require a new prepare.'
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-b', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'COMMIT_MUTEX_OWNER_MISMATCH'
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'HANDOFF ADVANCE PASS'
     $stateAfterB = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
     Assert-True ($stateAfterB.baselineHead -eq $headB) 'advance did not move baseline to B'
@@ -103,15 +113,23 @@ try {
     git -C $root push | Out-Null
     $headC = (git -C $root rev-parse HEAD).Trim()
     $result = Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'BASELINE_MOVED'
+    Assert-Output $result 0 'HANDOFF JOIN PASS'
+    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
     $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'COMMIT_MUTEX_REQUIRED'
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 "New Baseline: $headC"
     Assert-Output (Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF JOIN PASS'
 
     Set-Content -LiteralPath (Join-Path $root 'un pushed.txt') -Value 'ahead'
     git -C $root add 'un pushed.txt'
     git -C $root commit -m local-ahead | Out-Null
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
+    $result = Invoke-Handoff @('-Mode', 'commit-unlock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'COMMIT_MUTEX_UNADVANCED'
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'REMOTE_DIVERGED'
     git -C $root push | Out-Null
 
@@ -123,7 +141,7 @@ try {
     $stateAfterC.branch = 'main'
     $stateAfterC.baselineHead = (git -C $root rev-list --max-parents=0 HEAD).Trim()
     $stateAfterC | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'HANDOFF ADVANCE PASS'
 
     $statusHead = (git -C $root rev-parse HEAD).Trim()

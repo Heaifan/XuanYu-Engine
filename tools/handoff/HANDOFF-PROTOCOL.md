@@ -30,7 +30,17 @@ prepare → join → work → commit + push → advance → next join
 
 `advance` 不是新的 `prepare`，也不结束 Wave。它只在当前 branch、远端 branch、HEAD 和远端 tip 完全收敛，且旧 baseline 是当前 HEAD 祖先时，将 `baselineHead` 原子推进到当前 HEAD；Active Wave、ForeignDirty 和产品工作区保持不变。推进记录保存在 state.json 的 `baselineAdvance` 字段中，state.json 不进入 Git。
 
-当 JOIN 报 `BASELINE_MOVED` 时，Agent 必须停止并报告 baseline、HEAD、Remote HEAD、Ahead/Behind、Branch 和 ForeignDirty。若输出给出安全解析路径，由 Coordinator 执行 `handoff.cmd advance --scope xye`，然后 Agent 重新执行 join。不得执行 prepare、手动编辑 state.json、reset、stash 或 clean。
+JOIN 允许 `baselineHead == HEAD`，也允许 `baselineHead` 是当前 HEAD 的祖先；这使已 JOIN Session 不会因其他 Session 的合法 fast-forward commit 停工。只有 branch 改变或历史分叉时才阻断 JOIN。
+
+当需要提交时，Agent 必须先获取 Git Commit Mutex：
+
+```text
+handoff.cmd commit-lock --scope xye --owner <session>
+```
+
+持锁者才可以执行精确路径 stage、commit、push 和 `advance --owner <session>`；禁止 `git add .`。成功 advance 后锁自动释放。无提交时，持锁者可用同 owner 的 `commit-unlock` 释放；HEAD 已前进时不得绕过 push + advance 解锁。
+
+当 JOIN 报 `BASELINE_MOVED` 时，Agent 必须停止并报告 baseline、HEAD、Remote HEAD、Ahead/Behind、Branch 和 ForeignDirty。不得执行 prepare、手动编辑 state.json、reset、stash 或 clean；先处理真实 branch/分叉异常。
 
 `state.json` 的 Wave 字段为：`mode=development|convergence`、`coordinatorScope=xye|integration|governance|null`。Coordinator 可在 PREPARE 时登记 Convergence 模式；普通 Agent 不得直接修改 state。
 

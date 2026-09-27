@@ -1,9 +1,10 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('prepare', 'join', 'status', 'close', 'advance')][string]$Mode = 'join',
+    [ValidateSet('prepare', 'join', 'status', 'close', 'advance', 'commit-lock', 'commit-unlock')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
     [ValidateSet('development', 'convergence')][string]$WaveMode = 'development',
     [ValidateSet('xye', 'integration', 'governance')][AllowNull()][string]$CoordinatorScope = $null,
+    [string]$Owner = $null,
     [string]$RepositoryRoot = $null,
     [switch]$AllowTestWorkspace
 )
@@ -12,6 +13,7 @@ $ErrorActionPreference = 'Stop'
 $RepoRoot = $null
 $Config = $null
 $StatePath = $null
+$MutexPath = $null
 
 function Stop-Handoff([string]$Code, [string]$Reason) {
     Write-Host ''
@@ -62,6 +64,42 @@ function Write-State($State) {
     } finally {
         if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force }
     }
+}
+
+function Write-JsonAtomic([string]$Path, $Value) {
+    $dir = Split-Path -Parent $Path
+    if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+    $temp = Join-Path $dir ([IO.Path]::GetFileName($Path) + '.' + [guid]::NewGuid().ToString('N') + '.tmp')
+    try {
+        [IO.File]::WriteAllText($temp, ($Value | ConvertTo-Json -Depth 6), [Text.UTF8Encoding]::new($false))
+        Move-Item -LiteralPath $temp -Destination $Path -Force
+    } finally {
+        if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force }
+    }
+}
+
+function Read-Mutex {
+    if (-not (Test-Path -LiteralPath $MutexPath -PathType Leaf)) { return $null }
+    try { return Get-Content -Raw -LiteralPath $MutexPath | ConvertFrom-Json }
+    catch { Stop-Handoff 'COMMIT_MUTEX_INVALID' $_.Exception.Message }
+}
+
+function Write-Mutex($Mutex) { Write-JsonAtomic $MutexPath $Mutex }
+
+function Remove-Mutex {
+    if (Test-Path -LiteralPath $MutexPath -PathType Leaf) { Remove-Item -LiteralPath $MutexPath -Force }
+}
+
+function Get-EffectiveOwner([string]$Value) {
+    if (-not [string]::IsNullOrWhiteSpace($Value)) { return $Value.Trim() }
+    return "$env:USERNAME@$env:COMPUTERNAME"
+}
+
+function Stop-Mutex([string]$Code, [string]$Reason) {
+    Write-Host ''
+    Write-Host "COMMIT MUTEX BLOCKED: $Code" -ForegroundColor Red
+    Write-Host "Reason: $Reason"
+    exit 1
 }
 
 function Get-Facts {
@@ -115,7 +153,8 @@ function Show-BaselineMoved($Facts, $State, $RemoteFacts) {
     if (Test-AdvanceReady $State $Facts $RemoteFacts) {
         Write-Host 'Resolution:'
         Write-Host 'Coordinator must run:'
-        Write-Host 'handoff.cmd advance --scope xye'
+        Write-Host 'handoff.cmd commit-lock --scope xye --owner <session>'
+        Write-Host 'handoff.cmd advance --scope xye --owner <session>'
         Write-Host 'Then retry join.'
     } else {
         Write-Host 'Resolution: Resolve branch or remote convergence before advance.'
@@ -211,6 +250,7 @@ $configPath = Join-Path $RepoRoot 'tools\handoff\HandoffConfig.psd1'
 if (-not (Test-Path -LiteralPath $configPath -PathType Leaf)) { $configPath = Join-Path $RepoRoot 'HandoffConfig.psd1' }
 $Config = Read-Config $configPath
 $StatePath = Join-Path $RepoRoot '.git\xye-handoff\state.json'
+$MutexPath = Join-Path $RepoRoot '.git\xye-handoff\commit-mutex.json'
 Assert-CanonicalWorkspace
 
 try { $facts = Get-Facts } catch { Stop-Handoff 'GIT_STATE_FAILED' $_.Exception.Message }
@@ -223,10 +263,50 @@ if ($Mode -eq 'status') {
     exit 0
 }
 
+if ($Mode -eq 'commit-lock') {
+    if ($null -eq $state -or -not [bool]$state.active) { Stop-Mutex 'NO_ACTIVE_WAVE' '没有可获取提交锁的 Active Wave。' }
+    $owner = Get-EffectiveOwner $Owner
+    $mutex = Read-Mutex
+    if ($null -ne $mutex) {
+        if ($mutex.owner -eq $owner) {
+            Write-Host "HANDOFF COMMIT-LOCK PASS: ALREADY_HELD ($owner)"
+            exit 0
+        }
+        Stop-Mutex 'COMMIT_MUTEX_HELD' "当前持有者：$($mutex.owner)。"
+    }
+    Write-Mutex ([pscustomobject]@{
+            owner = $owner
+            scope = $Scope
+            branch = $facts.Branch
+            baselineHead = $state.baselineHead
+            acquiredAt = (Get-Date).ToUniversalTime().ToString('o')
+        })
+    Write-Host "HANDOFF COMMIT-LOCK PASS: $owner"
+    Write-Host 'GitCommitPushAdvance: SERIALIZED'
+    Write-Host 'StagingRule: precise paths only; never git add .'
+    exit 0
+}
+
+if ($Mode -eq 'commit-unlock') {
+    $owner = Get-EffectiveOwner $Owner
+    $mutex = Read-Mutex
+    if ($null -eq $mutex) { Stop-Mutex 'COMMIT_MUTEX_NOT_HELD' '当前没有提交锁。' }
+    if ($mutex.owner -ne $owner) { Stop-Mutex 'COMMIT_MUTEX_OWNER_MISMATCH' "当前持有者：$($mutex.owner)。" }
+    if ($null -ne $state -and $facts.Head -ne $state.baselineHead) {
+        Stop-Mutex 'COMMIT_MUTEX_UNADVANCED' 'HEAD 已前进，必须完成 push + advance 后才能释放提交锁。'
+    }
+    Remove-Mutex
+    Write-Host "HANDOFF COMMIT-UNLOCK PASS: $owner"
+    exit 0
+}
+
 if ($Mode -eq 'join') {
     if ($null -eq $state) { Stop-Handoff 'STATE_MISSING' 'JOIN 只读且需要 Coordinator 先建立 Workspace Baseline。' }
     if (-not [bool]$state.active) { Stop-Handoff 'INACTIVE_WAVE' '当前 Workspace Wave 已 CLOSE，请由 Coordinator 执行 PREPARE。' }
-    if ($facts.Branch -ne $state.branch -or $facts.Head -ne $state.baselineHead) {
+    if ($facts.Branch -ne $state.branch) {
+        Show-BaselineMoved $facts $state (Get-RemoteFacts)
+    }
+    if ($facts.Head -ne $state.baselineHead -and -not (Test-Ancestor $state.baselineHead $facts.Head)) {
         Show-BaselineMoved $facts $state (Get-RemoteFacts)
     }
     if ($state.mode -eq 'convergence' -and $state.coordinatorScope -eq 'xye' -and $Scope -eq 'xyui') {
@@ -260,6 +340,11 @@ if ($Mode -eq 'advance') {
         Write-Host 'ADVANCE NOOP: BASELINE_ALREADY_CURRENT'
         exit 0
     }
+    $mutex = Read-Mutex
+    if ($null -eq $mutex) { Stop-Advance 'COMMIT_MUTEX_REQUIRED' 'Baseline-changing advance 必须先获取 commit-lock。' }
+    if ([string]::IsNullOrWhiteSpace($Owner)) { Stop-Advance 'COMMIT_MUTEX_REQUIRED' 'Baseline-changing advance 必须显式提供 --owner。' }
+    $owner = $Owner.Trim()
+    if ($mutex.owner -ne $owner) { Stop-Advance 'COMMIT_MUTEX_OWNER_MISMATCH' "当前持有者：$($mutex.owner)。" }
     if (-not (Test-Ancestor $oldBaseline $facts.Head)) {
         Stop-Advance 'NON_FAST_FORWARD_BASELINE' 'Old baseline 不是当前 HEAD 的祖先。'
     }
@@ -285,6 +370,7 @@ if ($Mode -eq 'advance') {
     if (($dirtyBefore -join "`n") -ne ($dirtyAfter -join "`n")) {
         Stop-Advance 'FOREIGN_DIRTY_CHANGED' 'ForeignDirty 在 advance 前后发生变化。'
     }
+    Remove-Mutex
     Write-Host ''
     Write-Host 'HANDOFF ADVANCE PASS' -ForegroundColor Green
     Write-Host "Scope: $Scope"
@@ -296,6 +382,7 @@ if ($Mode -eq 'advance') {
     Write-Host 'Ahead/Behind: 0/0'
     Write-Host "ForeignDirty: PRESERVED ($($dirtyAfter.Count))"
     Write-Host 'Active Wave: PRESERVED'
+    Write-Host 'Commit Mutex: RELEASED'
     exit 0
 }
 
@@ -317,7 +404,8 @@ if ($Mode -eq 'prepare') {
         if ($facts.Head -ne $state.baselineHead -and (Test-AdvanceReady $state $facts $remoteFacts)) {
             Write-Host 'Current wave does not require a new prepare.'
             Write-Host 'Coordinator action:'
-            Write-Host 'handoff.cmd advance --scope xye'
+            Write-Host 'handoff.cmd commit-lock --scope xye --owner <session>'
+            Write-Host 'handoff.cmd advance --scope xye --owner <session>'
         }
         Write-Host 'Do NOT manually edit state.json, reset HEAD, rebuild workspace, or stash ForeignDirty.'
         exit 1
