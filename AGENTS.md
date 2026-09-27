@@ -1,3 +1,30 @@
+# SESSION HANDOFF — MANDATORY
+
+> **本节优先于后续 Repository Bootstrap、Build/Test、任务规划和代码修改规则。**
+
+每个新的 XuanYuEngine 开发会话，在规划、编辑、测试、运行、分配并行任务或改变 Git 状态之前，必须：
+
+1. 读取 `tools/handoff/HANDOFF-PROTOCOL.md`。
+2. 执行 `tools\handoff\handoff.cmd`。
+3. 只有输出 `HANDOFF PASS` 后才允许开始开发。
+4. 若输出 `HANDOFF BLOCKED`，立即停止并报告 Block Code / Reason；禁止自行 stash、merge、rebase、force push 或绕过协议。
+5. 不得自行猜测 Active Branch、Canonical Workspace、SDK 路径或本地 dirty 文件的保留优先级。
+
+交接权威顺序：
+
+```text
+本地独有正式 Commit > GitHub Remote > 本地未提交 / untracked 残留
+```
+
+当本地相对 Active Remote **Ahead = 0 且 Behind > 0** 时，执行 **REMOTE WINS**：本地未提交 tracked 修改和 untracked 残留不得阻断同步，由交接程序清理并精确对齐远端。只有本地存在 Remote 没有的正式 Commit 时才阻断自动覆盖。
+
+.NET SDK 必须由交接程序通过正式 `scripts/resolve-dotnet.ps1` Resolver Chain 解析。已登记首选路径：
+
+- 私人电脑：`D:\MyApp\sdk-dotnet\dotnet.exe`
+- 工作电脑：`E:\MyApp\sdk-dotnet\dotnet.exe`
+
+PATH 中没有 `dotnet` 不等于 SDK 不存在。
+
 # AGENTS.md — XuanYu Engine（玄域引擎）AI 协作入口
 
 > 仓库内 AI 编码工具统一入口。  
@@ -25,7 +52,8 @@
 ## 每轮入口
 
 ```text
-0. Repository Bootstrap：scripts/xye-bootstrap.ps1
+-1. Session Handoff：tools/handoff/handoff.cmd（HANDOFF PASS 后继续）
+0. Repository Bootstrap：由 Handoff 在同步完成后执行 scripts/xye-bootstrap.ps1
 1. 接管核对 Git / 工作区
 2. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
 3. MEDIUM / HIGH 或已登记任务域 → Knowledge Preflight
