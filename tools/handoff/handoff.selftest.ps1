@@ -11,7 +11,9 @@ function Assert-True([bool]$Condition, [string]$Message) {
 }
 
 function Invoke-Handoff([string[]]$Arguments) {
-    $output = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath @Arguments 2>&1)
+    $shell = (Get-Command pwsh.exe -ErrorAction SilentlyContinue).Source
+    if ([string]::IsNullOrWhiteSpace($shell)) { $shell = 'powershell.exe' }
+    $output = @(& $shell -NoProfile -ExecutionPolicy Bypass -File $scriptPath @Arguments 2>&1)
     [pscustomobject]@{ ExitCode = $LASTEXITCODE; Text = ($output -join [Environment]::NewLine) }
 }
 
@@ -171,3 +173,5 @@ finally {
     if (Test-Path -LiteralPath $root) { Remove-Item -LiteralPath $root -Recurse -Force }
     if (Test-Path -LiteralPath $remote) { Remove-Item -LiteralPath $remote -Recurse -Force }
 }
+
+exit 0
