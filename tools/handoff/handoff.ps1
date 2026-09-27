@@ -33,7 +33,7 @@ function Invoke-Git([Parameter(ValueFromRemainingArguments = $true)][string[]]$G
     }
 
     if ($exitCode -ne 0) {
-        throw "git $($GitArgs -join ' ') failed with exit code $exitCode:`n$($output -join [Environment]::NewLine)"
+        throw "git $($GitArgs -join ' ') failed with exit code ${exitCode}:`n$($output -join [Environment]::NewLine)"
     }
     return @($output | ForEach-Object { "$_" })
 }
