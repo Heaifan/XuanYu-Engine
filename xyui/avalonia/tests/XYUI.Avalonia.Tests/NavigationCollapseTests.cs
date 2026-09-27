@@ -8,11 +8,12 @@ namespace XYUI.Avalonia.Tests;
 public class NavigationCollapseTests
 {
     [Fact]
-    public void XYUI1_Collapsed_By_Default_And_XYUI2_Expanded()
+    public void Latest_gallery_page_is_selected_and_its_section_is_expanded()
     {
         var vm = new XYUI1DocumentationViewModel();
         Assert.False(vm.IsXYUI1Expanded);   // XYUI-1 FROZEN → 默认折叠
-        Assert.True(vm.IsXYUI2Expanded);    // XYUI-2 当前工作区 → 默认展开
+        Assert.True(vm.IsXYUI4Expanded);   // Gallery 默认落到最新页面
+        Assert.Equal(XYUI4DocumentationCatalog.LatestComponentId, vm.SelectedXYUI4Item?.Id);
     }
 
     [Fact]

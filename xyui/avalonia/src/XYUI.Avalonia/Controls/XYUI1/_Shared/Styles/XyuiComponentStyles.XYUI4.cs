@@ -9,7 +9,56 @@ namespace XYUI.Avalonia.Controls;
 
 public static partial class XyuiComponentStyles
 {
-    static void AddXYUI4(Styles styles) { Spinner(styles); LoadingIndicator(styles); ProgressBar(styles); }
+    static void AddXYUI4(Styles styles) { HoverState(styles); Spinner(styles); LoadingIndicator(styles); ProgressBar(styles); SelectionGestures(styles); SelectionOutline(styles); BoundingBox(styles); }
+
+    static void SelectionGestures(Styles styles)
+    {
+        var marquee = new Style(x => x.OfType<XYMarqueeSelection>().Class("xyui-marquee-selection"));
+        Brush(marquee, XYMarqueeSelection.BorderBrushProperty, "XY.Brush.Editor.Selection"); styles.Add(marquee);
+        var crossing = new Style(x => x.OfType<XYMarqueeSelection>().Class("xyui-marquee-selection-crossing"));
+        Brush(crossing, XYMarqueeSelection.BorderBrushProperty, "XY.Brush.Editor.MultiSelection"); styles.Add(crossing);
+        var lasso = new Style(x => x.OfType<XYLassoSelection>().Class("xyui-lasso-selection"));
+        Brush(lasso, XYLassoSelection.StrokeProperty, "XY.Brush.Editor.Selection"); styles.Add(lasso);
+    }
+
+    static void SelectionOutline(Styles styles)
+    {
+        var outline = new Style(x => x.OfType<XYSelectionOutline>().Class("xyui-selection-outline"));
+        Brush(outline, XYSelectionOutline.AccentBrushProperty, "XY.Brush.Editor.Selection"); styles.Add(outline);
+    }
+
+    static void BoundingBox(Styles styles)
+    {
+        var box = new Style(x => x.OfType<XYBoundingBox>().Class("xyui-bounding-box"));
+        Brush(box, XYBoundingBox.BorderBrushProperty, "XY.Brush.Editor.BoundingBox");
+        Brush(box, XYBoundingBox.HandleBrushProperty, "XY.Brush.Editor.Handle"); styles.Add(box);
+    }
+
+    static void HoverState(Styles styles)
+    {
+        var root = new Style(x => x.OfType<XYHoverState>().Class("xyui-hover-state"));
+        root.Setters.Add(new Setter(Border.BackgroundProperty, Brushes.Transparent));
+        root.Setters.Add(new Setter(Border.BorderBrushProperty, Brushes.Transparent));
+        root.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(0))); styles.Add(root);
+        HoverSurface(styles, "xyui-hover-state-surface", Border.BackgroundProperty, "XY.Brush.State.Color.Hover");
+        HoverSurface(styles, "xyui-hover-state-border", Border.BorderBrushProperty, "XY.Brush.State.Color.Hover");
+        HoverSurface(styles, "xyui-hover-state-outline", Border.BorderBrushProperty, "XY.Brush.Accent.Default");
+        HoverSurface(styles, "xyui-hover-state-handle", Border.BorderBrushProperty, "XY.Brush.State.Color.Hover");
+        foreach (var cls in new[] { "border", "outline", "handle" })
+        {
+            var thickness = cls == "outline" ? 1.5 : 1d;
+            var style = new Style(x => x.OfType<XYHoverState>().Class(cls == "outline" ? "xyui-hover-state-outline" : $"xyui-hover-state-{cls}").Class("xyui-hover-state-hovered"));
+            style.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(thickness))); styles.Add(style);
+        }
+        var selected = new Style(x => x.OfType<XYHoverState>().Class("xyui-hover-state-selected"));
+        Brush(selected, Border.BackgroundProperty, "XY.Brush.Surface.Selected"); styles.Add(selected);
+    }
+
+    static void HoverSurface(Styles styles, string cls, AvaloniaProperty property, string token)
+    {
+        var style = new Style(x => x.OfType<XYHoverState>().Class(cls).Class("xyui-hover-state-hovered"));
+        Brush(style, property, token); styles.Add(style);
+    }
 
     static void Spinner(Styles styles)
     {

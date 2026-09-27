@@ -12,7 +12,7 @@
     </DataTemplate>
     <DataTemplate x:Key="FoundationNavItemTemplate" x:DataType="g:FoundationNavigationItem">
       <StackPanel Spacing="1">
-        <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
+        <TextBlock Text="{Binding DisplayChineseName}" Classes="xyui-text-label" />
         <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
       </StackPanel>
     </DataTemplate>
@@ -22,8 +22,14 @@
       <ScrollViewer x:Name="NavigationScrollHost" HorizontalScrollBarVisibility="Disabled">
         <StackPanel Margin="12,16">
           <TextBlock Text="文档导航" Classes="xyui-heading-panel" Margin="8,0,8,14" />
-          <TextBlock Text="Foundation" Classes="xyui-text-section" Margin="8,0,8,5" />
-          <ListBox Classes="nav-foundation" ItemsSource="{Binding FoundationItems}" SelectedItem="{Binding SelectedFoundation}" ItemTemplate="{StaticResource FoundationNavItemTemplate}" />
+          <Grid Classes="nav-section-header" Tapped="OnToggleFoundation">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="16" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <Path Grid.Column="0" Classes="nav-chevron" Data="M4 2 L9 7 L4 12" x:CompileBindings="False" IsVisible="{Binding !IsFoundationExpanded}" />
+            <Path Grid.Column="0" Classes="nav-chevron" Data="M2 4 L7 9 L12 4" x:CompileBindings="False" IsVisible="{Binding IsFoundationExpanded}" />
+            <TextBlock Grid.Column="1" Text="Foundation" Classes="xyui-text-section" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2" Text="13/13" Classes="xyui-text-caption" VerticalAlignment="Center" />
+          </Grid>
+          <ListBox Classes="nav-foundation" IsVisible="{Binding IsFoundationExpanded}" ItemsSource="{Binding FoundationItems}" SelectedItem="{Binding SelectedFoundation}" ItemTemplate="{StaticResource FoundationNavItemTemplate}" />
           <Grid Classes="nav-section-header" Tapped="OnToggleXyui1">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="16" />

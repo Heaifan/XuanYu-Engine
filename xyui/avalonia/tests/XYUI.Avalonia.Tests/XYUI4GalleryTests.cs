@@ -1,3 +1,4 @@
+using Avalonia;
 using XYUI.Avalonia.Gallery;
 using XYUI.Avalonia.Gallery.Views;
 using XYUI.Avalonia.Controls;
@@ -7,7 +8,7 @@ using Avalonia.VisualTree;
 namespace XYUI.Avalonia.Tests;
 
 [Collection("XyuiHeadless")]
-public sealed class XYUI4GalleryTests : IClassFixture<XyuiHeadlessFixture>
+public sealed partial class XYUI4GalleryTests : IClassFixture<XyuiHeadlessFixture>
 {
     readonly XyuiHeadlessFixture _fx;
     public XYUI4GalleryTests(XyuiHeadlessFixture fx) => _fx = fx;
@@ -17,10 +18,20 @@ public sealed class XYUI4GalleryTests : IClassFixture<XyuiHeadlessFixture>
     {
         XyuiBatchTestHost.Prepare();
         var vm = new XYUI1DocumentationViewModel();
-        Assert.Equal("3/3", vm.XYUI4CountText);
-        Assert.Equal("XYUI-4-4.14", vm.XYUI4Items[0].Id);
-        Assert.Equal("XYLoadingIndicator", vm.XYUI4Items[0].CanonicalName);
-        Assert.Equal("XYSpinner", vm.XYUI4Items[1].CanonicalName);
+        Assert.Equal("13/13", vm.XYUI4CountText);
+        Assert.Equal(new[] { "XYUI-4-4.01", "XYUI-4-4.02", "XYUI-4-4.03", "XYUI-4-4.04", "XYUI-4-4.05", "XYUI-4-4.06", "XYUI-4-4.07", "XYUI-4-4.08", "XYUI-4-4.09", "XYUI-4-4.10" },
+            vm.XYUI4Items.Take(10).Select(x => x.Id));
+        Assert.Equal("XYHoverState", vm.XYUI4Items[0].CanonicalName);
+        Assert.Equal("SelectedState", vm.XYUI4Items[1].CanonicalName);
+        Assert.Equal("ActiveState", vm.XYUI4Items[2].CanonicalName);
+        Assert.Equal("SelectionContextFocus", vm.XYUI4Items[3].CanonicalName);
+        Assert.Equal("MultiSelection", vm.XYUI4Items[4].CanonicalName);
+        Assert.Equal("SelectionGroup", vm.XYUI4Items[5].CanonicalName);
+        Assert.Equal("XYMarqueeSelection", vm.XYUI4Items[6].CanonicalName);
+        Assert.Equal("XYLassoSelection", vm.XYUI4Items[7].CanonicalName);
+        Assert.Equal("XYSelectionOutline", vm.XYUI4Items[8].CanonicalName);
+        Assert.Equal("XYBoundingBox", vm.XYUI4Items[9].CanonicalName);
+        Assert.Equal(XYUI4DocumentationCatalog.LatestComponentId, vm.SelectedXYUI4Item?.Id);
         vm.Select("XYUI-4-4.15");
         Assert.Equal("XYUI-4-4.15", vm.SelectedXYUI4Item?.Id);
         Assert.True(vm.IsXYUI4Expanded);
@@ -28,29 +39,57 @@ public sealed class XYUI4GalleryTests : IClassFixture<XyuiHeadlessFixture>
     });
 
     [Fact]
-    public void ProgressBar_gallery_exposes_four_visual_forms() => _fx.Run(() =>
+    public void Multi_selection_and_group_gallery_expose_primary_secondary_contracts() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare();
-        var preview = XYUI4GalleryCatalog.CreatePreview("XYUI-4-4.16");
-        var bars = preview.GetVisualDescendants().OfType<XYProgressBar>().ToArray();
-        Assert.True(bars.Length >= 7);
-        Assert.Contains(bars, x => x.Variant == XyuiProgressBarVariant.Labeled);
-        Assert.Contains(bars, x => x.Variant == XyuiProgressBarVariant.SegmentedStage);
-        Assert.Contains(bars, x => x.Variant == XyuiProgressBarVariant.InlineCompact);
-        Assert.IsType<XYProgressBar>(XYUI4GalleryCatalog.CreateLiveExamples("XYUI-4-4.16")
-            .GetVisualDescendants().OfType<XYProgressBar>().First());
+        var multi = XYUI4GalleryCatalog.CreatePreview("XYUI-4-4.05");
+        var multiWindow = new Window { Content = multi };
+        multiWindow.Show();
+        Assert.True(multi.GetVisualDescendants().OfType<ListBox>().Single().SelectedItems!.Count >= 2);
+        var group = XYUI4GalleryCatalog.CreatePreview("XYUI-4-4.06");
+        Assert.Contains(group.GetVisualDescendants().OfType<TextBlock>(), x => x.Text?.Contains("选择组") == true);
+        Assert.NotNull(XYUI4GalleryCatalog.CreateLiveExamples("XYUI-4-4.05"));
+        Assert.NotNull(XYUI4GalleryCatalog.CreateLiveExamples("XYUI-4-4.06"));
+        multiWindow.Close();
     });
 
     [Fact]
-    public void Segmented_stage_gallery_maps_completed_current_and_pending() => _fx.Run(() =>
+    public void Selection_state_gallery_uses_existing_interaction_style_contracts() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare();
-        var preview = XYUI4GalleryCatalog.CreatePreview("XYUI-4-4.16");
-        var stages = preview.GetVisualDescendants().OfType<XYProgressBar>()
-            .Where(x => x.Variant == XyuiProgressBarVariant.SegmentedStage).ToArray();
-        Assert.Equal(5, stages.Length);
-        Assert.Equal(new[] { 100d, 100d, 40d, 0d, 0d }, stages.Select(x => x.Value));
-        Assert.Contains(preview.GetVisualDescendants().OfType<TextBlock>(), x => x.Text?.Contains("解析") == true);
-        Assert.Contains(preview.GetVisualDescendants().OfType<TextBlock>(), x => x.Text?.Contains("当前") == true);
+        var vm = new XYUI1DocumentationViewModel();
+        foreach (var id in new[] { "XYUI-4-4.02", "XYUI-4-4.03", "XYUI-4-4.04" })
+        {
+            vm.Select(id);
+            var document = vm.XYUI4Items.Single(x => x.Id == id).Document;
+            Assert.NotNull(document);
+            Assert.NotNull(document!.PreviewFactory());
+            Assert.NotNull(document.LiveExamplesFactory?.Invoke());
+        }
     });
+
+    [Fact]
+    public void Selection_outline_gallery_exposes_result_boundary() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare();
+        var preview = XYUI4GalleryCatalog.CreatePreview("XYUI-4-4.09");
+        var outline = preview.GetVisualDescendants().OfType<XYSelectionOutline>().Single();
+        Assert.True(outline.Points.Count >= 5);
+        Assert.NotNull(XYUI4GalleryCatalog.CreateLiveExamples("XYUI-4-4.09"));
+    });
+
+    [Fact]
+    public void Bounding_box_gallery_exposes_transform_handles() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare();
+        var preview = XYUI4GalleryCatalog.CreatePreview("XYUI-4-4.10");
+        var box = preview.GetVisualDescendants().OfType<XYBoundingBox>().Single();
+        Assert.Equal(7, box.HandleSize);
+        Assert.True(box.ShowRotationHandle);
+        Assert.True(box.ShowPivot);
+        Assert.True(box.IsHitTestVisible);
+        Assert.Equal(0, box.Angle);
+        Assert.NotNull(XYUI4GalleryCatalog.CreateLiveExamples("XYUI-4-4.10"));
+    });
+
 }

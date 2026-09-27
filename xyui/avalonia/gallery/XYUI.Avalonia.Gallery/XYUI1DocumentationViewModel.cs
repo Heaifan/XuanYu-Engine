@@ -16,9 +16,11 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
     public IReadOnlyList<XYUI1NavigationItem> Items { get; }
     public IReadOnlyList<XYUI1NavigationItem> ComponentItems => Items.Skip(1).ToArray();
     // G0-R1 · 树形章节（非 Accordion 卡片；仅改导航呈现）
+    bool _isFoundation;
+    public bool IsFoundationExpanded { get => _isFoundation; set { if (_isFoundation == value) return; _isFoundation = value; PropertyChanged?.Invoke(this, new(nameof(IsFoundationExpanded))); } }
     bool _isX1;
     public bool IsXYUI1Expanded { get => _isX1; set { if (_isX1 == value) return; _isX1 = value; PropertyChanged?.Invoke(this, new(nameof(IsXYUI1Expanded))); } }
-    bool _isX2 = true;
+    bool _isX2;
     public bool IsXYUI2Expanded { get => _isX2; set { if (_isX2 == value) return; _isX2 = value; PropertyChanged?.Invoke(this, new(nameof(IsXYUI2Expanded))); } }
     public string XYUI1CountText => "24/24";
     public string XYUI2CountText => "24/24";
@@ -64,7 +66,8 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
         Items = new[] { new XYUI1NavigationItem("XYUI-1", "模块概览", "Text & Information", null) }.Concat(documents).ToArray();
         _selectedItem = Items[0];
         SelectedDocument = new XYUI1ModuleOverviewView { DataContext = this };
-        BootstrapXYUI2(); BootstrapXYUI3(); BootstrapXYUI4();
+        BootstrapXYUI2(); BootstrapXYUI3(); BootstrapXYUI4(); Select(XYUI4DocumentationCatalog.LatestComponentId);
+        IsFoundationExpanded = false; IsXYUI1Expanded = false; IsXYUI2Expanded = false; IsXYUI3Expanded = false; IsXYUI4Expanded = false;
     }
 
     public void Select(string id)
@@ -72,6 +75,7 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
         var item = Items.FirstOrDefault(x => x.Id == id);
         if (item is not null)
         {
+            IsFoundationExpanded = false;
             IsXYUI1Expanded = true;
             IsXYUI2Expanded = false;
             IsXYUI3Expanded = false;

@@ -24,7 +24,7 @@
                      ToolTip.Tip="启动场景模拟">
           <StackPanel Orientation="Horizontal" Spacing="4">
             <xy:XYIcon Icon="Play" Size="Small"/>
-            <TextBlock Text="运行"/>
+            <xy:XYLabel Text="运行"/>
           </StackPanel>
         </xy:XYButton>
         <xy:XYButton Variant="Danger"
@@ -34,7 +34,7 @@
                      ToolTip.Tip="停止场景模拟">
           <StackPanel Orientation="Horizontal" Spacing="4">
             <xy:XYIcon Icon="Stop" Size="Small"/>
-            <TextBlock Text="停止"/>
+            <xy:XYLabel Text="停止"/>
           </StackPanel>
         </xy:XYButton>
       </StackPanel>

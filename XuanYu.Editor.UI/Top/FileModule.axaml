@@ -39,7 +39,7 @@
                    ToolTip.Tip="打开场景">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Open" Size="Medium"/>
-          <TextBlock Text="打开"/>
+          <xy:XYLabel Text="打开"/>
         </StackPanel>
       </xy:XYButton>
       <xy:XYButton Variant="Secondary"
@@ -52,7 +52,7 @@
                    ToolTip.Tip="保存场景">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Save" Size="Medium"/>
-          <TextBlock Text="保存"/>
+          <xy:XYLabel Text="保存"/>
         </StackPanel>
       </xy:XYButton>
       <xy:XYSeparator Variant="VerticalSplit"
@@ -67,7 +67,7 @@
                    ToolTip.Tip="撤销">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Undo" Size="Medium"/>
-          <TextBlock Text="撤销"/>
+          <xy:XYLabel Text="撤销"/>
         </StackPanel>
       </xy:XYButton>
       <xy:XYButton Variant="Secondary"
@@ -79,7 +79,7 @@
                    ToolTip.Tip="重做">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Redo" Size="Medium"/>
-          <TextBlock Text="重做"/>
+          <xy:XYLabel Text="重做"/>
         </StackPanel>
       </xy:XYButton>
     </StackPanel>

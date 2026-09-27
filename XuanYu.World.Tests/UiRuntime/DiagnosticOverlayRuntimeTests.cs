@@ -39,7 +39,7 @@ public sealed class DiagnosticOverlayRuntimeTests : IDisposable
             Dispatcher.UIThread.RunJobs(); window.UpdateLayout();
             Assert.Equal(bounds, target.Bounds); Assert.Equal(extent, scroll.Extent);
             var popup = UiRuntimeTestHost.Descendants<Avalonia.Controls.Primitives.Popup>(host).Single();
-            Assert.True(popup.ShouldUseOverlayLayer); Assert.False(popup.TakesFocusFromNativeControl);
+            Assert.False(popup.ShouldUseOverlayLayer); Assert.False(popup.TakesFocusFromNativeControl);
             Assert.Equal((1, 1), (host.ActivePopupCount, host.ActiveBadgeCount)); window.Close();
         });
     }

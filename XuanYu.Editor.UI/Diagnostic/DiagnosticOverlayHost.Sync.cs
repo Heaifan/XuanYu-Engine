@@ -30,7 +30,9 @@ public partial class DiagnosticOverlayHost
                 Placement = PlacementMode.TopEdgeAlignedLeft,
                 IsLightDismissEnabled = false,
                 TakesFocusFromNativeControl = false,
-                ShouldUseOverlayLayer = true,
+                // Vulkan NativeControlHost is a native HWND and covers Avalonia's
+                // in-window OverlayLayer; use a native Popup root for badges.
+                ShouldUseOverlayLayer = false,
                 Child = new DiagnosticBadge(target, _clipboard),
             };
             PopupOwner.Children.Add(popup);

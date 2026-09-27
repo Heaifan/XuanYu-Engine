@@ -8,7 +8,7 @@ namespace XYUI.Avalonia.Gallery;
 
 public static partial class XYUI3GalleryCatalog
 {
-    public const string ContextToolbarId = "XYUI-3-3.17-context";
+    public const string ContextToolbarId = "XYUI-3-3.25";
     public static Control ContextToolbarPreview() => BuildDemos();
     static Control BuildDemos()
     {
@@ -47,5 +47,5 @@ public static partial class XYUI3LiveExamplesFactory
 
 public static partial class XYUI3DocumentationCatalog
 {
-    public static XYUI1ComponentDocument ContextToolbarDocument() => new(XYUI3GalleryCatalog.ContextToolbarId, "上下文工具栏", "Context Toolbar", "分组卡片式上下文工具栏与一体展开 Board。", "用于编辑器上下文模式的紧凑工具组与单层级下拉操作。", XYUI3GalleryCatalog.ContextToolbarPreview, ["<c:XYContextToolbar />", "<c:XYContextDropdownBoard />"], [new("A + A3 + A4", "48 DIP toolbar / compact board", "Editor context")], [new("Open", "单 Popup Board"), new("Keyboard", "Esc / arrows / Enter")], [], [], "XYUI.Avalonia.Controls.XYContextToolbar") { CanonicalIdentity = "XYUI-3-3.17~3.22 · Context Toolbar Gallery", Category = "XYUI-3 · Context Toolbar", Acceptance = "GALLERY IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE", LiveExamplesFactory = XYUI3LiveExamplesFactory.CreateContextToolbarLiveExamples, CompositionFactory = XYUI3LiveExamplesFactory.CreateContextToolbarComposition };
+    public static XYUI1ComponentDocument ContextToolbarDocument() => new(XYUI3GalleryCatalog.ContextToolbarId, "上下文工具栏", "Context Toolbar", "分组卡片式上下文工具栏与一体展开 Board。", "用于编辑器上下文模式的紧凑工具组与单层级下拉操作。", XYUI3GalleryCatalog.ContextToolbarPreview, ["<c:XYContextToolbar />", "<c:XYContextDropdownBoard />"], [new("A + A3 + A4", "48 DIP toolbar / compact board", "Editor context")], [new("Open", "单 Popup Board"), new("Keyboard", "Esc / arrows / Enter")], [], [], "XYUI.Avalonia.Controls.XYContextToolbar") { CanonicalIdentity = "XYUI-3-3.25 · Context Toolbar Gallery", Category = "XYUI-3 · Context Toolbar", Acceptance = "GALLERY IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE", LiveExamplesFactory = XYUI3LiveExamplesFactory.CreateContextToolbarLiveExamples, CompositionFactory = XYUI3LiveExamplesFactory.CreateContextToolbarComposition };
 }

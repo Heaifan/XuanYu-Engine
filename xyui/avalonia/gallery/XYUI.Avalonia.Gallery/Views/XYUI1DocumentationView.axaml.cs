@@ -12,6 +12,12 @@ public partial class XYUI1DocumentationView : UserControl
     }
 
     // G0-R1 · 整行标题点击 = 展开/折叠（不影响右侧当前页面）
+    private void OnToggleFoundation(object? sender, TappedEventArgs e)
+    {
+        if (DataContext is XYUI1DocumentationViewModel vm)
+            vm.IsFoundationExpanded = !vm.IsFoundationExpanded;
+    }
+
     private void OnToggleXyui1(object? sender, TappedEventArgs e)
     {
         if (DataContext is XYUI1DocumentationViewModel vm)

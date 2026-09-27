@@ -23,7 +23,7 @@
                    ToolTip.Tip="聚焦选择对象">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Focus" Size="Small"/>
-          <TextBlock Text="聚焦"/>
+          <xy:XYLabel Text="聚焦"/>
         </StackPanel>
       </xy:XYButton>
       <xy:XYButton Variant="Secondary"
@@ -35,7 +35,7 @@
                    ToolTip.Tip="查看全部">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="ViewAll" Size="Small"/>
-          <TextBlock Text="全览"/>
+          <xy:XYLabel Text="全览"/>
         </StackPanel>
       </xy:XYButton>
       <xy:XYButton Variant="Secondary"
@@ -47,7 +47,7 @@
                    ToolTip.Tip="平移视图">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Pan" Size="Small"/>
-          <TextBlock Text="平移"/>
+          <xy:XYLabel Text="平移"/>
         </StackPanel>
       </xy:XYButton>
       <xy:XYButton Variant="Secondary"
@@ -59,7 +59,7 @@
                    ToolTip.Tip="环绕视图">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Orbit" Size="Small"/>
-          <TextBlock Text="环绕"/>
+          <xy:XYLabel Text="环绕"/>
         </StackPanel>
       </xy:XYButton>
       <xy:XYMenuBar Classes="compact" ShowDivider="False" VerticalAlignment="Center">

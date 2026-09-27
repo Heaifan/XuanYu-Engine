@@ -19,7 +19,7 @@ public record XYUI1ComponentDocument(
     IReadOnlyList<XYUIDocToken> Tokens, string AvaloniaType)
 {
     public string CanonicalDisplay => $"{CanonicalIdentity} · {EnglishName}";
-    public string DisplayId => Id.EndsWith("-context", StringComparison.Ordinal) ? Id[..^8] + "~3.22" : Id;
+    public string DisplayId => Id;
     public string CanonicalIdentity { get; init; } = "";
     public string KnownGap { get; init; } = "";
     public string Category { get; init; } = "Canonical Stable · Typography / Text";
@@ -60,8 +60,12 @@ public sealed partial record XYUI1NavigationItem
         if (parts.Length < 3 || parts[0] != "XYUI") return null;
         var leaf = parts[2]; var dot = leaf.LastIndexOf('.');
         if (dot >= 0) leaf = leaf[(dot + 1)..];
-        return id.EndsWith("-context", StringComparison.Ordinal) ? $"{parts[1]}.{leaf}~3.22" : $"{parts[1]}.{leaf}";
+        return $"{parts[1]}.{leaf}";
     }
 }
 
-public sealed record FoundationNavigationItem(string Id, string ChineseName, string CanonicalName);
+public sealed record FoundationNavigationItem(string Id, string ChineseName, string CanonicalName)
+{
+    public string NavigationNumber { get; init; } = "";
+    public string DisplayChineseName => $"{NavigationNumber} · {ChineseName}";
+}

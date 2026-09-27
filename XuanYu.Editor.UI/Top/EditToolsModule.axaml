@@ -25,7 +25,7 @@
                          ToolTip.Tip="选择工具">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Select" Size="Small"/>
-          <TextBlock Text="选择"/>
+          <xy:XYLabel Text="选择"/>
         </StackPanel>
       </xy:XYToggleButton>
       <xy:XYToggleButton MinHeight="34"
@@ -36,7 +36,7 @@
                          ToolTip.Tip="框选功能尚未实装（即将推出）">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="BoxSelect" Size="Small"/>
-          <TextBlock Text="框选"/>
+          <xy:XYLabel Text="框选"/>
         </StackPanel>
       </xy:XYToggleButton>
       <xy:XYToggleButton MinHeight="34"
@@ -49,7 +49,7 @@
                          ToolTip.Tip="移动工具">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Move" Size="Small"/>
-          <TextBlock Text="移动"/>
+          <xy:XYLabel Text="移动"/>
         </StackPanel>
       </xy:XYToggleButton>
       <xy:XYToggleButton MinHeight="34"
@@ -62,7 +62,7 @@
                          ToolTip.Tip="旋转工具">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Rotate" Size="Small"/>
-          <TextBlock Text="旋转"/>
+          <xy:XYLabel Text="旋转"/>
         </StackPanel>
       </xy:XYToggleButton>
       <xy:XYToggleButton MinHeight="34"
@@ -75,7 +75,7 @@
                          ToolTip.Tip="缩放工具">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Scale" Size="Small"/>
-          <TextBlock Text="缩放"/>
+          <xy:XYLabel Text="缩放"/>
         </StackPanel>
       </xy:XYToggleButton>
     </StackPanel>

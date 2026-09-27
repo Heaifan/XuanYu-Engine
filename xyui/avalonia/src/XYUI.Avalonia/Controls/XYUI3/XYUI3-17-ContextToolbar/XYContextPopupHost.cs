@@ -39,7 +39,7 @@ internal sealed class XYContextPopupHost
     internal void Open()
     {
         if (_anchor is null) return;
-        _popup.PlacementTarget = _anchor; _popup.IsVisible = true; _popup.IsOpen = true; RefreshBounds();
+        _popup.PlacementTarget = _anchor; RefreshBounds(); _popup.IsVisible = true; _popup.IsOpen = true;
     }
 
     internal void Close()
@@ -63,6 +63,7 @@ internal sealed class XYContextPopupHost
         if (double.IsNaN(_surface.Width) || double.IsNaN(_surface.Height) || Math.Abs(_surface.Width - nextWidth) > 0.1 || Math.Abs(_surface.Height - nextHeight) > 0.1)
         { _surface.Width = nextWidth; _surface.Height = nextHeight; var bounds = new Rect(new Size(nextWidth, nextHeight)); _surface.Measure(bounds.Size); _surface.Arrange(bounds); }
         Canvas.SetLeft(_root, 0); Canvas.SetTop(_root, 0);
+        if (_popup.IsOpen) RefreshPlacement();
     }
 
     internal void SetChildPosition(Border child, double x, double y) { Canvas.SetLeft(child, x); Canvas.SetTop(child, y); }

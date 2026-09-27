@@ -8,6 +8,7 @@ public static partial class XYUI4GalleryCatalog
 {
     public static Control CreatePreview(string id) => id switch
     {
+        "XYUI-4-4.01" => HoverPreview(), "XYUI-4-4.02" => SelectedPreview(), "XYUI-4-4.03" => ActivePreview(), "XYUI-4-4.04" => FocusPreview(), "XYUI-4-4.05" => MultiSelectionPreview(), "XYUI-4-4.06" => SelectionGroupPreview(), "XYUI-4-4.07" => MarqueePreview(), "XYUI-4-4.08" => LassoPreview(), "XYUI-4-4.09" => SelectionOutlinePreview(), "XYUI-4-4.10" => BoundingBoxPreview(),
         "XYUI-4-4.14" => LoadingPreview(),
         "XYUI-4-4.15" => SpinnerPreview(),
         "XYUI-4-4.16" => ProgressBarPreview(),
@@ -16,11 +17,31 @@ public static partial class XYUI4GalleryCatalog
 
     public static Control CreateLiveExamples(string id) => id switch
     {
+        "XYUI-4-4.01" => HoverLiveExample(), "XYUI-4-4.02" => SelectedLiveExample(), "XYUI-4-4.03" => ActiveLiveExample(), "XYUI-4-4.04" => FocusLiveExample(), "XYUI-4-4.05" => MultiSelectionLiveExample(), "XYUI-4-4.06" => SelectionGroupLiveExample(), "XYUI-4-4.07" => MarqueeLiveExample(), "XYUI-4-4.08" => LassoLiveExample(), "XYUI-4-4.09" => SelectionOutlineLiveExample(), "XYUI-4-4.10" => BoundingBoxLiveExample(),
         "XYUI-4-4.14" => LoadingLiveExample(),
         "XYUI-4-4.15" => SpinnerLiveExample(),
         "XYUI-4-4.16" => ProgressBarLiveExample(),
         _ => new TextBlock { Text = "未注册组件" }
     };
+
+    static Control HoverPreview() => new StackPanel { Spacing = 8, Children =
+    {
+        SampleHover(XyuiHoverStateVariant.Surface, "Surface"), SampleHover(XyuiHoverStateVariant.Border, "Border"),
+        SampleHover(XyuiHoverStateVariant.Outline, "Outline"), SampleHover(XyuiHoverStateVariant.Handle, "Handle")
+    } };
+
+    static Control SampleHover(XyuiHoverStateVariant variant, string label) => new XYHoverState
+    {
+        Variant = variant, IsHovered = true, Child = new XYCaption { Text = $"{label} · Hover" }, Width = 220, Height = 28
+    };
+
+    static Control HoverLiveExample()
+    {
+        var state = new XYHoverState { Variant = XyuiHoverStateVariant.Surface, Child = new XYCaption { Text = "移动指针观察 Hover" }, Width = 220, Height = 32 };
+        var selected = new XYHoverState { Variant = XyuiHoverStateVariant.Surface, IsSelected = true, Child = new XYCaption { Text = "Selected + Hover" }, Width = 220, Height = 32 };
+        var disabled = new XYHoverState { Variant = XyuiHoverStateVariant.Surface, IsEnabled = false, Child = new XYCaption { Text = "Disabled" }, Width = 220, Height = 32 };
+        return new StackPanel { Spacing = 8, Children = { state, selected, disabled } };
+    }
 
     static Control LoadingPreview() => new StackPanel
     {

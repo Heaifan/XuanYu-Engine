@@ -1,5 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
+using System.Globalization;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -12,6 +14,23 @@ public abstract class XyuiTextComponent : TextBlock
     }
 
     public abstract string CanonicalId { get; }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var arranged = base.ArrangeOverride(finalSize);
+        RenderTransform = SingleLineTransform(finalSize);
+        return arranged;
+    }
+
+    TranslateTransform? SingleLineTransform(Size finalSize)
+    {
+        if (string.IsNullOrEmpty(Text) || TextWrapping != TextWrapping.NoWrap || Text.Contains('\n')) return null;
+        var typeface = new Typeface(FontFamily, FontStyle, FontWeight);
+        var geometry = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection,
+            typeface, FontSize, Brushes.Black).BuildGeometry(new Point(0, 0));
+        if (geometry is null || finalSize.Height <= geometry.Bounds.Height) return null;
+        return new TranslateTransform(0, finalSize.Height / 2 - geometry.Bounds.Center.Y);
+    }
 }
 
 public abstract class XyuiTextSurface : Border

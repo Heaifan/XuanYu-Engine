@@ -21,7 +21,7 @@
                          ToolTip.Tip="切换几何吸附">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <xy:XYIcon Icon="Snap" Size="Small"/>
-          <TextBlock Text="{Binding SnapMode}"/>
+          <xy:XYLabel Text="{Binding SnapMode}"/>
         </StackPanel>
       </xy:XYToggleButton>
     </StackPanel>
