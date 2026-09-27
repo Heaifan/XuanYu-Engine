@@ -8,6 +8,7 @@ namespace XuanYu.Render.Abstractions;
 public interface INativeHostSurfaceBridge : IDisposable
 {
     bool Attach(NativeHostSurfaceHandle handle);
+    // width/height are physical pixels, matching the native HWND and Vulkan swapchain extent.
     void Resize(int width, int height);
     void Detach();
 }

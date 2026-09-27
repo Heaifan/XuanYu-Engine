@@ -19,7 +19,7 @@ public sealed partial class VulkanRenderSession
             _resizeStopping = true;
         }
         VulkanResizeTracer.StartTrace();
-        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize 开始", $"请求逻辑尺寸={width}x{height}"));
+        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize 开始", $"请求物理尺寸={width}x{height}"));
         if (!_presentLoop.Stop()) return FailResize("Present 泵停止失败");
         lock (_rebuildLock)
         {

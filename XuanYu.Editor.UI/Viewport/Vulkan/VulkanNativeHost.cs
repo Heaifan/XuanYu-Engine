@@ -10,6 +10,10 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     INativeHostSurfaceBridge? _bridge;
     bool _createdReported;
     bool _layoutSyncHooked;
+    int _lastNativeWidth;
+    int _lastNativeHeight;
+    int _lastBridgeWidth;
+    int _lastBridgeHeight;
     nint _hwnd;
     internal event EventHandler? RendererReady; internal bool IsRendererReady { get; private set; }
     public VulkanNativeHost()
@@ -18,7 +22,14 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         FocusAdorner = null;
         _resizer = new NativeHostResizeCoalescer((snap, count) =>
         {
-            _bridge?.Resize(snap.Width, snap.Height);
+            TryAttach(snap);
+            var physical = NativeHostSurfaceContract.ToSurfaceHandle(snap);
+            if (_bridge is not null && (physical.Width != _lastBridgeWidth || physical.Height != _lastBridgeHeight))
+            {
+                _bridge.Resize(physical.Width, physical.Height);
+                _lastBridgeWidth = physical.Width;
+                _lastBridgeHeight = physical.Height;
+            }
             ViewportNativeHostRoute.ReportMerged(DataContext as UiVm, snap, count);
         });
         DataContextChanged += (_, _) => HookLayoutSync(); DataContextChanged += OnMapContextDataContextChanged; LostFocus += OnAvaloniaLostFocus;
@@ -33,14 +44,12 @@ public sealed partial class VulkanNativeHost : NativeControlHost
             _createdReported = true;
         }
         var snap = Report(NativeHostLifecycleState.Attached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
-        _bridge ??= CreateBridge();
-        if (_bridge.Attach(NativeHostSurfaceContract.ToSurfaceHandle(snap)))
-        {
-            IsRendererReady = true; RendererReady?.Invoke(this, EventArgs.Empty);
-        }
+        TryAttach(snap);
     }
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
+        _lastNativeWidth = 0;
+        _lastNativeHeight = 0;
         _hwnd = Win32ViewportHost.CreateChild(parent.Handle);
         Win32ViewportHost.SetInputSinks(_hwnd, OnNativePointerMessage, OnNativeKeyMessage);
         Report(NativeHostLifecycleState.HandleAvailable, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), true);
@@ -57,7 +66,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         if (isValid)
         {
             var (physicalW, physicalH) = ToPhysicalSize(width, height, dpi);
-            Win32ViewportHost.Resize(_hwnd, physicalW, physicalH);
+            ApplyNativeSize(physicalW, physicalH);
             (DataContext as UiVm)?.UpdateViewportFrame(width, height);
         }
         _resizer.OnResize(width, height, dpi, isValid, _hwnd);
@@ -96,5 +105,13 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         var snapshot = _probe.Capture(state, hwnd, width, height, dpiScale, isValid);
         ViewportNativeHostRoute.Report(DataContext as UiVm, snapshot);
         return snapshot;
+    }
+
+    void ApplyNativeSize(int width, int height)
+    {
+        if (_lastNativeWidth == width && _lastNativeHeight == height) return;
+        Win32ViewportHost.Resize(_hwnd, width, height);
+        _lastNativeWidth = width;
+        _lastNativeHeight = height;
     }
 }

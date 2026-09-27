@@ -7,6 +7,12 @@ namespace XuanYu.Editor.UI;
 // 真正的 Attach/Detach 接线在 VK3-C 由组合根完成。
 public static class NativeHostSurfaceContract
 {
-    public static NativeHostSurfaceHandle ToSurfaceHandle(NativeHostHandleSnapshot snap) =>
-        new(snap.Hwnd, Win32ViewportHost.ModuleHandle, snap.Width, snap.Height, snap.DpiScale);
+    public static NativeHostSurfaceHandle ToSurfaceHandle(NativeHostHandleSnapshot snap)
+    {
+        var physical = ToPhysical(snap.Width, snap.Height, snap.DpiScale);
+        return new(snap.Hwnd, Win32ViewportHost.ModuleHandle, physical.Width, physical.Height, snap.DpiScale);
+    }
+
+    internal static (int Width, int Height) ToPhysical(int width, int height, double dpi) =>
+        (Math.Max(1, (int)Math.Round(width * dpi)), Math.Max(1, (int)Math.Round(height * dpi)));
 }
