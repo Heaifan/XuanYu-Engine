@@ -12,11 +12,25 @@
 tools\handoff\handoff.cmd prepare  # 新 Wave / 跨电脑接管，可同步 Git
 tools\handoff\handoff.cmd join --scope xye|xyui|integration|governance
                                      # 并行 Session，只读，允许 dirty
+tools\handoff\handoff.cmd advance --scope xye
+                                     # Coordinator 在 commit + push 后推进 Active Wave baseline
 tools\handoff\handoff.cmd status   # 只读状态
 tools\handoff\handoff.cmd close    # 收口后关闭 Active Wave
 ```
 
 无参数等价于 `join --scope xye`。状态登记在 `.git\xye-handoff\state.json`，不进入 Git；JOIN 不在缺失 state 时创建它。
+
+### 1.1 Active Wave 内的连续任务
+
+标准流程为：
+
+```text
+prepare → join → work → commit + push → advance → next join
+```
+
+`advance` 不是新的 `prepare`，也不结束 Wave。它只在当前 branch、远端 branch、HEAD 和远端 tip 完全收敛，且旧 baseline 是当前 HEAD 祖先时，将 `baselineHead` 原子推进到当前 HEAD；Active Wave、ForeignDirty 和产品工作区保持不变。推进记录保存在 state.json 的 `baselineAdvance` 字段中，state.json 不进入 Git。
+
+当 JOIN 报 `BASELINE_MOVED` 时，Agent 必须停止并报告 baseline、HEAD、Remote HEAD、Ahead/Behind、Branch 和 ForeignDirty。若输出给出安全解析路径，由 Coordinator 执行 `handoff.cmd advance --scope xye`，然后 Agent 重新执行 join。不得执行 prepare、手动编辑 state.json、reset、stash 或 clean。
 
 `state.json` 的 Wave 字段为：`mode=development|convergence`、`coordinatorScope=xye|integration|governance|null`。Coordinator 可在 PREPARE 时登记 Convergence 模式；普通 Agent 不得直接修改 state。
 

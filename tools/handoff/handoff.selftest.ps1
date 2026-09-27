@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'handoff.ps1'
 $root = Join-Path $env:TEMP ('xye-handoff-selftest-' + [guid]::NewGuid().ToString('N'))
+$remote = Join-Path (Split-Path $root) ((Split-Path $root -Leaf) + '-remote.git')
 
 function Assert-True([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw "SELF TEST FAILED: $Message" }
@@ -27,6 +28,9 @@ try {
     Set-Content -LiteralPath (Join-Path $root 'README.md') -Value 'fixture'
     git -C $root add README.md
     git -C $root commit -m fixture | Out-Null
+    git init --bare $remote | Out-Null
+    git -C $root remote add origin $remote
+    git -C $root push -u origin main | Out-Null
 
     $dotnet = Join-Path $root 'dotnet.cmd'
     Set-Content -LiteralPath $dotnet -Value '@echo 9.9.9-selftest'
@@ -53,6 +57,10 @@ try {
     $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
     $stateBefore = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')
 
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'ADVANCE NOOP: BASELINE_ALREADY_CURRENT'
+    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $stateBefore) 'advance noop changed state.json'
+
     New-Item -ItemType Directory -Path (Join-Path $root 'xyui') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $root 'XuanYu.World') -Force | Out-Null
     Set-Content -LiteralPath (Join-Path $root 'xyui\dirty.txt') -Value 'xyui'
@@ -71,13 +79,64 @@ try {
     Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all) -join "`n" -eq ($statusBefore -join "`n")) 'join changed dirty files'
     Assert-True ((git -C $root rev-parse HEAD).Trim() -eq $head) 'join changed HEAD'
 
+    Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'B'
+    git -C $root add committed.txt
+    git -C $root commit -m B | Out-Null
+    git -C $root push | Out-Null
+    $headB = (git -C $root rev-parse HEAD).Trim()
+    $result = Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'Resolution:'
+    Assert-Output $result 1 'handoff.cmd advance --scope xye'
+    $result = Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'ACTIVE_WAVE_EXISTS'
+    Assert-Output $result 1 'Current wave does not require a new prepare.'
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF ADVANCE PASS'
+    $stateAfterB = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    Assert-True ($stateAfterB.baselineHead -eq $headB) 'advance did not move baseline to B'
+    Assert-True ($null -ne $stateAfterB.baselineAdvance) 'advance audit missing'
+    Assert-Output (Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF JOIN PASS'
+
+    Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'C'
+    git -C $root add committed.txt
+    git -C $root commit -m C | Out-Null
+    git -C $root push | Out-Null
+    $headC = (git -C $root rev-parse HEAD).Trim()
+    $result = Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'BASELINE_MOVED'
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 "New Baseline: $headC"
+    Assert-Output (Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF JOIN PASS'
+
+    Set-Content -LiteralPath (Join-Path $root 'un pushed.txt') -Value 'ahead'
+    git -C $root add 'un pushed.txt'
+    git -C $root commit -m local-ahead | Out-Null
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'REMOTE_DIVERGED'
+    git -C $root push | Out-Null
+
+    $stateAfterC = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    $stateAfterC.branch = 'wrong-branch'
+    $stateAfterC | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'BRANCH_MISMATCH'
+    $stateAfterC.branch = 'main'
+    $stateAfterC.baselineHead = (git -C $root rev-list --max-parents=0 HEAD).Trim()
+    $stateAfterC | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF ADVANCE PASS'
+
+    $statusHead = (git -C $root rev-parse HEAD).Trim()
+    $statusDirty = @(git -C $root status --porcelain=v1 --untracked-files=all)
+    $statusState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')
     $result = Invoke-Handoff @('-Mode', 'status', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'HANDOFF STATUS PASS'
-    Assert-True ((git -C $root rev-parse HEAD).Trim() -eq $head) 'status changed HEAD'
-    Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all) -join "`n" -eq ($statusBefore -join "`n")) 'status changed dirty files'
-    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $stateBefore) 'status changed state.json'
+    Assert-True ((git -C $root rev-parse HEAD).Trim() -eq $statusHead) 'status changed HEAD'
+    Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all) -join "`n" -eq ($statusDirty -join "`n")) 'status changed dirty files'
+    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $statusState) 'status changed state.json'
 
-    $state.mode = 'convergence'; $state.coordinatorScope = 'xye'
+    $state = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    $state.mode = 'convergence'; $state.coordinatorScope = 'xye'; $state.baselineHead = $statusHead
     $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
     $result = Invoke-Handoff @('-Mode', 'join', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'CONVERGENCE_EXCLUSIVE'
@@ -85,11 +144,12 @@ try {
     $state.mode = 'development'; $state.coordinatorScope = $null
     $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
     $result = Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'ACTIVE_WAVE'
+    Assert-Output $result 1 'ACTIVE_WAVE_EXISTS'
     $result = Invoke-Handoff @('-Mode', 'close', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'DIRTY_ON_CLOSE'
     Write-Host 'HANDOFF SELF TEST PASS'
 }
 finally {
     if (Test-Path -LiteralPath $root) { Remove-Item -LiteralPath $root -Recurse -Force }
+    if (Test-Path -LiteralPath $remote) { Remove-Item -LiteralPath $remote -Recurse -Force }
 }

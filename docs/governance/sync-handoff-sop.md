@@ -8,6 +8,18 @@
 
 > v1.1 核心修订：正式确立 **Single Canonical Workspace + Sequential Handoff**。普通开发与 Agent 交接不再默认创建 Codex/Gemini/Integration 长期 worktree；同一功能链默认顺序写入唯一正式工作区。任何与本规则冲突的旧 Prompt、旧任务书、Agent 习惯或临时方案，以本 SOP 为准。
 
+## Active Wave baseline migration
+
+同一 Active Wave 可以承载连续的正式提交。Coordinator 完成合法 `commit + push` 后，如果后续 Agent 仍需进入同一 Wave，执行：
+
+```text
+tools\handoff\handoff.cmd advance --scope xye
+```
+
+`advance` 仅更新 `.git/xye-handoff/state.json` 的 handoff 字段，不提交、不推送 state.json，不清理 ForeignDirty，不创建新 Wave。它必须确认当前 branch 与 state 一致、远端 branch 存在、HEAD 与远端 tip 一致、Ahead/Behind 为 `0/0`，并确认旧 baseline 是当前 HEAD 的祖先；否则失败且保持旧 baseline。
+
+`join` 仍然严格禁止 `HEAD != baselineHead`，但会在安全条件满足时提示 Coordinator 执行 `advance`。`prepare` 在 Active Wave 存在时仍然阻止重复创建，并提示当前 Wave 不需要新的 prepare。任何 Agent 都不得手动编辑 state.json 来解锁。
+
 ---
 
 # 1. 目标

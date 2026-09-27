@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('prepare', 'join', 'status', 'close')][string]$Mode = 'join',
+    [ValidateSet('prepare', 'join', 'status', 'close', 'advance')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
     [ValidateSet('development', 'convergence')][string]$WaveMode = 'development',
     [ValidateSet('xye', 'integration', 'governance')][AllowNull()][string]$CoordinatorScope = $null,
@@ -54,7 +54,14 @@ function Read-State {
 function Write-State($State) {
     $dir = Split-Path -Parent $StatePath
     if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
-    $State | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $StatePath -Encoding UTF8
+    $temp = Join-Path $dir ('state.' + [guid]::NewGuid().ToString('N') + '.tmp')
+    try {
+        $json = $State | ConvertTo-Json -Depth 6
+        [IO.File]::WriteAllText($temp, $json, [Text.UTF8Encoding]::new($false))
+        Move-Item -LiteralPath $temp -Destination $StatePath -Force
+    } finally {
+        if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force }
+    }
 }
 
 function Get-Facts {
@@ -62,6 +69,61 @@ function Get-Facts {
     $head = (Invoke-Git @('rev-parse', 'HEAD') -join '').Trim()
     $dirty = @(Invoke-Git @('status', '--porcelain=v1', '--untracked-files=all'))
     [pscustomobject]@{ Branch = $branch; Head = $head; Dirty = $dirty }
+}
+
+function Get-RemoteFacts {
+    $remote = $Config.Remote
+    $remoteRef = "refs/remotes/$remote/$($Config.ActiveBranch)"
+    try { Invoke-Git @('show-ref', '--verify', '--quiet', $remoteRef) | Out-Null }
+    catch { return [pscustomobject]@{ Exists = $false; Head = $null; Ahead = $null; Behind = $null } }
+    $remoteHead = (Invoke-Git @('rev-parse', $remoteRef) -join '').Trim()
+    $counts = ((Invoke-Git @('rev-list', '--left-right', '--count', "HEAD...$remoteRef")) -join '').Trim() -split '\s+'
+    [pscustomobject]@{ Exists = $true; Head = $remoteHead; Ahead = [int]$counts[0]; Behind = [int]$counts[1] }
+}
+
+function Test-Ancestor([string]$Old, [string]$New) {
+    & git merge-base --is-ancestor $Old $New 2>$null
+    return $LASTEXITCODE -eq 0
+}
+
+function Test-AdvanceReady($State, $Facts, $RemoteFacts) {
+    if ($null -eq $State -or -not [bool]$State.active) { return $false }
+    if ($Facts.Branch -ne $State.branch -or -not $RemoteFacts.Exists) { return $false }
+    if ($Facts.Head -ne $RemoteFacts.Head -or $RemoteFacts.Ahead -ne 0 -or $RemoteFacts.Behind -ne 0) { return $false }
+    if ($Facts.Head -eq $State.baselineHead) { return $true }
+    return Test-Ancestor $State.baselineHead $Facts.Head
+}
+
+function Stop-Advance([string]$Code, [string]$Reason) {
+    Write-Host ''
+    Write-Host '================ HANDOFF ================' -ForegroundColor Red
+    Write-Host "ADVANCE FAIL: $Code" -ForegroundColor Red
+    Write-Host "Reason: $Reason"
+    Write-Host '========================================='
+    exit 1
+}
+
+function Show-BaselineMoved($Facts, $State, $RemoteFacts) {
+    Write-Host ''
+    Write-Host 'HANDOFF JOIN BLOCKED' -ForegroundColor Red
+    Write-Host 'Reason: BASELINE_MOVED'
+    Write-Host "Baseline: $($State.baselineHead)"
+    Write-Host "Current HEAD: $($Facts.Head)"
+    Write-Host "Branch: $($Facts.Branch)"
+    Write-Host "Remote HEAD: $(if ($RemoteFacts.Exists) { $RemoteFacts.Head } else { 'NOT_FOUND' })"
+    Write-Host "Ahead/Behind: $(if ($RemoteFacts.Exists) { "$($RemoteFacts.Ahead)/$($RemoteFacts.Behind)" } else { 'UNKNOWN' })"
+    if (Test-AdvanceReady $State $Facts $RemoteFacts) {
+        Write-Host 'Resolution:'
+        Write-Host 'Coordinator must run:'
+        Write-Host 'handoff.cmd advance --scope xye'
+        Write-Host 'Then retry join.'
+    } else {
+        Write-Host 'Resolution: Resolve branch or remote convergence before advance.'
+    }
+    Write-Host 'IMPORTANT: Do NOT run prepare.'
+    Write-Host 'Do NOT manually edit state.json.'
+    Write-Host 'Do NOT reset/stash/clean the workspace.'
+    exit 1
 }
 
 function Get-DirtyPath([string]$Line) {
@@ -164,8 +226,9 @@ if ($Mode -eq 'status') {
 if ($Mode -eq 'join') {
     if ($null -eq $state) { Stop-Handoff 'STATE_MISSING' 'JOIN 只读且需要 Coordinator 先建立 Workspace Baseline。' }
     if (-not [bool]$state.active) { Stop-Handoff 'INACTIVE_WAVE' '当前 Workspace Wave 已 CLOSE，请由 Coordinator 执行 PREPARE。' }
-    if ($facts.Branch -ne $state.branch) { Stop-Handoff 'BASELINE_MOVED' "Branch 已从 $($state.branch) 变为 $($facts.Branch)。" }
-    if ($facts.Head -ne $state.baselineHead) { Stop-Handoff 'BASELINE_MOVED' "HEAD 已从 $($state.baselineHead) 变为 $($facts.Head)。" }
+    if ($facts.Branch -ne $state.branch -or $facts.Head -ne $state.baselineHead) {
+        Show-BaselineMoved $facts $state (Get-RemoteFacts)
+    }
     if ($state.mode -eq 'convergence' -and $state.coordinatorScope -eq 'xye' -and $Scope -eq 'xyui') {
         Stop-Handoff 'CONVERGENCE_EXCLUSIVE' 'XYE Convergence 期间 Workspace 由 XYE Coordinator 独占，XYUI JOIN 暂停。'
     }
@@ -174,6 +237,65 @@ if ($Mode -eq 'join') {
     $output = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $bootstrap)
     if ($LASTEXITCODE -ne 0) { Stop-Handoff 'BOOTSTRAP_FAILED' ($output -join ' | ') }
     Show-Header 'JOIN' 'PASS' $facts $state $toolchain $report 'READY'
+    exit 0
+}
+
+if ($Mode -eq 'advance') {
+    if ($null -eq $state) { Stop-Advance 'STATE_NOT_FOUND' 'handoff state.json 不存在。' }
+    if (-not [bool]$state.active) { Stop-Advance 'NO_ACTIVE_WAVE' '不存在 Active Wave。' }
+    if ($null -ne $state.coordinatorScope -and $Scope -ne $state.coordinatorScope) {
+        Stop-Advance 'COORDINATOR_MISMATCH' "当前 scope $Scope 不是 Coordinator scope $($state.coordinatorScope)。"
+    }
+    if ($facts.Branch -ne $state.branch) { Stop-Advance 'BRANCH_MISMATCH' "Expected $($state.branch)，Current $($facts.Branch)。" }
+    $remote = $Config.Remote
+    try { Invoke-Git @('fetch', '--prune', $remote) | Out-Null } catch { Stop-Advance 'REMOTE_NOT_FOUND' "无法读取 $remote。" }
+    $remoteFacts = Get-RemoteFacts
+    if (-not $remoteFacts.Exists) { Stop-Advance 'REMOTE_NOT_FOUND' "找不到 $remote/$($Config.ActiveBranch)。" }
+    if ($facts.Head -ne $remoteFacts.Head) { Stop-Advance 'REMOTE_DIVERGED' "Current HEAD $($facts.Head) != Remote HEAD $($remoteFacts.Head)。" }
+    if ($remoteFacts.Ahead -ne 0 -or $remoteFacts.Behind -ne 0) {
+        Stop-Advance 'REMOTE_NOT_CONVERGED' "Ahead/Behind = $($remoteFacts.Ahead)/$($remoteFacts.Behind)。"
+    }
+    $oldBaseline = $state.baselineHead
+    if ($facts.Head -eq $oldBaseline) {
+        Write-Host 'ADVANCE NOOP: BASELINE_ALREADY_CURRENT'
+        exit 0
+    }
+    if (-not (Test-Ancestor $oldBaseline $facts.Head)) {
+        Stop-Advance 'NON_FAST_FORWARD_BASELINE' 'Old baseline 不是当前 HEAD 的祖先。'
+    }
+    $dirtyBefore = @($facts.Dirty)
+    $state.baselineHead = $facts.Head
+    $audit = [pscustomobject]@{
+        from = $oldBaseline
+        to = $facts.Head
+        at = (Get-Date).ToUniversalTime().ToString('o')
+    }
+    $state | Add-Member -MemberType NoteProperty -Name baselineAdvance -Value $audit -Force
+    Write-State $state
+    $verifiedState = Read-State
+    $verifiedFacts = Get-Facts
+    $verifiedRemote = Get-RemoteFacts
+    if ($verifiedState.baselineHead -ne $facts.Head -or $verifiedFacts.Head -ne $facts.Head) {
+        Stop-Advance 'STATE_VERIFY_FAILED' 'state 或 HEAD 在 advance 后未保持预期。'
+    }
+    if ($verifiedRemote.Head -ne $facts.Head -or $verifiedRemote.Ahead -ne 0 -or $verifiedRemote.Behind -ne 0) {
+        Stop-Advance 'REMOTE_VERIFY_FAILED' '远端在 advance 后不再与 HEAD 收敛。'
+    }
+    $dirtyAfter = @($verifiedFacts.Dirty)
+    if (($dirtyBefore -join "`n") -ne ($dirtyAfter -join "`n")) {
+        Stop-Advance 'FOREIGN_DIRTY_CHANGED' 'ForeignDirty 在 advance 前后发生变化。'
+    }
+    Write-Host ''
+    Write-Host 'HANDOFF ADVANCE PASS' -ForegroundColor Green
+    Write-Host "Scope: $Scope"
+    Write-Host "Branch: $($verifiedFacts.Branch)"
+    Write-Host "Old Baseline: $oldBaseline"
+    Write-Host "New Baseline: $($verifiedFacts.Head)"
+    Write-Host "HEAD: $($verifiedFacts.Head)"
+    Write-Host "Remote HEAD: $($verifiedRemote.Head)"
+    Write-Host 'Ahead/Behind: 0/0'
+    Write-Host "ForeignDirty: PRESERVED ($($dirtyAfter.Count))"
+    Write-Host 'Active Wave: PRESERVED'
     exit 0
 }
 
@@ -188,7 +310,18 @@ if ($Mode -eq 'close') {
 }
 
 if ($Mode -eq 'prepare') {
-    if ($null -ne $state -and [bool]$state.active) { Stop-Handoff 'ACTIVE_WAVE' '当前 Workspace 已有 Active Wave，禁止再次 PREPARE。' }
+    if ($null -ne $state -and [bool]$state.active) {
+        Write-Host 'HANDOFF PREPARE BLOCKED' -ForegroundColor Red
+        Write-Host 'Reason: ACTIVE_WAVE_EXISTS'
+        $remoteFacts = Get-RemoteFacts
+        if ($facts.Head -ne $state.baselineHead -and (Test-AdvanceReady $state $facts $remoteFacts)) {
+            Write-Host 'Current wave does not require a new prepare.'
+            Write-Host 'Coordinator action:'
+            Write-Host 'handoff.cmd advance --scope xye'
+        }
+        Write-Host 'Do NOT manually edit state.json, reset HEAD, rebuild workspace, or stash ForeignDirty.'
+        exit 1
+    }
     $remote = $Config.Remote
     $remoteRef = "$remote/$($Config.ActiveBranch)"
     try { Invoke-Git @('fetch', '--prune', $remote) | Out-Null } catch { Stop-Handoff 'GIT_FETCH_FAILED' $_.Exception.Message }
