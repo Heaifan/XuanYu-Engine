@@ -2,13 +2,7 @@
 
 > **本节优先于后续 Repository Bootstrap、Build/Test、任务规划和代码修改规则。**
 
-每个新的 XuanYuEngine 开发会话，在规划、编辑、测试、运行、分配并行任务或改变 Git 状态之前，必须：
-
-1. 读取 `tools/handoff/HANDOFF-PROTOCOL.md`。
-2. 执行 `tools\handoff\handoff.cmd`。
-3. 只有输出 `HANDOFF PASS` 后才允许开始开发。
-4. 若输出 `HANDOFF BLOCKED`，立即停止并报告 Block Code / Reason；禁止自行 stash、merge、rebase、force push 或绕过协议。
-5. 不得自行猜测 Active Branch、Canonical Workspace、SDK 路径或本地 dirty 文件的保留优先级。
+每个 Workspace / Development Wave：Coordinator 执行一次 `tools\handoff\handoff.cmd prepare` 建立 Workspace Baseline；同一 Workspace 的其他并行 Session 执行 `tools\handoff\handoff.cmd join`。JOIN 为只读操作，允许 Workspace 因其他 Ownership Task 而 dirty。Active Wave 期间禁止再次 PREPARE；Convergence / Commit / Push / Clean 后执行 `tools\handoff\handoff.cmd close`。不得自行猜测 Active Branch、Canonical Workspace、SDK 路径或本地 dirty 文件的保留优先级。
 
 交接权威顺序：
 
@@ -28,7 +22,7 @@ PATH 中没有 `dotnet` 不等于 SDK 不存在。
 # AGENTS.md — XuanYu Engine（玄域引擎）AI 协作入口
 
 > 仓库内 AI 编码工具统一入口。  
-> **唯一权威规则：`docs/玄域引擎_AI开发宪法.md`（3.0）。**  
+> **唯一权威规则：`docs/玄域引擎_AI开发宪法.md`（3.1）。**
 > 代码硬规则：`docs/CODE_CONSTITUTION.md`。  
 > 执行手册：`docs/dev-rules.md`。
 
@@ -38,6 +32,17 @@ PATH 中没有 `dotnet` 不等于 SDK 不存在。
 - 解决方案：`XuanYu.Engine.slnx`
 - GitHub 是正式跨设备事实源；当前分支和远端关系每轮以实际仓库核对为准
 - XYUI 是仓库内一等内置子系统，Canonical 根固定为 `xyui/`
+
+## Lane / Ownership
+
+每个任务先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再执行 `tools\handoff\handoff.cmd join --scope <lane>`。唯一 Lane 事实源为 [`docs/governance/development-lanes.md`](docs/governance/development-lanes.md)。
+
+- `P0 XYE FAST LANE`：主线优先；XYE 拥有 Engine 产品与测试文件。
+- `P1 XYUI CONTROLLED SUPPORT LANE`：默认仅 `xyui/**`，继续开发、审计、进入同一 Git/GitHub，但默认禁止自行 Commit/Push/Branch mutation。
+- `P0.5 INTEGRATION`：必须明确声明，并提供 XYE Consumer 与 XYUI Runtime/Public Contract 的 Ownership 文件表；真实 Consumer 破坏才是 Blocker。
+- `GOVERNANCE`：仅治理文档、Handoff 与 Lane 规则；不借治理 Lane 修改产品代码。
+
+`ForeignDirty != OwnershipConflict`：其他 Lane 的 dirty 可以使 JOIN 通过；只有即将写入的文件与当前 Ownership 冲突才阻断。共享编译出现 `Compile-RED` 时 XYE 优先恢复 Green，XYUI 必须修复自身造成的红灯。Convergence 时 Coordinator 独占 Workspace，其他 Lane Freeze；普通 Agent 禁止创建 / 切换 Branch 或额外 Worktree。
 
 ## 不可侵犯红线
 
@@ -52,8 +57,9 @@ PATH 中没有 `dotnet` 不等于 SDK 不存在。
 ## 每轮入口
 
 ```text
--1. Session Handoff：tools/handoff/handoff.cmd（HANDOFF PASS 后继续）
-0. Repository Bootstrap：由 Handoff 在同步完成后执行 scripts/xye-bootstrap.ps1
+-1. 声明 Lane：XYE / XYUI / INTEGRATION / GOVERNANCE
+-2. Session Handoff：Coordinator 用 prepare；并行 Session 用 `join --scope <lane>`（JOIN PASS 后继续）
+0. Repository Bootstrap：由 prepare / join 按 Resolver Chain 执行 scripts/xye-bootstrap.ps1
 1. 接管核对 Git / 工作区
 2. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
 3. MEDIUM / HIGH 或已登记任务域 → Knowledge Preflight

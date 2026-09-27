@@ -65,6 +65,7 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 | K-PERF-001 | Knowledge | Performance | Preview 高频路径与 Commit 重路径必须分离 | P0 | E2 | v0.1.8.7-fix · 2026-06-25 00:18 · 26f2006 | Active |
 | K-GEO-001 | Knowledge | Architecture | 可编辑几何能力契约与 Snap/Topology 边界 | P0 | E1 | MAP-DATA-A-R2-F3-E1 · 2026-08-13 · 本轮提交 | Active |
 | K-GEO-002 | Decision | Architecture | R2 收口并以 Point Consumer 作为下一验证形态 | P0 | R2 | MAP-DATA-A-R2-CLOSEOUT · 2026-08-13 · 6a3d5b8 | Active |
+| DEC-XYE-XYUI-DUAL-LANE | Decision | Governance | XYE / XYUI Dual-Lane Development Model | P0 | R1 | XYE-XYUI-DUAL-LANE-R1 · 2026-09-27 | Active |
 
 ## 分类文件
 
@@ -78,5 +79,6 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 - `incidents.md`：代表性事故记录与映射
 - `lessons.md`：L-ARCH-001、L-REN-001～L-REN-003、L-VAL-001、L-NATIVE-001、L-TEST-001 及后续复盘
 - `decisions/`：已批准并仍有长期约束价值的 DEC
+- `decisions/xye-xyui-dual-lane-development-model.md`：XYE / XYUI One Workspace / Dual Lane 决策
 - `docs/governance/agent-error-log.md`：Agent 真实错误事实
 - `docs/governance/agent-experience-rules.md`：去重后的防复发经验规则

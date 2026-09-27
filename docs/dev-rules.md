@@ -20,6 +20,10 @@ Prohibited
 Knowledge Preflight
 ```
 
+任务必须先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再执行 `tools\handoff\handoff.cmd join --scope <lane>`。Lane、Ownership、Audit、Convergence 和跨 Lane 升级的唯一事实源是 `docs/governance/development-lanes.md`。
+
+共享 Workspace 只保留一个当前分支和一个 HEAD；普通 Agent 禁止创建 / 切换 Branch 和额外 Worktree。`ForeignDirty != OwnershipConflict`：JOIN 可在其他 Lane dirty 时通过，只有写入范围与 Ownership 冲突才阻断。
+
 必须确认当前分支、HEAD、远端 tip、工作区与任务范围一致。未知修改不得覆盖。
 
 不再强制“普通目标 ≤3”，也不要求每条中间回复重复完整 TODO；限制的是未解决依赖链和失控扩围。
@@ -97,6 +101,8 @@ HIGH、阶段可信基线、正式验收 / Release 前至少执行：
 - 任务需要的运行、真机或保存闭环。
 
 全量门禁没有取消，只在真正需要建立可信基线的节点执行。
+
+共享编译进入 `Compile-RED` 时，优先恢复 XYE Fast Lane 为 Green；XYUI 必须修复自身造成的共享编译红灯。XYUI 普通失败不阻断 XYE，真实 XYE Consumer 破坏才升级为 `P0.5 INTEGRATION`。
 
 ---
 
@@ -403,6 +409,8 @@ Git 提交以原子、可验证成果为单位，不为每个微编辑单独 Com
 
 正式验收成果不得长期只留在本地。
 
+XYUI 默认只写 `xyui/**`，经 Audit PASS 和 Freeze 后由 Coordinator 批量入库；XYUI Agent 不得自行 `git add` / `commit` / `push`。XYE 与 Integration 的 Ownership 必须在任务声明中列出文件表。Convergence 期间 Coordinator 独占 Workspace，其他 Lane Freeze。
+
 ---
 
 ## 20. 文档最小同步
@@ -424,6 +432,8 @@ XYUI 唯一 Canonical 根：仓库 `xyui/`。
 Engine、XYUI Runtime、Gallery、Tests 共用正式 Git、版本、构建与维护生命周期，但保持独立项目 / 程序集边界。
 
 正式功能、架构、数据和测试优先于未推送 UI 实验；未知 worktree / recovery / 临时实验不得自动并入正式基线。
+
+XYUI Audit 分为：L（Gallery / Visual / 非 Public Runtime Contract）、M（Runtime 行为改变且无 Public API，追加受影响 Runtime Tests 与 XYE Consumer Smoke Compatibility）、H / Integration（Public API、Default Layout Contract 或全局行为改变，追加 Public Contract Diff、受影响 XYE Consumer Build/Test、架构边界与 5+100）。
 
 ---
 

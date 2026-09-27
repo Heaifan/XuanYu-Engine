@@ -1,7 +1,7 @@
-# 玄域引擎 AI 开发宪法 3.0
+# 玄域引擎 AI 开发宪法 3.1
 
-**版本：** 3.0  
-**修订日期：** 2026-09-16  
+**版本：** 3.1
+**修订日期：** 2026-09-27
 **维护者：** 用户指定的宪法维护 AI——ChatGPT  
 **生效条件：** 经用户批准并提交至玄域引擎正式仓库  
 **适用范围：** 玄域引擎、《兵无常势》及基于玄域引擎开展的代码、测试、文档、审计、规划、验收与 Git 操作
@@ -475,13 +475,23 @@ Residual Risk
 
 真机 IPO 必须写真实中文 UI 路径、输入 I、过程 P、输出 O，输出必须可观察、可判定。
 
-## 第二十八条　多 Agent 与 XYUI
+## 第二十八条　XYE / XYUI Dual-Lane Development Model
 
-正式开发分支以 GitHub 为跨设备事实源。
+玄域引擎采用 **One Workspace / One Current Branch / Dual Lane**：
 
-XYUI 的唯一 Canonical 根为仓库内 `xyui/`，与 Engine 共用正式 Git、版本、构建和发布生命周期；XYUI Runtime、Gallery、Tests 保持独立项目 / 程序集边界。
+```text
+P0   XYE FAST LANE
+P0.5 XYE × XYUI INTEGRATION
+P1   XYUI CONTROLLED SUPPORT LANE
+```
 
-正式功能、架构、数据和测试优先于未推送 UI 实验。禁止把未知 worktree、recovery 或临时实验资产自动并入正式基线。
+优先级固定为：`XYE > INTEGRATION > XYUI`。XYUI 是仓库内一等内置子系统，Canonical 根固定为 `xyui/`；它继续开发、审计并进入同一 Git / GitHub，但普通 XYUI 失败不得阻断 XYE。只有 XYUI Runtime / Public Contract 实际影响 XYE Consumer 时，才升级为 P0.5 Integration Blocker。
+
+共享 Workspace 只允许一个当前分支和一个 HEAD。普通 Agent 不得创建 / 切换 Branch，不得创建额外 Worktree。并行开发依靠文件 Ownership 与 Lane-scoped Build/Test；Convergence 时由 Coordinator 独占 Workspace，其他 Lane Freeze。
+
+XYUI 默认只拥有 `xyui/**`，默认禁止自行 Commit、Push、Branch mutation；经 Audit PASS、Freeze 后由 Coordinator 批量 Stage、原子 Commit、Push 并复核远端。XYUI 普通视觉问题、Gallery 失败和非公共 Runtime Contract 失败保持 P1，不得伪装为 XYE 阻断。
+
+该决策的理由与交接、审计和升级合同见 `docs/knowledge/decisions/xye-xyui-dual-lane-development-model.md` 与唯一 Lane 事实源 `docs/governance/development-lanes.md`。
 
 ---
 
@@ -633,7 +643,7 @@ CONSTITUTION_CANDIDATE
 
 # 附则
 
-1. 本宪法 3.0 生效后，与本版本冲突的旧条款自动失效。
+1. 本宪法 3.1 生效后，与本版本冲突的旧条款自动失效。
 2. `docs/CODE_CONSTITUTION.md`、`docs/dev-rules.md`、`AGENTS.md` 必须与本宪法保持一致。
 3. 具体构建命令和模块级技术合同放入 `docs/dev-rules.md` 或正式架构文档，不重复塞回宪法。
 4. 其他 Agent 发现宪法与仓库事实冲突时必须报告，不得擅自改宪法。
