@@ -27,6 +27,26 @@ function Invoke-Git([Parameter(ValueFromRemainingArguments = $true)][string[]]$G
     return $output
 }
 
+function Read-HandoffConfig([string]$Path) {
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw "Handoff config not found: $Path"
+    }
+
+    $nativeImport = Get-Command 'Import-PowerShellDataFile' -ErrorAction SilentlyContinue
+    if ($null -ne $nativeImport) {
+        return Import-PowerShellDataFile -Path $Path
+    }
+
+    # Windows PowerShell versions before Import-PowerShellDataFile support.
+    # HandoffConfig.psd1 is repository-controlled and contains data only.
+    $text = [IO.File]::ReadAllText($Path)
+    $config = & ([ScriptBlock]::Create($text))
+    if ($config -isnot [hashtable]) {
+        throw "Handoff config did not return a Hashtable: $Path"
+    }
+    return $config
+}
+
 try {
     $RepoRoot = ((Invoke-Git rev-parse --show-toplevel) -join '').Trim()
 } catch {
@@ -40,7 +60,11 @@ $Remote = $BootstrapRemote
 $CanonicalWorkspaces = $BootstrapWorkspaces
 
 if (Test-Path $ConfigPath -PathType Leaf) {
-    $Config = Import-PowerShellDataFile $ConfigPath
+    try {
+        $Config = Read-HandoffConfig $ConfigPath
+    } catch {
+        Stop-Handoff 'CONFIG_LOAD_FAILED' $_.Exception.Message
+    }
     $ActiveBranch = $Config.ActiveBranch
     $Remote = $Config.Remote
     $CanonicalWorkspaces = $Config.CanonicalWorkspaces
@@ -90,8 +114,11 @@ Invoke-Git reset --hard $RemoteRef | Out-Null
 Invoke-Git clean -fd | Out-Null
 Invoke-Git branch "--set-upstream-to=$RemoteRef" $ActiveBranch | Out-Null
 
-# Reload the authoritative config after the remote branch is active.
-$Config = Import-PowerShellDataFile $ConfigPath
+try {
+    $Config = Read-HandoffConfig $ConfigPath
+} catch {
+    Stop-Handoff 'CONFIG_LOAD_FAILED' $_.Exception.Message
+}
 $Resolver = Join-Path $RepoRoot $Config.ResolverScript
 $Bootstrap = Join-Path $RepoRoot $Config.BootstrapScript
 
@@ -146,6 +173,7 @@ Write-Host "Remote    : $($finalRemote.Substring(0,8))"
 Write-Host 'Ahead     : 0'
 Write-Host 'Behind    : 0'
 Write-Host 'Status    : clean'
+Write-Host "PowerShell: $($PSVersionTable.PSVersion)"
 Write-Host "DOTNET    : $dotnet"
 Write-Host "SDK       : $sdk"
 Write-Host "DOTNET_ROOT: $env:DOTNET_ROOT"
