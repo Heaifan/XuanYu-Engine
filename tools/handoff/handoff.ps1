@@ -84,7 +84,22 @@ function Read-Mutex {
     catch { Stop-Handoff 'COMMIT_MUTEX_INVALID' $_.Exception.Message }
 }
 
-function Write-Mutex($Mutex) { Write-JsonAtomic $MutexPath $Mutex }
+function Try-CreateMutex($Mutex) {
+    $dir = Split-Path -Parent $MutexPath
+    if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+    $json = $Mutex | ConvertTo-Json -Depth 6
+    $bytes = [Text.UTF8Encoding]::new($false).GetBytes($json)
+    $stream = $null
+    try {
+        $stream = [IO.File]::Open($MutexPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+        $stream.Write($bytes, 0, $bytes.Length)
+        return $true
+    } catch [IO.IOException] {
+        return $false
+    } finally {
+        if ($null -ne $stream) { $stream.Dispose() }
+    }
+}
 
 function Remove-Mutex {
     if (Test-Path -LiteralPath $MutexPath -PathType Leaf) { Remove-Item -LiteralPath $MutexPath -Force }
@@ -274,13 +289,17 @@ if ($Mode -eq 'commit-lock') {
         }
         Stop-Mutex 'COMMIT_MUTEX_HELD' "当前持有者：$($mutex.owner)。"
     }
-    Write-Mutex ([pscustomobject]@{
+    $created = Try-CreateMutex ([pscustomobject]@{
             owner = $owner
             scope = $Scope
             branch = $facts.Branch
             baselineHead = $state.baselineHead
             acquiredAt = (Get-Date).ToUniversalTime().ToString('o')
         })
+    if (-not $created) {
+        $mutex = Read-Mutex
+        Stop-Mutex 'COMMIT_MUTEX_HELD' "当前持有者：$($mutex.owner)。"
+    }
     Write-Host "HANDOFF COMMIT-LOCK PASS: $owner"
     Write-Host 'GitCommitPushAdvance: SERIALIZED'
     Write-Host 'StagingRule: precise paths only; never git add .'
@@ -345,6 +364,7 @@ if ($Mode -eq 'advance') {
     if ([string]::IsNullOrWhiteSpace($Owner)) { Stop-Advance 'COMMIT_MUTEX_REQUIRED' 'Baseline-changing advance 必须显式提供 --owner。' }
     $owner = $Owner.Trim()
     if ($mutex.owner -ne $owner) { Stop-Advance 'COMMIT_MUTEX_OWNER_MISMATCH' "当前持有者：$($mutex.owner)。" }
+    if ($mutex.scope -ne $Scope) { Stop-Advance 'COMMIT_MUTEX_SCOPE_MISMATCH' "锁 scope 为 $($mutex.scope)，当前 scope 为 $Scope。" }
     if (-not (Test-Ancestor $oldBaseline $facts.Head)) {
         Stop-Advance 'NON_FAST_FORWARD_BASELINE' 'Old baseline 不是当前 HEAD 的祖先。'
     }
