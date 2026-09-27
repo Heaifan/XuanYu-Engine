@@ -34,7 +34,7 @@ public sealed partial class UiVm
         if (_selectedMapGeometry is { Kind: MapGeometryFeatureKind.Road }) return InspectorObjectKind.Road;
         if (_selectedMapGeometry is { Kind: MapGeometryFeatureKind.Region }) return InspectorObjectKind.Region;
         if (IsEntityInspector) return InspectorObjectKind.Entity;
-        if (SelectedDataset is { Type: MapDatasetTypes.TerrainArea } && _terrainInspectorMetadata is not null)
+        if (SelectedDataset is { Type: MapDatasetTypes.TerrainArea } && TerrainInspectorMetadata is not null)
             return InspectorObjectKind.Terrain;
         if (SelectedDataset is not null) return InspectorObjectKind.Dataset;
         if (MapSession.Selection.Kind == MapSelectionKind.None) return InspectorObjectKind.Empty;

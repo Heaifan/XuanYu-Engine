@@ -22,11 +22,16 @@ public sealed partial class UiVm
 
     public void EnterTerrainContext()
     {
-        if (_isTerrainContext) return;
+        if (_isTerrainContext)
+        {
+            RaiseInspectorSelectionBindings();
+            return;
+        }
         CancelActiveInput("切换地形上下文");
         _isTerrainContext = true;
         SelectTool("选择", logTool: false);
         RaiseTerrainContextBindings();
+        RaiseInspectorSelectionBindings();
     }
 
     public void EnterRegionContext()

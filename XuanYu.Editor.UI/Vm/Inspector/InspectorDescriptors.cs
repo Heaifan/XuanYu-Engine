@@ -25,11 +25,16 @@ static class InspectorDescriptors
             D("Region.Status.State", kind, "状态", "可见性", "状态")];
 
     static IReadOnlyList<InspectorPropertyDescriptor> Terrain(InspectorObjectKind kind) =>
-        [D("Terrain.Data.Grid", kind, "数据", "地形", "网格"),
+        [D("Terrain.Data.Tile", kind, "数据", "地形", "Tile"),
+            D("Terrain.Data.Grid", kind, "数据", "地形", "网格"),
             D("Terrain.Data.Resolution", kind, "数据", "地形", "分辨率"),
+            D("Terrain.Data.Bounds", kind, "数据", "地形", "Bounds"),
+            D("Terrain.Data.Source", kind, "数据", "地形", "Source"),
+            D("Terrain.Data.VerticalDatum", kind, "数据", "地形", "Vertical Datum"),
             D("Terrain.Data.MinElevation", kind, "数据", "地形", "最低高程"),
             D("Terrain.Data.MaxElevation", kind, "数据", "地形", "最高高程"),
             D("Terrain.Data.NoData", kind, "数据", "地形", "NoData"),
+            D("Terrain.Data.Probe", kind, "数据", "地形", "Probe / Elevation"),
             D("Terrain.Display.VerticalExaggeration", kind, "显示", "地形", "垂直夸张", IsEditable: true)];
 
     static InspectorPropertyDescriptor D(string key, InspectorObjectKind kind, string category, string section, string name,
@@ -46,8 +51,10 @@ static class InspectorDescriptors
         "Dataset.Basic.Name" => vm.SelectedDataset?.Name ?? "",
         "Dataset.Basic.Type" => vm.SelectedDataset?.TypeDisplay ?? "",
         "Dataset.Basic.Id" => vm.SelectedDataset?.Id ?? "",
-        "Terrain.Data.Grid" or "Terrain.Data.Resolution" or "Terrain.Data.MinElevation" or
-            "Terrain.Data.MaxElevation" or "Terrain.Data.NoData" or "Terrain.Display.VerticalExaggeration"
+        "Terrain.Data.Tile" or "Terrain.Data.Grid" or "Terrain.Data.Resolution" or "Terrain.Data.Bounds" or
+            "Terrain.Data.Source" or "Terrain.Data.VerticalDatum" or "Terrain.Data.MinElevation" or
+            "Terrain.Data.MaxElevation" or "Terrain.Data.NoData" or "Terrain.Data.Probe" or
+            "Terrain.Display.VerticalExaggeration"
             => vm.TerrainValue(key),
         "Road.Basic.Name" or "Region.Basic.Name" or "Marker.Basic.Name" => vm.InspectorFeatureNameText,
         "Region.Style.FillColor" => vm.InspectorRegionFillColorText,

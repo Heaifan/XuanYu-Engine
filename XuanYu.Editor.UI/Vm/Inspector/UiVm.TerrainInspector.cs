@@ -12,7 +12,7 @@ public sealed partial class UiVm
     double _verticalExaggeration = 1.0;
 
     public bool IsTerrainInspector => InspectorIdentity == InspectorObjectKind.Terrain;
-    public TerrainMetadata? TerrainInspectorMetadata => _terrainInspectorMetadata;
+    public TerrainMetadata? TerrainInspectorMetadata => _terrainInspectorMetadata ?? TerrainWorld?.Metadata;
     public double VerticalExaggeration
     {
         get => _verticalExaggeration;
@@ -50,16 +50,25 @@ public sealed partial class UiVm
         return true;
     }
 
-    internal string TerrainValue(string key) => key switch
+    internal string TerrainValue(string key)
     {
-        "Terrain.Data.Grid" => $"{TerrainInspectorMetadata!.Width} × {TerrainInspectorMetadata.Height}",
-        "Terrain.Data.Resolution" => ResolutionText(TerrainInspectorMetadata!),
-        "Terrain.Data.MinElevation" => $"{FormatTerrainNumber(TerrainInspectorMetadata!.MinElevation)} m",
-        "Terrain.Data.MaxElevation" => $"{FormatTerrainNumber(TerrainInspectorMetadata!.MaxElevation)} m",
-        "Terrain.Data.NoData" => TerrainInspectorMetadata!.NoData?.ToString("0.###", CultureInfo.InvariantCulture) ?? "—",
-        "Terrain.Display.VerticalExaggeration" => VerticalExaggerationText,
-        _ => ""
-    };
+        if (key == "Terrain.Display.VerticalExaggeration") return VerticalExaggerationText;
+        if (TerrainInspectorMetadata is not { } metadata) return "—";
+        return key switch
+        {
+            "Terrain.Data.Tile" => TerrainTileId,
+            "Terrain.Data.Grid" => $"{metadata.Width} × {metadata.Height}",
+            "Terrain.Data.Resolution" => ResolutionText(metadata),
+            "Terrain.Data.Bounds" => TerrainBoundsText,
+            "Terrain.Data.Source" => TerrainSourceName,
+            "Terrain.Data.VerticalDatum" => TerrainDatumText,
+            "Terrain.Data.MinElevation" => $"{FormatTerrainNumber(metadata.MinElevation)} m",
+            "Terrain.Data.MaxElevation" => $"{FormatTerrainNumber(metadata.MaxElevation)} m",
+            "Terrain.Data.NoData" => metadata.NoData?.ToString("0.###", CultureInfo.InvariantCulture) ?? "—",
+            "Terrain.Data.Probe" => TerrainProbeText,
+            _ => ""
+        };
+    }
 
     static string FormatTerrainNumber(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 
