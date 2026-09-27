@@ -23,6 +23,9 @@ public sealed partial class LogListAutoScrollController : IDisposable
     bool _tailCorrectionScheduled;
     bool _programmaticCorrection;
 
+    public int AutoScrollRequestCount { get; private set; }
+    public int UiThreadPostCount { get; private set; }
+
     public LogListAutoScrollController(ListBox listBox)
     {
         _listBox = listBox;
@@ -59,6 +62,7 @@ public sealed partial class LogListAutoScrollController : IDisposable
     // 唯一入口：新增日志 / 分类切换 / 清空后重现 / 布局变化都经此。
     void RequestLatestItemVisibility(bool forceFollow)
     {
+        AutoScrollRequestCount++;
         if (_disposed || _scroll is null) return;
         if (!forceFollow && !_atTail && !_forceNext) return; // 阅读旧日志不强制拉回
         if (forceFollow) _forceNext = true;
@@ -76,6 +80,7 @@ public sealed partial class LogListAutoScrollController : IDisposable
         _tailCorrectionScheduled = false;
         if (_primaryPending) return; // 已有任务排队：执行时读取最新请求
         _primaryPending = true;
+        UiThreadPostCount++;
         Dispatcher.UIThread.Post(RunPrimaryScroll, DispatcherPriority.Render);
     }
 

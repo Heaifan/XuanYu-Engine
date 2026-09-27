@@ -29,6 +29,7 @@ public sealed partial class LogListAutoScrollController
     {
         if (_tailCorrectionScheduled) return;
         _tailCorrectionScheduled = true;
+        UiThreadPostCount++;
         Dispatcher.UIThread.Post(
             () => RunFinalCorrection(version, lastItem), DispatcherPriority.Background);
     }

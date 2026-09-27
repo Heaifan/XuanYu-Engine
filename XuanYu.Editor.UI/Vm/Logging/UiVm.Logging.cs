@@ -5,16 +5,19 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     readonly EditorLogBuffer _logBuffer = new();
+    readonly LogProjectionCache _logItems = new();
+    readonly LogProjectionCache _problemItems = new();
+    readonly LogProjectionCache _buildItems = new();
+    readonly LogProjectionCache _taskItems = new();
     EditorLogBus _logBus = null!;
     EditorLogFilterState _logFilterState = EditorLogFilterState.CreateDefault();
     LogEntry? _selectedLogEntry;
     LogEntry[] _selectedEntries = [];
 
-    public IReadOnlyList<LogEntry> LogItems => _logBuffer.All.Where(_logFilterState.Allows).ToArray();
-    public IReadOnlyList<LogEntry> ProblemItems => _logBuffer.Filter(EditorLogFilter.Warning)
-        .Concat(_logBuffer.Filter(EditorLogFilter.Error)).ToArray();
-    public IReadOnlyList<LogEntry> BuildItems => _logBuffer.Filter(EditorLogFilter.Build);
-    public IReadOnlyList<LogEntry> TaskItems => _logBuffer.Filter(EditorLogFilter.Task);
+    public IReadOnlyList<LogEntry> LogItems => _logItems.Items;
+    public IReadOnlyList<LogEntry> ProblemItems => _problemItems.Items;
+    public IReadOnlyList<LogEntry> BuildItems => _buildItems.Items;
+    public IReadOnlyList<LogEntry> TaskItems => _taskItems.Items;
     public string LogSummary => EditorLogSummary.From(_logBuffer.All).Text;
     public LogEntry? SelectedLogEntry
     {
@@ -22,8 +25,7 @@ public sealed partial class UiVm
         set
         {
             if (!Set(ref _selectedLogEntry, value)) return;
-            OnPropertyChanged(nameof(HasSelectedLogEntry));
-            OnPropertyChanged(nameof(SelectedLogClipboardText));
+            RefreshLogSelectionBindings();
         }
     }
     public bool HasSelectedLogEntry => SelectedLogEntry is not null;
