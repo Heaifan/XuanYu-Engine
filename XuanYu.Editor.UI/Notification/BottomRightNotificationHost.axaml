@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
+             x:Class="XuanYu.Editor.UI.BottomRightNotificationHost"
+             x:DataType="local:UiVm"
+             HorizontalAlignment="Right"
+             VerticalAlignment="Bottom"
+             Margin="0,0,16,16"
+             IsHitTestVisible="False">
+  <UserControl.Styles>
+    <Style Selector="Border.terrainProgressCard">
+      <Setter Property="Background" Value="{StaticResource Color.Bg.Panel}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Padding" Value="14"/>
+      <Setter Property="Width" Value="360"/>
+    </Style>
+  </UserControl.Styles>
+  <StackPanel Spacing="8" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+    <local:NotificationBar IsHitTestVisible="True"/>
+    <Border Classes="terrainProgressCard"
+            IsVisible="{Binding IsTerrainImporting}"
+            IsHitTestVisible="True">
+      <StackPanel Spacing="8">
+        <Grid ColumnDefinitions="*,Auto">
+          <xy:XYHeading Text="正在导入 DEM" Variant="PanelTitle"/>
+          <xy:XYCaption Grid.Column="1"
+                        Text="{Binding TerrainImportPercentage, StringFormat='{}{0:0}%'}"
+                        HorizontalAlignment="Right"/>
+        </Grid>
+        <xy:XYProgressBar Value="{Binding TerrainImportPercentage}" Maximum="100"/>
+        <xy:XYCaption Text="{Binding TerrainImportMessage}"/>
+        <xy:XYButton Content="取消" Command="{Binding CancelTerrainImportCommand}"
+                     HorizontalAlignment="Right" IsEnabled="{Binding IsTerrainImporting}"/>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

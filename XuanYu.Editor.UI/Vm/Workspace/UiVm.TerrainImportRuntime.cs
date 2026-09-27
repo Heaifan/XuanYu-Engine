@@ -21,11 +21,12 @@ public sealed partial class UiVm
             ActivateTerrainTiles(tiles);
             ReportTerrainProgress(new(TerrainImportStage.Activating, 1, 1, 100, "导入完成"));
             TerrainImportState = TerrainImportState.Completed; RaiseImportBindings();
+            NotifySuccess("地形导入完成");
             return true;
         }
-        catch (OperationCanceledException) { TerrainImportState = TerrainImportState.Cancelled; FailTerrainImport("已取消导入。"); return false; }
-        catch (TerrainSourceReadException error) { TerrainImportState = TerrainImportState.Error; FailTerrainImport(error.Message); return false; }
-        catch (Exception error) { TerrainImportState = TerrainImportState.Error; FailTerrainImport($"Runtime 激活失败：{error.Message}"); return false; }
+        catch (OperationCanceledException) { TerrainImportState = TerrainImportState.Cancelled; FailTerrainImport("已取消导入。", UiNotificationLevel.Warning); return false; }
+        catch (TerrainSourceReadException error) { TerrainImportState = TerrainImportState.Error; FailTerrainImport(error.Message, UiNotificationLevel.Error); return false; }
+        catch (Exception error) { TerrainImportState = TerrainImportState.Error; FailTerrainImport($"Runtime 激活失败：{error.Message}", UiNotificationLevel.Error); return false; }
         finally { _terrainImportCancellation?.Dispose(); _terrainImportCancellation = null; RaiseImportBindings(); }
     }
 

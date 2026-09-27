@@ -49,6 +49,7 @@
         <Border BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1" ClipToBounds="True">
           <local:Main />
         </Border>
+        <local:BottomRightNotificationHost />
         <!-- F3-F1：导航 Gizmo 已移入 Vulkan Overlay Pass（原生子窗口 airspace 遮挡 Avalonia 覆盖层，命中走原生指针流） -->
       </Grid>
 

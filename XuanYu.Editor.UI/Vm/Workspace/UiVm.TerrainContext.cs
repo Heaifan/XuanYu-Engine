@@ -57,14 +57,19 @@ public sealed partial class UiVm
             FrameTerrainResources([world.ToRenderSnapshot("terrain", 1)]);
             return true;
         }
-        catch (TerrainSourceReadException error) { return FailTerrainImport(error.Message); }
-        catch (ArgumentException error) { return FailTerrainImport(error.Message); }
+        catch (TerrainSourceReadException error) { return FailTerrainImport(error.Message, UiNotificationLevel.Error); }
+        catch (ArgumentException error) { return FailTerrainImport(error.Message, UiNotificationLevel.Error); }
     }
 
-    void RequestTerrainImport() => FileCommandRequested?.Invoke("导入DEM");
-
-    bool FailTerrainImport(string message)
+    void RequestTerrainImport()
     {
+        if (IsTerrainImporting) return;
+        FileCommandRequested?.Invoke("导入DEM");
+    }
+
+    bool FailTerrainImport(string message, UiNotificationLevel level = UiNotificationLevel.Error)
+    {
+        if (level == UiNotificationLevel.Warning) NotifyWarning(message); else NotifyError(message);
         TerrainStatus = message; FooterMessage = message; FooterState = "状态：加载失败";
         OnPropertyChanged(nameof(TerrainStatus)); return false;
     }
