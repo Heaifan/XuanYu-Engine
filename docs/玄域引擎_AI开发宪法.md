@@ -1,7 +1,7 @@
-# 玄域引擎 AI 开发宪法 3.1
+# 玄域引擎 AI 开发宪法 3.2
 
-**版本：** 3.1
-**修订日期：** 2026-09-27
+**版本：** 3.2
+**修订日期：** 2026-09-28
 **维护者：** 用户指定的宪法维护 AI——ChatGPT  
 **生效条件：** 经用户批准并提交至玄域引擎正式仓库  
 **适用范围：** 玄域引擎、《兵无常势》及基于玄域引擎开展的代码、测试、文档、审计、规划、验收与 Git 操作
@@ -554,7 +554,152 @@ XYUI 默认只拥有 `xyui/**`，默认禁止自行 Commit、Push、Branch mutat
 
 未完成必要真机验收时只能报告“待真机验收”，不得提前 CLOSED。
 
-## 第三十二条　Git 交付
+## 第三十二条　XYE PRODUCT-GATE GOVERNANCE
+
+### 1. 子任务 / Lane 没有产品验收权
+
+A / B / C 等并行 Lane 的最终状态只能是：
+
+```text
+LOCAL VERIFIED
+READY FOR INTEGRATION
+```
+
+或：
+
+```text
+LOCAL BLOCKED
+```
+
+除非该 Lane 本身就是唯一 Product Integration Owner，否则禁止输出以下结论：
+
+```text
+PASS
+功能已修复
+问题已解决
+READY FOR USER ACCEPTANCE
+```
+
+### 2. 局部测试不能证明产品完成
+
+以下结果只能作为局部证据，不得据此推导用户问题已经解决：
+
+- Unit Tests PASS；
+- Contract Tests PASS；
+- Build 0W0E；
+- 5+100 PASS；
+- `git diff --check` PASS。
+
+### 3. 证据等级固定且不得越级覆盖
+
+产品证据优先级固定为：
+
+```text
+用户真机验收
+>
+Canonical run.bat 产品 E2E
+>
+Integration Tests
+>
+Module / Unit Tests
+>
+Static Contract Tests
+```
+
+高等级证据失败时，低等级证据无权覆盖。例如 Contract Tests 100/100 PASS，但用户真机没有 Grid，最终状态必须是：
+
+```text
+INTEGRATION BLOCKED
+```
+
+### 4. 每波并行任务必须冻结 User Story Done Definition
+
+每一波并行任务开始前，Coordinator 必须冻结唯一的 User Story Done Definition。所有 A / B / C 等子任务都只是实现该目标的手段，不得自行改变产品完成标准。
+
+示例：
+
+```text
+Terrain DONE =
+run.bat
+→ 导入正式 3601×3601 DEM
+→ Terrain 可见
+→ RenderSession 存活
+→ Zoom / Orbit / Pan 正常
+→ 性能明显改善
+```
+
+### 5. Convergence 必须运行真实产品路径
+
+Convergence 禁止只执行 Build、Unit Tests 或 Contract Tests。必须按用户真实路径验证：
+
+- Terrain：真实 Import HGT；
+- Grid：真实打开 Empty Scene；
+- Picking：真实走 Picking Runtime Path；
+- Vulkan：真实完成 Present。
+
+真实产品路径无法执行时，状态只能是：
+
+```text
+UNVERIFIED
+```
+
+或：
+
+```text
+INTEGRATION BLOCKED
+```
+
+禁止报告 PASS。
+
+### 6. 跨 Lane 接口由中央 Integration Owner 负责
+
+以下接口必须由中央 Integration Owner 验证，不得把各 Lane 的局部状态相加后视为产品正确：
+
+```text
+A 输出 → B 输入
+B 输出 → C 输入
+Cache → Builder
+Snapshot → Renderer
+CPU → GPU
+Shader Source → Runtime
+UI → Runtime
+```
+
+`A LOCAL VERIFIED + B LOCAL VERIFIED + C LOCAL VERIFIED` 不等于产品正确。
+
+### 7. 用户验收前必须形成 Candidate
+
+只有中央 E2E 验证通过后，才允许：
+
+1. 更新版本；
+2. 固定精确 Stage；
+3. Commit；
+4. Push；
+5. 核对 `Local HEAD = Remote HEAD` 且 `Ahead / Behind = 0 / 0`；
+6. 再次执行 `run.bat`。
+
+用户验收必须针对明确的 Version 与明确的 Commit。禁止将大量 Dirty、旧 Commit 或旧版本标题交给用户验收。
+
+### 8. READY FOR USER ACCEPTANCE 的版本责任
+
+任何状态达到 `READY FOR USER ACCEPTANCE` 之前，必须完成 Version / Candidate Identity 更新。禁止代码已经发生实质变化，但窗口仍显示旧版本或旧 Commit。
+
+### 9. 最终状态词统一
+
+```text
+地方 Lane：       LOCAL VERIFIED / LOCAL BLOCKED
+中央 Integration：INTEGRATION VERIFIED / INTEGRATION BLOCKED
+交用户前：        READY FOR USER ACCEPTANCE
+用户最终：        ACCEPTED / REJECTED
+```
+
+上述状态词不得混用。
+
+### 10. 反报喜硬门禁
+
+未完成 Frozen User Story 的真实 E2E 时，任何报告若使用“PASS、已修复、已解决、完成、可验收”等产品完成性结论，均属于 `GOVERNANCE FAIL`，不得进入下一阶段。
+
+## 第三十三条　Git 交付
 
 Git 提交以**原子、可验证成果**为单位，不要求每个微小编辑单独 Commit / Push。
 
@@ -566,11 +711,11 @@ Git 提交以**原子、可验证成果**为单位，不要求每个微小编辑
 
 Commit 不等于 Push；Push 不等于远端一致；必须实际核验远端分支 tip 后才能声明已交付。
 
-## 第三十三条　版本与发布
+## 第三十四条　版本与发布
 
 当前规定的版本源必须保持一致。Tag、Release 和冻结必须在自动门禁、必要真机验收、阶段 CLOSED 且用户明确批准后执行。
 
-## 第三十四条　Milestone 知识收口
+## 第三十五条　Milestone 知识收口
 
 正式 Milestone 在 CLOSED 前执行一次 `Milestone Knowledge Review`，但不得为每个小 Fix 制造重型知识审计。
 
@@ -589,7 +734,7 @@ CONSTITUTION_CANDIDATE
 
 复盘阶段不得顺手扩大产品 Scope。
 
-## 第三十五条　月度健康治理
+## 第三十六条　月度健康治理
 
 每个自然月至少检查一次：
 
@@ -607,7 +752,7 @@ CONSTITUTION_CANDIDATE
 
 普通措辞和目录美观不得阻断主线。
 
-## 第三十六条　最终报告最小事实集
+## 第三十七条　最终报告最小事实集
 
 发生正式仓库写入的开发轮，最终报告至少包含：
 
