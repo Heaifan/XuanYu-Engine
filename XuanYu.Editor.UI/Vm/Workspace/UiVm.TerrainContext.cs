@@ -54,6 +54,7 @@ public sealed partial class UiVm
             OnPropertyChanged(nameof(TerrainSource)); OnPropertyChanged(nameof(TerrainWorld));
             OnPropertyChanged(nameof(TerrainStatus));
             PublishSceneRenderSnapshot();
+            FrameTerrainResources([world.ToRenderSnapshot("terrain", 1)]);
             return true;
         }
         catch (TerrainSourceReadException error) { return FailTerrainImport(error.Message); }
