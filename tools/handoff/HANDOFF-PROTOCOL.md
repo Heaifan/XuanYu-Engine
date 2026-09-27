@@ -154,7 +154,7 @@ scripts/resolve-dotnet.ps1
 
 JOIN 必须只读取 Git 事实：`rev-parse`、`branch --show-current`、`status`、`worktree list` 及正式 Resolver / Bootstrap。它不得执行 fetch、pull、reset、clean、checkout、switch、merge、rebase、stash、commit 或 push；Git 成败只看真实 Exit Code。
 
-JOIN 必须允许 dirty；只有 Branch 或 HEAD 偏离 `.git\xye-handoff\state.json` 时以 `BASELINE_MOVED` 阻断。输出必须包含 `DirtyFiles`、`Scope`、`OwnDirty`、`ForeignDirty` 与 `GitMutation: NONE`。XYUI / XYE / GOVERNANCE 可按路径归属报告 OwnDirty 与 ForeignDirty；INTEGRATION 无法可靠推断时必须输出 `OwnDirty: UNKNOWN`、`ForeignDirty: INFORMATIONAL`，不得把 ForeignDirty 当作 OwnershipConflict。
+JOIN 必须允许 dirty；只有 Branch 改变，或 `baselineHead` 不是当前 HEAD 的祖先时，才以 `BASELINE_MOVED` 阻断。输出必须包含 `DirtyFiles`、`Scope`、`OwnDirty`、`ForeignDirty` 与 `GitMutation: NONE`。XYUI / XYE / GOVERNANCE 可按路径归属报告 OwnDirty 与 ForeignDirty；INTEGRATION 无法可靠推断时必须输出 `OwnDirty: UNKNOWN`、`ForeignDirty: INFORMATIONAL`，不得把 ForeignDirty 当作 OwnershipConflict。
 
 development 下所有 Lane JOIN 可通过 dirty。convergence 且 `coordinatorScope=xye` 时，`join --scope xyui` 返回 `HANDOFF BLOCKED` 与 `CONVERGENCE_EXCLUSIVE`；`join --scope xye` 与 XYE Coordinator status 允许。
 
@@ -180,7 +180,7 @@ Active Wave 存在时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。CLOSE 仅在
 
 ## 9. Self Test / Dry Test
 
-`powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖 dirty JOIN PASS、XYUI development PASS、XYUI convergence `CONVERGENCE_EXCLUSIVE`、无参等价 XYE、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED；测试结束删除 fixture，不污染 canonical Workspace。
+`powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖祖先 baseline 下的并行 JOIN PASS、Commit Mutex 争抢/owner 校验/安全解锁、commit 后 advance 自动释放、dirty 保留、XYUI convergence `CONVERGENCE_EXCLUSIVE`、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED；测试结束删除 fixture，不污染 canonical Workspace。
 
 ## 10. Successful final state
 
