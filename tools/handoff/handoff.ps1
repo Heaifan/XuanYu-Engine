@@ -20,11 +20,22 @@ function Stop-Handoff([string]$Code, [string]$Reason) {
 }
 
 function Invoke-Git([Parameter(ValueFromRemainingArguments = $true)][string[]]$GitArgs) {
-    $output = @(& git @GitArgs 2>&1)
-    if ($LASTEXITCODE -ne 0) {
-        throw "git $($GitArgs -join ' ') failed:`n$($output -join [Environment]::NewLine)"
+    $previousErrorAction = $ErrorActionPreference
+    try {
+        # Windows PowerShell 5.1 can surface successful native stderr
+        # (for example git fetch/switch progress) as NativeCommandError when
+        # ErrorActionPreference is Stop. Judge Git by its real exit code.
+        $ErrorActionPreference = 'Continue'
+        $output = @(& git @GitArgs 2>&1)
+        $exitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $previousErrorAction
     }
-    return $output
+
+    if ($exitCode -ne 0) {
+        throw "git $($GitArgs -join ' ') failed with exit code $exitCode:`n$($output -join [Environment]::NewLine)"
+    }
+    return @($output | ForEach-Object { "$_" })
 }
 
 function Read-HandoffConfig([string]$Path) {
@@ -83,14 +94,22 @@ if (-not $workspaceOk) {
     Stop-Handoff 'NON_CANONICAL_WORKSPACE' "未登记的工作区：$resolvedRepo"
 }
 
-Invoke-Git fetch --prune $Remote | Out-Null
+try {
+    Invoke-Git fetch --prune $Remote | Out-Null
+} catch {
+    Stop-Handoff 'GIT_FETCH_FAILED' $_.Exception.Message
+}
 $RemoteRef = "$Remote/$ActiveBranch"
 & git show-ref --verify --quiet "refs/remotes/$Remote/$ActiveBranch"
 if ($LASTEXITCODE -ne 0) {
     Stop-Handoff 'REMOTE_BRANCH_NOT_FOUND' "找不到 $RemoteRef"
 }
 
-$counts = ((Invoke-Git rev-list --left-right --count "HEAD...$RemoteRef") -join '').Trim() -split '\s+'
+try {
+    $counts = ((Invoke-Git rev-list --left-right --count "HEAD...$RemoteRef") -join '').Trim() -split '\s+'
+} catch {
+    Stop-Handoff 'GIT_STATE_FAILED' $_.Exception.Message
+}
 $Ahead = [int]$counts[0]
 $Behind = [int]$counts[1]
 $dirtyBefore = @(& git status --porcelain=v1 --untracked-files=all)
@@ -103,16 +122,24 @@ if ($Ahead -gt 0) {
 
 if ($Behind -gt 0) {
     Write-Host "REMOTE WINS: local is behind $Behind commit(s)." -ForegroundColor Yellow
-    Invoke-Git reset --hard HEAD | Out-Null
-    Invoke-Git clean -fd | Out-Null
+    try {
+        Invoke-Git reset --hard HEAD | Out-Null
+        Invoke-Git clean -fd | Out-Null
+    } catch {
+        Stop-Handoff 'REMOTE_WIN_CLEAN_FAILED' $_.Exception.Message
+    }
 } elseif ($dirtyBefore.Count -gt 0) {
     Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异，但工作区 dirty；禁止静默删除。'
 }
 
-Invoke-Git switch --ignore-other-worktrees -C $ActiveBranch $RemoteRef | Out-Null
-Invoke-Git reset --hard $RemoteRef | Out-Null
-Invoke-Git clean -fd | Out-Null
-Invoke-Git branch "--set-upstream-to=$RemoteRef" $ActiveBranch | Out-Null
+try {
+    Invoke-Git switch --ignore-other-worktrees -C $ActiveBranch $RemoteRef | Out-Null
+    Invoke-Git reset --hard $RemoteRef | Out-Null
+    Invoke-Git clean -fd | Out-Null
+    Invoke-Git branch "--set-upstream-to=$RemoteRef" $ActiveBranch | Out-Null
+} catch {
+    Stop-Handoff 'GIT_SYNC_FAILED' $_.Exception.Message
+}
 
 try {
     $Config = Read-HandoffConfig $ConfigPath
@@ -147,10 +174,14 @@ if ($LASTEXITCODE -ne 0) {
     Stop-Handoff 'BOOTSTRAP_FAILED' ($bootstrapOutput -join ' | ')
 }
 
-$finalLocal = ((Invoke-Git rev-parse HEAD) -join '').Trim()
-$finalRemote = ((Invoke-Git rev-parse $RemoteRef) -join '').Trim()
-$finalBranch = ((Invoke-Git branch --show-current) -join '').Trim()
-$finalCounts = ((Invoke-Git rev-list --left-right --count "HEAD...$RemoteRef") -join '').Trim() -split '\s+'
+try {
+    $finalLocal = ((Invoke-Git rev-parse HEAD) -join '').Trim()
+    $finalRemote = ((Invoke-Git rev-parse $RemoteRef) -join '').Trim()
+    $finalBranch = ((Invoke-Git branch --show-current) -join '').Trim()
+    $finalCounts = ((Invoke-Git rev-list --left-right --count "HEAD...$RemoteRef") -join '').Trim() -split '\s+'
+} catch {
+    Stop-Handoff 'FINAL_GIT_STATE_FAILED' $_.Exception.Message
+}
 $finalDirty = @(& git status --porcelain=v1 --untracked-files=all)
 
 if ($finalBranch -ne $ActiveBranch) { Stop-Handoff 'WRONG_BRANCH' "当前分支：$finalBranch" }
@@ -160,7 +191,11 @@ if ([int]$finalCounts[0] -ne 0 -or [int]$finalCounts[1] -ne 0) {
 }
 if ($finalDirty.Count -gt 0) { Stop-Handoff 'DIRTY_AFTER_SYNC' '同步后 working tree 仍 dirty。' }
 
-$worktreeLines = @(Invoke-Git worktree list --porcelain | Where-Object { $_ -like 'worktree *' })
+try {
+    $worktreeLines = @(Invoke-Git worktree list --porcelain | Where-Object { $_ -like 'worktree *' })
+} catch {
+    Stop-Handoff 'WORKTREE_QUERY_FAILED' $_.Exception.Message
+}
 
 Write-Host ''
 Write-Host '================ HANDOFF ================' -ForegroundColor Green
