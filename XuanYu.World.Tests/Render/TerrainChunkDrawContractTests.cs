@@ -29,6 +29,9 @@ public sealed class TerrainChunkDrawContractTests
         var a = new TerrainChunkGpuKey("t", 1, 1, 0, 0, TerrainLodLevel.Lod2);
         Assert.NotEqual(a, a with { Lod = TerrainLodLevel.Lod3 });
         Assert.NotEqual(a, a with { Revision = 2 });
+        Assert.NotEqual(a, a with { ChunkX = 1 });
+        Assert.NotEqual(a, a with { ChunkY = 1 });
+        Assert.NotEqual(a, a with { VerticalExaggeration = 2 });
     }
 
     [Fact]

@@ -10,6 +10,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     Silk.NET.Vulkan.Pipeline _terrainPipeline;
     PipelineLayout _terrainPipelineLayout;
     Terrain.VulkanTerrainGpuCache? _terrainCache;
+    readonly TerrainLodStateCache _terrainLodStates = new();
     public TerrainRenderStats TerrainStats { get; private set; }
 
     public void SetTerrainPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
@@ -19,7 +20,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
             throw new InvalidOperationException("Terrain Pipeline 注入后 CommandBuffer 重录失败");
     }
 
-    internal void DisposeTerrain() { _terrainCache?.Dispose(); _terrainCache = null; }
+    internal void DisposeTerrain()
+    { _terrainCache?.Dispose(); _terrainCache = null; _terrainLodStates.Clear(); }
+
+    internal void RetainTerrainLodStates(IEnumerable<TerrainRenderResource> resources) =>
+        _terrainLodStates.RetainOnly(resources.Select(x => (x.TerrainId, x.Revision)));
 
     void DrawTerrain(CommandBuffer cb, float* scene, int terrainIndex)
     {
@@ -30,13 +35,16 @@ public sealed unsafe partial class VulkanClearFrameOwner
             (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
         var state = _renderProjection.Camera.ToViewProjection(viewport);
         var draws = new List<TerrainChunkDraw>(); var culled = 0;
+        RetainTerrainLodStates(_renderProjection.TerrainResources);
         foreach (var chunk in cache.GetChunks(resource))
         {
             var b = chunk.WorldBounds; var origin = resource.WorldOrigin;
             var bounds = new SpatialAabb(new(origin.X + b.MinX, origin.Y + b.MinY, b.MinZ),
                 new(origin.X + b.MaxX, origin.Y + b.MaxY, b.MaxZ));
             if (!TerrainFrustumCuller.Intersects(state, bounds)) { culled++; continue; }
-            var lod = (TerrainLodLevel)TerrainLodSelector.Select(state, bounds).Lod;
+            var lodKey = new TerrainLodStateKey(resource.TerrainId, resource.Revision,
+                chunk.ChunkX, chunk.ChunkY);
+            var lod = (TerrainLodLevel)_terrainLodStates.Select(lodKey, state, bounds).Lod;
             var gpu = cache.GetOrCreate(resource, chunk, lod, _renderProjection.EffectiveTerrainTransform);
             if (gpu is null) continue;
             var vb = gpu.Vertices.Buffer; var ib = gpu.Indices.Buffer; ulong offset = 0;

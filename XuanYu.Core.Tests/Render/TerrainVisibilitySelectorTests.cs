@@ -29,6 +29,34 @@ public sealed class TerrainVisibilitySelectorTests
         Assert.Equal(first.Lod, next.Lod);
     }
 
+    [Fact]
+    public void LodStateIsScopedToTerrainRevisionAndChunk()
+    {
+        var cache = new TerrainLodStateCache();
+        var state = State(ProjectionMode.Perspective);
+        var key = new TerrainLodStateKey("terrain", 1, 0, 0);
+        var first = cache.Select(key, state, Box(0, 0, 70));
+        var otherChunk = cache.Select(key with { ChunkX = 1 }, state, Box(0, 0, 70));
+        var otherRevision = cache.Select(key with { Revision = 2 }, state, Box(0, 0, 70));
+
+        Assert.Equal(first.Lod, otherChunk.Lod);
+        Assert.Equal(first.Lod, otherRevision.Lod);
+        Assert.Equal(3, cache.Count);
+    }
+
+    [Fact]
+    public void LodStateRetention_drops_old_revision_without_inheriting_it()
+    {
+        var cache = new TerrainLodStateCache();
+        var state = State(ProjectionMode.Perspective);
+        cache.Select(new("terrain", 1, 0, 0), state, Box(0, 0, 70));
+        cache.Select(new("terrain", 2, 0, 0), state, Box(0, 0, 70));
+
+        cache.RetainOnly([("terrain", 2)]);
+
+        Assert.Equal(1, cache.Count);
+    }
+
     [Fact] public void VisibilityStatsCorrect()
     {
         var result = TerrainChunkVisibility.Select(

@@ -31,7 +31,7 @@ public static class TerrainChunkVisibility
                 continue;
             }
 
-            var selection = TerrainLodSelector.Select(state, chunk.Bounds);
+            var selection = TerrainLodSelector.Select(state, chunk.Bounds, -1);
             entries.Add(new(chunk.ChunkId, false, selection));
             lods[selection.Lod]++;
         }
