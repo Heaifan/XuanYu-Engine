@@ -141,7 +141,12 @@ function Get-Facts {
 
 function Get-RemoteFacts {
     $remote = $Config.Remote
-    $remoteRef = "refs/remotes/$remote/$($Config.ActiveBranch)"
+    $activeBranch = if ($null -ne $state -and -not [string]::IsNullOrWhiteSpace([string]$state.branch)) {
+        [string]$state.branch
+    } else {
+        [string]$Config.ActiveBranch
+    }
+    $remoteRef = "refs/remotes/$remote/$activeBranch"
     try { Invoke-Git @('show-ref', '--verify', '--quiet', $remoteRef) | Out-Null }
     catch { return [pscustomobject]@{ Exists = $false; Head = $null; Ahead = $null; Behind = $null } }
     $remoteHead = (Invoke-Git @('rev-parse', $remoteRef) -join '').Trim()
@@ -199,6 +204,98 @@ function Get-DirtyPath([string]$Line) {
     $path = if ($Line.Length -gt 3) { $Line.Substring(3).Trim() } else { $Line.Trim() }
     if ($path.Contains(' -> ')) { $path = ($path -split ' -> ')[-1] }
     return $path.Trim('"') -replace '\\', '/'
+}
+
+function Get-DirtyRecords($Facts) {
+    @($Facts.Dirty | ForEach-Object {
+        $line = [string]$_
+        $status = if ($line.Length -ge 2) { $line.Substring(0, 2) } else { '??' }
+        [pscustomobject]@{
+            Status = $status
+            Path = Get-DirtyPath $line
+            Staged = $status[0] -ne ' ' -and $status -ne '??'
+            ChangeKind = if ($status -eq '??') { 'Untracked' } elseif ($status[0] -eq 'R') { 'Renamed' } elseif ($status[0] -eq 'D' -or $status[1] -eq 'D') { 'Deleted' } else { 'TrackedModified' }
+        }
+    })
+}
+
+function Get-ConvergenceOwner([string]$Path) {
+    $owners = @{
+        'XuanYu.Editor.UI/Input/UiVmMapBackend.cs' = 'B'
+        'XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Input.cs' = 'B'
+        'XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionCancel.cs' = 'B'
+        'XuanYu.Editor.UI/Vm/Workspace/UiVm.ContextTransition.cs' = 'B'
+        'XuanYu.Editor/Workspace/EditorContextTransitionContract.cs' = 'B'
+        'XuanYu.World.Tests/UiRuntime/TerrainRegionModeTransitionFix1Tests.cs' = 'B'
+        'XuanYu.Editor.UI/Vm/Map/MapRegionLabelProjection.cs' = 'C'
+        'XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs' = 'C'
+        'XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Labels.cs' = 'C'
+        'XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs' = 'C'
+        'XuanYu.Editor.UI/Vm/Scene/UiVm.RenderProjection.cs' = 'C'
+        'XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainContext.cs' = 'C'
+        'XuanYu.Editor/MapEditing/MapSurfacePicker.cs' = 'C'
+        'XuanYu.World/Map/MapMarker.cs' = 'C'
+        'XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Marker.cs' = 'C'
+        'XuanYu.Editor.UI/Vm/Workspace/TerrainElevationSampler.cs' = 'C'
+        'XuanYu.Editor/MapEditing/TerrainRayInterval.cs' = 'C'
+        'XuanYu.Editor/MapEditing/TerrainSurfacePicker.cs' = 'C'
+        'XuanYu.World/Map/MapMarkerHeightPolicy.cs' = 'C'
+        'XuanYu.World.Tests/MapEditing/MapMarkerHeightPolicyTests.cs' = 'C'
+        'XuanYu.World.Tests/MapEditing/TerrainSurfacePickerTests.cs' = 'C'
+        'XuanYu.World.Tests/UiRuntime/TerrainOverlayElevationTests.cs' = 'C'
+        'tools/handoff/handoff.ps1' = 'GOVERNANCE'
+        'tools/handoff/dirty-convergence.selftest.ps1' = 'GOVERNANCE'
+    }
+    if ($owners.ContainsKey($Path)) { return $owners[$Path] }
+    return $null
+}
+
+function Get-ContentFingerprint([string]$Path) {
+    $full = Join-Path $RepoRoot $Path
+    if (-not (Test-Path -LiteralPath $full -PathType Leaf)) { return $null }
+    return (Get-FileHash -LiteralPath $full -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+
+function Get-ConvergenceBaseline($Facts, $RemoteFacts, [string]$RequestedMode) {
+    $records = @(Get-DirtyRecords $Facts)
+    $staged = @($records | Where-Object { $_.Staged })
+    $invalid = @($records | Where-Object { $_.ChangeKind -in @('Deleted', 'Renamed') })
+    $baseline = @()
+    $governance = @()
+    $foreign = @()
+    $unknown = @()
+    foreach ($record in $records) {
+        $owner = Get-ConvergenceOwner $record.Path
+        if ($null -eq $owner) {
+            if (Test-OwnedPath $record.Path 'xye') { $unknown += $record } else { $foreign += $record }
+            continue
+        }
+        $fingerprint = Get-ContentFingerprint $record.Path
+        if ([string]::IsNullOrWhiteSpace($fingerprint)) { $unknown += $record; continue }
+        $baseline += [pscustomobject]@{
+            Path = $record.Path
+            Owner = $owner
+            ChangeKind = $record.ChangeKind
+            BaselineHead = $Facts.Head
+            Fingerprint = $fingerprint
+            FingerprintKind = if ($record.ChangeKind -eq 'Untracked') { 'ContentHash' } else { 'ContentHash' }
+        }
+        if ($owner -eq 'GOVERNANCE') { $governance += $baseline[-1] }
+    }
+    [pscustomobject]@{
+        ValidMode = $RequestedMode -eq 'convergence'
+        ValidRemote = $null -ne $RemoteFacts -and $RemoteFacts.Exists -and $Facts.Head -eq $RemoteFacts.Head -and $RemoteFacts.Ahead -eq 0 -and $RemoteFacts.Behind -eq 0
+        Baseline = $baseline
+        Governance = $governance
+        Staged = $staged
+        Foreign = $foreign
+        Unknown = $unknown
+        Invalid = $invalid
+    }
+}
+
+function Stop-DirtyConvergence([string]$Code, [string]$Reason) {
+    Stop-Handoff $Code $Reason
 }
 
 function Test-OwnedPath([string]$Path, [string]$Lane) {
@@ -264,8 +361,21 @@ function Show-Header([string]$Name, [string]$Result, $Facts, $State, $Toolchain,
     Write-Host "Scope       : $Scope"
     Write-Host "Dirty      : $(if ($Facts.Dirty.Count -gt 0) { 'YES' } else { 'NO' })"
     Write-Host "DirtyFiles : $($Facts.Dirty.Count)"
-    Write-Host "OwnDirty   : $($Report.Own)"
-    Write-Host "ForeignDirty: $($Report.Foreign)"
+    $ownDirty = $Report.Own
+    $foreignDirty = $Report.Foreign
+    if ($null -ne $State -and $null -ne $State.dirtyBaseline) {
+        $ownDirty = @($State.dirtyBaseline | Where-Object { $_.Owner -in @('A', 'B', 'C') }).Count
+        $foreignDirty = $State.foreignDirtyCount
+    }
+    Write-Host "OwnDirty   : $ownDirty"
+    Write-Host "ForeignDirty: $foreignDirty"
+    if ($null -ne $State -and $null -ne $State.dirtyBaseline) {
+        Write-Host "UnknownDirty: $($State.unknownDirtyCount)"
+        Write-Host "Staged     : $($State.stagedCount)"
+        Write-Host "BaselineFingerprint: $($State.dirtyBaseline.Count) files"
+        Write-Host "CandidateTreeMatch: $(if ($State.candidateTreeMatch) { 'YES' } else { 'NO' })"
+        Write-Host 'CommitEligibility: NO'
+    }
     Write-Host 'GitMutation: NONE'
     if ($null -ne $Toolchain) { Write-Host "DOTNET     : $($Toolchain.Path)"; Write-Host "SDK        : $($Toolchain.Version)" }
     Write-Host "Bootstrap  : $Bootstrap"
@@ -460,14 +570,63 @@ if ($Mode -eq 'prepare') {
         Invoke-Git @('reset', '--hard', $remoteRef) | Out-Null
         Invoke-Git @('clean', '-fd') | Out-Null
         Invoke-Git @('switch', '--ignore-other-worktrees', '-C', $Config.ActiveBranch, $remoteRef) | Out-Null
-    } elseif ($facts.Dirty.Count -gt 0) { Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异但工作区 dirty。' }
+    } elseif ($facts.Dirty.Count -gt 0 -and $WaveMode -ne 'convergence') { Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异但工作区 dirty。' }
     $newFacts = Get-Facts
-    $handoffMode = if ($Config.ContainsKey('Mode')) { [string]$Config.Mode } else { $WaveMode }
-    if ($handoffMode -notin @('development', 'convergence', 'WIP_RESUME')) {
-        Stop-Handoff 'CONFIG_INVALID' "非法 Handoff Mode：$handoffMode"
-    }
     $convergenceTarget = if ($Config.ContainsKey('ConvergenceTargetBranch')) { [string]$Config.ConvergenceTargetBranch } else { $null }
-    $state = [pscustomobject]@{ branch = $newFacts.Branch; baselineHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = $handoffMode; convergenceTargetBranch = $convergenceTarget; coordinatorScope = (Normalize-CoordinatorScope $CoordinatorScope); preparedAt = (Get-Date).ToUniversalTime().ToString('o') }
+    $requestedConvergence = $WaveMode -eq 'convergence'
+    if ($requestedConvergence) {
+        $coordinator = Normalize-CoordinatorScope $CoordinatorScope
+        if ($coordinator -ne 'xye') {
+            Stop-Handoff 'CONVERGENCE_COORDINATOR_REQUIRED' 'Dirty Convergence Baseline 必须由 XYE Coordinator 显式建立。'
+        }
+        $remoteFacts = Get-RemoteFacts
+        $dirtyBaseline = Get-ConvergenceBaseline $newFacts $remoteFacts $WaveMode
+        if (-not $dirtyBaseline.ValidRemote) {
+            Stop-DirtyConvergence 'REMOTE_NOT_CONVERGED' 'Dirty Convergence Baseline 要求 Local/Remote HEAD 与 Ahead/Behind 完全一致。'
+        }
+        if ($dirtyBaseline.Staged.Count -gt 0) {
+            Stop-DirtyConvergence 'STAGED_DIRTY' 'Dirty Convergence Baseline 禁止包含 Staged 修改。'
+        }
+        if ($dirtyBaseline.Invalid.Count -gt 0) {
+            Stop-DirtyConvergence 'UNOWNED_DELETE_OR_RENAME' 'Deleted/Renamed 文件不能作为 Dirty Convergence Baseline。'
+        }
+        if ($dirtyBaseline.Foreign.Count -gt 0) {
+            Stop-DirtyConvergence 'FOREIGN_DIRTY' 'Dirty Convergence Baseline 不允许 ForeignDirty。'
+        }
+        if ($dirtyBaseline.Unknown.Count -gt 0 -or $dirtyBaseline.Baseline.Count -ne $newFacts.Dirty.Count) {
+            Stop-DirtyConvergence 'UNKNOWN_DIRTY' 'Dirty Convergence Baseline 要求所有 Dirty/Untracked 文件都有明确 Owner。'
+        }
+        $state = [pscustomobject]@{
+            waveId = [guid]::NewGuid().ToString('N')
+            branch = $newFacts.Branch
+            baselineHead = $newFacts.Head
+            remoteHead = $remoteFacts.Head
+            workspace = $RepoRoot
+            active = $true
+            mode = 'convergence'
+            waveMode = 'convergence'
+            convergenceTargetBranch = $convergenceTarget
+            coordinatorScope = $coordinator
+            dirtyBaseline = @($dirtyBaseline.Baseline)
+            ownDirtyCount = @($dirtyBaseline.Baseline | Where-Object { $_.Owner -in @('A', 'B', 'C') }).Count
+            governanceDirtyCount = $dirtyBaseline.Governance.Count
+            foreignDirtyCount = $dirtyBaseline.Foreign.Count
+            unknownDirtyCount = $dirtyBaseline.Unknown.Count
+            stagedCount = $dirtyBaseline.Staged.Count
+            candidateTreeMatch = $false
+            commitEligibility = $false
+            preparedAt = (Get-Date).ToUniversalTime().ToString('o')
+        }
+    } else {
+        $handoffMode = if ($Config.ContainsKey('Mode')) { [string]$Config.Mode } else { $WaveMode }
+        if ($handoffMode -notin @('development', 'convergence', 'WIP_RESUME')) {
+            Stop-Handoff 'CONFIG_INVALID' "非法 Handoff Mode：$handoffMode"
+        }
+        if ($newFacts.Dirty.Count -gt 0) {
+            Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异但工作区 dirty。'
+        }
+        $state = [pscustomobject]@{ waveId = [guid]::NewGuid().ToString('N'); branch = $newFacts.Branch; baselineHead = $newFacts.Head; remoteHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = $handoffMode; waveMode = $handoffMode; convergenceTargetBranch = $convergenceTarget; coordinatorScope = (Normalize-CoordinatorScope $CoordinatorScope); preparedAt = (Get-Date).ToUniversalTime().ToString('o') }
+    }
     Write-State $state
     $toolchain = Resolve-Dotnet
     Show-Header 'PREPARE' 'PASS' $newFacts $state $toolchain (Get-DirtyReport $newFacts $Scope)
