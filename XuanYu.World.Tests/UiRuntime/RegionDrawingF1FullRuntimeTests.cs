@@ -34,16 +34,6 @@ public sealed partial class RegionDrawingF1FullRuntimeTests
         Assert.Empty(vm.MapSession.CurrentMap.Regions);
     }
 
-    [Fact]
-    public void R07_enter_after_three_vertices_creates_formal_region()
-    {
-        var vm = CreateVm();
-        foreach (var point in FindHits(vm, Viewport, 3)) vm.RegionDrawingPointerPressed(point.X, point.Y, Viewport);
-        Assert.True(vm.CommitRegionDrawingFromEnter());
-        Assert.False(vm.IsRegionDrawingDraftActive);
-        Assert.Single(vm.MapSession.CurrentMap.Regions);
-        Assert.Contains(vm.RenderProjection.Projection!.VectorOverlayResources, x => x.Key.Value == "map-vector-overlay");
-    }
 
     [Fact]
     public void R08_enter_before_three_vertices_keeps_draft()

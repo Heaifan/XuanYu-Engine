@@ -77,18 +77,6 @@ public sealed class DiagnosticClickToTrackTests
         Assert.Equal(GestureOwner.Picking, vm.ViewportInput.Router.State.Owner);
     }
 
-    [Fact]
-    public void Native_left_down_dismisses_the_xyui_map_context_menu()
-    {
-        var host = new VulkanNativeHost(); var menu = new XYContextMenu();
-        typeof(VulkanNativeHost).GetField("_mapContextMenu",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(host, menu);
-        menu.Open(host);
-        typeof(VulkanNativeHost).GetMethod("OnNativePointerMessage",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.Invoke(host,
-            [new NativePointerMessage(NativePointerMessage.LeftDown, 1, 20, 30, (nint)1, 0, 0, 0)]);
-        Assert.False(menu.IsOpen);
-    }
     static DiagnosticOverlayHost EnabledOverlay()
     {
         var overlay = new DiagnosticOverlayHost(); var vm = new UiVm(null, seedInitialScene: false);

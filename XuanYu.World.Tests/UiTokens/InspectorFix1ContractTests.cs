@@ -33,8 +33,8 @@ public sealed class InspectorFix1ContractTests
     {
         Assert.Contains("<local:MapEditorPanel", Panel);
         Assert.Contains("<local:FeatureInspectorPanel", Panel);
-        Assert.Contains("<local:EntityInspectorPanel", Panel);
-        Assert.DoesNotContain("<local:MarkerInspectorPanel", Panel);
+        foreach (var legacy in new[] { "MarkerInspectorPanel", "EntityInspectorPanel" })
+            Assert.DoesNotContain($"<local:{legacy}", Panel);
     }
 
     [Fact]

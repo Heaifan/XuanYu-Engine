@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Headless;
@@ -8,13 +7,6 @@ namespace XuanYu.World.Tests.UiRuntime;
 
 internal static class UiTestPlatformServices
 {
-    [ModuleInitializer]
-    internal static void Initialize()
-    {
-        UiTestAppBuilder.BuildAvaloniaApp().SetupWithoutStarting();
-        Install();
-    }
-
     internal static void Install()
     {
         var locator = typeof(AvaloniaLocator).GetProperty("CurrentMutable",

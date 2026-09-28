@@ -28,23 +28,6 @@ public partial class DiagnosticOverlayHost : UserControl
     public int ActivePopupCount => _popups.Count;
     public int ActiveBadgeCount => _popups.Count(x => x.Child is DiagnosticBadge);
 
-    void AttachFloatingLayer(Window window)
-    {
-        var root = EnsureWindowRoot(window);
-        if (root is null) return;
-        if (_floatingLayer?.Parent is Panel) return;
-        _floatingLayer = new Canvas { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch, IsHitTestVisible = false };
-        _floatingLayer.SetValue(Panel.ZIndexProperty, -1); root.Children.Insert(0, _floatingLayer);
-        window.UpdateLayout();
-    }
-
-    void DetachFloatingLayer()
-    {
-        if (_floatingLayer?.Parent is Panel root) root.Children.Remove(_floatingLayer);
-        _floatingLayer = null;
-    }
-
     void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         _loaded = true;
