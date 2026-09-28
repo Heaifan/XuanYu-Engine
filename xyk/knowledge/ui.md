@@ -86,3 +86,42 @@ Measure constraint
 Diagnostic 的身份是 Observer：可以观察 Pointer、读取 HWND、报告坐标和绘制不阻塞的 Highlight，但不得抢 Capture、阻塞目标 Pointer、成为新的 Input Owner、调用 Router 作为第二入口或创建长期 Native UI Owner。
 
 Diagnostic 开启与关闭不应改变目标 Viewport 的输入可用性。任何新增 Diagnostic 交互都必须先证明不会改变生产输入仲裁和生命周期。
+
+
+---
+
+## K-UI-002 拖拽反馈必须保持 Pointer Grab Point 不变量
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E2
+**标签**：Drag、Ghost Preview、Pointer、GrabOffset、Interaction
+**适用范围**：列表项、节点、面板、地图对象、Ghost Preview 等拖拽反馈。
+
+### 问题
+
+用户开始拖拽时，Pointer 通常落在对象内部任意位置，而非固定左上角或中心。如果 Preview 使用固定偏移，拖动后光标与视觉对象会持续漂移。
+
+### 工程规则
+
+Drag Begin 时记录：
+```text
+GrabOffset = PointerPosition - ObjectOrigin
+```
+
+整个 Drag 生命周期保持 GrabOffset 不变：
+```text
+PreviewOrigin = CurrentPointer - GrabOffset
+```
+
+### 禁止做法
+
+- 使用固定 +X/+Y Offset 模拟拖拽 Preview；
+- 拖动过程中重新计算抓取点；
+- 强制让 Pointer 跟随对象中心，而忽略用户实际按下位置。
+
+### 验证
+
+至少从对象左上、中心、右下和任意内部位置开始拖拽，整个过程中 Pointer 相对 Preview 的抓取点必须保持不变。
+
+**来源任务**：XYUI4 DragFeedback / ContextMenu Coordinate Audit · 2026-09-28

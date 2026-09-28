@@ -177,3 +177,14 @@ Real Platform Event → Real Adapter → Editor Event → Production Router → 
 平台编码只能在 Adapter 内解释；Router、Consumer 和领域 Core 只消费统一语义，例如 `EditorKey.Alt` 与 `EditorPointerModifiers.Alt`。`0x0020` 不得凭经验映射为 Alt，必须依据平台合同区分 XBUTTON1 等真实含义。
 
 验证必须覆盖真实平台 Enum / Message Contract，再验证 Adapter 输出的统一语义。
+
+### 2026-09-28 强化：Pointer 坐标必须携带空间语义
+
+Pointer Event 的 `X/Y` 数值本身不是完整合同。跨层传递时必须明确：
+- Source Space；
+- Target Space；
+- Unit（DIP / Physical Pixel）；
+- Owner / TopLevel；
+- DPI conversion state。
+
+遇到坐标错位时，应先画完整 Coordinate Chain，再定位错误转换段；若审计证明生产链已经满足 DPI Exactly Once，正确结论可以是 `NO CODE CHANGE`，禁止为了“修坐标”重复换算。

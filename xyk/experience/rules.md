@@ -320,6 +320,18 @@ Occurrences：2
 验证 / 自动化：
 优先建立 `PlatformKeyNormalization`、`ProductionInputNoBypass`、`ProductionPathTestRule`；已有 ProductionInputComposition/E5 输入冻结测试作为基础，但不能替代所有真机输入验收。
 
+### 2026-09-28 强化：坐标错位先审计链路，禁止先加 Offset/DPI
+
+遇到 Pointer / Popup / ContextMenu / Drag / Native 坐标错位时，先画：
+```text
+Source Event
+→ Source Visual
+→ TopLevel
+→ Screen / Native
+→ Target Host
+```
+逐段标记 Space、Unit、DPI Owner 与 Conversion。只有证明确切错误段后才修改该段。若生产链已经满足单次 DPI 转换，应保留正确代码并输出 `NO CODE CHANGE`，不得为了任务必须产生 diff 而重复转换。
+
 Superseded by：
 无
 

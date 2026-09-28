@@ -75,13 +75,15 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | EXP-GOVERNANCE-004 | EXP | Engineering | Governance RED 先分类，禁止“修绿” | P0 | E2 | GOV-BASELINE-RECOVERY-R1 · 2026-09-28 | Active |
 | DEC-XYK-KNOWLEDGE-PLANE | Decision | Governance | XYE / XYUI / XYK 三位一体与 XYK 远端知识平面 | P0 | R1 | XYK-FOUNDATION-R1 · 2026-09-28 | Active |
 
+| K-UI-002 | Knowledge | UI | 拖拽反馈必须保持 Pointer Grab Point 不变量 | P1 | E2 | XYUI4 DragFeedback / Coordinate Audit · 2026-09-28 | Active |
+
 ## 分类文件
 
 - `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004
-- `ui.md`：K-UI-001、K-DIAG-001
+- `ui.md`：K-UI-001～K-UI-002、K-DIAG-001
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
 - `incidents.md`：代表性事故记录与映射

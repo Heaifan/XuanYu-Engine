@@ -417,3 +417,9 @@ Native Client → Screen → Owner/TopLevel → Avalonia Logical/DIP
 ```
 
 禁止把只有 `X/Y` 的数值直接当作另一宿主的坐标。验证至少包含 DPI、窗口移动、Owner 偏移和往返误差。
+
+### 2026-09-28 强化：事件坐标优先与 DPI Exactly Once
+
+由 PointerPressed 等真实事件触发 Popup / ContextMenu 时，优先使用事件自身的局部坐标，并显式转换到目标 TopLevel；不得在同一事件处理中重新查询全局 Pointer 位置作为锚点，因为两者可能处于不同时间点、Host 与坐标空间。
+
+每条 Native↔Avalonia 坐标链还必须明确 DPI 转换 Owner。DIP↔Physical Pixel 在一条链上只能转换一次；若 Native Adapter 已完成正规化，上层禁止再次乘除 DPI Scale。
