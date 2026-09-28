@@ -17,6 +17,7 @@ public sealed class XYHoverState : Border
     public XYHoverState()
     {
         Classes.Add("xyui-4-component"); Classes.Add("xyui-hover-state");
+        BorderThickness = new Thickness(1.5);
         PointerEntered += (_, _) => IsHovered = IsEnabled;
         PointerExited += (_, _) => IsHovered = false;
         Apply();

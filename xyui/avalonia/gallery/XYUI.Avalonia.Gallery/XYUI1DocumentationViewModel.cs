@@ -66,8 +66,9 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
         Items = new[] { new XYUI1NavigationItem("XYUI-1", "模块概览", "Text & Information", null) }.Concat(documents).ToArray();
         _selectedItem = Items[0];
         SelectedDocument = new XYUI1ModuleOverviewView { DataContext = this };
-        BootstrapXYUI2(); BootstrapXYUI3(); BootstrapXYUI4(); Select(XYUI4DocumentationCatalog.LatestComponentId);
+        BootstrapXYUI2(); BootstrapXYUI3(); BootstrapXYUI4();
         IsFoundationExpanded = false; IsXYUI1Expanded = false; IsXYUI2Expanded = false; IsXYUI3Expanded = false; IsXYUI4Expanded = false;
+        Select(XYUI4DocumentationCatalog.LatestComponentId);
     }
 
     public void Select(string id)

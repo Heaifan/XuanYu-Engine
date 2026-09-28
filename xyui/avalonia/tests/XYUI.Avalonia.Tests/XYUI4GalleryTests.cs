@@ -18,9 +18,9 @@ public sealed partial class XYUI4GalleryTests : IClassFixture<XyuiHeadlessFixtur
     {
         XyuiBatchTestHost.Prepare();
         var vm = new XYUI1DocumentationViewModel();
-        Assert.Equal("13/13", vm.XYUI4CountText);
-        Assert.Equal(new[] { "XYUI-4-4.01", "XYUI-4-4.02", "XYUI-4-4.03", "XYUI-4-4.04", "XYUI-4-4.05", "XYUI-4-4.06", "XYUI-4-4.07", "XYUI-4-4.08", "XYUI-4-4.09", "XYUI-4-4.10" },
-            vm.XYUI4Items.Take(10).Select(x => x.Id));
+        Assert.Equal("14/14", vm.XYUI4CountText);
+        Assert.Equal(new[] { "XYUI-4-4.01", "XYUI-4-4.02", "XYUI-4-4.03", "XYUI-4-4.04", "XYUI-4-4.05", "XYUI-4-4.06", "XYUI-4-4.07", "XYUI-4-4.08", "XYUI-4-4.09", "XYUI-4-4.10", "XYUI-4-4.11" },
+            vm.XYUI4Items.Take(11).Select(x => x.Id));
         Assert.Equal("XYHoverState", vm.XYUI4Items[0].CanonicalName);
         Assert.Equal("SelectedState", vm.XYUI4Items[1].CanonicalName);
         Assert.Equal("ActiveState", vm.XYUI4Items[2].CanonicalName);

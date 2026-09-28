@@ -9,7 +9,7 @@ namespace XYUI.Avalonia.Controls;
 
 public static partial class XyuiComponentStyles
 {
-    static void AddXYUI4(Styles styles) { HoverState(styles); Spinner(styles); LoadingIndicator(styles); ProgressBar(styles); SelectionGestures(styles); SelectionOutline(styles); BoundingBox(styles); }
+    static void AddXYUI4(Styles styles) { HoverState(styles); Spinner(styles); LoadingIndicator(styles); ProgressBar(styles); SelectionGestures(styles); SelectionOutline(styles); BoundingBox(styles); DragFeedback(styles); }
 
     static void SelectionGestures(Styles styles)
     {
@@ -39,17 +39,11 @@ public static partial class XyuiComponentStyles
         var root = new Style(x => x.OfType<XYHoverState>().Class("xyui-hover-state"));
         root.Setters.Add(new Setter(Border.BackgroundProperty, Brushes.Transparent));
         root.Setters.Add(new Setter(Border.BorderBrushProperty, Brushes.Transparent));
-        root.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(0))); styles.Add(root);
+        root.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(1.5))); styles.Add(root);
         HoverSurface(styles, "xyui-hover-state-surface", Border.BackgroundProperty, "XY.Brush.State.Color.Hover");
         HoverSurface(styles, "xyui-hover-state-border", Border.BorderBrushProperty, "XY.Brush.State.Color.Hover");
         HoverSurface(styles, "xyui-hover-state-outline", Border.BorderBrushProperty, "XY.Brush.Accent.Default");
         HoverSurface(styles, "xyui-hover-state-handle", Border.BorderBrushProperty, "XY.Brush.State.Color.Hover");
-        foreach (var cls in new[] { "border", "outline", "handle" })
-        {
-            var thickness = cls == "outline" ? 1.5 : 1d;
-            var style = new Style(x => x.OfType<XYHoverState>().Class(cls == "outline" ? "xyui-hover-state-outline" : $"xyui-hover-state-{cls}").Class("xyui-hover-state-hovered"));
-            style.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(thickness))); styles.Add(style);
-        }
         var selected = new Style(x => x.OfType<XYHoverState>().Class("xyui-hover-state-selected"));
         Brush(selected, Border.BackgroundProperty, "XY.Brush.Surface.Selected"); styles.Add(selected);
     }
@@ -85,5 +79,13 @@ public static partial class XyuiComponentStyles
         var root = new Style(x => x.OfType<XYProgressBar>().Class("xyui-progress-bar"));
         Brush(root, XYProgressBar.TrackProperty, "XY.Brush.Accent.Soft");
         Brush(root, XYProgressBar.FillProperty, "XY.Brush.Accent.Default"); styles.Add(root);
+    }
+
+    static void DragFeedback(Styles styles)
+    {
+        var root = new Style(x => x.OfType<XYDragFeedback>().Class("xyui-drag-feedback"));
+        Brush(root, XYDragFeedback.SourceBrushProperty, "XY.Brush.State.Color.Dragging");
+        Brush(root, XYDragFeedback.PreviewBrushProperty, "XY.Brush.Surface.Selected");
+        Brush(root, XYDragFeedback.BorderBrushProperty, "XY.Brush.Editor.Selection"); styles.Add(root);
     }
 }

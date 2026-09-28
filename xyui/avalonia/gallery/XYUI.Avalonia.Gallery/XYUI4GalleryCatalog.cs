@@ -8,7 +8,7 @@ public static partial class XYUI4GalleryCatalog
 {
     public static Control CreatePreview(string id) => id switch
     {
-        "XYUI-4-4.01" => HoverPreview(), "XYUI-4-4.02" => SelectedPreview(), "XYUI-4-4.03" => ActivePreview(), "XYUI-4-4.04" => FocusPreview(), "XYUI-4-4.05" => MultiSelectionPreview(), "XYUI-4-4.06" => SelectionGroupPreview(), "XYUI-4-4.07" => MarqueePreview(), "XYUI-4-4.08" => LassoPreview(), "XYUI-4-4.09" => SelectionOutlinePreview(), "XYUI-4-4.10" => BoundingBoxPreview(),
+        "XYUI-4-4.01" => HoverPreview(), "XYUI-4-4.02" => SelectedPreview(), "XYUI-4-4.03" => ActivePreview(), "XYUI-4-4.04" => FocusPreview(), "XYUI-4-4.05" => MultiSelectionPreview(), "XYUI-4-4.06" => SelectionGroupPreview(), "XYUI-4-4.07" => MarqueePreview(), "XYUI-4-4.08" => LassoPreview(), "XYUI-4-4.09" => SelectionOutlinePreview(), "XYUI-4-4.10" => BoundingBoxPreview(), "XYUI-4-4.11" => DragFeedbackPreview(),
         "XYUI-4-4.14" => LoadingPreview(),
         "XYUI-4-4.15" => SpinnerPreview(),
         "XYUI-4-4.16" => ProgressBarPreview(),
@@ -17,7 +17,7 @@ public static partial class XYUI4GalleryCatalog
 
     public static Control CreateLiveExamples(string id) => id switch
     {
-        "XYUI-4-4.01" => HoverLiveExample(), "XYUI-4-4.02" => SelectedLiveExample(), "XYUI-4-4.03" => ActiveLiveExample(), "XYUI-4-4.04" => FocusLiveExample(), "XYUI-4-4.05" => MultiSelectionLiveExample(), "XYUI-4-4.06" => SelectionGroupLiveExample(), "XYUI-4-4.07" => MarqueeLiveExample(), "XYUI-4-4.08" => LassoLiveExample(), "XYUI-4-4.09" => SelectionOutlineLiveExample(), "XYUI-4-4.10" => BoundingBoxLiveExample(),
+        "XYUI-4-4.01" => HoverLiveExample(), "XYUI-4-4.02" => SelectedLiveExample(), "XYUI-4-4.03" => ActiveLiveExample(), "XYUI-4-4.04" => FocusLiveExample(), "XYUI-4-4.05" => MultiSelectionLiveExample(), "XYUI-4-4.06" => SelectionGroupLiveExample(), "XYUI-4-4.07" => MarqueeLiveExample(), "XYUI-4-4.08" => LassoLiveExample(), "XYUI-4-4.09" => SelectionOutlineLiveExample(), "XYUI-4-4.10" => BoundingBoxLiveExample(), "XYUI-4-4.11" => DragFeedbackLiveExample(),
         "XYUI-4-4.14" => LoadingLiveExample(),
         "XYUI-4-4.15" => SpinnerLiveExample(),
         "XYUI-4-4.16" => ProgressBarLiveExample(),

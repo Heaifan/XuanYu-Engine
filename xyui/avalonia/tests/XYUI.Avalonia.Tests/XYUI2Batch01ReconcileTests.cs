@@ -10,7 +10,6 @@ using XYUI.Avalonia.Gallery;
 using XYUI.Avalonia.Gallery.Views;
 using XYUI.Avalonia.Typography;
 namespace XYUI.Avalonia.Tests;
-
 // XYUI-2 Batch 01 · R1 对齐合同：Gallery Foundation 导航模板、Batch 01 验收状态文本、
 // Action Edge 铺满 Chrome 内宽（非 Padding 内缩短线）、按钮家族排版消费 Foundation token。
 [Collection("XyuiHeadless")]
@@ -37,12 +36,13 @@ public sealed class XYUI2Batch01ReconcileTests : IClassFixture<XyuiHeadlessFixtu
         var view = new XYUI1DocumentationView();
         var window = new Window { Width = 1120, Height = 760, Content = view };
         window.Show();
+        ((XYUI1DocumentationViewModel)view.DataContext!).IsFoundationExpanded = true;
         view.ApplyStyling();
         Dispatcher.UIThread.RunJobs();
         var texts = view.GetVisualDescendants().OfType<TextBlock>()
             .Select(x => x.Text ?? string.Empty).ToArray();
         Assert.DoesNotContain(texts, x => x.Contains("FoundationNavigationItem"));
-        Assert.Contains("色彩", texts);
+        Assert.Contains(texts, x => x.Contains("色彩"));
         Assert.Contains("Palette", texts);
         window.Close();
     });

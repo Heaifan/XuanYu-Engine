@@ -62,6 +62,9 @@ public sealed partial class XYContextMenu
     void OnMenuClosed(object? sender, EventArgs e) { if (!_closing) Close(); }
     void OnPopupClosed(object? sender, EventArgs e) => Close();
     void OnSourcePointerPressed(object? sender, PointerPressedEventArgs e)
-    { if (e.GetCurrentPoint((Visual)sender!).Properties.IsRightButtonPressed) { Open((Control)sender!); e.Handled = true; } }
+    {
+        if (sender is not Control source || !e.GetCurrentPoint(source).Properties.IsRightButtonPressed) return;
+        OpenAt(source, e.GetPosition(source)); e.Handled = true;
+    }
     protected override void OnKeyDown(KeyEventArgs e) { if (e.Key == Key.Escape) { Close(); e.Handled = true; return; } base.OnKeyDown(e); }
 }
