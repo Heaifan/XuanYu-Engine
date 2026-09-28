@@ -15,7 +15,8 @@ public partial class DiagnosticOverlayHost
         ClearTargetBounds();
         foreach (var target in DiagnosticRegistry.Targets.Values)
         {
-            if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is not { } root) continue;
+            if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is not { } root ||
+                !ReferenceEquals(root, _topLevel)) continue;
             var owner = GetProbeLayer(root);
             if (owner is null || target.TranslatePoint(default, owner) is not { } origin) continue;
             var border = new Border { Width = target.Bounds.Width, Height = target.Bounds.Height,

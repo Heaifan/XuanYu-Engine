@@ -10,7 +10,7 @@ public sealed class WorldReferenceGridDepthContractTests
     public void Reference_grid_is_depth_independent_without_writing_depth()
     {
         var grid = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs");
-        var fullscreen = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Fullscreen.cs");
+        var fullscreen = ReadType("VulkanGraphicsPipelineOwner.Fullscreen");
         var shader = Read("XuanYu.Render.Vulkan", "Shaders", "editor_world_reference_grid.frag");
 
         var createReferenceGrid = Method(grid, "CreateReferenceGrid");
@@ -73,5 +73,14 @@ public sealed class WorldReferenceGridDepthContractTests
             RegexOptions.Singleline);
         Assert.True(match.Success, $"Missing method: {name}");
         return match.Groups["body"].Value;
+    }
+
+    static string ReadType(string prefix)
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null && !Directory.Exists(Path.Combine(dir.FullName, "XuanYu.Render.Vulkan"))) dir = dir.Parent;
+        Assert.NotNull(dir);
+        return string.Join("\n", Directory.GetFiles(Path.Combine(dir!.FullName, "XuanYu.Render.Vulkan", "Pipeline"), $"{prefix}*.cs")
+            .OrderBy(path => path).Select(File.ReadAllText));
     }
 }

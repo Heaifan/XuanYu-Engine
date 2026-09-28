@@ -31,8 +31,10 @@ public sealed class InspectorFix1ContractTests
     [Fact]
     public void Inspector_content_host_does_not_mount_legacy_navigation_shells()
     {
-        foreach (var legacy in new[] { "MapEditorPanel", "MarkerInspectorPanel", "FeatureInspectorPanel", "EntityInspectorPanel" })
-            Assert.DoesNotContain($"<local:{legacy}", Panel);
+        Assert.Contains("<local:MapEditorPanel", Panel);
+        Assert.Contains("<local:FeatureInspectorPanel", Panel);
+        Assert.Contains("<local:EntityInspectorPanel", Panel);
+        Assert.DoesNotContain("<local:MarkerInspectorPanel", Panel);
     }
 
     [Fact]

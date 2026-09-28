@@ -47,54 +47,12 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             log?.Invoke(VulkanPipelineLogFormatter.Failed("全屏 Pass CreatePipelineLayout 失败"));
             return null;
         }
-        var entry = System.Text.Encoding.ASCII.GetBytes("main\0");
-        Silk.NET.Vulkan.Pipeline pipeline = default;
-        fixed (byte* pName = entry)
+        if (!TryCreateFullscreenPipeline(vk, deviceOwner, clearFrame, vert, frag, layout, depthTest, topology, log, out var pipeline))
         {
-            var vertStage = new PipelineShaderStageCreateInfo { SType = StructureType.PipelineShaderStageCreateInfo, Stage = ShaderStageFlags.VertexBit, Module = vert, PName = pName };
-            var fragStage = new PipelineShaderStageCreateInfo { SType = StructureType.PipelineShaderStageCreateInfo, Stage = ShaderStageFlags.FragmentBit, Module = frag, PName = pName };
-            PipelineShaderStageCreateInfo* pStages = stackalloc PipelineShaderStageCreateInfo[2];
-            pStages[0] = vertStage; pStages[1] = fragStage;
-            var binding = StaticModelVertexBinding();
-            VertexInputAttributeDescription* attrs = stackalloc VertexInputAttributeDescription[3];
-            FillStaticModelAttributes(attrs);
-            var vertexInput = StaticModelVertexInput(&binding, attrs);
-            var inputAssembly = new PipelineInputAssemblyStateCreateInfo { SType = StructureType.PipelineInputAssemblyStateCreateInfo, Topology = topology };
-            var viewportState = new PipelineViewportStateCreateInfo { SType = StructureType.PipelineViewportStateCreateInfo, ViewportCount = 1, ScissorCount = 1 };
-            DynamicState* pDynamic = stackalloc DynamicState[2];
-            pDynamic[0] = DynamicState.Viewport; pDynamic[1] = DynamicState.Scissor;
-            var dynamicState = new PipelineDynamicStateCreateInfo { SType = StructureType.PipelineDynamicStateCreateInfo, DynamicStateCount = 2, PDynamicStates = pDynamic };
-            var raster = new PipelineRasterizationStateCreateInfo
-            {
-                SType = StructureType.PipelineRasterizationStateCreateInfo,
-                PolygonMode = PolygonMode.Fill, CullMode = CullModeFlags.None,
-                FrontFace = FrontFace.Clockwise, LineWidth = 1.0f
-            };
-            var multisample = new PipelineMultisampleStateCreateInfo { SType = StructureType.PipelineMultisampleStateCreateInfo, RasterizationSamples = SampleCountFlags.Count1Bit };
-            var depth = new PipelineDepthStencilStateCreateInfo
-            {
-                SType = StructureType.PipelineDepthStencilStateCreateInfo, DepthTestEnable = depthTest, DepthWriteEnable = false,
-                DepthCompareOp = CompareOp.GreaterOrEqual
-            };
-            var blendAttach = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.RBit | ColorComponentFlags.GBit | ColorComponentFlags.BBit | ColorComponentFlags.ABit, BlendEnable = true, SrcColorBlendFactor = BlendFactor.SrcAlpha, DstColorBlendFactor = BlendFactor.OneMinusSrcAlpha, ColorBlendOp = BlendOp.Add, SrcAlphaBlendFactor = BlendFactor.One, DstAlphaBlendFactor = BlendFactor.OneMinusSrcAlpha, AlphaBlendOp = BlendOp.Add };
-            var colorBlend = new PipelineColorBlendStateCreateInfo { SType = StructureType.PipelineColorBlendStateCreateInfo, AttachmentCount = 1, PAttachments = &blendAttach, LogicOpEnable = false };
-            var pipelineInfo = new GraphicsPipelineCreateInfo
-            {
-                SType = StructureType.GraphicsPipelineCreateInfo, StageCount = 2, PStages = pStages,
-                PVertexInputState = &vertexInput, PInputAssemblyState = &inputAssembly,
-                PViewportState = &viewportState, PRasterizationState = &raster,
-                PMultisampleState = &multisample, PDepthStencilState = &depth,
-                PColorBlendState = &colorBlend, PDynamicState = &dynamicState,
-                Layout = layout, RenderPass = clearFrame.RenderPass, Subpass = 0,
-            };
-            if (vk.CreateGraphicsPipelines(deviceOwner.LogicalDevice, default, 1, &pipelineInfo, null, out pipeline) != Result.Success)
-            {
-                vk.DestroyPipelineLayout(deviceOwner.LogicalDevice, layout, null);
-                VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
-                VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
-                log?.Invoke(VulkanPipelineLogFormatter.Failed("全屏 Pass CreateGraphicsPipelines 失败"));
-                return null;
-            }
+            vk.DestroyPipelineLayout(deviceOwner.LogicalDevice, layout, null);
+            VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
+            VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
+            return null;
         }
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);

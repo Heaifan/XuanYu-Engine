@@ -48,8 +48,8 @@ public sealed class EditorModeUiCompositionTests
     {
         var inspector = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
         Assert.Contains("InspectorPropertyRow", inspector);
-        Assert.DoesNotContain("<local:MapEditorPanel", inspector);
-        Assert.DoesNotContain("<local:FeatureInspectorPanel", inspector);
+        Assert.Equal(1, Count(inspector, "<local:MapEditorPanel"));
+        Assert.Equal(1, Count(inspector, "<local:FeatureInspectorPanel"));
         Assert.DoesNotContain("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));
         Assert.Contains("MapPagePanel", Read("XuanYu.Editor.UI", "Right", "MapPagePanel.axaml"));
         Assert.Contains("EditorLayerDock", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));

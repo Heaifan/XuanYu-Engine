@@ -18,21 +18,22 @@ public sealed class FeatureEditUiContractTests
         Assert.DoesNotContain("地图编辑", toolbar);
         Assert.DoesNotContain("要素编辑", toolbar);
         Assert.Contains("XYSplitButton", toolbar);
-        Assert.Contains("Category(\"点\"", code);
-        Assert.Contains("Category(\"线\"", code);
-        Assert.Contains("Category(\"面\"", code);
-        
-        Assert.Contains("Category(\"点\"", code);
-        Assert.Contains("Category(\"线\"", code);
-        Assert.Contains("Category(\"面\"", code);
+        Assert.Contains("new(\"point\", \"点\")", code);
+        Assert.Contains("new(\"line\", \"线\")", code);
+        Assert.Contains("new(\"area\", \"区域\")", code);
+        Assert.Contains("\"点标记\"", code);
+        Assert.Contains("\"道路\"", code);
+        Assert.Contains("\"区域\"", code);
     }
 
     [Fact]
     public void Workspace_selector_semantics_updated()
     {
-        var selector = Read("Workspace/WorkspaceSelector.axaml");
+        var selector = Read("Workspace/WorkspaceSelector.axaml") +
+                       Read("Workspace/WorkspaceSelector.axaml.cs");
         
         Assert.Contains("要素编辑", selector);
+        Assert.Contains("feature-editing", selector);
         Assert.DoesNotContain("区域编辑", selector);
         Assert.DoesNotContain("点要素编辑", selector);
     }

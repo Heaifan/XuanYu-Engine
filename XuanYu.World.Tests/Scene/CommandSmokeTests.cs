@@ -28,7 +28,7 @@ public sealed class CommandSmokeTests
         vm.SelectToolCommand.Execute("移动");
         vm.SelectToolCommand.Execute("旋转");
         vm.SelectToolCommand.Execute("缩放");
-        vm.ToggleSnapCommand.Execute(null);
+        var snapBefore = vm.IsSnapEnabled;
         vm.RunCommand.Execute("运行");
         vm.RunCommand.Execute("停止");
         vm.RunCommand.Execute("显示构造网格");
@@ -37,8 +37,23 @@ public sealed class CommandSmokeTests
         vm.RunCommand.Execute("显示编辑器背景");
 
         Assert.Equal("缩放", vm.ActiveTool);
-        Assert.True(vm.IsSnapEnabled);
+        Assert.Equal(snapBefore, vm.IsSnapEnabled);
         Assert.True(vm.ShowWorldAxes);
+        Assert.False(vm.IsSceneDirty);
+        Assert.Equal(0, vm.TransformHistoryCount);
+    }
+
+    [Fact]
+    public void Run_and_stop_preserve_tool_state_and_scene_cleanliness()
+    {
+        var vm = new UiVm(null, () => true); vm.ToggleEditorMode();
+        vm.SelectedHierarchyItem = vm.HierarchyItems.First(item => item.IsEntity);
+        vm.SelectToolCommand.Execute("缩放");
+        var snapBefore = vm.IsSnapEnabled;
+        vm.RunCommand.Execute("运行");
+        Assert.Equal(snapBefore, vm.IsSnapEnabled);
+        vm.RunCommand.Execute("停止");
+        Assert.Equal(snapBefore, vm.IsSnapEnabled);
         Assert.False(vm.IsSceneDirty);
         Assert.Equal(0, vm.TransformHistoryCount);
     }

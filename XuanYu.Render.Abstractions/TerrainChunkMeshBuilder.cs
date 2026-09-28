@@ -12,12 +12,13 @@ public static class TerrainChunkMeshBuilder
         if (!double.IsFinite(verticalExaggeration) || verticalExaggeration <= 0)
             throw new ArgumentOutOfRangeException(nameof(verticalExaggeration));
         var stride = lodLevel.Stride();
+        var transform = new TerrainRenderTransform(verticalExaggeration);
         var xs = Coordinates(chunk.StartSampleX, chunk.CellCountX, stride);
         var ys = Coordinates(chunk.StartSampleY, chunk.CellCountY, stride);
         var vertices = new List<TerrainMeshVertex>(xs.Count * ys.Count);
         foreach (var y in ys)
             foreach (var x in xs)
-                vertices.Add(Vertex(field, chunk, x, y, verticalExaggeration));
+                vertices.Add(Vertex(field, chunk, x, y, transform));
         var indices = new List<uint>();
         for (var y = 0; y < ys.Count - 1; y++)
             for (var x = 0; x < xs.Count - 1; x++)
@@ -35,10 +36,15 @@ public static class TerrainChunkMeshBuilder
     }
 
     static TerrainMeshVertex Vertex(TerrainHeightfield field, TerrainChunkDescriptor chunk,
-        int x, int y, double exaggeration) =>
-        new((x - chunk.StartSampleX) * field.CellSizeMeters,
+        int x, int y, TerrainRenderTransform transform)
+    {
+        var normal = TerrainNormalBuilder.Build(field, field.CellSizeMeters,
+            transform, y, x);
+        return new((x - chunk.StartSampleX) * field.CellSizeMeters,
             (y - chunk.StartSampleY) * field.CellSizeMeters,
-            field.ElevationAt(y, x) * exaggeration, 0, 0, 1);
+            transform.VisualHeight(field.ElevationAt(y, x)),
+            normal.X, normal.Y, normal.Z);
+    }
 
     static void AddQuad(List<uint> indices, int topLeft, int bottomLeft, int width)
     {

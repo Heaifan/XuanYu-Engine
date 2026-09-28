@@ -24,7 +24,7 @@ public sealed class UiR1VisualContractTests
             return (Count: UiRuntimeTestHost.Descendants<XYNavigationItem>(tabs).Count(), Text: vm.InspectorCategory);
         });
 
-        Assert.True(state.Count > 0); Assert.Equal("最近", state.Text);
+        Assert.True(state.Count > 0); Assert.Equal("基础", state.Text);
     }
 
     [Fact]

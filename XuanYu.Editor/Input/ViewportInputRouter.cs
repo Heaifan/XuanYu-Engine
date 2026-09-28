@@ -63,10 +63,10 @@ public sealed partial class ViewportInputRouter
     ViewportInputDispatchResult DispatchActive(EditorPointerEvent pointer)
     {
         if (pointer.PointerId != State.PointerId && !IsGlobalCancel(pointer.Kind)) return ViewportInputDispatchResult.Ignored;
-        _lifecycle.Update(pointer);
-        if (pointer.Kind is EditorPointerEventKind.Released) return End(ViewportInputDispatchKind.Released);
         if (IsGlobalCancel(pointer.Kind))
             return Cancel(pointer.Kind);
+        _lifecycle.Update(pointer);
+        if (pointer.Kind is EditorPointerEventKind.Released) return End(ViewportInputDispatchKind.Released);
         return ViewportInputDispatchResult.Handled;
     }
 

@@ -28,6 +28,7 @@ public sealed class TopLeftInteractionR1Tests
         Assert.False(vm.CanTransformSelectedEntity);
 
         vm.RunCommand.Execute("添加立方体");
+        Assert.True(vm.HasTransformableSelection);
         Assert.True(vm.CanTransformSelectedEntity);
         Assert.True(vm.SelectToolCommand.CanExecute("移动"));
         Assert.True(vm.SelectToolCommand.CanExecute("旋转"));
@@ -38,8 +39,10 @@ public sealed class TopLeftInteractionR1Tests
 
         vm.SelectedHierarchyItem = null;
         Assert.False(vm.HasSelection);
+        Assert.True(vm.IsMapInspector);
+        Assert.True(vm.IsMapWorkspaceInspectorVisible);
+        Assert.False(vm.HasTransformableSelection);
         Assert.False(vm.CanTransformSelectedEntity);
-        Assert.True(vm.IsInspectorEmpty);
     }
 
     [Fact]

@@ -19,7 +19,7 @@ public sealed class AreaDR2CorrectionInstanceRuntimeTests
             var vm = new UiVm(null, seedInitialScene: false); vm.AddCubeEntity(); vm.ToggleEditorMode();
             var right = new Right { DataContext = vm }; host.Show(right, 480, 720); right.UpdateLayout();
             return (EditorTabs: Count<EditorRightTabs>(right), Inspector: Count<InspectorPanel>(right),
-                Legacy: Count<EntityInspectorPanel>(right) + Count<MapEditorPanel>(right), Dock: Count<EditorLayerDock>(right),
+                Legacy: Count<EntityInspectorPanel>(right), Dock: Count<EditorLayerDock>(right),
                 VisibleInspector: Visible<InspectorPanel>(right), VisibleDock: Visible<EditorLayerDock>(right));
         });
 

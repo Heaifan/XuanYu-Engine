@@ -33,8 +33,9 @@ public sealed class UiD4DebtClearedTests
     [Fact]
     public void Baseline_total_shrinks_with_d5_migrations()
     {
-        // D4 末 159 条 → D5/Area A/Area B 清除已迁移到 XYUI 的历史债务。
-        Assert.Equal(100, UiDebtBaseline.Entries.Count);
+        // D4 末 159 条 → D5/Area A/Area B 清除已迁移债务；区域颜色编辑的 5 条
+        // 已由 e1964f11/c96c7b0e/12b3f7db 的正式合同登记，当前批准基线为 105。
+        Assert.Equal(105, UiDebtBaseline.Entries.Count);
     }
 
     [Fact]

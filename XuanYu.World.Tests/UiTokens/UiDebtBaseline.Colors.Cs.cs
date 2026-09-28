@@ -7,6 +7,13 @@ internal static partial class UiDebtBaseline
 {
     private static void AddCs(System.Collections.Generic.List<BaselineEntry> list)
     {
+        // ALLOW-INSPECTOR-COLOR: approved by region color-picker contract
+        // (e1964f11/c96c7b0e/12b3f7db and docs/superpowers/plans/2026-09-26-region-inspector-color-picker-r1.md).
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Inspector/InspectorColorValue.cs", "InspectorColorValue.FromRgb", UiRuleKind.CsHexColor, "ColorAPI", "Color.FromRgb("));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Inspector/InspectorColorValue.cs", "InspectorColorValue.FromRgb", UiRuleKind.CsHexColor, "Colors", "Colors.Transparent"));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorFeatureEditing.cs", "UiVm.FirstOrDefault", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF"));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorRegionColorPreview.cs", "UiVm.if", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF", 2));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Map/MapRegionColorPreviewProjection.cs", "MapRegionColorPreviewProjection.if", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF"));
         list.Add(new("W71-ALLOW", "XuanYu.Editor.UI/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "Hex", "#C7D7EA"));
         list.Add(new("ALLOW-RENDER", "XuanYu.Editor.UI/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "ColorAPI", "Color.Parse("));
         list.Add(new("ALLOW-RENDER", "XuanYu.Editor.UI/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "Brush", "new SolidColorBrush("));

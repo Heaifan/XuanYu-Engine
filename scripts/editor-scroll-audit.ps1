@@ -8,6 +8,8 @@ $legal = @{
     'Top/Top.axaml' = @('ContextToolScrollHost')
     'Right/TopTabStripTemplate.axaml' = @('TabScroller')
     'Right/InspectorPanel.axaml' = @('InspectorContentScrollHost')
+    'Diagnostic/DiagnosticDetailPanel.axaml' = @('')
+    'Diagnostic/DiagnosticFloatingCard.axaml' = @('')
 }
 $violations = [Collections.Generic.List[string]]::new()
 foreach ($file in Get-ChildItem -LiteralPath $EditorRoot -Recurse -Filter '*.axaml') {

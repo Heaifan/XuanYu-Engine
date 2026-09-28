@@ -37,6 +37,8 @@ public sealed partial class UiVm
     {
         OnPropertyChanged(nameof(CurrentMode)); OnPropertyChanged(nameof(IsManageMode));
         OnPropertyChanged(nameof(IsEditMode)); OnPropertyChanged(nameof(IsMapEditMode));
+        OnPropertyChanged(nameof(IsMapWorkspaceInspectorVisible)); OnPropertyChanged(nameof(IsLegacyInspectorContentVisible));
+        OnPropertyChanged(nameof(IsInspectorEmptyAndNoMapWorkspace));
         OnPropertyChanged(nameof(CanUseEditTools)); OnPropertyChanged(nameof(CanToggleSnap));
         OnPropertyChanged(nameof(CanTransformSelectedEntity));
         (SelectToolCommand as RelayCommand)?.RaiseCanExecuteChanged();

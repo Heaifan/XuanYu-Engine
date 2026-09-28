@@ -83,7 +83,7 @@ public sealed class XYUI2R2BContractTests
         var form = Read("XuanYu.Editor.UI", "Right", "MapFormPanel.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "Right.axaml");
         Assert.Contains("<xy:XYSectionTitle", inspector);
-        Assert.Contains("<xy:XYSeparator Variant=\"Section\"", inspector);
+        Assert.Contains("XYNavigationRail", inspector);
         Assert.Contains("ColumnDefinitions=\"80,*\"", inspector);
         Assert.Contains("PropsWide", form); Assert.DoesNotContain("PropsNarrow", form);
         Assert.Contains("EditorLayerDock", right);

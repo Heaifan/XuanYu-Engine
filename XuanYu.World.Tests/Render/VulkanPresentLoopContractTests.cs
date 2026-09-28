@@ -34,7 +34,9 @@ public sealed class VulkanPresentLoopContractTests
     public void No_projection_semantic_change()
     {
         var loop = RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.cs"));
-        var owner = RenderVulkanFile(Path.Combine("Render", "ClearFrame", "VulkanClearFrameOwner.cs"));
+        var owner = string.Join("\n", Directory.GetFiles(Path.Combine(
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..")),
+            "XuanYu.Render.Vulkan", "Render", "ClearFrame"), "VulkanClearFrameOwner*.cs").Select(File.ReadAllText));
         Assert.DoesNotContain("ClearRenderProjection", loop); // Present 循环不清理投影
         Assert.Contains("_hasRenderProjection = true;", owner); // Set 置真：持续状态语义保留
     }

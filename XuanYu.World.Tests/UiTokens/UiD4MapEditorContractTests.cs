@@ -70,7 +70,7 @@ public sealed class UiD4MapEditorContractTests
     [Fact]
     public void Each_page_has_single_vertical_scroll_container()
     {
-        Assert.Contains("VerticalScrollBarVisibility=\"Auto\"", Editor);
+        Assert.DoesNotContain("<ScrollViewer", Editor);
         Assert.DoesNotContain("<ScrollViewer", Page);          // 页面内部不嵌套纵向滚动
     }
 

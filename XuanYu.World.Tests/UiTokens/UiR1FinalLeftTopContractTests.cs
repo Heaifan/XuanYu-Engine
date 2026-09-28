@@ -17,7 +17,6 @@ public sealed class UiR1FinalLeftTopContractTests
         Assert.Contains("Text=\"{Binding Title}\"", project);
         Assert.Contains("Text=\"{Binding Title}\"", hierarchy);
     }
-
     [Fact]
     public void Regional_authoring_heading_uses_section_title()
     {
@@ -84,12 +83,14 @@ public sealed class UiR1FinalLeftTopContractTests
         Assert.Contains("Icon=\"ViewAll\"", view);
         Assert.Contains("<xy:XYBadge", runtime);
         Assert.DoesNotContain("<Menu", file); Assert.DoesNotContain("<MenuItem", file);
+        Assert.Contains("SwitcherHost", workspace);
         Assert.DoesNotContain("<Menu", workspace); Assert.DoesNotContain("<MenuItem", workspace);
         Assert.DoesNotContain("<Menu", view); Assert.DoesNotContain("<MenuItem", view);
         Assert.Contains("<xy:XYMenuBar", file); Assert.Contains("<xy:XYMenuItem", file);
-        Assert.Contains("<xy:XYMenuBar", workspace); Assert.Contains("<xy:XYMenuItem", workspace);
+        Assert.DoesNotContain("<xy:XYMenuBar", workspace); Assert.DoesNotContain("<xy:XYMenuItem", workspace);
         Assert.Contains("<xy:XYMenuBar", view); Assert.Contains("<xy:XYMenuItem", view);
-        Assert.Contains("Text=\"工作区\"", workspace); Assert.Contains("Label=\"文件\" Icon=\"File\"", file);
+        Assert.Contains("WorkspaceSelectorButton", Read("Workspace/WorkspaceSelector.axaml.cs"));
+        Assert.Contains("Label=\"文件\" Icon=\"File\"", file);
         Assert.Contains("Text=\"编辑\"", tools); Assert.Contains("Text=\"视图\"", view);
         Assert.Contains("Text=\"吸附\"", snap); Assert.Contains("Text=\"运行\"", runtime);
         Assert.Contains("Text=\"状态\"", runtime); Assert.Contains("Text=\"菜单\"", file);

@@ -46,7 +46,7 @@ public sealed class ViewportInputRouterLifecycleTests
         router.Dispatch(Event(EditorPointerEventKind.Pressed, 2));
         router.Dispatch(Event(EditorPointerEventKind.CaptureLost, 2));
 
-        Assert.Equal(4, camera.Calls.Count);
+        Assert.Equal(2, camera.Calls.Count);
         Assert.Equal(ViewportGestureState.Idle, router.State);
     }
 

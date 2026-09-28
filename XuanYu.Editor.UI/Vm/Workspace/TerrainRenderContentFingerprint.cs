@@ -1,8 +1,8 @@
 using XuanYu.Render.Abstractions;
 
-namespace XuanYu.World.Terrain;
+namespace XuanYu.Editor.UI;
 
-public static class TerrainContentFingerprint
+static class TerrainContentFingerprint
 {
     public static ulong ForHeightfield(TerrainHeightfield heightfield)
     {

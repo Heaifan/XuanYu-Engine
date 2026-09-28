@@ -21,7 +21,7 @@ public sealed class RenderLogNoiseContractTests
         var snapshot = Read("XuanYu.Editor.UI/Vm/Scene/UiVm.Scene.cs");
         Assert.DoesNotContain("% 100", command);
         Assert.DoesNotContain("% 100", snapshot);
-        Assert.Contains("_recordCommandTraceCount != 1", command);
+        Assert.Contains("if (_gridTraceLogged || !_hasRenderProjection || !allGridPipelinesReady) return;", command);
         Assert.Contains("_renderSnapshotPublishCount != 1", snapshot);
     }
 }

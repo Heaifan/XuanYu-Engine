@@ -10,7 +10,7 @@ public sealed class ReverseZDepthContractPrototypeTests
         var root = Root();
         var clear = Read(root, "XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Commands.cs");
         Assert.Contains("Depth = 0.0f", clear);
-        foreach (var file in PipelineFiles(root)) Assert.Contains("CompareOp.GreaterOrEqual", Read(root, file));
+        foreach (var source in PipelineSources(root)) Assert.Contains("CompareOp.GreaterOrEqual", source);
     }
 
     [Fact]
@@ -44,11 +44,14 @@ public sealed class ReverseZDepthContractPrototypeTests
     }
 
     static double ReversePerspective(double z, double n, double f) => (f * n / z - n) / (f - n);
-    static string[] PipelineFiles(string root) => [
-        "XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs",
-        "XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.cs",
-        "XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.GridLine.cs",
-        "XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Terrain.cs"];
+    static IEnumerable<string> PipelineSources(string root)
+    {
+        var dir = Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline");
+        foreach (var prefix in new[] { "VulkanGraphicsPipelineOwner.Depth", "VulkanGraphicsPipelineOwner.Fullscreen",
+            "VulkanGraphicsPipelineOwner.GridLine", "VulkanGraphicsPipelineOwner.Terrain" })
+            yield return string.Join("\n", Directory.GetFiles(dir, $"{prefix}*.cs")
+                .OrderBy(path => path).Select(Read));
+    }
     static string Root()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);

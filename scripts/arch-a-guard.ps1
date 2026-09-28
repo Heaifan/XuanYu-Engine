@@ -1,33 +1,13 @@
 ﻿$ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
-Set-Location $root
-$failures = New-Object System.Collections.Generic.List[string]
+. (Join-Path $PSScriptRoot "architecture/guard-bootstrap.ps1")
+Initialize-GuardBootstrap -Root $root -NewRun | Out-Null
 
-function Add-Failure([string]$message) { $failures.Add($message) }
-function Read-Text([string]$path) { Get-Content -LiteralPath $path -Raw -Encoding utf8 }
-function Assert-Contains([string]$path, [string]$needle, [string]$label) {
-    if ((Read-Text $path).IndexOf($needle, [StringComparison]::OrdinalIgnoreCase) -lt 0) {
-        Add-Failure "$label missing: $needle"
-    }
-}
-function Assert-NotContains([string]$path, [string[]]$needles, [string]$label) {
-    $text = Read-Text $path
-    foreach ($needle in $needles) {
-        if ($text.IndexOf($needle, [StringComparison]::OrdinalIgnoreCase) -ge 0) {
-            Add-Failure "$label forbidden: $needle ($path)"
-        }
-    }
-}
 function Get-OutputType([string]$path) {
     $match = [regex]::Match((Read-Text $path), '<OutputType>(.*?)</OutputType>')
     if ($match.Success) { return $match.Groups[1].Value }
     return ""
-}
-function Get-SourceFiles([string]$dir) {
-    @($(git ls-files "$dir/*") + $(git ls-files --others --exclude-standard "$dir/*")) |
-        Where-Object { $_ -match '\.(cs|axaml|js)$' -and (Test-Path $_) } |
-        ForEach-Object { Get-Item -LiteralPath $_ }
 }
 function Get-TrackedHandwrittenFiles {
     # 5+100 检查范围与宪法第十三条一致：.cs / .axaml / .js（ps1 不在红线内，SHR-2026-08-D2）
@@ -110,15 +90,9 @@ foreach ($project in $projects) {
     }
 }
 
-$changelog = Read-Text "changelog.md"
-$versionPattern = 'v0\.[0-9]+\.[0-9]+\.[0-9]+-(rz|fix|vk|stab)'
-$versionMatch = [regex]::Match($changelog, "(?m)^##\s+($versionPattern)")
-if (!$versionMatch.Success) { Add-Failure "changelog top version missing" }
-else {
-    $version = $versionMatch.Groups[1].Value
-    if ($version -notmatch "^$versionPattern$") { Add-Failure "invalid development version: $version" }
-    Assert-Contains "XuanYu.Editor.UI/Win/UiWin.axaml" $version "main window title version"
-    Assert-Contains "run.bat" $version "run.bat title version"
+$formalVersion = (& (Join-Path $root "scripts/resolve-version.ps1")).Trim()
+if ($formalVersion -notmatch '^v[0-9]+(\.[0-9]+)+-[a-z0-9.-]+$') {
+    Add-Failure "formal Version Resolver returned invalid version: $formalVersion"
 }
 
 # ARCH-WORLD red-line guards live in a separate file (5+100 split).
@@ -137,9 +111,4 @@ foreach ($file in Get-TrackedHandwrittenFiles) {
     if ($lines -gt 100) { Add-Failure "5+100 exceeded: $lines lines $($file.FullName)" }
 }
 
-if ($failures.Count -gt 0) {
-    $failures | ForEach-Object { Write-Error $_ }
-    exit 1
-}
-
-Write-Host "ARCH-A guard passed."
+Complete-GuardRun "ARCH-A guard completed."

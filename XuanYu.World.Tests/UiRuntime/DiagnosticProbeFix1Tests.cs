@@ -35,9 +35,9 @@ public sealed class DiagnosticProbeFix1Tests
             var command = new ProbeCommand(); var button = new Button { Content = "保存", Command = command };
             var host = new DiagnosticOverlayHost(); var vm = new UiVm(null, seedInitialScene: false);
             vm.RunCommand.Execute("诊断模式"); host.DataContext = vm;
-            var window = Show(button, host); var point = button.TranslatePoint(new Point(4, 4), window)!.Value;
-            window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left);
-            Dispatcher.UIThread.RunJobs(); window.Close(); return command.Count;
+            var window = Show(button, host);
+            UiHeadlessInputHarness.Click(window, button);
+            window.Close(); return command.Count;
         });
         Assert.Equal(1, count);
     }
@@ -69,7 +69,6 @@ public sealed class DiagnosticProbeFix1Tests
             Content = new Grid { Children = { target, host } } };
         window.Show(); window.UpdateLayout(); Dispatcher.UIThread.RunJobs(); return window;
     }
-
     sealed class ProbeCommand : System.Windows.Input.ICommand
     {
         public int Count { get; private set; }

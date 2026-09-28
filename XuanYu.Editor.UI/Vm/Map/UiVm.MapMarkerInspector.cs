@@ -20,7 +20,9 @@ public sealed partial class UiVm
     public double MarkerInspectorPositionY => SelectedMarker?.Position.Y ?? 0;
     public bool IsRegionInspectorPlaceholderVisible => IsRegionInspector && !IsMarkerInspector;
     public bool IsGenericInspectorVisible => HasInspectorSelection && InspectorIdentity == InspectorObjectKind.Entity;
-    public bool IsMapWorkspaceInspectorVisible => IsMapInspector;
+    public bool IsMapWorkspaceInspectorVisible => IsMapEditMode && !IsEntityInspector;
+    public bool IsLegacyInspectorContentVisible => !IsMapWorkspaceInspectorVisible && !IsFeatureInspector;
+    public bool IsInspectorEmptyAndNoMapWorkspace => IsInspectorEmpty && !IsMapWorkspaceInspectorVisible;
     public bool IsLayerInspectorVisible => HasCurrentLayerSelection &&
         InspectorIdentity is not (InspectorObjectKind.Marker or InspectorObjectKind.Road or InspectorObjectKind.Region);
 
@@ -42,7 +44,8 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(MarkerInspectorDatasetText)); OnPropertyChanged(nameof(MarkerInspectorStatusText));
         OnPropertyChanged(nameof(MarkerInspectorPositionX)); OnPropertyChanged(nameof(MarkerInspectorPositionY));
         OnPropertyChanged(nameof(IsRegionInspectorPlaceholderVisible)); OnPropertyChanged(nameof(IsGenericInspectorVisible));
-        OnPropertyChanged(nameof(IsMapWorkspaceInspectorVisible)); OnPropertyChanged(nameof(IsLayerInspectorVisible));
+        OnPropertyChanged(nameof(IsMapWorkspaceInspectorVisible)); OnPropertyChanged(nameof(IsLegacyInspectorContentVisible));
+        OnPropertyChanged(nameof(IsInspectorEmptyAndNoMapWorkspace)); OnPropertyChanged(nameof(IsLayerInspectorVisible));
         OnPropertyChanged(nameof(InspectorSelectionTitle)); OnPropertyChanged(nameof(InspectorSelectionSubtitle));
         OnPropertyChanged(nameof(HasInspectorSelection)); OnPropertyChanged(nameof(IsInspectorEmpty));
         OnPropertyChanged(nameof(InspectorSectionTitle)); OnPropertyChanged(nameof(InspectorFields));

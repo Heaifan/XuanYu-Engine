@@ -88,9 +88,7 @@ public sealed class DiagnosticOverlayRuntimeTests : IDisposable
 
     static void Click(Window window, Control control, RawInputModifiers modifiers)
     {
-        var point = control.TranslatePoint(new Point(4, 4), window)!.Value;
-        window.MouseDown(point, MouseButton.Left, modifiers); window.MouseUp(point, MouseButton.Left, modifiers);
-        Dispatcher.UIThread.RunJobs();
+        UiHeadlessInputHarness.Click(window, control, modifiers);
     }
 
     sealed class FakeClipboard : IDiagnosticClipboard

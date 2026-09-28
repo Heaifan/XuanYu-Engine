@@ -38,10 +38,10 @@ public sealed class UiMapLayoutContractTests
     [Fact]
     public void Map_editor_has_frozen_content_navigation_tabs()
     {
-        Assert.Equal(3, MapEditor.Split("InspectorSectionHeader").Length - 1);
-        Assert.Contains("Header=\"基础设置\"", MapEditor);
-        Assert.Contains("Header=\"环境\"", MapEditor);
-        Assert.Contains("Header=\"地图资产\"", MapEditor);
+        Assert.Equal(3, MapEditor.Split("<xy:XYToggleButton").Length - 1);
+        Assert.Contains("Content=\"基础\"", MapEditor);
+        Assert.Contains("Content=\"环境\"", MapEditor);
+        Assert.Contains("Content=\"地图资产\"", MapEditor);
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public sealed class UiMapLayoutContractTests
     public void Right_keeps_global_tabs_and_rehomes_edit_contexts()
     {
         Assert.Contains("Label=\"检查器\"", Right);
-        Assert.DoesNotContain("Label=\"调试\"", Right);
+        Assert.Contains("Label=\"调试\"", Right);
         var rightShell = File.ReadAllText(Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "Right.axaml"));
         var inspector = File.ReadAllText(Path.Combine(

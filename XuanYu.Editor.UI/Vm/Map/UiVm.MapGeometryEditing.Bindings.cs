@@ -4,7 +4,7 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    public void ClearMapGeometrySelection()
+    public void ClearMapGeometrySelection(bool clearInspectorSelection = true)
     {
         CancelRegionFillColorPreviewForSelection(null);
         IsGeometryEditingActive = false;
@@ -12,6 +12,11 @@ public sealed partial class UiVm
         _selectedMapGeometry = null; _selectedMapGeometryVertexIndex = -1; _mapGeometryPreview = null;
         _geometrySnap.Clear();
         MapSession.ClearSelection();
+        if (clearInspectorSelection)
+        {
+            DatasetSelectedId = null;
+            ClearLayerSelection();
+        }
         if (hadSelection) RaiseMapGeometryBindings();
         PublishSceneRenderSnapshot();
     }

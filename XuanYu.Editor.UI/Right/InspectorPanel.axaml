@@ -1,11 +1,12 @@
 <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:XuanYu.Editor.UI" xmlns:xy="using:XYUI.Avalonia.Controls"
-             x:Class="XuanYu.Editor.UI.InspectorPanel" x:DataType="local:UiVm">
+             x:Class="XuanYu.Editor.UI.InspectorPanel" x:DataType="local:UiVm"
+             local:XYDiagnostic.DebugId="XYE.INSPECTOR">
   <UserControl.Styles>
     <Style Selector="Grid.inspectorProperty"><Setter Property="MinHeight" Value="30"/><Setter Property="Margin" Value="0,2"/></Style>
   </UserControl.Styles>
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="40,8,*" ColumnSpacing="0">
-    <Grid Grid.ColumnSpan="3" ColumnDefinitions="*,Auto" ColumnSpacing="8" IsVisible="{Binding HasInspectorSelection}" x:Name="EntityHeader">
+    <Grid Grid.ColumnSpan="3" ColumnDefinitions="*,Auto" ColumnSpacing="8" IsVisible="{Binding IsInspectorHeaderVisible}" x:Name="EntityHeader">
       <StackPanel Spacing="1">
       <xy:XYHeading x:Name="EntityHeaderTitle" Text="{Binding InspectorSelectionTitle}" Variant="PanelTitle"/>
       <xy:XYCaption x:Name="EntityHeaderSubtitle" Text="{Binding InspectorSelectionSubtitle}"/>
@@ -23,8 +24,12 @@
     <xy:XYTextField Grid.Row="1" Grid.ColumnSpan="3" x:Name="SearchBox" PlaceholderText="搜索全部属性…"
                     Text="{Binding InspectorSearchText, Mode=TwoWay}" Margin="0,8,0,8"/>
     <xy:XYNavigationRail Grid.Row="2" x:Name="InspectorNavigationRail" Width="40" IsVisible="{Binding HasInspectorSelection}"/>
-    <ScrollViewer Grid.Row="2" Grid.Column="2" x:Name="InspectorContentScrollHost" VerticalScrollBarVisibility="Auto">
-      <StackPanel Spacing="4">
+    <Grid Grid.Row="2" Grid.Column="2">
+      <local:MapEditorPanel x:Name="MapWorkspace" IsVisible="{Binding IsMapWorkspaceInspectorVisible}"/>
+      <local:FeatureInspectorPanel x:Name="FeatureWorkspace" IsVisible="{Binding IsFeatureInspector}"/>
+      <ScrollViewer x:Name="InspectorContentScrollHost" VerticalScrollBarVisibility="Auto"
+                    IsVisible="{Binding IsLegacyInspectorContentVisible}">
+        <StackPanel Spacing="4">
         <!-- C1 Terrain: 网格、分辨率、最低高程、最高高程、NoData、垂直夸张 -->
         <xy:XYSectionTitle Text="{Binding InspectorCategory}" IsVisible="{Binding !IsInspectorSearchMode}"/>
         <ItemsControl ItemsSource="{Binding InspectorProperties}" IsVisible="{Binding IsInspectorPropertyListVisible}" x:Name="InspectorPropertyRows">
@@ -48,9 +53,10 @@
         </ItemsControl>
         <xy:XYEmptyText Text="暂无最近编辑属性" IsVisible="{Binding IsInspectorRecentEmpty}"/>
         <xy:XYEmptyText Text="未找到匹配属性。" IsVisible="{Binding IsInspectorNoResults}"/>
-      </StackPanel>
-    </ScrollViewer>
-    <StackPanel Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{Binding IsInspectorEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center">
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+    <StackPanel Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{Binding IsInspectorEmptyAndNoMapWorkspace}" HorizontalAlignment="Center" VerticalAlignment="Center">
       <xy:XYEmptyText Text="未选择对象"/>
       <xy:XYCaption Text="选择地图、点、道路或区域以查看属性。"/>
     </StackPanel>

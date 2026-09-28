@@ -43,10 +43,11 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
             var toolbar = UiRuntimeTestHost.Descendants<ContextToolBar>(top).Single();
             var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
             split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
-            var menu = toolbar.FindControl<XYMenu>("DrawMenu")!;
-            menu.Items.OfType<XYMenuItem>().Single(item => item.Label == "面").Activate();
-            var submenu = toolbar.FindControl<XYMenu>("DrawChildMenu")!;
-            submenu.Items.OfType<XYMenuItem>().Single().Activate();
+            var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single();
+            var menu = board.Menu;
+            menu.Items.OfType<XYMenuItem>().Single(item => item.Label == "区域").Activate();
+            var submenu = board.SubMenus[2].ChildMenu;
+            submenu.Items.OfType<XYMenuItem>().Single(item => item.Label == "区域").Activate();
             var state = vm.IsRegionEditMode && vm.CanStartRegionDrawing;
             return state;
         });

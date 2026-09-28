@@ -3,6 +3,7 @@
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.FeatureInspectorPanel"
+             local:XYDiagnostic.DebugId="{Binding DiagnosticFeatureModuleId}"
              x:DataType="local:UiVm">
   <StackPanel Spacing="8">
     <xy:XYToggleButton local:XYDiagnostic.DebugId="{Binding DiagnosticFeatureBasicId}" x:Name="FeatureBasicSection" Content="基础" IsChecked="{Binding IsInspectorBasicExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Basic" HorizontalAlignment="Stretch"/>

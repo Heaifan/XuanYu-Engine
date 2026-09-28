@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
@@ -41,7 +42,11 @@ public partial class UiRoot : UserControl
     void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(UiVm.IsLogOpen)) ClampLayout();
-        if (e.PropertyName == nameof(UiVm.InspectorIdentity)) RefreshDiagnosticRegistry();
+        if (e.PropertyName == nameof(UiVm.InspectorIdentity))
+        {
+            RefreshDiagnosticRegistry();
+            Dispatcher.UIThread.Post(RefreshDiagnosticRegistry, DispatcherPriority.Render);
+        }
     }
 
     void RefreshDiagnosticRegistry()

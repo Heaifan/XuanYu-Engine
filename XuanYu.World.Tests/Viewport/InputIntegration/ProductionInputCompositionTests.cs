@@ -11,9 +11,10 @@ public sealed class ProductionInputCompositionTests
         var composition = Create();
 
         Assert.Same(composition.Router.Lifecycle, composition.Lifecycle);
-        Assert.Equal(8, composition.Consumers.Count);
-        Assert.Equal(8, composition.Consumers.Select(x => x.Owner).Distinct().Count());
+        Assert.Equal(9, composition.Consumers.Count);
+        Assert.Equal(9, composition.Consumers.Select(x => x.Owner).Distinct().Count());
         Assert.Contains(GestureOwner.Navigation, composition.Consumers.Select(x => x.Owner));
+        Assert.Contains(GestureOwner.ContextMenu, composition.Consumers.Select(x => x.Owner));
         Assert.DoesNotContain(GestureOwner.None, composition.Consumers.Select(x => x.Owner));
         Assert.DoesNotContain(GestureOwner.SnapInteractionHelper, composition.Consumers.Select(x => x.Owner));
     }
@@ -43,7 +44,7 @@ public sealed class ProductionInputCompositionTests
     {
         var vm = new XuanYu.Editor.UI.UiVm(null, () => true, seedInitialScene: false);
 
-        Assert.Equal(8, vm.ViewportInput.Consumers.Count);
+        Assert.Equal(9, vm.ViewportInput.Consumers.Count);
         Assert.Same(vm.ViewportInput.Lifecycle, vm.ViewportInput.Router.Lifecycle);
         Assert.Same(vm.ViewportInput.CaptureCoordinator, vm.ViewportInput.Router.CaptureCoordinator);
     }

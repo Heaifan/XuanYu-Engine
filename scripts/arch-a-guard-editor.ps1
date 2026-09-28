@@ -1,3 +1,7 @@
+. (Join-Path $PSScriptRoot "architecture/guard-bootstrap.ps1")
+$root = Split-Path -Parent $PSScriptRoot
+Initialize-GuardBootstrap -Root $root | Out-Null
+
 # ARCH-WORLD-R4 Editor domain boundary guards, dot-sourced by arch-a-guard.ps1.
 # Enforces the layering introduced by ARCH-WORLD-R4:
 #   Editor -> Core + World (allowed)   Editor -/-> Editor.UI / Avalonia / Vulkan / Silk
@@ -37,3 +41,5 @@ Assert-Contains $editorUiCsproj "XuanYu.Editor.csproj" "Editor.UI composes Edito
 
 # Solution must contain the new Editor assembly.
 Assert-Contains "XuanYu.Engine.slnx" "XuanYu.Editor/XuanYu.Editor.csproj" "solution contains Editor"
+
+Complete-GuardRun "ARCH-EDITOR guard completed." -Child

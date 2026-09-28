@@ -50,8 +50,6 @@ public sealed partial class UiVm
         if (TryApplyViewFaceCommand(name)) return;
         FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}");
         FooterState = name is "运行" ? "状态：运行中" : "状态：就绪";
-        if (name is "运行") CommitTestEntityPosition(new Vector3d(1.0, 0.0, 0.0));
-        if (name is "停止") CommitTestEntityPosition(Vector3d.Zero);
         LogCommand(name);
         OnPropertyChanged(nameof(DebugObjectItems));
         OnPropertyChanged(nameof(LogSummary));

@@ -63,7 +63,7 @@ public partial class DiagnosticOverlayHost
         }
         PlaceToolWindow(bounds);
         ApplyToolPosition();
-        _toolWindow.ReassertOwnedZOrder();
+        ReassertToolWindowZOrder();
         return true;
     }
 }

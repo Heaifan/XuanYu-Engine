@@ -28,7 +28,7 @@ public sealed class ReverseZDepthPipelineContractTests
     [Fact]
     public void ReferenceGridReverseDepthContract()
     {
-        var source = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Fullscreen.cs");
+        var source = ReadType("VulkanGraphicsPipelineOwner.Fullscreen");
         Assert.Contains("CompareOp.GreaterOrEqual", source);
         Assert.Contains("DepthTestEnable = depthTest", source);
         Assert.Contains("DepthWriteEnable = false", source);
@@ -67,5 +67,19 @@ public sealed class ReverseZDepthPipelineContractTests
             dir = dir.Parent;
         }
         throw new FileNotFoundException(string.Join("/", parts));
+    }
+
+    static string ReadType(string prefix)
+    {
+        var root = ReadRoot();
+        return string.Join("\n", Directory.GetFiles(Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline"), $"{prefix}*.cs")
+            .OrderBy(path => path).Select(File.ReadAllText));
+    }
+
+    static string ReadRoot()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null && !Directory.Exists(Path.Combine(dir.FullName, "XuanYu.Render.Vulkan"))) dir = dir.Parent;
+        return dir?.FullName ?? throw new DirectoryNotFoundException("Repository root");
     }
 }

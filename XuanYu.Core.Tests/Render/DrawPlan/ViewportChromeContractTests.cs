@@ -1,4 +1,6 @@
 using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace XuanYu.Core.Tests.Render;
 
@@ -50,6 +52,9 @@ public sealed class ViewportChromeContractTests
     public void Native_host_stretches_to_fill()
     {
         var xaml = UiFile(Path.Combine("Viewport", "Vulkan", "VulkanViewport.axaml"));
-        Assert.Contains("<local:VulkanNativeHost/>", xaml);
+        var host = XDocument.Parse(xaml).Descendants()
+            .SingleOrDefault(x => x.Name.LocalName == "VulkanNativeHost");
+        Assert.NotNull(host);
+        Assert.Equal("ViewportNativeHost", host!.Attribute(XName.Get("Name", "http://schemas.microsoft.com/winfx/2006/xaml"))?.Value);
     }
 }

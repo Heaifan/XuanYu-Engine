@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 
 namespace XuanYu.Editor.UI;
 
@@ -24,17 +23,7 @@ public partial class DiagnosticOverlayHost
         {
             if (!ReferenceEquals(TopLevel.GetTopLevel(target), _topLevel)) continue;
             if (!target.IsEffectivelyVisible || TopLevel.GetTopLevel(target) is null) continue;
-            var popup = new Popup
-            {
-                PlacementTarget = target,
-                Placement = PlacementMode.TopEdgeAlignedLeft,
-                IsLightDismissEnabled = false,
-                TakesFocusFromNativeControl = false,
-                // Vulkan NativeControlHost is a native HWND and covers Avalonia's
-                // in-window OverlayLayer; use a native Popup root for badges.
-                ShouldUseOverlayLayer = false,
-                Child = new DiagnosticBadge(target, _clipboard),
-            };
+            var popup = CreateDiagnosticNativePopup(target);
             PopupOwner.Children.Add(popup);
             _popups.Add(popup);
             popup.IsOpen = true;

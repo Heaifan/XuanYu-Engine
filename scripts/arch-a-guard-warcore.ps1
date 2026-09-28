@@ -1,31 +1,8 @@
+. (Join-Path $PSScriptRoot "architecture/guard-bootstrap.ps1")
 $ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
-Set-Location $root
-# ARCH-UI-SPEC-R1-D4：仅当主守卫未先创建失败列表时才初始化——避免清空主守卫
-# 已累积的失败（版本一致性等检查在子守卫源入之前执行，曾被本行重置吞掉）。
-if ($null -eq $failures) { $failures = New-Object System.Collections.Generic.List[string] }
-
-function Add-Failure([string]$message) { $failures.Add($message) }
-function Read-Text([string]$path) { Get-Content -LiteralPath $path -Raw -Encoding utf8 }
-function Assert-Contains([string]$path, [string]$needle, [string]$label) {
-    if ((Read-Text $path).IndexOf($needle, [StringComparison]::OrdinalIgnoreCase) -lt 0) {
-        Add-Failure "$label missing: $needle"
-    }
-}
-function Assert-NotContains([string]$path, [string[]]$needles, [string]$label) {
-    $text = Read-Text $path
-    foreach ($needle in $needles) {
-        if ($text.IndexOf($needle, [StringComparison]::OrdinalIgnoreCase) -ge 0) {
-            Add-Failure "$label forbidden: $needle ($path)"
-        }
-    }
-}
-function Get-SourceFiles([string]$dir) {
-    @($(git ls-files "$dir/*") + $(git ls-files --others --exclude-standard "$dir/*")) |
-        Where-Object { $_ -match '\.(cs|axaml|js)$' -and (Test-Path $_) } |
-        ForEach-Object { Get-Item -LiteralPath $_ }
-}
+Initialize-GuardBootstrap -Root $root | Out-Null
 
 $wcCsproj = "XuanYu.WarCore/XuanYu.WarCore.csproj"
 $wcTestsCsproj = "XuanYu.WarCore.Tests/XuanYu.WarCore.Tests.csproj"
@@ -53,11 +30,4 @@ if ($slnx.IndexOf("XuanYu.WarCore.Tests/XuanYu.WarCore.Tests.csproj", [StringCom
     Add-Failure "solution missing project: XuanYu.WarCore.Tests/XuanYu.WarCore.Tests.csproj"
 }
 
-if ($failures.Count -gt 0) {
-    # 被主守卫源入时不做输出与退出（统一由主守卫收尾），仅独立运行本脚本时收口。
-    if ($MyInvocation.InvocationName -eq '.') { return }
-    $failures | ForEach-Object { Write-Error $_ }
-    exit 1
-}
-
-Write-Host "ARCH-A WarCore guard passed."
+Complete-GuardRun "ARCH-A WarCore guard completed." -Child

@@ -63,7 +63,7 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
             UiRuntimeTestHost.Descendants<XYTabs>(right).Single().Select("inspector"); right.UpdateLayout();
             return Snapshot(right);
         });
-        Assert.Equal(0, state.MapForms); Assert.Equal(0, state.MapPages); Assert.Equal(1, state.Layers);
+        Assert.Equal(1, state.MapForms); Assert.Equal(1, state.MapPages); Assert.Equal(1, state.Layers);
     }
     [Fact]
     public void Clearing_entity_owner_restores_single_map_context()
@@ -77,7 +77,7 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
             UiRuntimeTestHost.Descendants<XYTabs>(right).Single().Select("inspector"); right.UpdateLayout();
             return Snapshot(right);
         });
-        Assert.Equal(0, state.MapForms); Assert.Equal(0, state.MapPages); Assert.Equal(1, state.Layers);
+        Assert.Equal(1, state.MapForms); Assert.Equal(1, state.MapPages); Assert.Equal(1, state.Layers);
     }
     [Fact]
     public void Navigation_sources_use_xy_tabs_without_native_tab_hosts()

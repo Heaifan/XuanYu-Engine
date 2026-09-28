@@ -76,7 +76,7 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
         var inspector = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
         Assert.Contains("InspectorPropertyRow", inspector);
-        Assert.DoesNotContain("<local:MapEditorPanel", inspector);
+        Assert.Equal(1, inspector.Split("<local:MapEditorPanel", StringSplitOptions.None).Length - 1);
     }
 
     static SnapshotData Snapshot(UiRuntimeTestHost host, UiVm vm)

@@ -1,17 +1,13 @@
+. (Join-Path $PSScriptRoot "architecture/guard-bootstrap.ps1")
+$root = Split-Path -Parent $PSScriptRoot
+Initialize-GuardBootstrap -Root $root | Out-Null
+
 # ARCH-WORLD red-line guards (R1-R1 hardening), dot-sourced by arch-a-guard.ps1.
 # Enforces the physical layering introduced by ARCH-WORLD-R1:
 #   World -> Core (allowed)   Core -/-> World   World -/-> Editor/Vulkan/Avalonia/Silk
 # ProjectReference elements are parsed explicitly (not whole-file substring) so the
 # legitimate InternalsVisibleTo("XuanYu.World.Tests") attribute is NOT mistaken for a
 # production->test dependency.
-function Get-ProjectReferences([string]$path) {
-    $text = Read-Text $path
-    $refs = New-Object System.Collections.Generic.List[string]
-    $matches = [regex]::Matches($text, '<ProjectReference\s+Include="([^"]+)"')
-    foreach ($m in $matches) { $refs.Add($m.Groups[1].Value) }
-    return $refs
-}
-
 $coreCsproj = "XuanYu.Core/XuanYu.Core.csproj"
 $worldCsproj = "XuanYu.World/XuanYu.World.csproj"
 
@@ -62,3 +58,5 @@ foreach ($file in Get-SourceFiles "XuanYu.World") {
 # without the guard noticing (the old $projects list omitted them).
 Assert-Contains "XuanYu.Engine.slnx" "XuanYu.World/XuanYu.World.csproj" "solution contains World"
 Assert-Contains "XuanYu.Engine.slnx" "XuanYu.World.Tests/XuanYu.World.Tests.csproj" "solution contains World.Tests"
+
+Complete-GuardRun "ARCH-WORLD guard completed." -Child

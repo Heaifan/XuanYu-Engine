@@ -48,13 +48,15 @@ public sealed partial class UiVm
         try
         {
             var source = EsriAsciiGridTerrainReader.Read(path);
-            var world = TerrainWorldFactory.FromSource(source);
-            TerrainSource = source; TerrainWorld = world; TerrainStatus = "地形源已加载。";
-            FooterMessage = TerrainStatus; FooterState = "状态：就绪";
-            OnPropertyChanged(nameof(TerrainSource)); OnPropertyChanged(nameof(TerrainWorld));
+            var bounds = new TerrainGeoBounds(source.GeographicBounds.South,
+                source.GeographicBounds.West, source.GeographicBounds.East,
+                source.GeographicBounds.North);
+            var tile = new TerrainElevationTile("terrain", bounds, source.Raster,
+                source.Resolution, TerrainElevationUnit.Meter,
+                TerrainVerticalDatum.Egm96Geoid, TerrainSourceFormat.NasademHgt);
+            ActivateTerrainTiles(TerrainTileSet.Create([tile]));
+            TerrainStatus = "地形源已加载。"; FooterMessage = TerrainStatus;
             OnPropertyChanged(nameof(TerrainStatus));
-            PublishSceneRenderSnapshot();
-            FrameTerrainResources([world.ToRenderSnapshot("terrain", 1)]);
             return true;
         }
         catch (TerrainSourceReadException error) { return FailTerrainImport(error.Message, UiNotificationLevel.Error); }

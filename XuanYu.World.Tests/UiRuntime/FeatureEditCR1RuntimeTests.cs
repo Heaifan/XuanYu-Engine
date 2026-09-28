@@ -54,13 +54,13 @@ public sealed class FeatureEditCR1RuntimeTests
             Assert.NotNull(split);
             split!.MenuCommand!.Execute(null);
             Dispatcher.UIThread.RunJobs();
-            var popup = toolbar.FindControl<Popup>("DrawMenuPopup");
-            var rootMenu = Assert.IsType<XYMenu>(toolbar.FindControl<XYMenu>("DrawMenu"));
-            Assert.Same(popup!.Child, rootMenu.GetVisualParent());
-            Assert.True(rootMenu.Bounds.Width > 0 && rootMenu.Bounds.Height > 0);
+            var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single();
+            Assert.True(board.Popup.IsOpen);
+            var rootMenu = board.Menu;
             var labels = rootMenu.Items.OfType<XYMenuItem>().Select(x => x.Label).ToArray();
-            Assert.Equal(["点", "线", "面"], labels);
-            Assert.All(rootMenu.Items.OfType<XYMenuItem>(), item => Assert.True(item.HasSubMenu));
+            Assert.Equal(["点", "线", "区域", "地形"], labels);
+            Assert.All(rootMenu.Items.OfType<XYMenuItem>(), item =>
+                Assert.Equal(item.Label == "地形" ? false : true, item.HasSubMenu));
         });
     }
 
@@ -76,14 +76,11 @@ public sealed class FeatureEditCR1RuntimeTests
             host.Show(toolbar, 800, 100); toolbar.UpdateLayout();
             var split = toolbar.FindControl<XYSplitButton>("DrawSplitButton")!;
             split.MainCommand!.Execute(null); Dispatcher.UIThread.RunJobs();
-            var root = toolbar.FindControl<XYMenu>("DrawMenu")!;
+            var board = UiRuntimeTestHost.Descendants<XYContextDropdownBoard>(toolbar).Single();
+            var root = board.Menu;
             root.Items.OfType<XYMenuItem>().Single(x => x.Label == "线").Activate();
             Dispatcher.UIThread.RunJobs(); toolbar.UpdateLayout();
-            var submenuPopup = toolbar.FindControl<Popup>("DrawSubMenuPopup")!;
-            var childMenu = Assert.IsType<XYMenu>(toolbar.FindControl<XYMenu>("DrawChildMenu"));
-            Assert.True(submenuPopup.IsOpen);
-            Assert.Same(submenuPopup.Child, childMenu.GetVisualParent());
-            Assert.True(childMenu.Bounds.Width > 0 && childMenu.Bounds.Height > 0);
+            var childMenu = board.SubMenus[1].ChildMenu;
             childMenu.Items.OfType<XYMenuItem>().Single().Activate();
             await Task.Delay(1);
             Assert.True(vm.IsDrawingTransactionActive);

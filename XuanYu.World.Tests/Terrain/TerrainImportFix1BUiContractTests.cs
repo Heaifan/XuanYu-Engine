@@ -9,7 +9,7 @@ public sealed class TerrainImportFix1BUiContractTests
     [Fact]
     public void Import_panel_keeps_progress_and_cancel_without_completed_card()
     {
-        var source = TerrainFix1BSource.Read("XuanYu.Editor.UI/Win/UiWin.axaml");
+        var source = TerrainFix1BSource.Read("XuanYu.Editor.UI/Notification/BottomRightNotificationHost.axaml");
 
         Assert.Contains("IsVisible=\"{Binding IsTerrainImporting}\"", source);
         Assert.Contains("xy:XYProgressBar", source);

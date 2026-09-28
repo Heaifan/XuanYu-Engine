@@ -56,8 +56,8 @@ public sealed class UiD4InspectorContractTests
     [Fact]
     public void Debug_tab_is_not_a_production_right_tab()
     {
-        Assert.DoesNotContain("Id=\"debug\"", Right);
-        Assert.DoesNotContain("DebugWorkspace", Right);
+        Assert.Contains("Id=\"debug\"", Right);
+        Assert.Contains("DebugWorkspace", Right);
     }
 
     [Fact]

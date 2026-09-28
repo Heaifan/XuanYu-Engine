@@ -35,7 +35,7 @@ public sealed partial class UiVm
         if (CurrentRegionAuthoringMode == mode) return;
         CancelRegionDrawingFromEscape();
         CancelRoadDrawingFromEscape();
-        ClearMapGeometrySelection();
+        ClearMapGeometrySelection(clearInspectorSelection: false);
         if (IsEditMode) SelectTool("选择", logTool: false);
         CurrentRegionAuthoringMode = mode;
         OnPropertyChanged(nameof(CurrentRegionAuthoringMode));

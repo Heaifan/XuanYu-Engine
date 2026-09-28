@@ -1,4 +1,5 @@
 using System.IO;
+using System.Xml.Linq;
 
 namespace XuanYu.Core.Tests.Render;
 
@@ -9,7 +10,8 @@ public sealed class ViewportScaleIndicatorContractTests
     {
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
         var xaml = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanViewport.axaml"));
-        var host = xaml.IndexOf("<local:VulkanNativeHost/>", StringComparison.Ordinal);
+        var host = XDocument.Parse(xaml).Descendants()
+            .SingleOrDefault(x => x.Name.LocalName == "VulkanNativeHost");
         Assert.Contains("<Grid>", xaml);
         Assert.DoesNotContain("RowDefinitions=\"*,Auto\"", xaml);
         Assert.DoesNotContain("ScaleIndicator", xaml);
@@ -29,7 +31,8 @@ public sealed class ViewportScaleIndicatorContractTests
         Assert.False(File.Exists(Path.Combine(nativeDir, "Win32ViewportHost.ScaleIndicator.cs")));
         Assert.False(File.Exists(Path.Combine(nativeDir, "Win32ViewportHost.ScaleIndicator.Paint.cs")));
         Assert.False(File.Exists(Path.Combine(nativeDir, "VulkanNativeHost.ScaleIndicator.cs")));
-        Assert.True(host >= 0, "视口必须保留 Native Host");
+        Assert.NotNull(host);
+        Assert.Equal("ViewportNativeHost", host!.Attribute(XName.Get("Name", "http://schemas.microsoft.com/winfx/2006/xaml"))?.Value);
     }
 
     [Fact]

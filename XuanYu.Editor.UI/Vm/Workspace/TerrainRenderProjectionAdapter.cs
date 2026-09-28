@@ -1,10 +1,13 @@
 using XuanYu.Render.Abstractions;
+using XuanYu.World.Terrain;
+using XuanYu.World.Terrain.Source;
 
-namespace XuanYu.World.Terrain;
+namespace XuanYu.Editor.UI;
 
-public static class TerrainWorldProjection
+public static class TerrainRenderProjectionAdapter
 {
-    public static TerrainHeightfield ToHeightfield(this TerrainWorld world, int maxSamples = 513)
+    public static TerrainHeightfield ToHeightfield(this TerrainWorld world,
+        int maxSamples = 513)
     {
         if (maxSamples < 2) throw new ArgumentOutOfRangeException(nameof(maxSamples));
         var width = Math.Min(maxSamples, world.Metadata.Width);
@@ -14,16 +17,18 @@ public static class TerrainWorldProjection
         var values = new double[width * height];
         var mask = new bool[values.Length];
         for (var y = 0; y < height; y++)
-            for (var x = 0; x < width; x++)
-            {
-                var index = y * width + x;
-                var sourceY = height == 1 ? 0 : (int)Math.Round(y * (world.Metadata.Height - 1d) / (height - 1));
-                if (world.RenderRowsSouthToNorth) sourceY = world.Metadata.Height - 1 - sourceY;
-                var sourceX = width == 1 ? 0 : (int)Math.Round(x * (world.Metadata.Width - 1d) / (width - 1));
-                var sample = world.GetFinalHeight(new(sourceX, sourceY));
-                mask[index] = sample.IsNoData;
-                values[index] = sample.IsValid ? sample.Meters : 0.0;
-            }
+        for (var x = 0; x < width; x++)
+        {
+            var index = y * width + x;
+            var sourceY = height == 1 ? 0 :
+                (int)Math.Round(y * (world.Metadata.Height - 1d) / (height - 1));
+            if (world.RenderRowsSouthToNorth) sourceY = world.Metadata.Height - 1 - sourceY;
+            var sourceX = width == 1 ? 0 :
+                (int)Math.Round(x * (world.Metadata.Width - 1d) / (width - 1));
+            var sample = world.GetFinalHeight(new(sourceX, sourceY));
+            mask[index] = sample.IsNoData;
+            values[index] = sample.IsValid ? sample.Meters : 0.0;
+        }
         var metadata = world.Metadata;
         var renderMetadata = new TerrainRenderMetadata(metadata.Width, metadata.Height,
             metadata.ResolutionX, metadata.ResolutionY, metadata.MinElevation,
@@ -40,4 +45,8 @@ public static class TerrainWorldProjection
         var heightfield = world.ToHeightfield(maxSamples);
         return new(terrainId, revision, heightfield, heightfield.CellSizeMeters);
     }
+
+    public static TerrainRenderResource ToRenderSnapshot(this TerrainElevationTile tile,
+        string terrainId, int revision, int maxSamples = 513) =>
+        TerrainWorld.FromElevationTile(tile).ToRenderSnapshot(terrainId, revision, maxSamples);
 }

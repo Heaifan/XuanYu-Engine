@@ -1,3 +1,5 @@
+. (Join-Path $PSScriptRoot "architecture/guard-bootstrap.ps1")
+
 function Get-GuardPath([string]$root, [string]$relative) {
     Join-Path $root ($relative -replace '/', '\')
 }

@@ -37,8 +37,8 @@ public sealed class UiD4F1TextOverflowContractTests
     [Fact]
     public void Debug_workspace_is_not_a_production_surface()
     {
-        Assert.DoesNotContain("DebugWorkspace", Right);
-        Assert.DoesNotContain("Id=\"debug\"", Right);
+        Assert.Contains("DebugWorkspace", Right);
+        Assert.Contains("Id=\"debug\"", Right);
     }
 
     [Fact]

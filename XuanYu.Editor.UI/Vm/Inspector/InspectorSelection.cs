@@ -14,6 +14,7 @@ public sealed partial class UiVm
     public bool IsRoadInspector => InspectorIdentity == InspectorObjectKind.Road;
     public bool IsRegionInspector => InspectorIdentity == InspectorObjectKind.Region;
     public bool IsFeatureInspector => IsRoadInspector || IsRegionInspector;
+    public bool IsInspectorHeaderVisible => IsEntityInspector || IsMarkerInspector || IsFeatureInspector;
 
     public InspectorEditTarget CreateInspectorEditTarget(string propertyKey) =>
         new(InspectorIdentity, InspectorObjectId(), propertyKey);
@@ -37,7 +38,8 @@ public sealed partial class UiVm
         if (SelectedDataset is { Type: MapDatasetTypes.TerrainArea } && TerrainInspectorMetadata is not null)
             return InspectorObjectKind.Terrain;
         if (SelectedDataset is not null) return InspectorObjectKind.Dataset;
-        if (MapSession.Selection.Kind == MapSelectionKind.None) return InspectorObjectKind.Empty;
+        if (MapSession.Selection.Kind == MapSelectionKind.None)
+            return IsMapEditMode ? InspectorObjectKind.Map : InspectorObjectKind.Empty;
         if (MapSession.Selection.Kind == MapSelectionKind.Map) return InspectorObjectKind.Map;
         if (MapSession.Selection.Kind == MapSelectionKind.Region) return InspectorObjectKind.Region;
         return InspectorObjectKind.Empty;
@@ -50,10 +52,12 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(IsTerrainInspectorKind)); OnPropertyChanged(nameof(IsTerrainInspector));
         OnPropertyChanged(nameof(IsMarkerInspector)); OnPropertyChanged(nameof(IsRoadInspector));
         OnPropertyChanged(nameof(IsRegionInspector)); OnPropertyChanged(nameof(IsFeatureInspector)); OnPropertyChanged(nameof(IsInspectorEmpty));
+        OnPropertyChanged(nameof(IsInspectorHeaderVisible));
         OnPropertyChanged(nameof(HasInspectorSelection)); OnPropertyChanged(nameof(InspectorSelectionTitle));
         OnPropertyChanged(nameof(InspectorSelectionSubtitle)); OnPropertyChanged(nameof(InspectorSectionTitle));
         OnPropertyChanged(nameof(IsMapWorkspaceInspectorVisible)); OnPropertyChanged(nameof(IsLayerInspectorVisible));
         OnPropertyChanged(nameof(IsGenericInspectorVisible)); OnPropertyChanged(nameof(IsRegionInspectorPlaceholderVisible));
+        OnPropertyChanged(nameof(IsLegacyInspectorContentVisible)); OnPropertyChanged(nameof(IsInspectorEmptyAndNoMapWorkspace));
         RefreshInspectorNavigation();
         RaiseDiagnosticIdentityBindings();
     }
