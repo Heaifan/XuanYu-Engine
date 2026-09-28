@@ -41,6 +41,8 @@ try {
     @"
 @{
     ActiveBranch = 'main'
+    Mode = 'WIP_RESUME'
+    ConvergenceTargetBranch = 'formal/main'
     Remote = 'origin'
     CanonicalWorkspaces = @('$root')
     PreferredDotnetByDrive = @{}
@@ -60,6 +62,8 @@ try {
     Assert-True $stateBefore.Contains('"coordinatorScope": null') 'prepare must write coordinatorScope null'
     $state = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
     Assert-True ($null -eq $state.coordinatorScope) 'prepare coordinatorScope must be null'
+    Assert-True ($state.mode -eq 'WIP_RESUME') 'prepare must preserve configured WIP_RESUME mode'
+    Assert-True ($state.convergenceTargetBranch -eq 'formal/main') 'prepare must preserve convergence target branch'
 
     $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'ADVANCE NOOP: BASELINE_ALREADY_CURRENT'

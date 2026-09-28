@@ -2,7 +2,7 @@
 param(
     [ValidateSet('prepare', 'join', 'status', 'close', 'advance', 'commit-lock', 'commit-unlock')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
-    [ValidateSet('development', 'convergence')][string]$WaveMode = 'development',
+    [ValidateSet('development', 'convergence', 'WIP_RESUME')][string]$WaveMode = 'development',
     [AllowNull()][string]$CoordinatorScope = $null,
     [string]$Owner = $null,
     [string]$RepositoryRoot = $null,
@@ -258,7 +258,8 @@ function Show-Header([string]$Name, [string]$Result, $Facts, $State, $Toolchain,
     Write-Host "Baseline   : $(if ($null -eq $State) { 'NONE' } else { $State.baselineHead })"
     Write-Host "HEAD       : $($Facts.Head)"
     Write-Host "Active     : $(if ($null -eq $State) { 'false' } else { $State.active })"
-    Write-Host "WaveMode   : $(if ($null -eq $State.mode) { 'development' } else { $State.mode })"
+    Write-Host "HandoffMode: $(if ($null -eq $State.mode) { 'development' } else { $State.mode })"
+    Write-Host "ConvergenceTarget: $(if ($null -eq $State -or [string]::IsNullOrWhiteSpace([string]$State.convergenceTargetBranch)) { 'NONE' } else { $State.convergenceTargetBranch })"
     Write-Host "Coordinator: $(if ($null -eq $State.coordinatorScope) { 'null' } else { $State.coordinatorScope })"
     Write-Host "Scope       : $Scope"
     Write-Host "Dirty      : $(if ($Facts.Dirty.Count -gt 0) { 'YES' } else { 'NO' })"
@@ -461,7 +462,12 @@ if ($Mode -eq 'prepare') {
         Invoke-Git @('switch', '--ignore-other-worktrees', '-C', $Config.ActiveBranch, $remoteRef) | Out-Null
     } elseif ($facts.Dirty.Count -gt 0) { Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异但工作区 dirty。' }
     $newFacts = Get-Facts
-    $state = [pscustomobject]@{ branch = $newFacts.Branch; baselineHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = $WaveMode; coordinatorScope = (Normalize-CoordinatorScope $CoordinatorScope); preparedAt = (Get-Date).ToUniversalTime().ToString('o') }
+    $handoffMode = if ($Config.ContainsKey('Mode')) { [string]$Config.Mode } else { $WaveMode }
+    if ($handoffMode -notin @('development', 'convergence', 'WIP_RESUME')) {
+        Stop-Handoff 'CONFIG_INVALID' "非法 Handoff Mode：$handoffMode"
+    }
+    $convergenceTarget = if ($Config.ContainsKey('ConvergenceTargetBranch')) { [string]$Config.ConvergenceTargetBranch } else { $null }
+    $state = [pscustomobject]@{ branch = $newFacts.Branch; baselineHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = $handoffMode; convergenceTargetBranch = $convergenceTarget; coordinatorScope = (Normalize-CoordinatorScope $CoordinatorScope); preparedAt = (Get-Date).ToUniversalTime().ToString('o') }
     Write-State $state
     $toolchain = Resolve-Dotnet
     Show-Header 'PREPARE' 'PASS' $newFacts $state $toolchain (Get-DirtyReport $newFacts $Scope)

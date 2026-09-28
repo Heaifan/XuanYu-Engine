@@ -42,7 +42,7 @@ handoff.cmd commit-lock --scope xye --owner <session>
 
 当 JOIN 报 `BASELINE_MOVED` 时，Agent 必须停止并报告 baseline、HEAD、Remote HEAD、Ahead/Behind、Branch 和 ForeignDirty。不得执行 prepare、手动编辑 state.json、reset、stash 或 clean；先处理真实 branch/分叉异常。
 
-`state.json` 的 Wave 字段为：`mode=development|convergence`、`coordinatorScope=xye|integration|governance|null`。Coordinator 可在 PREPARE 时登记 Convergence 模式；普通 Agent 不得直接修改 state。
+`state.json` 的 Wave 字段为：`mode=development|convergence|WIP_RESUME`、`convergenceTargetBranch=<formal branch>|null`、`coordinatorScope=xye|integration|governance|null`。`WIP_RESUME` 表示远端已验证的跨设备 WIP 快照，不是 Release 或 Convergence；正式收口目标由 `ConvergenceTargetBranch` 明确记录。Coordinator 可在 PREPARE 时登记 Convergence 模式；普通 Agent 不得直接修改 state。
 
 ## 2. Canonical Workspaces
 
@@ -162,7 +162,7 @@ development 下所有 Lane JOIN 可通过 dirty。convergence 且 `coordinatorSc
 
 Active Wave 存在时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。CLOSE 仅在 working tree clean 时将 Active 标记为 false；dirty 时返回 `DIRTY_ON_CLOSE`。
 
-`prepare` 默认登记 `mode=development`；Convergence Coordinator 可显式登记 `mode=convergence` 和 `coordinatorScope`。Active Wave 期间再次 PREPARE 永远阻断。
+`prepare` 默认登记 `mode=development`；WIP Resume 可由 `HandoffConfig.psd1` 登记 `Mode = 'WIP_RESUME'`、`ActiveBranch` 与 `ConvergenceTargetBranch`；Convergence Coordinator 可显式登记 `mode=convergence` 和 `coordinatorScope`。Active Wave 期间再次 PREPARE 永远阻断。
 
 ## 8. Legacy worktrees
 
