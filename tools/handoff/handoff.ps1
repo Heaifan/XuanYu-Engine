@@ -426,6 +426,9 @@ if ($Mode -eq 'close') {
     if ($null -eq $state -or -not [bool]$state.active) { Stop-Handoff 'NO_ACTIVE_WAVE' '没有可关闭的 Active Wave。' }
     if ($facts.Dirty.Count -gt 0) { Stop-Handoff 'DIRTY_ON_CLOSE' 'Working tree dirty，禁止关闭 Active Wave。' }
     $state.active = $false
+    if ($null -eq $state.PSObject.Properties['closedAt']) {
+        $state | Add-Member -NotePropertyName closedAt -NotePropertyValue $null
+    }
     $state.closedAt = (Get-Date).ToUniversalTime().ToString('o')
     Write-State $state
     Show-Header 'CLOSE' 'PASS' $facts $state $null $report

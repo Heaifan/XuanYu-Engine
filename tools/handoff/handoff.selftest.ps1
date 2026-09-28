@@ -177,6 +177,13 @@ try {
     Assert-Output $result 1 'ACTIVE_WAVE_EXISTS'
     $result = Invoke-Handoff @('-Mode', 'close', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'DIRTY_ON_CLOSE'
+    git -C $root clean -fd | Out-Null
+    Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all).Count -eq 0) 'fixture must be clean before close regression'
+    $result = Invoke-Handoff @('-Mode', 'close', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF CLOSE PASS'
+    $closedState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    Assert-True (-not [bool]$closedState.active) 'close must deactivate the wave'
+    Assert-True ($null -ne $closedState.closedAt) 'close must persist closedAt for legacy state'
     Write-Host 'HANDOFF SELF TEST PASS'
 }
 finally {
