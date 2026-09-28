@@ -1,5 +1,6 @@
 using XuanYu.Render.Abstractions;
 using XuanYu.Core.Map;
+using System.Text.RegularExpressions;
 
 namespace XuanYu.World.Tests.Render;
 
@@ -11,22 +12,28 @@ public sealed class WorldReferenceGridDepthContractTests
         var grid = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs");
         var fullscreen = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Fullscreen.cs");
 
-        Assert.Contains("ShaderBytecodeWorldReferenceGridFrag.Code", grid);
-        Assert.Contains("VulkanClearFrameOwner.ReferenceGridPushSize, log, depthTest: true", grid);
+        var createReferenceGrid = Method(grid, "CreateReferenceGrid");
+        Assert.Contains("ShaderBytecodeWorldReferenceGridFrag.Code", createReferenceGrid);
+        Assert.Contains("VulkanClearFrameOwner.ReferenceGridPushSize, log", createReferenceGrid);
+        Assert.Contains("depthTest: true, depthBias: 4.0f", createReferenceGrid);
         Assert.Contains("DepthTestEnable = depthTest", fullscreen);
         Assert.Contains("DepthWriteEnable = false", fullscreen);
         Assert.Contains("DepthCompareOp = CompareOp.GreaterOrEqual", fullscreen);
         Assert.Contains("BlendEnable = true", fullscreen);
+        Assert.Contains("DepthBiasEnable = depthBias != 0.0f", fullscreen);
+        Assert.Contains("DepthBiasConstantFactor = depthBias", fullscreen);
+        Assert.Contains("DepthBiasSlopeFactor = 0.0f", fullscreen);
     }
 
     [Fact]
-    public void Navigation_gizmo_and_world_origin_keep_depth_off()
+    public void Non_grid_fullscreen_passes_keep_depth_off()
     {
         var grid = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs");
 
-        Assert.Contains("ShaderBytecodeWorldOriginFrag.Code", grid);
-        Assert.Contains("ShaderBytecodeNavGizmoFrag.Code", grid);
-        Assert.Equal(3, grid.Split("depthTest: false").Length - 1);
+        Assert.Contains("ShaderBytecodeWorldOriginFrag.Code", Method(grid, "CreateWorldOrigin"));
+        Assert.Contains("ShaderBytecodeNavGizmoFrag.Code", Method(grid, "CreateNavigationGizmo"));
+        Assert.Contains("depthTest: false", Method(grid, "CreateWorldOrigin"));
+        Assert.Contains("depthTest: false", Method(grid, "CreateNavigationGizmo"));
     }
 
     [Fact]
@@ -57,5 +64,13 @@ public sealed class WorldReferenceGridDepthContractTests
             dir = dir.Parent;
         }
         throw new FileNotFoundException(string.Join("/", parts));
+    }
+
+    static string Method(string source, string name)
+    {
+        var match = Regex.Match(source, $"{name}\\b(?<body>.*?)(?=\\n    internal static|\\n    //|\\n}})",
+            RegexOptions.Singleline);
+        Assert.True(match.Success, $"Missing method: {name}");
+        return match.Groups["body"].Value;
     }
 }

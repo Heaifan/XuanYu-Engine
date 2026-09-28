@@ -14,6 +14,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
     internal static VulkanGraphicsPipelineOwner? CreateFullscreenPass(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice,
         uint[] vertCode, uint[] fragCode, uint pushSize, Action<string>? log, bool depthTest = true,
+        float depthBias = 0.0f,
         PrimitiveTopology topology = PrimitiveTopology.TriangleList)
     {
         var props = new PhysicalDeviceProperties();
@@ -64,7 +65,15 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             DynamicState* pDynamic = stackalloc DynamicState[2];
             pDynamic[0] = DynamicState.Viewport; pDynamic[1] = DynamicState.Scissor;
             var dynamicState = new PipelineDynamicStateCreateInfo { SType = StructureType.PipelineDynamicStateCreateInfo, DynamicStateCount = 2, PDynamicStates = pDynamic };
-            var raster = new PipelineRasterizationStateCreateInfo { SType = StructureType.PipelineRasterizationStateCreateInfo, PolygonMode = PolygonMode.Fill, CullMode = CullModeFlags.None, FrontFace = FrontFace.Clockwise, LineWidth = 1.0f };
+            var raster = new PipelineRasterizationStateCreateInfo
+            {
+                SType = StructureType.PipelineRasterizationStateCreateInfo,
+                PolygonMode = PolygonMode.Fill, CullMode = CullModeFlags.None,
+                FrontFace = FrontFace.Clockwise, LineWidth = 1.0f,
+                DepthBiasEnable = depthBias != 0.0f,
+                DepthBiasConstantFactor = depthBias, DepthBiasSlopeFactor = 0.0f,
+                DepthBiasClamp = 0.0f
+            };
             var multisample = new PipelineMultisampleStateCreateInfo { SType = StructureType.PipelineMultisampleStateCreateInfo, RasterizationSamples = SampleCountFlags.Count1Bit };
             var depth = new PipelineDepthStencilStateCreateInfo
             {

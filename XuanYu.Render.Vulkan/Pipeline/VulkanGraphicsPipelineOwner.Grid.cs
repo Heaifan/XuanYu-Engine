@@ -14,7 +14,8 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
         => CreateFullscreenPass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
             ShaderBytecodeGridVert.Code, ShaderBytecodeWorldReferenceGridFrag.Code,
-            VulkanClearFrameOwner.ReferenceGridPushSize, log, depthTest: true);
+            VulkanClearFrameOwner.ReferenceGridPushSize, log,
+            depthTest: true, depthBias: 4.0f);
 
     internal static VulkanGraphicsPipelineOwner? CreateWorldAxes(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
