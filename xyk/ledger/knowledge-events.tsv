@@ -1,2 +1,7 @@
 KEventId	Action	ObjectId	Category	SourceTask	SourceProductCommit	Evidence	Status
 K-20260928-001	MIGRATE	XYK-BASELINE	Governance	XYK-FOUNDATION-R1	b0e6d397829a6cd5ec94624b1de062644c37decf	Remote product knowledge baseline migration	ACTIVE
+K-20260928-002	CREATE	K-GOV-004	Governance	GOV-BASELINE-RECOVERY-R1	b0e6d397829a6cd5ec94624b1de062644c37decf	Guard shared bootstrap/direct-run audit	ACTIVE
+K-20260928-002	STRENGTHEN	K-GOV-002	Governance	GOV-BASELINE-RECOVERY-R1	b0e6d397829a6cd5ec94624b1de062644c37decf	No allowlist widening for real architecture violation	ACTIVE
+K-20260928-002	STRENGTHEN	K-GOV-003	Governance	GOV-BASELINE-RECOVERY-R1	b0e6d397829a6cd5ec94624b1de062644c37decf	Version consumers must use canonical resolver	ACTIVE
+K-20260928-002	CREATE	EXP-GOVERNANCE-004	Governance	GOV-BASELINE-RECOVERY-R1	b0e6d397829a6cd5ec94624b1de062644c37decf	Governance RED classification before repair	ACTIVE
+K-20260928-002	CREATE	DEC-XYK-KNOWLEDGE-PLANE	Governance	XYK-FOUNDATION-R1	b0e6d397829a6cd5ec94624b1de062644c37decf	User approved XYK as third project plane	ACTIVE

@@ -38,3 +38,12 @@ Knowledge 是长期稳定的架构事实、接口契约、系统规律或验证�
 适用范围覆盖 FIX、FEATURE、REFACTOR、PERFORMANCE、GOVERNANCE、INCIDENT、UI、RENDER、TERRAIN、CAMERA 及后续所有施工任务。
 
 该交接块与 Version Event、5+100、Handoff、Commit Mutex、精确 Stage、`git diff --check` 同时生效；它不改变既有产品验收、版本计数或 Git 收口规则。
+
+
+## XYK Authority
+
+XYK 正式知识平面位于同仓库独立分支 `xyk/main`。ChatGPT 是正式 Knowledge Audit / Writeback Owner；Codex、Gemini 与其他施工 Agent 仅拥有只读消费权。
+
+施工 Agent 禁止 checkout、merge、rebase、cherry-pick `xyk/main`，也禁止直接修改 XYK。任务开始只通过 fetch/show/search 读取远端最新 Knowledge SHA 与相关条目；任务结束只提交 Candidate Knowledge / Experience 与 `CHATGPT KNOWLEDGE AUDIT REQUIRED`。
+
+K Commit 不推进 XYE Product Version，也不得改变当前产品分支的 ahead/behind。

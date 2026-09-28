@@ -418,3 +418,37 @@ Agent 将另一台电脑或旧阶段的绝对路径当成当前事实，绕过�
 
 Superseded by：
 无
+
+
+---
+
+## EXP-GOVERNANCE-004 Governance RED 先分类，禁止“修绿”
+
+状态：ACTIVE
+适用范围：Architecture Guard / 5+100 / Version Guard / Governance Selftest / Convergence
+触发条件：正式治理 Gate 为 RED，或多个 Gate 同时失败。
+Occurrences：1
+
+规则：
+任何治理 RED 在修改前必须先分类为：
+- GUARD-INFRA-DEFECT
+- ARCH-CONTRACT-VIOLATION
+- BASELINE-DEBT
+- PRODUCT-REGRESSION
+
+不同类别必须进入不同处理链。不得因为当前任务急于收口而把所有失败都当成 Guard Bug，也不得因为失败“看起来历史已存在”就自动视为可接受债务。
+
+正确做法：
+1. 保存真实失败命令与输出；
+2. 证明失败属于哪一类；
+3. Guard 缺陷修 Guard；架构违规做 Migration；基线债务按正式红线清理；产品回归归责当前实现；
+4. 没有可复现 Before Baseline 的“既有失败”只能记 UNKNOWN，不能记 PRE-EXISTING；
+5. 重新执行同一 Gate 证明分类与修复闭环。
+
+禁止：
+- 扩大 allowlist 消灭真实架构错误；
+- 给当前任务加临时 exception；
+- 用上一 Agent 的文字报告替代 Before Baseline；
+- 用局部 PASS 冒充全量 PASS。
+
+来源：GOV-BASELINE-RECOVERY-R1 · 2026-09-28

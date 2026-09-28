@@ -251,7 +251,11 @@ Repository Current Files → Current Machine Resolver → Git Current State → 
 
 必须先核对 `run.bat`、`scripts/resolve-dotnet.ps1` 和当前 Git 状态。历史记忆只能帮助寻找入口，不能作为最终环境结论。
 
-**验证方法**：先执行 `scripts/xye-bootstrap.ps1`，记录 Resolver 选择的 SDK 路径/版本、当前分支、HEAD 与远端关系；正式 .NET 命令通过 `scripts/xye-dotnet.ps1` 或 Resolver 返回的绝对 `DOTNET_EXE` 执行。`CanonicalRunResolver` 已由 HANDOFF-BOOTSTRAP-R1 落地为机器 Gate；不得仅凭 PATH 或记忆宣布“无 SDK”或“运行的是某个输出目录”。
+**验证方法**：先执行 `scripts/xye-bootstrap.ps1`，记录 Resolver 选择的 SDK 路径/版本、当前分支、HEAD 与远端关系；正式 .NET 命令通过 `scripts/xye-dotnet.ps1` 或 Resolver 返回的绝对 `DOTNET_EXE` 执行。CanonicalRunResolver 已由 HANDOFF-BOOTSTRAP-R1 落地为机器 Gate；不得仅凭 PATH 或记忆宣布“无 SDK”或“运行的是某个输出目录”。
+
+### 2026-09-28 强化：Version Consumer 必须服从正式 Resolver
+
+产品版本唯一事实源为仓库正式 Version Source，并通过正式 Resolver 暴露给消费者。Guard、窗口标题、Changelog 等都只是消费者，不得反向把展示文本当成第二版本源。若 Guard 仍检查历史硬编码展示字符串，应修复 Guard 的取值路径，而不是修改正式 Version Source 去迎合旧检查。
 
 ---
 
@@ -307,3 +311,41 @@ Repository Current Files → Current Machine Resolver → Git Current State → 
 3. 门禁是否已经进入正式串行验证链？
 
 **关联 Knowledge**：K-GOV-001、K-VAL-002
+
+### 2026-09-28 强化：Guard RED 不得通过放宽 Contract 修绿
+
+Architecture Guard 报出冻结边界外文件、依赖或白名单违规时，必须先判断它属于 Guard 基础设施缺陷还是真实 Architecture Contract Violation。若是后者，禁止扩大 allowlist、增加临时 exception、弱化断言或关闭检查；应进入独立 Architecture Migration。只有经正式架构裁定改变 Contract，门禁才可随之更新。
+
+
+---
+
+## K-GOV-004 Governance Guard 必须共享显式 Bootstrap 且可独立执行
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Governance、Architecture Guard、Bootstrap、Failure Propagation
+**适用范围**：主 Guard、子 Guard、治理脚本、架构门禁与聚合验证。
+
+### 已确认事实
+
+2026-09-28 的治理基线审计确认：部分子 Guard 直接运行时缺少 `Get-SourceFiles`、`Read-Text`、断言函数、`Get-ProjectReferences` 与 failure sink，因为这些能力只由主 Guard 在运行期临时定义。相同治理历史还曾出现主/子 Guard failure scope 不一致、失败被重置或未完整上报的问题。
+
+### 工程规则
+
+公共治理能力必须进入唯一、显式、可复用的 bootstrap/module。任何子 Guard 都必须能够在不先运行父脚本的情况下独立加载依赖并得到与聚合执行一致的 PASS/FAIL。
+
+主 Guard 聚合子 Guard 时必须完整传播失败；禁止 reset、覆盖、吞掉或局部隐藏 failure sink。
+
+### 禁止做法
+
+- 由主 Guard 临时定义公共函数，并假设子 Guard 永远只会被父脚本调用；
+- 每个子 Guard 各复制一份同名 Helper；
+- catch 后把治理失败降级为 warning；
+- 为了让主 Guard 变绿而不呈现子 Guard 的真实失败。
+
+### 验证
+
+至少同时执行：主 Guard、每个子 Guard direct-run、Windows PowerShell 5.1、项目正式支持时的 pwsh，并验证失败传播一致。
+
+**来源任务**：GOV-BASELINE-RECOVERY-R1 · 2026-09-28
