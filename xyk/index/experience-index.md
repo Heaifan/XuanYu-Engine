@@ -11,3 +11,4 @@
 - EXP-GOVERNANCE-001 Repository Authority First
 - EXP-GOVERNANCE-003 Process Version Telemetry Must Advance
 - EXP-GOVERNANCE-004 Governance RED 先分类，禁止“修绿”
+- EXP-GOVERNANCE-005 Lane PASS ≠ Integration PASS

@@ -349,3 +349,35 @@ Architecture Guard 报出冻结边界外文件、依赖或白名单违规时，�
 至少同时执行：主 Guard、每个子 Guard direct-run、Windows PowerShell 5.1、项目正式支持时的 pwsh，并验证失败传播一致。
 
 **来源任务**：GOV-BASELINE-RECOVERY-R1 · 2026-09-28
+
+
+---
+
+## K-GOV-005 Candidate Tree Purity
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Governance、Candidate Tree、Validation Tree、Fail Closed、Commit Eligibility
+**适用范围**：C0、Forensic、Convergence、Integration、Build/Test/Acceptance、Commit 与 Release 裁决。
+
+### 正式规则
+
+1. **Candidate Tree** 是最终计划 Stage / Commit 的文件集合及其确定依赖状态。
+2. **Validation Tree** 是实际参与 Build / Test / Acceptance 的工作树状态。
+3. 如果 `Validation Tree != Candidate Tree`，必须输出 `CANDIDATE TREE MATCH = NO`。即使 Build、Test、Dedicated Gate 或 Manual Acceptance PASS，也不得推出 `COMMIT ELIGIBILITY = YES`、`RELEASE ELIGIBILITY = YES`、`PRODUCT CLOSED` 或 `ACCEPTANCE COMPLETE`。
+4. Dirty dependency 只要参与编译、运行、测试或行为验证，即属于 Validation Tree；不能以“文件不是本 Lane 的”为理由忽略。
+5. 合法解除方式只有：
+   - 将 Dirty Dependency 独立正式收口，形成稳定 Commit Baseline 后重新验证；或
+   - 在不包含该 Dirty Dependency 的真实 Candidate Tree 重新执行同等级 Gate 并 PASS。
+6. 禁止用局部定向测试代替真实 Candidate Tree、用历史 PASS 继承当前 Candidate，或在 Candidate Tree Mismatch 状态推进版本。
+
+### 本轮 Incident Evidence
+
+本条由 `XYK-C0-GOVERNANCE-SEDIMENT-R1` 写入；以下数字仅是本次 Incident Evidence，不是永久固定值：`XYE Dirty Paths = 68`、`XYE OwnDirty = 53`、`XYUI known dirty = 15`、`True ForeignDirty = 0`、`Candidate Tree Match = NO`、`Confirmed Current-Wave Regression = 4`、`Unresolved Unknown = 11`。
+
+### 验证与关联
+
+所有顶层 C0 / Forensic / Convergence / Integration 报告必须使用 Reporting Contract 输出本条状态；任一 Mismatch 必须 fail-closed。
+
+**来源任务**：XYK-C0-GOVERNANCE-SEDIMENT-R1 · 2026-09-28

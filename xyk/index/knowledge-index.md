@@ -72,6 +72,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | DEC-XYE-XYUI-DUAL-LANE | Decision | Governance | XYE / XYUI Dual-Lane Development Model | P0 | R1 | XYE-XYUI-DUAL-LANE-R1 · 2026-09-27 | Active |
 
 | K-GOV-004 | Knowledge | Engineering | Governance Guard 必须共享显式 Bootstrap 且可独立执行 | P0 | E2 | GOV-BASELINE-RECOVERY-R1 · 2026-09-28 | Active |
+| K-GOV-005 | Knowledge | Engineering | Candidate Tree 与 Validation Tree 不一致时必须 Fail-Closed | P0 | E2 | XYK-C0-GOVERNANCE-SEDIMENT-R1 · 2026-09-28 | Active |
 | EXP-GOVERNANCE-004 | EXP | Engineering | Governance RED 先分类，禁止“修绿” | P0 | E2 | GOV-BASELINE-RECOVERY-R1 · 2026-09-28 | Active |
 | DEC-XYK-KNOWLEDGE-PLANE | Decision | Governance | XYE / XYUI / XYK 三位一体与 XYK 远端知识平面 | P0 | R1 | XYK-FOUNDATION-R1 · 2026-09-28 | Active |
 
@@ -79,7 +80,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 ## 分类文件
 
-- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004
+- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-005
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004

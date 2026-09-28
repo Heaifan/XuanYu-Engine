@@ -464,3 +464,40 @@ Occurrences：1
 - 用局部 PASS 冒充全量 PASS。
 
 来源：GOV-BASELINE-RECOVERY-R1 · 2026-09-28
+
+
+---
+
+## EXP-GOVERNANCE-005 Lane PASS ≠ Integration PASS
+
+状态：ACTIVE
+适用范围：C0 / Forensic / Convergence / Integration 报告、Lane 汇报、Coordinator 裁决、Commit 与 Release Eligibility。
+触发条件：任一 Lane 报告 `XYE Consumer Impact: NO`、`Blocking Failures: 0`、Local Gate PASS，或其他只描述局部责任范围的 PASS 状态。
+Occurrences：1
+
+规则：
+局部责任判断与全局产品裁决必须分离。Lane 只能报告自身范围内的 `Local Regression`、`Consumer Impact`、`Local Gate`、`Ownership` 与 `Classification`；Lane 不得输出具有全局含义的 `Global Commit Eligibility`、`Product Closed`、`Release Ready` 或 `Integration PASS`。
+
+只有 Coordinator 可以输出全局裁决，且必须同时受顶层 Reporting Contract 约束。`Lane PASS` 不能推导出 `Integration PASS`；局部无阻塞不能推导出全局无阻塞或可以 Commit。
+
+根因模式：
+把“本 Lane 未发现问题”压缩成全局布尔状态，导致跨 Lane Dirty、依赖树不匹配、未知项或其他 Lane 回归被遗漏，上层错误推进 Commit。
+
+禁止：
+- 将 `XYE Consumer Impact: NO` 解读为全局无阻塞；
+- 将 `Blocking Failures: 0` 解读为 `COMMIT ELIGIBILITY = YES`；
+- 让 Lane 自行宣布 `Product Closed`、`Release Ready` 或 `Integration PASS`；
+- 以 Lane PASS 覆盖 `CANDIDATE TREE MATCH = NO`、`PRODUCT REGRESSION = CONFIRMED/UNKNOWN` 或 `UNRESOLVED UNKNOWN > 0`。
+
+正确做法：
+1. Lane 输出局部事实、范围、Ownership 与证据；
+2. Coordinator 汇总所有 Lane、依赖树、未知项、回归与 Gate 状态；
+3. Coordinator 按 Reporting Contract 明确输出全局裁决；
+4. 任何条件不足时 fail-closed，`COMMIT ELIGIBILITY = NO`。
+
+本轮 Incident Evidence（仅本次事实，不是永久固定值）：`XYE Dirty Paths = 68`、`XYE OwnDirty = 53`、`XYUI known dirty = 15`、`True ForeignDirty = 0`、`Candidate Tree Match = NO`、`Confirmed Current-Wave Regression = 4`、`Unresolved Unknown = 11`。
+
+验证 / 自动化：
+所有 C0 / Forensic / Convergence / Integration 顶层报告必须包含 Reporting Contract 的全局字段，并明确 Lane 与 Coordinator 权限边界。
+
+来源：XYK-C0-GOVERNANCE-SEDIMENT-R1 · 2026-09-28

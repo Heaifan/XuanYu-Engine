@@ -47,3 +47,66 @@ XYK 正式知识平面位于同仓库独立分支 `xyk/main`。ChatGPT 是正式
 施工 Agent 禁止 checkout、merge、rebase、cherry-pick `xyk/main`，也禁止直接修改 XYK。任务开始只通过 fetch/show/search 读取远端最新 Knowledge SHA 与相关条目；任务结束只提交 Candidate Knowledge / Experience 与 `CHATGPT KNOWLEDGE AUDIT REQUIRED`。
 
 K Commit 不推进 XYE Product Version，也不得改变当前产品分支的 ahead/behind。
+# XYK C0 / Forensic / Convergence / Integration Reporting Contract
+
+本合同适用于所有 C0、Forensic、Convergence、Integration 最终报告，并覆盖报告正文、Summary、Acceptance 与 Commit 裁决。Lane 报告是局部证据；只有 Coordinator 可以输出全局裁决。
+
+## Lane 与 Coordinator 权限
+
+Lane 可以输出：
+
+- `Local Regression`
+- `Consumer Impact`
+- `Local Gate`
+- `Ownership`
+- `Classification`
+
+Lane 禁止输出具有全局含义的：
+
+- `Global Commit Eligibility`
+- `Product Closed`
+- `Release Ready`
+- `Integration PASS`
+
+`Lane PASS` 不等于 `Integration PASS`。`XYE Consumer Impact: NO` 或 `Blocking Failures: 0` 只能证明对应 Lane 的局部判断，不能证明全局无阻塞或可以 Commit。
+
+## 强制顶层状态合同
+
+所有适用报告末尾必须存在以下字段：
+
+```text
+PRODUCT REGRESSION:
+CONFIRMED / NONE / UNKNOWN
+
+UNRESOLVED UNKNOWN:
+<number>
+
+GATE STATUS:
+GREEN / RED
+
+CANDIDATE TREE MATCH:
+YES / NO
+
+COMMIT ELIGIBILITY:
+YES / NO
+```
+
+`CANDIDATE TREE` 是最终计划 Stage / Commit 的文件集合及其确定依赖状态；`VALIDATION TREE` 是实际参与 Build / Test / Acceptance 的工作树状态。两者不一致时，`CANDIDATE TREE MATCH = NO`，必须 fail-closed，即使局部 Build、Test、Dedicated Gate 或 Manual Acceptance PASS，也不得宣布 Commit、Release 或 Product Closed。
+
+Dirty dependency 只要参与编译、运行、测试或行为验证，即属于 Validation Tree；不得以 Lane Ownership 排除。只能通过独立正式收口形成稳定 Commit Baseline，或在不包含该依赖的真实 Candidate Tree 重新执行同等级 Gate 并 PASS 来解除 Mismatch。
+
+## COMMIT ELIGIBILITY 裁决条件
+
+`COMMIT ELIGIBILITY = YES` 只有在以下全部成立且 Coordinator 明确裁决时才允许：
+
+1. `PRODUCT REGRESSION = NONE`
+2. `UNRESOLVED UNKNOWN = 0`
+3. `GATE STATUS = GREEN`
+4. `CANDIDATE TREE MATCH = YES`
+5. `True ForeignDirty = 0`
+6. 当前 Candidate 已完成要求的 Build / Test / Guard
+7. Coordinator 明确裁决
+
+任一条件失败，必须输出 `COMMIT ELIGIBILITY = NO`。Lane 不得自行宣告 YES。
+
+本轮 `XYK-C0-GOVERNANCE-SEDIMENT-R1` 的 Incident Evidence 仅供本次追溯：`XYE Dirty Paths = 68`、`XYE OwnDirty = 53`、`XYUI known dirty = 15`、`True ForeignDirty = 0`、`Candidate Tree Match = NO`、`Confirmed Current-Wave Regression = 4`、`Unresolved Unknown = 11`。这些数字不得固化为永久默认值。
