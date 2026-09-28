@@ -190,3 +190,11 @@ Agent 错误权威库：
 自动测试通过不等于需要真机的 UI、渲染、输入、生命周期阶段 CLOSED。
 
 达到 Goal + Gate + 必要文档 + Commit/Push/远端复核后停止当前开发轮；需要真机时等待用户验收，不主动扩展下一阶段。
+
+## Version Governance
+
+- Process Version 是开发过程遥测；Commit SHA 是历史唯一身份，正式记录必须同时包含 Version、Commit、Branch、Dirty。
+- 一个独立 FEATURE、FIX 或 STABILIZATION 完成后必须产生一个 Version Event；连续 FIX 每一轮分别计数，不得用 SHA 替代或事后合并。
+- Planning 与 Execution 均执行 Knowledge Preflight；进入正式验收/Commit 前输出 `VERSION EVENT`（Change Type、Previous、Next、Reason）。不推进产品版本时输出 `Version Event: NONE` 与历史依据。
+- 当前仓库工具入口：`tools/governance/version-audit.ps1`、`version-next.ps1`、`version-selftest.ps1`、`version-metrics.ps1`；规则与跨项目模板见 `docs/governance/process-versioning.md` 和 `docs/governance/templates/process-version-governance-template.md`。
+- 正式 Acceptance 必须输出 `ACCEPTANCE IDENTITY`。Dirty=YES 只能作为显式 Dirty Runtime Probe，不得宣布正式 Product Closed。

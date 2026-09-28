@@ -59,6 +59,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-INP-004 | Knowledge | Input | 平台输入编码必须在 Adapter 边界正规化 | P0 | E2 | Region Snap R1 · 2026-09-25 | Active |
 | K-DIAG-001 | Knowledge | UI | Diagnostic 必须保持观察者与输入透明 | P0 | E2 | Diagnostic + Viewport R1 · 2026-09-25 | Active |
 | K-GOV-003 | Knowledge | Engineering | 当前仓库入口/Resolver 高于 Agent 历史环境记忆 | P0 | E2 | SDK resolver audit · 2026-09-25 | Active |
+| EXP-GOVERNANCE-003 | EXP | Engineering | Process Version Telemetry Must Advance | P0 | E2 | GLOBAL-PROCESS-VERSION-GOVERNANCE-R1 · 2026-09-28 | Active |
 | K-UI-001 | Knowledge | UI | 冷启动错位/操作后恢复优先检查 Measure/Arrange 与命中热区 | P0 | E2 | v0.2.24.49-fix → .50-fix · 2026-08-09 · 60fd339 收口 | Active |
 | K-DATA-001 | Knowledge | Data | 覆盖保存必须采用可回滚 Staging 事务 | P0 | E3 | v0.2.21.24-rz · 2026-08-02 14:10:00 · e089325 | Active |
 | K-DATA-002 | Knowledge | Data | Load 必须 Candidate→Commit，结构失败与资源失败分级 | P0 | E3 | v0.2.21.25-rz · 2026-08-02 15:30:00 · cafe400 | Active |

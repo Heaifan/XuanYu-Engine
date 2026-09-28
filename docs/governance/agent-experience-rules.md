@@ -404,5 +404,17 @@ Agent 将另一台电脑或旧阶段的绝对路径当成当前事实，绕过�
 验证 / 自动化：
 `CanonicalRunResolver` 已由 HANDOFF-BOOTSTRAP-R1 正式落地为机器 Gate。当前权威链为 `run.bat → scripts/resolve-dotnet.ps1`；新会话/新机器先执行 `scripts/xye-bootstrap.ps1`，正式 .NET 命令通过 `scripts/xye-dotnet.ps1` 或 Resolver 返回的绝对 `DOTNET_EXE` 执行。Canonical Toolchain Contract T1–T7、Bootstrap Runtime、Dogfood Build/Test 均已 PASS；对应治理提交为 `1b29f197`、`ee17a281`。
 
+---
+
+## EXP-GOVERNANCE-003 Process Version Telemetry Must Advance
+
+状态：ACTIVE
+适用范围：所有正式 FEATURE、FIX、STABILIZATION、Release、Milestone、Product Acceptance Baseline 与治理收口任务。
+触发条件：AI 准备完成一个应计数的 Version Event，或准备进入正式验收/Commit。
+
+规则：必须先执行 Version Preflight，并明确 Previous、Next、Change Type 与 Reason。一个独立 Feature、一个独立 Fix、以及连续修复的每一轮都必须留下独立 Version Event；不得用 Commit SHA 替代递增，不得复用已有正式 Version，不得为减少版本号隐藏返工次数。治理-only 是否推进产品 Version 服从项目已审计历史，若不推进必须显式输出 `Version Event: NONE` 及依据。
+
+验证 / 自动化：`tools/governance/version-next.ps1` 只计算下一值；`version-selftest.ps1` 验证 FEATURE、FIX、连续 FIX、未知类型和非法版本；`version-events.tsv` 一行一个事件。
+
 Superseded by：
 无

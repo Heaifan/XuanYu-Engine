@@ -223,6 +223,16 @@ Codex 接手一个“基于 v0.2.30.4-fix 修复”的任务时，如果用户�
 **关联 Incident**：INC-2026-08-10-005（历史版本追溯风险）
 **关联 Knowledge**：K-VAL-001
 
+### K-GOV-001 追加：双身份模型（2026-09-28）
+
+Process Version 是开发过程统计身份，Commit SHA 是历史唯一身份；二者必须同时记录。Commit Hash 唯一不意味着 Version 可以不递增。禁止只记录 Version、只记录 SHA、事后合并多个 Fix Event、隐藏返工次数，或重用已有正式 Version 表示新的正式状态。正式 Build/Acceptance Identity 还必须记录 Branch 与 Dirty 状态。
+
+**关联规则**：K-VAL-001、EXP-GOVERNANCE-003。
+
+### K-VAL-001 追加：产物双身份闭环（2026-09-28）
+
+用户运行产物与验证产物必须绑定相同 Process Version + Commit SHA；Dirty 产物只能作为明确命名的 Runtime Probe，不能直接成为正式 Product Acceptance Baseline。
+
 ---
 
 ## K-GOV-003 当前仓库入口/Resolver 高于 Agent 历史环境记忆
