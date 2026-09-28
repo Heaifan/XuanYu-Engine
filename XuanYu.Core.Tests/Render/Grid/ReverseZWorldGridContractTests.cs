@@ -9,7 +9,14 @@ public sealed class ReverseZWorldGridContractTests
     static string Shader => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "editor_world_reference_grid.frag"));
     static string Pipeline => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
 
-    [Fact] public void GridReverseZDepth() => Assert.Contains("gl_FragDepth = depth", Shader);
+    [Fact]
+    public void GridReverseZDepthIsIndependentOfFragmentDepthWrites()
+    {
+        var shader = Shader;
+        Assert.DoesNotContain("gl_FragDepth", shader);
+        Assert.DoesNotContain("DEPTH_BIAS", shader);
+        Assert.DoesNotContain("depth + bias", shader);
+    }
     [Fact] public void GridNearFarConvention() => Assert.Contains("depth >= 0.0 && depth <= 1.0", Shader);
     [Fact] public void GridNeverDisappearsWhilePlaneVisible() => Assert.DoesNotContain("gridMaxDistance", Shader);
     [Fact] public void NoDistanceHardCutoff() => Assert.DoesNotContain("distToCamera", Shader);
@@ -35,9 +42,9 @@ public sealed class ReverseZWorldGridContractTests
     [Fact] public void ExtremeZoomOutStillHasCoarseGrid() => Assert.Contains("coarseContribution", Shader);
 
     [Fact]
-    public void GridDepthTestIsEnabledWithoutWriteContract()
+    public void GridDepthTestIsDisabledWithoutWriteContract()
     {
-        Assert.Contains("depthTest: true", Pipeline);
+        Assert.Contains("depthTest: false", Pipeline);
         Assert.Contains("ShaderBytecodeWorldReferenceGridFrag.Code", Pipeline);
     }
 }

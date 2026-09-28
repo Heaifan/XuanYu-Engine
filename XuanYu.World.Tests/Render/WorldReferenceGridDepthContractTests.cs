@@ -7,22 +7,23 @@ namespace XuanYu.World.Tests.Render;
 public sealed class WorldReferenceGridDepthContractTests
 {
     [Fact]
-    public void Reference_grid_uses_depth_test_without_writing_depth()
+    public void Reference_grid_is_depth_independent_without_writing_depth()
     {
         var grid = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs");
         var fullscreen = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Fullscreen.cs");
+        var shader = Read("XuanYu.Render.Vulkan", "Shaders", "editor_world_reference_grid.frag");
 
         var createReferenceGrid = Method(grid, "CreateReferenceGrid");
         Assert.Contains("ShaderBytecodeWorldReferenceGridFrag.Code", createReferenceGrid);
         Assert.Contains("VulkanClearFrameOwner.ReferenceGridPushSize, log", createReferenceGrid);
-        Assert.Contains("depthTest: true, depthBias: 4.0f", createReferenceGrid);
+        Assert.Contains("depthTest: false", createReferenceGrid);
+        Assert.DoesNotContain("depthBias", createReferenceGrid);
         Assert.Contains("DepthTestEnable = depthTest", fullscreen);
         Assert.Contains("DepthWriteEnable = false", fullscreen);
         Assert.Contains("DepthCompareOp = CompareOp.GreaterOrEqual", fullscreen);
         Assert.Contains("BlendEnable = true", fullscreen);
-        Assert.Contains("DepthBiasEnable = depthBias != 0.0f", fullscreen);
-        Assert.Contains("DepthBiasConstantFactor = depthBias", fullscreen);
-        Assert.Contains("DepthBiasSlopeFactor = 0.0f", fullscreen);
+        Assert.DoesNotContain("DepthBias", fullscreen);
+        Assert.DoesNotContain("gl_FragDepth", shader);
     }
 
     [Fact]

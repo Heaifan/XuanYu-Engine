@@ -7,7 +7,7 @@ using XuanYu.Render.Vulkan.Swapchain;
 namespace XuanYu.Render.Vulkan.Pipeline;
 
 // GRID-RW-2A：World Reference Grid 是独立编辑器环境层：全屏三角形 + World XY(Z=0) 求交。
-// 不依赖 MapGround/BaseHeight；深度测试开启、深度写入关闭，旧 GridLine 资产暂保留。
+// 不依赖 MapGround/BaseHeight；旧 GridLine 资产暂保留。
 internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
     internal static VulkanGraphicsPipelineOwner? CreateReferenceGrid(Vk vk, VulkanDeviceOwner deviceOwner,
@@ -15,7 +15,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
         => CreateFullscreenPass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
             ShaderBytecodeGridVert.Code, ShaderBytecodeWorldReferenceGridFrag.Code,
             VulkanClearFrameOwner.ReferenceGridPushSize, log,
-            depthTest: true, depthBias: 4.0f);
+            depthTest: false);
 
     internal static VulkanGraphicsPipelineOwner? CreateWorldAxes(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)

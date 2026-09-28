@@ -29,7 +29,7 @@ public sealed class WorldReferenceGridFarFadeContractTests
         Assert.DoesNotContain("gridMaxDistance", shader);
         Assert.DoesNotContain("distanceFade", shader);
         Assert.Contains("clipPosition", shader);
-        Assert.Contains("gl_FragDepth", shader);
+        Assert.DoesNotContain("gl_FragDepth", shader);
         Assert.Contains("depth >= 0.0 && depth <= 1.0", shader);
     }
 

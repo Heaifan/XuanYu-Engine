@@ -27,7 +27,7 @@ public sealed class ReverseZDepthContractPrototypeTests
         var root = Root();
         var shaders = Directory.GetFiles(Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders"), "*.frag");
         var writers = shaders.Where(x => Read(x).Contains("gl_FragDepth")).Select(Path.GetFileName).ToArray();
-        Assert.Contains("editor_world_reference_grid.frag", writers);
+        Assert.DoesNotContain("editor_world_reference_grid.frag", writers);
         Assert.Contains("editor_view_plane_grid.frag", writers);
         Assert.Contains("editor_world_axes.frag", writers);
     }

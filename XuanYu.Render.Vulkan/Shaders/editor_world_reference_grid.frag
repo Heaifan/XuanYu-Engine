@@ -42,8 +42,6 @@ void main() {
     vec4 clipPosition = pc.viewProjection * vec4(worldPosition, 1.0);
     float depth = clipPosition.z / clipPosition.w;
     if (!(depth >= 0.0 && depth <= 1.0)) discard;
-    gl_FragDepth = depth;
-
     float fineSpacing = max(pc.gridState.x, 100.0);
     float coarseSpacing = max(pc.gridState.y, fineSpacing);
     float fineWeight = clamp(pc.gridState.z, 0.0, 1.0);

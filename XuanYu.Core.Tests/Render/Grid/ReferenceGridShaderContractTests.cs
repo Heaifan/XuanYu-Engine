@@ -32,6 +32,9 @@ public sealed class ReferenceGridShaderContractTests
         Assert.Contains("ShaderBytecodeWorldReferenceGridFrag.Code", source);
         Assert.Contains("ShaderBytecodeGridVert.Code", source);
         Assert.Contains("depthTest: false", source);
+        Assert.DoesNotContain("depthBias", source);
+        var shader = ShaderSource("editor_world_reference_grid.frag");
+        Assert.DoesNotContain("gl_FragDepth", shader);
         Assert.DoesNotContain("CreateReferenceGridLinePass", source);
         Assert.DoesNotContain("ShaderBytecodeGridLine", source);
     }
