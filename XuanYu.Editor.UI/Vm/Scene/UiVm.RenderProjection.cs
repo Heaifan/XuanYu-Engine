@@ -18,17 +18,9 @@ public sealed partial class UiVm
             MapGeometryPreview, _viewportDpiScale, _mapLabelBitmapCache);
         IReadOnlyList<RenderVectorOverlayResource> overlays =
             vectorOverlay.Primitives.Count == 0 ? [] : [vectorOverlay];
-        var terrains = _terrainTiles?.Tiles.Select(tile =>
-        {
-            var world = _terrainTiles.Tiles.Count == 1 ? TerrainWorld : null;
-            var resource = TerrainWorldPlacement.ToRenderResource(
-                tile, _terrainTiles.Bounds, world);
-            var revision = _terrainRevisionLedger.Resolve(resource.TerrainId,
-                TerrainContentFingerprint.ForHeightfield(resource.Heightfield));
-            return resource with { Revision = revision };
-        }).ToArray();
-        var terrain = terrains?.FirstOrDefault() ?? TerrainWorld?.ToRenderSnapshot("terrain", 1);
-        var map = IsTerrainContext && terrains is { Length: > 0 }
+        var terrains = CachedTerrainRenderResources();
+        var terrain = terrains?.FirstOrDefault();
+        var map = IsTerrainContext && terrains is { Count: > 0 }
             ? MapRenderSnapshot.Empty : _mapRenderSnapshot;
         return SceneRenderProjectionAdapter.TryCreate(
             snapshot,

@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using XuanYu.Render.Abstractions;
 using XuanYu.World.Terrain.Import;
 using XuanYu.World.Terrain.Source;
 
@@ -8,6 +9,8 @@ public sealed partial class UiVm
 {
     TerrainElevationTile? _terrainTile;
     TerrainTileSet? _terrainTiles;
+    TerrainRenderResource[]? _terrainRenderResources;
+    int _terrainRenderEditRevision;
     CancellationTokenSource? _terrainImportCancellation;
     public TerrainImportState TerrainImportState { get; private set; }
     public bool IsTerrainImporting => TerrainImportState == TerrainImportState.Importing;

@@ -35,6 +35,7 @@ public sealed partial class UiVm
         _terrainTiles = tiles; _terrainTile = tiles.Tiles[0];
         if (tiles.Tiles.Count == 1) ActivateSingleTerrain(_terrainTile);
         else ActivateMultiTerrain(tiles);
+        RebuildTerrainRenderResources();
         OnTerrainRuntimeEstablished(tiles);
         EnterTerrainContext();
         PublishSceneRenderSnapshot();
@@ -47,7 +48,7 @@ public sealed partial class UiVm
             new(tile.Bounds.West, tile.Bounds.South, tile.Bounds.East, tile.Bounds.North),
             tile.Resolution, new Dictionary<string, string> { ["format"] = "NASADEM_HGT" });
         TerrainStatus = "导入完成"; FooterMessage = $"导入完成：{TerrainTileId} · {TerrainResolutionText}";
-        FooterState = "状态：就绪"; PublishSceneRenderSnapshot();
+        FooterState = "状态：就绪";
     }
 
     void ActivateMultiTerrain(TerrainTileSet tiles)

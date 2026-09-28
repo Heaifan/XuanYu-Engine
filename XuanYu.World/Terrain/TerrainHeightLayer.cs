@@ -4,6 +4,7 @@ public sealed class TerrainHeightLayer
 {
     readonly Dictionary<TerrainSampleCoordinate, double> _values;
     readonly bool _editable;
+    public int Revision { get; private set; }
 
     private TerrainHeightLayer(bool editable, IEnumerable<(TerrainSampleCoordinate Coordinate, double Meters)> values)
     {
@@ -42,6 +43,8 @@ public sealed class TerrainHeightLayer
     public void Set(TerrainSampleCoordinate coordinate, double meters)
     {
         if (!_editable) throw new InvalidOperationException("BaseHeight 不可编辑。");
+        if (_values.TryGetValue(coordinate, out var current) && current == meters) return;
         _values[coordinate] = meters;
+        Revision++;
     }
 }
