@@ -1023,6 +1023,18 @@ NONE
 
 如果不是 NONE，必须明确列出。
 
+每个施工任务的最终 Handoff 报告必须追加 Knowledge / Experience Audit Handoff。该尾部将事实审计交给 ChatGPT，不得由施工 Agent 直接把 Candidate Lesson 写成正式条目：
+
+```text
+==================================================
+KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
+==================================================
+
+CHATGPT KNOWLEDGE AUDIT REQUIRED
+```
+
+完整固定文本以 `docs/governance/knowledge-audit-handoff.md` 为准。ChatGPT 必须先搜索既有 Knowledge / Experience，再决定 `UPDATE / STRENGTHEN / CREATE / RETIRE / NO DEPOSIT`；新结论替代旧结论时保留历史状态链。
+
 ---
 
 # 32. User Acceptance

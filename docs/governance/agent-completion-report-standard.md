@@ -197,3 +197,26 @@ M  +x / -y   path/to/doc.md
 ## 11. 审计判定
 
 满足本规范仅代表“报告完整”，不代表实现本身正确。审计方仍需按需要核对 Commit、Diff、测试、门禁和真机结果。
+
+## 12. Knowledge / Experience Audit Handoff
+
+每个施工任务最终报告必须以 `docs/governance/knowledge-audit-handoff.md` 的固定交接块结尾。施工 Agent / Codex 只能提交事实和 Candidate Lessons；不得自行宣布正式 Knowledge、Experience、Lesson、Incident、ERR 或 EXP。ChatGPT 审计 AI 必须先 `SEARCH EXISTING`，再决定 `UPDATE / STRENGTHEN` 或 `CREATE`，也可以输出 `RETIRE / NO DEPOSIT`。
+
+固定尾部：
+
+```text
+==================================================
+KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
+==================================================
+
+本任务施工结果已完成，请 ChatGPT 作为审计 AI：
+
+1. 审计本任务的 Root Cause、修复方式、测试证据和治理过程；
+2. 判断是否存在值得长期沉淀的 Knowledge / Experience / Incident Lessons；
+3. 已有同类知识优先更新，不重复创建；
+4. 新结论推翻旧知识时，必须保留历史追溯并修订状态；
+5. 无长期价值时输出 NO KNOWLEDGE DEPOSIT；
+6. 未经 ChatGPT 审计的施工结论不得直接作为正式知识库/经验库条目。
+
+CHATGPT KNOWLEDGE AUDIT REQUIRED
+```

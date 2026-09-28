@@ -167,6 +167,20 @@ Knowledge Writeback: none
 
 不得为了“完成知识流程”制造空洞条目。
 
+### 5.1 ChatGPT Knowledge / Experience Audit Handoff
+
+施工 Agent / Codex 的最终报告必须附加 `docs/governance/knowledge-audit-handoff.md` 固定尾部。施工 Agent 只提供事实与 Candidate Lessons；ChatGPT 审计 AI 负责正式维护，并且必须先执行：
+
+```text
+SEARCH EXISTING → MATCH → UPDATE / STRENGTHEN
+                             ↓ no match
+                           CREATE
+```
+
+正式判定包括 `CREATE / UPDATE / STRENGTHEN / RETIRE / NO DEPOSIT`。Knowledge 表示长期稳定的架构事实、接口契约、系统规律或验证后的技术约束；Experience 表示踩坑、错误路径、诊断/修复方法、返工原因或过程治理经验。未经 ChatGPT 审计的施工结论不得进入正式 Knowledge / Experience 库。
+
+`CHATGPT KNOWLEDGE AUDIT REQUIRED`
+
 ## 6. 正式 Knowledge 最低要求
 
 每条正式 Knowledge 应至少包含：

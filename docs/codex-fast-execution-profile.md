@@ -227,6 +227,17 @@ Blockers
 Status
 ```
 
+所有施工任务最终报告还必须附加：
+
+```text
+==================================================
+KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
+==================================================
+CHATGPT KNOWLEDGE AUDIT REQUIRED
+```
+
+Codex 仅提交事实、Root Cause、Changed Files、Tests、Evidence、Known Risk 和 Candidate Lessons；正式知识判断由 ChatGPT 审计 AI 完成，并遵循 `SEARCH EXISTING → MATCH → UPDATE / STRENGTHEN → CREATE`。
+
 ## 八、XYUI Round 1 标准执行序列
 
 ```text

@@ -198,3 +198,5 @@ Agent 错误权威库：
 - Planning 与 Execution 均执行 Knowledge Preflight；进入正式验收/Commit 前输出 `VERSION EVENT`（Change Type、Previous、Next、Reason）。不推进产品版本时输出 `Version Event: NONE` 与历史依据。
 - 当前仓库工具入口：`tools/governance/version-audit.ps1`、`version-next.ps1`、`version-selftest.ps1`、`version-metrics.ps1`；规则与跨项目模板见 `docs/governance/process-versioning.md` 和 `docs/governance/templates/process-version-governance-template.md`。
 - 正式 Acceptance 必须输出 `ACCEPTANCE IDENTITY`。Dirty=YES 只能作为显式 Dirty Runtime Probe，不得宣布正式 Product Closed。
+- 所有施工任务最终报告必须追加 `KNOWLEDGE / EXPERIENCE AUDIT HANDOFF`；施工 Agent/Codex 只提交事实与 Candidate Lessons，ChatGPT 审计 AI 必须先 SEARCH EXISTING，再决定 CREATE/UPDATE/STRENGTHEN/RETIRE/NO DEPOSIT。未经 ChatGPT 审计不得写入正式 Knowledge/Experience。
+- `CHATGPT KNOWLEDGE AUDIT REQUIRED`

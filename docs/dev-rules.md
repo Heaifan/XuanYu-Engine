@@ -227,6 +227,17 @@ Agent 真实失误？ → ERR
 
 全部为否：`Knowledge Writeback: none`。
 
+施工任务最终报告不得在此处直接完成知识写回，必须附加 [Knowledge / Experience Audit Handoff](governance/knowledge-audit-handoff.md)。Agent 只提交事实、Root Cause、Changed Files、Tests、Evidence、Known Risk 和 Candidate Lessons；正式 Knowledge/Experience 由 ChatGPT 审计 AI 先 `SEARCH EXISTING`，再决定 `UPDATE / STRENGTHEN / CREATE / RETIRE / NO DEPOSIT`。
+
+固定尾部：
+
+```text
+==================================================
+KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
+==================================================
+CHATGPT KNOWLEDGE AUDIT REQUIRED
+```
+
 Plan / Audit / 临时日志不自动成为长期知识。
 
 ---
