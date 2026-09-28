@@ -431,7 +431,7 @@ Agent：Codex（UiRuntime 测试基础设施前序实现）
 UiTestPlatformServices.ModuleInitializer 在 UiHeadlessFixture 创建 HeadlessUnitTestSession 之前额外调用 BuildAvaloniaApp().SetupWithoutStarting()，造成同一测试进程内存在重复 Avalonia Headless Platform Bootstrap。测试窗口、布局与 Bounds 看似正常，但真实 MouseDown/MouseUp 无法进入正常 Routed Pointer / Button Click 链，导致 Diagnostic / Native 相关测试被误判为产品回归。
 
 根因：
-测试基础设施没有明确唯一的 Avalonia Platform Lifecycle Owner；平台 Stub 注册与 Application/Platform Bootstrap 被混为同一职责。执行链先由 ModuleInitializer 建立一套全局 Platform，再由 HeadlessUnitTestSession 建立第二套 Session 生命周期，导致 InputRoot / MouseDevice / Dispatcher 所属运行上下文失配。
+测试基础设施没有明确唯一的 Avalonia Platform Lifecycle Owner；平台 Stub 注册与 Application/Platform Bootstrap 被混为同一职责。执行链先由 ModuleInitializer 建立一套全局 Platform，再由 HeadlessUnitTestSession 建立第二套 Session 生命周期，使 Headless 输入链不再可靠地绑定到当前 Session 的权威 Platform 生命周期。具体是 InputRoot、MouseDevice、Dispatcher 中哪一个内部对象先发生失配，本轮没有单独证明，因此不作更细机制断言。
 
 后果：
 Cluster B 三项稳定失败并阻塞 C0 Full Gate；排查期间先后怀疑坐标、窗口激活、HitTest、Overlay、Pointer Modifier 与 Diagnostic 产品逻辑，产生较大返工风险。若继续按假产品故障修改生产代码，可能为了迎合坏测试环境而破坏原本正确的产品行为。
