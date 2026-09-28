@@ -9,9 +9,9 @@ namespace XuanYu.Editor.UI;
 static class TerrainWorldPlacement
 {
     public static TerrainRenderResource ToRenderResource(
-        TerrainElevationTile tile, TerrainGeoBounds aggregate)
+        TerrainElevationTile tile, TerrainGeoBounds aggregate, TerrainWorld? world = null)
     {
-        var resource = tile.ToRenderSnapshot(tile.TileId, 1);
+        var resource = world?.ToRenderSnapshot(tile.TileId, 1) ?? tile.ToRenderSnapshot(tile.TileId, 1);
         var origin = new GeographicPosition(
             aggregate.South, aggregate.West, 0);
         var mapping = new GeographicWorldMapping(origin);

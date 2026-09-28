@@ -13,12 +13,20 @@ public sealed partial class UiVm
         if (_lastViewport is { } viewport && !ViewProjectionState.TryCreate(_camera, viewport, out _))
             return RenderProjectionResult.Fail("相机投影超出当前单精度渲染表示范围。");
         var transform = snapshot.RenderTransform;
-        var vectorOverlay = MapRegionRenderProjection.Build(RegionFillColorPreviewMap(), _regionDrawing,
-            _roadDrawing, MapGeometryPreview, _viewportDpiScale, _mapLabelBitmapCache);
+        var vectorOverlay = MapRegionRenderProjection.Build(
+            RegionFillColorPreviewMap(), _regionDrawing, _roadDrawing,
+            MapGeometryPreview, _viewportDpiScale, _mapLabelBitmapCache);
         IReadOnlyList<RenderVectorOverlayResource> overlays =
             vectorOverlay.Primitives.Count == 0 ? [] : [vectorOverlay];
         var terrains = _terrainTiles?.Tiles.Select(tile =>
-            TerrainWorldPlacement.ToRenderResource(tile, _terrainTiles.Bounds)).ToArray();
+        {
+            var world = _terrainTiles.Tiles.Count == 1 ? TerrainWorld : null;
+            var resource = TerrainWorldPlacement.ToRenderResource(
+                tile, _terrainTiles.Bounds, world);
+            var revision = _terrainRevisionLedger.Resolve(resource.TerrainId,
+                TerrainContentFingerprint.ForHeightfield(resource.Heightfield));
+            return resource with { Revision = revision };
+        }).ToArray();
         var terrain = terrains?.FirstOrDefault() ?? TerrainWorld?.ToRenderSnapshot("terrain", 1);
         var map = IsTerrainContext && terrains is { Length: > 0 }
             ? MapRenderSnapshot.Empty : _mapRenderSnapshot;
