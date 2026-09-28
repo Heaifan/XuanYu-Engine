@@ -288,9 +288,9 @@ Superseded by：
 ## EXP-TEST-001 平台与生产链测试必须从权威边界进入
 
 状态：ACTIVE
-适用范围：Input Adapter / Native / Avalonia / Runtime Wiring / Platform Contract / Production Path
-触发条件：测试涉及平台消息、键值、Pointer、Adapter、Router、生产接线或以源码字符串/Helper 证明行为。
-Occurrences：2
+适用范围：Input Adapter / Native / Avalonia / Runtime Wiring / Platform Contract / Production Path / Headless Runtime UI / Test Bootstrap
+触发条件：测试涉及平台消息、键值、Pointer、Adapter、Router、生产接线、Headless Session 生命周期、Visual 坐标转换，或以源码字符串/Helper 证明行为。
+Occurrences：3
 
 规则：
 平台边界测试必须从真实平台 Enum / Message Contract 开始；生产链测试必须覆盖真实 Adapter → Unified Model → Router → Consumer。Helper PASS、源码 `Assert.Contains`、人工构造理想统一值只能作为 L1/L2 证据，不能单独证明 Production Runtime 行为。
@@ -307,18 +307,21 @@ Occurrences：2
 正确做法：
 - 平台事实 → Adapter → Editor Semantic Model；
 - Editor Event → Production Router → Arbitration → Owner → Consumer；
-- 对真机相关问题继续保留 Runtime UI / Real-machine 层级验收。
+- 对真机相关问题继续保留 Runtime UI / Real-machine 层级验收；
+- Headless Runtime UI 由单一 HeadlessUnitTestSession 拥有 Platform Lifecycle；平台 Stub 在该 Session 内注册；
+- 依赖 Pointer、HitTest、TranslatePoint、Popup 或 Visual 坐标的测试必须把目标挂入真实 Window/TopLevel/Visual Tree，完成布局后再验证。
 
 来源 ERR：
 - ERR-20260925-001
 - ERR-20260925-003
 - ERR-20260925-004
+- ERR-20260928-002
 
 任务注入：
 涉及 Native/Avalonia Input、Adapter、Production Router、平台常量、Source Contract 或 Runtime Wiring 时必须加载本规则。
 
 验证 / 自动化：
-优先建立 `PlatformKeyNormalization`、`ProductionInputNoBypass`、`ProductionPathTestRule`；已有 ProductionInputComposition/E5 输入冻结测试作为基础，但不能替代所有真机输入验收。
+优先建立 `PlatformKeyNormalization`、`ProductionInputNoBypass`、`ProductionPathTestRule`；已有 ProductionInputComposition/E5 输入冻结测试作为基础，但不能替代所有真机输入验收。Headless 侧现有 `HeadlessInputInfrastructureTests` 固定验证官方式 MouseDown/MouseUp 与统一 Harness 均能真实触发 Button Click。
 
 ### 2026-09-28 强化：坐标错位先审计链路，禁止先加 Offset/DPI
 
@@ -331,6 +334,17 @@ Source Event
 → Target Host
 ```
 逐段标记 Space、Unit、DPI Owner 与 Conversion。只有证明确切错误段后才修改该段。若生产链已经满足单次 DPI 转换，应保留正确代码并输出 `NO CODE CHANGE`，不得为了任务必须产生 diff 而重复转换。
+
+### 2026-09-28 强化：Headless Session 单一生命周期 Owner + 真实 Visual Tree
+
+当 Avalonia Headless 测试出现“Window/Layout/Bounds 正常，但 Pointer/Button/Popup 行为完全不达”的反常组合时，先审计 Platform Lifecycle Ownership，不要先修改产品输入逻辑。
+
+禁止在 HeadlessUnitTestSession 外再次调用 `Setup()` / `SetupWithoutStarting()`。Platform Stub 注册与 Platform Bootstrap 必须分离：前者可在 Session 内安装，后者只能由唯一 Session Owner 管理。
+
+凡测试依赖 Visual 坐标、命中或事件路由，目标必须进入真实 `Window/TopLevel/Visual Tree`，并完成 Layout/Dispatcher；脱离真实树的理想化控件只能证明局部逻辑，不能证明 Runtime UI 行为。
+
+来源 ERR：
+- ERR-20260928-002
 
 Superseded by：
 无

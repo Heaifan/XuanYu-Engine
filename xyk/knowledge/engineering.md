@@ -381,3 +381,46 @@ Architecture Guard 报出冻结边界外文件、依赖或白名单违规时，�
 所有顶层 C0 / Forensic / Convergence / Integration 报告必须使用 Reporting Contract 输出本条状态；任一 Mismatch 必须 fail-closed。
 
 **来源任务**：XYK-C0-GOVERNANCE-SEDIMENT-R1 · 2026-09-28
+
+---
+
+## K-VAL-003 Headless Runtime UI 必须单一生命周期并进入真实 Visual Tree
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Validation、Avalonia.Headless、Runtime UI、Platform Lifecycle、Visual Tree、Pointer、HitTest
+**适用范围**：Avalonia.Headless、UiRuntime、Diagnostic、Popup/ContextMenu、Pointer、Button、TranslatePoint、Visual 坐标与任何需要真实事件路由的自动化 UI 测试。
+
+**确认时间**：2026-09-28（UTC+08:00）
+**来源任务**：XYE-C0-LAST-MILE-FINAL-R1
+**产品证据 Commit**：`516c83f9da2e7be129e2f9e6560bf12958347fad`
+
+### 已确认事实
+
+同一测试进程中若先由 ModuleInitializer 执行 `BuildAvaloniaApp().SetupWithoutStarting()`，随后再创建 `HeadlessUnitTestSession`，会形成重复 Platform Bootstrap。此时 Window、Layout、Bounds 与可见性仍可能正常，但 MouseDown/MouseUp 无法进入正常 Routed Pointer / Button Click 链，制造“产品输入坏了”的假故障。
+
+A/B 对照中，仅移除额外 `SetupWithoutStarting()`、让 `HeadlessUnitTestSession` 独占生命周期，即使同一 Minimal Button、同一 Harness 与同一 Cluster B 从 FAIL 全部转为 PASS。
+
+### 工程规则
+
+1. `HeadlessUnitTestSession` 是 Headless Runtime UI 的唯一 Avalonia Platform Lifecycle Owner。
+2. Platform Stub / Test Service 可以在 Session 内安装，但不得因此再次执行 `Setup()` 或 `SetupWithoutStarting()`。
+3. 依赖 Pointer、HitTest、Popup、`TranslatePoint`、Visual 坐标或 Routed Event 的测试，目标必须挂入真实 `Window/TopLevel/Visual Tree`。
+4. 进入真实树后必须完成 `Show → Layout → Dispatcher drain`，再进行输入或坐标验证。
+5. 脱离 Visual Tree 的直接对象调用只能证明局部逻辑，不能作为 Runtime UI / Production Route 的等价证据。
+
+### 防复发 Gate
+
+- `HeadlessInputInfrastructureTests.Official_headless_button_click_executes`
+- `HeadlessInputInfrastructureTests.Harness_headless_button_click_executes`
+- Diagnostic Probe / Overlay 专项回归
+- World Full Gate
+
+### 验证证据
+
+正式收口结果：Minimal Button PASS、Harness PASS、Cluster B 3/3 PASS、Diagnostic Probe/Overlay 26/26 PASS、World 2125/2125、XYUI 701/701、Core 448/448、Build 0W0E、ARCH-A PASS、5+100 PASS。
+
+**关联 ERR**：ERR-20260928-002
+**关联 Experience**：EXP-TEST-001
+**关联 Knowledge**：K-VAL-002

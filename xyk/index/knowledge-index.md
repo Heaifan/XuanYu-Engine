@@ -11,12 +11,12 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 | 任务域 | 典型触发 | 优先读取 |
 |---|---|---|
-| 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-003；EXP-GOVERNANCE-001；再检查其他相关 ACTIVE EXP |
+| 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001～K-VAL-003、K-GOV-001～K-GOV-003；EXP-GOVERNANCE-001；再检查其他相关 ACTIVE EXP |
 | 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；EXP-ARCH-001；`decisions/` 中相关 DEC；其他相关 ACTIVE EXP |
 | 空间 / 几何 | Camera、Screen↔World、Geometry、Snap、Topology | K-SPA-001、K-SPA-002、K-GEO-001、K-GEO-002；相关 DEC / EXP |
 | Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan、Shader、Texture、GPU Text、Vector Stroke | K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002、L-REN-001～L-REN-003、L-NATIVE-001；EXP-ARCH-001；其他相关 ACTIVE EXP |
 | Input | Pointer、Capture、手势 Owner、真实生产输入接线、平台输入 | K-INP-001～K-INP-004；EXP-TEST-001；其他相关 ACTIVE EXP |
-| UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标、Diagnostic | K-UI-001、K-DIAG-001；相关 `decisions/`；EXP-UI-001、EXP-UI-002；其他 UI 类 ACTIVE EXP |
+| UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标、Diagnostic | K-UI-001、K-DIAG-001、K-VAL-003（Headless/Runtime UI 时）；相关 `decisions/`；EXP-UI-001、EXP-UI-002、EXP-TEST-001；其他 UI 类 ACTIVE EXP |
 | Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
 | Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
 | Global Migration / Refactor | Reverse-Z、Projection、Renderer、Depth Policy、Input Architecture、Persistence Migration、Workspace Architecture | 相关领域 K/L；EXP-GOVERNANCE-002；EXP-ARCH-001 |
@@ -33,6 +33,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 |---|---|---|---|---|---|---|---|
 | K-VAL-001 | Knowledge | Engineering | 用户运行产物必须与验证产物一致 | P0 | E1 | v0.2.25.18-stab · 2026-08-10 16:51:42 · 06b26e9 | Active |
 | K-VAL-002 | Knowledge | Engineering | UI/Native 功能必须分层验收 | P0 | E2 | v0.2.24.50-fix · 2026-08-09 19:42:41 · 60fd339 | Active |
+| K-VAL-003 | Knowledge | Engineering | Headless Runtime UI 必须单一生命周期并进入真实 Visual Tree | P0 | E2 | XYE-C0-LAST-MILE-FINAL-R1 · 2026-09-28 · 516c83f9 | Active |
 | L-VAL-001 | Lesson | Engineering | 修复存在但真机完全不变时先证明运行时实际路由 | P0 | E1 | MAP-DATA-A-R2-F2-F2-F1 · 2026-08-12 · 3d53de0 | Active |
 | L-NATIVE-001 | Lesson | Rendering | Native/Avalonia UI 问题连续两次局部 Placement 修复失败后审查 Airspace 与 Ownership | P0 | E2 | Diagnostic + Viewport R1 · 2026-09-25 | Active |
 | L-TEST-001 | Lesson | Engineering | 测试使用自己制造的错误平台前提时绿灯更危险 | P0 | E2 | Region Snap R1 · 2026-09-25 | Active |
@@ -80,7 +81,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 ## 分类文件
 
-- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-005
+- `engineering.md`：K-VAL-001～K-VAL-003、K-GOV-001～K-GOV-005
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004
