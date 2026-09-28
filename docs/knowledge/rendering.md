@@ -139,6 +139,28 @@ World Reference Grid is not Map Surface
 - `fwidth` 只用于 AA；
 - MapGround、World Grid、Region 是不同语义层。
 
+### Global Depth Migration Invariant
+
+任何 Standard-Z → Reverse-Z、Reverse-Z → Standard-Z、Projection Migration、Depth Compare Migration、Near/Far Convention Migration 或 Renderer Pass 重构，都不得隐式改变 World Reference Grid 的 Layer Identity。
+
+Reference Grid 的默认长期合同冻结为：
+
+```text
+DepthTest = Off
+DepthWrite = Off
+FragDepth = Absent
+World Z Offset = None
+Ground Depth Dependency = None
+Terrain Depth Dependency = None
+Ground Bias Dependency = None
+```
+
+World XY / Z=0 保持独立。Global Reverse-Z 可以改变 Near/Far reconstruction、Projection 与 Scene geometry Depth policy，但不能顺带把 Grid 变成 Scene Geometry。
+
+未来若确需改变该合同，必须先 SUPERSEDE K-REN-004，并提供新架构理由以及 Ground ON/OFF、Terrain ON/OFF、Perspective、Orthographic、Near/Far、Resize 和迁移回归的 Runtime Visual Evidence。普通 Feature / Migration 任务不得私自修改本合同。
+
+**2026-09-28 最近验证证据**：Remote HEAD `b95b2e7925b117463b4b301251b1a0516118a7fb`（`fix(grid): restore depth-independent world reference layer`）恢复 `DepthTest=false`、`DepthWrite=false` 与无显式 Fragment Depth；保持全局 Reverse-Z `Near=1`、`Far=0`、`ClearDepth=0`、`GreaterOrEqual` 时，历史回放显示 Grid 出现且远处闪烁消失。Shader Source / Embedded SPIR-V 已同步。该证据证明合同恢复结果，不将未执行 GPU Capture 的机制解释写成 GPU Capture 事实。
+
 ### 禁止做法
 
 - 用真实世界 LineList 与 MapGround 共面，再以 Depth Bias 抢可见性；

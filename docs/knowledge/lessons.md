@@ -218,6 +218,12 @@ Region Drawing 同时跨 Pointer、Picking、MapPoint、Draft、Vector Overlay�
 
 本事故中，错误前提是把 World Grid 定义为“必须压在 MapGround 上的一批真实世界线”。正确身份是独立 Editor Environment Layer。
 
+### 2026-09-28 第二次重大重演证据
+
+8 月经历了 Depth / Bias / LOD / Line 调整，最终发现 Grid Identity 错误并收口为 Environment Layer。9 月 Reverse-Z 迁移后又沿着 `DepthBias → FragDepth Bias → MinSpacing` 连续调参，仍然 FAIL。保持全局 Reverse-Z 不变，仅恢复 `DepthTest Off`、`DepthWrite Off`、`FragDepth Absent` 的独立 Environment Layer 后，Grid 立即恢复，远景闪烁消失。
+
+因此，同一视觉问题连续两个假设或补丁失败后，禁止第三次继续 Bias、Offset、Scale、Fade、Threshold、Alpha 或 LOD 参数调优。必须先读取 Incident 历史与 ACTIVE Knowledge，查最近一次已知正常 Commit，做单变量历史回放，并审查对象身份、Pass 与 Depth Ownership。
+
 ### 停止条件
 
 - **STOP-01**：同一问题连续 2 次针对性修复失败，且症状跨多个子系统出现时，停止参数调优，审查共同依赖。

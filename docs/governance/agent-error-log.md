@@ -147,6 +147,41 @@ ERR 进入 `已验证` 前至少必须满足：
 
 ## 当前记录
 
+## ERR-20260928-001
+
+Agent：ChatGPT（策划/根因判断） + Codex（Reverse-Z 执行链）
+任务：Reverse-Z / World Grid Migration
+类型：GOVERNANCE
+严重度：Critical
+附加项目事故等级：T0+
+
+错误：
+Reverse-Z migration 在未 Supersede K-REN-004 的情况下，把 Grid 从独立 Editor Environment Layer 改成 `DepthTest=true` + `gl_FragDepth`，改变了既有 Layer Identity / Depth Contract。随后在已有 L-REN-001 / EXP-ARCH-001 的情况下，又连续进行了 DepthBias、FragDepth Bias、Scale / MinSpacing 调参，没有及时触发历史知识停止线。
+
+根因：
+Knowledge Preflight 虽已存在于仓库规则，但没有成为规划和执行阶段的强制 Conflict Gate；Planner 的知识读取没有被 Execution Agent 基于当前 HEAD 重新验证。
+
+后果：
+World Grid 真机消失；历史已解决的 Depth/Ground 耦合问题回潮；发生多轮错误修补；World Authoring 主线被阻塞；自动测试多次 PASS 但 Product Visual FAIL。
+
+正确做法：
+在全局 Depth / Projection / Renderer Migration 前执行 `Task Domain → Knowledge Index → ACTIVE K/L/EXP → Hard Constraint → Conflict Check`。若计划违反 ACTIVE P0 Knowledge，必须 STOP；只有 `SUPERSEDE old Knowledge + 新证据 + 治理批准` 后才允许改变长期合同。
+
+经验规则：
+EXP-ARCH-001
+EXP-GOVERNANCE-002
+
+发现方式：
+用户真机验收 / 历史回放 / ChatGPT 治理复盘
+
+验证证据：
+最终 Grid 修复已在 Remote HEAD `b95b2e7925b117463b4b301251b1a0516118a7fb` 收口；本次治理通过文档一致性、Helper selftest、Planning/Execution Dogfood 与 Scope 审计后关闭。
+
+状态：
+已验证
+
+---
+
 ## ERR-20260916-001
 
 Agent：Codex（前序 Inspector 实现）

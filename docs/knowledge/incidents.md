@@ -210,6 +210,51 @@ World Reference Grid 被重新定义为独立 Editor Environment Layer：不属�
 
 ---
 
+## INC-2026-09-28-001 World Reference Grid 在 Reverse-Z 迁移中违反既有 Environment Layer 合同
+
+**事故等级**：T0+
+**事故对象**：World Reference Grid
+**全局系统**：Reverse-Z Migration
+**最终修复 Commit**：`b95b2e7925b117463b4b301251b1a0516118a7fb`
+
+### 已确认事实
+
+- K-REN-004 已将 World Reference Grid 定义为 Editor Environment，而非 Map Surface，并要求 `DepthTest=Off`、`DepthWrite=Off`、不依赖 MapGround Depth、Ground Bias 或 Terrain Depth。
+- Reverse-Z 迁移中，Grid 被改为 `DepthTest=true`、`DepthWrite=false`、显式 `gl_FragDepth`，进入 Scene Reverse-Z Depth Contract。
+- 真机表现为空场景 Grid 不可见，导入 DEM 后行为变化；后续多轮局部修复仍未解决。
+
+### 根因
+
+Reverse-Z migration 错误改变了 World Reference Grid 的 Layer Identity / Depth Contract。Reverse-Z 全局契约本身不是根因。
+
+### 错误修复路径
+
+先后尝试 fixed-function Depth Bias、shader-side `gl_FragDepth` bias 与 Grid MinSpacing / Scale 调整，均未恢复正确的独立环境层语义。
+
+### 历史回放实验
+
+保持全局 Reverse-Z：`Near=1`、`Far=0`、`ClearDepth=0`、`Compare=GreaterOrEqual`；仅恢复 `DepthTest=false`、`DepthWrite=false`、`FragDepth=ABSENT`。结果为 `VISUAL RESULT = GRID APPEARS`，远处闪烁同时消失。Shader Source / Embedded SPIR-V 已确认同步。这里不把未经 GPU Capture 证明的机制解释写成 GPU 已证事实。
+
+### 最终恢复合同
+
+Grid 保持 World XY / Z=0 的独立 Editor Environment Layer；不进入 Scene Geometry Depth Contract，不依赖 Ground 或 Terrain Depth，不使用 Ground Bias；CPU 全帧统一 Step，`fwidth` 仅用于 AA。
+
+### 治理根因
+
+仓库已经存在 K-REN-004 与 L-REN-001，但 Reverse-Z 迁移规划与执行没有真正消费 ACTIVE Knowledge，导致已解决事故回潮；连续错误调参也没有及时触发历史知识停止线。
+
+### 防复发措施
+
+新增 `ERR-20260928-001` 与 `EXP-GOVERNANCE-002`，将 Knowledge Preflight 升级为 Planning + Execution 双门禁；任何与 ACTIVE P0 Knowledge 冲突的计划或实现必须 STOP，除非完成显式 Governance Supersede。
+
+### Machine Gate Candidate
+
+`WorldReferenceGridEnvironmentContract` 登记为下一步机器 Gate Candidate：应断言 `ReferenceGrid.DepthTest=false`、`ReferenceGrid.DepthWrite=false`、World Reference Grid shader 的 `FragDepth` absent，并静态或运行时拒绝 Ground Depth dependency 与 Ground Bias workaround。本治理任务不修改产品 Test 项目，故不宣称该 Gate 已实现。
+
+**关联**：INC-2026-08-10-006、K-REN-002、K-REN-004、L-REN-001、ERR-20260928-001、EXP-GOVERNANCE-002。
+
+---
+
 ## INC-2026-09-25-001 Diagnostic + Viewport 长周期开发复盘 R1
 
 **确认时间**：2026-09-25（UTC+08:00）

@@ -78,25 +78,71 @@ docs/governance/agent-experience-rules.md
 
 只写入而不在下一次任务加载的知识，视为治理未完成。
 
-## 4. Knowledge Preflight
+## 4. Dual Knowledge Preflight
 
-MEDIUM / HIGH 任务，以及 `knowledge-index.md` 已经建立任务域映射的工作，在设计或写代码前必须：
+MEDIUM / HIGH 任务，以及 `knowledge-index.md` 已经建立任务域映射的工作，必须执行两个独立阶段：
+
+```text
+Planning
+↓
+Knowledge Preflight
+↓
+Task Plan
+↓
+Handoff / Task State
+↓
+Execution Knowledge Preflight
+↓
+Code
+↓
+Validation
+↓
+Knowledge Writeback
+```
+
+### Planning Preflight
+
+发生在任务书、设计方案或修改计划生成之前，防止计划本身违反历史合同：
 
 1. 识别任务域；
 2. 查 `knowledge-index.md`；
 3. 读取该域直接相关的 DEC / Knowledge / Lesson / EXP；
 4. 在 Task State 中列出实际加载 ID；
-5. 不读取与任务无关的全部知识库。
+5. 提取 Hard Constraints；
+6. 对计划执行 Active Knowledge Conflict Gate；
+7. 不读取与任务无关的全部知识库。
+
+### Execution Preflight
+
+发生在 Handoff JOIN 与 Task State 之后、第一处文件写入之前。执行 Agent 必须基于当前 Repository HEAD 重新完成上述检查，不能把 Planner 已经查过作为替代。
+
+### Active Knowledge Conflict Gate
+
+计划或实现若与 ACTIVE P0 Knowledge 冲突，必须停止并输出：
+
+```text
+KNOWLEDGE CONFLICT
+Conflicting ID:
+Planned Change:
+Existing Contract:
+Evidence Required To Supersede:
+```
+
+只有修改计划服从既有知识，或显式完成 Governance Supersede（更新原条目状态并提供替代证据）后，才允许继续。
 
 推荐格式：
 
 ```text
 Knowledge Preflight
+Phase: PLANNING | EXECUTION
 Task Domain: Data / Save
 Loaded:
 - K-DATA-001
 - K-DATA-002
 - EXP-DATA-xxx
+Hard Constraints:
+- ...
+Conflict Check: PASS | BLOCKED
 ```
 
 没有匹配项时写 `Loaded: none`。

@@ -1,11 +1,13 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-09-26
+> 最后治理更新：2026-09-28
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
 
 ## 任务域预检映射
 
 MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前执行 Knowledge Preflight。
+
+Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划或实现与 ACTIVE P0 Knowledge 冲突，必须 `STOP`；只有显式 Governance Supersede、更新原条目状态并提供替代证据后才能继续。无匹配时输出 `Loaded: none`，不得为了形式制造无关知识。
 
 | 任务域 | 典型触发 | 优先读取 |
 |---|---|---|
@@ -17,6 +19,7 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 | UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标、Diagnostic | K-UI-001、K-DIAG-001；相关 `decisions/`；EXP-UI-001、EXP-UI-002；其他 UI 类 ACTIVE EXP |
 | Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
 | Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
+| Global Migration / Refactor | Reverse-Z、Projection、Renderer、Depth Policy、Input Architecture、Persistence Migration、Workspace Architecture | 相关领域 K/L；EXP-GOVERNANCE-002；EXP-ARCH-001 |
 | Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
 | Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-004、K-DIAG-001、K-GOV-003、L-VAL-001、L-NATIVE-001、L-TEST-001；EXP-ARCH-001、EXP-TEST-001、EXP-UI-002、EXP-GOVERNANCE-001 |
 
@@ -82,3 +85,7 @@ MEDIUM / HIGH 任务，以及下表已登记任务域，开始设计或写入前
 - `decisions/xye-xyui-dual-lane-development-model.md`：XYE / XYUI One Workspace / Dual Lane 决策
 - `docs/governance/agent-error-log.md`：Agent 真实错误事实
 - `docs/governance/agent-experience-rules.md`：去重后的防复发经验规则
+
+### Knowledge Preflight helper
+
+`tools/governance/knowledge-preflight.ps1` 是只读定位工具。它接受 `-Phase Planning|Execution`、`-Domain` 与 `-Keywords`，只输出索引命中、候选 ID 和对应文件路径，不替 Agent 读取正文、判断冲突或执行 Supersede。`knowledge-preflight.selftest.ps1` 固定验证 Rendering / Grid / Depth 的关键候选与无匹配查询。

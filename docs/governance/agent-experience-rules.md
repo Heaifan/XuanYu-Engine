@@ -77,7 +77,8 @@ Occurrences：3
 
 Superseded by：
 无
-```
+
+---
 
 ## 5. 创建规则
 
@@ -191,6 +192,52 @@ Occurrences：1
 
 验证 / 自动化：
 `InspectorEntityEditTargetTests`、`InspectorPropertyTargetTests` 与 Inspector 专项回归；当前已通过 16/16。后续可继续评估静态检查或更高层运行时门禁。
+
+Superseded by：
+无
+
+---
+
+## EXP-GOVERNANCE-002 Active Knowledge Conflict Gate
+
+状态：ACTIVE
+适用范围：所有 MEDIUM / HIGH Task，以及 knowledge-index 已登记 Domain，特别是 Architecture、Rendering、Depth、Viewport、Input、Data、Performance、Global Migration。
+触发条件：任务进入策划、设计、修改计划或执行 Agent 准备第一次文件写入；计划涉及已有 ACTIVE Knowledge 的任务域。
+Occurrences：1
+
+规则：
+任何 AI 在“策划”和“执行”两个阶段，都必须独立执行 Knowledge Preflight。
+
+### PLANNING PREFLIGHT
+
+发生在任务书、设计方案或修改计划生成之前：识别 Task Domain；查询 knowledge-index；按 Domain + Keyword 搜索 K/L/EXP/DEC；读取直接相关 ACTIVE 条目；输出 Loaded IDs；提取 Hard Constraints；对方案执行 Conflict Check。
+
+### EXECUTION PREFLIGHT
+
+发生在执行 Agent 完成 handoff JOIN + Task State 之后、第一处文件写入之前。必须基于 Current Repository HEAD 重新执行，不能相信 Planner 已经查过。
+
+### CONFLICT RULE
+
+如果 Planned Change 与 ACTIVE P0 Knowledge 冲突，必须 STOP 并输出：
+
+```text
+KNOWLEDGE CONFLICT
+Conflicting ID:
+Planned Change:
+Existing Contract:
+Evidence Required To Supersede:
+```
+
+禁止先实现看看、因“大迁移”跳过旧合同、用新测试 PASS 自动覆盖旧 Knowledge，或静默改变 ACTIVE Knowledge 语义。合法路径只有：修改计划服从 Knowledge，或显式启动 Governance Supersede，更新原 Knowledge 状态并提供替代证据。
+
+来源 ERR：
+- ERR-20260928-001
+
+任务注入：
+所有 MEDIUM / HIGH 任务与 Index 已登记 Domain 都必须在计划形成前和第一次写入前加载本规则。
+
+验证 / 自动化：
+`tools/governance/knowledge-preflight.ps1` 提供只读定位；`knowledge-preflight.selftest.ps1` 验证 Rendering / Grid / Depth 关键候选与无匹配查询；AGENTS.md、README.md 与 knowledge-index.md 固化双阶段入口。
 
 Superseded by：
 无

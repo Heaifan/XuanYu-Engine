@@ -61,14 +61,28 @@ PATH 中没有 `dotnet` 不等于 SDK 不存在。
 -2. Session Handoff：Coordinator 用 prepare；并行 Session 用 `join --scope <lane>`（JOIN PASS 后继续）
 0. Repository Bootstrap：由 prepare / join 按 Resolver Chain 执行 scripts/xye-bootstrap.ps1
 1. 接管核对 Git / 工作区
-2. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
-3. MEDIUM / HIGH 或已登记任务域 → Knowledge Preflight
-4. 实装
-5. 按 GATE-L / GATE-M / GATE-H 验证
-6. Knowledge Writeback 判断
-7. 原子 Commit → Push → 远端 tip 复核
-8. 需要真机时进入“待真机验收”
+2. Planning 阶段：MEDIUM / HIGH 或已登记任务域 → Knowledge Planning Preflight
+3. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
+4. Execution 阶段：Handoff JOIN + Task State 后、第一处文件写入前 → Knowledge Execution Preflight
+5. 实装
+6. 按 GATE-L / GATE-M / GATE-H 验证
+7. Knowledge Writeback 判断
+8. 原子 Commit → Push → 远端 tip 复核
+9. 需要真机时进入“待真机验收”
 ```
+
+Planning / Execution Knowledge Preflight 必须输出：
+
+```text
+Knowledge Preflight
+Phase: PLANNING | EXECUTION
+Task Domain:
+Loaded:
+Hard Constraints:
+Conflict Check: PASS | BLOCKED
+```
+
+如果 `Conflict Check = BLOCKED`，禁止修改代码或治理文件。ACTIVE P0 Knowledge 只有显式 Governance Supersede（更新原条目状态、提供新证据并获治理批准）才能被新实现推翻；不得静默改写历史条目。
 
 任何 Build / Test / Run / SDK 判断前，必须先执行 Repository Bootstrap，遵守 Repository Bootstrap / Resolver First，或通过 `run.bat` 进入同一 Resolver Chain。只有 `scripts/resolve-dotnet.ps1` 实际失败后，才允许报告 .NET SDK 不可用；PATH 中没有 `dotnet` 不等于 SDK 不存在。正式 .NET 命令统一通过 `scripts/xye-dotnet.ps1`。
 
