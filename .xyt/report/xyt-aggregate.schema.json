@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "XYT Report Aggregate",
+  "type": "object",
+  "required": ["Schema", "Kind", "Period", "WindowStart", "WindowEnd", "Summary", "Reports"],
+  "properties": {
+    "Schema": { "const": "XYT-T-Aggregate.v1" },
+    "Kind": { "const": "Aggregate" },
+    "Period": { "enum": ["month", "quarter", "year"] },
+    "WindowStart": { "type": "string", "format": "date-time" },
+    "WindowEnd": { "type": "string", "format": "date-time" },
+    "Summary": { "type": "object", "required": ["Total", "PASS", "FAIL", "BLOCKED", "TIMEOUT", "FLAKY"] },
+    "Reports": { "type": "array" }
+  }
+}
