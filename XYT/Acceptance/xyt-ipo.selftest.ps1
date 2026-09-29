@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $entry = Join-Path $root 'scripts/governance/xyt-ipo.ps1'
 $temp = Join-Path ([IO.Path]::GetTempPath()) ('xyt-ipo-' + [guid]::NewGuid())
