@@ -8,8 +8,12 @@ sealed partial class MapVectorOverlayBuilder
         double width, double radius) => _primitives.Add(new(
         first, _indices.Count - first, 0, kind, color, width, radius));
 
-    double SurfaceHeight(MapPoint point) => surface is { } query && query(point, out var z) ? z : height;
+    bool UsesTerrain(SurfaceBinding? binding) =>
+        binding?.Kind == SurfaceBindingKind.Terrain || binding is null && surface is not null;
 
-    bool HasSurface(IReadOnlyList<MapPoint> points) =>
-        surface is null || points.All(point => surface(point, out _));
+    double SurfaceHeight(MapPoint point, SurfaceBinding? binding = null) =>
+        UsesTerrain(binding) && surface is { } query && query(point, out var z) ? z : height;
+
+    bool HasSurface(IReadOnlyList<MapPoint> points, SurfaceBinding? binding = null) =>
+        !UsesTerrain(binding) || surface is not null && points.All(point => surface(point, out _));
 }
