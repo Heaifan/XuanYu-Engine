@@ -1,0 +1,14 @@
+name: Handoff R3 Registry Recovery
+
+on:
+  push:
+    branches:
+      - feat/v0.3-world-authoring-r1
+  workflow_dispatch:
+
+jobs:
+  recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Registry recovery probe
+        run: echo HANDOFF_R3_REGISTRY_RECOVERY_OK
