@@ -656,6 +656,7 @@ VALID -> REVALIDATION_REQUIRED
 **首次确认**：2026-09-29
 **来源**：XYT-L Integration Contract Prep。
 **正式落地 Commit**：`18842310247abac42b125816645afeccb6947dcb`。
+**中央集成收口 Commit**：`475ab10dfdde94898725acf4607ee8d09ae1e9dc`。
 
 ### 工程规则
 
