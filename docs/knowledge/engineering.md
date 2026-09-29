@@ -466,3 +466,34 @@ T0 的目标是尽快阻止污染扩散并保护开发效率。污染范围可�
 ### 验证 / 自动化
 
 XYT-D Executor Selftest 已覆盖 Stable FAIL、FLAKY、TIMEOUT、BLOCKED_BY、Failure Sweep 与 UNKNOWN root cause。
+
+
+---
+
+## K-XYT-AUDIT-001 测试名称与目录不能授予证据等级，证据等级必须由真实验证边界决定
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：XYT、Legacy Test、Evidence Classification、Runtime、False Green
+**适用范围**：所有旧测试清库、测试命名、P0~P4 登记、Runtime/Integration/Performance 类测试。
+
+**首次确认**：2026-09-29
+**Commit**：待补证
+**来源**：XYT-G Legacy Test Clean-Room Audit。
+
+### 已确认事实
+
+XYT-G 扫描 696 个测试源文件、2552 个测试方法。审计快照中：P0=281、P1=284、P2=131、P3=0；另有 37 项需要 DOWNGRADE、95 项需要 RENAME，P4 明确为 MISSING。
+
+### 工程规则
+
+测试类名、目录名、文件名中出现 `Runtime`、`Vulkan`、`Swapchain`、`Churn`、`Performance`、`Integration`、`EndToEnd`、`Real`、`Native`，都不能自动获得更高证据等级。P0~P4 只由测试实际跨越的验证边界决定。
+
+源码字符串检查、反射结构检查、纯逻辑、Headless/UI VM 测试即使名字含 Runtime，也不得登记为 P3。P3 必须具备真实应用/窗口/Native/Vulkan/GPU/Present 等其目标能力所要求的真实运行边界。
+
+### 防复发
+
+旧测试完成清库后，Registry 应保存经审计的 P-Level；测试新增或改名不得自行提升 P-Level。若测试实现边界未改变，仅修改名称不能改变正式证据等级。
+
+**关联 Incident**：INC-2026-09-29-002

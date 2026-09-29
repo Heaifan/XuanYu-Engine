@@ -325,3 +325,49 @@ F2 保留 Report 能力，将实现移动为独立 Report Module；禁止 F2 修
 `Subsystem = Module Contract`。
 
 **关联 Lesson**：L-XYT-001
+
+
+---
+
+## INC-2026-09-29-002 · 旧测试证据层级失真与 P3 真空
+
+**日期**：2026-09-29
+**XYT 事故等级**：T0
+**状态**：ACTIVE / CONTAINED
+**影响范围**：Legacy Test Evidence、Runtime Acceptance Evidence、旧自动化 PASS 的证据解释
+**来源**：XYT-G Legacy Test Clean-Room Audit
+**Commit**：待补证
+
+### 事件
+
+XYT-G 对旧测试体系进行 Clean-Room Audit：扫描 696 个测试源文件、2552 个测试方法，得到 P0=281、P1=284、P2=131、P3=0；37 项需 DOWNGRADE，95 项需 RENAME，P4 明确缺失。
+
+### T0 定性原因
+
+这不是单个测试写错，而是证据体系层面的系统性缺口。旧体系存在以 Runtime/Churn/Performance 等名称表达高层能力、实际验证边界却停留在 P0~P2 的风险。它会让自动测试 PASS 被误解为真实运行证明，造成错误收口、重复返工与开发效率损失。
+
+### 当前隔离
+
+本事故不停止 XYE 主线开发。
+
+T0-LOCK 范围仅包括：
+- 禁止把尚未重新登记的旧测试当作 P3/P4 正式证据；
+- 禁止基于旧 Runtime/Churn/Performance 名称直接宣称真实运行能力已证明；
+- 正式 Runtime 结论必须由新增 P3 能力或人工 P4 提供。
+
+P0~P2 测试仍可按其真实等级继续使用；与此证据链无关的并行开发继续。
+
+### 处置方向
+
+1. 完成 G 审计文件正式提交；
+2. 运行 G-INTEGRATION，把审计后的 P-Level 写入 Registry；
+3. 优先整改 DOWNGRADE / RENAME 高风险项；
+4. 启动 P3 Runtime Harness 建设；
+5. P4 继续保持用户最终 IPO 验收；
+6. 历史正式结论按影响范围标记为需重验，不无差别推翻全部历史 PASS。
+
+### 解锁条件
+
+完成首批高风险证据纠偏，并建立可用 P3 路径后，对受影响能力执行一轮最小充分测试；通过后可按用户最终裁决解除对应 T0-LOCK。
+
+**关联 Knowledge**：K-VAL-002、K-XYT-AUDIT-001

@@ -82,16 +82,18 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-XYT-EXEC-001 | Knowledge | Engineering | 执行失败根因在证据不足时保持 UNKNOWN | P0 | E3 | XYT-D · 673dae7f · 2026-09-29 | Active |
 | L-XYT-001 | Lesson | Engineering | 中央入口 Single Owner，子系统通过 Module Contract 集成 | P1 | E1 | XYT-A/F/F2 · 2026-09-29 | Active |
 
+| K-XYT-AUDIT-001 | Knowledge | Engineering | 测试名称与目录不能授予证据等级 | P0 | E1 | XYT-G Legacy Audit · 2026-09-29 | Active |
+
 ## 分类文件
 
-- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001
+- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004
 - `ui.md`：K-UI-001、K-DIAG-001
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
-- `incidents.md`：代表性事故记录与映射；含 INC-2026-09-29-001
+- `incidents.md`：代表性事故记录与映射；含 INC-2026-09-29-001、INC-2026-09-29-002
 - `lessons.md`：L-ARCH-001、L-REN-001～L-REN-003、L-VAL-001、L-NATIVE-001、L-TEST-001、L-XYT-001 及后续复盘
 - `decisions/`：已批准并仍有长期约束价值的 DEC
 - `decisions/xye-xyui-dual-lane-development-model.md`：XYE / XYUI One Workspace / Dual Lane 决策
