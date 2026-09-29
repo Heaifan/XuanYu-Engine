@@ -35,18 +35,28 @@ public sealed partial class GroundAuthoringContractTests
     }
 
     [Fact]
-    public void Region_preview_uses_terrain_conforming_path()
+    public void Terrain_bound_region_preview_samples_terrain_elevation()
     {
         var baseMap = MapDefaultDefinition.CreateDefault();
         var layer = baseMap.Layers.First(item => item.Kind == MapLayerKind.Region);
-        var map = baseMap with
-        {
-            Regions = [new(MapRegionId.New(), layer.LayerId, "R", MapRegionKind.Generic,
-                [new(1, 1), new(5, 1), new(3, 5)])]
-        };
-        var resource = MapRegionRenderProjection.Build(map, new(), new(), null, 1, null,
-            new FakeSurface(25));
+        var region = new MapRegion(MapRegionId.New(), layer.LayerId, "R", MapRegionKind.Generic,
+            [new(1, 1), new(5, 1), new(3, 5)])
+        { SurfaceBinding = SurfaceBinding.Terrain("fake-terrain") };
+        var resource = MapRegionRenderProjection.Build(baseMap with { Regions = [region] },
+            new(), new(), null, 1, null, new FakeSurface(25));
         Assert.Contains(resource.Vertices, vertex => vertex.Position.Z == 25);
+    }
+
+    [Fact]
+    public void Reference_plane_region_ignores_available_terrain()
+    {
+        var baseMap = MapDefaultDefinition.CreateDefault();
+        var layer = baseMap.Layers.First(item => item.Kind == MapLayerKind.Region);
+        var region = new MapRegion(MapRegionId.New(), layer.LayerId, "R", MapRegionKind.Generic,
+            [new(1, 1), new(5, 1), new(3, 5)]);
+        var resource = MapRegionRenderProjection.Build(baseMap with { Regions = [region] },
+            new(), new(), null, 1, null, new FakeSurface(25));
+        Assert.DoesNotContain(resource.Vertices, vertex => vertex.Position.Z == 25);
     }
 
     sealed class FakeSurface(double? height) : IGroundSurface
