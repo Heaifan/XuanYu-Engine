@@ -392,3 +392,39 @@ G3 Legacy Registry Migration 曾报告 PASS，但 ChatGPT 审计发现 696 条�
 XYT-H 建立 P3 Runtime Harness 后，首轮 P3-01 返回 `BLOCKED_BY`，直接原因是当前路径下未找到 `XuanYu.Editor.App.exe`。Repository Audit 随后确认正式 `run.bat` 会先通过 `scripts/resolve-dotnet.ps1` 获取 SDK，再 Rebuild `XuanYu.Editor.App`，并明确运行产物路径。
 
 因此此次阻塞的已确认根因属于 Harness / Prerequisite 链未闭合，而不是 Product Failure，也不能据此宣布 Environment 缺失。真实 P3=PASS 仍未获得；`INC-2026-09-29-002` 保持 ACTIVE / CONTAINED。
+
+
+---
+
+## INC-2026-09-29-003 · XYT 聚合 Selftest 文本 PASS 与进程 Exit Code 不一致
+
+**日期**：2026-09-29
+**XYT 事故等级**：T1
+**状态**：FIXED / REVALIDATION REQUIRED
+**影响范围**：XYT Aggregate Selftest / Machine Gate
+
+### 事件
+
+`XYT/tests/xyt.selftest.ps1` 在验证 unknown mode 必须失败时，子 `pwsh.exe` 正确返回非零，并把父进程 `$LASTEXITCODE` 留为 2。脚本随后成功完成所有断言并打印 `XYT SELFTEST PASS`，但没有显式 `exit 0`，导致调用方观察到“文本 PASS、进程返回 2”。
+
+### 影响
+
+不会造成 Product Failure，但会让人工报告与自动化 Gate 对同一次 Selftest 得出相反结论，导致正常治理任务被错误阻塞，也可能使只读取文本的 Agent 误报 PASS。
+
+### 根因
+
+父级 Selftest 没有在“预期的子进程失败测试”之后归一化自己的最终机器退出码。Expected Child Failure 与 Parent Test Verdict 没有隔离。
+
+### 修复
+
+Selftest 在全部断言完成并输出 PASS 后显式 `exit 0`。后续必须同时验证 PASS 文本与进程 Exit Code=0。
+
+### 解锁条件
+
+重新执行 Aggregate Selftest，确认：
+- 输出包含 `XYT SELFTEST PASS`
+- 进程 Exit Code = 0
+
+验证完成后可关闭本 T1。
+
+**关联 Knowledge**：K-XYT-HARNESS-001

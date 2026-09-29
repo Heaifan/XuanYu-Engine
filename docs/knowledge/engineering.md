@@ -692,3 +692,33 @@ run.bat
 如果 Harness 在没有执行权威构建/解析链之前，仅因目标 exe 当前不存在就停止，根因应优先分类为 `HARNESS / PREREQUISITE`，不能宣称 Product 或 Environment Root Cause。
 
 P3 PASS 仍必须具备目标 Capability 所要求的真实运行证据；Harness Selftest PASS 不等于 P3 PASS。
+
+
+---
+
+## K-XYT-HARNESS-001 Expected Child Failure 不得污染父级 Selftest 最终退出码
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：XYT、Harness、Selftest、Exit Code、False PASS、False Fail
+**适用范围**：聚合测试、CLI Gate、调用预期失败子进程的 Selftest。
+
+**首次确认**：2026-09-29
+**来源**：INC-2026-09-29-003。
+
+### 工程规则
+
+Selftest 可以为了验证错误路径故意启动返回非零的子进程，但 Expected Child Failure 只能作为被测事实，不能泄漏成父级 Selftest 的最终 Verdict。
+
+正式机器 Gate 必须同时满足：
+
+```text
+Human-readable PASS
+AND
+Process Exit Code = 0
+```
+
+如果脚本最后一次 native/process 调用预期非零，父级在全部断言成功后必须显式归一化为成功退出码；反之，真正断言失败必须保持非零。
+
+只看 PASS 字符串或只看 Exit Code 都不足以解释一个复杂 Harness，报告层必须绑定二者。

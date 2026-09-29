@@ -20,7 +20,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
 | Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
 | Global Migration / Refactor | Reverse-Z、Projection、Renderer、Depth Policy、Input Architecture、Persistence Migration、Workspace Architecture | 相关领域 K/L；EXP-GOVERNANCE-002；EXP-ARCH-001 |
-| XYT / 测试治理 | xyt、测试选择、P0~P4、T0~T3、Runner、Executor、Incident、Lock、Report、IPO、Witness、Evidence、P3、Closure | K-VAL-002、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001、L-XYT-001；并读取 test-registry-policy / xyt-* contracts |
+| XYT / 测试治理 | xyt、测试选择、P0~P4、T0~T3、Runner、Executor、Incident、Lock、Report、IPO、Witness、Evidence、P3、Closure | K-VAL-002、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001、K-XYT-HARNESS-001、L-XYT-001；并读取 test-registry-policy / xyt-* contracts |
 | Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
 | Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-004、K-DIAG-001、K-GOV-003、L-VAL-001、L-NATIVE-001、L-TEST-001；EXP-ARCH-001、EXP-TEST-001、EXP-UI-002、EXP-GOVERNANCE-001 |
 
@@ -92,9 +92,11 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-XYT-CLOSE-001 | Knowledge | Engineering | Integration Contract READY 不等于 Runtime / Product Closure | P0 | E1 | XYT-L · 2026-09-29 | Active |
 | K-XYT-P3-001 | Knowledge | Engineering | P3 Harness 必须先走仓库权威构建/运行入口 | P0 | E1 | XYT-H · 2026-09-29 | Active |
 
+| K-XYT-HARNESS-001 | Knowledge | Engineering | Expected Child Failure 不得污染父级 Selftest 退出码 | P0 | E2 | INC-2026-09-29-003 | Active |
+
 ## 分类文件
 
-- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001
+- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001、K-XYT-HARNESS-001
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004

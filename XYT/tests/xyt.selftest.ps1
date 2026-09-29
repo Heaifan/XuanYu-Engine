@@ -32,3 +32,4 @@ if ($invalid.ExitCode -eq 0) { throw 'Unknown mode unexpectedly succeeded.' }
 Assert-Contains $invalid.Output 'Status: INVALID_MODE'
 
 Write-Output 'XYT SELFTEST PASS'
+exit 0
