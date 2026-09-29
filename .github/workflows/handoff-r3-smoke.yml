@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - feat/v0.3-world-authoring-r1
-  workflow_dispatch:
 
 jobs:
   smoke:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Smoke
-        shell: pwsh
-        run: Write-Host "HANDOFF_R3_SMOKE_OK"
+      - run: echo HANDOFF_R3_SMOKE_OK
