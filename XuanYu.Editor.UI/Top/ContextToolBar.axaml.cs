@@ -25,7 +25,7 @@ public partial class ContextToolBar : UserControl
     void RunMainDrawAction() { var vm = DataContext as UiVm; if (vm?.IsDrawingTransactionActive == true) return; if (vm?.IsTerrainContext == true || vm?.LastDrawTool is null) OpenDrawingMenu(); else _ = vm.BeginLastDrawToolAsync(); }
     void ToggleContextBoard(XYContextDropdownBoard board) { var vm = DataContext as UiVm; if (vm?.CanOpenContextSelector != true) return; board.SelectCategory(vm.IsTerrainContext ? "terrain" : "area"); board.Toggle(DrawSplitButton); }
     void OpenDrawingMenu() => DrawSplitButton.MenuCommand?.Execute(null);
-    void UndoDrawingVertex_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.UndoRoadDrawingVertex(); else vm.UndoRegionDrawingVertex(); } }
-    void CompleteDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.CompleteRoadDrawing(); else vm.CompleteRegionDrawing(); } }
-    void CancelDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingDraftActive) vm.CancelRoadDrawing(); else vm.CancelRegionDrawing(); } }
+    void UndoDrawingVertex_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingTool) vm.UndoRoadDrawingVertex(); else vm.UndoRegionDrawingVertex(); } }
+    void CompleteDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingTool) vm.CompleteRoadDrawing(); else vm.CompleteRegionDrawing(); } }
+    void CancelDrawing_Click(object? s, RoutedEventArgs e) { if (DataContext is UiVm vm) { if (vm.IsRoadDrawingTool) vm.CancelRoadDrawing(); else vm.CancelRegionDrawing(); } }
 }
