@@ -22,17 +22,20 @@ function New-Fixture {
     Set-Content -LiteralPath $dotnet -Value '@echo 9.9.9-selftest'
     @"
 @{
-    ActiveBranch = 'main'
-    Mode = 'development'
-    ConvergenceTargetBranch = 'main'
     Remote = 'origin'
+    OwnershipManifest = 'ownership-manifest.json'
     CanonicalWorkspaces = @('$root')
     PreferredDotnetByDrive = @{}
     ResolverScript = 'resolve-dotnet.ps1'
     BootstrapScript = 'bootstrap.ps1'
 }
 "@ | Set-Content -LiteralPath (Join-Path $root 'HandoffConfig.psd1')
+    @{
+        version = 1
+        entries = @(@{ path = 'XuanYu.Editor.UI/Input/UiVmMapBackend.cs'; owner = 'B' })
+    } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $root 'ownership-manifest.json')
     Set-Content -LiteralPath (Join-Path $root 'resolve-dotnet.ps1') -Value "Write-Output '$dotnet'"
+    git -C $root add HandoffConfig.psd1 bootstrap.ps1 dotnet.cmd ownership-manifest.json resolve-dotnet.ps1 2>&1 | Out-Null
     git -C $root add . 2>&1 | Out-Null
     git -C $root commit -m fixture 2>&1 | Out-Null
     git init --bare $remote 2>&1 | Out-Null

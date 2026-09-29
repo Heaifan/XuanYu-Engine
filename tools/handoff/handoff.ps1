@@ -1,10 +1,12 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('prepare', 'join', 'status', 'close', 'advance', 'commit-lock', 'commit-unlock')][string]$Mode = 'join',
+    [ValidateSet('prepare', 'join', 'status', 'close', 'advance', 'commit-lock', 'commit-unlock', 'maintenance', 'repair')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
     [ValidateSet('development', 'convergence', 'WIP_RESUME')][string]$WaveMode = 'development',
     [AllowNull()][string]$CoordinatorScope = $null,
     [string]$Owner = $null,
+    [string]$SourceBranch = $null,
+    [string]$TargetBranch = $null,
     [string]$RepositoryRoot = $null,
     [switch]$AllowTestWorkspace
 )
@@ -61,7 +63,11 @@ function Read-State {
     if (-not (Test-Path -LiteralPath $StatePath -PathType Leaf)) { return $null }
     try {
         $state = Get-Content -Raw -LiteralPath $StatePath | ConvertFrom-Json
-        $state.coordinatorScope = Normalize-CoordinatorScope $state.coordinatorScope
+        $scope = if ($null -ne $state.PSObject.Properties['coordinatorScope']) { $state.coordinatorScope } else { $null }
+        if ($null -eq $state.PSObject.Properties['coordinatorScope']) {
+            $state | Add-Member -MemberType NoteProperty -Name coordinatorScope -Value $null
+        }
+        $state.coordinatorScope = Normalize-CoordinatorScope $scope
         return $state
     }
     catch { Stop-Handoff 'STATE_INVALID' $_.Exception.Message }
@@ -132,26 +138,38 @@ function Stop-Mutex([string]$Code, [string]$Reason) {
     exit 1
 }
 
+function Get-UpstreamRef([string]$Branch) {
+    $upstream = @(& git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>$null)
+    if ($LASTEXITCODE -eq 0 -and $upstream.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace([string]$upstream[0])) {
+        return ([string]$upstream[0]).Trim()
+    }
+    $fallback = "origin/$Branch"
+    & git show-ref --verify --quiet "refs/remotes/$fallback" 2>$null
+    if ($LASTEXITCODE -eq 0) { return $fallback }
+    return $null
+}
+
 function Get-Facts {
     $branch = (Invoke-Git @('branch', '--show-current') -join '').Trim()
     $head = (Invoke-Git @('rev-parse', 'HEAD') -join '').Trim()
     $dirty = @(Invoke-Git @('status', '--porcelain=v1', '--untracked-files=all'))
-    [pscustomobject]@{ Branch = $branch; Head = $head; Dirty = $dirty }
+    $upstream = Get-UpstreamRef $branch
+    [pscustomobject]@{ Branch = $branch; Head = $head; Dirty = $dirty; Upstream = $upstream }
 }
 
-function Get-RemoteFacts {
+function Get-RemoteFacts($Facts = $null) {
     $remote = $Config.Remote
-    $activeBranch = if ($null -ne $state -and -not [string]::IsNullOrWhiteSpace([string]$state.branch)) {
-        [string]$state.branch
-    } else {
-        [string]$Config.ActiveBranch
+    if ($null -eq $Facts) { $Facts = Get-Facts }
+    $upstream = [string]$Facts.Upstream
+    if ([string]::IsNullOrWhiteSpace($upstream)) {
+        return [pscustomobject]@{ Exists = $false; Head = $null; Ahead = $null; Behind = $null; Ref = $null; Branch = $null }
     }
-    $remoteRef = "refs/remotes/$remote/$activeBranch"
+    $remoteRef = "refs/remotes/$upstream"
     try { Invoke-Git @('show-ref', '--verify', '--quiet', $remoteRef) | Out-Null }
-    catch { return [pscustomobject]@{ Exists = $false; Head = $null; Ahead = $null; Behind = $null } }
+    catch { return [pscustomobject]@{ Exists = $false; Head = $null; Ahead = $null; Behind = $null; Ref = $upstream; Branch = $upstream.Substring($upstream.IndexOf('/') + 1) } }
     $remoteHead = (Invoke-Git @('rev-parse', $remoteRef) -join '').Trim()
-    $counts = ((Invoke-Git @('rev-list', '--left-right', '--count', "HEAD...$remoteRef")) -join '').Trim() -split '\s+'
-    [pscustomobject]@{ Exists = $true; Head = $remoteHead; Ahead = [int]$counts[0]; Behind = [int]$counts[1] }
+    $counts = ((Invoke-Git @('rev-list', '--left-right', '--count', "HEAD...$upstream")) -join '').Trim() -split '\s+'
+    [pscustomobject]@{ Exists = $true; Head = $remoteHead; Ahead = [int]$counts[0]; Behind = [int]$counts[1]; Ref = $upstream; Branch = $upstream.Substring($upstream.IndexOf('/') + 1) }
 }
 
 function Test-Ancestor([string]$Old, [string]$New) {
@@ -165,6 +183,17 @@ function Test-AdvanceReady($State, $Facts, $RemoteFacts) {
     if ($Facts.Head -ne $RemoteFacts.Head -or $RemoteFacts.Ahead -ne 0 -or $RemoteFacts.Behind -ne 0) { return $false }
     if ($Facts.Head -eq $State.baselineHead) { return $true }
     return Test-Ancestor $State.baselineHead $Facts.Head
+}
+
+function Test-WipExpired($State, $Facts, $RemoteFacts) {
+    if ($null -eq $State -or $State.mode -ne 'WIP_RESUME') { return $false }
+    $target = if ($null -ne $State.PSObject.Properties['targetBranch']) { [string]$State.targetBranch } else { '' }
+    if ([string]::IsNullOrWhiteSpace($target) -or $Facts.Branch -ne $target) { return $false }
+    return $RemoteFacts.Exists -and $RemoteFacts.Branch -eq $target -and $Facts.Head -eq $RemoteFacts.Head -and $RemoteFacts.Ahead -eq 0 -and $RemoteFacts.Behind -eq 0
+}
+
+function Test-StatelessReady($Facts, $RemoteFacts) {
+    return $RemoteFacts.Exists -and $Facts.Head -eq $RemoteFacts.Head -and $RemoteFacts.Ahead -eq 0 -and $RemoteFacts.Behind -eq 0 -and $Facts.Dirty.Count -eq 0
 }
 
 function Stop-Advance([string]$Code, [string]$Reason) {
@@ -219,34 +248,15 @@ function Get-DirtyRecords($Facts) {
     })
 }
 
-function Get-ConvergenceOwner([string]$Path) {
-    $owners = @{
-        'XuanYu.Editor.UI/Input/UiVmMapBackend.cs' = 'B'
-        'XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Input.cs' = 'B'
-        'XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionCancel.cs' = 'B'
-        'XuanYu.Editor.UI/Vm/Workspace/UiVm.ContextTransition.cs' = 'B'
-        'XuanYu.Editor/Workspace/EditorContextTransitionContract.cs' = 'B'
-        'XuanYu.World.Tests/UiRuntime/TerrainRegionModeTransitionFix1Tests.cs' = 'B'
-        'XuanYu.Editor.UI/Vm/Map/MapRegionLabelProjection.cs' = 'C'
-        'XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs' = 'C'
-        'XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Labels.cs' = 'C'
-        'XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs' = 'C'
-        'XuanYu.Editor.UI/Vm/Scene/UiVm.RenderProjection.cs' = 'C'
-        'XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainContext.cs' = 'C'
-        'XuanYu.Editor/MapEditing/MapSurfacePicker.cs' = 'C'
-        'XuanYu.World/Map/MapMarker.cs' = 'C'
-        'XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Marker.cs' = 'C'
-        'XuanYu.Editor.UI/Vm/Workspace/TerrainElevationSampler.cs' = 'C'
-        'XuanYu.Editor/MapEditing/TerrainRayInterval.cs' = 'C'
-        'XuanYu.Editor/MapEditing/TerrainSurfacePicker.cs' = 'C'
-        'XuanYu.World/Map/MapMarkerHeightPolicy.cs' = 'C'
-        'XuanYu.World.Tests/MapEditing/MapMarkerHeightPolicyTests.cs' = 'C'
-        'XuanYu.World.Tests/MapEditing/TerrainSurfacePickerTests.cs' = 'C'
-        'XuanYu.World.Tests/UiRuntime/TerrainOverlayElevationTests.cs' = 'C'
-        'tools/handoff/handoff.ps1' = 'GOVERNANCE'
-        'tools/handoff/dirty-convergence.selftest.ps1' = 'GOVERNANCE'
-    }
-    if ($owners.ContainsKey($Path)) { return $owners[$Path] }
+function Get-ConvergenceOwner([string]$Path, $State = $null) {
+    $manifestPath = if ($null -ne $State -and $null -ne $State.PSObject.Properties['ownershipManifest']) { [string]$State.ownershipManifest } else { [string]$Config.OwnershipManifest }
+    if ([string]::IsNullOrWhiteSpace($manifestPath)) { return $null }
+    $full = Join-Path $RepoRoot $manifestPath
+    if (-not (Test-Path -LiteralPath $full -PathType Leaf)) { Stop-Handoff 'OWNERSHIP_MANIFEST_MISSING' "找不到 Ownership Manifest：$manifestPath" }
+    try { $entries = @(Get-Content -Raw -LiteralPath $full | ConvertFrom-Json).entries }
+    catch { Stop-Handoff 'OWNERSHIP_MANIFEST_INVALID' $_.Exception.Message }
+    $entry = $entries | Where-Object { [string]$_.path -eq $Path } | Select-Object -First 1
+    if ($null -ne $entry) { return [string]$entry.owner }
     return $null
 }
 
@@ -256,7 +266,7 @@ function Get-ContentFingerprint([string]$Path) {
     return (Get-FileHash -LiteralPath $full -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 
-function Get-ConvergenceBaseline($Facts, $RemoteFacts, [string]$RequestedMode) {
+function Get-ConvergenceBaseline($Facts, $RemoteFacts, [string]$RequestedMode, $State = $null) {
     $records = @(Get-DirtyRecords $Facts)
     $staged = @($records | Where-Object { $_.Staged })
     $invalid = @($records | Where-Object { $_.ChangeKind -in @('Deleted', 'Renamed') })
@@ -265,7 +275,7 @@ function Get-ConvergenceBaseline($Facts, $RemoteFacts, [string]$RequestedMode) {
     $foreign = @()
     $unknown = @()
     foreach ($record in $records) {
-        $owner = Get-ConvergenceOwner $record.Path
+        $owner = Get-ConvergenceOwner $record.Path $state
         if ($null -eq $owner) {
             if (Test-OwnedPath $record.Path 'xye') { $unknown += $record } else { $foreign += $record }
             continue
@@ -352,11 +362,13 @@ function Show-Header([string]$Name, [string]$Result, $Facts, $State, $Toolchain,
     Write-Host "Mode       : $Name"
     Write-Host "Workspace  : $RepoRoot"
     Write-Host "Branch     : $($Facts.Branch)"
+    Write-Host "Upstream   : $(if ([string]::IsNullOrWhiteSpace([string]$Facts.Upstream)) { 'NONE' } else { $Facts.Upstream })"
     Write-Host "Baseline   : $(if ($null -eq $State) { 'NONE' } else { $State.baselineHead })"
     Write-Host "HEAD       : $($Facts.Head)"
     Write-Host "Active     : $(if ($null -eq $State) { 'false' } else { $State.active })"
     Write-Host "HandoffMode: $(if ($null -eq $State.mode) { 'development' } else { $State.mode })"
-    Write-Host "ConvergenceTarget: $(if ($null -eq $State -or [string]::IsNullOrWhiteSpace([string]$State.convergenceTargetBranch)) { 'NONE' } else { $State.convergenceTargetBranch })"
+    $wave = if ($null -eq $State -or -not [bool]$State.active) { 'STATELESS / READY' } else { 'ACTIVE' }
+    Write-Host "Wave       : $wave"
     Write-Host "Coordinator: $(if ($null -eq $State.coordinatorScope) { 'null' } else { $State.coordinatorScope })"
     Write-Host "Scope       : $Scope"
     Write-Host "Dirty      : $(if ($Facts.Dirty.Count -gt 0) { 'YES' } else { 'NO' })"
@@ -397,10 +409,30 @@ Assert-CanonicalWorkspace
 try { $facts = Get-Facts } catch { Stop-Handoff 'GIT_STATE_FAILED' $_.Exception.Message }
 $state = Read-State
 $report = Get-DirtyReport $facts $Scope
+$remoteFacts = Get-RemoteFacts $facts
+
+function Invoke-Bootstrap {
+    $bootstrap = Join-Path $RepoRoot $Config.BootstrapScript
+    $output = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $bootstrap)
+    if ($LASTEXITCODE -ne 0) { Stop-Handoff 'BOOTSTRAP_FAILED' ($output -join ' | ') }
+    return 'READY'
+}
 
 if ($Mode -eq 'status') {
     $toolchain = Resolve-Dotnet
     Show-Header 'STATUS' 'PASS' $facts $state $toolchain $report
+    exit 0
+}
+
+if ($Mode -in @('maintenance', 'repair')) {
+    if ($facts.Dirty.Count -gt 0) { Stop-Handoff 'MAINTENANCE_DIRTY' 'Control Plane Maintenance 要求 working tree clean。' }
+    if (-not $remoteFacts.Exists) { Stop-Handoff 'MAINTENANCE_UPSTREAM_MISSING' '当前 branch 没有可验证的 upstream。' }
+    if ($facts.Head -ne $remoteFacts.Head -or $remoteFacts.Ahead -ne 0 -or $remoteFacts.Behind -ne 0) {
+        Stop-Handoff 'MAINTENANCE_NOT_CONVERGED' "当前 branch 未与 upstream 收敛：$($remoteFacts.Ahead)/$($remoteFacts.Behind)。"
+    }
+    $toolchain = Resolve-Dotnet
+    $bootstrapStatus = Invoke-Bootstrap
+    Show-Header 'MAINTENANCE' 'PASS' $facts $state $toolchain $report $bootstrapStatus
     exit 0
 }
 
@@ -446,22 +478,27 @@ if ($Mode -eq 'commit-unlock') {
 }
 
 if ($Mode -eq 'join') {
-    if ($null -eq $state) { Stop-Handoff 'STATE_MISSING' 'JOIN 只读且需要 Coordinator 先建立 Workspace Baseline。' }
-    if (-not [bool]$state.active) { Stop-Handoff 'INACTIVE_WAVE' '当前 Workspace Wave 已 CLOSE，请由 Coordinator 执行 PREPARE。' }
+    if ($null -eq $state -or -not [bool]$state.active -or (Test-WipExpired $state $facts $remoteFacts)) {
+        if (-not (Test-StatelessReady $facts $remoteFacts)) {
+            Stop-Handoff 'STATELESS_NOT_READY' '无 Active Wave 时要求 canonical workspace、upstream、clean 与 HEAD/Remote 0/0。'
+        }
+        $toolchain = Resolve-Dotnet
+        $bootstrapStatus = Invoke-Bootstrap
+        Show-Header 'JOIN' 'PASS' $facts $null $toolchain $report $bootstrapStatus
+        exit 0
+    }
     if ($facts.Branch -ne $state.branch) {
-        Show-BaselineMoved $facts $state (Get-RemoteFacts)
+        Show-BaselineMoved $facts $state $remoteFacts
     }
     if ($facts.Head -ne $state.baselineHead -and -not (Test-Ancestor $state.baselineHead $facts.Head)) {
-        Show-BaselineMoved $facts $state (Get-RemoteFacts)
+        Show-BaselineMoved $facts $state $remoteFacts
     }
     if ($state.mode -eq 'convergence' -and $state.coordinatorScope -eq 'xye' -and $Scope -eq 'xyui') {
         Stop-Handoff 'CONVERGENCE_EXCLUSIVE' 'XYE Convergence 期间 Workspace 由 XYE Coordinator 独占，XYUI JOIN 暂停。'
     }
     $toolchain = Resolve-Dotnet
-    $bootstrap = Join-Path $RepoRoot $Config.BootstrapScript
-    $output = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $bootstrap)
-    if ($LASTEXITCODE -ne 0) { Stop-Handoff 'BOOTSTRAP_FAILED' ($output -join ' | ') }
-    Show-Header 'JOIN' 'PASS' $facts $state $toolchain $report 'READY'
+    $bootstrapStatus = Invoke-Bootstrap
+    Show-Header 'JOIN' 'PASS' $facts $state $toolchain $report $bootstrapStatus
     exit 0
 }
 
@@ -475,8 +512,9 @@ if ($Mode -eq 'advance') {
     if ($facts.Branch -ne $state.branch) { Stop-Advance 'BRANCH_MISMATCH' "Expected $($state.branch)，Current $($facts.Branch)。" }
     $remote = $Config.Remote
     try { Invoke-Git @('fetch', '--prune', $remote) | Out-Null } catch { Stop-Advance 'REMOTE_NOT_FOUND' "无法读取 $remote。" }
-    $remoteFacts = Get-RemoteFacts
-    if (-not $remoteFacts.Exists) { Stop-Advance 'REMOTE_NOT_FOUND' "找不到 $remote/$($Config.ActiveBranch)。" }
+    $facts = Get-Facts
+    $remoteFacts = Get-RemoteFacts $facts
+    if (-not $remoteFacts.Exists) { Stop-Advance 'REMOTE_NOT_FOUND' "找不到当前 branch 的 upstream：$($facts.Upstream)。" }
     if ($facts.Head -ne $remoteFacts.Head) { Stop-Advance 'REMOTE_DIVERGED' "Current HEAD $($facts.Head) != Remote HEAD $($remoteFacts.Head)。" }
     if ($remoteFacts.Ahead -ne 0 -or $remoteFacts.Behind -ne 0) {
         Stop-Advance 'REMOTE_NOT_CONVERGED' "Ahead/Behind = $($remoteFacts.Ahead)/$($remoteFacts.Behind)。"
@@ -506,7 +544,7 @@ if ($Mode -eq 'advance') {
     Write-State $state
     $verifiedState = Read-State
     $verifiedFacts = Get-Facts
-    $verifiedRemote = Get-RemoteFacts
+    $verifiedRemote = Get-RemoteFacts $verifiedFacts
     if ($verifiedState.baselineHead -ne $facts.Head -or $verifiedFacts.Head -ne $facts.Head) {
         Stop-Advance 'STATE_VERIFY_FAILED' 'state 或 HEAD 在 advance 后未保持预期。'
     }
@@ -547,10 +585,12 @@ if ($Mode -eq 'close') {
 }
 
 if ($Mode -eq 'prepare') {
-    if ($null -ne $state -and [bool]$state.active) {
+    try { Invoke-Git @('fetch', '--prune', $Config.Remote) | Out-Null } catch { Stop-Handoff 'GIT_FETCH_FAILED' $_.Exception.Message }
+    $facts = Get-Facts
+    $remoteFacts = Get-RemoteFacts $facts
+    if ($null -ne $state -and [bool]$state.active -and -not (Test-WipExpired $state $facts $remoteFacts)) {
         Write-Host 'HANDOFF PREPARE BLOCKED' -ForegroundColor Red
         Write-Host 'Reason: ACTIVE_WAVE_EXISTS'
-        $remoteFacts = Get-RemoteFacts
         if ($facts.Head -ne $state.baselineHead -and (Test-AdvanceReady $state $facts $remoteFacts)) {
             Write-Host 'Current wave does not require a new prepare.'
             Write-Host 'Coordinator action:'
@@ -560,27 +600,24 @@ if ($Mode -eq 'prepare') {
         Write-Host 'Do NOT manually edit state.json, reset HEAD, rebuild workspace, or stash ForeignDirty.'
         exit 1
     }
-    $remote = $Config.Remote
-    $remoteRef = "$remote/$($Config.ActiveBranch)"
-    try { Invoke-Git @('fetch', '--prune', $remote) | Out-Null } catch { Stop-Handoff 'GIT_FETCH_FAILED' $_.Exception.Message }
-    try { Invoke-Git @('show-ref', '--verify', '--quiet', "refs/remotes/$remote/$($Config.ActiveBranch)") | Out-Null } catch { Stop-Handoff 'REMOTE_BRANCH_NOT_FOUND' "找不到 $remoteRef" }
-    try { $counts = ((Invoke-Git @('rev-list', '--left-right', '--count', "HEAD...$remoteRef")) -join '').Trim() -split '\s+' } catch { Stop-Handoff 'GIT_STATE_FAILED' $_.Exception.Message }
-    if ([int]$counts[0] -gt 0) { Stop-Handoff 'LOCAL_COMMITS_EXIST' "本地存在 $($counts[0]) 个 Remote 没有的正式 Commit。" }
-    if ([int]$counts[1] -gt 0) {
-        Invoke-Git @('reset', '--hard', $remoteRef) | Out-Null
+    if (-not $remoteFacts.Exists) { Stop-Handoff 'REMOTE_BRANCH_NOT_FOUND' "当前 branch 没有可验证的 upstream：$($facts.Upstream)" }
+    if ($remoteFacts.Ahead -gt 0) { Stop-Handoff 'LOCAL_COMMITS_EXIST' "本地存在 $($remoteFacts.Ahead) 个 upstream 没有的正式 Commit。" }
+    if ($remoteFacts.Behind -gt 0) {
+        if ($Config.RemoteWinsWhenBehind -ne $true) { Stop-Handoff 'REMOTE_BEHIND' '本地落后 upstream，但 RemoteWinsWhenBehind 未启用。' }
+        Invoke-Git @('reset', '--hard', $remoteFacts.Ref) | Out-Null
         Invoke-Git @('clean', '-fd') | Out-Null
-        Invoke-Git @('switch', '--ignore-other-worktrees', '-C', $Config.ActiveBranch, $remoteRef) | Out-Null
+        $facts = Get-Facts
+        $remoteFacts = Get-RemoteFacts $facts
     } elseif ($facts.Dirty.Count -gt 0 -and $WaveMode -ne 'convergence') { Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异但工作区 dirty。' }
     $newFacts = Get-Facts
-    $convergenceTarget = if ($Config.ContainsKey('ConvergenceTargetBranch')) { [string]$Config.ConvergenceTargetBranch } else { $null }
     $requestedConvergence = $WaveMode -eq 'convergence'
     if ($requestedConvergence) {
         $coordinator = Normalize-CoordinatorScope $CoordinatorScope
         if ($coordinator -ne 'xye') {
             Stop-Handoff 'CONVERGENCE_COORDINATOR_REQUIRED' 'Dirty Convergence Baseline 必须由 XYE Coordinator 显式建立。'
         }
-        $remoteFacts = Get-RemoteFacts
-        $dirtyBaseline = Get-ConvergenceBaseline $newFacts $remoteFacts $WaveMode
+        $remoteFacts = Get-RemoteFacts $newFacts
+        $dirtyBaseline = Get-ConvergenceBaseline $newFacts $remoteFacts $WaveMode $state
         if (-not $dirtyBaseline.ValidRemote) {
             Stop-DirtyConvergence 'REMOTE_NOT_CONVERGED' 'Dirty Convergence Baseline 要求 Local/Remote HEAD 与 Ahead/Behind 完全一致。'
         }
@@ -605,7 +642,7 @@ if ($Mode -eq 'prepare') {
             active = $true
             mode = 'convergence'
             waveMode = 'convergence'
-            convergenceTargetBranch = $convergenceTarget
+            ownershipManifest = [string]$Config.OwnershipManifest
             coordinatorScope = $coordinator
             dirtyBaseline = @($dirtyBaseline.Baseline)
             ownDirtyCount = @($dirtyBaseline.Baseline | Where-Object { $_.Owner -in @('A', 'B', 'C') }).Count
@@ -618,14 +655,16 @@ if ($Mode -eq 'prepare') {
             preparedAt = (Get-Date).ToUniversalTime().ToString('o')
         }
     } else {
-        $handoffMode = if ($Config.ContainsKey('Mode')) { [string]$Config.Mode } else { $WaveMode }
-        if ($handoffMode -notin @('development', 'convergence', 'WIP_RESUME')) {
-            Stop-Handoff 'CONFIG_INVALID' "非法 Handoff Mode：$handoffMode"
-        }
         if ($newFacts.Dirty.Count -gt 0) {
             Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异但工作区 dirty。'
         }
-        $state = [pscustomobject]@{ waveId = [guid]::NewGuid().ToString('N'); branch = $newFacts.Branch; baselineHead = $newFacts.Head; remoteHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = $handoffMode; waveMode = $handoffMode; convergenceTargetBranch = $convergenceTarget; coordinatorScope = (Normalize-CoordinatorScope $CoordinatorScope); preparedAt = (Get-Date).ToUniversalTime().ToString('o') }
+        if ($WaveMode -eq 'WIP_RESUME') {
+            if ([string]::IsNullOrWhiteSpace($TargetBranch)) { Stop-Handoff 'WIP_TARGET_REQUIRED' 'WIP_RESUME 必须显式提供 TargetBranch。' }
+            $source = if ([string]::IsNullOrWhiteSpace($SourceBranch)) { $newFacts.Branch } else { $SourceBranch.Trim() }
+            $state = [pscustomobject]@{ waveId = [guid]::NewGuid().ToString('N'); branch = $newFacts.Branch; baselineHead = $newFacts.Head; remoteHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = 'WIP_RESUME'; waveMode = 'WIP_RESUME'; sourceBranch = $source; targetBranch = $TargetBranch.Trim(); createdAt = (Get-Date).ToUniversalTime().ToString('o'); expiryCondition = 'CurrentBranch==targetBranch && HEAD==origin/targetBranch && Ahead/Behind==0/0'; ownershipManifest = [string]$Config.OwnershipManifest; coordinatorScope = (Normalize-CoordinatorScope $CoordinatorScope) }
+        } else {
+            $state = [pscustomobject]@{ waveId = [guid]::NewGuid().ToString('N'); branch = $newFacts.Branch; baselineHead = $newFacts.Head; remoteHead = $newFacts.Head; workspace = $RepoRoot; active = $true; mode = 'development'; waveMode = 'development'; ownershipManifest = [string]$Config.OwnershipManifest; coordinatorScope = (Normalize-CoordinatorScope $CoordinatorScope); preparedAt = (Get-Date).ToUniversalTime().ToString('o') }
+        }
     }
     Write-State $state
     $toolchain = Resolve-Dotnet

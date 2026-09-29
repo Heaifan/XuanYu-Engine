@@ -1,8 +1,6 @@
 @{
-    Mode = 'WIP_RESUME'
-    ActiveBranch = 'wip/c0-handoff-20260928'
-    ConvergenceTargetBranch = 'feat/v0.3-world-authoring-r1'
     Remote = 'origin'
+    OwnershipManifest = 'tools\handoff\ownership-manifest.json'
 
     CanonicalWorkspaces = @(
         'D:\MyDoc\project-vsCode\XuanyuEngine'

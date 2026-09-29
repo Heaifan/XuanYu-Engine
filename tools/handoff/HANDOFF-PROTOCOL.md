@@ -16,6 +16,7 @@ tools\handoff\handoff.cmd advance --scope xye
                                      # Coordinator 在 commit + push 后推进 Active Wave baseline
 tools\handoff\handoff.cmd status   # 只读状态
 tools\handoff\handoff.cmd close    # 收口后关闭 Active Wave
+tools\handoff\handoff.ps1 -Mode maintenance -Scope governance # Control Plane 修复前置检查
 ```
 
 无参数等价于 `join --scope xye`。状态登记在 `.git\xye-handoff\state.json`，不进入 Git；JOIN 不在缺失 state 时创建它。
@@ -42,7 +43,7 @@ handoff.cmd commit-lock --scope xye --owner <session>
 
 当 JOIN 报 `BASELINE_MOVED` 时，Agent 必须停止并报告 baseline、HEAD、Remote HEAD、Ahead/Behind、Branch 和 ForeignDirty。不得执行 prepare、手动编辑 state.json、reset、stash 或 clean；先处理真实 branch/分叉异常。
 
-`state.json` 的 Wave 字段为：`mode=development|convergence|WIP_RESUME`、`convergenceTargetBranch=<formal branch>|null`、`coordinatorScope=xye|integration|governance|null`。`WIP_RESUME` 表示远端已验证的跨设备 WIP 快照，不是 Release 或 Convergence；正式收口目标由 `ConvergenceTargetBranch` 明确记录。Coordinator 可在 PREPARE 时登记 Convergence 模式；普通 Agent 不得直接修改 state。
+`state.json` 的 Wave 字段为：`mode=development|convergence|WIP_RESUME`、`coordinatorScope=xye|integration|governance|null`。WIP Resume 只能作为临时 state，必须记录 `sourceBranch`、`targetBranch`、`createdAt`、`expiryCondition`；不得写入 Repository Config。当前 Branch 到达 target 且 HEAD 与 target upstream 0/0 后，WIP 自动失效，旧 source 不再参与新的 PREPARE 比较。
 
 ## 2. Canonical Workspaces
 
@@ -72,7 +73,7 @@ GitHub Remote 是跨设备正式事实源。
 
 ### 3.1 Local Ahead > 0（仅 PREPARE）
 
-如果当前 Local HEAD 相对 Active Remote 存在 Remote 没有的正式 Commit：
+如果当前 Local HEAD 相对当前 branch upstream 存在 Remote 没有的正式 Commit：
 
 ```text
 Ahead > 0
@@ -83,7 +84,7 @@ Ahead > 0
 
 ### 3.2 Local Ahead = 0 且 Behind > 0（仅 PREPARE）
 
-如果本地没有独有正式 Commit，但落后于 Active Remote：
+如果本地没有独有正式 Commit，但落后于当前 branch upstream：
 
 ```text
 Ahead = 0
@@ -95,8 +96,8 @@ Behind > 0
 
 - 丢弃 tracked 未提交修改；
 - 删除 non-ignored untracked 文件 / 目录；
-- 切换到 Active Branch；
-- 将 Local HEAD 精确对齐 `origin/<ActiveBranch>`；
+- 保持当前 branch 不变；
+- 将 Local HEAD 精确对齐当前 branch upstream；
 - 再次验证 Ahead / Behind = 0 / 0；
 - 验证 working tree clean。
 
@@ -113,21 +114,7 @@ same tip + dirty
 
 ## 4. Active Branch
 
-当前权威开发分支由：
-
-```text
-tools/handoff/HandoffConfig.psd1
-```
-
-中的 `ActiveBranch` 指定。
-
-当前值：
-
-```text
-feat/v0.3-world-authoring-r1
-```
-
-开发主线迁移时必须在正式 Git 节点中更新此配置。
+当前权威开发分支来自 live Git：`git branch --show-current`；远端事实来自该 branch 的 upstream，默认回退为 `origin/<CurrentBranch>`。Ahead/Behind 永远比较 `HEAD...upstream`，不得比较持久化的旧 ActiveBranch 或旧 WIP 分支。
 
 ## 5. SDK / Resolver
 
@@ -154,15 +141,15 @@ scripts/resolve-dotnet.ps1
 
 JOIN 必须只读取 Git 事实：`rev-parse`、`branch --show-current`、`status`、`worktree list` 及正式 Resolver / Bootstrap。它不得执行 fetch、pull、reset、clean、checkout、switch、merge、rebase、stash、commit 或 push；Git 成败只看真实 Exit Code。
 
-JOIN 必须允许 dirty；只有 Branch 改变，或 `baselineHead` 不是当前 HEAD 的祖先时，才以 `BASELINE_MOVED` 阻断。输出必须包含 `DirtyFiles`、`Scope`、`OwnDirty`、`ForeignDirty` 与 `GitMutation: NONE`。XYUI / XYE / GOVERNANCE 可按路径归属报告 OwnDirty 与 ForeignDirty；INTEGRATION 无法可靠推断时必须输出 `OwnDirty: UNKNOWN`、`ForeignDirty: INFORMATIONAL`，不得把 ForeignDirty 当作 OwnershipConflict。
+JOIN 必须允许 dirty；Active Wave 只有在 Branch 改变或 `baselineHead` 不是当前 HEAD 的祖先时，才以 `BASELINE_MOVED` 阻断。缺失或已关闭 state 时，只要 canonical workspace、当前 branch upstream、HEAD/Remote 0/0、无 staged conflict 与 ownership conflict，即返回 `HANDOFF JOIN PASS` 和 `Wave: STATELESS / READY`。输出必须包含 `DirtyFiles`、`Scope`、`OwnDirty`、`ForeignDirty` 与 `GitMutation: NONE`。XYUI / XYE / GOVERNANCE 可按路径归属报告 OwnDirty 与 ForeignDirty；INTEGRATION 无法可靠推断时必须输出 `OwnDirty: UNKNOWN`、`ForeignDirty: INFORMATIONAL`，不得把 ForeignDirty 当作 OwnershipConflict。
 
 development 下所有 Lane JOIN 可通过 dirty。convergence 且 `coordinatorScope=xye` 时，`join --scope xyui` 返回 `HANDOFF BLOCKED` 与 `CONVERGENCE_EXCLUSIVE`；`join --scope xye` 与 XYE Coordinator status 允许。
 
 ## 7. PREPARE / CLOSE
 
-Active Wave 存在时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。CLOSE 仅在 working tree clean 时将 Active 标记为 false；dirty 时返回 `DIRTY_ON_CLOSE`。
+Active Wave 存在且未过期时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。旧 Closed Wave 不阻塞新的普通 PREPARE。CLOSE 仅在 working tree clean 时将 Active 标记为 false；dirty 时返回 `DIRTY_ON_CLOSE`。
 
-`prepare` 默认登记 `mode=development`；WIP Resume 可由 `HandoffConfig.psd1` 登记 `Mode = 'WIP_RESUME'`、`ActiveBranch` 与 `ConvergenceTargetBranch`；Convergence Coordinator 可显式登记 `mode=convergence` 和 `coordinatorScope`。Active Wave 期间再次 PREPARE 永远阻断。
+`prepare` 默认登记 `mode=development`；WIP Resume 必须通过本次命令显式提供 `-SourceBranch` 与 `-TargetBranch`，并只登记到 state。Control Plane Maintenance 仅在 canonical、clean、当前 branch/upstream 0/0 时通过，且只能修复 `tools/handoff/**` 与治理文档/测试。Active Wave 期间再次 PREPARE 永远阻断，已满足 expiry condition 的 WIP 除外。
 
 ## 8. Legacy worktrees
 
@@ -180,7 +167,7 @@ Active Wave 存在时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。CLOSE 仅在
 
 ## 9. Self Test / Dry Test
 
-`powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖祖先 baseline 下的并行 JOIN PASS、Commit Mutex 争抢/owner 校验/安全解锁、commit 后 advance 自动释放、dirty 保留、XYUI convergence `CONVERGENCE_EXCLUSIVE`、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED；测试结束删除 fixture，不污染 canonical Workspace。
+`powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖祖先 baseline 下的并行 JOIN PASS、Commit Mutex 争抢/owner 校验/安全解锁、commit 后 advance 自动释放、dirty 保留、XYUI convergence `CONVERGENCE_EXCLUSIVE`、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED。`state-lifecycle.selftest.ps1` 额外覆盖 live upstream、旧 WIP expiry、stateless JOIN、Remote Wins、Local Ahead 安全保护与 maintenance gate；测试结束删除 fixture，不污染 canonical Workspace。
 
 ## 10. Successful final state
 

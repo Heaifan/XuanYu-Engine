@@ -8,6 +8,12 @@
 
 > v1.1 核心修订：正式确立 **Single Canonical Workspace + Sequential Handoff**。普通开发与 Agent 交接不再默认创建 Codex/Gemini/Integration 长期 worktree；同一功能链默认顺序写入唯一正式工作区。任何与本规则冲突的旧 Prompt、旧任务书、Agent 习惯或临时方案，以本 SOP 为准。
 
+## Control Plane lifecycle repair
+
+Handoff 的 Branch Truth 只能来自 live Git：当前 branch 使用 `git branch --show-current`，远端使用当前 branch 的 upstream，Ahead/Behind 比较 `HEAD...upstream`。`HandoffConfig.psd1` 只保存 Remote、Canonical Workspace、Resolver、Bootstrap 与安全策略，不保存 ActiveBranch、WIP Resume Mode 或 Convergence Target。
+
+缺失或已关闭的 `state.json` 不阻止 clean 且 0/0 的普通开发；JOIN 返回 `Wave: STATELESS / READY`。WIP Resume 仅存在于 state，记录 `sourceBranch`、`targetBranch`、`createdAt`、`expiryCondition`，回到 target 且 0/0 后自动失效。Control Plane 故障时，只有 canonical、clean、当前 branch/upstream 0/0 才能进入 `maintenance` / `repair` preflight；该入口只允许修复 Handoff 与治理文件。
+
 ## Active Wave baseline migration
 
 同一 Active Wave 可以承载连续的正式提交。Coordinator 完成合法 `commit + push` 后，如果后续 Agent 仍需进入同一 Wave，执行：

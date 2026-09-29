@@ -40,10 +40,8 @@ try {
     Set-Content -LiteralPath (Join-Path $root 'bootstrap.ps1') -Value ''
     @"
 @{
-    ActiveBranch = 'main'
-    Mode = 'WIP_RESUME'
-    ConvergenceTargetBranch = 'formal/main'
     Remote = 'origin'
+    OwnershipManifest = 'tools\handoff\ownership-manifest.json'
     CanonicalWorkspaces = @('$root')
     PreferredDotnetByDrive = @{}
     ResolverScript = 'resolve-dotnet.ps1'
@@ -62,8 +60,8 @@ try {
     Assert-True $stateBefore.Contains('"coordinatorScope": null') 'prepare must write coordinatorScope null'
     $state = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
     Assert-True ($null -eq $state.coordinatorScope) 'prepare coordinatorScope must be null'
-    Assert-True ($state.mode -eq 'WIP_RESUME') 'prepare must preserve configured WIP_RESUME mode'
-    Assert-True ($state.convergenceTargetBranch -eq 'formal/main') 'prepare must preserve convergence target branch'
+    Assert-True ($state.mode -eq 'development') 'prepare must create ordinary development mode'
+    Assert-True ($null -eq $state.PSObject.Properties['convergenceTargetBranch']) 'prepare must not persist stale convergence target'
 
     $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'ADVANCE NOOP: BASELINE_ALREADY_CURRENT'
