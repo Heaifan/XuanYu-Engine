@@ -68,8 +68,17 @@ if ($Field) {
     if ($current -eq 'FROZEN' -or ($lane -and $lane.Value.state -eq 'FROZEN')) { Stop-Authority 'FROZEN_STATE' 'FROZEN 后禁止回写。' }
     $targetSet = if ($globalFields -contains $Field.ToUpperInvariant()) { 'globalStatus' } else { 'fields' }
     if ($null -eq $state.PSObject.Properties[$targetSet]) { $state | Add-Member -NotePropertyName $targetSet -NotePropertyValue ([pscustomobject]@{}) }
-    $container = if ($targetSet -eq 'globalStatus') { $state.globalStatus } else { $state.laneStates.$Scope.fields }
-    if ($null -eq $container) { $container = [pscustomobject]@{}; if ($targetSet -eq 'globalStatus') { $state.globalStatus = $container } else { $state.laneStates.$Scope.fields = $container } }
+    $laneEntry = $null
+    if ($targetSet -eq 'globalStatus') {
+        $container = $state.globalStatus
+    } else {
+        $laneEntry = $state.laneStates.PSObject.Properties[$Scope].Value
+        $container = $laneEntry.fields
+    }
+    if ($null -eq $container) {
+        $container = [pscustomobject]@{}
+        if ($targetSet -eq 'globalStatus') { $state.globalStatus = $container } else { $laneEntry.fields = $container }
+    }
     $container | Add-Member -NotePropertyName ($Field.ToUpperInvariant()) -NotePropertyValue $Value -Force
 }
 Write-Atomic $state
