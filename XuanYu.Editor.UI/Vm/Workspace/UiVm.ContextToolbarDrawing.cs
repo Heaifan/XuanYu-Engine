@@ -70,7 +70,8 @@ public sealed partial class UiVm
 
     void BeginDrawingTransaction(string kind)
     {
-        _authoringSession.Begin(kind == "道路" ? AuthoringInputKind.Road : AuthoringInputKind.Region);
+        var inputKind = kind == "道路" ? AuthoringInputKind.Road : AuthoringInputKind.Region;
+        if (!_authoringSession.Begin(inputKind)) return;
         RaiseContextToolbarDrawingBindings();
     }
 
