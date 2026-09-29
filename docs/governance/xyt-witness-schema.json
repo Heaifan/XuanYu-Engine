@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "XYT Regression Witness Report",
+  "type": "object",
+  "required": ["WitnessId", "BugId", "IncidentId", "Capability", "PreFixCommit", "PostFixCommit", "TestId", "TestSetVersion", "PreFixResult", "PostFixResult", "Status"],
+  "properties": {
+    "WitnessId": { "type": "string", "minLength": 1 },
+    "BugId": { "type": "string", "minLength": 1 },
+    "IncidentId": { "type": "string", "minLength": 1 },
+    "Capability": { "type": "string", "minLength": 1 },
+    "PreFixCommit": { "type": "string", "minLength": 1 },
+    "PostFixCommit": { "type": "string", "minLength": 1 },
+    "TestId": { "type": "string", "minLength": 1 },
+    "PreFixTestId": { "type": "string", "minLength": 1 },
+    "PostFixTestId": { "type": "string", "minLength": 1 },
+    "TestSetVersion": { "type": "string", "minLength": 1 },
+    "PreFixResult": { "enum": ["FAIL", "PASS", "NOT_EXECUTED"] },
+    "PostFixResult": { "enum": ["FAIL", "PASS", "NOT_EXECUTED"] },
+    "PreFixEvidence": { "type": "string" },
+    "PostFixEvidence": { "type": "string" },
+    "Status": { "enum": ["RED_CONFIRMED", "GREEN_CONFIRMED", "INCOMPLETE", "INVALID"] },
+    "Reason": { "type": "string" },
+    "GeneratedAtUtc": { "type": "string" }
+  },
+  "additionalProperties": false
+}
