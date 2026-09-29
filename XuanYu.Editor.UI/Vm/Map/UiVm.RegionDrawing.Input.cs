@@ -6,11 +6,22 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    bool TryPickRegionPoint(double x, double y, ViewportState viewport, out MapPoint point)
+    bool TryPickGroundPoint(double x, double y, ViewportState viewport, out GroundPickResult result)
     {
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
         var terrain = TerrainWorld is null ? null : new TerrainWorldGroundSurface(TerrainWorld);
-        return MapSurfacePicker.TryPick(MapSession.CurrentMap, projection, x, y, terrain, out point);
+        return MapSurfacePicker.TryPickGround(MapSession.CurrentMap, projection, x, y, terrain, out result);
+    }
+
+    bool TryPickRegionPoint(double x, double y, ViewportState viewport, out MapPoint point)
+    {
+        if (!TryPickGroundPoint(x, y, viewport, out var result))
+        {
+            point = default;
+            return false;
+        }
+        point = result.WorldXY;
+        return true;
     }
 
     static bool IsInsideViewport(double x, double y, ViewportState viewport) =>
