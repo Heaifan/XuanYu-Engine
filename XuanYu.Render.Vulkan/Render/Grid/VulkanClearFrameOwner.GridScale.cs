@@ -47,9 +47,9 @@ public sealed unsafe partial class VulkanClearFrameOwner
             FillMatrixTranspose(pScene, viewProjection);
             FillMatrixTransposeInverse(pScene + 16, viewProjection);
         }
-        scene[32] = (float)camera.Position.X;
-        scene[33] = (float)camera.Position.Y;
-        scene[34] = (float)camera.Position.Z;
+        scene[32] = (float)state.RenderOrigin.X;
+        scene[33] = (float)state.RenderOrigin.Y;
+        scene[34] = (float)state.RenderOrigin.Z;
         scene[35] = 1.0f;
         scene[36] = _extent.Width;
         scene[37] = _extent.Height;

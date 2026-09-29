@@ -1,0 +1,91 @@
+{
+  "contract": "Deferred Capability Contract",
+  "contractVersion": "R2",
+  "statuses": ["DEFERRED-SAFE", "ARMED", "BLOCKING", "CLOSED"],
+  "debts": [
+    {
+      "DebtId": "RENDER-LARGE-WORLD-001",
+      "Title": "Camera-relative Rendering / Render Origin 尚未完成",
+      "CurrentTemporarySolution": "沿用 Global double → Region double 规划下的绝对 float 渲染边界；当前仅允许小/中尺度临时使用。",
+      "DeferredCapability": "Camera-relative Rendering 与 Render Origin / Rebasing",
+      "ReasonForDeferral": "WORLD-A-R0 已规划 Global double、Region double、Camera-relative、Vulkan float，但 Camera-relative / Render Origin 后移。",
+      "ValidEnvelope": "当前绝对 float 渲染边界只允许被视为小/中尺度临时方案，不得宣称完整 Geographic Large World 能力。",
+      "ActivationTriggers": [
+        {"TriggerId": "TERRAIN-DEM-RUNTIME", "Description": "Terrain / DEM 正式进入运行链", "CapabilityTags": ["terrain-dem-runtime"]},
+        {"TriggerId": "GEOGRAPHIC-WORLD-RUNTIME", "Description": "Geographic World 正式进入运行链", "CapabilityTags": ["geographic-world-runtime"]},
+        {"TriggerId": "WORLD-EXTENT-10KM", "Description": "WorldExtent >= 10 km", "CapabilityTags": ["world-extent-ge-10km"]},
+        {"TriggerId": "CAMERA-DISTANCE-10KM", "Description": "CameraDistance >= 10 km", "CapabilityTags": ["camera-distance-ge-10km"]}
+      ],
+      "BlockedCapabilities": [
+        {"Name": "Large World 产品收口", "CapabilityTags": ["large-world-product-closeout"]},
+        {"Name": "Geographic Terrain 正式 FREEZE", "CapabilityTags": ["geographic-terrain-freeze"]},
+        {"Name": "DEM Large-scale Orbit 稳定性 CLOSED", "CapabilityTags": ["dem-large-scale-orbit-closeout"]},
+        {"Name": "依赖绝对 float 世界坐标继续扩建的新能力", "CapabilityTags": ["absolute-float-world-coordinate"]}
+      ],
+      "RequiredClosure": [
+        "Camera-relative Rendering",
+        "Render Origin / Rebasing",
+        "50 km / 100 km / 500 km / 1000 km 自动测试",
+        "Real Vulkan + Real DEM Runtime 验收",
+        "最终用户验收"
+      ],
+      "TestDebt": [
+        "50 km 自动测试",
+        "100 km 自动测试",
+        "500 km 自动测试",
+        "1000 km 自动测试",
+        "Real Vulkan + Real DEM Runtime 验收"
+      ],
+      "IntroducedAt": {
+        "Commit": "968efe32ab967b6edab234aaa38a5e539ecd94c4",
+        "Version": "v0.3.0.0-r1",
+        "Date": "2026-09-29"
+      },
+      "LastReviewedAt": "2026-09-29",
+      "Status": "BLOCKING",
+      "Evidence": [
+        "WORLD-A-R0 规划：Global double → Region double → Camera-relative → Vulkan float",
+        "Camera-relative / Render Origin 在当前阶段后移",
+        "当前绝对 float 边界不具备完整 Geographic Large World 能力"
+      ],
+      "ClosureEvidence": []
+    },
+    {
+      "DebtId": "GOV-OWNERSHIP-LIFECYCLE-001",
+      "Title": "Wave-scoped Ownership Manifest 尚未实现",
+      "CurrentTemporarySolution": "Repository-level tools/handoff/ownership-manifest.json；仅作为当前已明确记录的 convergence ownership 过渡事实源。",
+      "DeferredCapability": "Wave-scoped Ownership Manifest / generated ownership state",
+      "ReasonForDeferral": "当前 Handoff 支持 state 指向静态 Ownership Manifest，但尚未支持按新 Wave 生成和登记精确 ownership。",
+      "ValidEnvelope": "仅适用于当前明确记录的 convergence ownership；不得当成永久业务 Ownership Truth，也不得自动判定新 Wave 的精确 ownership。",
+      "ActivationTriggers": [
+        {"TriggerId": "NEW-WAVE-DIFFERENT-OWNERSHIP", "Description": "新的并行 Wave 需要与 Manifest 中旧文件不同的精确 ownership", "CapabilityTags": ["wave-scoped-ownership"]}
+      ],
+      "BlockedCapabilities": [
+        {"Name": "依赖旧静态 Manifest 自动判定新 Wave 精确 ownership", "CapabilityTags": ["wave-scoped-ownership"]}
+      ],
+      "RequiredClosure": [
+        "实现 Wave-scoped Ownership Manifest",
+        "生成并登记 Wave ownership state",
+        "为新 Wave 提供精确 ownership 冲突判定测试"
+      ],
+      "TestDebt": [
+        "不同 Wave ownership manifest 生成测试",
+        "旧 manifest 不得自动覆盖新 Wave ownership 测试",
+        "Convergence ownership conflict / ForeignDirty 分类测试"
+      ],
+      "IntroducedAt": {
+        "Commit": "968efe32ab967b6edab234aaa38a5e539ecd94c4",
+        "Version": "v0.3.0.0-r1",
+        "Date": "2026-09-29"
+      },
+      "LastReviewedAt": "2026-09-29",
+      "Status": "DEFERRED-SAFE",
+      "Evidence": [
+        "tools/handoff/handoff.ps1 仅从 state 或 HandoffConfig 解析单一 ownershipManifest 路径",
+        "当前 ownership-manifest.json 保留旧 B/C convergence 文件",
+        "本轮禁止为该能力扩大 Handoff Core 范围"
+      ],
+      "ClosureEvidence": []
+    }
+  ]
+}

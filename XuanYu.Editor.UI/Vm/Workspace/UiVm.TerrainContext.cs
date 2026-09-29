@@ -11,8 +11,9 @@ public sealed partial class UiVm
     public bool IsTerrainContext => _isTerrainContext;
     public bool IsRegionContext => !_isTerrainContext;
     public string ContextButtonLabel => _isTerrainContext ? "地形" : "区域";
-    public string ContextToolbarButtonLabel => _isTerrainContext
-        ? "地形" : DrawButtonLabel == "绘制" ? "区域" : DrawButtonLabel;
+    public string ContextToolbarButtonLabel => _isTerrainContext ? "地形"
+        : IsDrawingTransactionActive ? ActiveTool
+        : DrawButtonLabel == "绘制" ? "区域" : DrawButtonLabel;
     public TerrainSourceData? TerrainSource { get; private set; }
     public TerrainWorld? TerrainWorld { get; private set; }
     public string TerrainStatus { get; private set; } = "未加载地形源。";
@@ -22,6 +23,7 @@ public sealed partial class UiVm
 
     public void EnterTerrainContext()
     {
+        if (IsDrawingTransactionActive) return;
         if (_isTerrainContext)
         {
             RaiseInspectorSelectionBindings();
@@ -36,6 +38,7 @@ public sealed partial class UiVm
 
     public void EnterRegionContext()
     {
+        if (IsDrawingTransactionActive) return;
         if (!_isTerrainContext) return;
         CancelActiveInput("切换区域上下文");
         _isTerrainContext = false;

@@ -1,5 +1,6 @@
 using XuanYu.Core.Gizmo;
 using XuanYu.Core.Space;
+using XuanYu.Editor.Input;
 using XuanYu.Editor.MapEditing;
 using XuanYu.World.Map;
 
@@ -8,6 +9,7 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     readonly RegionDrawingState _regionDrawing = new();
+    bool _releasingRegionPointerCapture;
 
     public bool IsRegionDrawingActive => IsRegionDrawingTool;
     public int RegionDrawingHitCount { get; private set; }
@@ -83,6 +85,7 @@ public sealed partial class UiVm
     public bool CancelRegionDrawingFromEscape()
     {
         if (!_regionDrawing.IsActive && !IsRegionDrawingTool) return false;
+        ReleaseRegionPointerCapture(EditorPointerEventKind.Cancel);
         _regionDrawing.Cancel();
         ClearRegionDrawingSnap();
         RaiseRegionDrawingBindings(); EndDrawingTransaction();
@@ -92,6 +95,21 @@ public sealed partial class UiVm
         LogRegionDrawingCanceled();
         PublishSceneRenderSnapshot();
         return true;
+    }
+
+    void ReleaseRegionPointerCapture(EditorPointerEventKind terminal)
+    {
+        if (_releasingRegionPointerCapture ||
+            ViewportInput.Router.State.Owner != GestureOwner.Region) return;
+        var state = ViewportInput.Router.State;
+        _releasingRegionPointerCapture = true;
+        try
+        {
+            ViewportInput.Dispatch(new EditorPointerEvent(terminal, new(0, 0),
+                EditorPointerButtons.None, EditorPointerModifiers.None, 0, state.PointerId,
+                new("region-session"), 1));
+        }
+        finally { _releasingRegionPointerCapture = false; }
     }
 
 }

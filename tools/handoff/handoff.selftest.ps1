@@ -117,6 +117,33 @@ try {
     Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -match '"coordinatorScope"\s*:\s*null') 'advance must write coordinatorScope null'
     Assert-Output (Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF JOIN PASS'
 
+    $stateAfterB.coordinatorScope = 'xye'
+    $stateAfterB | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Field', 'GATE STATUS', '-Value', 'REGRESSION_PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'AUTHORITY_REJECTED'
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xye', '-Field', 'GATE STATUS', '-Value', 'REGRESSION_PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'AUTHORITY PASS'
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Field', 'IMPLEMENTATION STATUS', '-Value', 'IMPLEMENTATION_PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'LANE STATE PASS'
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Field', 'IMPLEMENTATION STATUS', '-Value', 'PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'TYPED_PASS_REQUIRED'
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', 'IMPLEMENTATION_COMPLETE', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'ILLEGAL_STATE_TRANSITION'
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', 'ACTIVE', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'LANE STATE PASS'
+    foreach ($transition in @('IMPLEMENTATION_COMPLETE','IMPLEMENTATION_HANDOFF_READY','DEPENDENCY_RELEASED','REGRESSION_REQUIRED','PRODUCT_ACCEPTANCE_PENDING','ACCEPTED')) {
+        $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', $transition, '-RepositoryRoot', $root, '-AllowTestWorkspace')
+        Assert-Output $result 0 'LANE STATE PASS'
+    }
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', 'FROZEN', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'LANE STATE PASS'
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xye', '-ExceptionStatus', 'UNKNOWN_DIRTY', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'LANE STATE PASS'
+    $authorityState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    Assert-True ($authorityState.laneStates.xye.exceptions -contains 'UNKNOWN_DIRTY') 'exception status must be independent'
+    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Field', 'OWN-SCOPE TEST STATUS', '-Value', 'OWN_SCOPE_PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'FROZEN_STATE'
+
     Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'C'
     git -C $root add committed.txt
     git -C $root commit -m C | Out-Null
@@ -186,6 +213,7 @@ try {
     $closedState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
     Assert-True (-not [bool]$closedState.active) 'close must deactivate the wave'
     Assert-True ($null -ne $closedState.closedAt) 'close must persist closedAt for legacy state'
+    Write-Host 'H1 SELFTEST 7/7 PASS'
     Write-Host 'HANDOFF SELF TEST PASS'
 }
 finally {

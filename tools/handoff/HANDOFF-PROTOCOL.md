@@ -47,6 +47,22 @@ Convergence Coordinator 为 `xye` 时，治理控制面修复可由 `governance`
 
 `state.json` 的 Wave 字段为：`mode=development|convergence|WIP_RESUME`、`coordinatorScope=xye|integration|governance|null`。WIP Resume 只能作为临时 state，必须记录 `sourceBranch`、`targetBranch`、`createdAt`、`expiryCondition`；不得写入 Repository Config。当前 Branch 到达 target 且 HEAD 与 target upstream 0/0 后，WIP 自动失效，旧 source 不再参与新的 PREPARE 比较。
 
+### 1.2 R3 Authority / Lane State
+
+R3 将 Lane 状态与 Coordinator 全局结论分离。Lane 状态只能沿以下单向序列迁移，默认起点为 `JOINED`，`FROZEN` 为终态：
+
+```text
+JOINED → ACTIVE → IMPLEMENTATION_COMPLETE → IMPLEMENTATION_HANDOFF_READY
+→ DEPENDENCY_RELEASED → REGRESSION_REQUIRED → PRODUCT_ACCEPTANCE_PENDING
+→ ACCEPTED → FROZEN
+```
+
+阻塞/异常是独立表达，不是 Lane 主状态：`BLOCKED`、`CONFLICT`、`UNKNOWN_DIRTY`、`CANDIDATE_MISMATCH`、`EVIDENCE_STALE`、`HARNESS_FAILURE`。Lane 只可写 `IMPLEMENTATION STATUS`、`OWN-SCOPE TEST STATUS`、`BUILD STATUS`、`HANDOFF READINESS`、`PRODUCT ACCEPTANCE STATUS` 及上述异常记录。
+
+Lane 不得写入或输出 `GATE STATUS`、`PRODUCT REGRESSION`、`UNRESOLVED UNKNOWN`、`CANDIDATE TREE MATCH`、`COMMIT ELIGIBILITY`、`GLOBAL PASS`、`RELEASE READY`；这些字段只能由 `coordinatorScope` 对应的 Coordinator 写入。所有状态值中的 PASS 必须带类型：`IMPLEMENTATION_PASS`、`OWN_SCOPE_PASS`、`REGRESSION_PASS`、`PRODUCT_ACCEPTANCE_PASS` 或 `INTEGRATION_PASS`。裸 `PASS`、`ALL PASS`、`GLOBAL PASS`、`COMMIT ELIGIBLE` 必须明确拒绝。
+
+R2 的 `active=true` 且 `coordinatorScope=null` 状态仍可 JOIN、status 和继续使用，不得被直接废掉。显式 `migrate-active -CoordinatorScope <scope>` 执行 R2 → R3 迁移，保留 Wave、HEAD、dirty fingerprint 与已有 Lane 状态，写入 `schemaVersion=XYE-HANDOFF/3` 和 `authorityModel=R3-LANE-COORDINATOR`；迁移前不得覆盖已有 Coordinator Scope。
+
 ## 2. Canonical Workspaces
 
 两台电脑允许使用不同绝对路径：

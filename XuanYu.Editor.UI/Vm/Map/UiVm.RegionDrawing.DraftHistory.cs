@@ -5,7 +5,7 @@ public sealed partial class UiVm
     public bool CanUndoRegionDrawingVertex => _regionDrawing.CanUndo;
     public bool CanRedoRegionDrawingVertex => _regionDrawing.CanRedo;
     public bool CanCompleteRegionDrawing => _regionDrawing.IsActive && _regionDrawing.Draft?.CanClose == true;
-    public bool CanCancelRegionDrawing => _regionDrawing.IsActive;
+    public bool CanCancelRegionDrawing => IsRegionDrawingTool || _regionDrawing.IsActive;
 
     public bool UndoRegionDrawingVertex()
     {

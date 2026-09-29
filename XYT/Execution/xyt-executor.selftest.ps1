@@ -14,11 +14,11 @@ try {
             [ordered]@{ testId='serial'; dependsOn=@('parallel-a'); command='Start-Sleep -Milliseconds 50; exit 0'; maxDurationSeconds=30; timeoutSeconds=10 }
             [ordered]@{ testId='stable-fail'; command='exit 7'; maxDurationSeconds=30; timeoutSeconds=10 }
             [ordered]@{ testId='flaky'; command="if (`$env:XYT_ATTEMPT -eq '1') { exit 9 } else { exit 0 }"; maxDurationSeconds=30; timeoutSeconds=10 }
-            [ordered]@{ testId='timeout'; command='Start-Sleep -Seconds 3; exit 0'; maxDurationSeconds=3; timeoutSeconds=2 }
+            [ordered]@{ testId='timeout'; command='Start-Sleep -Seconds 20; exit 0'; maxDurationSeconds=3; timeoutSeconds=2 }
             [ordered]@{ testId='blocked'; dependsOn=@('stable-fail'); command='exit 0'; maxDurationSeconds=30; timeoutSeconds=10 }
             [ordered]@{ testId='sweep-pass'; command='exit 0'; maxDurationSeconds=30; timeoutSeconds=10 }
             [ordered]@{ testId='sweep-fail'; command='exit 5'; maxDurationSeconds=30; timeoutSeconds=10 }
-            [ordered]@{ testId='cost-warning'; command='Start-Sleep -Milliseconds 250; exit 0'; maxDurationSeconds=0.05; timeoutSeconds=3 }
+            [ordered]@{ testId='cost-warning'; command='Start-Sleep -Milliseconds 250; exit 0'; maxDurationSeconds=0.05; timeoutSeconds=15 }
             [ordered]@{ testId='unclassified'; maxDurationSeconds=3; timeoutSeconds=3 }
         )
     }

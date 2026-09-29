@@ -17,4 +17,5 @@ public sealed record MapRegion(
 {
     public const uint DefaultFillColorRgb = 0x00338CE6;
     public uint FillColorRgb { get; init; } = DefaultFillColorRgb;
+    public SurfaceBinding SurfaceBinding { get; init; } = SurfaceBinding.ReferencePlane;
 }

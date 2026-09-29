@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Regression Witness record",
+  "type": "object",
+  "required": ["BugId", "BugSymptom", "PreFixBaseline", "WitnessTest", "PreFixResult", "PostFixBaseline", "PostFixResult", "RequiredEvidenceTier", "HarnessStatus", "RootCauseClassification", "RegressionScope"],
+  "properties": {
+    "BugId": { "type": "string", "minLength": 1 },
+    "BugSymptom": { "type": "string", "minLength": 1 },
+    "PreFixBaseline": { "type": "string", "minLength": 1 },
+    "WitnessTest": { "type": "string", "minLength": 1 },
+    "PreFixResult": { "enum": ["PASS", "FAIL", "NOT_EXECUTED", "INVALID"] },
+    "PostFixBaseline": { "type": "string", "minLength": 1 },
+    "PostFixResult": { "enum": ["PASS", "FAIL", "NOT_EXECUTED", "INVALID"] },
+    "RequiredEvidenceTier": { "enum": ["E1", "E2", "E3"] },
+    "HarnessStatus": { "enum": ["PASS", "FAIL", "NOT_RUN"] },
+    "RootCauseClassification": { "enum": ["PRODUCT", "TEST_HARNESS", "MIXED", "UNKNOWN"] },
+    "RegressionScope": { "type": "string", "minLength": 1 },
+    "Retroactive": { "type": "boolean" },
+    "RetroactiveReason": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "Retroactive": { "const": true } }, "required": ["Retroactive"] },
+      "then": {
+        "required": ["RetroactiveReason"],
+        "properties": { "PreFixResult": { "const": "NOT_EXECUTED" }, "RetroactiveReason": { "minLength": 1 } }
+      }
+    }
+  ]
+}

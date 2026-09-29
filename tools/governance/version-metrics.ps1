@@ -3,7 +3,9 @@ param([string]$LedgerPath)
 $ErrorActionPreference = 'Stop'
 if ([string]::IsNullOrWhiteSpace($LedgerPath)) { $LedgerPath = Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) 'docs\governance\version-events.tsv' }
 if (-not (Test-Path $LedgerPath)) { throw "Ledger not found: $LedgerPath" }
-$rows = @(Import-Csv -Delimiter "`t" -Path $LedgerPath | Where-Object { $_.Type -in @('FEATURE','FIX','STABILIZATION','GOVERNANCE') })
+$rows = @(Import-Csv -Delimiter "`t" -Path $LedgerPath | Where-Object {
+    $_.Type -in @('FEATURE','FIX','STABILIZATION','GOVERNANCE') -and (!$_.Status -or $_.Status -eq 'APPLIED')
+})
 $features = @($rows | Where-Object Type -eq FEATURE).Count
 $fixes = @($rows | Where-Object Type -eq FIX).Count
 $ratio = if ($features) { '{0:N2}' -f ($fixes / $features) } else { 'N/A' }

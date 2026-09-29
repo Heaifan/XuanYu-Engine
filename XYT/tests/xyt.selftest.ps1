@@ -31,5 +31,13 @@ $invalid = Invoke-Xyt @('unknown')
 if ($invalid.ExitCode -eq 0) { throw 'Unknown mode unexpectedly succeeded.' }
 Assert-Contains $invalid.Output 'Status: INVALID_MODE'
 
+$versionGate = Invoke-Xyt @('version-gate', '-ChangeType', 'FIX', '-EventId', 'missing', '-CurrentVersion', 'v0.3.0.0-r1', '-CandidateId', 'CAND', '-CandidateFingerprint', 'CAND@v0.3.0.0-r1', '-FormalAcceptance')
+if ($versionGate.ExitCode -eq 0) { throw 'Version gate unexpectedly passed missing event.' }
+Assert-Contains $versionGate.Output 'GATE STATUS: BLOCKED'
+
+$routerLines = @(Get-Content -LiteralPath $entry).Count
+if ($routerLines -gt 100) { throw "xyt.ps1 exceeds 5+100: $routerLines lines." }
+if (-not (Test-Path -LiteralPath (Join-Path $root 'XYT\xyt-router.ps1'))) { throw 'Thin router target is missing.' }
+
 Write-Output 'XYT SELFTEST PASS'
 exit 0

@@ -1,7 +1,7 @@
 {
   "schema": "XYT-P3-R1/2",
-  "statuses": ["PASS", "FAIL", "TIMEOUT", "FLAKY", "BLOCKED_BY", "UNCLASSIFIED"],
-  "required": ["Version", "Commit", "Branch", "DirtyState", "AppExePath", "AppBuildTimestamp", "GPU", "VulkanAdapter", "WindowHost", "VulkanDevice", "Swapchain", "PresentEvidence", "RuntimeTestId", "Capability", "StartTime", "DurationMs", "Result", "EvidencePath"],
+  "statuses": ["PASS", "FAIL", "TIMEOUT", "CRASH", "BLOCKED_NO_GUI", "HARNESS_FAILURE", "EVIDENCE_FAILURE"],
+  "required": ["Version", "Commit", "Branch", "DirtyState", "AppExePath", "AppBuildTimestamp", "GPU", "VulkanAdapter", "WindowHost", "VulkanDevice", "Swapchain", "PresentEvidence", "CandidateId", "RuntimeTestId", "Capability", "StartTime", "EndTime", "DurationMs", "Status", "Reason", "HarnessStatus", "EvidencePath", "StderrEvidencePath"],
   "p3Rule": "PASS requires real App, Window/Native Host, Vulkan Device, Swapchain and Present markers required by the capability",
   "productVerdict": "REAL RUNTIME AUTOMATED EVIDENCE PASS",
   "forbiddenVerdict": "PRODUCT PASS"

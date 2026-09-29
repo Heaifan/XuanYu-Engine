@@ -26,9 +26,10 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var vulkanProjection = ToVulkanProjection(state.Projection);
         var viewProjection = state.View * vulkanProjection;
         FillMatrixTranspose(target, viewProjection);
-        target[16] = (float)position.X;
-        target[17] = (float)position.Y;
-        target[18] = (float)position.Z;
+        var relativePosition = position - state.RenderOrigin;
+        target[16] = (float)relativePosition.X;
+        target[17] = (float)relativePosition.Y;
+        target[18] = (float)relativePosition.Z;
         target[19] = 1.0f;
         target[20] = gizmoModeOverride ?? (projection.ScaleGizmoVisible ? 2.0f
             : (projection.RotateGizmoVisible ? 1.0f : 0.0f));

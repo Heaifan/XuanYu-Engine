@@ -50,6 +50,21 @@ public sealed class ViewportInputRouterLifecycleTests
         Assert.Equal(ViewportGestureState.Idle, router.State);
     }
 
+    [Fact]
+    public void Mode_change_cancels_owner_and_releases_capture()
+    {
+        var capture = new CaptureSpy();
+        var camera = new Consumer(GestureOwner.Camera, ViewportInputDispatchResult.Captured);
+        var router = Create(capture, camera);
+
+        router.Dispatch(Event(EditorPointerEventKind.Pressed));
+        var result = router.Dispatch(Event(EditorPointerEventKind.ModeChanged));
+
+        Assert.Equal(ViewportInputDispatchKind.Cancelled, result.Kind);
+        Assert.Equal(ViewportGestureState.Idle, router.State);
+        Assert.Equal(new[] { "capture:Camera", "release:Camera" }, capture.Events);
+    }
+
     static ViewportInputRouter Create(params object[] items) => new(
         items.OfType<Consumer>(), items.OfType<CaptureSpy>().SingleOrDefault() ?? new CaptureSpy());
 

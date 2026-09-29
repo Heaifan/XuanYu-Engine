@@ -13,6 +13,7 @@ public sealed partial class UiVm
 
     public bool PublishMapGeometryContext(EditorPointerEvent pointer)
     {
+        if (IsDrawingTransactionActive) return false;
         if (pointer.Kind != EditorPointerEventKind.Pressed ||
             !pointer.Buttons.HasFlag(EditorPointerButtons.Right) ||
             !TryGetMapGeometryContext(pointer.Position.X, pointer.Position.Y, CurrentViewport, out var hit)) return false;
@@ -23,7 +24,8 @@ public sealed partial class UiVm
         out MapGeometryContextHit hit)
     {
         hit = MapGeometryContextHit.Empty;
-        if (!IsRegionEditMode || !IsSelectTool || IsRegionDrawingDraftActive || IsRoadDrawingDraftActive) return false;
+        if (!IsRegionEditMode || !IsSelectTool || IsDrawingTransactionActive ||
+            IsRegionDrawingDraftActive || IsRoadDrawingDraftActive) return false;
         if (!IsInsideViewport(x, y, viewport)) return false;
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
         if (!MapGeometryContextHitTester.TryHit(MapSession.CurrentMap, projection, x, y,

@@ -67,6 +67,23 @@ public sealed class ViewProjectionStateTests
         Assert.Throws<InvalidOperationException>(() => state.ProjectWorldPoint(new Vector3d(0, 0, -6)));
     }
 
+    [Fact]
+    public void Large_world_projection_exposes_camera_relative_render_origin()
+    {
+        var camera = new CameraState(new(50000, -50000, 30000), Vector3d.UnitY,
+            Vector3d.UnitZ, 60, 1, 500000, 0);
+        var state = ViewProjectionState.Create(camera, TestViewport(800, 600));
+
+        Assert.Equal(camera.Position, state.RenderOrigin);
+        Assert.True(MathF.Abs(state.View.M41) < 0.0001f);
+        Assert.True(MathF.Abs(state.View.M42) < 0.0001f);
+        Assert.True(MathF.Abs(state.View.M43) < 0.0001f);
+        var point = camera.Position + camera.Forward * 1000;
+        var clip = Vector4.Transform(new Vector4((float)(point.X - state.RenderOrigin.X),
+            (float)(point.Y - state.RenderOrigin.Y), (float)(point.Z - state.RenderOrigin.Z), 1), state.ViewProjection);
+        Assert.True(point.DistanceTo(state.TransformPointToWorld(clip.X / clip.W, clip.Y / clip.W, clip.Z / clip.W)) < 0.01);
+    }
+
     static CameraState TestCamera()
     {
         return new CameraState(new Vector3d(0, 0, -5), Vector3d.UnitZ, Vector3d.UnitY, 60, 0.1, 100, 0);

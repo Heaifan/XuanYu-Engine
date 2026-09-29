@@ -6,8 +6,10 @@ using XuanYu.World.Map;
 
 namespace XuanYu.Editor.UI;
 
+delegate bool GroundElevationQuery(MapPoint point, out double elevation);
+
 sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.0,
-    MapLabelBitmapCache? labelCache = null)
+    MapLabelBitmapCache? labelCache = null, GroundElevationQuery? surface = null)
 {
     static readonly RenderStaticModelColor RegionStroke = new(.12, .38, .70, .92);
     readonly List<RenderVectorOverlayVertex> _vertices = [];
@@ -19,6 +21,7 @@ sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.
     public void AddRegion(MapRegion region, bool selected, IReadOnlyList<MapPoint>? preview)
     {
         var points = preview ?? region.Vertices;
+        if (!HasSurface(points)) return;
         AddFill(points, MapRegionRenderStyle.FillColor(region));
         AddLabel(region, points);
         AddStroke(points, true, selected ? new(.98, .75, .12, .98) : RegionStroke, selected ? 2.4 : 1.5, 0);
@@ -34,6 +37,7 @@ sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.
     {
         var points = draft.Vertices.ToList();
         if (cursor is { } point) points.Add(point);
+        if (!HasSurface(points)) return;
         AddStroke(points, false, new(.95, .72, .12, .95), 2.0, 0);
         for (var i = 0; i < draft.Vertices.Length; i++)
             AddMarker(draft.Vertices[i], i == 0 ? 6.5 : 5.5);
@@ -89,12 +93,8 @@ sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.
     }
 
     RenderVectorOverlayVertex Vertex(MapPoint p) =>
-        new(MapCoordinateContract.MapToWorld(p, height), Vector3d.Zero, 0, 0);
+        new(MapCoordinateContract.MapToWorld(p, SurfaceHeight(p)), Vector3d.Zero, 0, 0);
     RenderVectorOverlayVertex LineVertex(MapPoint p, MapPoint other, double side, double along) =>
-        new(MapCoordinateContract.MapToWorld(p, height),
-            MapCoordinateContract.MapToWorld(other, height), side, along);
-
-    void AddPrimitive(int first, RenderStaticModelColor color, RenderVectorOverlayPrimitiveKind kind,
-        double width, double radius) => _primitives.Add(new(
-        first, _indices.Count - first, 0, kind, color, width, radius));
+        new(MapCoordinateContract.MapToWorld(p, SurfaceHeight(p)),
+            MapCoordinateContract.MapToWorld(other, SurfaceHeight(other)), side, along);
 }

@@ -10,7 +10,8 @@ public sealed class MapContextMenuInputConsumer : IViewportInputConsumer
     public GestureOwner Owner => GestureOwner.ContextMenu;
     public int BeginPriority => 1000;
     public bool CanBegin(EditorPointerEvent pointer, ViewportGestureState state) =>
-        pointer.Kind == EditorPointerEventKind.Pressed && pointer.Buttons.HasFlag(EditorPointerButtons.Right);
+        !_vm.IsDrawingTransactionActive && pointer.Kind == EditorPointerEventKind.Pressed &&
+        pointer.Buttons.HasFlag(EditorPointerButtons.Right);
     public ViewportInputDispatchResult Handle(EditorPointerEvent pointer, ViewportGestureState state) =>
         _vm.PublishMapGeometryContext(pointer) ? ViewportInputDispatchResult.Observed : ViewportInputDispatchResult.Ignored;
     public void Begin(ViewportGestureContext context) { }

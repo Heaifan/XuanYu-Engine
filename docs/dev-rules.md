@@ -18,9 +18,14 @@ Gate: GATE-L / GATE-M / GATE-H
 Stop Condition
 Prohibited
 Knowledge Preflight
+Candidate Tree
+Deferred Capability Preflight
+Capability Tags
 ```
 
 任务必须先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再执行 `tools\handoff\handoff.cmd join --scope <lane>`。Lane、Ownership、Audit、Convergence 和跨 Lane 升级的唯一事实源是 `docs/governance/development-lanes.md`。
+
+Feature 写入前必须完成 Candidate Tree、Planning/Execution Knowledge Preflight、Deferred Capability Preflight 和 Capability Tags。若命中的 Deferred Capability 为 `BLOCKING`，则 `CODING = BLOCKED`；不得用局部测试 PASS 绕过。
 
 共享 Workspace 只保留一个当前分支和一个 HEAD；普通 Agent 禁止创建 / 切换 Branch 和额外 Worktree。`ForeignDirty != OwnershipConflict`：JOIN 可在其他 Lane dirty 时通过，只有写入范围与 Ownership 冲突才阻断。
 
@@ -101,6 +106,8 @@ HIGH、阶段可信基线、正式验收 / Release 前至少执行：
 - 任务需要的运行、真机或保存闭环。
 
 全量门禁没有取消，只在真正需要建立可信基线的节点执行。
+
+三个治理子 Gate（Deferred Capability、Test Evidence T0-T4、Regression Witness/Harness Integrity）只能作为现有 GATE-L/M/H 的子 Gate；不得建立第二套主 Gate、主 Constitution 或主 Report System。
 
 共享编译进入 `Compile-RED` 时，优先恢复 XYE Fast Lane 为 Green；XYUI 必须修复自身造成的共享编译红灯。XYUI 普通失败不阻断 XYE，真实 XYE Consumer 破坏才升级为 `P0.5 INTEGRATION`。
 
@@ -211,6 +218,8 @@ docs/governance/agent-experience-rules.md
 
 Codex / Gemini / 其他执行 Agent 对上述 ERR / EXP 正式库只读。
 
+治理任务还必须记录 Deferred Capability Preflight：声明命中的 capability tags、有效状态、阻塞能力和 `CODING` 判定。该检查读取 `docs/governance/deferred-capabilities.json`，不改变既有主 Gate 的权威性。
+
 ---
 
 ## 8. 任务结束知识回写
@@ -239,6 +248,31 @@ CHATGPT KNOWLEDGE AUDIT REQUIRED
 ```
 
 Plan / Audit / 临时日志不自动成为长期知识。
+
+### Feature Task Preflight
+
+固定顺序：`Candidate Tree → Knowledge Preflight → Deferred Capability Preflight → Capability Tags`。缺少任一项时任务不得进入写入阶段；命中 `BLOCKING` 时输出 `CODING = BLOCKED`。
+
+### Fix Closure Template
+
+每个 Bug/Fix Closure 必须固定输出：
+
+```text
+BUG SYMPTOM
+PRODUCT ROOT CAUSE
+TEST HARNESS ROOT CAUSE
+ROOT CAUSE CLASSIFICATION: PRODUCT | TEST_HARNESS | MIXED | UNKNOWN
+REGRESSION WITNESS
+PRE-FIX RESULT
+POST-FIX RESULT
+REQUIRED EVIDENCE TIER
+ACHIEVED EVIDENCE TIER
+RUNTIME ACCEPTANCE
+PRODUCT ACCEPTANCE
+EVIDENCE GAP
+```
+
+`UNKNOWN` 不得填成 PASS；Retroactive 只能记录 `PRE-FIX RESULT = NOT_EXECUTED`，不得伪造历史 RED。`Tests x/x PASS` 不是完整 Fix Closure。
 
 ---
 
@@ -419,6 +453,8 @@ Git 提交以原子、可验证成果为单位，不为每个微编辑单独 Com
 未经用户批准禁止 Force Push、Rebase、改写历史、删除远端分支、创建 / 合并 PR、Tag、Release。
 
 正式验收成果不得长期只留在本地。
+
+Convergence 前必须输出 `PRODUCT REGRESSION`、`UNRESOLVED UNKNOWN`、`GATE STATUS`、`CANDIDATE TREE MATCH`、`COMMIT ELIGIBILITY`，并证明 `ForeignDirty = 0`、`UnknownDirty = 0`、`Staged = 0`。Commit Eligibility 仅在这些条件全部满足后成立。
 
 XYUI 默认只写 `xyui/**`，经 Audit PASS 和 Freeze 后由 Coordinator 批量入库；XYUI Agent 不得自行 `git add` / `commit` / `push`。XYE 与 Integration 的 Ownership 必须在任务声明中列出文件表。Convergence 期间 Coordinator 独占 Workspace，其他 Lane Freeze。
 

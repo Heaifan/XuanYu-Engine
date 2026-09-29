@@ -66,6 +66,10 @@ git diff --check：PASS
 
 未执行的验证不得写成 PASS。若存在既有失败或环境阻断，必须明确区分 `PRE-EXISTING`、`BLOCKED` 与本轮新增失败。
 
+治理 Convergence 还必须报告：`PRODUCT REGRESSION`、`UNRESOLVED UNKNOWN`、`GATE STATUS`、`CANDIDATE TREE MATCH`、`COMMIT ELIGIBILITY`、`DEFERRED CAPABILITY GATE`、`TEST EVIDENCE GATE`、`REGRESSION WITNESS GATE` 与 `HARNESS INTEGRITY`。
+
+XYT Version Event Gate additionally reports `VERSION LEDGER`, `VERSION EVENT`, `FIX COUNTER`, `FEATURE COUNTER`, `MISSING EVENT GATE`, `MISSING BUMP GATE`, `DUPLICATE GATE`, `CANDIDATE VERSION BINDING`, `POWERSHELL 5.1`, `PWSH`, `REGRESSION`, and `PUSH`. A formal FIX/FEATURE closeout is ineligible unless the event is accepted, applied exactly once, and bound to the candidate version fingerprint.
+
 **5+100 为硬红线，不存在临时豁免、事后再拆或风险接受。**
 
 ## 7. 治理 / 经验回写

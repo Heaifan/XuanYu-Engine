@@ -24,6 +24,10 @@ public sealed class ViewportInputComposition
     public ViewportInputDispatchResult Dispatch(EditorPointerEvent pointer) => Router.Dispatch(pointer);
     public ViewportInputDispatchResult Dispatch(EditorKeyEvent key) => Router.Dispatch(key);
 
+    public ViewportInputDispatchResult CancelForModeChange() => Router.Dispatch(new EditorPointerEvent(
+        EditorPointerEventKind.ModeChanged, new(0, 0), EditorPointerButtons.None,
+        EditorPointerModifiers.None, 0, Router.State.PointerId, new("mode"), 1));
+
     sealed class RouterSink(ViewportInputRouter router) : IViewportInputSink
     {
         readonly ViewportInputRouter _router = router;

@@ -6,7 +6,7 @@ using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.Mode;
 
-public sealed class EditorModeUiTests
+public sealed partial class EditorModeUiTests
 {
     [Fact]
     public void Default_ui_starts_manage_with_map_target()

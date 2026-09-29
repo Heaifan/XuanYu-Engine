@@ -22,6 +22,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | Global Migration / Refactor | Reverse-Z、Projection、Renderer、Depth Policy、Input Architecture、Persistence Migration、Workspace Architecture | 相关领域 K/L；EXP-GOVERNANCE-002；EXP-ARCH-001 |
 | XYT / 测试治理 | xyt、测试选择、P0~P4、T0~T3、Runner、Executor、Incident、Lock、Report、IPO、Witness、Evidence、P3、Closure | K-VAL-002、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001、L-XYT-001；并读取 test-registry-policy / xyt-* contracts |
 | Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
+| Governance Convergence / Evidence | Candidate Tree、Deferred Capability、T0-T4、Regression Witness、Handoff ownership | K-GOV-001～K-GOV-003、K-VAL-001～K-VAL-002、EXP-GOVERNANCE-001；本轮候选结论必须先 SEARCH EXISTING，再由 ChatGPT 审计决定 UPDATE / STRENGTHEN / CREATE / RETIRE / NO DEPOSIT |
 | Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-004、K-DIAG-001、K-GOV-003、L-VAL-001、L-NATIVE-001、L-TEST-001；EXP-ARCH-001、EXP-TEST-001、EXP-UI-002、EXP-GOVERNANCE-001 |
 
 任务若横跨多个域，只加载与当前 Scope 直接相关条目，不机械全文读取。

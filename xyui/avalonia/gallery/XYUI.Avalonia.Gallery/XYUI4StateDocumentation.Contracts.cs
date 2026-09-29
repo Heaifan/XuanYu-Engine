@@ -13,6 +13,8 @@ static partial class XYUI4StateDocumentation
         "XYUI-4-4.08" => [P("Points", "IReadOnlyList<Point>", "低平滑度路径"), P("Stroke / Fill", "IBrush?", "由 Foundation Token 提供")],
         "XYUI-4-4.09" => [P("Points", "IReadOnlyList<Point>", "对象边界路径"), P("SeparationBrush", "IBrush?", "GAP-001 未定义时保持空")],
         "XYUI-4-4.10" => [P("BoundsRect", "Rect", "由 Transform 上下文提供"), P("HandleSize", "6–8 DIP", "视觉尺寸"), P("ShowRotationHandle / ShowPivot", "bool", "模式开关")],
+        "XYUI-4-4.12" => [P("TargetRect", "Rect", "当前目标几何"), P("State", "XyuiDropState", "None / Valid / Invalid / Conditional"), P("IsActive", "bool", "临时反馈生命周期"), P("ActionHint", "string?", "短动作提示")],
+        "XYUI-4-4.13" => [P("TargetRect", "Rect", "当前目标几何"), P("Mode", "XyuiInsertionMode", "Before / Into / After"), P("IndentLevel", "int", "树层级"), P("ShowGapPreview / GapRect", "bool / Rect", "可选结构占位")],
         _ => []
     };
 
@@ -27,6 +29,8 @@ static partial class XYUI4StateDocumentation
         "XYUI-4-4.08" => [T("Stroke", "XY.Editor.Selection"), T("Candidate", "XY.Editor.MultiSelection"), T("Fill opacity", "XYUI4-GAP-003")],
         "XYUI-4-4.09" => [T("Accent", "XY.Editor.Selection"), T("Separation", "XYUI4-GAP-001"), T("Glow", "XY.Shadow.None")],
         "XYUI-4-4.10" => [T("Border", "XY.Editor.BoundingBox"), T("Handle", "XY.Editor.Handle"), T("Pivot Border", "XY.Editor.Selection"), T("LayoutShift", "XY.State.ResizeOnChange")],
+        "XYUI-4-4.12" => [T("Target", "XY.State.Color.DropTarget.Border"), T("Valid / Invalid", "XY.Semantic.Success / XY.Semantic.Error"), T("Conditional", "XYUI4-GAP-004"), T("LayoutShift / Shadow", "Forbidden / XY.Shadow.None")],
+        "XYUI-4-4.13" => [T("Anchor / Line", "XY.Editor.Selection"), T("Gap", "XY.Editor.MultiSelection"), T("Indent", "XY.Indent.PerLevel"), T("LayoutShift", "仅 Gap Preview 允许")],
         _ => []
     };
 
@@ -41,6 +45,8 @@ static partial class XYUI4StateDocumentation
         "XYUI-4-4.08" => [new("路径稳定", "低平滑度闭合路径，不引入高频重采样。"), new("候选与结果分离", "套索只呈现候选，不直接修改业务选择。")],
         "XYUI-4-4.09" => [new("结果反馈", "轮廓只呈现已提交选择，不负责命中或变换。"), new("边界分离", "不得用 Glow 或布局变化替代分离轮廓。")],
         "XYUI-4-4.10" => [new("工具上下文", "普通 Selected 不常驻 BoundingBox，只有 Transform 模式显示。"), new("几何分离", "BoundingBox 不改变对象真实 Geometry。"), new("手柄命中", "视觉手柄与实际 SemanticExpanded 命中区域分离。")],
+        "XYUI-4-4.12" => [new("职责边界", "DropIndicator 只呈现目标反馈，不执行 Drop Commit 或插入顺序。"), new("状态辨识", "Valid、Invalid、Conditional 不能只依赖颜色。"), new("布局稳定", "反馈不得改变目标布局；离开、取消或提交后必须清除。")],
+        "XYUI-4-4.13" => [new("位置明确", "必须明确 Before、Into 或 After，不得让用户猜测最终位置。"), new("层级一致", "Anchor 使用 IndentLevel 表达最终 Parent 层级。"), new("职责边界", "InsertionIndicator 只呈现位置，不执行重排或提交。")],
         _ => null
     };
 

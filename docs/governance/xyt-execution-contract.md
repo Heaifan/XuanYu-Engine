@@ -23,9 +23,13 @@ and `timeoutSeconds` (default 300). `maxDurationSeconds` is a cost budget;
 - A failed attempt is retried once. FAIL then PASS is `FLAKY`; it is never
   promoted to PASS. Two failures remain stable `FAIL`.
 - `TIMEOUT` is independent of FAIL and is never classified as a product bug.
-- A dependency failure, timeout, flaky, unclassified result, or cycle yields
+- A dependency failure, timeout, flaky, or unclassified result yields
   `BLOCKED_BY` for its dependent when the dependency is known.
 - Malformed or unresolved execution input yields `UNCLASSIFIED`.
+- A dependency cycle is detected before scheduling and crosses the command
+  boundary as a typed `CIRCULAR_HANDOFF_DEPENDENCY` error. The result carries
+  `errorCode` and the exact `cyclePath` (for example `A -> B -> A`), and the
+  command exits non-zero. Missing dependencies remain `UNCLASSIFIED`.
 - Failure results expose `rootCause=UNKNOWN`; XYT-D never infers `PRODUCT`.
 - Exceeding the identity's max duration adds `COST WARNING` and does not
   change status or fail a run by itself.
@@ -42,4 +46,6 @@ applicable), `costWarning`, and warnings. Supported statuses are `PASS`,
 
 Run `XYT\Execution\xyt-executor.selftest.ps1`. It covers parallel overlap,
 dependency serialization, stable FAIL, FLAKY, TIMEOUT, BLOCKED_BY, failure
-sweep continuation, cost warning, and UNKNOWN/UNCLASSIFIED handling.
+sweep continuation, cost warning, and UNKNOWN/UNCLASSIFIED handling. Run
+`XYT\Execution\xyt-executor-deadlock.selftest.ps1` for the real command-boundary
+2-node, 3-node, non-cycle, non-circular-error, and typed-wrapper contracts.

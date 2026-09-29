@@ -1,6 +1,6 @@
 # 玄域引擎工程知识库
 
-> 最后治理更新：2026-09-29  
+> 最后治理更新：2026-09-16  
 > 目的：把经过工程证据验证的知识变成未来任务的主动输入，而不是被动归档。
 
 ---
@@ -180,26 +180,6 @@ SEARCH EXISTING → MATCH → UPDATE / STRENGTHEN
 正式判定包括 `CREATE / UPDATE / STRENGTHEN / RETIRE / NO DEPOSIT`。Knowledge 表示长期稳定的架构事实、接口契约、系统规律或验证后的技术约束；Experience 表示踩坑、错误路径、诊断/修复方法、返工原因或过程治理经验。未经 ChatGPT 审计的施工结论不得进入正式 Knowledge / Experience 库。
 
 `CHATGPT KNOWLEDGE AUDIT REQUIRED`
-
-### 5.2 审计通过后的默认写回
-
-ChatGPT 完成审计后：
-
-```text
-NO DEPOSIT
-→ 不写入
-
-CREATE / UPDATE / STRENGTHEN
-→ 立即写回权威 XYK
-→ 同步 knowledge-index
-→ 完成必要校验
-→ Commit / Push
-
-CONFLICT / UNCERTAIN
-→ 通报用户裁决
-```
-
-首次入库不等待月度巡检。月度巡检负责去重、合并、降级、SUPERSEDE / RETIRE 和自动化升级；不得用“等月度再说”作为丢失已验证经验的理由。历史记录不做无痕删除。
 
 ## 6. 正式 Knowledge 最低要求
 

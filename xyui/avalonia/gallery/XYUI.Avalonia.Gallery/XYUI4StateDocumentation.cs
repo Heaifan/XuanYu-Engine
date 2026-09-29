@@ -13,6 +13,8 @@ static partial class XYUI4StateDocumentation
         "XYUI-4-4.08" => "LassoSelection 表达自由路径候选区域，不直接提交业务选择。",
         "XYUI-4-4.09" => "SelectionOutline 表达已提交选择结果与对象边界的分离轮廓。",
         "XYUI-4-4.10" => "BoundingBox 表达当前 Transform 工具上下文中的对象边界与操作手柄。",
+        "XYUI-4-4.12" => "DropIndicator 表达当前 Drag Payload 对目标的 Valid、Invalid 或 Conditional 放置语义。",
+        "XYUI-4-4.13" => "InsertionIndicator 表达 Drag Item 最终插入的精确位置、层级与 Before / Into / After 关系。",
         _ => null
     };
 
@@ -27,6 +29,8 @@ static partial class XYUI4StateDocumentation
         "XYUI-4-4.08" => "用于需要自由轮廓命中候选对象的画布和地图交互。",
         "XYUI-4-4.09" => "用于已选对象的稳定边界反馈，不改变对象原始 Fill。",
         "XYUI-4-4.10" => "用于 Resize、Rotate、Pivot 和 Group Transform 操作上下文。",
+        "XYUI-4-4.12" => "用于 Container、Slot、Tree Parent、Canvas Region 和 Inspector Target 的放置反馈。",
+        "XYUI-4-4.13" => "用于 List、Tree、Layer、Card、Asset 和 Timeline 的稳定重排位置反馈。",
         _ => null
     };
 
@@ -41,6 +45,8 @@ static partial class XYUI4StateDocumentation
         "XYUI-4-4.08" => ["<c:XYLassoSelection Points=\"{Binding LassoPoints}\" />"],
         "XYUI-4-4.09" => ["<c:XYSelectionOutline Points=\"{Binding SelectionPoints}\" />"],
         "XYUI-4-4.10" => ["<c:XYBoundingBox BoundsRect=\"{Binding TransformBounds}\" />"],
+        "XYUI-4-4.12" => ["<c:XYDropIndicator IsActive=\"True\" State=\"Valid\" />"],
+        "XYUI-4-4.13" => ["<c:XYInsertionIndicator IsActive=\"True\" Mode=\"Before\" />"],
         _ => []
     };
 
@@ -55,6 +61,8 @@ static partial class XYUI4StateDocumentation
         "XYUI-4-4.08" => [new("Candidate Path", "候选路径", "低平滑度"), new("Closed Result", "闭合结果", "交给 Selection Set")],
         "XYUI-4-4.09" => [new("Separation", "分离轮廓", "对象边界与选择反馈"), new("Accent", "选择强调线", "XY.Editor.Selection")],
         "XYUI-4-4.10" => [new("Resize", "八个缩放手柄", "Resize Mode"), new("Rotate", "旋转手柄", "Rotate Mode"), new("Pivot", "原点手柄", "Pivot Edit")],
+        "XYUI-4-4.12" => [new("Target Border", "目标边框", "Container / Slot"), new("Semantic Mark", "状态符号", "Valid / Invalid / Conditional")],
+        "XYUI-4-4.13" => [new("Anchored Insert Line", "锚定插入线", "List / Tree"), new("Gap Preview", "结构占位预览", "Card / Asset")],
         _ => []
     };
 
@@ -69,6 +77,8 @@ static partial class XYUI4StateDocumentation
         "XYUI-4-4.08" => [new("Drawing", "指针拖动形成路径"), new("Committed", "释放后交给选择集合")],
         "XYUI-4-4.09" => [new("Selected", "选择结果已提交"), new("Stable", "指针离开后保持")],
         "XYUI-4-4.10" => [new("Resize", "显示八个边角手柄"), new("Rotate", "显示旋转手柄"), new("Pivot", "显示 Pivot 手柄")],
+        "XYUI-4-4.12" => [new("None", "没有有效目标"), new("Valid", "Pointer Up 可以提交"), new("Invalid", "Pointer Up 不提交"), new("Conditional", "需要转换或额外动作")],
+        "XYUI-4-4.13" => [new("Before", "插入目标之前"), new("Into", "插入目标内部"), new("After", "插入目标之后")],
         _ => []
     };
 

@@ -1,17 +1,22 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('prepare', 'join', 'status', 'close', 'advance', 'commit-lock', 'commit-unlock', 'maintenance', 'repair')][string]$Mode = 'join',
+    [ValidateSet('prepare', 'join', 'status', 'close', 'advance', 'commit-lock', 'commit-unlock', 'maintenance', 'repair', 'migrate-active', 'lane-state')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
     [ValidateSet('development', 'convergence', 'WIP_RESUME')][string]$WaveMode = 'development',
     [AllowNull()][string]$CoordinatorScope = $null,
     [string]$Owner = $null,
     [string]$SourceBranch = $null,
     [string]$TargetBranch = $null,
+    [string]$Field = $null,
+    [string]$Value = $null,
+    [string]$Transition = $null,
+    [string]$ExceptionStatus = $null,
     [string]$RepositoryRoot = $null,
     [switch]$AllowTestWorkspace
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'process-runner.ps1')
 $RepoRoot = $null
 $Config = $null
 $StatePath = $null
@@ -28,16 +33,12 @@ function Stop-Handoff([string]$Code, [string]$Reason) {
 }
 
 function Invoke-Git([string[]]$GitArgs) {
-    $old = $ErrorActionPreference
-    try {
-        $ErrorActionPreference = 'Continue'
-        $output = @(& git @GitArgs 2>&1)
-        $exitCode = $LASTEXITCODE
-    } finally { $ErrorActionPreference = $old }
-    if ($exitCode -ne 0) {
-        throw "git $($GitArgs -join ' ') failed with exit code ${exitCode}:`n$($output -join [Environment]::NewLine)"
+    $directory = if ($RepoRoot) { $RepoRoot } else { (Get-Location).Path }
+    $result = Invoke-HandoffProcess -FilePath 'git.exe' -WorkingDirectory $directory -Arguments $GitArgs
+    if ($result.ExitCode -ne 0) {
+        throw "git $($GitArgs -join ' ') failed with exit code $($result.ExitCode):`n$($result.Stdout)`n$($result.Stderr)"
     }
-    return @($output | ForEach-Object { "$($_)" })
+    return @($result.Stdout -split "`r?`n" | Where-Object { $_ -ne '' })
 }
 
 function Read-Config([string]$Path) {
@@ -346,9 +347,9 @@ function Resolve-Dotnet {
         if (Test-Path -LiteralPath $preferred -PathType Leaf) { $env:XUANYU_DOTNET = $preferred }
     }
     $resolver = Join-Path $RepoRoot $Config.ResolverScript
-    $lines = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $resolver)
-    if ($LASTEXITCODE -ne 0 -or $lines.Count -eq 0) { Stop-Handoff 'SDK_NOT_FOUND' '正式 Resolver Chain 未能解析 .NET SDK。' }
-    $dotnet = ($lines | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Last 1).Trim()
+    $result = Invoke-HandoffProcess -FilePath 'powershell.exe' -Arguments @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $resolver)
+    if ($result.ExitCode -ne 0 -or [string]::IsNullOrWhiteSpace($result.Stdout)) { Stop-Handoff 'SDK_NOT_FOUND' "正式 Resolver Chain 未能解析 .NET SDK。 $($result.Stderr)" }
+    $dotnet = ($result.Stdout -split "`r?`n" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Last 1).Trim()
     $sdk = (& $dotnet --version 2>&1 | Out-String).Trim()
     if ($LASTEXITCODE -ne 0) { Stop-Handoff 'SDK_BROKEN' "解析到的 SDK 无法执行：$dotnet" }
     [pscustomobject]@{ Path = $dotnet; Version = $sdk }
@@ -385,8 +386,6 @@ function Show-Header([string]$Name, [string]$Result, $Facts, $State, $Toolchain,
         Write-Host "UnknownDirty: $($State.unknownDirtyCount)"
         Write-Host "Staged     : $($State.stagedCount)"
         Write-Host "BaselineFingerprint: $($State.dirtyBaseline.Count) files"
-        Write-Host "CandidateTreeMatch: $(if ($State.candidateTreeMatch) { 'YES' } else { 'NO' })"
-        Write-Host 'CommitEligibility: NO'
     }
     Write-Host 'GitMutation: NONE'
     if ($null -ne $Toolchain) { Write-Host "DOTNET     : $($Toolchain.Path)"; Write-Host "SDK        : $($Toolchain.Version)" }
@@ -413,9 +412,31 @@ $remoteFacts = Get-RemoteFacts $facts
 
 function Invoke-Bootstrap {
     $bootstrap = Join-Path $RepoRoot $Config.BootstrapScript
-    $output = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $bootstrap)
-    if ($LASTEXITCODE -ne 0) { Stop-Handoff 'BOOTSTRAP_FAILED' ($output -join ' | ') }
+    $result = Invoke-HandoffProcess -FilePath 'powershell.exe' -Arguments @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $bootstrap)
+    if ($result.ExitCode -ne 0) { Stop-Handoff 'BOOTSTRAP_FAILED' "$($result.Stdout) $($result.Stderr)" }
     return 'READY'
+}
+
+if ($Mode -eq 'migrate-active') {
+    if ([string]::IsNullOrWhiteSpace($CoordinatorScope)) { Stop-Handoff 'COORDINATOR_SCOPE_REQUIRED' 'migrate-active requires -CoordinatorScope.' }
+    $migration = Join-Path $RepoRoot 'tools\handoff\migrate-active.ps1'
+    $result = Invoke-HandoffProcess -FilePath 'powershell.exe' -Arguments @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $migration, '-CoordinatorScope', $CoordinatorScope, '-RepositoryRoot', $RepoRoot)
+    if ($result.Stdout) { Write-Output $result.Stdout.TrimEnd() }
+    if ($result.Stderr) { [Console]::Error.WriteLine($result.Stderr.TrimEnd()) }
+    exit $result.ExitCode
+}
+
+if ($Mode -eq 'lane-state') {
+    $authority = Join-Path $PSScriptRoot 'authority-state.ps1'
+    $authorityArgs = @('-StatePath', $StatePath, '-Scope', $Scope, '-CoordinatorScope', [string]$state.coordinatorScope)
+    if ($Field) { $authorityArgs += @('-Field', $Field) }
+    if ($Value) { $authorityArgs += @('-Value', $Value) }
+    if ($Transition) { $authorityArgs += @('-Transition', $Transition) }
+    if ($ExceptionStatus) { $authorityArgs += @('-ExceptionStatus', $ExceptionStatus) }
+    $result = Invoke-HandoffProcess -FilePath 'powershell.exe' -Arguments (@('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $authority) + $authorityArgs)
+    if ($result.Stdout) { Write-Output $result.Stdout.TrimEnd() }
+    if ($result.Stderr) { [Console]::Error.WriteLine($result.Stderr.TrimEnd()) }
+    exit $result.ExitCode
 }
 
 if ($Mode -eq 'status') {

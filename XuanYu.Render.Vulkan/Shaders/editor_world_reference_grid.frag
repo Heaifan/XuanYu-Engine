@@ -31,11 +31,12 @@ float gridLine(vec2 normalizedCoordinate, float density) {
 }
 
 void main() {
+    vec3 renderOrigin = pc.cameraPosition.xyz;
     vec3 nearWorld = vNearWorld.xyz / vNearWorld.w;
     vec3 farWorld = vFarWorld.xyz / vFarWorld.w;
     vec3 rayDirection = farWorld - nearWorld;
     if (abs(rayDirection.z) < 0.000001) discard;
-    float t = -nearWorld.z / rayDirection.z;
+    float t = (-renderOrigin.z - nearWorld.z) / rayDirection.z;
     if (t <= 0.0 || t > pc.viewportAndFar.z) discard;
     vec3 worldPosition = nearWorld + rayDirection * t;
 
@@ -46,13 +47,13 @@ void main() {
     float coarseSpacing = max(pc.gridState.y, fineSpacing);
     float fineWeight = clamp(pc.gridState.z, 0.0, 1.0);
     float coarseWeight = clamp(pc.gridState.w, 0.0, 1.0);
-    float fineDensity = min(densityFade(worldPosition.x, fineSpacing),
-        densityFade(worldPosition.y, fineSpacing));
-    float coarseDensity = min(densityFade(worldPosition.x, coarseSpacing),
-        densityFade(worldPosition.y, coarseSpacing));
-    float fineLine = gridLine(vec2(worldPosition.x / fineSpacing,
-        worldPosition.y / fineSpacing), fineDensity);
-    float coarseLine = gridLine(worldPosition.xy / coarseSpacing, coarseDensity);
+    vec2 absoluteWorldXY = worldPosition.xy + renderOrigin.xy;
+    float fineDensity = min(densityFade(absoluteWorldXY.x, fineSpacing),
+        densityFade(absoluteWorldXY.y, fineSpacing));
+    float coarseDensity = min(densityFade(absoluteWorldXY.x, coarseSpacing),
+        densityFade(absoluteWorldXY.y, coarseSpacing));
+    float fineLine = gridLine(absoluteWorldXY / fineSpacing, fineDensity);
+    float coarseLine = gridLine(absoluteWorldXY / coarseSpacing, coarseDensity);
     float fineContribution = fineLine * 0.16 * fineWeight;
     float coarseContribution = coarseLine * 0.24 * coarseWeight;
     float gridAlpha = max(fineContribution, coarseContribution);

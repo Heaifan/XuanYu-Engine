@@ -40,11 +40,13 @@ public sealed partial class UiVm
             _regionDrawing.Cancel();
             ClearRegionDrawingSnap();
             RaiseRegionDrawingBindings();
+            EndDrawingTransaction();
             if (hadDraft) LogRegionDrawingCanceled();
         }
         if (IsRoadDrawingTool && requestedTool != EditorToolId.RoadDrawing)
         {
             var hadDraft = _roadDrawing.IsActive; _roadDrawing.Cancel(); RaiseRoadDrawingBindings();
+            EndDrawingTransaction();
             if (hadDraft) LogRoadDrawingCanceled();
         }
         if (name is "框选")
@@ -66,6 +68,8 @@ public sealed partial class UiVm
         }
 
         RaiseToolChanged();
+        if (requestedTool == EditorToolId.RegionDrawing) BeginDrawingTransaction("区域面");
+        if (requestedTool == EditorToolId.RoadDrawing) BeginDrawingTransaction("道路");
         PublishSceneRenderSnapshot();
         FooterMessage = $"当前工具：{ActiveTool}。视口等待输入。";
         FooterState = "状态：就绪";

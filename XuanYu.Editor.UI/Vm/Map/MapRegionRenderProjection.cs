@@ -14,9 +14,10 @@ public static class MapRegionRenderProjection
 
     public static RenderVectorOverlayResource Build(MapDefinition map, RegionDrawingState drawing,
         RoadDrawingState roads, MapGeometryPreview? geometry, double dpiScale = 1.0,
-        MapLabelBitmapCache? labelCache = null)
+        MapLabelBitmapCache? labelCache = null, IGroundSurface? ground = null)
     {
-        var builder = new MapVectorOverlayBuilder(map.Surface.BaseHeightMeters, dpiScale, labelCache);
+        GroundElevationQuery? query = ground is null ? null : ground.TryGetElevation;
+        var builder = new MapVectorOverlayBuilder(map.Surface.BaseHeightMeters, dpiScale, labelCache, query);
         var layers = map.Layers.ToDictionary(layer => layer.LayerId);
         foreach (var region in map.Regions.Where(region =>
                      region.IsVisible && layers.TryGetValue(region.LayerId, out var layer) && layer.IsVisible)

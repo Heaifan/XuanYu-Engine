@@ -8,12 +8,14 @@ public sealed partial class ViewProjectionState
     ViewProjectionState(
         CameraState camera,
         ViewportState viewport,
+        Vector3d renderOrigin,
         Matrix4x4 view,
         Matrix4x4 projection,
         Matrix4x4 inverse)
     {
         Camera = camera;
         Viewport = viewport;
+        RenderOrigin = renderOrigin;
         View = view;
         Projection = projection;
         ViewProjection = view * projection;
@@ -23,6 +25,8 @@ public sealed partial class ViewProjectionState
     public CameraState Camera { get; }
 
     public ViewportState Viewport { get; }
+
+    public Vector3d RenderOrigin { get; }
 
     public Matrix4x4 View { get; }
 
@@ -34,8 +38,9 @@ public sealed partial class ViewProjectionState
 
     public static ViewProjectionState Create(CameraState camera, ViewportState viewport)
     {
-        var eye = ToVector3(camera.Position);
-        var target = ToVector3(camera.Position + camera.Forward);
+        var renderOrigin = RequiresRenderOrigin(camera) ? camera.Position : Vector3d.Zero;
+        var eye = ToVector3(camera.Position - renderOrigin);
+        var target = ToVector3(camera.Position + camera.Forward - renderOrigin);
         var up = ToVector3(camera.Up);
         var view = Matrix4x4.CreateLookAt(eye, target, up);
         var aspect = (float)(viewport.LogicalWidth / viewport.LogicalHeight);
@@ -57,7 +62,7 @@ public sealed partial class ViewProjectionState
             throw new InvalidOperationException("ViewProjection 矩阵不可逆。");
         }
 
-        return new ViewProjectionState(camera, viewport, view, projection, inverse);
+        return new ViewProjectionState(camera, viewport, renderOrigin, view, projection, inverse);
     }
 
     public static bool TryCreate(CameraState camera, ViewportState viewport,
@@ -78,11 +83,17 @@ public sealed partial class ViewProjectionState
         var world = Vector4.Transform(clip, InverseViewProjection);
         if (world.W == 0.0f) throw new InvalidOperationException("World 坐标 W 为 0。");
 
-        return new Vector3d(world.X / world.W, world.Y / world.W, world.Z / world.W);
+        return RenderOrigin + new Vector3d(world.X / world.W, world.Y / world.W, world.Z / world.W);
     }
 
     static Vector3 ToVector3(Vector3d vector)
     {
         return new Vector3((float)vector.X, (float)vector.Y, (float)vector.Z);
     }
+
+    static bool RequiresRenderOrigin(CameraState camera) =>
+        global::System.Math.Max(
+            global::System.Math.Max(global::System.Math.Abs(camera.Position.X),
+                global::System.Math.Abs(camera.Position.Y)),
+            global::System.Math.Abs(camera.Position.Z)) >= 10_000.0;
 }

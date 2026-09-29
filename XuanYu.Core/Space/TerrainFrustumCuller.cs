@@ -8,10 +8,19 @@ public static class TerrainFrustumCuller
 {
     public static bool Intersects(ViewProjectionState state, SpatialAabb bounds)
     {
-        var corners = Corners(bounds);
         for (var plane = 0; plane < 6; plane++)
         {
-            if (corners.All(corner => Outside(Transform(state.ViewProjection, corner), plane)))
+            var outside = true;
+            for (var corner = 0; corner < 8; corner++)
+            {
+                if (!Outside(Transform(state, Corner(bounds, corner)), plane))
+                {
+                    outside = false;
+                    break;
+                }
+            }
+
+            if (outside)
             {
                 return false;
             }
@@ -23,6 +32,14 @@ public static class TerrainFrustumCuller
     internal static Vector4 Transform(Matrix4x4 matrix, Vector3d point) =>
         Vector4.Transform(new Vector4((float)point.X, (float)point.Y, (float)point.Z, 1), matrix);
 
+    internal static Vector4 Transform(ViewProjectionState state, Vector3d point) =>
+        Transform(state.ViewProjection, point - state.RenderOrigin);
+
+    internal static Vector3d Corner(SpatialAabb box, int index) => new(
+        (index & 1) == 0 ? box.Min.X : box.Max.X,
+        (index & 2) == 0 ? box.Min.Y : box.Max.Y,
+        (index & 4) == 0 ? box.Min.Z : box.Max.Z);
+
     static bool Outside(Vector4 point, int plane) => plane switch
     {
         0 => point.X < -point.W,
@@ -33,11 +50,4 @@ public static class TerrainFrustumCuller
         _ => point.Z > point.W
     };
 
-    internal static Vector3d[] Corners(SpatialAabb box) =>
-    [
-        new(box.Min.X, box.Min.Y, box.Min.Z), new(box.Max.X, box.Min.Y, box.Min.Z),
-        new(box.Min.X, box.Max.Y, box.Min.Z), new(box.Max.X, box.Max.Y, box.Min.Z),
-        new(box.Min.X, box.Min.Y, box.Max.Z), new(box.Max.X, box.Min.Y, box.Max.Z),
-        new(box.Min.X, box.Max.Y, box.Max.Z), new(box.Max.X, box.Max.Y, box.Max.Z)
-    ];
 }

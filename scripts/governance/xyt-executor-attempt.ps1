@@ -1,18 +1,23 @@
+ $runnerPath = Join-Path (Split-Path -Parent $PSScriptRoot) '..\tools\handoff\process-runner.ps1'
+
 function Start-XytAttempt {
     param([pscustomobject]$Spec, [int]$Attempt)
     $job = Start-Job -ScriptBlock {
-        param($command, $workingDirectory, $attempt)
+        param($command, $workingDirectory, $attempt, $runnerPath)
+        . $runnerPath
         $ErrorActionPreference = 'Continue'
         $oldAttempt = $env:XYT_ATTEMPT
         $env:XYT_ATTEMPT = [string]$attempt
         try {
             if ($workingDirectory) { Set-Location -LiteralPath $workingDirectory }
-            $lines = @(& pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command $command 2>&1 | ForEach-Object { $_.ToString() })
-            [pscustomobject]@{ exitCode = [int]$LASTEXITCODE; output = [string]::Join("`n", $lines) }
+            $shell = (Get-Command pwsh.exe -ErrorAction SilentlyContinue).Source
+            if (!$shell) { $shell = (Get-Command powershell.exe).Source }
+            $run = Invoke-HandoffProcess -FilePath $shell -WorkingDirectory $workingDirectory -Arguments @('-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',$command)
+            [pscustomobject]@{ exitCode = [int]$run.ExitCode; output = $run.Stdout + $run.Stderr }
         } catch {
             [pscustomobject]@{ exitCode = 1; output = $_ | Out-String }
         } finally { $env:XYT_ATTEMPT = $oldAttempt }
-    } -ArgumentList $Spec.command, $Spec.workingDirectory, $Attempt
+    } -ArgumentList $Spec.command, $Spec.workingDirectory, $Attempt, $runnerPath
     [pscustomobject]@{ spec=$Spec; job=$job; attempt=$Attempt; startedAt=[datetime]::UtcNow }
 }
 

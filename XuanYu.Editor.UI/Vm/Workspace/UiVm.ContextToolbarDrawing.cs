@@ -1,17 +1,20 @@
 using System.Windows.Input;
+using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.Workspace;
 
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    string? _contextDrawingKind;
+    readonly AuthoringInputSession _authoringSession = new();
     public string? LastDrawTool { get; private set; }
     public string DrawButtonLabel => LastDrawTool is null ? "绘制" : LastDrawTool switch { "地图标记" => "点标记", "区域面" => "区域", _ => LastDrawTool };
-    public bool IsDrawingTransactionActive => _contextDrawingKind is not null;
-    public string DrawingTransactionLabel => _contextDrawingKind == "道路"
+    public bool IsDrawingTransactionActive => _authoringSession.IsActive;
+    public bool CanOpenContextSelector => !IsDrawingTransactionActive;
+    public string DrawingTransactionLabel => _authoringSession.Kind == AuthoringInputKind.Road
         ? $"道路绘制中 · {RoadDrawingDraftPointCount}"
-        : _contextDrawingKind == "区域面" ? $"区域绘制中 · {RegionDrawingDraftVertexCount}" : "";
+        : _authoringSession.Kind == AuthoringInputKind.Region
+            ? $"区域绘制中 · {RegionDrawingDraftVertexCount}" : "";
     public ICommand BeginLastDrawToolCommand => _beginLastDrawToolCommand ??=
         new RelayCommand(_ => _ = BeginLastDrawToolAsync());
     public ICommand SelectDrawToolCommand => _selectDrawToolCommand ??= new RelayCommand(
@@ -25,6 +28,7 @@ public sealed partial class UiVm
         if (IsDrawingTransactionActive || tool is null) return false;
         if (!IsRegionWorkspace) SwitchWorkspace(EditorWorkspaceId.RegionEditor);
         if (!IsEditMode) ToggleEditorMode();
+        EnterRegionContext();
         if (tool == "道路")
         {
             SelectRegionAuthoringMode("道路");
@@ -58,26 +62,28 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(ContextToolbarButtonLabel));
     }
 
-    public bool CanUndoDrawingVertex => _contextDrawingKind == "道路" ? CanUndoRoadDrawingVertex : CanUndoRegionDrawingVertex;
-    public bool CanCompleteDrawing => _contextDrawingKind == "道路" ? CanCompleteRoadDrawing : CanCompleteRegionDrawing;
-    public bool CanCancelDrawing => _contextDrawingKind == "道路" ? CanCancelRoadDrawing : CanCancelRegionDrawing;
+    public bool CanUndoDrawingVertex => _authoringSession.Kind == AuthoringInputKind.Road
+        ? CanUndoRoadDrawingVertex : CanUndoRegionDrawingVertex;
+    public bool CanCompleteDrawing => _authoringSession.Kind == AuthoringInputKind.Road
+        ? CanCompleteRoadDrawing : CanCompleteRegionDrawing;
+    public bool CanCancelDrawing => _authoringSession.IsActive;
 
     void BeginDrawingTransaction(string kind)
     {
-        _contextDrawingKind = kind;
+        _authoringSession.Begin(kind == "道路" ? AuthoringInputKind.Road : AuthoringInputKind.Region);
         RaiseContextToolbarDrawingBindings();
     }
 
     void EndDrawingTransaction()
     {
-        if (_contextDrawingKind is null) return;
-        _contextDrawingKind = null;
+        if (!_authoringSession.End()) return;
         RaiseContextToolbarDrawingBindings();
     }
 
     void RaiseContextToolbarDrawingBindings()
     {
         OnPropertyChanged(nameof(IsDrawingTransactionActive));
+        OnPropertyChanged(nameof(CanOpenContextSelector));
         OnPropertyChanged(nameof(DrawingTransactionLabel));
         OnPropertyChanged(nameof(CanUndoDrawingVertex));
         OnPropertyChanged(nameof(CanCompleteDrawing));

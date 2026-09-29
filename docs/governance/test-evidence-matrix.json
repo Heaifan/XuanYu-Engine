@@ -1,0 +1,27 @@
+{
+  "version": "T0-T4",
+  "tiers": {
+    "T0": { "name": "Static Guard", "proves": ["source structure", "5+100", "dependencies", "shader source shape", "string contracts", "architecture scans"], "doesNotProve": ["runtime correctness", "visual correctness", "GPU correctness"] },
+    "T1": { "name": "Unit / Pure Logic", "proves": ["math", "algorithms", "state machines", "coordinate formulas", "LOD selection", "data models"], "doesNotProve": ["module composition", "real platform behavior", "GPU behavior"] },
+    "T2": { "name": "Integration / Headless", "proves": ["UiVm", "Avalonia Headless", "importer", "cross-module resources", "render projection", "non-real-GPU integration"], "doesNotProve": ["real app", "HWND", "NativeControlHost", "real Vulkan", "GPU", "swapchain", "present"] },
+    "T3": { "name": "Real Runtime", "proves": ["Editor", "HWND", "NativeControlHost", "Vulkan", "GPU", "swapchain", "present", "fence", "pointer capture", "DPI", "real DEM"], "doesNotProve": ["product acceptance"] },
+    "T4": { "name": "Product Acceptance", "proves": ["real user observes required behavior in the real product"], "doesNotProve": ["out-of-scope behavior"] }
+  },
+  "minimumTier": {
+    "Pure Math": ["T1"],
+    "Business Logic": ["T1", "T2"],
+    "UiVm": ["T2"],
+    "Avalonia Focus/Pointer": ["T3"],
+    "NativeControlHost": ["T3"],
+    "Vulkan Swapchain": ["T3"],
+    "GPU Rendering": ["T3"],
+    "Frame Pacing": ["T3"],
+    "Final Visual Effect": ["T4"],
+    "DEM Orbit Jitter": ["T1", "T2", "T3", "T4"]
+  },
+  "scaleEvidence": ["1m", "100m", "1km", "10km", "100km", "500km", "1000km"],
+  "temporalEvidence": { "singleFrame": "one frame only", "stableSequence": [100, 1000], "rule": "single-frame correctness does not imply temporal stability" },
+  "monotonicRule": "A lower-tier PASS never derives a higher-tier PASS.",
+  "headlessIsRealApp": false
+}
+

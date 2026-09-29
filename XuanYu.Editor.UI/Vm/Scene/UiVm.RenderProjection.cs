@@ -1,6 +1,7 @@
 using XuanYu.Core.Map;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Space;
+using XuanYu.Editor.MapEditing;
 using XuanYu.Render.Abstractions;
 using XuanYu.World.Terrain;
 
@@ -15,7 +16,8 @@ public sealed partial class UiVm
         var transform = snapshot.RenderTransform;
         var vectorOverlay = MapRegionRenderProjection.Build(
             RegionFillColorPreviewMap(), _regionDrawing, _roadDrawing,
-            MapGeometryPreview, _viewportDpiScale, _mapLabelBitmapCache);
+            MapGeometryPreview, _viewportDpiScale, _mapLabelBitmapCache,
+            TerrainWorld is null ? null : new TerrainWorldGroundSurface(TerrainWorld));
         IReadOnlyList<RenderVectorOverlayResource> overlays =
             vectorOverlay.Primitives.Count == 0 ? [] : [vectorOverlay];
         var terrains = CachedTerrainRenderResources();

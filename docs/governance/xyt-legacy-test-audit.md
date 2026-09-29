@@ -29,7 +29,7 @@ Enumeration: `rg --files <scope> -g '*.cs'` plus attribute count `^\s*\[(Fact|Th
 
 - Actions: DOWNGRADE=37, KEEP=564, RENAME=95; no DELETE/REWRITE decision is made from static inspection alone
 - Proposed P-levels: P0=281, P1=284, P2=131, P3=0
-- Risk: HIGH=132, LOW=327, MEDIUM=237
+- Risk: HIGH=132, LOW=330, MEDIUM=237
 
 ## Module totals
 

@@ -50,6 +50,15 @@ public sealed partial class UiVm
         PublishSceneRenderSnapshot();
     }
 
+    void ClearNavigationGizmoInteractionState()
+    {
+        if (_navGizmoHoverIndex == -1 && _navGizmoPressedIndex == -1 && !_navGizmoCenterHover) return;
+        _navGizmoHoverIndex = -1;
+        _navGizmoPressedIndex = -1;
+        _navGizmoCenterHover = false;
+        PublishSceneRenderSnapshot();
+    }
+
     bool TryToggleViewportAssist(string name)
     {
         return name switch

@@ -9,7 +9,8 @@ public sealed partial class UiVm
     bool TryPickRegionPoint(double x, double y, ViewportState viewport, out MapPoint point)
     {
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        return MapSurfacePicker.TryPick(MapSession.CurrentMap, projection, x, y, out point);
+        var terrain = TerrainWorld is null ? null : new TerrainWorldGroundSurface(TerrainWorld);
+        return MapSurfacePicker.TryPick(MapSession.CurrentMap, projection, x, y, terrain, out point);
     }
 
     static bool IsInsideViewport(double x, double y, ViewportState viewport) =>

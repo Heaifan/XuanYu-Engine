@@ -1,4 +1,5 @@
 using XuanYu.Editor.MapEditing;
+using XuanYu.Editor.Input;
 
 namespace XuanYu.Editor.UI;
 
@@ -6,6 +7,7 @@ public sealed partial class UiVm
 {
     bool CloseRegionDraft()
     {
+        ReleaseRegionPointerCapture(EditorPointerEventKind.Released);
         var draft = _regionDrawing.TakeDraftForClose();
         if (draft is null)
         {

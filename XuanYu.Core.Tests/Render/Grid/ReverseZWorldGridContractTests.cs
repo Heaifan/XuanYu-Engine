@@ -20,7 +20,7 @@ public sealed class ReverseZWorldGridContractTests
     [Fact] public void GridNearFarConvention() => Assert.Contains("depth >= 0.0 && depth <= 1.0", Shader);
     [Fact] public void GridNeverDisappearsWhilePlaneVisible() => Assert.DoesNotContain("gridMaxDistance", Shader);
     [Fact] public void NoDistanceHardCutoff() => Assert.DoesNotContain("distToCamera", Shader);
-    [Fact] public void PerspectivePersistence() => Assert.Contains("t = -nearWorld.z / rayDirection.z", Shader);
+    [Fact] public void PerspectivePersistence() => Assert.Contains("(-renderOrigin.z - nearWorld.z) / rayDirection.z", Shader);
     [Fact] public void OrthographicPersistence() => Assert.Contains("pc.gridState.y", Shader);
 
     [Fact]

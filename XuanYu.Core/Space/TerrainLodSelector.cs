@@ -1,4 +1,3 @@
-using System.Numerics;
 using XuanYu.Core.Spatial;
 
 namespace XuanYu.Core.Space;
@@ -40,12 +39,25 @@ public static class TerrainLodSelector
 
     static double ProjectedPixels(ViewProjectionState state, SpatialAabb bounds)
     {
-        var points = TerrainFrustumCuller.Corners(bounds)
-            .Select(corner => TerrainFrustumCuller.Transform(state.ViewProjection, corner))
-            .Where(point => point.W > 0.0f).ToArray();
-        if (points.Length == 0) return 0.0;
-        var xs = points.Select(point => (point.X / point.W + 1.0) * 0.5 * state.Viewport.PhysicalWidth);
-        var ys = points.Select(point => (point.Y / point.W + 1.0) * 0.5 * state.Viewport.PhysicalHeight);
-        return global::System.Math.Max(xs.Max() - xs.Min(), ys.Max() - ys.Min());
+        var minX = double.PositiveInfinity;
+        var maxX = double.NegativeInfinity;
+        var minY = double.PositiveInfinity;
+        var maxY = double.NegativeInfinity;
+        for (var corner = 0; corner < 8; corner++)
+        {
+            var point = TerrainFrustumCuller.Transform(
+                state, TerrainFrustumCuller.Corner(bounds, corner));
+            if (!(point.W > 0.0f)) continue;
+            var x = (point.X / point.W + 1.0) * 0.5 * state.Viewport.PhysicalWidth;
+            var y = (point.Y / point.W + 1.0) * 0.5 * state.Viewport.PhysicalHeight;
+            minX = global::System.Math.Min(minX, x);
+            maxX = global::System.Math.Max(maxX, x);
+            minY = global::System.Math.Min(minY, y);
+            maxY = global::System.Math.Max(maxY, y);
+        }
+
+        return double.IsPositiveInfinity(minX)
+            ? 0.0
+            : global::System.Math.Max(maxX - minX, maxY - minY);
     }
 }

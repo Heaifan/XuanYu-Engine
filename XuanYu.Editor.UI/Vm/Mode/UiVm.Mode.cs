@@ -20,11 +20,13 @@ public sealed partial class UiVm
 
     public bool ToggleEditorMode()
     {
+        ViewportInput.CancelForModeChange();
         CancelActiveInput("切换编辑模式");
         if (IsRegionDrawingTool || IsRegionDrawingDraftActive) CancelRegionDrawingFromEscape();
         if (IsRoadDrawingTool || IsRoadDrawingDraftActive) CancelRoadDrawingFromEscape();
         var transition = _modeManager.Toggle();
         if (!transition.Changed) return false;
+        ClearNavigationGizmoInteractionState();
         SelectTool("选择", logTool: false);
         RaiseModeBindings();
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
