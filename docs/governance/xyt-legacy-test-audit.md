@@ -2,9 +2,9 @@
 
 > Scope: evidence-only audit. No Registry change, no batch test rewrite, no product-code change. Audit unit is one test-bearing source file; `Tests` is the attributed test-case count in that file. A file-level action applies to every attributed test in that source unit unless a later method-level wave records an exception.
 
-Lane: GOVERNANCE  
-Session Handoff: JOIN PASS  
-Knowledge Preflight / PLANNING: Task Domain = legacy test evidence audit; Loaded = knowledge index, existing evidence audit, evidence policy, knowledge handoff contract; Hard Constraints = P0-P4 vocabulary, no Registry/test rewrite, preserve ForeignDirty; Conflict Check = PASS.  
+Lane: GOVERNANCE
+Session Handoff: JOIN PASS
+Knowledge Preflight / PLANNING: Task Domain = legacy test evidence audit; Loaded = knowledge index, existing evidence audit, evidence policy, knowledge handoff contract; Hard Constraints = P0-P4 vocabulary, no Registry/test rewrite, preserve ForeignDirty; Conflict Check = PASS.
 Knowledge Preflight / EXECUTION: Task Domain = same; Loaded = current source inventory and candidate implementations; Hard Constraints = evidence-only plus independent audit file; Conflict Check = PASS.
 
 ## Decision vocabulary
@@ -990,5 +990,3 @@ SEARCH EXISTING → UPDATE / STRENGTHEN / CREATE / NO DEPOSIT
 施工事实：本轮新增本审计文件；未修改 B Registry、测试代码、Architecture/Governance Guards。Candidate Lesson：测试名称、证据等级与实际执行机制必须分离；源文件字符串断言不得冒充运行时/GPU证据；Headless UiVm 不得冒充真实应用或产品验收。请 ChatGPT 审计既有 Knowledge/Experience 后决定 CREATE / UPDATE / STRENGTHEN / NO DEPOSIT。
 
 CHATGPT KNOWLEDGE AUDIT REQUIRED
-
-
