@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [ValidateSet('P3-01','P3-02','P3-03','P3-04')][string]$Capability='P3-01',
     [string]$CandidateId='', [string]$AppCommand='', [string[]]$AppArgument=@(), [string]$AppScript='',
