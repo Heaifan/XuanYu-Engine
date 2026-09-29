@@ -51,6 +51,30 @@ jobs:
         run: |
           & .\scripts\xye-bootstrap.ps1
 
+      - name: PS5.1 parser diagnostics
+        shell: powershell
+        run: |
+          $targets = @(
+            Get-ChildItem .\tools\handoff -Filter *.ps1 -File
+            Get-ChildItem .\scripts\governance -Filter *.ps1 -File
+            Get-ChildItem .\XYT -Filter *.ps1 -File -Recurse
+          )
+          $allErrors = @()
+          foreach ($file in $targets) {
+            $tokens = $null
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($file.FullName, [ref]$tokens, [ref]$errors)
+            foreach ($err in @($errors)) {
+              $message = "$($file.FullName):$($err.Extent.StartLineNumber):$($err.Extent.StartColumnNumber) $($err.Message)"
+              Write-Host $message
+              $allErrors += $message
+            }
+          }
+          if ($allErrors.Count -gt 0) {
+            throw "PS5.1 parser errors: $($allErrors.Count)"
+          }
+          Write-Host "PS5.1_PARSE_ALL_PASS"
+
       - name: Handoff H1 authority and lifecycle - PS5.1
         shell: powershell
         run: |
