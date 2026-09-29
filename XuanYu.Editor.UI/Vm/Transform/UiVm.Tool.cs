@@ -12,12 +12,10 @@ public sealed partial class UiVm
         if (!CanUseEditTools) return;
         SelectTool(name);
     }
-
     void TryToggleSnap()
     {
         if (CanToggleSnap) ToggleSnap();
     }
-
     void SelectTool(string name, bool logTool = true)
     {
         if (!CanChangeToolNow(name)) return;
@@ -76,7 +74,6 @@ public sealed partial class UiVm
         if (logTool) LogTool(ActiveTool);
         OnPropertyChanged(nameof(LogSummary));
     }
-
     bool IsTool(EditorToolId tool) => _editorState.ToolSnapshot.ActiveTool == tool;
 
     void ToggleSnap()
