@@ -497,3 +497,66 @@ XYT-G 扫描 696 个测试源文件、2552 个测试方法。审计快照中：P
 旧测试完成清库后，Registry 应保存经审计的 P-Level；测试新增或改名不得自行提升 P-Level。若测试实现边界未改变，仅修改名称不能改变正式证据等级。
 
 **关联 Incident**：INC-2026-09-29-002
+
+
+---
+
+## K-XYT-AUDIT-002 正式迁移前摘要与逐行明细必须满足数量恒等式
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：XYT、Audit Integrity、Migration、Count Invariant、Report Oracle
+**适用范围**：Legacy Test Audit、Registry Migration、批量治理清单、任何“摘要统计 → 正式写回”的迁移任务。
+
+**首次确认**：2026-09-29
+**来源**：XYT-G / G2 Legacy Registry Migration Prep。
+
+### 已确认事实
+
+XYT-G 审计文件曾写出 `HIGH=132, MEDIUM=237, LOW=330`，而 696 条逐行明细重新计数得到 `HIGH=132, MEDIUM=237, LOW=327`。明细的 Action 总数、P-Level 总数与唯一 Test ID 均严格等于 696，因此根因位于摘要聚合/报告 Oracle，而不是测试分类本体。
+
+### 工程规则
+
+任何批量 Registry / Knowledge / Migration 写回之前，必须验证至少三类恒等式：
+
+```text
+Σ Risk Buckets = Total Unique IDs
+Σ Action Buckets = Total Unique IDs
+Σ P-Level Buckets = Total Unique IDs
+```
+
+摘要与明细不一致时，正式迁移必须 BLOCKED；不得为了让摘要“对上”去猜测或修改逐行事实。
+
+### 正确做法
+
+以可重放的逐行明细为事实源，重新计算摘要；修正摘要后再放行迁移。数量校验应尽可能自动化，避免人工维护两个事实源。
+
+**关联 Incident**：INC-2026-09-29-002
+
+
+---
+
+## K-XYT-TAX-001 P0~P4 只表示证据等级，T0~T3 只表示事故等级
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：XYT、Taxonomy、Evidence、Incident、Naming
+**适用范围**：XYT Registry、Runner、Executor、Incident、Report、历史测试迁移。
+
+**首次确认**：2026-09-29
+**来源**：XYT-B-FIX 与 test-registry-policy。
+
+### 工程规则
+
+`P0~P4` 是唯一正式测试证据等级命名空间；`T0~T3` 是唯一正式事故严重度命名空间。禁止建立 P↔T 兼容映射，禁止在同一字段或报告中让 T 同时表示测试层级和事故等级。
+
+### 目的
+
+避免历史 `T0~T4 Evidence` 与新事故 `T0~T3` 发生双重语义，防止 Registry、报告和自动 Gate 产生不可解释的歧义。
+
+### 自动化
+
+Registry 校验已经拒绝旧 T0~T4 Evidence 映射；正式迁移必须只写 P0~P4。
+

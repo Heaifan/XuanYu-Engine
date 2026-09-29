@@ -84,9 +84,12 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 | K-XYT-AUDIT-001 | Knowledge | Engineering | 测试名称与目录不能授予证据等级 | P0 | E1 | XYT-G Legacy Audit · 2026-09-29 | Active |
 
+| K-XYT-AUDIT-002 | Knowledge | Engineering | 正式迁移前摘要与逐行明细必须满足数量恒等式 | P0 | E1 | XYT-G/G2 · 2026-09-29 | Active |
+| K-XYT-TAX-001 | Knowledge | Engineering | P0~P4 只表示证据等级，T0~T3 只表示事故等级 | P0 | E3 | XYT-B-FIX · 2026-09-29 | Active |
+
 ## 分类文件
 
-- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001
+- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004

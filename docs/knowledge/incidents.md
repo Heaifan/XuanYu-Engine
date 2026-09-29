@@ -371,3 +371,8 @@ P0~P2 测试仍可按其真实等级继续使用；与此证据链无关的并�
 完成首批高风险证据纠偏，并建立可用 P3 路径后，对受影响能力执行一轮最小充分测试；通过后可按用户最终裁决解除对应 T0-LOCK。
 
 **关联 Knowledge**：K-VAL-002、K-XYT-AUDIT-001
+
+
+### 2026-09-29 G2 统计完整性补充
+
+G2 在正式 Registry Migration 前发现 G 审计摘要的 Risk 统计与逐行明细不一致。重新按 696 个唯一 `XYT-G-*` 明细计数确认：HIGH=132、MEDIUM=237、LOW=327；Actions=696，P-Level=696。问题定性为报告/Oracle T2，处于本 T0 Incident 的处置范围内；迁移在摘要修正前保持 BLOCKED。该问题不改变 P3=0、DOWNGRADE=37、RENAME=95 的核心审计结论。
