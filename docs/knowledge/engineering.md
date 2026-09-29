@@ -362,9 +362,15 @@ Repository Current Files → Current Machine Resolver → Git Current State → 
 
 正式必跑测试不得只由 Agent 主观挑选。XYT 必须从实际 Change/Diff 出发，结合文件 Ownership、Capability Mapping，生成 Required Tests；未知映射进入 `REVIEW_REQUIRED`，不得静默当作 PASS。
 
+### 2026-09-29 强化：REVIEW_REQUIRED 是解析状态，不是 Capability Key
+
+当旧测试或新变更无法可靠映射到 Canonical Capability 时，必须记录为 `capabilityResolution=REVIEW_REQUIRED` 并保持 BLOCKED / 不可选入正式 Required Test 计划；`REVIEW_REQUIRED` 不能写入 `targetCapability` 冒充能力键。
+
+Capability 命名空间只允许真实 `CAP-*` 事实。不得为了满足“必填字段”制造假的 Capability。未决就是未决，后续由人工或受控治理补全映射。
+
 ### 验证 / 自动化
 
-`scripts/governance/xyt-runner.ps1` 与对应 Selftest 已建立机器化链路。
+`scripts/governance/xyt-runner.ps1` 与对应 Selftest 已建立机器化链路；Registry Gate 还必须验证：若 `capabilityResolution=REVIEW_REQUIRED`，则记录不得参与 Capability 查询或正式 Required Test 选择。
 
 ---
 

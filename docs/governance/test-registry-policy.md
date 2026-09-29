@@ -18,7 +18,7 @@ Registry 根：`docs/governance/test-registry.json`
 | `testId` | string | 是 | 稳定编号，格式 `XYT-B-NNNN`；编号不复用。 |
 | `module` | string | 是 | 归属模块，例如 `XuanYu.Core.Tests`、`XuanYu.World.Tests`、`XYUI.Avalonia.Tests`。 |
 | `evidenceLevel` | enum | 是 | `P0` 至 `P4`；语义见第 3 节。 |
-| `targetCapability` | string[] | 是 | 一个或多个 Registry 能力键，必须存在于能力映射表。 |
+| `targetCapability` | string[] | 是 | `RESOLVED` 时为一个或多个 Canonical Capability Key；`REVIEW_REQUIRED` 时必须为 `[]`。 |
 | `productInvariants` | string[] | 是 | 测试保护的产品不变量；不得只写“应通过”。 |
 | `prerequisites` | string[] | 是 | 执行前置；无前置写 `[]`。 |
 | `blockingScope` | enum | 是 | `NONE`、`TEST_SET`、`MODULE`、`RELEASE` 之一。 |
@@ -73,6 +73,19 @@ P4 = 产品验收
 能力键的唯一来源是 `test-capability-map.json`。每个能力键至少定义：模块、最低 P 等级、产品不变量和阻塞默认值。
 
 登记测试时，`targetCapability` 中每个键都必须可在映射表中找到。按能力查询时，先匹配能力键，再汇总所有 `ACTIVE` 测试；不得通过模糊标题代替能力键。
+
+### 4.1 未解析 Capability
+
+Legacy Migration 或新测试登记时，如果当前证据不足以可靠映射到 Canonical Capability：
+
+- 必须记录 `capabilityResolution = REVIEW_REQUIRED`；
+- `status` 必须为 `BLOCKED`；
+- `REVIEW_REQUIRED` 不得写入 `targetCapability`；
+- 未解析记录不得参与按 Capability 查询、Minimum Sufficient Test Set 或正式 Required Test Selection；
+- 不得为了满足字段要求猜测或伪造 `CAP-*`；
+- 待人工 / Governance 解析后，再填入真实 `targetCapability` 并解除对应 BLOCKED。
+
+因此 `targetCapability` 的“一个或多个 Canonical Capability Key”要求只适用于 `capabilityResolution = RESOLVED` 的正式记录；未解析迁移记录允许为空数组，直到映射完成。
 
 ## 5. 测试集版本
 
