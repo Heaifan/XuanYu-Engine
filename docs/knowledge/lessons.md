@@ -273,3 +273,33 @@ Region Drawing 同时跨 Pointer、Picking、MapPoint、Draft、Vector Overlay�
 **适用范围**：平台 Adapter、Input Router、Source Contract、Runtime Wiring。
 
 人工构造的错误平台值、把 Source Contains 当成 Runtime Wiring、或只验证 Helper PASS，都可能让错误实现稳定绿灯。跨平台行为测试必须从真实平台 Enum / Message Contract 开始，随后覆盖 Adapter、统一模型、Router、Consumer 和领域结果。
+
+
+---
+
+## L-XYT-001 中央入口必须 Single Owner，子系统通过 Module Contract 集成
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E1
+**标签**：XYT、Parallel Development、Ownership、Integration Hotspot、Module Contract
+**适用范围**：统一入口、中央 Registry、总配置、Composition / Integration Hotspot。
+
+**确认时间**：2026-09-29
+**来源**：XYT-A / XYT-F 并行冲突与 XYT-F2 收口。
+
+### 已确认事实
+
+XYT-A 已将 `xyt.ps1` 作为统一入口提交；并行的 XYT-F 同时修改该文件，导致 F 已完成能力无法安全收口并主动 STOP。F2 将 Report 重构为独立模块，禁止直接拥有 `xyt.ps1` 后成功收口。
+
+### 教训
+
+中央入口、总 Registry、总配置等高争用 Integration Hotspot 不能由多个并行 Lane 同时拥有。并行子系统应各自完成独立 Module Contract，最后由单一 Integration Owner 做最小接线。
+
+### 停止条件
+
+发现两个并行任务计划修改同一中央入口，或子系统为了“顺手接入”开始修改不属于自身 Ownership 的 Hotspot 时，必须停止其中一个写入路径并重新切分 Ownership；不得靠最后手工合并碰碰运气。
+
+### 关联 Incident
+
+`INC-2026-09-29-001`

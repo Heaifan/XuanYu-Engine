@@ -23,7 +23,7 @@ CHATGPT KNOWLEDGE AUDIT REQUIRED
 
 施工 Agent / Codex 只提供事实、Root Cause、修复方式、Changed Files、Tests、Evidence、Known Risk，并可提出 Candidate Lessons；不得自行把 Candidate Lesson 宣布为正式 Knowledge / Experience。
 
-ChatGPT 审计 AI 负责搜索既有条目，判断 `CREATE / UPDATE / STRENGTHEN / RETIRE / NO DEPOSIT`，维护正式 Knowledge、Lesson、Incident、ERR、EXP 与索引。
+ChatGPT 审计 AI 负责搜索既有条目，判断 `CREATE / UPDATE / STRENGTHEN / RETIRE / NO DEPOSIT`，维护正式 Knowledge、Lesson、Incident、ERR、EXP 与索引。审计结果为 `CREATE / UPDATE / STRENGTHEN` 时默认立即写回 XYK 并 Commit / Push，不再等待用户逐条批准；`CONFLICT / UNCERTAIN` 或涉及重要 Canonical 废止时必须通报用户裁决。
 
 审计顺序固定为：
 
@@ -38,3 +38,21 @@ Knowledge 是长期稳定的架构事实、接口契约、系统规律或验证�
 适用范围覆盖 FIX、FEATURE、REFACTOR、PERFORMANCE、GOVERNANCE、INCIDENT、UI、RENDER、TERRAIN、CAMERA 及后续所有施工任务。
 
 该交接块与 Version Event、5+100、Handoff、Commit Mutex、精确 Stage、`git diff --check` 同时生效；它不改变既有产品验收、版本计数或 Git 收口规则。
+
+
+## 默认写回与月度巡检
+
+正式流程：
+
+```text
+施工 Agent 完成
+→ ChatGPT Knowledge Audit
+→ SEARCH EXISTING
+→ NO DEPOSIT：结束
+→ CREATE / UPDATE / STRENGTHEN：立即 Writeback + Index + Commit/Push
+→ CONFLICT / UNCERTAIN：用户裁决
+```
+
+原则：先保全经过审计的工程经验，再在月度巡检中进行去重、合并、降级、SUPERSEDE / RETIRE 与自动化升级。月度巡检不是首次入库的审批门槛。
+
+历史 Knowledge / Lesson / Incident / ERR / EXP 不得为了“删减”无痕消失；需要淘汰时使用 SUPERSEDED / RETIRED 并保留追溯。

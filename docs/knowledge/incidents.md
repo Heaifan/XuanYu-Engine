@@ -291,3 +291,37 @@ EXP 候选：`EXP-ARCH-001` 连续局部修复停止线、`EXP-TEST-001` 生产�
 ### 后续机器 Gate 候选
 
 `ProductionInputNoBypass`、`DiagnosticInputTransparency`、`NativeCoordinateRoundTrip`、`PlatformKeyNormalization`、`ProductionPathTestRule`、`ViewportLegacyAllowlist`、`CanonicalRunResolver`。本记录不把尚未执行的 Gate 宣布为已通过。
+
+
+---
+
+## INC-2026-09-29-001 · XYT 中央入口并行 Ownership 冲突
+
+**日期**：2026-09-29
+**XYT 事故等级**：T1
+**状态**：CLOSED
+**影响范围**：XYT-A / XYT-F Report Integration
+**相关提交**：A `abd5416c9691512f75087fb2413f8c10bed25bbc`；F2 `6066b6c3193be94a2597b96b1226c47e3811f1dc`
+
+### 事件
+
+XYT-A 与 XYT-F 在同一并行 Wave 中同时拥有 `xyt.ps1`。A 先提交统一入口后，F 检测到 HEAD 变化与文件冲突，按规则停止 Commit/Push，没有覆盖 ForeignDirty。
+
+### 影响
+
+造成 F Lane 明确返工和延迟，但未污染 XYE 产品代码，也未拖慢全部主线，因此定级 T1 而非 T0。
+
+### 根因
+
+并行任务在下发时只划分了功能范围，没有提前识别 `xyt.ps1` 这种中央 Integration Hotspot 的未来写入竞争。
+
+### 处置
+
+F2 保留 Report 能力，将实现移动为独立 Report Module；禁止 F2 修改中央入口。入口后续由唯一 Integration Owner 接线。
+
+### 预防
+
+`Central Entry = Single Owner`；
+`Subsystem = Module Contract`。
+
+**关联 Lesson**：L-XYT-001

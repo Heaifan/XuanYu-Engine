@@ -20,6 +20,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
 | Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
 | Global Migration / Refactor | Reverse-Z、Projection、Renderer、Depth Policy、Input Architecture、Persistence Migration、Workspace Architecture | 相关领域 K/L；EXP-GOVERNANCE-002；EXP-ARCH-001 |
+| XYT / 测试治理 | xyt、测试选择、P0~P4、T0~T3、Runner、Executor、Incident、Lock、Report | K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、L-XYT-001；并读取 test-registry-policy / xyt-* contracts |
 | Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
 | Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-004、K-DIAG-001、K-GOV-003、L-VAL-001、L-NATIVE-001、L-TEST-001；EXP-ARCH-001、EXP-TEST-001、EXP-UI-002、EXP-GOVERNANCE-001 |
 
@@ -71,17 +72,27 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-GEO-002 | Decision | Architecture | R2 收口并以 Point Consumer 作为下一验证形态 | P0 | R2 | MAP-DATA-A-R2-CLOSEOUT · 2026-08-13 · 6a3d5b8 | Active |
 | DEC-XYE-XYUI-DUAL-LANE | Decision | Governance | XYE / XYUI Dual-Lane Development Model | P0 | R1 | XYE-XYUI-DUAL-LANE-R1 · 2026-09-27 | Active |
 
+| K-GOV-004 | Knowledge | Engineering | ChatGPT 审计通过后默认立即写回 XYK | P0 | E1 | XYT 建设治理裁决 · 2026-09-29 | Active |
+| K-XYT-MAP-001 | Knowledge | Engineering | 正式测试选择必须经过 Change→Ownership→Capability→Required Tests | P0 | E3 | XYT-C · 0d75987c · 2026-09-29 | Active |
+| K-XYT-MAP-002 | Knowledge | Engineering | Agent 可以增加测试但不得删除 Required Tests | P0 | E3 | XYT-C · 0d75987c · 2026-09-29 | Active |
+| K-XYT-INC-001 | Knowledge | Engineering | T0 默认局部隔离，不默认全局停线 | P0 | E3 | XYT-E · bac12aec · 2026-09-29 | Active |
+| K-XYT-INC-002 | Knowledge | Engineering | DEPENDENCY-UNCERTAIN 必须上报用户 | P0 | E3 | XYT-E · bac12aec · 2026-09-29 | Active |
+| K-XYT-INC-003 | Knowledge | Engineering | USER OVERRIDE 是正式治理能力 | P0 | E3 | XYT-E · bac12aec · 2026-09-29 | Active |
+| K-XYT-INC-004 | Knowledge | Engineering | 上游解锁后轻量复核并自动恢复 | P1 | E3 | XYT-E · bac12aec · 2026-09-29 | Active |
+| K-XYT-EXEC-001 | Knowledge | Engineering | 执行失败根因在证据不足时保持 UNKNOWN | P0 | E3 | XYT-D · 673dae7f · 2026-09-29 | Active |
+| L-XYT-001 | Lesson | Engineering | 中央入口 Single Owner，子系统通过 Module Contract 集成 | P1 | E1 | XYT-A/F/F2 · 2026-09-29 | Active |
+
 ## 分类文件
 
-- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001、K-GOV-002、K-GOV-003
+- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004
 - `ui.md`：K-UI-001、K-DIAG-001
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
-- `incidents.md`：代表性事故记录与映射
-- `lessons.md`：L-ARCH-001、L-REN-001～L-REN-003、L-VAL-001、L-NATIVE-001、L-TEST-001 及后续复盘
+- `incidents.md`：代表性事故记录与映射；含 INC-2026-09-29-001
+- `lessons.md`：L-ARCH-001、L-REN-001～L-REN-003、L-VAL-001、L-NATIVE-001、L-TEST-001、L-XYT-001 及后续复盘
 - `decisions/`：已批准并仍有长期约束价值的 DEC
 - `decisions/xye-xyui-dual-lane-development-model.md`：XYE / XYUI One Workspace / Dual Lane 决策
 - `docs/governance/agent-error-log.md`：Agent 真实错误事实

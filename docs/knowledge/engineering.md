@@ -307,3 +307,162 @@ Repository Current Files → Current Machine Resolver → Git Current State → 
 3. 门禁是否已经进入正式串行验证链？
 
 **关联 Knowledge**：K-GOV-001、K-VAL-002
+
+
+---
+
+## K-GOV-004 ChatGPT 审计通过后默认立即写回 XYK
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：XYK、Knowledge Writeback、Audit、Monthly Review、Governance
+**适用范围**：所有带有 `KNOWLEDGE / EXPERIENCE AUDIT HANDOFF` 的正式施工任务。
+
+**首次确认**：2026-09-29
+**来源**：XYT 建设阶段用户治理裁决。
+
+### 工程规则
+
+施工 Agent 只提交事实与 Candidate Lessons；ChatGPT 完成 `SEARCH EXISTING → MATCH → UPDATE / STRENGTHEN / CREATE / NO DEPOSIT` 审计后，凡结论为 `CREATE / UPDATE / STRENGTHEN`，默认立即写回权威 XYK、同步索引并提交上传，不再逐条等待用户二次批准。
+
+`NO DEPOSIT` 不写入；`CONFLICT / UNCERTAIN` 或涉及重要 Canonical 废止、互相矛盾的长期规则时，必须通报用户裁决。
+
+月度巡检负责去重、合并、降级、SUPERSEDE / RETIRE 与自动化升级，不作为首次入库的前置条件。历史条目不得无痕删除。
+
+### 目的
+
+工程经验是由真实返工、事故和开发时间换来的资产。默认先保全事实与经验，再在周期性巡检中做瘦身，避免因“等以后整理”而丢失知识。
+
+---
+
+## K-XYT-MAP-001 正式测试选择必须经过 Change → Ownership → Capability → Required Tests
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：XYT、Test Mapping、Minimum Sufficient Set、Capability
+**适用范围**：XYT 快速验证、模块收口、全局收口。
+
+**首次确认**：2026-09-29
+**Commit**：`0d75987cff361cefd3ccd4864ea9c17fe17f3581`
+**来源**：XYT-C Minimum Sufficient Test Set。
+
+### 工程规则
+
+正式必跑测试不得只由 Agent 主观挑选。XYT 必须从实际 Change/Diff 出发，结合文件 Ownership、Capability Mapping，生成 Required Tests；未知映射进入 `REVIEW_REQUIRED`，不得静默当作 PASS。
+
+### 验证 / 自动化
+
+`scripts/governance/xyt-runner.ps1` 与对应 Selftest 已建立机器化链路。
+
+---
+
+## K-XYT-MAP-002 Agent 可以增加测试，但不得删除 XYT Required Tests
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：XYT、Required Tests、Agent Boundary、False Green
+**适用范围**：所有由 AI / Agent 发起或扩展的 XYT 测试计划。
+
+**首次确认**：2026-09-29
+**Commit**：`0d75987cff361cefd3ccd4864ea9c17fe17f3581`
+
+### 工程规则
+
+Agent 可以基于额外风险追加验证，但不得删除、降级或绕过 XYT 根据固定映射生成的 Required Tests。若认为 Required Test 不适用，必须进入 Review / Governance 变更，而不是在本轮计划中自行移除。
+
+---
+
+## K-XYT-INC-001 T0 默认局部隔离，不默认全局停线
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：XYT、Incident、T0、Parallel Development、Lock
+**适用范围**：XYT T0 事故响应。
+
+**首次确认**：2026-09-29
+**Commit**：`bac12aec`
+
+### 工程规则
+
+T0 的目标是尽快阻止污染扩散并保护开发效率。污染范围可可靠圈定时，只锁事故能力、所有权文件及真实依赖链；不相关的并行任务继续运行。
+
+---
+
+## K-XYT-INC-002 DEPENDENCY-UNCERTAIN 必须上报用户，不得擅自扩大锁定或放行
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：XYT、Dependency Lock、Uncertain、User Decision
+**适用范围**：T0-LOCK 依赖传播与并行任务恢复。
+
+**首次确认**：2026-09-29
+**Commit**：`bac12aec`
+
+### 工程规则
+
+依赖关系无法可靠判定时，状态必须为 `DEPENDENCY-UNCERTAIN`。系统不得因为求稳无限扩大锁定，也不得为了赶进度擅自放行；必须立即通报用户，由用户最终裁决。
+
+---
+
+## K-XYT-INC-003 USER OVERRIDE 是正式治理能力，局部授权不等于解除 T0-LOCK
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：XYT、User Override、Incident、Authority
+**适用范围**：T0-LOCK、DEPENDENCY-LOCK。
+
+**首次确认**：2026-09-29
+**Commit**：`bac12aec`
+
+### 工程规则
+
+用户拥有最终解释权与决定权，可以显式授权某个任务、文件或操作在锁定期间放行。Override 必须记录允许范围和原因；默认是局部豁免，不自动解除整个 T0-LOCK。
+
+---
+
+## K-XYT-INC-004 上游解锁后先做轻量依赖变更检查再自动恢复
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E3
+**标签**：XYT、Auto Resume、Dependency、Incident Recovery
+**适用范围**：被 DEPENDENCY-LOCK 连带暂停的并行任务。
+
+**首次确认**：2026-09-29
+**Commit**：`bac12aec`
+
+### 工程规则
+
+上游 T0-LOCK 解除后，下游任务不应长期等待人工重新批准。先检查接口、行为契约、共享文件与依赖证据是否改变；无影响则自动恢复，有影响只继续锁定真正受影响的任务。
+
+---
+
+## K-XYT-EXEC-001 执行失败的根因在证据不足时必须保持 UNKNOWN
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：XYT、Execution、Root Cause、UNKNOWN、False Product Failure
+**适用范围**：XYT Executor、Failure Sweep、Timeout、Flaky 与失败分类。
+
+**首次确认**：2026-09-29
+**Commit**：`673dae7f02c4d9c43a5a5fc83b1952233471f4d5`
+**来源**：XYT-D Test Execution Engine。
+
+### 工程规则
+
+执行层只报告它实际观察到的执行结果。FAIL、TIMEOUT、FLAKY 或 Harness 异常在完成根因分类前必须保持 `UNKNOWN / UNCLASSIFIED`；不得因为测试红灯直接升级为 PRODUCT ROOT CAUSE。
+
+### 正确做法
+
+先完成 Failure Sweep，保留独立测试继续执行；再把稳定失败分类为 Product / Harness / Oracle / Environment / Unknown。UNKNOWN 是合法状态，不是需要被“补齐”为 Product 的空字段。
+
+### 验证 / 自动化
+
+XYT-D Executor Selftest 已覆盖 Stable FAIL、FLAKY、TIMEOUT、BLOCKED_BY、Failure Sweep 与 UNKNOWN root cause。
