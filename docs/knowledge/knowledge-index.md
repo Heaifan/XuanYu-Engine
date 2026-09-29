@@ -88,7 +88,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-XYT-TAX-001 | Knowledge | Engineering | P0~P4 只表示证据等级，T0~T3 只表示事故等级 | P0 | E3 | XYT-B-FIX · 2026-09-29 | Active |
 
 | K-XYT-WIT-001 | Knowledge | Engineering | Regression Witness 必须由同一测试形成 RED→GREEN 闭环 | P0 | E3 | XYT-J · 9e4c1a3d · 2026-09-29 | Active |
-| K-XYT-EVID-001 | Knowledge | Engineering | Evidence Expiry 必须 Capability 隔离并区分开发与收口 | P0 | E1 | XYT-K · 2026-09-29 | Active |
+| K-XYT-EVID-001 | Knowledge | Engineering | Evidence Expiry 必须 Capability 隔离并区分开发与收口 | P0 | E1 | XYT-K · 32af17e9 · 2026-09-29 | Active |
 | K-XYT-CLOSE-001 | Knowledge | Engineering | Integration Contract READY 不等于 Runtime / Product Closure | P0 | E1 | XYT-L · 2026-09-29 | Active |
 | K-XYT-P3-001 | Knowledge | Engineering | P3 Harness 必须先走仓库权威构建/运行入口 | P0 | E1 | XYT-H · 2026-09-29 | Active |
 
@@ -103,7 +103,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 - `ui.md`：K-UI-001、K-DIAG-001
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
-- `incidents.md`：代表性事故记录与映射；含 INC-2026-09-29-001、INC-2026-09-29-002
+- `incidents.md`：代表性事故记录与映射；含 INC-2026-09-29-001、INC-2026-09-29-002、INC-2026-09-29-003
 - `lessons.md`：L-ARCH-001、L-REN-001～L-REN-003、L-VAL-001、L-NATIVE-001、L-TEST-001、L-XYT-001 及后续复盘
 - `decisions/`：已批准并仍有长期约束价值的 DEC
 - `decisions/xye-xyui-dual-lane-development-model.md`：XYE / XYUI One Workspace / Dual Lane 决策

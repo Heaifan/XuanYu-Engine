@@ -372,6 +372,14 @@ Capability 命名空间只允许真实 `CAP-*` 事实。不得为了满足“必
 
 `scripts/governance/xyt-runner.ps1` 与对应 Selftest 已建立机器化链路；Registry Gate 还必须验证：若 `capabilityResolution=REVIEW_REQUIRED`，则记录不得参与 Capability 查询或正式 Required Test 选择。
 
+### 2026-09-29 G4 实战强化
+
+HIGH 风险旧测试 Capability Resolution 共 132 条，最终 129 条获得可追溯 Canonical Capability，3 条因证据不足继续保持 `REVIEW_REQUIRED + targetCapability=[] + status=BLOCKED`。
+
+这证明正式解析目标不是“100% 填满”，而是“只在 Actual Evidence + Product Invariant + Canonical Capability 三者同时成立时 RESOLVED”。无法可靠解析时继续 BLOCKED 是正确结果，不属于迁移失败。
+
+G4 Commit：`aaaaf369a7ac97ebd866a3d79c363d19b3065b37`。
+
 ---
 
 ## K-XYT-MAP-002 Agent 可以增加测试，但不得删除 XYT Required Tests
@@ -616,7 +624,8 @@ Witness 只证明回归测试的前后因果边界，不自动关闭 Incident，
 **适用范围**：长期测试证据、模块 Freeze、Release、Render/Input/Terrain/Runtime 迁移。
 
 **首次确认**：2026-09-29
-**来源**：XYT-K Evidence Expiry & Revalidation R1；实现待正式 Commit。
+**来源**：XYT-K Evidence Expiry & Revalidation R1。
+**Commit**：`32af17e9dbe076fbd76dde331c751fe3479b0abf`。
 
 ### 工程规则
 

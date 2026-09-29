@@ -400,7 +400,7 @@ XYT-H 建立 P3 Runtime Harness 后，首轮 P3-01 返回 `BLOCKED_BY`，直接�
 
 **日期**：2026-09-29
 **XYT 事故等级**：T1
-**状态**：FIXED / REVALIDATION REQUIRED
+**状态**：CLOSED
 **影响范围**：XYT Aggregate Selftest / Machine Gate
 
 ### 事件
@@ -426,5 +426,14 @@ Selftest 在全部断言完成并输出 PASS 后显式 `exit 0`。后续必须�
 - 进程 Exit Code = 0
 
 验证完成后可关闭本 T1。
+
+### 关闭证据
+
+- `xyt.selftest.ps1` 输出 `XYT SELFTEST PASS`，父进程 Exit Code = 0；
+- unknown mode 仍正确返回 `Status: INVALID_MODE`，Exit Code = 2，证明预期失败路径未被吞掉；
+- Aggregate Selftest 输出 `XYT AGGREGATE SELFTEST PASS`，Exit Code = 0；
+- 首次 Aggregate 调用出现一次子进程文件占用竞争，未修改代码，独立等待重跑与最终直接重跑均通过；当前不升级为新 Incident，后续若重复发生再按 FLAKY/Harness 规则处理。
+
+因此该 T1 满足关闭条件。
 
 **关联 Knowledge**：K-XYT-HARNESS-001
