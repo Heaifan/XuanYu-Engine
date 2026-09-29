@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $gate = Join-Path $PSScriptRoot 'deferred-capability-gate.ps1'
 $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ('deferred-capability-selftest-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $tempRoot | Out-Null
