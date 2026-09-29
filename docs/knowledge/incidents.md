@@ -437,3 +437,40 @@ Selftest 在全部断言完成并输出 PASS 后显式 `exit 0`。后续必须�
 因此该 T1 满足关闭条件。
 
 **关联 Knowledge**：K-XYT-HARNESS-001
+
+
+---
+
+## INC-2026-09-29-004 · Handoff Commit Mutex 缺少 Stale Recovery 导致 Convergence 阻塞
+
+**日期**：2026-09-29
+**XYT / Governance 事故等级**：T1
+**状态**：ACTIVE / CONTAINED
+**影响范围**：XYT-L2 Integration Contract Convergence、并行收口串行提交口
+
+### 事件
+
+本地 Commit Mutex 长期保持：
+
+- owner = `XYT-C-CONVERGENCE`
+- scope = `GOVERNANCE`
+- acquiredAt = `2026-09-29T06:23:51.6042186Z`
+
+期间 Remote HEAD 已由多个合法治理提交持续推进，但 L2 仍被旧 mutex 阻塞。仓库审计确认当前 Handoff Mutex 只有原子创建、Owner 校验和正常 advance/unlock，没有 lease、heartbeat、TTL 或 stale recovery。
+
+### 定性
+
+这是治理控制面的 T1：没有污染产品代码，也不要求 XYE 主线停线，但已经阻塞一个已验证 PASS 的正式 Convergence，并可能继续制造并行任务等待。
+
+### 当前隔离
+
+禁止普通 Agent 手工删除、覆盖或冒用旧 owner。先建立受控 recovery / user override 路径，再恢复 L2 与 H3 收口。
+
+### 关闭条件
+
+- stale mutex 被可审计地恢复；
+- ForeignDirty 保持不变；
+- L2 / H3 可重新取得正常 commit mutex；
+- Handoff 增加防止永久 stale lock 的 recovery contract / selftest。
+
+**关联 Knowledge**：K-HANDOFF-001

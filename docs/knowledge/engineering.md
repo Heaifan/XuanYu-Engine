@@ -731,3 +731,81 @@ Process Exit Code = 0
 如果脚本最后一次 native/process 调用预期非零，父级在全部断言成功后必须显式归一化为成功退出码；反之，真正断言失败必须保持非零。
 
 只看 PASS 字符串或只看 Exit Code 都不足以解释一个复杂 Harness，报告层必须绑定二者。
+
+
+---
+
+## K-HANDOFF-001 Stale Commit Mutex 必须具有受控恢复路径
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Handoff、Commit Mutex、Stale Lock、Recovery、Parallel Convergence
+**适用范围**：共享 canonical workspace 的 Commit / Push / Advance 串行收口。
+
+**首次确认**：2026-09-29
+**来源**：XYT-L2 Convergence 阻塞与 Handoff Repository Audit。
+
+### 已确认事实
+
+当前 `tools/handoff/handoff.ps1` 的 commit mutex 采用原子 `CreateNew` 文件锁，并校验 owner / scope；正常 `advance` 会释放锁。但现有实现没有 lease、heartbeat、TTL 或受控 stale-lock recovery。
+
+当持锁 Agent / 会话异常结束且未执行 advance/unlock 时，`.git/xye-handoff/commit-mutex.json` 可以长期残留。其他任务只能得到 `COMMIT_MUTEX_HELD`，即使 Remote HEAD 已经被后续正式提交多次推进，也没有机器化恢复路径。
+
+### 工程规则
+
+Commit Mutex 必须保持“不能被随意抢锁”的安全性，同时提供受控 stale recovery。恢复至少需要证明：
+
+1. 锁的 owner 不再有正在执行的合法收口任务；
+2. 当前 Remote HEAD 与锁记录的 baseline / acquired state 已经发生可审计偏移，或锁超过明确 lease；
+3. 工作区 / ForeignDirty 不因恢复操作发生变化；
+4. recovery 被记录为治理事件；
+5. 用户或 Coordinator 拥有最终 override 权限。
+
+禁止普通 Agent 直接删除 mutex 文件。
+
+### 目标
+
+未来 Handoff 应支持显式 recovery / takeover 流程，而不是在 stale lock 时依赖人工删除 `.git` 文件。
+
+---
+
+## K-XYT-P3-002 P3 构建准备与 Runtime Probe 必须分离并受时间预算约束
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E1
+**标签**：XYT、P3、Runtime Harness、Cost Budget、Build Reuse、Timeout
+**适用范围**：真实 App / HWND / Vulkan / Swapchain / Present 自动验证。
+
+**首次确认**：2026-09-29
+**来源**：XYT-H2/H3 Real P3 Runtime Proof。
+
+### 工程规则
+
+首次建立 P3 链路允许执行完整 Resolver → restore → build → Runtime Probe；链路建立后，后续 P3 不应无条件重复全量准备。
+
+Harness 应把：
+
+```text
+Build Preparation
+与
+Runtime Probe
+```
+
+分开计时和报告。
+
+当 Commit、Build Identity、目标 EXE 与依赖产物能够证明一致时，可复用已验证产物直接进入 Runtime Probe。若身份不一致，再触发 Canonical Rebuild。
+
+P3-01 这类关键 marker 已全部出现后，应立即记录 PASS 并主动回收长驻 GUI。后续独立能力如 P3-02 Resize 必须拥有独立较短时间预算；其 TIMEOUT 不得拖长或覆盖已经成立的 P3-01 结论。
+
+### 成本治理
+
+报告至少分别记录：
+- Resolve / Restore 时间；
+- Build 时间；
+- App Startup 时间；
+- Marker Acquisition 时间；
+- 每个 P3 Capability 的独立 Duration / Timeout。
+
+这样才能识别“真实 Runtime 本身慢”还是“每次都在重复 Build / 等无效 Timeout”。
