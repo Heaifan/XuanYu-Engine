@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$StatePath,
     [Parameter(Mandatory)][ValidateSet('xye','xyui','integration','governance')][string]$Scope,
