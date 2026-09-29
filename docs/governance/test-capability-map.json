@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "XYT-B-CAP-v1.0",
+  "capabilities": [
+    {
+      "capabilityId": "CAP-CORE-MATH",
+      "name": "Core pure mathematics",
+      "module": "XuanYu.Core.Tests",
+      "minimumEvidenceLevel": "P1",
+      "defaultBlockingScope": "MODULE",
+      "productInvariants": ["相同输入在声明数值域内产生确定性结果", "非法输入不会产生未声明的有效结果"]
+    },
+    {
+      "capabilityId": "CAP-WORLD-HEADLESS",
+      "name": "World editor headless composition",
+      "module": "XuanYu.World.Tests",
+      "minimumEvidenceLevel": "P2",
+      "defaultBlockingScope": "TEST_SET",
+      "productInvariants": ["领域事实由 World/Editor 权威持有", "UI 投影不会伪造领域状态"]
+    },
+    {
+      "capabilityId": "CAP-XYUI-RUNTIME",
+      "name": "XYUI runtime contract",
+      "module": "XYUI.Avalonia.Tests",
+      "minimumEvidenceLevel": "P2",
+      "defaultBlockingScope": "MODULE",
+      "productInvariants": ["Runtime 公共契约与 Gallery/Consumer 映射一致", "交互状态由真实路由更新"]
+    }
+  ]
+}

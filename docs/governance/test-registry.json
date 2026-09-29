@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "XYT-B-REG-v1.0",
+  "updatedAt": "2026-09-29",
+  "tests": [
+    {
+      "testId": "XYT-B-0001",
+      "module": "XuanYu.Core.Tests",
+      "evidenceLevel": "P1",
+      "targetCapability": ["CAP-CORE-MATH"],
+      "productInvariants": ["相同输入在声明数值域内产生确定性结果"],
+      "prerequisites": [".NET SDK Resolver Chain"],
+      "blockingScope": "MODULE",
+      "evidenceType": ["UNIT"],
+      "maxDurationSeconds": 30,
+      "testSetVersion": "TSET-CORE-MATH-v1.0",
+      "testPath": "XuanYu.Core.Tests/Space/ReverseZPrecisionRegressionTests.cs",
+      "status": "ACTIVE",
+      "owner": "XYE"
+    },
+    {
+      "testId": "XYT-B-0002",
+      "module": "XuanYu.World.Tests",
+      "evidenceLevel": "P2",
+      "targetCapability": ["CAP-WORLD-HEADLESS"],
+      "productInvariants": ["领域事实由 World/Editor 权威持有"],
+      "prerequisites": [".NET SDK Resolver Chain", "受影响项目可编译"],
+      "blockingScope": "TEST_SET",
+      "evidenceType": ["INTEGRATION"],
+      "maxDurationSeconds": 60,
+      "testSetVersion": "TSET-WORLD-HEADLESS-v1.0",
+      "testPath": "XuanYu.World.Tests/Workspace/EditorWorkspaceManagerTests.cs",
+      "status": "ACTIVE",
+      "owner": "XYE"
+    },
+    {
+      "testId": "XYT-B-0003",
+      "module": "XYUI.Avalonia.Tests",
+      "evidenceLevel": "P2",
+      "targetCapability": ["CAP-XYUI-RUNTIME"],
+      "productInvariants": ["Runtime 公共契约与 Gallery/Consumer 映射一致"],
+      "prerequisites": ["XYUI canonical root=xyui/", ".NET SDK Resolver Chain"],
+      "blockingScope": "MODULE",
+      "evidenceType": ["INTEGRATION"],
+      "maxDurationSeconds": 90,
+      "testSetVersion": "TSET-XYUI-RUNTIME-v1.0",
+      "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/XYFoundationRuntimeTests.cs",
+      "status": "ACTIVE",
+      "owner": "XYUI"
+    }
+  ]
+}
