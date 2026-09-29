@@ -1,0 +1,9 @@
+{
+  "schema": "XYT-E-LOCK-v1",
+  "t0": { "default": "T0-LOCK", "investigation": "READ_ONLY", "fixTask": "WRITE_LOCKED_SCOPE" },
+  "dependency": { "positive": "DEPENDENCY-LOCK", "unknown": "DEPENDENCY-UNCERTAIN", "independent": "CONTINUE" },
+  "release": ["ROOT_CAUSE_CONFIRMED", "CONTROLLED_FIX", "MINIMUM_TESTS_PASS"],
+  "resume": { "noContractChange": "AUTO-RESUME", "contractChange": "CONTINUE-LOCKED" },
+  "infraFailure": { "development": "FAIL-OPEN", "product": "UNVERIFIED", "formalCloseout": "FAIL-CLOSED" },
+  "userOverride": "USER OVERRIDE"
+}
