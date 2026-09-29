@@ -15,6 +15,8 @@ public sealed class UiRuntimeTestHost : IDisposable
 
     public void Run(Action action) => _fixture.Run(action);
 
+    public Task<T> RunAsync<T>(Func<Task<T>> action) => _fixture.RunAsync(action);
+
     public Window Show(Control content, double width = 300, double height = 420)
     {
         var window = new Window { Width = width, Height = height, Content = content };

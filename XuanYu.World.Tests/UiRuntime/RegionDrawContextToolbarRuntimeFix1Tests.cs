@@ -13,18 +13,19 @@ public sealed class RegionDrawContextToolbarRuntimeFix1Tests
     public RegionDrawContextToolbarRuntimeFix1Tests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Active_region_draw_disables_the_real_context_split_button()
+    public async Task Active_region_draw_disables_the_real_context_split_button()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         Top top = null!;
-        var started = host.Run(() =>
+        UiVm vm = null!;
+        host.Run(() =>
         {
-            var vm = new UiVm(null, () => true, seedInitialScene: false);
+            vm = new UiVm(null, () => true, seedInitialScene: false);
             top = new Top { DataContext = vm };
             host.Show(top, 900, 180);
             top.UpdateLayout();
-            return vm.BeginContextDrawingAsync("区域面").GetAwaiter().GetResult();
         });
+        var started = await host.RunAsync(() => vm.BeginContextDrawingAsync("区域面"));
 
         Assert.True(started);
         var enabled = host.Run(() =>

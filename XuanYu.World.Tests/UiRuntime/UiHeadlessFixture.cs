@@ -25,6 +25,13 @@ public sealed class UiHeadlessFixture : IAsyncLifetime
             action();
         }, CancellationToken.None).GetAwaiter().GetResult();
 
+    public Task<T> RunAsync<T>(Func<Task<T>> action) =>
+        _session.Dispatch(async () =>
+        {
+            UiTestPlatformServices.Install();
+            return await action();
+        }, CancellationToken.None);
+
     public Task InitializeAsync() => Task.CompletedTask;
 
     public Task DisposeAsync() => _session.DisposeAsync().AsTask();
