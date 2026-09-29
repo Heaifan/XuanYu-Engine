@@ -66,7 +66,7 @@ for ($index = 0; $index -lt 696; $index++) {
         testId = $row.TestId
         module = $unit.Module
         evidenceLevel = $row.EvidenceLevel
-        targetCapability = @('REVIEW_REQUIRED')
+        targetCapability = @()
         productInvariants = @("REVIEW_REQUIRED: G1 capability label '$($row.CapabilityLabel)' has no canonical CAP-* mapping in test-capability-map.json")
         prerequisites = @('.NET SDK Resolver Chain', 'G1 audit identity')
         blockingScope = 'TEST_SET'
@@ -84,7 +84,7 @@ for ($index = 0; $index -lt 696; $index++) {
 }
 
 $document = [ordered]@{
-    schemaVersion = 'XYT-G-REG-v1.0'
+    schemaVersion = 'XYT-G-REG-v1.1'
     updatedAt = '2026-09-29'
     migrationSource = 'docs/governance/xyt-legacy-test-audit.md and docs/governance/xyt-legacy-registry-migration-plan.md'
     evidenceCanonical = 'P0-P4'
@@ -98,6 +98,9 @@ $document = [ordered]@{
 }
 
 foreach ($record in $records) {
+    if ($record.capabilityResolution -eq 'REVIEW_REQUIRED' -and $record.targetCapability.Count -ne 0) {
+        throw "REVIEW_REQUIRED record must have an empty targetCapability: $($record.testId)"
+    }
     foreach ($capability in $record.targetCapability) {
         if ($capability -ne 'REVIEW_REQUIRED' -and $capability -notin $validCapabilities) { throw "Invalid capability key: $capability" }
     }
