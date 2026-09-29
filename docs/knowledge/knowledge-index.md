@@ -89,7 +89,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 | K-XYT-WIT-001 | Knowledge | Engineering | Regression Witness 必须由同一测试形成 RED→GREEN 闭环 | P0 | E3 | XYT-J · 9e4c1a3d · 2026-09-29 | Active |
 | K-XYT-EVID-001 | Knowledge | Engineering | Evidence Expiry 必须 Capability 隔离并区分开发与收口 | P0 | E1 | XYT-K · 32af17e9 · 2026-09-29 | Active |
-| K-XYT-CLOSE-001 | Knowledge | Engineering | Integration Contract READY 不等于 Runtime / Product Closure | P0 | E1 | XYT-L · 2026-09-29 | Active |
+| K-XYT-CLOSE-001 | Knowledge | Engineering | Integration Contract READY 不等于 Runtime / Product Closure | P0 | E1 | XYT-L · 18842310 · 2026-09-29 | Active |
 | K-XYT-P3-001 | Knowledge | Engineering | P3 Harness 必须先走仓库权威构建/运行入口 | P0 | E1 | XYT-H · ccd3dbef · 2026-09-29 | Active |
 
 | K-XYT-HARNESS-001 | Knowledge | Engineering | Expected Child Failure 不得污染父级 Selftest 退出码 | P0 | E2 | INC-2026-09-29-003 | Active |

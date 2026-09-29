@@ -654,7 +654,8 @@ VALID -> REVALIDATION_REQUIRED
 **适用范围**：XYT 最终集成、模块收口、Release Gate。
 
 **首次确认**：2026-09-29
-**来源**：XYT-L Integration Contract Prep；实现待正式 Commit。
+**来源**：XYT-L Integration Contract Prep。
+**正式落地 Commit**：`18842310247abac42b125816645afeccb6947dcb`。
 
 ### 工程规则
 

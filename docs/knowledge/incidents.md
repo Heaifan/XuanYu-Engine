@@ -451,7 +451,7 @@ Selftest 在全部断言完成并输出 PASS 后显式 `exit 0`。后续必须�
 
 **日期**：2026-09-29
 **XYT / Governance 事故等级**：T1
-**状态**：ACTIVE / CONTAINED
+**状态**：CLOSED
 **影响范围**：XYT-L2 Integration Contract Convergence、并行收口串行提交口
 
 ### 事件
@@ -478,5 +478,14 @@ Selftest 在全部断言完成并输出 PASS 后显式 `exit 0`。后续必须�
 - ForeignDirty 保持不变；
 - L2 / H3 可重新取得正常 commit mutex；
 - Handoff 增加防止永久 stale lock 的 recovery contract / selftest。
+
+### 2026-09-29 关闭证据
+
+- H3 通过正式 `advance` 将 Baseline 推进至 Canonical H3 Commit，并正常释放旧 Commit Mutex；
+- 随后 L2 成功重新获取 Commit Mutex、完成 Commit / Push / Advance 并正常释放；
+- L2 正式远端 Commit：`18842310247abac42b125816645afeccb6947dcb`；
+- 最终 HEAD == Remote、Ahead/Behind = 0/0、Staged = 0、ForeignDirty 保留。
+
+因此本次 T1 的实际阻塞已经解除并满足关闭条件。Stale-lock Recovery 的长期增强需求由 K-HANDOFF-001 保留，不再阻塞 XYT R1 收尾。
 
 **关联 Knowledge**：K-HANDOFF-001
