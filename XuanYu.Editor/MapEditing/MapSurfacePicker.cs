@@ -22,12 +22,30 @@ public static class MapSurfacePicker
         IGroundSurface? terrain,
         out MapPoint point)
     {
+        if (!TryPickGround(map, projection, logicalX, logicalY, terrain, out var result))
+        {
+            point = default;
+            return false;
+        }
+        point = result.WorldXY;
+        return true;
+    }
+
+    public static bool TryPickGround(
+        MapDefinition map,
+        ViewProjectionState projection,
+        double logicalX,
+        double logicalY,
+        IGroundSurface? terrain,
+        out GroundPickResult result)
+    {
         ArgumentNullException.ThrowIfNull(map);
         ArgumentNullException.ThrowIfNull(projection);
         var ray = WorldRayFactory.FromViewportPoint(projection, logicalX, logicalY);
-        var result = GroundPickResolver.Resolve(ray, terrain, map.Surface.BaseHeightMeters);
-        point = result.WorldXY;
+        result = GroundPickResolver.Resolve(ray, terrain, map.Surface.BaseHeightMeters);
         if (!result.IsValid) return false;
-        return MapBounds.Contains(map.SizeMeters, point.X, point.Y);
+        if (MapBounds.Contains(map.SizeMeters, result.WorldXY.X, result.WorldXY.Y)) return true;
+        result = GroundPickResult.Invalid;
+        return false;
     }
 }
