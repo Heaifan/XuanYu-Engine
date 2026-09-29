@@ -1,0 +1,16 @@
+name: Handoff R3 Smoke
+
+on:
+  push:
+    branches:
+      - feat/v0.3-world-authoring-r1
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Smoke
+        shell: pwsh
+        run: Write-Host "HANDOFF_R3_SMOKE_OK"
