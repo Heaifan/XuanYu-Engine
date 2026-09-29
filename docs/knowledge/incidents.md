@@ -385,3 +385,10 @@ G3 Legacy Registry Migration 曾报告 PASS，但 ChatGPT 审计发现 696 条�
 因此 G3 PASS 被撤销，状态改为 `FALSE PASS / BLOCKED`。根因属于迁移表示层 / Oracle Contract 错误：把“能力解析状态”混入“能力身份命名空间”。
 
 处置原则：`REVIEW_REQUIRED` 必须作为独立解析状态保存；未决记录保持 BLOCKED，且不得进入 Capability Query / Required Test Selection。该发现属于当前 `INC-2026-09-29-002` T0 的处置范围，不新建重复 Incident ID。
+
+
+### 2026-09-29 P3 Harness 首轮阻塞补充
+
+XYT-H 建立 P3 Runtime Harness 后，首轮 P3-01 返回 `BLOCKED_BY`，直接原因是当前路径下未找到 `XuanYu.Editor.App.exe`。Repository Audit 随后确认正式 `run.bat` 会先通过 `scripts/resolve-dotnet.ps1` 获取 SDK，再 Rebuild `XuanYu.Editor.App`，并明确运行产物路径。
+
+因此此次阻塞的已确认根因属于 Harness / Prerequisite 链未闭合，而不是 Product Failure，也不能据此宣布 Environment 缺失。真实 P3=PASS 仍未获得；`INC-2026-09-29-002` 保持 ACTIVE / CONTAINED。

@@ -417,3 +417,64 @@ scripts/resolve-dotnet.ps1 实际解析到 D:\MyApp\sdk-dotnet\dotnet.exe，SDK 
 
 状态：
 已验证
+
+
+---
+
+## ERR-20260929-001
+
+Agent：Codex（XYT-K）
+任务：XYT-K Evidence Expiry & Revalidation R1
+类型：GOVERNANCE
+严重度：Medium
+
+错误：
+在 Knowledge Writeback 阶段假设存在独立远端 `git@github.com:Heaifan/XuanYu-Knowledge.git`，执行 `git ls-remote` 得到 Repository not found 后，将 XYK 写回标记为 BLOCKED。
+
+根因：
+没有先读取当前仓库已有的 `docs/knowledge/**`、`docs/governance/knowledge-audit-handoff.md` 与 Repository Authority 规则，把一个未验证的“独立 Knowledge Repo”假设当成权威位置。
+
+后果：
+没有造成文件覆盖，但会把本可正常完成的知识沉淀错误标记为外部仓库阻塞，并重复历史“绕过当前仓库权威入口”的治理错误。
+
+正确做法：
+当前 XYE 的 XYK 权威资料位于当前 XuanYu-Engine 仓库；施工 Agent 只提交 Candidate Lesson，正式写回由 ChatGPT 按 Knowledge Audit 规则完成。任何外部 Knowledge Repo 都必须先由当前仓库事实或用户明确授权证明存在。
+
+经验规则：
+EXP-GOVERNANCE-001
+
+发现方式：
+ChatGPT Knowledge Audit / Repository Audit
+
+状态：
+已发现
+
+---
+
+## ERR-20260929-002
+
+Agent：Codex（XYT-H）
+任务：XYT-H P3 Real Runtime Harness R1
+类型：TEST
+严重度：Medium
+
+错误：
+首轮真实 P3-01 在目标 `XuanYu.Editor.App.exe` 不存在时直接返回 `BLOCKED_BY`，没有先走当前仓库权威的 Resolver + Rebuild 链生成/解析正式运行产物。
+
+根因：
+Runtime Harness 把“当前文件是否存在”当成运行入口事实源，没有优先消费 `run.bat → scripts/resolve-dotnet.ps1 → build XuanYu.Editor.App` 这一现有 Canonical Runtime Build Chain。
+
+后果：
+Harness 自检虽然 PASS，但真实 P3 路径没有打通，并把一个 Harness Prerequisite 缺口表现成“缺少真实产品运行入口”。未造成 Product False PASS，但浪费一次 P3 尝试并延迟 T0 解锁。
+
+正确做法：
+P3 Harness 在判断 App Artifact 缺失前必须调用或复用 Canonical Resolver / Build Contract；只有 Resolver / Build 真正失败后才允许进入相应 Environment / Build BLOCKED 分类。
+
+经验规则：
+EXP-GOVERNANCE-001
+
+发现方式：
+ChatGPT Repository Audit
+
+状态：
+已发现

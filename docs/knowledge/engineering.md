@@ -576,3 +576,119 @@ XYT-G 审计文件曾写出 `HIGH=132, MEDIUM=237, LOW=330`，而 696 条逐行�
 
 Registry 校验已经拒绝旧 T0~T4 Evidence 映射；正式迁移必须只写 P0~P4。
 
+
+
+---
+
+## K-XYT-WIT-001 Regression Witness 必须由同一测试跨 PRE-FIX / POST-FIX 形成闭环
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：XYT、Regression Witness、RED→GREEN、False PASS、Evidence
+**适用范围**：用户发现的真实 Bug、已验收能力回归、False PASS / False Freeze Incident。
+
+**首次确认**：2026-09-29
+**Commit**：`9e4c1a3de93c569bd24352867001c6c2ad10b869`
+**来源**：XYT-J Regression Witness R1。
+
+### 工程规则
+
+有效 Witness 必须绑定同一个 `TestId`、明确的 `PreFixCommit` 与 `PostFixCommit`，并保存前后证据。标准闭环：
+
+```text
+PRE-FIX  Commit + same TestId -> FAIL
+POST-FIX Commit + same TestId -> PASS
+```
+
+PRE-FIX 意外 PASS、前后 Test ID 不一致属于 `INVALID`；旧状态证据缺失、Commit 身份缺失或 POST-FIX 仍失败属于 `INCOMPLETE`。没有旧状态证据时不得升级为 `RED_CONFIRMED`。
+
+Witness 只证明回归测试的前后因果边界，不自动关闭 Incident，也不替代 P3/P4 验收。
+
+---
+
+## K-XYT-EVID-001 测试证据失效必须 Capability 隔离，并区分开发与正式收口
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：XYT、Evidence Expiry、Revalidation、Capability Isolation、Closure
+**适用范围**：长期测试证据、模块 Freeze、Release、Render/Input/Terrain/Runtime 迁移。
+
+**首次确认**：2026-09-29
+**来源**：XYT-K Evidence Expiry & Revalidation R1；实现待正式 Commit。
+
+### 工程规则
+
+Evidence 必须绑定 Commit、Version、Capability、Test ID、Test Set Version、Evidence Level、Created At 与 Invalidation Trigger。
+
+当 Capability Contract、Render Pipeline、Swapchain Lifecycle、Input Route、Terrain Pipeline、Runtime Host、Test Oracle 或 Test Set Major Version 等真实失效条件命中时：
+
+```text
+VALID -> REVALIDATION_REQUIRED
+```
+
+不能直接推导为 `PRODUCT FAIL`。
+
+失效必须按 Capability 精确传播，不能因无关 P0 变化污染无关 P3 证据。开发阶段允许继续推进；模块收口、Freeze、Release 时，关键证据若未重验则 Closure Gate 必须阻断。
+
+重验应生成最小充分 `Revalidation Plan`，不得默认全量重跑。
+
+---
+
+## K-XYT-CLOSE-001 Integration Contract READY 不等于 Runtime / Product Closure
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：XYT、Integration、Closure Gate、Runtime Pending、P4
+**适用范围**：XYT 最终集成、模块收口、Release Gate。
+
+**首次确认**：2026-09-29
+**来源**：XYT-L Integration Contract Prep；实现待正式 Commit。
+
+### 工程规则
+
+模块 Contract 可以先 READY，但只要真实 Runtime Contract、Incident/Witness、关键 Evidence 或用户 IPO Verdict 尚未满足，下游状态必须保持 Pending / Blocked。
+
+正式 Closure Gate 至少聚合：
+
+- Required Tests / Executor Result；
+- 必要的 P3 Runtime Evidence；
+- Incident 状态；
+- 需要时的 Regression Witness；
+- Evidence Validity / Revalidation 状态；
+- P4 用户 IPO Verdict。
+
+Fake / Fixture Integration PASS 只能证明 Contract 可串联，不得升级为真实 Runtime PASS 或 Product PASS。
+
+---
+
+## K-XYT-P3-001 P3 Harness 必须先走仓库权威构建/运行入口，再判断真实运行是否缺失
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：XYT、P3、Runtime Harness、Repository Authority、Build Artifact
+**适用范围**：真实 App、Native Host、Vulkan、Swapchain、Present、P3 自动化。
+
+**首次确认**：2026-09-29
+**来源**：XYT-H P3 Runtime Harness R1 与 Repository Audit。
+
+### 工程规则
+
+P3 不能由 Headless 补齐。对于真实 XYE Runtime，Harness 必须先通过仓库权威 Resolver / Build / Run 链确认或生成运行产物，再进入 App / Window Host / Vulkan Device / Swapchain / Present 等真实边界。
+
+当前权威链已经明确：
+
+```text
+run.bat
+→ scripts/resolve-dotnet.ps1
+→ restore / rebuild XuanYu.Editor.App
+→ XuanYu.Editor.App\bin\Debug\net10.0\XuanYu.Editor.App.exe
+→ real runtime
+```
+
+如果 Harness 在没有执行权威构建/解析链之前，仅因目标 exe 当前不存在就停止，根因应优先分类为 `HARNESS / PREREQUISITE`，不能宣称 Product 或 Environment Root Cause。
+
+P3 PASS 仍必须具备目标 Capability 所要求的真实运行证据；Harness Selftest PASS 不等于 P3 PASS。
