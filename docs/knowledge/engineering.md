@@ -157,6 +157,16 @@ Runtime Probe 应只记录入口、路由、分支、宿主和生命周期等决
 **关联 Incident**：INC-2026-08-12-001
 **关联 Lesson**：L-VAL-001
 
+### 2026-09-29 追加：XYT P4 必须由用户最终裁决
+
+XYT 正式证据模型采用 P0~P4 后，P4 固定表示产品验收。P4 可以由工具根据受影响 Capability 自动生成最小 IPO 清单，但工具默认状态必须是 `P4 PENDING`；自动测试、Headless、真实 Runtime P3、截图分析或 Agent 自评都不得自行写成 `P4 PASS`。
+
+只有用户已经明确给出验收结论时，系统才可以把该 verdict 记录为 PASS / FAIL，并且必须绑定对应版本、Commit、验收路径与 IPO 项。生成器负责“该验什么”，用户负责“是否通过”。
+
+P4 IPO 应遵守最小充分原则：只覆盖受影响 Capability，不生成大而全的验收表；每项采用 I / P / O，并把过程 P 拆成可执行编号步骤，避免模糊验收。
+
+**验证 / 自动化**：XYT-I P4 IPO Generator Selftest 已覆盖单能力、多能力、去重、过程编号、最小集合与默认 `P4 PENDING`；施工提交待收口。
+
 ---
 
 ## K-GOV-001 历史唯一身份以 Commit Hash 为准

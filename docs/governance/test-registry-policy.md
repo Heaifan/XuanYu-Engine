@@ -58,6 +58,16 @@ P4 = 产品验收
 
 `P0~P4` 是登记声明，不是自动 PASS。执行结果必须由对应运行记录和 XYT Gate 证明；低等级 PASS 不得升级为高等级 PASS。Incident Severity `T0~T3` 只用于事故管理，不得写入 `evidenceLevel`。
 
+
+### 3.1 P4 用户最终裁决
+
+- P4 只能表示产品验收，最终 verdict 由用户确认。
+- 自动化可以生成 Capability 驱动的最小 IPO 清单，但默认状态必须是 `P4 PENDING`。
+- P0~P3 的任何 PASS 都不得自动升级为 `P4 PASS`。
+- Agent / Runner / Executor / Runtime Harness 不得自行填写用户验收结论。
+- 仅当用户已经明确提供 PASS / FAIL 时，系统才可记录该 verdict，并绑定 Version、Commit、Branch、IPO 路径与验收项。
+- IPO 生成遵守最小充分原则；过程字段 P 必须拆成可执行编号步骤，而不是一句模糊描述。
+
 ## 4. 能力映射
 
 能力键的唯一来源是 `test-capability-map.json`。每个能力键至少定义：模块、最低 P 等级、产品不变量和阻塞默认值。
