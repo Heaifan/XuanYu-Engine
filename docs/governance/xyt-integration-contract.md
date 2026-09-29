@@ -2,7 +2,7 @@
 
 状态：`INTEGRATION CONTRACT: READY`
 
-运行时状态：`RUNTIME CONTRACT PENDING`
+运行时状态：`RUNTIME CONTRACT: P3 PATH ESTABLISHED`
 
 本文件只定义 A–K 模块之间的公开接口、结果形状和未来中央入口的责任边界。
 本轮不接入中央入口，不修改 `xyt.ps1`、`xyt.bat` 或 `XYT/Runtime/**`。
@@ -118,7 +118,7 @@ Report 消费两个独立输入：`ExecutionResult` 和 `RuntimeResult`。两者
 
 Runtime 结果与普通测试结果不可互相替代。Fake/fixture Runtime 只能标为 `sourceKind=FIXTURE_RUNTIME`，只能验证串接，不得产出真实 Runtime PASS。
 
-当前 H 的公开结果字段为 `Schema=XYT-P3-R1/1`、`Result`、`ExitCode`、`RequiredMarkers`、`MissingMarkers`、`HarnessFailure`、`BlockedBy` 等；该字段映射已经登记，但 H 的总体 Contract 因 `T0-LOCK` 保持 `RUNTIME CONTRACT PENDING`。
+当前 H 的公开结果字段为 `Schema=XYT-P3-R1/1`、`Result`、`ExitCode`、`RequiredMarkers`、`MissingMarkers`、`HarnessFailure`、`BlockedBy` 等；H3 已以 `ccd3dbef94864466ec2a7fc73c4ee6074e5809b2` 建立 P3 Path。P3-01 为 `REAL PASS`，P3-02 为 `TIMEOUT / independent`；这两项均不得解释为 Product Pass 或 P4 Pass。
 
 ### 5.3 Incident/Witness → Report
 
@@ -151,7 +151,7 @@ Selftest 的成功含义仅为：`INTEGRATION CONTRACT: READY`。真实 Runtime�
 
 ## 7. 当前结论
 
-其他 A–G、I–K 的接口可以继续按本文收口；H 的公开结果形状已登记但 Contract 状态为 `RUNTIME CONTRACT PENDING`。因此本轮不等待 H 空转，也不把 H 的 pending 转写成整体失败：统一 Contract READY，真实 Integration Runtime Gate 尚未 CLOSED。
+其他 A–G、I–K 的接口可以继续按本文收口；H 的公开结果形状和 P3 Path 已建立，但 P4 用户验收仍为 `P4 PENDING`。因此统一入口可以消费 P3-01 证据，同时必须保留 P3-02 的独立 TIMEOUT 和 P4 Pending，不得生成 Product Pass 或 P4 Pass。
 
 ## KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
 
