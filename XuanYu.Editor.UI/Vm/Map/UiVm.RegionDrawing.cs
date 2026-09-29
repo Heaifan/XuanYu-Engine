@@ -25,11 +25,12 @@ public sealed partial class UiVm
     {
         if (!IsRegionDrawingTool) return false;
         if (!IsInsideViewport(x, y, viewport)) return true;
-        if (!TryPickRegionPoint(x, y, viewport, out var point))
+        if (!TryPickGroundPoint(x, y, viewport, out var groundPick))
         {
             FooterMessage = $"区域绘制收到视口点击：地面拾取未命中 ({x:0.#}, {y:0.#})";
             return true;
         }
+        var point = groundPick.WorldXY;
         if (!_regionDrawing.IsActive) ClearRegionDrawingSnap();
         point = ResolveRegionDrawingPoint(point, x, y, viewport, snapSuppressed);
         LastRegionDrawingHit = point;
@@ -39,7 +40,7 @@ public sealed partial class UiVm
         {
             var layer = MapLayerRules.Find(MapSession.CurrentMap.Layers, MapSession.ActiveRegionLayerId);
             if (layer is not { Kind: MapLayerKind.Region }) return true;
-            _regionDrawing.Start(layer.LayerId, "未命名区域", MapRegionKind.Generic);
+            _regionDrawing.Start(layer.LayerId, "未命名区域", MapRegionKind.Generic, groundPick.SurfaceBinding);
             LogRegionDrawingStarted();
             RaiseRegionDrawingBindings();
         }
