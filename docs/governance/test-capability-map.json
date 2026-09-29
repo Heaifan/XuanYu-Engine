@@ -7,7 +7,10 @@
       "module": "XuanYu.Core.Tests",
       "minimumEvidenceLevel": "P1",
       "defaultBlockingScope": "MODULE",
-      "productInvariants": ["相同输入在声明数值域内产生确定性结果", "非法输入不会产生未声明的有效结果"]
+      "productInvariants": [
+        "相同输入在声明数值域内产生确定性结果",
+        "非法输入不会产生未声明的有效结果"
+      ]
     },
     {
       "capabilityId": "CAP-WORLD-HEADLESS",
@@ -15,7 +18,10 @@
       "module": "XuanYu.World.Tests",
       "minimumEvidenceLevel": "P2",
       "defaultBlockingScope": "TEST_SET",
-      "productInvariants": ["领域事实由 World/Editor 权威持有", "UI 投影不会伪造领域状态"]
+      "productInvariants": [
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
+      ]
     },
     {
       "capabilityId": "CAP-XYUI-RUNTIME",
@@ -23,7 +29,100 @@
       "module": "XYUI.Avalonia.Tests",
       "minimumEvidenceLevel": "P2",
       "defaultBlockingScope": "MODULE",
-      "productInvariants": ["Runtime 公共契约与 Gallery/Consumer 映射一致", "交互状态由真实路由更新"]
+      "productInvariants": [
+        "Runtime 公共契约与 Gallery/Consumer 映射一致",
+        "交互状态由真实路由更新"
+      ]
+    },
+    {
+      "capabilityId": "CAP-WORLD-STATIC-CONTRACT",
+      "name": "World editor static UI/input contract",
+      "module": "XuanYu.World.Tests",
+      "minimumEvidenceLevel": "P0",
+      "defaultBlockingScope": "TEST_SET",
+      "productInvariants": [
+        "World/Editor UI and input ownership declarations preserve their declared contract"
+      ]
+    },
+    {
+      "capabilityId": "CAP-WORLD-INPUT-STATE",
+      "name": "World editor input state",
+      "module": "XuanYu.World.Tests",
+      "minimumEvidenceLevel": "P1",
+      "defaultBlockingScope": "TEST_SET",
+      "productInvariants": [
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
+      ]
+    },
+    {
+      "capabilityId": "CAP-TERRAIN-HEADLESS-COMPOSITION",
+      "name": "Terrain headless composition",
+      "module": "XuanYu.World.Tests",
+      "minimumEvidenceLevel": "P2",
+      "defaultBlockingScope": "TEST_SET",
+      "productInvariants": [
+        "Terrain/render projection and resource composition remain coherent in headless integration; no GPU claim"
+      ]
+    },
+    {
+      "capabilityId": "CAP-RENDER-SOURCE-CONTRACT",
+      "name": "Render source contract",
+      "module": "XuanYu.Render",
+      "minimumEvidenceLevel": "P0",
+      "defaultBlockingScope": "TEST_SET",
+      "productInvariants": [
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
+      ]
+    },
+    {
+      "capabilityId": "CAP-RENDER-HEADLESS-COMPOSITION",
+      "name": "Render headless composition",
+      "module": "XuanYu.Render",
+      "minimumEvidenceLevel": "P2",
+      "defaultBlockingScope": "TEST_SET",
+      "productInvariants": [
+        "Render projection and draw-plan composition remain coherent in headless composition; no GPU claim"
+      ]
+    },
+    {
+      "capabilityId": "CAP-RENDER-STATE-CONTRACT",
+      "name": "Render state contract",
+      "module": "XuanYu.Render",
+      "minimumEvidenceLevel": "P1",
+      "defaultBlockingScope": "TEST_SET",
+      "productInvariants": [
+        "Render state and draw-plan calculations remain deterministic in the tested domain"
+      ]
+    },
+    {
+      "capabilityId": "CAP-XYUI-STATIC-CONTRACT",
+      "name": "XYUI static contract",
+      "module": "XYUI.Avalonia.Tests",
+      "minimumEvidenceLevel": "P0",
+      "defaultBlockingScope": "MODULE",
+      "productInvariants": [
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
+      ]
+    },
+    {
+      "capabilityId": "CAP-XYUI-UNIT-STATE",
+      "name": "XYUI unit state",
+      "module": "XYUI.Avalonia.Tests",
+      "minimumEvidenceLevel": "P1",
+      "defaultBlockingScope": "MODULE",
+      "productInvariants": [
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
+      ]
+    },
+    {
+      "capabilityId": "CAP-CORE-STATE-CONTRACT",
+      "name": "Core state contract",
+      "module": "XuanYu.Core.Tests",
+      "minimumEvidenceLevel": "P1",
+      "defaultBlockingScope": "MODULE",
+      "productInvariants": [
+        "Core state and transform contracts remain deterministic for tested inputs"
+      ]
     }
   ]
 }

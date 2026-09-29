@@ -477,9 +477,11 @@
       "testId": "XYT-G-0018",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-STATE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render state and draw-plan calculations remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -492,12 +494,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0019",
@@ -711,9 +713,11 @@
       "testId": "XYT-G-0027",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-CORE-STATE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "Core state and transform contracts remain deterministic for tested inputs"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -726,20 +730,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0028",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-CORE-STATE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "Core state and transform contracts remain deterministic for tested inputs"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -752,12 +758,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0029",
@@ -841,9 +847,11 @@
       "testId": "XYT-G-0032",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -856,20 +864,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/Diagnostics/RenderLogNoiseContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0033",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -882,12 +892,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/DrawPlan/CubeRenderDrawPlanTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0034",
@@ -919,9 +929,11 @@
       "testId": "XYT-G-0035",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-STATE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render state and draw-plan calculations remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -934,20 +946,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/DrawPlan/RenderDrawPlanTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0036",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -960,20 +974,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0037",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render projection and draw-plan composition remain coherent in headless composition; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -986,20 +1002,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.Rotation.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0038",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render projection and draw-plan composition remain coherent in headless composition; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -1012,12 +1030,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.Selection.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0039",
@@ -1335,9 +1353,11 @@
       "testId": "XYT-G-0051",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render projection and draw-plan composition remain coherent in headless composition; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -1350,12 +1370,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/LatestRenderProjectionQueueTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0052",
@@ -1387,9 +1407,11 @@
       "testId": "XYT-G-0053",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -1402,12 +1424,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/Map/MapRenderDrawPlanTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0054",
@@ -1803,9 +1825,11 @@
       "testId": "XYT-G-0069",
       "module": "XuanYu.Core.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render projection and draw-plan composition remain coherent in headless composition; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -1818,12 +1842,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.Core.Tests/Render/StaticModels/StaticModelRenderContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0070",
@@ -2271,9 +2295,11 @@
       "testId": "XYT-G-0087",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -2286,12 +2312,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Architecture/WorldRenderDependencyBoundaryTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0088",
@@ -3831,9 +3857,12 @@
       "testId": "XYT-G-0147",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -3846,12 +3875,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0148",
@@ -4975,9 +5004,11 @@
       "testId": "XYT-G-0191",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -4990,12 +5021,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Map/MapRegionDatasetRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0192",
@@ -5859,9 +5890,11 @@
       "testId": "XYT-G-0225",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-STATE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render state and draw-plan calculations remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -5874,12 +5907,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/MapEditing/MapRenderSnapshotProjectionTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0226",
@@ -6249,9 +6282,11 @@
       "testId": "XYT-G-0240",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -6264,12 +6299,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/MapEditing/RegionVertexSnapIntegrationContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0241",
@@ -6561,9 +6596,11 @@
       "testId": "XYT-G-0252",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -6576,12 +6613,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Render/TerrainMultiTileRenderContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0253",
@@ -6613,9 +6650,11 @@
       "testId": "XYT-G-0254",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -6628,20 +6667,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Render/VulkanPresentLoopContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0255",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-STATE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render state and draw-plan calculations remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -6654,20 +6695,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Render/VulkanPresentModeSelectionTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0256",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-STATE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render state and draw-plan calculations remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -6680,20 +6723,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Render/VulkanResizeContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0257",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -6706,12 +6751,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Render/VulkanSwapchainChurnTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0258",
@@ -7887,9 +7932,11 @@
       "testId": "XYT-G-0303",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-STATE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Render state and draw-plan calculations remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -7902,12 +7949,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Terrain/TerrainElevationTileRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0304",
@@ -8121,9 +8168,11 @@
       "testId": "XYT-G-0312",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -8136,12 +8185,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Terrain/TerrainRenderContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0313",
@@ -8797,9 +8846,12 @@
       "testId": "XYT-G-0338",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -8812,20 +8864,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaAR4MenuRuntimeTests.Contracts.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0339",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -8838,12 +8893,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaAR4MenuRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0340",
@@ -8875,9 +8930,11 @@
       "testId": "XYT-G-0341",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-TERRAIN-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Terrain/render projection and resource composition remain coherent in headless integration; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -8890,20 +8947,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaAR6WorkspaceRadioRenderTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0342",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -8916,20 +8975,23 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaBLeftWorkspaceRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0343",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -8942,20 +9004,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaBLeftWorkspaceRuntimeTests.R2.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0344",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -8968,12 +9033,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaCR1ContextToolbarRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0345",
@@ -9031,9 +9096,12 @@
       "testId": "XYT-G-0347",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9046,20 +9114,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaDR2CorrectionInstanceRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0348",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9072,20 +9143,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaDR2Fix1MapInspectorRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0349",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9098,20 +9172,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaDR2Fix2CompactNavLayerDockRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0350",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9124,20 +9200,23 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaDR2Fix3ProjectionDensityRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0351",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9150,20 +9229,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaDR2Fix4RegionInspectorRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0352",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9176,20 +9258,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaDR2Fix5TabIntegrationRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0353",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9202,20 +9286,23 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaDR2NavigationAndMapContextRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0354",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9228,20 +9315,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/AreaDR3InspectorPagerRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0355",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9254,20 +9344,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/ContextToolbarGeometryRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0356",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9280,12 +9373,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/ContextToolbarNativeDismissRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0357",
@@ -9343,9 +9436,11 @@
       "testId": "XYT-G-0359",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9358,20 +9453,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/ContextToolbarPopupHostRuntimeTests.Contracts.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0360",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9384,20 +9481,23 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/ContextToolbarPopupHostRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0361",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9410,20 +9510,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/ContextToolbarR2RuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0362",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9436,12 +9539,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DatasetLayerPanelRuntimeLayoutTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0363",
@@ -9473,9 +9576,11 @@
       "testId": "XYT-G-0364",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9488,12 +9593,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticBoundsRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0365",
@@ -9655,9 +9760,12 @@
       "testId": "XYT-G-0371",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9670,12 +9778,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticLockedControlNativeMoveTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0372",
@@ -9707,9 +9815,11 @@
       "testId": "XYT-G-0373",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9722,20 +9832,23 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticNativeCoordinateMappingTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0374",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9748,20 +9861,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticNativeDialogEdgeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0375",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9774,20 +9890,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticNativeDialogEdgeTests.Cycles.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0376",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9800,20 +9919,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticNativeDialogLifecycleTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0377",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9826,20 +9948,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticNativeLockedClickTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0378",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9852,20 +9977,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticNativeOverlayRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0379",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9878,20 +10005,23 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticNativePointerProbeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0380",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9904,20 +10034,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticNativeTargetOwnershipTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0381",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -9930,12 +10062,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticOverlayRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0382",
@@ -10097,9 +10229,12 @@
       "testId": "XYT-G-0388",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10112,12 +10247,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticPopupBoundsRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0389",
@@ -10175,9 +10310,11 @@
       "testId": "XYT-G-0391",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10190,12 +10327,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticProbeOverlayRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0392",
@@ -10253,9 +10390,11 @@
       "testId": "XYT-G-0394",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10268,12 +10407,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticR1FloatingRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0395",
@@ -10305,9 +10444,11 @@
       "testId": "XYT-G-0396",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10320,12 +10461,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticR1PopupRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0397",
@@ -10409,9 +10550,11 @@
       "testId": "XYT-G-0400",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10424,12 +10567,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticRegistrationRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0401",
@@ -10461,9 +10604,12 @@
       "testId": "XYT-G-0402",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10476,12 +10622,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/DiagnosticTargetBoundsRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0403",
@@ -10669,9 +10815,12 @@
       "testId": "XYT-G-0410",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10684,20 +10833,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/FeatureEditCR1InspectorRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0411",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10710,12 +10862,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/FeatureEditCR1RuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0412",
@@ -10825,9 +10977,12 @@
       "testId": "XYT-G-0416",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10840,20 +10995,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/FeatureEditWorkflowRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0417",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10866,20 +11024,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/GenericMarkerSnapIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0418",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -10892,12 +11053,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/GenericRoadSnapIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0419",
@@ -11137,9 +11298,11 @@
       "testId": "XYT-G-0428",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11152,20 +11315,23 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/InspectorSectionRailLayoutRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0429",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11178,12 +11344,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/InspectorSectionRailScrollRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0430",
@@ -11241,9 +11407,12 @@
       "testId": "XYT-G-0432",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11256,20 +11425,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/LayerARuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0433",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11282,20 +11454,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeLayoutTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0434",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11308,12 +11483,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeStateTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0435",
@@ -11371,9 +11546,12 @@
       "testId": "XYT-G-0437",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11386,12 +11564,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/MapMarkerInspectorPanelRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0438",
@@ -11683,9 +11861,12 @@
       "testId": "XYT-G-0449",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11698,12 +11879,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/PointFeatureEntryRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0450",
@@ -11735,9 +11916,12 @@
       "testId": "XYT-G-0451",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11750,12 +11934,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingF1ActivationRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0452",
@@ -11839,9 +12023,11 @@
       "testId": "XYT-G-0455",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11854,20 +12040,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingF1FullRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0456",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11880,12 +12068,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingF1FullRuntimeTests.Names.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0457",
@@ -11917,9 +12105,11 @@
       "testId": "XYT-G-0458",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-TERRAIN-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Terrain/render projection and resource composition remain coherent in headless integration; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11932,12 +12122,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingF1RenderContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0459",
@@ -11969,9 +12159,11 @@
       "testId": "XYT-G-0460",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -11984,12 +12176,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingF1RuntimeRedTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0461",
@@ -12073,9 +12265,11 @@
       "testId": "XYT-G-0464",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12088,20 +12282,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingSnapRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0465",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12114,20 +12310,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingSnapRuntimeTests.Edge.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0466",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12140,20 +12338,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingSnapRuntimeTests.History.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0467",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12166,12 +12366,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RegionDrawingSnapRuntimeTests.Persistence.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0468",
@@ -12203,9 +12403,12 @@
       "testId": "XYT-G-0469",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12218,12 +12421,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/RightTabsVisibilityRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0470",
@@ -12333,9 +12536,12 @@
       "testId": "XYT-G-0474",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12348,12 +12554,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/ScaleIndicatorVisibilityRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0475",
@@ -12463,9 +12669,11 @@
       "testId": "XYT-G-0479",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-TERRAIN-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Terrain/render projection and resource composition remain coherent in headless integration; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12478,20 +12686,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/TerrainContextRuntimeFixTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0480",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-TERRAIN-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Terrain/render projection and resource composition remain coherent in headless integration; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12504,12 +12714,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/TerrainHotpathTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0481",
@@ -12541,9 +12751,11 @@
       "testId": "XYT-G-0482",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-RENDER-SOURCE-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Renderer source and draw-plan contracts remain structurally consistent within the declared static scope"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12556,20 +12768,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/TerrainInspectorRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0483",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-TERRAIN-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Terrain/render projection and resource composition remain coherent in headless integration; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12582,20 +12796,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/TerrainRenderIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0484",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-TERRAIN-HEADLESS-COMPOSITION"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'Render/Terrain contract' has no canonical CAP-* mapping in test-capability-map.json"
+        "Terrain/render projection and resource composition remain coherent in headless integration; no GPU claim"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12608,12 +12824,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/TerrainTopContextRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0485",
@@ -12697,9 +12913,12 @@
       "testId": "XYT-G-0488",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -12712,12 +12931,12 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiRuntime/UiRuntimeRiskTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0489",
@@ -13789,9 +14008,11 @@
       "testId": "XYT-G-0530",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -13804,12 +14025,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/UiTokens/UiD6LogPerformanceTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0531",
@@ -14257,9 +14478,12 @@
       "testId": "XYT-G-0548",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14272,20 +14496,23 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/InputIntegration/CameraWheelAdapterIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0549",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P2",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-HEADLESS"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "领域事实由 World/Editor 权威持有",
+        "UI 投影不会伪造领域状态"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14298,20 +14525,22 @@
       "maxDurationSeconds": 60,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/InputIntegration/CameraWheelInputIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0550",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14324,12 +14553,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/InputIntegration/ConsumerLifecycleIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0551",
@@ -14387,9 +14616,11 @@
       "testId": "XYT-G-0553",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14402,20 +14633,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/InputIntegration/NativeKeyboardInputTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0554",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14428,20 +14661,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/InputIntegration/NativeViewportCoordinateContractTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0555",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor UI and input ownership declarations preserve their declared contract"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14454,12 +14689,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/InputIntegration/NativeViewportInputForwarderTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0556",
@@ -14543,9 +14778,11 @@
       "testId": "XYT-G-0559",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14558,12 +14795,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/InputIntegration/ViewportInputConvergenceIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0560",
@@ -14673,9 +14910,11 @@
       "testId": "XYT-G-0564",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14688,12 +14927,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/MapInputCancellationIntegrationTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0565",
@@ -14751,9 +14990,11 @@
       "testId": "XYT-G-0567",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14766,20 +15007,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/NativePointerEventAdapterTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0568",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14792,20 +15035,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/NativePointerRoutePolicyTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0569",
       "module": "XuanYu.World.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-WORLD-INPUT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "World/Editor input and state transitions remain deterministic in the tested local domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -14818,12 +15063,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "XuanYu.World.Tests/Viewport/PlatformInputParity/NativeSourceParityTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYE",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0570",
@@ -15245,9 +15490,11 @@
       "testId": "XYT-G-0586",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15260,20 +15507,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/AdaptiveLayoutRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0587",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15286,20 +15535,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/BadgeRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0588",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15312,12 +15563,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/BrushRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0589",
@@ -15375,9 +15626,11 @@
       "testId": "XYT-G-0591",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15390,12 +15643,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/CodeTextRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0592",
@@ -15453,9 +15706,11 @@
       "testId": "XYT-G-0594",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15468,20 +15723,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/DensityRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0595",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15494,12 +15751,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/FoundationFacadeRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0596",
@@ -15661,9 +15918,11 @@
       "testId": "XYT-G-0602",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15676,12 +15935,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/IconRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0603",
@@ -15765,9 +16024,11 @@
       "testId": "XYT-G-0606",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15780,12 +16041,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/MonoTextRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0607",
@@ -15817,9 +16078,11 @@
       "testId": "XYT-G-0608",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15832,20 +16095,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1CFeedbackRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0609",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15858,20 +16123,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1CSeparatorRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0610",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15884,20 +16151,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1CShortcutHintRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0611",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15910,20 +16179,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1DSearchTruncatedRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0612",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15936,20 +16207,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1DSelectableEmptyRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0613",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -15962,12 +16235,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1DTooltipRichTextRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0614",
@@ -16025,9 +16298,11 @@
       "testId": "XYT-G-0616",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16040,12 +16315,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/SearchHighlightRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0617",
@@ -16077,9 +16352,11 @@
       "testId": "XYT-G-0618",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16092,20 +16369,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/SelectableTextRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0619",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16118,12 +16397,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/ShapeRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0620",
@@ -16181,9 +16460,11 @@
       "testId": "XYT-G-0622",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16196,12 +16477,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/StatusAndIconLabelRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0623",
@@ -16233,9 +16514,11 @@
       "testId": "XYT-G-0624",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16248,20 +16531,22 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/ThemeRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0625",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16274,12 +16559,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/TypographyRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0626",
@@ -16311,9 +16596,11 @@
       "testId": "XYT-G-0627",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P1",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-UNIT-STATE"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI pure state, geometry, and token transitions remain deterministic in the tested domain"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16326,12 +16613,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/XYFoundationRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "DOWNGRADE",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0628",
@@ -16467,9 +16754,11 @@
       "testId": "XYT-G-0633",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16482,12 +16771,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1TextRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0634",
@@ -16623,9 +16912,11 @@
       "testId": "XYT-G-0639",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16638,12 +16929,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ButtonRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0640",
@@ -16883,9 +17174,11 @@
       "testId": "XYT-G-0649",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16898,12 +17191,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0650",
@@ -16935,9 +17228,11 @@
       "testId": "XYT-G-0651",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -16950,12 +17245,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2GhostToggleRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0652",
@@ -17377,9 +17672,11 @@
       "testId": "XYT-G-0668",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -17392,12 +17689,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SplitButtonRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0669",
@@ -17897,9 +18194,11 @@
       "testId": "XYT-G-0688",
       "module": "XYUI.Avalonia.Tests",
       "evidenceLevel": "P0",
-      "targetCapability": [],
+      "targetCapability": [
+        "CAP-XYUI-STATIC-CONTRACT"
+      ],
       "productInvariants": [
-        "REVIEW_REQUIRED: G1 capability label 'UI/input/integration' has no canonical CAP-* mapping in test-capability-map.json"
+        "XYUI static tokens and control contracts remain aligned with canonical Runtime and Consumer mappings"
       ],
       "prerequisites": [
         ".NET SDK Resolver Chain",
@@ -17912,12 +18211,12 @@
       "maxDurationSeconds": 30,
       "testSetVersion": "TSET-LEGACY-HIGH-v1.0",
       "testPath": "xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4GalleryRuntimeTests.cs",
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "owner": "XYUI",
       "migrationWave": "WAVE-HIGH",
       "auditAction": "RENAME",
       "auditRisk": "HIGH",
-      "capabilityResolution": "REVIEW_REQUIRED"
+      "capabilityResolution": "RESOLVED"
     },
     {
       "testId": "XYT-G-0689",
