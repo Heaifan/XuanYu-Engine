@@ -70,7 +70,7 @@ if ($Field) {
     if ($null -eq $state.PSObject.Properties[$targetSet]) { $state | Add-Member -NotePropertyName $targetSet -NotePropertyValue ([pscustomobject]@{}) }
     $container = if ($targetSet -eq 'globalStatus') { $state.globalStatus } else { $state.laneStates.$Scope.fields }
     if ($null -eq $container) { $container = [pscustomobject]@{}; if ($targetSet -eq 'globalStatus') { $state.globalStatus = $container } else { $state.laneStates.$Scope.fields = $container } }
-    $container | Add-Member -NotePropertyName $Field.ToUpperInvariant() -NotePropertyValue $Value -Force
+    $container | Add-Member -NotePropertyName ($Field.ToUpperInvariant()) -NotePropertyValue $Value -Force
 }
 Write-Atomic $state
 if ($isCoordinator -and $Field -and $globalFields -contains $Field.ToUpperInvariant()) { Write-Output 'AUTHORITY PASS' } else { Write-Output 'LANE STATE PASS' }
