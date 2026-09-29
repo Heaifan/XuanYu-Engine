@@ -14,10 +14,14 @@ public sealed class RegionDrawingState
     public bool CanUndo => _undo.Count > 0;
     public bool CanRedo => _redo.Count > 0;
 
-    public void Start(MapLayerId layerId, string displayName, MapRegionKind kind)
+    public void Start(MapLayerId layerId, string displayName, MapRegionKind kind,
+        SurfaceBinding? surfaceBinding = null)
     {
         ClearHistory();
-        Draft = new MapRegionDraft(layerId, displayName, kind, ImmutableArray<MapPoint>.Empty);
+        Draft = new MapRegionDraft(layerId, displayName, kind, ImmutableArray<MapPoint>.Empty)
+        {
+            SurfaceBinding = surfaceBinding ?? SurfaceBinding.ReferencePlane
+        };
         Cursor = null;
         IsCloseCandidate = false;
     }
