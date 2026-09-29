@@ -39,7 +39,7 @@ public sealed partial class GroundAuthoringContractTests
         var state = new RegionDrawingState();
         state.Start(map.Layers.First(item => item.Kind == MapLayerKind.Region).LayerId,
             "R", MapRegionKind.Generic);
-        Assert.False(MapSurfacePicker.TryPick(map, projection, 50, 50,
+        Assert.False(MapSurfacePicker.TryPickGround(map, projection, 50, 50,
             new FakeSurface(null), out _));
         Assert.Empty(state.Draft!.Vertices);
     }
@@ -52,6 +52,18 @@ public sealed partial class GroundAuthoringContractTests
         { SurfaceBinding = SurfaceBinding.Terrain("dem-a") };
         Assert.True(region.Vertices.SequenceEqual([new(1, 2), new(3, 2), new(2, 4)]));
         Assert.Equal("dem-a", region.SurfaceBinding.Identity);
+    }
+
+    [Fact]
+    public void Region_draft_carries_surface_binding_to_committed_region()
+    {
+        var binding = SurfaceBinding.Terrain("dem-a");
+        var state = new RegionDrawingState();
+        state.Start(MapLayerId.New(), "R", MapRegionKind.Generic, binding);
+        state.AddVertex(new(1, 1)); state.AddVertex(new(3, 1)); state.AddVertex(new(2, 3));
+        var region = state.TakeDraftForClose()!.Close(MapRegionId.New());
+        Assert.Equal(binding, region.SurfaceBinding);
+        Assert.True(region.Vertices.SequenceEqual([new(1, 1), new(3, 1), new(2, 3)]));
     }
 
     [Fact]
