@@ -1,4 +1,3 @@
-using System.Numerics;
 using XuanYu.Core.Map;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
@@ -40,10 +39,8 @@ public sealed class MapVectorOverlayDepthPolicyTests
         var state = ViewProjectionState.Create(start, viewport);
         foreach (var vertex in new[] { new Vector3d(-250, -250, 0), new(250, -250, 0), new(0, 250, 0) })
         {
-            var clip = Vector4.Transform(new Vector4((float)vertex.X, (float)vertex.Y,
-                (float)vertex.Z, 1), state.ViewProjection);
-            Assert.True(float.IsFinite(clip.W) && clip.W > 0);
-            Assert.True(float.IsFinite(clip.Z / clip.W));
+            Assert.True(state.TryProjectWorldPoint(vertex, out var screen));
+            Assert.True(double.IsFinite(screen.X) && double.IsFinite(screen.Y));
         }
     }
 

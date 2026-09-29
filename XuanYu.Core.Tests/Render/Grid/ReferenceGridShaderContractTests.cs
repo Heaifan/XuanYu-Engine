@@ -17,9 +17,8 @@ public sealed class ReferenceGridShaderContractTests
         Assert.Contains("coarseSpacing = max", shader);
         Assert.Contains("fineWeight", shader);
         Assert.Contains("coarseWeight", shader);
-        Assert.Contains("t = -nearWorld.z / rayDirection.z", shader);
-        Assert.Contains("worldPosition.x / fineSpacing", shader);
-        Assert.Contains("worldPosition.y / fineSpacing", shader);
+        Assert.Contains("(-renderOrigin.z - nearWorld.z) / rayDirection.z", shader);
+        Assert.Contains("absoluteWorldXY / fineSpacing", shader);
         Assert.Contains("fwidth(coordinate)", shader);
         Assert.DoesNotContain("BaseHeight", shader);
         Assert.DoesNotContain("log10", shader);
