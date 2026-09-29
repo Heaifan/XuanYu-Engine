@@ -1,0 +1,33 @@
+{
+  "schema": "XYT-C/1",
+  "ownershipRules": [
+    { "pattern": "scripts/governance/*", "owner": "GOVERNANCE" },
+    { "pattern": "docs/governance/*", "owner": "GOVERNANCE" },
+    { "pattern": "XuanYu.World/*", "owner": "XYE-WORLD" },
+    { "pattern": "XuanYu.Editor/*", "owner": "XYE-EDITOR" },
+    { "pattern": "XuanYu.Editor.UI/*", "owner": "XYE-UI" },
+    { "pattern": "xyui/*", "owner": "XYUI" },
+    { "pattern": "XYT/*", "owner": "XYT" },
+    { "pattern": "xyt.ps1", "owner": "XYT" },
+    { "pattern": "xyt.bat", "owner": "XYT" }
+  ],
+  "capabilityRules": [
+    { "pattern": "scripts/governance/*", "capability": "governance" },
+    { "pattern": "docs/governance/*", "capability": "governance" },
+    { "pattern": "XuanYu.World/*", "capability": "world" },
+    { "pattern": "XuanYu.Editor/*", "capability": "editor" },
+    { "pattern": "XuanYu.Editor.UI/*", "capability": "ui" },
+    { "pattern": "xyui/*", "capability": "xyui" },
+    { "pattern": "XYT/*", "capability": "xyt" },
+    { "pattern": "xyt.ps1", "capability": "xyt" },
+    { "pattern": "xyt.bat", "capability": "xyt" }
+  ],
+  "testRules": [
+    { "owner": "GOVERNANCE", "capabilities": ["governance"], "test": "scripts/governance/*selftest.ps1" },
+    { "owner": "XYE-WORLD", "capabilities": ["world"], "test": "XuanYu.World.Tests/" },
+    { "owner": "XYE-EDITOR", "capabilities": ["editor"], "test": "XuanYu.World.Tests/" },
+    { "owner": "XYE-UI", "capabilities": ["ui"], "test": "XuanYu.World.Tests/" },
+    { "owner": "XYUI", "capabilities": ["xyui"], "test": "xyui/avalonia/tests/XYUI.Avalonia.Tests/" },
+    { "owner": "XYT", "capabilities": ["xyt"], "test": "XYT/tests/xyt.selftest.ps1" }
+  ]
+}

@@ -1,0 +1,18 @@
+[CmdletBinding()]
+param([string]$ChangedListPath='', [string]$DiffRange='', [string]$OutputPath='', [string]$SupplementPath='', [string[]]$AgentTests=@(), [string]$MappingPath='', [string]$OwnershipPath='')
+$ErrorActionPreference='Stop'; $repo=(Get-Location).Path
+function Read-Json($Path) { if (!$Path -or !(Test-Path -LiteralPath $Path -PathType Leaf)) { return $null }; Get-Content -Raw -LiteralPath $Path | ConvertFrom-Json }
+function Repo-Path($Path,$Default) { if (!$Path) { return Join-Path $repo $Default }; if ([IO.Path]::IsPathRooted($Path)) { return $Path }; Join-Path $repo $Path }
+function Changed-Files { if ($ChangedListPath) { return @(Get-Content -LiteralPath $ChangedListPath | ? { $_.Trim() }) }; if ($DiffRange) { return @(& git -C $repo diff --name-only $DiffRange | ? { $_.Trim() }) }; throw 'Provide ChangedListPath or DiffRange.' }
+function Match($Path,$Pattern) { $Path -like $Pattern }
+function Owner($File,$Map,$Own) { $x=@($Own.entries)|? path -eq $File|select -First 1; if($x){return [pscustomobject]@{name=[string]$x.owner;source='ownership-manifest'}}; $x=@($Map.ownershipRules)|? {Match $File $_.pattern}|select -First 1; if($x){return [pscustomobject]@{name=[string]$x.owner;source='fixed-pattern'}}; [pscustomobject]@{name='UNKNOWN';source='unresolved'} }
+function Tests($Test) { if($Test -notmatch '[*?]'){return @($Test)}; $p=Join-Path $repo ($Test -replace '/','\'); @(Get-ChildItem -Path $p -File -EA SilentlyContinue|% {$_.FullName.Substring($repo.Length+1).Replace('\','/')}) }
+function Plan($Files,$Map,$Own,$Supplement) {
+    $required=[Collections.Generic.List[object]]::new(); $changed=@(); $disputes=[Collections.Generic.List[string]]::new()
+    foreach($file in $Files){$owner=Owner $file $Map $Own; $caps=@($Map.capabilityRules|? {Match $file $_.pattern}); if($owner.name -eq 'UNKNOWN' -or !$caps){[void]$disputes.Add("${file}: ownership/capability unresolved")}; $rules=@($Map.testRules|? {$_.owner -eq $owner.name -or @($_.capabilities|? {$caps.capability -contains $_}).Count -gt 0}); foreach($r in $rules){foreach($t in (Tests ([string]$r.test))){[void]$required.Add($t)}}; $changed+=[pscustomobject]@{path=$file;ownership=$owner.name;capabilities=@($caps.capability);mapping=$owner.source} }
+    foreach($t in $AgentTests){if($t.Trim()){[void]$required.Add($t.Trim())}}
+    $items=if($null -eq $Supplement){@()}else{@($Supplement.items)}; foreach($i in $items){if(!$i.test -or !$i.reason -or !$i.source){[void]$disputes.Add('AI supplement requires test, reason, and source')}}; $extra=@($items|% {[string]$_.test}|? {$_}); foreach($t in $extra){[void]$required.Add($t)}
+    [pscustomobject]@{schema='XYT-C/1';status=$(if($disputes.Count){'REVIEW_REQUIRED'}else{'PASS'});changedFiles=$changed;requiredTests=@($required|select -Unique);supplementalTests=@($extra|select -Unique);disputes=@($disputes);agentAdditions=@($AgentTests|? {$_.Trim()}|select -Unique);rule='fixed union agent additions and AI supplements; subtraction forbidden'}
+}
+$map=Read-Json (Repo-Path $MappingPath 'docs/governance/xyt-test-mapping.json'); $own=Read-Json (Repo-Path $OwnershipPath 'tools/handoff/ownership-manifest.json'); $result=Plan (Changed-Files) $map $own (Read-Json $SupplementPath); $json=$result|ConvertTo-Json -Depth 10
+if($OutputPath){$json|Set-Content -LiteralPath $OutputPath -Encoding UTF8}else{$json}; "XYT STATUS = $($result.status)"; "XYT REQUIRED TESTS = $(@($result.requiredTests).Count)"; "XYT SUPPLEMENTAL TESTS = $(@($result.supplementalTests).Count)"; if($result.disputes.Count){'XYT DISPUTES = '+($result.disputes -join '; ')}; if($result.status -eq 'REVIEW_REQUIRED'){exit 2}
