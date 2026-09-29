@@ -1,0 +1,11 @@
+{
+  "version": "P3-R1",
+  "capabilities": {
+    "P3-01": ["real App", "Window/Native Host", "Vulkan Surface", "LogicalDevice", "Swapchain", "first Present"],
+    "P3-02": ["real Window resize", "Swapchain recreate", "no DeviceLost"],
+    "P3-03": ["real DEM/HGT import", "Terrain Render Path", "Camera Dolly/Orbit", "resource lifecycle"],
+    "P3-04": ["map to region mode", "real Pointer/Capture", "Toolbar", "DEM state retention"]
+  },
+  "statuses": ["PASS", "FAIL", "TIMEOUT", "FLAKY", "BLOCKED_BY", "UNCLASSIFIED"],
+  "t0Lock": "INC-2026-09-29-002 remains unresolved"
+}
