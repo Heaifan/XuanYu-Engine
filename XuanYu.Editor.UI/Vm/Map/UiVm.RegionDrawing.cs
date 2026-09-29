@@ -10,7 +10,6 @@ public sealed partial class UiVm
 {
     readonly RegionDrawingState _regionDrawing = new();
     bool _releasingRegionPointerCapture;
-
     public bool IsRegionDrawingActive => IsRegionDrawingTool;
     public int RegionDrawingHitCount { get; private set; }
     public MapPoint? LastRegionDrawingHit { get; private set; }
@@ -20,7 +19,6 @@ public sealed partial class UiVm
     public string RegionDrawingDraftStatus => !IsRegionDrawingDraftActive ? "尚未开始绘制"
         : RegionDrawingDraftVertexCount < 3 ? "至少需要 3 个顶点" : "可以闭合";
     public int RegionContentCount => MapSession.CurrentMap.Regions.Length;
-
     public bool RegionDrawingPointerPressed(double x, double y, ViewportState viewport, bool snapSuppressed = false)
     {
         if (!IsRegionDrawingTool) return false;
