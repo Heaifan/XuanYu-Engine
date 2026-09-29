@@ -333,7 +333,7 @@ F2 保留 Report 能力，将实现移动为独立 Report Module；禁止 F2 修
 
 **日期**：2026-09-29
 **XYT 事故等级**：T0
-**状态**：ACTIVE / CONTAINED
+**状态**：READY FOR FINAL CLOSURE AUDIT
 **影响范围**：Legacy Test Evidence、Runtime Acceptance Evidence、旧自动化 PASS 的证据解释
 **来源**：XYT-G Legacy Test Clean-Room Audit
 **Commit**：待补证
@@ -370,7 +370,13 @@ P0~P2 测试仍可按其真实等级继续使用；与此证据链无关的并�
 
 完成首批高风险证据纠偏，并建立可用 P3 路径后，对受影响能力执行一轮最小充分测试；通过后可按用户最终裁决解除对应 T0-LOCK。
 
-**关联 Knowledge**：K-VAL-002、K-XYT-AUDIT-001
+### 2026-09-29 H3 P3 路径建立
+
+H3 已在正式远端提交 `ccd3dbef94864466ec2a7fc73c4ee6074e5809b2` 建立 Canonical P3 Runtime Harness，并通过真实 App / HWND / Vulkan Device / Swapchain / Present 取得 P3-01 REAL PASS。P3-02 独立保持 TIMEOUT，不覆盖 P3-01。
+
+因此本 Incident 的“P3=0 真空”已经解除；Legacy HIGH 风险测试也已完成首轮 Capability Resolution（129 RESOLVED / 3 REVIEW_REQUIRED）。当前 T0 状态升级为 `READY FOR FINAL CLOSURE AUDIT`，仍等待 L2 与 XYT-INTEGRATION-R1 证明统一入口能够正确消费 Registry / Planner / Executor / Runtime / Evidence / IPO，再由 ChatGPT + 用户最终裁决是否 CLOSED。
+
+**关联 Knowledge**：K-VAL-002、K-XYT-AUDIT-001、K-XYT-P3-001、K-XYT-P3-002
 
 
 ### 2026-09-29 G2 统计完整性补充

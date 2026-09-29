@@ -683,6 +683,7 @@ Fake / Fixture Integration PASS 只能证明 Contract 可串联，不得升级�
 
 **首次确认**：2026-09-29
 **来源**：XYT-H P3 Runtime Harness R1 与 Repository Audit。
+**正式落地 Commit**：`ccd3dbef94864466ec2a7fc73c4ee6074e5809b2`。
 
 ### 工程规则
 
