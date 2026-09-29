@@ -1,12 +1,7 @@
-name: Handoff R3 Smoke
-
-on:
-  push:
-    branches:
-      - feat/v0.3-world-authoring-r1
-
+name: smoke
+on: [push]
 jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
-      - run: echo HANDOFF_R3_SMOKE_OK
+      - run: echo ok
