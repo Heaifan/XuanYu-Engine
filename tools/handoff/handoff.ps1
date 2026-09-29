@@ -506,7 +506,8 @@ if ($Mode -eq 'advance') {
     if ($null -eq $state) { Stop-Advance 'STATE_NOT_FOUND' 'handoff state.json 不存在。' }
     if (-not [bool]$state.active) { Stop-Advance 'NO_ACTIVE_WAVE' '不存在 Active Wave。' }
     $coordinatorScope = Normalize-CoordinatorScope $state.coordinatorScope
-    if (-not [string]::IsNullOrWhiteSpace([string]$coordinatorScope) -and $Scope -ne $coordinatorScope) {
+    $advanceScopeException = $state.mode -eq 'convergence' -and $coordinatorScope -eq 'xye' -and $Scope -eq 'governance'
+    if (-not [string]::IsNullOrWhiteSpace([string]$coordinatorScope) -and $Scope -ne $coordinatorScope -and -not $advanceScopeException) {
         Stop-Advance 'COORDINATOR_MISMATCH' "当前 scope $Scope 不是 Coordinator scope $coordinatorScope。"
     }
     if ($facts.Branch -ne $state.branch) { Stop-Advance 'BRANCH_MISMATCH' "Expected $($state.branch)，Current $($facts.Branch)。" }

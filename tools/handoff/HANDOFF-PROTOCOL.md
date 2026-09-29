@@ -41,6 +41,8 @@ handoff.cmd commit-lock --scope xye --owner <session>
 
 持锁者才可以执行精确路径 stage、commit、push 和 `advance --owner <session>`；禁止 `git add .`。成功 advance 后锁自动释放。无提交时，持锁者可用同 owner 的 `commit-unlock` 释放；HEAD 已前进时不得绕过 push + advance 解锁。
 
+Convergence Coordinator 为 `xye` 时，治理控制面修复可由 `governance` Commit Mutex 持有者执行 `advance --scope governance`；该例外只适用于 `state.mode=convergence`，不放宽其他 Lane 的 Coordinator 或 Ownership 限制。
+
 当 JOIN 报 `BASELINE_MOVED` 时，Agent 必须停止并报告 baseline、HEAD、Remote HEAD、Ahead/Behind、Branch 和 ForeignDirty。不得执行 prepare、手动编辑 state.json、reset、stash 或 clean；先处理真实 branch/分叉异常。
 
 `state.json` 的 Wave 字段为：`mode=development|convergence|WIP_RESUME`、`coordinatorScope=xye|integration|governance|null`。WIP Resume 只能作为临时 state，必须记录 `sourceBranch`、`targetBranch`、`createdAt`、`expiryCondition`；不得写入 Repository Config。当前 Branch 到达 target 且 HEAD 与 target upstream 0/0 后，WIP 自动失效，旧 source 不再参与新的 PREPARE 比较。
