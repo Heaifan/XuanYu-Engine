@@ -11,7 +11,11 @@ public sealed record MapRegionDraft(
     ImmutableArray<MapPoint> Vertices)
 {
     public bool CanClose => Vertices.Length >= 3;
+    public SurfaceBinding SurfaceBinding { get; init; } = SurfaceBinding.ReferencePlane;
 
     public MapRegion Close(MapRegionId regionId) =>
-        new(regionId, LayerId, DisplayName, Kind, Vertices);
+        new(regionId, LayerId, DisplayName, Kind, Vertices)
+        {
+            SurfaceBinding = SurfaceBinding
+        };
 }
