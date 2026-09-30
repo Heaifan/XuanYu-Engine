@@ -116,7 +116,7 @@ These are recorded as GAP/PENDING, never as PASS. Wave T-A may close only if all
 ```text
 Product Version: v0.3.0.3-fix
 Event: XYT-T2-T-A-FIX-A-TERRAIN-CONTEXT
-Ledger status: PROVISIONAL
+Ledger status: APPLIED; product candidate CommitId 115b4ea9
 ```
 
 `Directory.Build.props`, Window Title source, `changelog.md`, and `docs/governance/version-events.tsv` are aligned to the same candidate version. Truth audit/rename/registry changes do not consume a second FIX event. The provisional event must not become APPLIED until the final Candidate / Commit Gate passes.
@@ -124,7 +124,7 @@ Ledger status: PROVISIONAL
 ## 8. Final Report Status
 
 ```text
-XYT-T2 / WAVE-T-A STATUS: FINAL CONVERGENCE READY FOR COMMIT
+XYT-T2 / WAVE-T-A STATUS: FINAL CONVERGENCE COMMITTED; PUSH/REMOTE VERIFY PENDING
 PRODUCT REGRESSION: NONE KNOWN from current recorded evidence
 UNRESOLVED UNKNOWN: 0
 GATE STATUS: PASS
