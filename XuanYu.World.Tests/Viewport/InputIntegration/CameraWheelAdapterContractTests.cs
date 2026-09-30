@@ -3,7 +3,7 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.Viewport.InputIntegration;
 
-public sealed class CameraWheelAdapterIntegrationTests
+public sealed class CameraWheelAdapterContractTests
 {
     [Fact]
     public void Native_wheel_reaches_camera_mutation()

@@ -1,3 +1,4 @@
+using XuanYu.Core.Map;
 using XuanYu.Editor.UI;
 using XuanYu.Render.Abstractions;
 
@@ -49,6 +50,18 @@ public sealed class TerrainMultiTileRenderContractTests
         var projection = Projection([]);
         Assert.False(projection.HasTerrain);
         Assert.DoesNotContain(RenderDrawPlan.GetFrameDrawPlan(projection), entry => entry.Kind == RenderDrawKind.Terrain);
+    }
+
+    [Fact]
+    public void World_surface_terrain_suppresses_map_ground_in_frame_plan()
+    {
+        var projection = Projection([Resource("terrain")]) with
+        { Map = new MapRenderSnapshot("map", 100, 100, MapSurfaceKind.Flat, 0, 0, 1, 1, 1) };
+
+        var plan = RenderDrawPlan.GetFrameDrawPlan(projection);
+
+        Assert.Contains(plan, entry => entry.Kind == RenderDrawKind.Terrain);
+        Assert.DoesNotContain(plan, entry => entry.Kind == RenderDrawKind.MapGround);
     }
 
     [Fact]

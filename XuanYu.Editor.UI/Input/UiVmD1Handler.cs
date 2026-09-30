@@ -16,7 +16,8 @@ sealed class UiVmD1Handler(
         : p.Kind == EditorPointerEventKind.Pressed &&
         (_owner == GestureOwner.Camera ? p.Buttons.HasFlag(EditorPointerButtons.Middle) :
          _owner == GestureOwner.Gizmo ? _vm.HasSelection && !_vm.IsSelectTool : p.Buttons.HasFlag(EditorPointerButtons.Left));
-    public bool HandleWheel(EditorPointerEvent p) => CanClaim(p) && _vm.DollyCamera(p.WheelDelta);
+    public bool HandleWheel(EditorPointerEvent p) => CanClaim(p) && _vm.DollyCameraAtCursor(
+        p.WheelDelta, p.Position.X, p.Position.Y, _viewport());
     public void Begin(ViewportGestureContext c)
     {
         if (_owner == GestureOwner.Camera) _vm.BeginCameraNavigation(c.PointerId, c.Input.Position.X, c.Input.Position.Y,

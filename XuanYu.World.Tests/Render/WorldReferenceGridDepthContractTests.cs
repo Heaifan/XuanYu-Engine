@@ -38,7 +38,7 @@ public sealed class WorldReferenceGridDepthContractTests
     }
 
     [Fact]
-    public void Draw_plan_keeps_terrain_and_map_before_reference_grid()
+    public void Draw_plan_keeps_world_terrain_before_reference_grid()
     {
         var terrain = new TerrainRenderResource("terrain", 1,
             new TerrainHeightfield(2, 2, [1, 2, 3, 4]));
@@ -50,7 +50,7 @@ public sealed class WorldReferenceGridDepthContractTests
 
         Assert.Equal([
             RenderDrawKind.EditorBackground, RenderDrawKind.Terrain,
-            RenderDrawKind.MapGround, RenderDrawKind.MapBounds,
+            RenderDrawKind.MapBounds,
             RenderDrawKind.EditorReferenceGrid, RenderDrawKind.WorldOrigin,
             RenderDrawKind.NavigationGizmo], kinds);
     }

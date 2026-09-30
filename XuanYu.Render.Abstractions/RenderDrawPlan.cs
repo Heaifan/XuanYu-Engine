@@ -42,9 +42,11 @@ public static partial class RenderDrawPlan
             var terrain = projection.TerrainResources[i];
             plan.Add(new FrameEntry(RenderDrawKind.Terrain, terrain.TriangleIndexCount, i));
         }
+        var hasWorldTerrain = projection.TerrainResources.Count != 0;
         if (projection.HasMap)
         {
-            if (projection.Map.ShowGround) plan.Add(new FrameEntry(RenderDrawKind.MapGround, MapGroundIndexCount));
+            if (projection.Map.ShowGround && !hasWorldTerrain)
+                plan.Add(new FrameEntry(RenderDrawKind.MapGround, MapGroundIndexCount));
             if (projection.Map.ShowBoundary) plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
         }
         if (assist.ViewPlaneGrid != EditorViewPlaneGridKind.None)

@@ -6,7 +6,7 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.Viewport.InputIntegration;
 
-public sealed class CameraWheelInputIntegrationTests
+public sealed class CameraWheelInputCompositionTests
 {
     [Fact]
     public void Camera_consumer_claims_wheel_without_capture()
@@ -19,17 +19,24 @@ public sealed class CameraWheelInputIntegrationTests
     }
 
     [Fact]
-    public void Perspective_wheel_changes_position_and_preserves_center()
+    public void Perspective_wheel_preserves_cursor_world_anchor()
     {
         var vm = new UiVm(null, () => true);
+        vm.UpdateViewportFrame(800, 600);
+        const double cursorX = 620;
+        const double cursorY = 180;
+        var viewport = vm.CurrentViewport;
         var before = vm.RenderSnapshot.CameraState;
-        var center = vm.ObservationCenter;
+        var projection = ViewProjectionState.Create(before, viewport);
+        var ray = WorldRayFactory.FromViewportPoint(projection, cursorX, cursorY);
+        var distance = -ray.Origin.Z / ray.Direction.Z;
+        var anchor = ray.Origin + ray.Direction * distance;
 
-        vm.ViewportInput.Sink.Handle(Wheel(1));
+        vm.ViewportInput.Sink.Handle(Wheel(cursorX, cursorY, 1));
 
-        var after = vm.RenderSnapshot.CameraState;
-        Assert.NotEqual(before.Position, after.Position);
-        Assert.Equal(center, vm.ObservationCenter);
+        var afterProjection = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, viewport);
+        var screen = afterProjection.ProjectWorldPoint(anchor);
+        Assert.InRange(Math.Sqrt(Math.Pow(screen.X - cursorX, 2) + Math.Pow(screen.Y - cursorY, 2)), 0, 2);
         Assert.False(vm.ViewportInput.Router.State.IsActive);
     }
 
@@ -62,8 +69,10 @@ public sealed class CameraWheelInputIntegrationTests
         Assert.True(negative.RenderSnapshot.CameraState.Position.DistanceTo(negative.ObservationCenter) > negativeBefore);
     }
 
-    static EditorPointerEvent Wheel(double delta) => new(EditorPointerEventKind.Wheel,
-        new(10, 20), EditorPointerButtons.None, EditorPointerModifiers.None, delta, 1,
+    static EditorPointerEvent Wheel(double delta) => Wheel(10, 20, delta);
+
+    static EditorPointerEvent Wheel(double x, double y, double delta) => new(EditorPointerEventKind.Wheel,
+        new(x, y), EditorPointerButtons.None, EditorPointerModifiers.None, delta, 1,
         new("test"), 1);
 
     sealed class Probe : IViewportD1ConsumerHandler
