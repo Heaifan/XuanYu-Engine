@@ -18,7 +18,7 @@ function Invoke-Handoff([string[]]$Arguments) {
 }
 
 function Assert-Output($Result, [int]$ExitCode, [string]$Text) {
-    Assert-True ($Result.ExitCode -eq $ExitCode) "expected exit $ExitCode, got $($Result.ExitCode): $($Result.Text)"
+    Assert-True ($Result.ExitCode -eq $ExitCode) "expected exit $ExitCode and '$Text', got $($Result.ExitCode): $($Result.Text)"
     Assert-True $Result.Text.Contains($Text) "expected '$Text' in: $($Result.Text)"
 }
 
@@ -106,6 +106,7 @@ try {
     Assert-Output $result 0 'HANDOFF JOIN PASS'
     $result = Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'ACTIVE_WAVE_EXISTS'
+    git -C $root clean -fd | Out-Null
     Assert-Output $result 1 'Current wave does not require a new prepare.'
     $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-b', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'COMMIT_MUTEX_OWNER_MISMATCH'
@@ -205,15 +206,69 @@ try {
     $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
     $result = Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 1 'ACTIVE_WAVE_EXISTS'
-    $result = Invoke-Handoff @('-Mode', 'close', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'DIRTY_ON_CLOSE'
     git -C $root clean -fd | Out-Null
+    $state.laneStates = [pscustomobject]@{
+        xye = [pscustomobject]@{ state = 'ACTIVE'; ownership = 'xye'; workRelease = 'xye' }
+        integration = [pscustomobject]@{ state = 'ACTIVE'; ownership = 'integration'; workRelease = 'integration' }
+        governance = [pscustomobject]@{ state = 'ACTIVE'; ownership = 'governance'; workRelease = 'governance' }
+    }
+    $state.coordinatorScope = 'xye'
+    $state | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'COORDINATOR_REQUIRED'
+    $activeAfterUnauthorizedClose = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    Assert-True ([bool]$activeAfterUnauthorizedClose.active) 'non-Coordinator close must preserve Active Wave'
+    $result = Invoke-Handoff @('-Mode', 'lane-close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'LANE CLOSE PASS'
+    $afterLaneClose = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    Assert-True ([bool]$afterLaneClose.active) 'Lane close must not deactivate the Wave'
+    Assert-True ($afterLaneClose.laneStates.xyui.state -eq 'FROZEN') 'Lane close must freeze only its lane'
+    $result = Invoke-Handoff @('-Mode', 'lane-close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'LANE CLOSE PASS: ALREADY_CLOSED'
+    $result = Invoke-Handoff @('-Mode', 'join', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF JOIN PASS'
+    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'ACTIVE_LANES_EXIST'
+    $stillActive = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    Assert-True ([bool]$stillActive.active) 'Coordinator close must reject remaining active lanes'
     Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all).Count -eq 0) 'fixture must be clean before close regression'
-    $result = Invoke-Handoff @('-Mode', 'close', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'COORDINATOR_REQUIRED'
+    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'ACTIVE_LANES_EXIST'
+    foreach ($lane in @('xye','integration','governance')) {
+        $result = Invoke-Handoff @('-Mode', 'lane-close', '-Scope', $lane, '-RepositoryRoot', $root, '-AllowTestWorkspace')
+        Assert-Output $result 0 'LANE CLOSE PASS'
+    }
+    $registryPath = Join-Path $stateDir 'task-registry.json'
+    $activeTaskState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    $activeTaskState | Add-Member NoteProperty activeTasks @('ACTIVE') -Force
+    $activeTaskState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'ACTIVE_TASKS_EXIST'
+    $activeTaskState.activeTasks = @()
+    $activeTaskState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $resourceState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    $resourceState.laneStates.xye.ownership = 'held'
+    $resourceState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'OWNERSHIP_NOT_RELEASED'
+    $resourceState.laneStates.xye.ownership = $null
+    $resourceState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
+    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
+    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'COMMIT_MUTEX_HELD'
+    Remove-Item -LiteralPath (Join-Path $stateDir 'commit-mutex.json') -Force
+    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'HANDOFF CLOSE PASS'
     $closedState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
     Assert-True (-not [bool]$closedState.active) 'close must deactivate the wave'
     Assert-True ($null -ne $closedState.closedAt) 'close must persist closedAt for legacy state'
+    $result = Invoke-Handoff @('-Mode', 'lane-close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'NO_ACTIVE_WAVE'
+    $closedAfterLaneClose = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
+    Assert-True (-not [bool]$closedAfterLaneClose.active) 'closed Wave must remain closed after Lane close'
     $registryPath = Join-Path $stateDir 'task-registry.json'
     $reportPath = Join-Path $stateDir 'task-reports.json'
     [pscustomobject]@{ tasks = @([pscustomobject]@{ TaskId = 'LEAK'; Status = 'ACTIVE'; WriteScope = @('leak/**'); ExpectedDependencies = @() }) } |

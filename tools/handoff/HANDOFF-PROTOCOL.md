@@ -167,9 +167,13 @@ JOIN 必须允许 dirty；Active Wave 只有在 Branch 改变或 `baselineHead` 
 
 development 下所有 Lane JOIN 可通过 dirty。convergence 且 `coordinatorScope=xye` 时，`join --scope xyui` 返回 `HANDOFF BLOCKED` 与 `CONVERGENCE_EXCLUSIVE`；`join --scope xye` 与 XYE Coordinator status 允许。
 
-## 7. PREPARE / CLOSE
+## 7. PREPARE / LANE CLOSE / GLOBAL CLOSE
 
-Active Wave 存在且未过期时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。旧 Closed Wave 不阻塞新的普通 PREPARE。CLOSE 仅在 working tree clean 时将 Active 标记为 false；dirty 时返回 `DIRTY_ON_CLOSE`。
+Active Wave 存在且未过期时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。旧 Closed Wave 不阻塞新的普通 PREPARE。
+
+Lane 完成与 Workspace Wave 关闭是两个不同动作。普通 Lane 必须使用 `handoff.cmd lane-close --scope <lane>`；它只将该 Lane 置为 `FROZEN`，释放该 Lane 的 Task、Ownership 和 Work Release，不得写入 Workspace `active=false`，也不得影响其他 Lane。重复 `lane-close` 返回幂等成功；Wave 已关闭时返回 `NO_ACTIVE_WAVE`，不得篡改历史。
+
+全局 `handoff.cmd close --scope <coordinator>` 只允许 `state.coordinatorScope` 匹配的 Coordinator。关闭前必须确认无 Active Lane、Active Task、未关闭 Task Registration、Ownership/Work Release、Commit Mutex；任一仍存在均拒绝。非 Coordinator 返回 `COORDINATOR_REQUIRED`，仍有 Lane 返回 `ACTIVE_LANES_EXIST`，仍有 Task 返回 `ACTIVE_TASKS_EXIST`，资源未释放返回 `OWNERSHIP_NOT_RELEASED`，锁被持有返回 `COMMIT_MUTEX_HELD`。只有全部资源释放且 working tree clean 时才将 Active 标记为 false；dirty 时返回 `DIRTY_ON_CLOSE`。
 
 `prepare` 默认登记 `mode=development`；WIP Resume 必须通过本次命令显式提供 `-SourceBranch` 与 `-TargetBranch`，并只登记到 state。Control Plane Maintenance 仅在 canonical、clean、当前 branch/upstream 0/0 时通过，且只能修复 `tools/handoff/**` 与治理文档/测试。Active Wave 期间再次 PREPARE 永远阻断，已满足 expiry condition 的 WIP 除外。
 

@@ -1,6 +1,6 @@
 ﻿[CmdletBinding()]
 param(
-    [ValidateSet('prepare', 'join', 'status', 'close', 'advance', 'commit-lock', 'commit-unlock', 'maintenance', 'repair', 'migrate-active', 'lane-state')][string]$Mode = 'join',
+    [ValidateSet('prepare', 'join', 'status', 'close', 'lane-close', 'advance', 'commit-lock', 'commit-unlock', 'maintenance', 'repair', 'migrate-active', 'lane-state')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
     [ValidateSet('development', 'convergence', 'WIP_RESUME')][string]$WaveMode = 'development',
     [AllowNull()][string]$CoordinatorScope = $null,
@@ -592,16 +592,23 @@ if ($Mode -eq 'advance') {
 }
 
 if ($Mode -eq 'close') {
-    if ($null -eq $state -or -not [bool]$state.active) { Stop-Handoff 'NO_ACTIVE_WAVE' '没有可关闭的 Active Wave。' }
-    if ($facts.Dirty.Count -gt 0) { Stop-Handoff 'DIRTY_ON_CLOSE' 'Working tree dirty，禁止关闭 Active Wave。' }
-    $state.active = $false
-    if ($null -eq $state.PSObject.Properties['closedAt']) {
-        $state | Add-Member -NotePropertyName closedAt -NotePropertyValue $null
-    }
-    $state.closedAt = (Get-Date).ToUniversalTime().ToString('o')
-    Write-State $state
-    Show-Header 'CLOSE' 'PASS' $facts $state $null $report
-    exit 0
+    $authority = Join-Path $PSScriptRoot 'close-authority.ps1'
+    $authorityArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $authority, '-Mode', 'global-close', '-Scope', $Scope, '-RepositoryRoot', $RepoRoot)
+    if ($facts.Dirty.Count -gt 0) { $authorityArgs += '-WorkingTreeDirty' }
+    $result = Invoke-HandoffProcess -FilePath 'powershell.exe' -Arguments $authorityArgs
+    if ($result.Stdout) { Write-Output $result.Stdout.TrimEnd() }
+    if ($result.Stderr) { [Console]::Error.WriteLine($result.Stderr.TrimEnd()) }
+    exit $result.ExitCode
+}
+
+if ($Mode -eq 'lane-close') {
+    $authority = Join-Path $PSScriptRoot 'close-authority.ps1'
+    $authorityArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $authority, '-Mode', 'lane-close', '-Scope', $Scope, '-RepositoryRoot', $RepoRoot)
+    if ($facts.Dirty.Count -gt 0) { $authorityArgs += '-WorkingTreeDirty' }
+    $result = Invoke-HandoffProcess -FilePath 'powershell.exe' -Arguments $authorityArgs
+    if ($result.Stdout) { Write-Output $result.Stdout.TrimEnd() }
+    if ($result.Stderr) { [Console]::Error.WriteLine($result.Stderr.TrimEnd()) }
+    exit $result.ExitCode
 }
 
 if ($Mode -eq 'prepare') {
