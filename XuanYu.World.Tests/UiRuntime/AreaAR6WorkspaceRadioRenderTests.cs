@@ -7,7 +7,7 @@ using XYUI.Avalonia.Controls;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
-public sealed partial class AreaAR4MenuRuntimeTests
+public sealed partial class AreaAR4MenuCompositionTests
 {
     [Fact]
     public void R7_real_popup_radio_styles_are_ready_before_first_attach()

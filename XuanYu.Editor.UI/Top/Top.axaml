@@ -4,7 +4,7 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.Top"
              x:DataType="local:UiVm">
-  <Grid RowDefinitions="Auto,Auto"
+  <Grid RowDefinitions="Auto,44"
         RowSpacing="6"
         Margin="0,2">
     <Grid ColumnDefinitions="Auto,Auto,*,Auto"

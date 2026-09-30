@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls.Shapes;
+using Avalonia.Controls.Shapes;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
@@ -8,7 +8,7 @@ using XYUI.Avalonia.Controls;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
-public sealed partial class AreaAR4MenuRuntimeTests
+public sealed partial class AreaAR4MenuCompositionTests
 {
     [Fact]
     public void Workspace_selector_radio_visuals_follow_vm_after_open_and_switch()

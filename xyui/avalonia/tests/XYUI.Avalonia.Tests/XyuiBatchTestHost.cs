@@ -11,7 +11,8 @@ using XYUI.Avalonia.Theme;
 
 namespace XYUI.Avalonia.Tests;
 
-// Batch 01 运行时测试宿主：注入主题资源与家族样式，提供 Edge 定位、真实鼠标悬停与 token 取色辅助。
+// Batch 01 Headless contract host: injects theme/family styles and provides layout,
+// synthetic pointer, and token assertions. It is not a desktop or pixel-rendering gate.
 internal static class XyuiBatchTestHost
 {
     internal static Application Prepare()
@@ -34,7 +35,8 @@ internal static class XyuiBatchTestHost
         return window;
     }
 
-    // 真实 headless 指针悬停：先移出再移入目标中心，驱动原生 :pointerover 伪类。
+    // Headless synthetic pointer hover: move out, then into the target center,
+    // to drive Avalonia's headless :pointerover pseudo-class.
     internal static void Hover(Window window, Control target)
     {
         window.MouseMove(new Point(-50, -50));

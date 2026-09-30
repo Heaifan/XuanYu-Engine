@@ -11,7 +11,7 @@ public class CanonicalAlignmentTests
         "tokens", "architecture", "token-canonical-map.json");
 
     [Fact]
-    public void Every_Runtime_Token_Matches_Canonical_Map()
+    public void Every_Token_Matches_Canonical_Map()
     {
         using var doc = JsonDocument.Parse(File.ReadAllText(MapPath));
         var entries = doc.RootElement.GetProperty("entries");
@@ -26,7 +26,7 @@ public class CanonicalAlignmentTests
     }
 
     [Fact]
-    public void Runtime_Has_No_Token_Outside_Canonical()
+    public void Canonical_Map_Excludes_Unknown_Tokens()
     {
         using var doc = JsonDocument.Parse(File.ReadAllText(MapPath));
         var canonical = doc.RootElement.GetProperty("entries").EnumerateArray()

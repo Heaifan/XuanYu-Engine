@@ -21,6 +21,10 @@ tools\handoff\handoff.ps1 -Mode maintenance -Scope governance # Control Plane �
 
 无参数等价于 `join --scope xye`。状态登记在 `.git\xye-handoff\state.json`，不进入 Git；JOIN 不在缺失 state 时创建它。
 
+### 1.3 Task Flight Plan / ACTIVE TASK LEAK
+
+任务级 Registry 使用 `.git\xye-handoff\task-registry.json`，由 `task-flight-plan.ps1` 维护；`task-reports.json` 记录本波次任务报告状态。JOIN、STATUS、ADVANCE 会显示 `ACTIVE TASKS`、`RELEASED TASKS`、Dirty Classifier 分类与 `FinalEvidenceEligibility`。`COMPLETE`、`IMPLEMENTATION_COMPLETE` 或 `HANDOFF_READY` 报告若仍对应 Registry `ACTIVE`，即为 `TASK_STATE_LEAK`，Gate 为 `BLOCKED`，`COMMIT_ELIGIBILITY = NO`；不会自动猜测 release。正常完成必须先 `ACTIVE -> RELEASED`，异常遗留只能由 Coordinator 显式 `reap`。
+
 ### 1.1 Active Wave 内的连续任务
 
 标准流程为：
@@ -186,6 +190,12 @@ Active Wave 存在且未过期时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。
 ## 9. Self Test / Dry Test
 
 `powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖祖先 baseline 下的并行 JOIN PASS、Commit Mutex 争抢/owner 校验/安全解锁、commit 后 advance 自动释放、dirty 保留、XYUI convergence `CONVERGENCE_EXCLUSIVE`、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED。`state-lifecycle.selftest.ps1` 额外覆盖 live upstream、旧 WIP expiry、stateless JOIN、Remote Wins、Local Ahead 安全保护与 maintenance gate；测试结束删除 fixture，不污染 canonical Workspace。
+
+### 9.1 Candidate-Scoped Final Evidence Gate
+
+`ACTIVE TASKS`、Repository `TEMP` 与 Repository `UNKNOWN TEMP` 仅为信息字段，不得单独阻断 Candidate。若 `.git\xye-handoff\candidate.json` 存在，Handoff 以其中的 Candidate Files、Build/Test/Runtime Dependencies、Truth/Registry/Harness Files 构造 Dependency Closure；只有命中该闭包的 ACTIVE writer、Consumed Active Foreign TEMP、UNKNOWN TEMP、OWNERSHIP CONFLICT、未吸收的 FRIENDLY RELEASED TEMP 或 Freeze Fingerprint 变化才可使 `FINAL EVIDENCE ELIGIBILITY` / `CERTIFICATION ALLOWED` 为 `NO`。Candidate 指纹只覆盖该闭包。未配置 manifest 时只输出 `NOT_CONFIGURED`，不得把仓库计数伪装成 Candidate 结论。
+
+用户层使用 `TEMP FILES`、`OWNED TEMP`、`FRIENDLY ACTIVE TEMP`、`FRIENDLY RELEASED TEMP`、`LEGACY TEMP`、`UNKNOWN TEMP`、`CONFLICT TEMP`；`DirtyFiles`、`ForeignDirty`、`UnknownDirty` 仅作为兼容字段，不拥有最终 Candidate Gate 裁决权。Handoff 不代表 XYT Truth-Reviewed、XYT Certified 或 XYT Pass。
 
 ## 10. Successful final state
 

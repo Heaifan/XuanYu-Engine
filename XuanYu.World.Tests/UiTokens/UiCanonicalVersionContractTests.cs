@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace XuanYu.World.Tests.UiTokens;
 
@@ -7,21 +8,33 @@ public sealed class UiCanonicalVersionContractTests
     static string RootPath(params string[] segments) => Path.Combine(
         AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(segments));
 
-    const string ExpectedVersion = "v0.3.0.1-fix";
-
     static string VersionSource() => File.ReadAllText(RootPath("Directory.Build.props"));
+
+    static (string ProductVersion, string VersionPrefix, string AssemblyVersion, string FileVersion, string InformationalVersion) Versions()
+    {
+        var content = VersionSource();
+        static string Value(string source, string element) =>
+            Regex.Match(source, $"<{element}>([^<]+)</{element}>").Groups[1].Value;
+        return (
+            Value(content, "ProductVersion"),
+            Value(content, "VersionPrefix"),
+            Value(content, "AssemblyVersion"),
+            Value(content, "FileVersion"),
+            Value(content, "InformationalVersion"));
+    }
 
     [Fact]
     public void Canonical_version_uses_the_world_authoring_release_sequence() =>
-        Assert.Contains("<Version>0.3.0.1-fix</Version>", VersionSource());
+        Assert.Equal("v" + Versions().VersionPrefix + "-fix", Versions().ProductVersion);
 
     [Fact]
     public void Version_source_declares_all_assembly_version_fields()
     {
         var content = VersionSource();
-        Assert.Contains("<AssemblyVersion>0.3.0.1</AssemblyVersion>", content);
-        Assert.Contains("<FileVersion>0.3.0.1</FileVersion>", content);
-        Assert.Contains("<InformationalVersion>v0.3.0.1-fix</InformationalVersion>", content);
+        var versions = Versions();
+        Assert.Contains($"<AssemblyVersion>{versions.AssemblyVersion}</AssemblyVersion>", content);
+        Assert.Contains($"<FileVersion>{versions.FileVersion}</FileVersion>", content);
+        Assert.Contains($"<InformationalVersion>{versions.InformationalVersion}</InformationalVersion>", content);
     }
 
     [Fact]
@@ -53,6 +66,6 @@ public sealed class UiCanonicalVersionContractTests
     public void Changelog_starts_with_the_v03_baseline()
     {
         var content = File.ReadAllText(RootPath("changelog.md"));
-        Assert.StartsWith($"## {ExpectedVersion} · WORLD AUTHORING / TERRAIN FOUNDATION CUT-1", content.TrimStart());
+        Assert.StartsWith($"## v{Versions().VersionPrefix}-fix ·", content.TrimStart());
     }
 }

@@ -2,12 +2,37 @@ using System.Buffers.Binary;
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
+using XuanYu.Render.Abstractions;
 using XuanYu.World.Map;
 
 namespace XuanYu.World.Tests.Terrain;
 
 public sealed partial class TerrainAuthoringContinuityTests
 {
+    static void AssertTerrainAuthoringFrame(UiVm vm, ViewportState viewport, int draftVertices)
+    {
+        var result = vm.RenderProjection;
+        Assert.True(result.Success, result.FailureReason);
+        var projection = result.Projection;
+        var terrainEntries = RenderDrawPlan.GetFrameDrawPlan(projection)
+            .Where(entry => entry.Kind == RenderDrawKind.Terrain).ToArray();
+        Assert.NotEmpty(terrainEntries);
+        Assert.DoesNotContain(RenderDrawPlan.GetFrameDrawPlan(projection),
+            entry => entry.Kind == RenderDrawKind.MapGround);
+        var state = projection.Camera.ToViewProjection(viewport);
+        var visible = projection.TerrainResources.SelectMany(resource =>
+            TerrainChunkPartitioner.Partition(resource.Heightfield, resource.TerrainId, resource.Revision)
+                .Select(chunk => new XuanYu.Core.Space.TerrainChunkBounds(chunk.ChunkX,
+                    new(new(resource.WorldOrigin.X + chunk.WorldBounds.MinX,
+                        resource.WorldOrigin.Y + chunk.WorldBounds.MinY, chunk.WorldBounds.MinZ),
+                        new(resource.WorldOrigin.X + chunk.WorldBounds.MaxX,
+                            resource.WorldOrigin.Y + chunk.WorldBounds.MaxY, chunk.WorldBounds.MaxZ))))
+            .Where(chunk => TerrainFrustumCuller.Intersects(state, chunk.Bounds))
+            .ToArray());
+        Assert.NotEmpty(visible);
+        Assert.Equal(draftVertices, vm.RegionDrawingDraftVertexCount);
+    }
+
     static IReadOnlyList<(double X, double Y)> FindTerrainClicks(UiVm vm,
         ViewportState viewport, int count)
     {

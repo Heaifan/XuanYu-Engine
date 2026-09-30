@@ -74,16 +74,18 @@ XYT Version Event Gate additionally reports `VERSION LEDGER`, `VERSION EVENT`, `
 
 ## 7. 治理 / 经验回写
 
-没有治理回写时写 `无`。
+没有治理回写时在报告中写 `XYK CANDIDATE: NONE`。
 
-存在回写时必须区分：
+存在候选时只能在报告纯文本 `XYK CANDIDATE` 区块中区分：
 
 - 候选问题证据；
 - 已验证 ERR；
 - 已提炼 EXP；
 - Knowledge / Decision 索引更新。
 
-候选审计材料不得直接当作正式 ERR。
+候选审计材料不得直接当作正式 ERR、EXP、Knowledge 或其它 XYK 条目；
+不得写入 Codex memory、ad-hoc note 或其它文件。AI Agents do not have default
+XYK write authority；正式入库由 ChatGPT / XYK Coordinator 决定。
 
 ## 8. 修改文件清单
 
@@ -213,14 +215,16 @@ M  +x / -y   path/to/doc.md
 KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
 ==================================================
 
-本任务施工结果已完成，请 ChatGPT 作为审计 AI：
+请 ChatGPT 审计本任务结果，并判断是否存在可沉淀的知识/经验。
+如有，必须仅在本报告的 `XYK CANDIDATE` 区块中以纯文本输出，
+禁止写入任何知识库、经验库、Codex memory、ad-hoc note 或其它文件；
+正式入库由 ChatGPT / XYK Coordinator 后续决定。
 
-1. 审计本任务的 Root Cause、修复方式、测试证据和治理过程；
-2. 判断是否存在值得长期沉淀的 Knowledge / Experience / Incident Lessons；
-3. 已有同类知识优先更新，不重复创建；
-4. 新结论推翻旧知识时，必须保留历史追溯并修订状态；
-5. 无长期价值时输出 NO KNOWLEDGE DEPOSIT；
-6. 未经 ChatGPT 审计的施工结论不得直接作为正式知识库/经验库条目。
+XYK CANDIDATE:
+NONE
+
+若存在候选，替换 `NONE` 并输出 Problem、Root Cause、Rule / Knowledge、
+Applies To、Evidence、Expiry / Revalidation、Suggested Action。
 
 CHATGPT KNOWLEDGE AUDIT REQUIRED
 ```

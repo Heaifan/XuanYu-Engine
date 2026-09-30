@@ -4,21 +4,29 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
+ [Collection("UiRuntime")]
 public sealed class DiagnosticNativeLockedClickTests
 {
+    readonly UiHeadlessFixture _fixture;
+
+    public DiagnosticNativeLockedClickTests(UiHeadlessFixture fixture) => _fixture = fixture;
+
     [Fact]
-    public void Native_blank_click_does_not_replace_locked_target()
+    public void Headless_native_blank_click_does_not_replace_locked_target()
     {
-        var overlay = new DiagnosticOverlayHost();
-        var vm = new UiVm(null, seedInitialScene: false);
-        vm.RunCommand.Execute("诊断模式"); overlay.DataContext = vm; AttachVm(overlay);
-        var first = new Button { Name = "A" };
-        overlay.TrackProbe(DiagnosticProbeResolver.Resolve(first));
+        _fixture.Run(() =>
+        {
+            var overlay = new DiagnosticOverlayHost();
+            var vm = new UiVm(null, seedInitialScene: false);
+            vm.RunCommand.Execute("诊断模式"); overlay.DataContext = vm; AttachVm(overlay);
+            var first = new Button { Name = "A" };
+            overlay.TrackProbe(DiagnosticProbeResolver.Resolve(first));
 
-        SendDiagnostic(overlay, new VulkanNativeHost(), "Clicked", 40, 30);
+            SendDiagnostic(overlay, new VulkanNativeHost(), "Clicked", 40, 30);
 
-        Assert.Same(first, overlay.LockedProbeResult?.SemanticTarget);
-        Assert.True(overlay.IsProbeLocked);
+            Assert.Same(first, overlay.LockedProbeResult?.SemanticTarget);
+            Assert.True(overlay.IsProbeLocked);
+        });
     }
 
     static void SendDiagnostic(DiagnosticOverlayHost overlay, VulkanNativeHost native,

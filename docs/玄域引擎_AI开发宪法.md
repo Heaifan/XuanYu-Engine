@@ -356,6 +356,17 @@ Loaded:
 
 ## 第二十一条　知识治理职责
 
+AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY.
+
+知识候选必须随任务报告输出，不得由执行 Agent 自行写入任何知识/经验文件。
+知识与经验候选只能作为最终报告中的纯文本交给 ChatGPT / XYK Coordinator；
+正式知识是否接受、合并、修订、拒绝或过期，由 ChatGPT / XYK Coordinator 审计决定。
+
+除非任务明确授予 `XYK WRITE AUTHORITY`，任何 Agent 都不得把知识候选持久化到
+Codex memory 目录、仓库文件、`ad_hoc` / `notes`、Markdown、JSON/YAML、TXT
+或其它 Agent 自建知识存储。普通任务 Agent 的默认权限是 `XYK PROPOSER`；
+ChatGPT / XYK Coordinator 才是 `XYK REVIEWER + WRITE AUTHORITY`。
+
 长期治理资料职责固定为：
 
 ```text
@@ -373,6 +384,8 @@ Plan/Audit   = 过程材料，不自动成为长期知识
 
 正式 ERR 唯一事实源：`docs/governance/agent-error-log.md`。  
 正式 EXP 唯一事实源：`docs/governance/agent-experience-rules.md`。
+上述正式库只可由 ChatGPT / XYK Coordinator 在明确授权下维护；执行 Agent
+不得以任务收尾、经验复盘或“知识沉淀”为由自行写回。
 
 ## 第二十二条　Agent 错误记录权限
 
@@ -394,9 +407,9 @@ Critical / High / Medium / Low
 
 同类错误重复发生时，不机械制造近义 EXP；优先复用既有 EXP，增加发生次数和关联 ERR-ID。
 
-## 第二十三条　知识回写判断
+## 第二十三条　知识候选报告规则
 
-任务完成前只做一次轻量知识判断：
+任务完成前只做一次轻量知识判断，并且只在最终报告文本中输出：
 
 ```text
 是否产生新的长期决策？    → DEC
@@ -405,9 +418,24 @@ Critical / High / Medium / Low
 是否形成可复用防复发规则？  → EXP
 ```
 
-全部为否时写“无需知识更新”，不得为了形式制造空洞条目。
+全部为否时在报告中写：
 
-Plan、Audit、临时日志、阶段直播默认不是长期知识。只有经过提炼的长期结论才进入正式知识库。
+```text
+XYK CANDIDATE:
+NONE
+```
+
+存在候选时，必须使用 `XYK CANDIDATE` 区块，按 Problem、Root Cause、
+Rule / Knowledge、Applies To、Evidence、Expiry / Revalidation、Suggested
+Action 以纯文本描述。该区块不得写入任何知识库、经验库、Codex memory、
+ad-hoc note 或其它文件；正式入库由 ChatGPT / XYK Coordinator 后续决定。
+
+Agent 只能报告 `XYK CANDIDATE: PRESENT` 或 `XYK CANDIDATE: NONE`，不得报告
+“已沉淀至经验库”“已写入知识库”“已更新 memory”或“已保存至 Codex memories”，
+除非本任务明确具有 `XYK WRITE AUTHORITY`。
+
+Plan、Audit、临时日志、阶段直播默认不是长期知识。只有 ChatGPT / XYK Coordinator
+审计接受并在明确授权下写入的长期结论，才可进入正式知识库。
 
 ## 第二十四条　经验规则的合并、强化与升格
 
@@ -717,7 +745,7 @@ Commit 不等于 Push；Push 不等于远端一致；必须实际核验远端分
 
 ## 第三十五条　Milestone 知识收口
 
-正式 Milestone 在 CLOSED 前执行一次 `Milestone Knowledge Review`，但不得为每个小 Fix 制造重型知识审计。
+正式 Milestone 在 CLOSED 前执行一次 `Milestone Knowledge Review`，但不得为每个小 Fix 制造重型知识审计。审计前，候选仍只能存在于任务最终报告纯文本中。
 
 候选只进入以下一种：
 

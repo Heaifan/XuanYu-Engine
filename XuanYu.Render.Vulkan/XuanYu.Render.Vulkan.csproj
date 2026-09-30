@@ -18,5 +18,6 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="XuanYu.World.Tests" />
+    <InternalsVisibleTo Include="XuanYu.Core.Tests" />
   </ItemGroup>
 </Project>

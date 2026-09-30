@@ -3,11 +3,11 @@ using XuanYu.Editor.UI;
 namespace XuanYu.World.Tests.UiRuntime;
 
 [Collection("UiRuntime")]
-public sealed partial class RegionDrawingF1FullRuntimeTests
+public sealed partial class RegionDrawingF1FullCompositionTests
 {
     readonly UiHeadlessFixture _fixture;
 
-    public RegionDrawingF1FullRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
+    public RegionDrawingF1FullCompositionTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
     public void R07_enter_after_three_vertices_creates_formal_region()

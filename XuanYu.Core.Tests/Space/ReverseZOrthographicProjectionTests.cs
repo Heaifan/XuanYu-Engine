@@ -1,3 +1,4 @@
+using XuanYu.Core.Gizmo;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 
@@ -29,14 +30,12 @@ public sealed class ReverseZOrthographicProjectionTests
     }
 
     [Fact]
-    public void OrthographicInverseRoundTripTest()
+    public void OrthographicNdcCoordinatesUseKnownWorldExtentsTest()
     {
-        var state = State(800, 600);
-        var expected = new Vector3d(0.75, 1.25, 200_000);
-        var clip = System.Numerics.Vector4.Transform(
-            new System.Numerics.Vector4((float)expected.X, (float)expected.Y, (float)expected.Z, 1), state.ViewProjection);
-        var actual = state.TransformPointToWorld(clip.X / clip.W, clip.Y / clip.W, clip.Z / clip.W);
-        Assert.True(expected.DistanceTo(actual) < 0.5);
+        var state = KnownExtentsState();
+        var nearTopRight = state.TransformPointToWorld(1, 1, 1);
+        Assert.True(nearTopRight.DistanceTo(new Vector3d(-4.0 / 3.0, 1.0, Near)) < 0.0001);
+        Assert.Equal(new ScreenPoint(800, 0), state.ProjectWorldPoint(new Vector3d(-4.0 / 3.0, 1.0, 200_000)));
     }
 
     static double Depth(double distance)
@@ -49,4 +48,8 @@ public sealed class ReverseZOrthographicProjectionTests
     static ViewProjectionState State(int width, int height) =>
         ViewProjectionState.Create(new CameraState(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY, 60, Near, Far, 0,
             ProjectionMode.Orthographic, 2.0), new ViewportState(0, 0, width, height, width, height, 1, 0));
+
+    static ViewProjectionState KnownExtentsState() =>
+        ViewProjectionState.Create(new CameraState(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY, 60, Near, 800, 0,
+            ProjectionMode.Orthographic, 2.0), new ViewportState(0, 0, 800, 600, 800, 600, 1, 0));
 }

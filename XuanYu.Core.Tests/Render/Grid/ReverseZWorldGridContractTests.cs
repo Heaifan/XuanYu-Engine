@@ -10,7 +10,7 @@ public sealed class ReverseZWorldGridContractTests
     static string Pipeline => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
 
     [Fact]
-    public void GridReverseZDepthIsIndependentOfFragmentDepthWrites()
+    public void GridShaderSourceDoesNotWriteFragmentDepth()
     {
         var shader = Shader;
         Assert.DoesNotContain("gl_FragDepth", shader);
@@ -18,7 +18,7 @@ public sealed class ReverseZWorldGridContractTests
         Assert.DoesNotContain("depth + bias", shader);
     }
     [Fact] public void GridNearFarConvention() => Assert.Contains("depth >= 0.0 && depth <= 1.0", Shader);
-    [Fact] public void GridNeverDisappearsWhilePlaneVisible() => Assert.DoesNotContain("gridMaxDistance", Shader);
+    [Fact] public void GridShaderSourceHasNoDistanceCutoffSymbol() => Assert.DoesNotContain("gridMaxDistance", Shader);
     [Fact] public void NoDistanceHardCutoff() => Assert.DoesNotContain("distToCamera", Shader);
     [Fact] public void PerspectivePersistence() => Assert.Contains("(-renderOrigin.z - nearWorld.z) / rayDirection.z", Shader);
     [Fact] public void OrthographicPersistence() => Assert.Contains("pc.gridState.y", Shader);
@@ -38,11 +38,11 @@ public sealed class ReverseZWorldGridContractTests
         Assert.True(levels.FineWeight > 0.0 && levels.CoarseWeight > 0.0);
     }
 
-    [Fact] public void FineFadesBeforeCoarseDominates() => Assert.Contains("fineContribution", Shader);
-    [Fact] public void ExtremeZoomOutStillHasCoarseGrid() => Assert.Contains("coarseContribution", Shader);
+    [Fact] public void GridShaderSourceContainsFineContribution() => Assert.Contains("fineContribution", Shader);
+    [Fact] public void GridShaderSourceContainsCoarseContribution() => Assert.Contains("coarseContribution", Shader);
 
     [Fact]
-    public void GridDepthTestIsDisabledWithoutWriteContract()
+    public void GridPipelineSourceDisablesDepthTestWithoutFragmentWrite()
     {
         Assert.Contains("depthTest: false", Pipeline);
         Assert.Contains("ShaderBytecodeWorldReferenceGridFrag.Code", Pipeline);

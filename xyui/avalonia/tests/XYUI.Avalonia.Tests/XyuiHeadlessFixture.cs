@@ -2,7 +2,8 @@ using Avalonia.Headless;
 
 namespace XYUI.Avalonia.Tests;
 
-// Headless 会话（玄域先例模式）：所有 UI 测试在独立 UI 线程内执行
+// Headless contract session: UI tests run on an isolated UI thread.
+// This fixture does not prove desktop usability or visual appearance.
 public sealed class XyuiHeadlessFixture : IAsyncLifetime
 {
     readonly HeadlessUnitTestSession _session =

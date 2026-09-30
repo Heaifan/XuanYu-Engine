@@ -24,6 +24,9 @@ public sealed class SoldierStateTests
         var state = new SoldierState(value, value, value, value);
 
         Assert.Equal(value, state.BodyCondition);
+        Assert.Equal(value, state.Stamina);
+        Assert.Equal(value, state.Morale);
+        Assert.Equal(value, state.Suppression);
     }
 
     [Theory]
@@ -71,7 +74,7 @@ public sealed class SoldierStateTests
     }
 
     [Fact]
-    public void Two_states_do_not_share_values()
+    public void Two_states_preserve_distinct_input_values()
     {
         var first = new SoldierState(80, 70, 90, 10);
         var second = new SoldierState(50, 40, 60, 80);

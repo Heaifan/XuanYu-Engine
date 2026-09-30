@@ -1,4 +1,5 @@
 using System.Numerics;
+using XuanYu.Core.Gizmo;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 
@@ -38,16 +39,15 @@ public sealed class ReverseZPerspectiveProjectionTests
     }
 
     [Fact]
-    public void PerspectiveInverseRoundTripTest()
+    public void PerspectiveNdcDepthUsesKnownWorldDistancesTest()
     {
         var state = State(800, 600);
-        foreach (var distance in new[] { 0.05, 20_000.0, 100_000.0, 500_000.0 })
-        {
-            var point = new Vector3d(0.5, -0.25, distance);
-            var clip = Vector4.Transform(new Vector4((float)point.X, (float)point.Y, (float)point.Z, 1), state.ViewProjection);
-            var actual = state.TransformPointToWorld(clip.X / clip.W, clip.Y / clip.W, clip.Z / clip.W);
-            Assert.True(point.DistanceTo(actual) < 0.5, $"distance={distance}");
-        }
+        Assert.True(state.TransformPointToWorld(0, 0, 1).DistanceTo(new Vector3d(0, 0, Near)) < 0.0001);
+        Assert.True(state.TransformPointToWorld(0, 0, 0).DistanceTo(new Vector3d(0, 0, Far)) < 0.5);
+
+        var distance = 100.0;
+        var edgeX = distance * global::System.Math.Tan(global::System.Math.PI / 6) * (800.0 / 600.0);
+        Assert.Equal(new ScreenPoint(800, 300), state.ProjectWorldPoint(new Vector3d(-edgeX, 0, distance)));
     }
 
     [Fact]

@@ -44,20 +44,20 @@ public sealed partial class TerrainAuthoringContinuityTests
         {
             WriteHgt(path, 100, 200, 300, 400);
             Assert.True(await vm.ImportTerrainSourceAsync(path));
-            Assert.NotNull(vm.TerrainWorld);
+            AssertTerrainAuthoringFrame(vm, new(0, 0, 800, 600, 800, 600, 1, 1), 0);
             vm.EnterRegionContext();
-            var projection = vm.RenderProjection.Projection;
-            Assert.NotEmpty(projection.TerrainResources);
-            Assert.DoesNotContain(RenderDrawPlan.GetFrameDrawPlan(projection),
-                entry => entry.Kind == RenderDrawKind.MapGround);
-            vm.SelectToolCommand.Execute("区域绘制");
             var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
+            AssertTerrainAuthoringFrame(vm, viewport, 0);
+            vm.SelectToolCommand.Execute("区域绘制");
+            AssertTerrainAuthoringFrame(vm, viewport, 0);
             var points = FindTerrainClicks(vm, viewport, 2);
             Assert.Equal(2, points.Count);
             Assert.True(vm.RegionDrawingPointerPressed(points[0].X, points[0].Y, viewport));
             Assert.Equal(1, vm.RegionDrawingDraftVertexCount);
+            AssertTerrainAuthoringFrame(vm, viewport, 1);
             Assert.True(vm.RegionDrawingPointerPressed(points[1].X, points[1].Y, viewport));
             Assert.Equal(2, vm.RegionDrawingDraftVertexCount);
+            AssertTerrainAuthoringFrame(vm, viewport, 2);
         }
         finally { Directory.Delete(directory, recursive: true); }
     }

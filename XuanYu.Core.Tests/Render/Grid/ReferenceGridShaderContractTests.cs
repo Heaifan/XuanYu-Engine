@@ -2,14 +2,14 @@ using System.IO;
 
 namespace XuanYu.Core.Tests.Render;
 
-public sealed class ReferenceGridShaderContractTests
+public sealed class ReferenceGridShaderSourceContractTests
 {
     static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
     static string ShaderSource(string name) => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", name));
     static string PipelineSource() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
 
     [Fact]
-    public void World_grid_is_fullscreen_frame_step_with_cpu_lod_weights()
+    public void Shader_source_is_fullscreen_frame_step_with_cpu_lod_weights()
     {
         var shader = ShaderSource("editor_world_reference_grid.frag");
         Assert.Contains("pc.gridState.x", shader);
@@ -25,7 +25,7 @@ public sealed class ReferenceGridShaderContractTests
     }
 
     [Fact]
-    public void World_grid_pipeline_is_depth_independent_fullscreen_pass()
+    public void Pipeline_source_declares_depth_independent_fullscreen_pass()
     {
         var source = PipelineSource();
         Assert.Contains("ShaderBytecodeWorldReferenceGridFrag.Code", source);
@@ -39,7 +39,7 @@ public sealed class ReferenceGridShaderContractTests
     }
 
     [Fact]
-    public void World_grid_draw_uses_fullscreen_triangle_and_world_plane_state()
+    public void Draw_source_uses_fullscreen_triangle_and_world_plane_state()
     {
         var source = File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.Grid.cs"));
         Assert.Contains("_referenceGridLevels.FineSpacing", source);
@@ -49,7 +49,7 @@ public sealed class ReferenceGridShaderContractTests
     }
 
     [Fact]
-    public void World_axes_remain_the_single_source_of_axis_truth()
+    public void World_axes_shader_source_remains_the_single_axis_truth()
     {
         var shader = ShaderSource("editor_world_axes.frag");
         Assert.Contains("AXIS_WIDTH_PX", shader);

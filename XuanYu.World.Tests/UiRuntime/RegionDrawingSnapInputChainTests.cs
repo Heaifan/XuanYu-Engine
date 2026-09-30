@@ -5,7 +5,7 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
-public sealed partial class RegionDrawingSnapRuntimeTests
+public sealed partial class RegionDrawingSnapCompositionTests
 {
     [Fact]
     public void Native_alt_down_and_up_refresh_snap_without_pointer_move()

@@ -17,6 +17,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'process-runner.ps1')
+. (Join-Path $PSScriptRoot 'task-flight-plan.handoff.ps1')
 $RepoRoot = $null
 $Config = $null
 $StatePath = $null
@@ -31,7 +32,6 @@ function Stop-Handoff([string]$Code, [string]$Reason) {
     Write-Host '========================================='
     exit 1
 }
-
 function Invoke-Git([string[]]$GitArgs) {
     $directory = if ($RepoRoot) { $RepoRoot } else { (Get-Location).Path }
     $result = Invoke-HandoffProcess -FilePath 'git.exe' -WorkingDirectory $directory -Arguments $GitArgs
@@ -40,7 +40,6 @@ function Invoke-Git([string[]]$GitArgs) {
     }
     return @($result.Stdout -split "`r?`n" | Where-Object { $_ -ne '' })
 }
-
 function Read-Config([string]$Path) {
     if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { throw "Handoff config not found: $Path" }
     $import = Get-Command Import-PowerShellDataFile -ErrorAction SilentlyContinue
@@ -49,7 +48,6 @@ function Read-Config([string]$Path) {
     if ($value -isnot [hashtable]) { throw "Handoff config did not return a Hashtable: $Path" }
     return $value
 }
-
 function Normalize-CoordinatorScope($Value) {
     if ($null -eq $Value) { return $null }
     $text = ([string]$Value).Trim()
@@ -59,7 +57,6 @@ function Normalize-CoordinatorScope($Value) {
     }
     return $text
 }
-
 function Read-State {
     if (-not (Test-Path -LiteralPath $StatePath -PathType Leaf)) { return $null }
     try {
@@ -73,7 +70,6 @@ function Read-State {
     }
     catch { Stop-Handoff 'STATE_INVALID' $_.Exception.Message }
 }
-
 function Write-State($State) {
     $dir = Split-Path -Parent $StatePath
     if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
@@ -87,7 +83,6 @@ function Write-State($State) {
         if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force }
     }
 }
-
 function Write-JsonAtomic([string]$Path, $Value) {
     $dir = Split-Path -Parent $Path
     if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
@@ -99,13 +94,11 @@ function Write-JsonAtomic([string]$Path, $Value) {
         if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force }
     }
 }
-
 function Read-Mutex {
     if (-not (Test-Path -LiteralPath $MutexPath -PathType Leaf)) { return $null }
     try { return Get-Content -Raw -LiteralPath $MutexPath | ConvertFrom-Json }
     catch { Stop-Handoff 'COMMIT_MUTEX_INVALID' $_.Exception.Message }
 }
-
 function Try-CreateMutex($Mutex) {
     $dir = Split-Path -Parent $MutexPath
     if (-not (Test-Path -LiteralPath $dir -PathType Container)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
@@ -382,6 +375,8 @@ function Show-Header([string]$Name, [string]$Result, $Facts, $State, $Toolchain,
     }
     Write-Host "OwnDirty   : $ownDirty"
     Write-Host "ForeignDirty: $foreignDirty"
+    $taskReport = Get-TaskFlightReport $RepoRoot $Facts $State
+    Show-TaskFlightReport $taskReport
     if ($null -ne $State -and $null -ne $State.dirtyBaseline) {
         Write-Host "UnknownDirty: $($State.unknownDirtyCount)"
         Write-Host "Staged     : $($State.stagedCount)"
@@ -440,6 +435,7 @@ if ($Mode -eq 'lane-state') {
 }
 
 if ($Mode -eq 'status') {
+    Assert-TaskFlightGate (Get-TaskFlightReport $RepoRoot $facts $state)
     $toolchain = Resolve-Dotnet
     Show-Header 'STATUS' 'PASS' $facts $state $toolchain $report
     exit 0
@@ -499,6 +495,7 @@ if ($Mode -eq 'commit-unlock') {
 }
 
 if ($Mode -eq 'join') {
+    Assert-TaskFlightGate (Get-TaskFlightReport $RepoRoot $facts $state)
     if ($null -eq $state -or -not [bool]$state.active -or (Test-WipExpired $state $facts $remoteFacts)) {
         if (-not (Test-StatelessReady $facts $remoteFacts)) {
             Stop-Handoff 'STATELESS_NOT_READY' '无 Active Wave 时要求 canonical workspace、upstream、clean 与 HEAD/Remote 0/0。'
@@ -524,6 +521,7 @@ if ($Mode -eq 'join') {
 }
 
 if ($Mode -eq 'advance') {
+    Assert-TaskFlightGate (Get-TaskFlightReport $RepoRoot $facts $state)
     if ($null -eq $state) { Stop-Advance 'STATE_NOT_FOUND' 'handoff state.json 不存在。' }
     if (-not [bool]$state.active) { Stop-Advance 'NO_ACTIVE_WAVE' '不存在 Active Wave。' }
     $coordinatorScope = Normalize-CoordinatorScope $state.coordinatorScope

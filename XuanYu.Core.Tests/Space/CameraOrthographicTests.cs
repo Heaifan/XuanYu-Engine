@@ -1,4 +1,5 @@
 using XuanYu.Core.Math;
+using XuanYu.Core.Gizmo;
 using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Space;
@@ -55,16 +56,13 @@ public sealed class CameraOrthographicTests
     }
 
     [Fact]
-    public void Orthographic_round_trip_through_clip_space_returns_to_world()
+    public void Orthographic_ndc_coordinates_match_known_world_extents()
     {
         var state = ViewProjectionState.Create(OrthographicCamera(), TestViewport(800, 600));
-        var expected = new Vector3d(0.75, 1.25, 2.0);
-        var clip = System.Numerics.Vector4.Transform(
-            new System.Numerics.Vector4((float)expected.X, (float)expected.Y, (float)expected.Z, 1),
-            state.ViewProjection);
-        var actual = state.TransformPointToWorld(clip.X / clip.W, clip.Y / clip.W, clip.Z / clip.W);
-
-        Assert.True(expected.DistanceTo(actual) < 0.0001);
+        Assert.True(state.TransformPointToWorld(-1, -1, 1)
+            .DistanceTo(new Vector3d(4.0 / 3.0, -1.0, -4.9)) < 0.0001);
+        Assert.Equal(new ScreenPoint(800, 0),
+            state.ProjectWorldPoint(new Vector3d(-4.0 / 3.0, 1.0, 2.0)));
     }
 
     [Fact]

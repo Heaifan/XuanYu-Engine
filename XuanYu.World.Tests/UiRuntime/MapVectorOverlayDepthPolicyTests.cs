@@ -3,6 +3,7 @@ using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Editor.Camera;
 using XuanYu.Render.Abstractions;
+using XuanYu.Render.Vulkan.Render;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -13,12 +14,11 @@ public sealed class MapVectorOverlayDepthPolicyTests
     {
         var depth = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Depth.cs"));
         var overlay = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Session", "VulkanRenderSession.VectorOverlay.cs"));
-        var bind = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Render", "ClearFrame", "VulkanClearFrameOwner.PipelineBind.cs"));
         var shader = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Shaders", "scene.vert"));
         Assert.Contains("DepthTestEnable = depthTest", depth);
         Assert.Contains("DepthWriteEnable = depthWrite", depth);
         Assert.Contains("depthTest: false, depthWrite: false", overlay);
-        Assert.Contains("kind == RenderDrawKind.MapVectorOverlay", bind);
+        Assert.Equal("VectorOverlay", VulkanClearFrameOwner.ResolveDrawOwner(RenderDrawKind.MapVectorOverlay).ToString());
         Assert.Contains("DepthCompareOp = CompareOp.GreaterOrEqual", depth);
         Assert.DoesNotContain("applyVectorOverlayDepthPolicy", shader);
         Assert.DoesNotContain("VECTOR_OVERLAY_FILL_DEPTH_BIAS", shader);

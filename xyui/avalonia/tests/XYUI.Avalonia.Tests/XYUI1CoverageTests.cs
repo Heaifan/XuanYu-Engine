@@ -43,7 +43,7 @@ public sealed class XYUI1CoverageTests
     }
 
     [Fact]
-    public void Gallery_uses_real_XYUI1_component_instances_for_all_entries()
+    public void Gallery_uses_XYUI1_component_instances_for_all_entries()
     {
         var gallery = XYUI1GalleryCatalog.Build();
         Assert.Equal(24, gallery.Count);

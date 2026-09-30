@@ -46,7 +46,7 @@ public sealed class MilitaryIdentityTests
     }
 
     [Fact]
-    public void Identity_rejects_empty_display_name()
+    public void Identity_rejects_whitespace_display_name()
     {
         var error = Assert.Throws<ArgumentException>(
             () => MilitaryIdentity.NewSoldier(UnitId.FromInt(1), "  "));
@@ -55,7 +55,7 @@ public sealed class MilitaryIdentityTests
     }
 
     [Fact]
-    public void Two_identities_do_not_share_state()
+    public void Two_identities_preserve_distinct_input_values()
     {
         var first = MilitaryIdentity.NewSoldier(UnitId.FromInt(1), "士兵 S-0001");
         var second = MilitaryIdentity.NewSoldier(UnitId.FromInt(2), "士兵 S-0002");

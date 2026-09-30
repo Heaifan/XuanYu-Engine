@@ -4,10 +4,10 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Space;
 
-public sealed class ReverseZPrecisionRegressionTests
+public sealed class ReverseZCpuFloatQuantizationTests
 {
     [Fact]
-    public void ReverseZProductionMatrixImprovesD32PrecisionAtLongRange()
+    public void ReverseZProductionMatrixImprovesCpuFloatDepthResolutionAtLongRange()
     {
         foreach (var distance in new[] { 1_000.0, 10_000, 20_000, 50_000, 100_000, 200_000, 500_000 })
         {

@@ -1,32 +1,57 @@
-# XYT-T2 / WAVE-T-A Final Convergence Report
+# XYT-T2 / FINAL-TRUTH-CONVERGENCE Report
 
-Task: `XYT-T2`
-Lane: `GOVERNANCE / COORDINATOR`
+Task: `XYT-T2 / FINAL-TRUTH-CONVERGENCE`
+Role: Coordinator
 Workspace: `E:\MyDoc\project-VSCode\XuanYuEngine`
-TestSet: `T1 LEGACY`
+TestSet Version: `T1 LEGACY`
 Candidate: `T2-CANDIDATE / WAVE-T-A`
 
-## 1. Truth Record Update
+## Truth update
 
-Updated the same TestId: `terrain.context.hidden-region-host-slot`.
+`terrain.context.hidden-region-host-slot` remains in the registry and its historical failure was not deleted:
 
 ```text
 TruthStatus: VERIFIED
 Decision: KEEP
 RegressionWitness: PRE-FIX FAIL / POST-FIX PASS
 WitnessStatus: GREEN_CONFIRMED
-PRE-FIX: same test, Expected 0, Actual 432, RED_CONFIRMED
-POST-FIX: same test, Expected 0, Actual 0, PASS, GREEN_CONFIRMED
+PRE-FIX: Expected 0, Actual 432, RED_CONFIRMED
+POST-FIX: Expected 0, Actual 0, PASS, GREEN_CONFIRMED
 ```
 
-The historical RED evidence is retained in `WitnessEvidence`; it was not deleted or replaced by the POST-FIX result.
+The same-test witness is valid. `ESCALATED_TEST_TRUTH` for this record is therefore zero.
 
-## 2. Registry and Truth Statistics
+## Inventory and execution
+
+The current candidate was scanned from source, counting each `[Fact]`/`[Theory]` attribute as one definition and reporting runtime execution separately:
+
+| Project | C# files | Definitions | Final runtime cases |
+|---|---:|---:|---:|
+| Core | 90 | 354 | 441 |
+| World | 554 | 1,872 | 2,163 |
+| WarCore | 6 | 17 | 22 |
+| XYUI | 153 | 660 | 706 |
+| **Total** | **803** | **2,903** | **3,332** |
+
+All four final-candidate runs passed:
+
+```text
+Core:    441/441
+World: 2,163/2,163
+WarCore: 22/22
+XYUI:   706/706
+```
+
+These are execution results only. They do not establish Truth for every definition.
+
+## Truth registry status
+
+The central registry currently contains only the imported Wave T-A records. The existing Truth tool validates those 8 records, not the 2,903 definitions above. It is therefore invalid to promote the registry or claim global T2 truth review.
 
 ```text
 TOTAL: 8
 REVIEWED: 8
-UNREVIEWED: 0
+UNREVIEWED: 0  (within the imported 8-record subset only)
 KEEP: 8
 RENAME: 0
 STRENGTHEN: 0
@@ -41,115 +66,114 @@ RED_INSENSITIVE: 0
 ESCALATED_TEST_TRUTH blocker: 0
 ```
 
-Capability mapping remains five entries: Terrain, Camera, Viewport/Input, Region/Ground Binding, and Render.
+The full-definition Truth total is not 8 and is not yet imported. Consequently global `UNREVIEWED TESTS` is unresolved, not zero.
 
-## 3. Candidate Tree Purity
+## Capability -> Test Mapping (imported subset)
 
-All current Dirty Files were classified as follows; no file was cleaned, restored, reset, stashed, or overwritten.
+| Capability | Imported TestIds | Truth state |
+|---|---|---|
+| Terrain | 4 records | VERIFIED; bounded CPU/UiVm evidence |
+| Camera | 1 record | VERIFIED; ObservationCenter only |
+| Viewport/Input | 1 record | VERIFIED; headless lifecycle only |
+| Region/Ground Binding | 1 record | VERIFIED; terrain elevation binding |
+| Render | 3 records | VERIFIED; CPU draw-plan/statistics only |
 
-### A. Wave T-A product fix
+This is a mapping of the imported subset, not a claim that all 2,903 definitions have been mapped.
 
-`Directory.Build.props`, `XuanYu.Core.Tests/Render/TerrainVisibilitySelectorTests.cs`, `XuanYu.Editor.UI/Vm/Mode/UiVm.Mode.cs`, `XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainContext.cs`, the four Terrain acceptance-to-contract/integration test replacements, `TerrainMultiSourceImportTests.cs`, the three TerrainAutoFrame test files, `TerrainContextRuntimeFixTests.cs`, `TerrainTopContextContractTests.cs`, `changelog.md`, `docs/governance/test-registry.json`, and `docs/governance/version-events.tsv`.
+## Cross-Lane File Registry
 
-### B. Wave T-A Test Truth governance assets
-
-`docs/governance/xyt-test-truth-policy.md`, `docs/governance/xyt-test-truth-registry.json`, `docs/governance/xyt-test-truth-schema.json`, `docs/governance/xyt-test-truth-wave-t-a-report.md`, `tools/governance/xyt-test-truth.ps1`, and `tools/governance/xyt-test-truth.selftest.ps1`.
-
-### C. Known ForeignDirty
-
-None in the final Candidate Tree classification. Handoff ownership reports 21 XYE-owned files and 6 GOVERNANCE-owned files; all 27 are explicitly accounted for in A or B.
-
-### D. UNKNOWN
-
-`0`.
-
-Candidate Tree Match: `YES`.
-
-## 4. Final Regression and Gates
-
-Required final tests must be executed from this same Candidate Tree. Historical Lane PASS from another tree is not reused as final evidence.
+The central registry has no explicit `CROSS_LANE_FILE` records. Handoff nevertheless reports 85 `ForeignDirty` files in the shared checkout. Their ownership/file-level allocation was not reproducibly resolved for this convergence snapshot, so the absence of registry entries is not treated as proof of a clean candidate boundary.
 
 ```text
-Terrain / Mode / Context / Workspace / Viewport/Input / Render / Camera / Region-Ground scoped: PASS; XuanYu.World.Tests 1012/1012
-Core Terrain / Viewport / Render / Camera scoped: PASS; XuanYu.Core.Tests 351/351
-ARCH-A: PASS
-5+100: PASS (included by ARCH-A)
-git diff --check: PASS
+CROSS_LANE_FILE records: 0
+ForeignDirty reported by Handoff: 85
+Candidate ownership proof: NOT ESTABLISHED
 ```
 
-Until these commands complete, final convergence remains blocked.
-
-## 5. Red Sensitivity Ledger
+## Capability and evidence boundaries
 
 ```text
 Terrain: VERIFIED
 Region/Ground Binding: VERIFIED
-Viewport Capture Lifecycle: VERIFIED
-Render Draw Plan: VERIFIED
-Camera: VERIFIED only for ObservationCenter invariant; no Cursor Anchor sensitivity claimed
-```
-
-Render boundary remains explicit:
-
-```text
-CPU / Render List contract: VERIFIED
-Command runtime: NOT PROVEN
-QueueSubmit runtime: NOT PROVEN
-GPU execution: NOT PROVEN
-Framebuffer: NOT PROVEN
-Present: NOT PROVEN
-User-visible pixels: NOT PROVEN
-```
-
-## 6. Capability Gaps
-
-```text
+Viewport Capture Lifecycle: VERIFIED at the recorded headless tier
+Render Draw Plan: VERIFIED at CPU/render-list tier
+Camera: VERIFIED for ObservationCenter invariant only
+Cursor Anchor sensitivity: NOT CLAIMED
 Viewport T3: GAP
 Render Vulkan T3: GAP
-T4 Product Acceptance: PENDING
+T4: PENDING
 ```
 
-These are recorded as GAP/PENDING, never as PASS. Wave T-A may close only if all required automated gates pass and these gaps remain honestly represented.
+Render runtime remains explicitly unproven: command runtime, QueueSubmit runtime, GPU execution, framebuffer, Present, and user-visible pixels. No evidence tier was upgraded from a test name or fixture name.
 
-## 7. Version Event
+## Candidate tree and gates
+
+The current Handoff status reports 277 dirty files, including 85 `ForeignDirty` files. No file was reset, restored, stashed, cleaned, or otherwise removed. Path classification has no UNKNOWN path, but a reproducible per-file ownership split proving that the four test runs consumed only the final candidate is not established while ForeignDirty remains in the same checkout.
+
+```text
+UNKNOWN path classification: 0
+Candidate Tree Match: NO / NOT PROVEN
+```
+
+Verified gates:
+
+```text
+Truth selftest: PASS
+Schema/registry validation: PASS for 8 imported records
+Truth MergeGate: PASS for 8 imported records only
+ARCH-A WarCore guard: PASS
+git diff --check: PASS
+```
+
+Failed or unresolved gates:
+
+```text
+ARCH-A / 5+100: FAIL
+  XuanYu.Editor/Camera/CameraNavigation.Try.cs = 139 lines
+Full Truth registry import: NOT COMPLETE
+Global Truth MergeGate: NOT ELIGIBLE
+```
+
+## Version event
 
 ```text
 Product Version: v0.3.0.3-fix
-Event: XYT-T2-T-A-FIX-A-TERRAIN-CONTEXT
-Ledger status: APPLIED; product candidate CommitId 115b4ea9
+Version Event: XYT-T2-T-A-FIX-A-TERRAIN-CONTEXT
+Ledger: APPLIED at historical product-fix commit 115b4ea9; no second event created
 ```
 
-`Directory.Build.props`, Window Title source, `changelog.md`, and `docs/governance/version-events.tsv` are aligned to the same candidate version. Truth audit/rename/registry changes do not consume a second FIX event. The provisional event must not become APPLIED until the final Candidate / Commit Gate passes.
+The existing product FIX event is not duplicated. Truth audit, rename, and registry work does not consume another product version event. Its prior product-fix application is not evidence that this dirty final candidate has passed the current commit gate.
 
-## 8. Final Report Status
+## Final decision
 
 ```text
-XYT-T2 / WAVE-T-A STATUS: CLOSED
-PRODUCT REGRESSION: NONE KNOWN from current recorded evidence
-UNRESOLVED UNKNOWN: 0
-GATE STATUS: PASS
-CANDIDATE TREE MATCH: YES
-COMMIT ELIGIBILITY: YES
-EXECUTION STATUS: World scoped 1012/1012; Core scoped 351/351; Truth selftest/registry validation PASS
-TRUTH AUDIT STATUS: PASS for all 8 imported records
-TOTAL REVIEWED: 8
-WRONG ORACLE: 0
-MISLEADING CLAIM: 0
-TIER OVERCLAIM: 0
-RED INSENSITIVE: 0
+XYT-T2 / WAVE-T-A STATUS: BLOCKED / NOT CLOSED
+PRODUCT REGRESSION: NONE KNOWN from the four executed project runs
+UNRESOLVED UNKNOWN: 0 path items; ownership/candidate provenance remains unresolved
+GATE STATUS: FAIL
+CANDIDATE TREE MATCH: NO / NOT PROVEN
+COMMIT ELIGIBILITY: NO
+EXECUTION STATUS: PASS, 3,332/3,332
+TRUTH AUDIT STATUS: PASS only for 8 imported records; global audit incomplete
+TOTAL REVIEWED: 8 imported records
+WRONG ORACLE: 0 imported records
+MISLEADING CLAIM: 0 imported records
+TIER OVERCLAIM: 0 imported records
+RED INSENSITIVE: 0 imported records
 REGRESSION WITNESS: Terrain Context RED -> GREEN, SAME TEST, GREEN_CONFIRMED
 TESTSET VERSION: T1 LEGACY
-T2 STATUS: T2-CANDIDATE / WAVE-T-A CLOSED; global TestSet remains T1 LEGACY and is not globally T2 truth-reviewed
-COMMIT SHA: cd0613c159c1985b494bb945a76d15dae84056e5
-REMOTE SHA: cd0613c159c1985b494bb945a76d15dae84056e5
-AHEAD/BEHIND: 0/0
-STAGED: 0
+T2 STATUS: T2-CANDIDATE / WAVE-T-A NOT CLOSED
+COMMIT SHA: 45fd7e636bfeb74701b4d192cfbedd6f4ddeb1d5 (HEAD; no commit created)
+REMOTE SHA: 45fd7e636bfeb74701b4d192cfbedd6f4ddeb1d5
+AHEAD/BEHIND: 0/0 before uncommitted work
 ```
+
+No commit or push was performed because the final gate is not satisfied. ForeignDirty was preserved.
 
 ## KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
 
 请 ChatGPT 审计本任务结果，并判断是否有可沉淀的知识库/经验库内容；如有，提炼并按治理规则维护入库。
 
-Candidate lessons: Execution 与 Truth 必须独立；同一测试的真实 PRE-FIX RED 与 POST-FIX GREEN 才能形成 Regression Witness；控制性 Mutation 只能证明 RED sensitivity；Capability coverage 与 TruthStatus 不得混为一谈。
+Candidate lessons: Execution 与 Truth 必须独立；同一测试的真实 PRE-FIX RED 与 POST-FIX GREEN 才能形成 Regression Witness；文件级审计不能冒充 Fact/Theory 级 Truth Record；Capability coverage 与 TruthStatus 不得混为一谈；同一 dirty checkout 中存在 ForeignDirty 时，不能把路径分类当作 Candidate Tree Match 证据。
 
 CHATGPT KNOWLEDGE AUDIT REQUIRED

@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace XuanYu.WarCore.Tests;
 
@@ -7,7 +8,7 @@ namespace XuanYu.WarCore.Tests;
 public sealed class WarCoreDependencyTests
 {
     [Fact]
-    public void WarCore_assembly_does_not_reference_editor()
+    public void WarCore_assembly_dependency_contract_excludes_editor()
     {
         var references = WarCoreAssembly().GetReferencedAssemblies()
             .Select(r => r.Name)
@@ -17,7 +18,7 @@ public sealed class WarCoreDependencyTests
     }
 
     [Fact]
-    public void WarCore_assembly_does_not_reference_vulkan()
+    public void WarCore_assembly_dependency_contract_excludes_vulkan()
     {
         var references = WarCoreAssembly().GetReferencedAssemblies()
             .Select(r => r.Name)
@@ -27,14 +28,19 @@ public sealed class WarCoreDependencyTests
     }
 
     [Fact]
-    public void WarCore_csproj_references_core()
+    public void WarCore_csproj_architecture_dependency_contract_references_core()
     {
-        // 运行时引用列表只包含被实际使用的程序集（WarCore 当前未直接使用
-        // Core 类型，EntityId 关联在 D3），故直接断言 csproj 声明。
-        var csproj = File.ReadAllText(
-            Path.Combine(AppContext.BaseDirectory, "../../../../XuanYu.WarCore/XuanYu.WarCore.csproj"));
+        // 这是项目声明契约，不是运行时程序集依赖行为断言。
+        var csprojPath = Path.Combine(
+            AppContext.BaseDirectory, "../../../../XuanYu.WarCore/XuanYu.WarCore.csproj");
+        var projectReferences = XDocument.Load(csprojPath)
+            .Descendants("ProjectReference")
+            .Select(reference => (string?)reference.Attribute("Include"))
+            .Where(include => include is not null)
+            .Select(include => Path.GetFileName(include!))
+            .ToArray();
 
-        Assert.Contains("XuanYu.Core.csproj", csproj);
+        Assert.Contains("XuanYu.Core.csproj", projectReferences);
     }
 
     static Assembly WarCoreAssembly()

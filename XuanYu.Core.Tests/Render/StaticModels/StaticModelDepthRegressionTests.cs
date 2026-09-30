@@ -1,9 +1,9 @@
 namespace XuanYu.Core.Tests.Render;
 
-public sealed class StaticModelDepthRegressionTests
+public sealed class StaticModelDepthSourceContractTests
 {
     [Fact]
-    public void Background_shader_stays_at_far_depth()
+    public void Background_shader_source_stays_at_far_depth()
     {
         var shader = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Shaders", "scene.vert"));
 

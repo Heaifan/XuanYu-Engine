@@ -7,53 +7,53 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     void BindFramePipeline(CommandBuffer cb, RenderDrawKind kind)
     {
-        if (kind == RenderDrawKind.Terrain)
+        switch (ResolveDrawOwner(kind))
         {
-            if (_terrainPipeline.Handle != 0 && _terrainPipelineLayout.Handle != 0)
+            case DrawOwner.EditorBackground:
+                if (_skyPipeline.Handle == 0 || _skyPipelineLayout.Handle == 0) return;
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _skyPipeline);
+                return;
+            case DrawOwner.Terrain:
+                if (_terrainPipeline.Handle == 0 || _terrainPipelineLayout.Handle == 0) return;
                 _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _terrainPipeline);
-            return;
+                return;
+            case DrawOwner.VectorOverlay:
+                if (_vectorOverlayPipeline.Handle == 0 || _vectorOverlayPipelineLayout.Handle == 0 ||
+                    _vectorStrokePipeline.Handle == 0 || _vectorStrokePipelineLayout.Handle == 0) return;
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _vectorOverlayPipeline);
+                return;
+            case DrawOwner.EditorReferenceGrid:
+                if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _gridPipeline);
+                return;
+            case DrawOwner.WorldOrigin:
+                if (_originPipeline.Handle == 0 || _originPipelineLayout.Handle == 0) return;
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _originPipeline);
+                return;
+            case DrawOwner.WorldAxes:
+                if (_axesPipeline.Handle == 0 || _axesPipelineLayout.Handle == 0) return;
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _axesPipeline);
+                return;
+            case DrawOwner.NavigationGizmo:
+                if (_navGizmoPipeline.Handle == 0 || _navGizmoPipelineLayout.Handle == 0) return;
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _navGizmoPipeline);
+                return;
+            case DrawOwner.ScaleIndicatorOverlay:
+                if (_scaleIndicatorPipeline.Handle == 0 || _scaleIndicatorPipelineLayout.Handle == 0) return;
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _scaleIndicatorPipeline);
+                return;
+            case DrawOwner.EditorViewPlaneGrid:
+                if (_viewPlaneGridPipeline.Handle == 0 || _viewPlaneGridPipelineLayout.Handle == 0) return;
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _viewPlaneGridPipeline);
+                return;
+            case DrawOwner.MapGround:
+            case DrawOwner.MapBounds:
+            case DrawOwner.Entity:
+            case DrawOwner.Gizmo:
+                _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
+                return;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(kind), kind, "Unsupported RenderDrawKind");
         }
-        if (kind == RenderDrawKind.MapVectorOverlay)
-        {
-            var pipeline = _vectorOverlayPipeline.Handle != 0 ? _vectorOverlayPipeline : _pipeline;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, pipeline); return;
-        }
-        if (kind == RenderDrawKind.EditorReferenceGrid)
-        {
-            if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _gridPipeline); return;
-        }
-        if (kind == RenderDrawKind.WorldOrigin)
-        {
-            if (_originPipeline.Handle == 0 || _originPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _originPipeline); return;
-        }
-        if (kind == RenderDrawKind.WorldAxes)
-        {
-            if (_axesPipeline.Handle == 0 || _axesPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _axesPipeline); return;
-        }
-        if (kind == RenderDrawKind.NavigationGizmo)
-        {
-            if (_navGizmoPipeline.Handle == 0 || _navGizmoPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _navGizmoPipeline); return;
-        }
-        if (kind == RenderDrawKind.ScaleIndicatorOverlay)
-        {
-            if (_scaleIndicatorPipeline.Handle == 0 || _scaleIndicatorPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _scaleIndicatorPipeline); return;
-        }
-        if (kind == RenderDrawKind.EditorViewPlaneGrid)
-        {
-            if (_viewPlaneGridPipeline.Handle == 0 || _viewPlaneGridPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _viewPlaneGridPipeline); return;
-        }
-        if (kind != RenderDrawKind.EditorBackground)
-        {
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
-            return;
-        }
-        if (_skyPipeline.Handle == 0 || _skyPipelineLayout.Handle == 0) return;
-        _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _skyPipeline);
     }
 }

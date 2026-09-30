@@ -2,14 +2,14 @@ using System.IO;
 
 namespace XuanYu.Core.Tests.Render.Background;
 
-public sealed class FarViewBackgroundShaderContractTests
+public sealed class FarViewBackgroundShaderSourceContractTests
 {
     private static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
     private static string Shader() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "scene.frag"));
     private static string Bytecode() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "ShaderBytecode.Frag.cs"));
 
     [Fact]
-    public void Background_does_not_define_fake_ground_layers()
+    public void Background_shader_source_does_not_define_fake_ground_layers()
     {
         var shader = Shader();
 
@@ -21,7 +21,7 @@ public sealed class FarViewBackgroundShaderContractTests
     }
 
     [Fact]
-    public void Background_ray_reconstructs_near_and_far_from_the_same_ndc_xy()
+    public void Background_shader_source_reconstructs_near_and_far_from_same_ndc_xy()
     {
         var shader = Shader();
 
@@ -33,7 +33,7 @@ public sealed class FarViewBackgroundShaderContractTests
     }
 
     [Fact]
-    public void Background_ray_guards_homogeneous_w_and_finite_values()
+    public void Background_shader_source_guards_homogeneous_w_and_finite_values()
     {
         var shader = Shader();
 
@@ -44,7 +44,7 @@ public sealed class FarViewBackgroundShaderContractTests
     }
 
     [Fact]
-    public void Embedded_background_bytecode_is_regenerated_from_the_new_shader()
+    public void Embedded_background_bytecode_source_marker_matches_shader_source()
     {
         var shader = Shader();
         var bytecode = Bytecode();

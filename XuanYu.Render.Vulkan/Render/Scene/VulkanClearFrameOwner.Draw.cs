@@ -6,6 +6,68 @@ namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
 {
+    internal enum DrawOwner
+    {
+        EditorBackground,
+        EditorReferenceGrid,
+        WorldOrigin,
+        WorldAxes,
+        MapGround,
+        MapBounds,
+        Terrain,
+        VectorOverlay,
+        Entity,
+        Gizmo,
+        ScaleIndicatorOverlay,
+        NavigationGizmo,
+        EditorViewPlaneGrid
+    }
+
+    internal readonly record struct PipelineReadiness(
+        bool Main,
+        bool Sky,
+        bool Grid,
+        bool Origin,
+        bool Axes,
+        bool Navigation,
+        bool ScaleIndicator,
+        bool ViewPlaneGrid,
+        bool Terrain,
+        bool VectorOverlay);
+
+    internal static DrawOwner ResolveDrawOwner(RenderDrawKind kind) => kind switch
+    {
+        RenderDrawKind.EditorBackground => DrawOwner.EditorBackground,
+        RenderDrawKind.EditorReferenceGrid => DrawOwner.EditorReferenceGrid,
+        RenderDrawKind.WorldOrigin => DrawOwner.WorldOrigin,
+        RenderDrawKind.WorldAxes => DrawOwner.WorldAxes,
+        RenderDrawKind.MapGround => DrawOwner.MapGround,
+        RenderDrawKind.MapBounds => DrawOwner.MapBounds,
+        RenderDrawKind.Terrain => DrawOwner.Terrain,
+        RenderDrawKind.MapVectorOverlay => DrawOwner.VectorOverlay,
+        RenderDrawKind.EntityFill or RenderDrawKind.EntityOutline => DrawOwner.Entity,
+        RenderDrawKind.MoveGizmo or RenderDrawKind.RotateGizmo or RenderDrawKind.ScaleGizmo => DrawOwner.Gizmo,
+        RenderDrawKind.ScaleIndicatorOverlay => DrawOwner.ScaleIndicatorOverlay,
+        RenderDrawKind.NavigationGizmo => DrawOwner.NavigationGizmo,
+        RenderDrawKind.EditorViewPlaneGrid => DrawOwner.EditorViewPlaneGrid,
+        _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "Unsupported RenderDrawKind")
+    };
+
+    internal static bool IsPipelineReady(DrawOwner owner, PipelineReadiness readiness) => owner switch
+    {
+        DrawOwner.EditorBackground => readiness.Sky,
+        DrawOwner.EditorReferenceGrid => readiness.Grid,
+        DrawOwner.WorldOrigin => readiness.Origin,
+        DrawOwner.WorldAxes => readiness.Axes,
+        DrawOwner.NavigationGizmo => readiness.Navigation,
+        DrawOwner.ScaleIndicatorOverlay => readiness.ScaleIndicator,
+        DrawOwner.EditorViewPlaneGrid => readiness.ViewPlaneGrid,
+        DrawOwner.Terrain => readiness.Terrain,
+        DrawOwner.VectorOverlay => readiness.VectorOverlay,
+        DrawOwner.MapGround or DrawOwner.MapBounds or DrawOwner.Entity or DrawOwner.Gizmo => readiness.Main,
+        _ => throw new ArgumentOutOfRangeException(nameof(owner), owner, "Unsupported draw owner")
+    };
+
     Silk.NET.Vulkan.Pipeline _skyPipeline;
     PipelineLayout _skyPipelineLayout;
     Silk.NET.Vulkan.Pipeline _gridPipeline;
@@ -39,38 +101,81 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 TraceGridDraw(draw.Kind, canRecord);
                 if (!canRecord) continue;
                 BindFramePipeline(cb, draw.Kind);
-                if (draw.Kind == RenderDrawKind.MapGround && _mapSurfaceIndexBuffer is not null)
-                    DrawMapSurface(cb, pScene);
-                else if (draw.Kind == RenderDrawKind.Terrain)
-                    DrawTerrain(cb, pScene, draw.EntityIndex);
-                else if (draw.Kind == RenderDrawKind.MapBounds && _mapBoundsVertexBuffer is not null)
-                    DrawMapBounds(cb, pScene);
-                else if (draw.Kind == RenderDrawKind.MapVectorOverlay)
-                    DrawVectorOverlay(cb, pScene, draw.EntityIndex);
-                // F2-R2/F3-F1：网格/轴/原点/导航 Gizmo 独立全屏 Pass。
-                if (draw.Kind == RenderDrawKind.EditorReferenceGrid) DrawReferenceGrid(cb);
-                else if (draw.Kind == RenderDrawKind.WorldOrigin) DrawWorldOrigin(cb);
-                else if (draw.Kind == RenderDrawKind.WorldAxes) DrawWorldAxes(cb);
-                else if (draw.Kind == RenderDrawKind.ScaleIndicatorOverlay) DrawScaleIndicator(cb);
-                else if (draw.Kind == RenderDrawKind.NavigationGizmo) DrawNavigationGizmo(cb);
-                else if (draw.Kind == RenderDrawKind.EditorViewPlaneGrid) DrawViewPlaneGrid(cb);
-                else if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);
-                else if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
-                else DrawGizmo(cb, pScene, draw);
+                DispatchDraw(cb, pScene, draw);
             }
         }
     }
-    bool CanRecordDraw(RenderDrawKind kind) => kind switch
+
+    void DispatchDraw(CommandBuffer cb, float* scene, RenderDrawPlan.FrameEntry draw)
     {
-        RenderDrawKind.EditorReferenceGrid => _gridPipeline.Handle != 0 && _gridPipelineLayout.Handle != 0,
-        RenderDrawKind.WorldAxes => _axesPipeline.Handle != 0 && _axesPipelineLayout.Handle != 0,
-        RenderDrawKind.WorldOrigin => _originPipeline.Handle != 0 && _originPipelineLayout.Handle != 0,
-        RenderDrawKind.NavigationGizmo => _navGizmoPipeline.Handle != 0 && _navGizmoPipelineLayout.Handle != 0,
-        RenderDrawKind.ScaleIndicatorOverlay => _scaleIndicatorPipeline.Handle != 0 && _scaleIndicatorPipelineLayout.Handle != 0,
-        RenderDrawKind.EditorViewPlaneGrid => _viewPlaneGridPipeline.Handle != 0 && _viewPlaneGridPipelineLayout.Handle != 0,
-        RenderDrawKind.EditorBackground => _skyPipeline.Handle != 0 && _skyPipelineLayout.Handle != 0,
-        _ => _pipeline.Handle != 0 && _pipelineLayout.Handle != 0
-    };
+        switch (draw.Kind)
+        {
+            case RenderDrawKind.EditorBackground:
+                DrawAssist(cb, scene, draw);
+                break;
+            case RenderDrawKind.EditorReferenceGrid:
+                DrawReferenceGrid(cb);
+                break;
+            case RenderDrawKind.WorldOrigin:
+                DrawWorldOrigin(cb);
+                break;
+            case RenderDrawKind.WorldAxes:
+                DrawWorldAxes(cb);
+                break;
+            case RenderDrawKind.MapGround:
+                if (_mapSurfaceIndexBuffer is not null) DrawMapSurface(cb, scene);
+                break;
+            case RenderDrawKind.MapBounds:
+                if (_mapBoundsVertexBuffer is not null) DrawMapBounds(cb, scene);
+                break;
+            case RenderDrawKind.Terrain:
+                DrawTerrain(cb, scene, draw.EntityIndex);
+                break;
+            case RenderDrawKind.MapVectorOverlay:
+                DrawVectorOverlay(cb, scene, draw.EntityIndex);
+                break;
+            case RenderDrawKind.EntityFill:
+            case RenderDrawKind.EntityOutline:
+                DrawEntity(cb, scene, draw);
+                break;
+            case RenderDrawKind.MoveGizmo:
+            case RenderDrawKind.RotateGizmo:
+            case RenderDrawKind.ScaleGizmo:
+                DrawGizmo(cb, scene, draw);
+                break;
+            case RenderDrawKind.ScaleIndicatorOverlay:
+                DrawScaleIndicator(cb);
+                break;
+            case RenderDrawKind.NavigationGizmo:
+                DrawNavigationGizmo(cb);
+                break;
+            case RenderDrawKind.EditorViewPlaneGrid:
+                DrawViewPlaneGrid(cb);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(draw.Kind), draw.Kind, "Unsupported RenderDrawKind");
+        }
+    }
+
+    bool CanRecordDraw(RenderDrawKind kind)
+    {
+        var owner = ResolveDrawOwner(kind);
+        var readiness = new PipelineReadiness(
+            Main: _pipeline.Handle != 0 && _pipelineLayout.Handle != 0,
+            Sky: _skyPipeline.Handle != 0 && _skyPipelineLayout.Handle != 0,
+            Grid: _gridPipeline.Handle != 0 && _gridPipelineLayout.Handle != 0,
+            Origin: _originPipeline.Handle != 0 && _originPipelineLayout.Handle != 0,
+            Axes: _axesPipeline.Handle != 0 && _axesPipelineLayout.Handle != 0,
+            Navigation: _navGizmoPipeline.Handle != 0 && _navGizmoPipelineLayout.Handle != 0,
+            ScaleIndicator: _scaleIndicatorPipeline.Handle != 0 && _scaleIndicatorPipelineLayout.Handle != 0,
+            ViewPlaneGrid: _viewPlaneGridPipeline.Handle != 0 && _viewPlaneGridPipelineLayout.Handle != 0,
+            Terrain: _terrainPipeline.Handle != 0 && _terrainPipelineLayout.Handle != 0,
+            VectorOverlay: _vectorOverlayPipeline.Handle != 0 && _vectorOverlayPipelineLayout.Handle != 0 &&
+                _vectorStrokePipeline.Handle != 0 && _vectorStrokePipelineLayout.Handle != 0);
+        var ready = IsPipelineReady(owner, readiness);
+        if (!ready) Log($"Vulkan Draw 不可记录：Kind={kind}; Owner={owner}");
+        return ready;
+    }
     void BindProceduralVertexBuffer(CommandBuffer cb)
     {
         if (_proceduralVertexBuffer is null) return;

@@ -7,21 +7,34 @@
 KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
 ==================================================
 
-本任务施工结果已完成，请 ChatGPT 作为审计 AI：
+请 ChatGPT 审计本任务结果，并判断是否存在可沉淀的知识/经验。
+如有，必须仅在本报告的 `XYK CANDIDATE` 区块中以纯文本输出，
+禁止写入任何知识库、经验库、Codex memory、ad-hoc note 或其它文件；
+正式入库由 ChatGPT / XYK Coordinator 后续决定。
 
-1. 审计本任务的 Root Cause、修复方式、测试证据和治理过程；
-2. 判断是否存在值得长期沉淀的 Knowledge / Experience / Incident Lessons；
-3. 已有同类知识优先更新，不重复创建；
-4. 新结论推翻旧知识时，必须保留历史追溯并修订状态；
-5. 无长期价值时输出 NO KNOWLEDGE DEPOSIT；
-6. 未经 ChatGPT 审计的施工结论不得直接作为正式知识库/经验库条目。
+XYK CANDIDATE:
+NONE
+
+若存在候选，替换上面的 `NONE`，并仅在本报告中按下列字段输出：
+- ID/Category: <可选候选标识>
+- Problem: <发生了什么问题>
+- Root Cause: <根因>
+- Rule / Knowledge: <可复用知识>
+- Applies To: <适用范围>
+- Evidence: <本任务证据>
+- Expiry / Revalidation: <如适用>
+- Suggested Action: <后续治理/优化建议>
+
+AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY.
+候选不得被宣称为已沉淀、已写入或已更新；只有明确授予 XYK WRITE AUTHORITY
+时，ChatGPT / XYK Coordinator 才能另行审计并维护正式 XYK。
 
 CHATGPT KNOWLEDGE AUDIT REQUIRED
 ```
 
 ## 职责边界
 
-施工 Agent / Codex 只提供事实、Root Cause、修复方式、Changed Files、Tests、Evidence、Known Risk，并可提出 Candidate Lessons；不得自行把 Candidate Lesson 宣布为正式 Knowledge / Experience。
+施工 Agent / Codex 只提供事实、Root Cause、修复方式、Changed Files、Tests、Evidence、Known Risk，并只能在最终报告纯文本中提出 XYK Candidate；不得自行把 Candidate Lesson 宣布为正式 Knowledge / Experience，也不得写入任何持久化知识存储。
 
 ChatGPT 审计 AI 负责搜索既有条目，判断 `CREATE / UPDATE / STRENGTHEN / RETIRE / NO DEPOSIT`，维护正式 Knowledge、Lesson、Incident、ERR、EXP 与索引。
 

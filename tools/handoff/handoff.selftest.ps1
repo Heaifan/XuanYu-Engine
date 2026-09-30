@@ -75,6 +75,7 @@ try {
 
     $result = Invoke-Handoff @('-Mode', 'join', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'HANDOFF JOIN PASS'
+    Assert-Output $result 0 'UNKNOWN_DIRTY: 2'
     Assert-Output $result 0 'OwnDirty'
     Assert-Output $result 0 'ForeignDirty'
     Assert-Output $result 0 'Scope       : xyui'
@@ -213,6 +214,14 @@ try {
     $closedState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
     Assert-True (-not [bool]$closedState.active) 'close must deactivate the wave'
     Assert-True ($null -ne $closedState.closedAt) 'close must persist closedAt for legacy state'
+    $registryPath = Join-Path $stateDir 'task-registry.json'
+    $reportPath = Join-Path $stateDir 'task-reports.json'
+    [pscustomobject]@{ tasks = @([pscustomobject]@{ TaskId = 'LEAK'; Status = 'ACTIVE'; WriteScope = @('leak/**'); ExpectedDependencies = @() }) } |
+        ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $registryPath
+    [pscustomobject]@{ reports = @([pscustomobject]@{ TaskId = 'LEAK'; Status = 'COMPLETE' }) } |
+        ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $reportPath
+    $result = Invoke-Handoff @('-Mode', 'status', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 1 'TASK_STATE_LEAK'
     Write-Host 'H1 SELFTEST 7/7 PASS'
     Write-Host 'HANDOFF SELF TEST PASS'
 }

@@ -23,10 +23,14 @@ public sealed class TerrainVisibilitySelectorTests
     [Fact] public void LodBoundaryDoesNotThrash()
     {
         var state = State(ProjectionMode.Perspective);
-        var box = Box(0, 0, 70);
-        var first = TerrainLodSelector.Select(state, box);
-        var next = TerrainLodSelector.Select(state, box, first.Lod);
-        Assert.Equal(first.Lod, next.Lod);
+        var far = TerrainLodSelector.Select(state, Box(0, 0, 140));
+        var withinHysteresis = TerrainLodSelector.Select(state, Box(0, 0, 110), far.Lod);
+        var crossedBack = TerrainLodSelector.Select(state, Box(0, 0, 20), withinHysteresis.Lod);
+
+        Assert.True(far.Lod > 2, $"far={far.Lod}; within={withinHysteresis.Lod}; back={crossedBack.Lod}");
+        Assert.True(far.Lod == withinHysteresis.Lod,
+            $"far={far.Lod}; within={withinHysteresis.Lod}; back={crossedBack.Lod}");
+        Assert.True(crossedBack.Lod < withinHysteresis.Lod);
     }
 
     [Fact]
@@ -35,12 +39,12 @@ public sealed class TerrainVisibilitySelectorTests
         var cache = new TerrainLodStateCache();
         var state = State(ProjectionMode.Perspective);
         var key = new TerrainLodStateKey("terrain", 1, 0, 0);
-        var first = cache.Select(key, state, Box(0, 0, 70));
-        var otherChunk = cache.Select(key with { ChunkX = 1 }, state, Box(0, 0, 70));
-        var otherRevision = cache.Select(key with { Revision = 2 }, state, Box(0, 0, 70));
+        var first = cache.Select(key, state, Box(0, 0, 140));
+        var otherChunk = cache.Select(key with { ChunkX = 1 }, state, Box(0, 0, 20));
+        var otherRevision = cache.Select(key with { Revision = 2 }, state, Box(0, 0, 20));
 
-        Assert.Equal(first.Lod, otherChunk.Lod);
-        Assert.Equal(first.Lod, otherRevision.Lod);
+        Assert.True(first.Lod > otherChunk.Lod);
+        Assert.Equal(otherChunk.Lod, otherRevision.Lod);
         Assert.Equal(3, cache.Count);
     }
 

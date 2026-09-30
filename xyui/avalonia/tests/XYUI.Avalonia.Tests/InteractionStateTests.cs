@@ -45,7 +45,7 @@ public class InteractionStateTests : IClassFixture<XyuiHeadlessFixture>
             XyuiInteractionState.DisabledBorder, XyuiInteractionState.FocusWidth, XyuiInteractionState.SelectedWidth };
         foreach (var k in keys) Assert.True(theme.ContainsKey(k), $"交互状态键 {k} 未登记（第二真值风险）");
     });
-    [Fact] public void Foundation_Leaves_Default_And_Checked_Appearance_To_Components() => _fx.Run(() =>
+    [Fact] public void Foundation_Leaves_Default_And_Checked_State_To_Components() => _fx.Run(() =>
     {
         Assert.False(HasResource("XY.Brush.Surface.Panel"));
         Assert.False(HasResource("XY.Brush.Text.Primary"));

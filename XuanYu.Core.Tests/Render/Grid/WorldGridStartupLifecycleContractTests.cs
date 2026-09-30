@@ -1,11 +1,11 @@
 using XuanYu.Render.Abstractions;
+using XuanYu.Render.Vulkan.Render;
 
 namespace XuanYu.Core.Tests.Render.Grid;
 
 public sealed class WorldGridStartupLifecycleContractTests
 {
     static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
-    static string DrawSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Scene", "VulkanClearFrameOwner.Draw.cs"));
     static string GridSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.Grid.cs"));
     static string ScaleSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.GridScale.cs"));
 
@@ -42,7 +42,9 @@ public sealed class WorldGridStartupLifecycleContractTests
 
     [Fact]
     public void GridDrawSurvivesTerrainImport()
-        => Assert.DoesNotContain("Terrain", DrawSource[..DrawSource.IndexOf("void RecordDraw")]);
+        => Assert.True(VulkanClearFrameOwner.IsPipelineReady(
+            VulkanClearFrameOwner.DrawOwner.EditorReferenceGrid,
+            new(false, false, true, false, false, false, false, false, false, false)));
 
     [Fact]
     public void GridDrawSurvivesTerrainRemoval()
@@ -50,5 +52,7 @@ public sealed class WorldGridStartupLifecycleContractTests
 
     [Fact]
     public void GridDrawDoesNotWaitForScenePipeline()
-        => Assert.DoesNotContain("if (_pipeline.Handle == 0 || _pipelineLayout.Handle == 0) return;", DrawSource);
+        => Assert.True(VulkanClearFrameOwner.IsPipelineReady(
+            VulkanClearFrameOwner.DrawOwner.EditorReferenceGrid,
+            new(false, false, true, false, false, false, false, false, false, false)));
 }

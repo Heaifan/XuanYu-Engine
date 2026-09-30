@@ -29,7 +29,7 @@ public class CatalogSourceTests
     }
 
     [Fact]
-    public void Implemented_Controls_Expose_Real_Avalonia_Types()
+    public void Implemented_Controls_Expose_Avalonia_Control_Types()
     {
         var entries = XyuiCatalogSource.Load(FindRoot());
         var controls = entries.Where(x => x.Module == "XYUI-2" && x.Status.Avalonia).ToArray();

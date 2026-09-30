@@ -2,7 +2,7 @@ using System.IO;
 
 namespace XuanYu.Core.Tests.Render;
 
-public sealed class WorldReferenceGridFarFadeContractTests
+public sealed class WorldReferenceGridFarFadeSourceContractTests
 {
     static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
     static string Shader() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "editor_world_reference_grid.frag"));
