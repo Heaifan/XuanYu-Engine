@@ -19,8 +19,8 @@
                    IsEnabled="{Binding IsEditMode}" />
       <xy:XYHoverState Variant="Outline"
                        IsSelected="{Binding IsDrawingTransactionActive}"
-                       Padding="1">
-        <xy:XYSplitButton x:Name="DrawSplitButton" Width="112" Content="{Binding ContextToolbarButtonLabel}"
+                       Padding="0">
+        <xy:XYSplitButton x:Name="DrawSplitButton" Width="112" Height="34" Content="{Binding ContextToolbarButtonLabel}"
                           ToolTip.Tip="{Binding DrawButtonLabel}"
                           IsEnabled="{Binding CanOpenContextSelector}" />
       </xy:XYHoverState>

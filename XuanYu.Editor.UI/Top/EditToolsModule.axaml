@@ -4,7 +4,7 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.EditToolsModule"
              x:DataType="local:UiVm">
-  <Border IsVisible="{Binding IsRegionContext}"
+  <Border x:Name="EditToolsRoot" IsVisible="{Binding IsRegionEditMode}"
           BorderBrush="{StaticResource Color.Border.Default}"
           BorderThickness="1"
           CornerRadius="{StaticResource Radius.Standard}"
