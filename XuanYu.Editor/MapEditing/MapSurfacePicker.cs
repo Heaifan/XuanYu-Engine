@@ -44,6 +44,7 @@ public static class MapSurfacePicker
         var ray = WorldRayFactory.FromViewportPoint(projection, logicalX, logicalY);
         result = GroundPickResolver.Resolve(ray, terrain, map.Surface.BaseHeightMeters);
         if (!result.IsValid) return false;
+        if (result.SurfaceBinding.Kind == SurfaceBindingKind.Terrain) return true;
         if (MapBounds.Contains(map.SizeMeters, result.WorldXY.X, result.WorldXY.Y)) return true;
         result = GroundPickResult.Invalid;
         return false;

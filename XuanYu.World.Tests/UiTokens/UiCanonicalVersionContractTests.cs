@@ -7,21 +7,21 @@ public sealed class UiCanonicalVersionContractTests
     static string RootPath(params string[] segments) => Path.Combine(
         AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(segments));
 
-    const string ExpectedVersion = "v0.3.0.0-r1";
+    const string ExpectedVersion = "v0.3.0.1-fix";
 
     static string VersionSource() => File.ReadAllText(RootPath("Directory.Build.props"));
 
     [Fact]
     public void Canonical_version_uses_the_world_authoring_release_sequence() =>
-        Assert.Contains("<Version>0.3.0.0-r1</Version>", VersionSource());
+        Assert.Contains("<Version>0.3.0.1-fix</Version>", VersionSource());
 
     [Fact]
     public void Version_source_declares_all_assembly_version_fields()
     {
         var content = VersionSource();
-        Assert.Contains("<AssemblyVersion>0.3.0.0</AssemblyVersion>", content);
-        Assert.Contains("<FileVersion>0.3.0.0</FileVersion>", content);
-        Assert.Contains("<InformationalVersion>v0.3.0.0-r1</InformationalVersion>", content);
+        Assert.Contains("<AssemblyVersion>0.3.0.1</AssemblyVersion>", content);
+        Assert.Contains("<FileVersion>0.3.0.1</FileVersion>", content);
+        Assert.Contains("<InformationalVersion>v0.3.0.1-fix</InformationalVersion>", content);
     }
 
     [Fact]

@@ -24,6 +24,7 @@ public sealed partial class UiVm
         var terrain = terrains?.FirstOrDefault();
         var map = IsTerrainContext && terrains is { Count: > 0 }
             ? MapRenderSnapshot.Empty : _mapRenderSnapshot;
+        if (!IsTerrainContext && terrains is { Count: > 0 }) map = map with { ShowGround = false };
         return SceneRenderProjectionAdapter.TryCreate(
             snapshot,
             ComputeRotateGizmoWorldRadius(transform.Position),
