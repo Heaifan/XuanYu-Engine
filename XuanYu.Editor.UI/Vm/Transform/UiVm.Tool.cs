@@ -1,5 +1,7 @@
 ﻿namespace XuanYu.Editor.UI;
 
+using XuanYu.Editor.Input;
+
 public sealed partial class UiVm
 {
     void TrySelectTool(object? value)
@@ -32,21 +34,6 @@ public sealed partial class UiVm
         }
         if (requestedTool == EditorToolId.MarkerPlacement && !CanStartMarkerPlacement)
         { FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的地图标记数据集。"; return; }
-        if (IsRegionDrawingTool && requestedTool != EditorToolId.RegionDrawing)
-        {
-            var hadDraft = _regionDrawing.IsActive;
-            _regionDrawing.Cancel();
-            ClearRegionDrawingSnap();
-            RaiseRegionDrawingBindings();
-            EndDrawingTransaction();
-            if (hadDraft) LogRegionDrawingCanceled();
-        }
-        if (IsRoadDrawingTool && requestedTool != EditorToolId.RoadDrawing)
-        {
-            var hadDraft = _roadDrawing.IsActive; _roadDrawing.Cancel(); RaiseRoadDrawingBindings();
-            EndDrawingTransaction();
-            if (hadDraft) LogRoadDrawingCanceled();
-        }
         if (name is "框选")
         {
             FooterState = "状态：就绪";
@@ -64,6 +51,14 @@ public sealed partial class UiVm
             RaiseToolChanged();
             return;
         }
+
+        ViewportInput.Dispatch(new EditorPointerEvent(EditorPointerEventKind.ToolChanged,
+            new(0, 0), EditorPointerButtons.None, EditorPointerModifiers.None, 0,
+            ViewportInput.Router.State.PointerId, new("tool"), 1));
+        if (requestedTool != EditorToolId.RegionDrawing)
+            EndRegionDrawingAfterToolChange();
+        if (requestedTool != EditorToolId.RoadDrawing)
+            EndRoadDrawingAfterToolChange();
 
         RaiseToolChanged();
         if (requestedTool == EditorToolId.RegionDrawing) BeginDrawingTransaction("区域面");

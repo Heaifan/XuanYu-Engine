@@ -59,4 +59,24 @@ public sealed partial class RegionDrawContextSyncFix1Tests
         Assert.False(vm.IsDrawingTransactionActive);
         Assert.True(vm.CanOpenContextSelector);
     }
+
+    [Fact]
+    public async Task Tool_change_cancels_region_owner_and_releases_capture()
+    {
+        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        Assert.True(await vm.BeginContextDrawingAsync("区域面"));
+        var pointer = new EditorPointerEvent(EditorPointerEventKind.Pressed,
+            new(20, 20), EditorPointerButtons.Left, EditorPointerModifiers.None,
+            0, 13, new("viewport"), 1);
+        Assert.Equal(ViewportInputDispatchKind.Captured, vm.ViewportInput.Dispatch(pointer).Kind);
+
+        vm.SelectToolCommand.Execute("选择");
+
+        Assert.Equal(ViewportGestureState.Idle, vm.ViewportInput.Router.State);
+        Assert.False(vm.ViewportInput.Router.State.IsCaptured);
+        Assert.Equal(GestureOwner.None, vm.ViewportInput.Router.State.Owner);
+        Assert.False(vm.IsDrawingTransactionActive);
+        Assert.False(vm.IsRegionDrawingTool);
+        Assert.Null(vm.RegionDrawingCursor);
+    }
 }
