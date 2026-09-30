@@ -32,7 +32,7 @@ public sealed class TerrainTopContextContractTests
     public void Terrain_mode_does_not_render_region_transform_module()
     {
         var editTools = Read("Top/EditToolsModule.axaml");
-        Assert.Contains("IsVisible=\"{Binding IsRegionContext}\"", editTools);
+        Assert.Contains("IsVisible=\"{Binding IsRegionEditMode}\"", editTools);
         Assert.Contains("IsVisible=\"{Binding IsTerrainContext}\"", Read("Top/ContextToolBar.axaml"));
         Assert.Contains("导入DEM", Read("Top/ContextToolBar.axaml"));
     }

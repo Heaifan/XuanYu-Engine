@@ -6,7 +6,7 @@ namespace XuanYu.Core.Tests.Render;
 
 public sealed class TerrainVisibilitySelectorTests
 {
-    [Fact] public void VisibleChunkAccepted() => AssertVisible(Box(0, 0, 10));
+    [Fact] public void ChunkInsideFrustumAccepted() => AssertInsideFrustum(Box(0, 0, 10));
     [Fact] public void OutsideChunkCulled() => Assert.True(Cull(Box(100, 0, 10)));
     [Fact] public void BehindCameraChunkCulled() => Assert.True(Cull(Box(0, 0, -10)));
     [Fact] public void PerspectiveCulling() => Assert.False(Cull(Box(0, 0, 10)));
@@ -57,7 +57,7 @@ public sealed class TerrainVisibilitySelectorTests
         Assert.Equal(1, cache.Count);
     }
 
-    [Fact] public void VisibilityStatsCorrect()
+    [Fact] public void FrustumSelectionStatsCorrect()
     {
         var result = TerrainChunkVisibility.Select(
             [new(1, Box(0, 0, 10)), new(2, Box(100, 0, 10)), new(3, Box(0, 0, 1000))],
@@ -69,7 +69,7 @@ public sealed class TerrainVisibilitySelectorTests
 
     [Fact] public void ReverseZFrustumRegression() => Assert.False(Cull(Box(0, 0, 99)));
 
-    static void AssertVisible(SpatialAabb box) => Assert.False(Cull(box));
+    static void AssertInsideFrustum(SpatialAabb box) => Assert.False(Cull(box));
     static bool Cull(SpatialAabb box, ProjectionMode mode = ProjectionMode.Perspective) =>
         !TerrainFrustumCuller.Intersects(State(mode), box);
     static int Lod(SpatialAabb box) => TerrainLodSelector.Select(State(), box).Lod;

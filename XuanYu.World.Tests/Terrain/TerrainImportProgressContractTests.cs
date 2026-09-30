@@ -2,14 +2,14 @@ using XuanYu.World.Terrain.Import;
 
 namespace XuanYu.World.Tests.Terrain;
 
-public sealed class TerrainImportProgressAcceptanceTests
+public sealed class TerrainImportProgressContractTests
 {
     [Fact]
     public void Reader_progress_stays_in_range_and_does_not_regress()
     {
-        var values = new TerrainImportAcceptanceFixture.ProgressCapture();
+        var values = new TerrainImportFixture.ProgressCapture();
         var reader = (IHgtReader)new HgtTerrainElevationTileReader();
-        using var stream = TerrainImportAcceptanceFixture.HgtStream(1, 2, 3, 4);
+        using var stream = TerrainImportFixture.HgtStream(1, 2, 3, 4);
 
         reader.Read(stream, "n23e121", values);
 

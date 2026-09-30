@@ -5,11 +5,11 @@ namespace XuanYu.World.Tests.UiRuntime;
 public sealed partial class TerrainAutoFrameD1Tests
 {
     [Fact]
-    public async Task Full_view_with_terrain_and_no_entities_keeps_terrain_visible()
+    public async Task Full_view_with_terrain_and_no_entities_keeps_terrain_bounds_inside_viewport()
     {
         var vm = await ImportAsync([("n23e121.hgt", 10, 2)]);
         vm.RunCommand.Execute("查看全部");
-        AssertTerrainVisible(vm);
+        AssertTerrainBoundsFitViewport(vm);
         Assert.Equal(TerrainWorldCenter(vm), vm.ObservationCenter);
     }
 
@@ -36,10 +36,10 @@ public sealed partial class TerrainAutoFrameD1Tests
     }
 
     [Fact]
-    public async Task Terrain_remains_visible_after_viewport_resize()
+    public async Task Terrain_bounds_remain_inside_viewport_after_resize()
     {
         var vm = await ImportAsync([("n23e121.hgt", 10, 2)]);
         vm.UpdateViewportFrame(1600, 900);
-        AssertTerrainVisible(vm);
+        AssertTerrainBoundsFitViewport(vm);
     }
 }

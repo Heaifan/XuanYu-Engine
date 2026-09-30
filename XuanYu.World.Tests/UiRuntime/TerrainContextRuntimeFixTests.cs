@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
+using XuanYu.Editor.Workspace;
 using XuanYu.Editor.UI;
 using XYUI.Avalonia.Controls;
 
@@ -40,6 +41,7 @@ public sealed class TerrainContextRuntimeFixTests
         var result = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
+            vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
             var top = new Top { DataContext = vm }; host.Show(top, 1200, 180);
             vm.EnterRegionContext(); Dispatcher.UIThread.RunJobs(); top.UpdateLayout();
             var edit = UiRuntimeTestHost.Descendants<EditToolsModule>(top).Single();

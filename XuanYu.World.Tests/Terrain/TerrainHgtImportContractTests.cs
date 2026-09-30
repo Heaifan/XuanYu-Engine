@@ -4,14 +4,14 @@ using XuanYu.World.Terrain.Source;
 
 namespace XuanYu.World.Tests.Terrain;
 
-public sealed class TerrainHgtImportAcceptanceTests
+public sealed class TerrainHgtImportContractTests
 {
     [Fact]
     public void Real_hgt_layout_becomes_tile_with_bounds_samples_and_nodata()
     {
-        var progress = new TerrainImportAcceptanceFixture.ProgressCapture();
+        var progress = new TerrainImportFixture.ProgressCapture();
         var reader = (IHgtReader)new HgtTerrainElevationTileReader();
-        using var stream = TerrainImportAcceptanceFixture.HgtStream(100, 200, short.MinValue, 400);
+        using var stream = TerrainImportFixture.HgtStream(100, 200, short.MinValue, 400);
 
         var tile = reader.Read(stream, "n23e121", progress);
 
@@ -28,7 +28,7 @@ public sealed class TerrainHgtImportAcceptanceTests
     public void Reader_query_uses_known_geographic_coordinates()
     {
         var reader = (IHgtReader)new HgtTerrainElevationTileReader();
-        using var stream = TerrainImportAcceptanceFixture.HgtStream(100, 200, 300, 400);
+        using var stream = TerrainImportFixture.HgtStream(100, 200, 300, 400);
         var tile = reader.Read(stream, "n23e121");
 
         Assert.Equal(300, tile.GetElevation(23, 121).ElevationMeters);

@@ -82,6 +82,7 @@ public sealed partial class UiVm
     void RaiseTerrainContextBindings()
     {
         OnPropertyChanged(nameof(IsTerrainContext)); OnPropertyChanged(nameof(IsRegionContext));
+        OnPropertyChanged(nameof(IsRegionEditMode));
         OnPropertyChanged(nameof(ContextButtonLabel)); OnPropertyChanged(nameof(ContextToolbarButtonLabel));
     }
 }

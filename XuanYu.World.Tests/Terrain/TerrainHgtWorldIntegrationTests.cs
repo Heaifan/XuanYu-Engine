@@ -5,13 +5,13 @@ using XuanYu.World.Terrain.Import;
 
 namespace XuanYu.World.Tests.Terrain;
 
-public sealed class TerrainHgtWorldAcceptanceTests
+public sealed class TerrainHgtWorldIntegrationTests
 {
     [Fact]
     public void Imported_tile_registers_in_world_and_query_returns_fixture_value()
     {
         var reader = (IHgtReader)new HgtTerrainElevationTileReader();
-        using var stream = TerrainImportAcceptanceFixture.HgtStream(10, 20, 30, 40);
+        using var stream = TerrainImportFixture.HgtStream(10, 20, 30, 40);
         var tile = reader.Read(stream, "n23e121");
         var world = TerrainWorld.FromElevationTile(tile);
         Assert.Equal(40, tile.GetElevation(23, 122).ElevationMeters);
@@ -24,7 +24,7 @@ public sealed class TerrainHgtWorldAcceptanceTests
     public void Projection_and_render_resource_preserve_different_elevations()
     {
         var reader = (IHgtReader)new HgtTerrainElevationTileReader();
-        using var stream = TerrainImportAcceptanceFixture.HgtStream(10, 20, 30, 40);
+        using var stream = TerrainImportFixture.HgtStream(10, 20, 30, 40);
         var world = TerrainWorld.FromElevationTile(reader.Read(stream, "n23e121"));
 
         TerrainHeightfield projection = world.ToHeightfield();

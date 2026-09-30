@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xuan-yu.local/schema/xyt-test-truth-v1.json",
+  "title": "XYT-T2 Test Truth Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "TestId", "Project", "File", "Capability", "TestName", "Claim",
+    "ActualProductionPath", "Oracle", "FixtureFakeMock", "EvidenceTier",
+    "Proves", "DoesNotProve", "ExecutionStatus", "TruthStatus", "Decision",
+    "RedSensitivity", "RegressionWitness", "WitnessStatus", "Notes"
+  ],
+  "properties": {
+    "TestId": { "type": "string", "minLength": 1 },
+    "Project": { "type": "string", "minLength": 1 },
+    "File": { "type": "string", "minLength": 1 },
+    "Capability": { "type": "string", "minLength": 1 },
+    "TestName": { "type": "string", "minLength": 1 },
+    "Claim": { "type": "string", "minLength": 1 },
+    "ActualProductionPath": { "type": "string", "minLength": 1 },
+    "Oracle": { "type": "string", "minLength": 1 },
+    "FixtureFakeMock": { "type": "string", "minLength": 1 },
+    "EvidenceTier": { "enum": ["T0", "T1", "T2", "T3", "T4"] },
+    "Proves": { "type": "array", "items": { "type": "string" } },
+    "DoesNotProve": { "type": "array", "items": { "type": "string" } },
+    "ExecutionStatus": { "enum": ["NOT_RUN", "PASS", "FAIL", "BLOCKED", "TIMEOUT", "FLAKY"] },
+    "TruthStatus": { "enum": ["UNREVIEWED", "VERIFIED", "WEAK_ORACLE", "WRONG_ORACLE", "MISLEADING_CLAIM", "TIER_OVERCLAIM", "RED_INSENSITIVE", "DUPLICATE", "IMPLEMENTATION_COUPLED", "ESCALATED"] },
+    "Decision": { "enum": ["KEEP", "RENAME", "STRENGTHEN", "REWRITE", "SPLIT", "RETIRE", "ESCALATE"] },
+    "RedSensitivity": { "enum": ["UNKNOWN", "SENSITIVE", "INSENSITIVE", "NOT_APPLICABLE"] },
+    "RegressionWitness": { "enum": ["NONE", "REQUIRED", "COMPLETE", "PRE-FIX FAIL / POST-FIX PASS", "INVALID", "WITNESS_UNAVAILABLE", "NOT_APPLICABLE"] },
+    "WitnessStatus": { "enum": ["NOT_RECORDED", "RED_CONFIRMED", "GREEN_CONFIRMED", "INCOMPLETE", "INVALID", "NOT_APPLICABLE"] },
+    "WitnessEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["SameTest", "PreFix", "PostFix"],
+      "properties": {
+        "SameTest": { "const": true },
+        "PreFix": { "$ref": "#/$defs/witnessResult" },
+        "PostFix": { "$ref": "#/$defs/witnessResult" }
+      }
+    },
+    "Notes": { "type": "string" }
+  },
+  "$defs": {
+    "witnessResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["Expected", "Actual", "Result", "Status"],
+      "properties": {
+        "Expected": { "type": "string" },
+        "Actual": { "type": "string" },
+        "Result": { "enum": ["PASS", "FAIL"] },
+        "Status": { "enum": ["RED_CONFIRMED", "GREEN_CONFIRMED"] }
+      }
+    },
+    "evidenceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ProductVersion", "Commit", "TestSetVersion", "TestId", "EvidenceTier", "Status"],
+      "properties": {
+        "ProductVersion": { "type": "string", "minLength": 1 },
+        "Commit": { "type": "string", "minLength": 1 },
+        "TestSetVersion": { "type": "string", "minLength": 1 },
+        "TestId": { "type": "string", "minLength": 1 },
+        "EvidenceTier": { "enum": ["T0", "T1", "T2", "T3", "T4"] },
+        "Status": { "enum": ["VALID", "REVALIDATION_REQUIRED", "EXPIRED", "SUPERSEDED"] },
+        "InvalidationTrigger": { "type": "string" },
+        "CreatedAt": { "type": "string" }
+      }
+    }
+  }
+}

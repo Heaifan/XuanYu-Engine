@@ -15,7 +15,7 @@ public sealed partial class UiVm
     public bool IsMapEditMode => IsEditMode && IsMapWorkspace;
     public bool CanUseEditTools => IsEditMode;
     public bool CanToggleSnap => IsMapEditMode;
-    public bool IsRegionEditMode => IsEditMode && IsRegionWorkspace;
+    public bool IsRegionEditMode => IsEditMode && IsRegionWorkspace && IsRegionContext;
     public string CurrentEditorModeText => IsManageMode ? "管理模式" : CurrentWorkspaceDisplayName;
 
     public bool ToggleEditorMode()

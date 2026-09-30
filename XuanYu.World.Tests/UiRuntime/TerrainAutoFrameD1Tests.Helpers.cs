@@ -61,16 +61,18 @@ public sealed partial class TerrainAutoFrameD1Tests
             (corners.Min(p => p.Z) + corners.Max(p => p.Z)) / 2);
     }
 
-    static void AssertTerrainVisible(UiVm vm)
+    static void AssertTerrainBoundsFitViewport(UiVm vm)
     {
         var projection = ViewProjectionState.Create(vm.RenderSnapshot.CameraState,
-            new(0, 0, 800, 600, 800, 600, 1, 1));
-        Assert.All(TerrainCorners(vm.RenderProjection.Projection.TerrainResources,
+            vm.CurrentViewport);
+        var resources = vm.RenderProjection.Projection.TerrainResources;
+        Assert.NotEmpty(resources);
+        Assert.All(TerrainCorners(resources,
             vm.VerticalExaggeration), corner =>
         {
             Assert.True(projection.TryProjectWorldPoint(corner, out var screen));
-            Assert.InRange(screen.X, 0, 800);
-            Assert.InRange(screen.Y, 0, 600);
+            Assert.InRange(screen.X, 0, vm.CurrentViewport.LogicalWidth);
+            Assert.InRange(screen.Y, 0, vm.CurrentViewport.LogicalHeight);
         });
     }
 

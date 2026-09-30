@@ -43,7 +43,7 @@ public sealed class TerrainMultiSourceImportTests
 
     static byte[] Bytes(short value)
     {
-        using var stream = TerrainImportAcceptanceFixture.HgtStream(value, value, value, value);
+        using var stream = TerrainImportFixture.HgtStream(value, value, value, value);
         return stream.ToArray();
     }
 }

@@ -3,7 +3,7 @@ using XuanYu.World.Terrain.Import;
 
 namespace XuanYu.World.Tests.Terrain;
 
-static class TerrainImportAcceptanceFixture
+static class TerrainImportFixture
 {
     public sealed class ProgressCapture : IProgress<TerrainImportProgress>
     {
