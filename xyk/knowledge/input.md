@@ -66,6 +66,18 @@ Selection.HandleLeftDown()
 **关联 Incident**：INC-2026-08-10-001
 **关联 Knowledge**：K-INP-002
 
+### 2026-09-30 强化：工具切换也是 Pointer 生命周期事件
+
+工具切换不能只改 `ActiveTool`。切换前必须先通过统一输入 Router 发出 ToolChanged/Cancel 语义，让当前 Owner、Capture、Hover/Preview 与绘制事务同时结束；随后再切换工具状态。
+
+已验证的 Region/Road 路径要求：
+- Router 回到 Idle，Owner=None，Capture=false；
+- Region/Road Draft、Snap、Hover/Preview 清理；
+- Drawing Transaction 结束；
+- 工具状态与上下文显示保持同一事实源。
+
+**强化证据 Commit**：`a5dc4d64` · 2026-09-30。
+
 ---
 
 ## K-INP-002 Win32 Mouse Capture 必须统一管理完整释放生命周期
