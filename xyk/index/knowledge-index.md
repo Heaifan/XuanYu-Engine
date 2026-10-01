@@ -1,6 +1,6 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-09-28
+> 最后治理更新：2026-10-01
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
 
 ## 任务域预检映射
@@ -78,6 +78,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | DEC-XYK-KNOWLEDGE-PLANE | Decision | Governance | XYE / XYUI / XYK 三位一体与 XYK 远端知识平面 | P0 | R1 | XYK-FOUNDATION-R1 · 2026-09-28 | Active |
 
 | K-UI-002 | Knowledge | UI | 拖拽反馈必须保持 Pointer Grab Point 不变量 | P1 | E2 | XYUI4 DragFeedback / Coordinate Audit · 2026-09-28 | Active |
+| K-XYT-T2-TERRAIN-CONTEXT-001 | Knowledge | UI | 上下文派生状态必须绑定真实 Workspace 与 Context | P0 | E2 | XYT-T2-T-A-FIX-A-TERRAIN-CONTEXT · 2026-09-30 · 115b4ea9 | Active |
 
 ## 分类文件
 
@@ -85,7 +86,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004
-- `ui.md`：K-UI-001～K-UI-002、K-DIAG-001
+- `ui.md`：K-UI-001～K-UI-002、K-XYT-T2-TERRAIN-CONTEXT-001、K-DIAG-001
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
 - `incidents.md`：代表性事故记录与映射

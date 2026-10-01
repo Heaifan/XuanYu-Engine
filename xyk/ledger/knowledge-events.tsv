@@ -16,3 +16,4 @@ K-20260928-006	CREATE	EXP-GOVERNANCE-005	Governance	XYK-C0-GOVERNANCE-SEDIMENT-R
 K-20260928-007	CREATE	K-VAL-003	Engineering	XYE-C0-LAST-MILE-FINAL-R1	516c83f9da2e7be129e2f9e6560bf12958347fad	Headless session single-owner and real Visual Tree runtime validation	ACTIVE
 K-20260928-007	STRENGTHEN	EXP-TEST-001	Engineering	XYE-C0-LAST-MILE-FINAL-R1	516c83f9da2e7be129e2f9e6560bf12958347fad	Headless lifecycle ownership and real TopLevel/Visual Tree requirement	ACTIVE
 K-20260928-007	CREATE	ERR-20260928-002	Incident	XYE-C0-LAST-MILE-FINAL-R1	516c83f9da2e7be129e2f9e6560bf12958347fad	Duplicate Avalonia Headless bootstrap caused false input failures	VERIFIED
+K-20261001-001	CREATE	K-XYT-T2-TERRAIN-CONTEXT-001	UI	XYT-T2-T-A-FIX-A-TERRAIN-CONTEXT	115b4ea90a92b28f113c7de9e947c8d2da4d877f	Same-test RED->GREEN; Terrain/Context scoped regression	ACTIVE

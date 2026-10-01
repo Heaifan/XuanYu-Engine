@@ -125,3 +125,32 @@ PreviewOrigin = CurrentPointer - GrabOffset
 至少从对象左上、中心、右下和任意内部位置开始拖拽，整个过程中 Pointer 相对 Preview 的抓取点必须保持不变。
 
 **来源任务**：XYUI4 DragFeedback / ContextMenu Coordinate Audit · 2026-09-28
+
+---
+
+## K-XYT-T2-TERRAIN-CONTEXT-001 上下文派生状态必须绑定真实 Workspace 与 Context
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Workspace、Context、Mode、Derived State、PropertyChanged、Avalonia
+**适用范围**：编辑器 Workspace/Context/Mode 切换、上下文工具栏、条件可见模块、派生布尔状态。
+
+### 根因
+
+仅用 Workspace 判断“区域编辑态”，会让 Terrain Context 下仍保留 RegionEditor 的隐藏宿主或可见性状态。Context 切换时如果只通知基础 Context 属性，而没有通知依赖它的派生属性，UI 绑定会继续消费旧状态。
+
+### 工程规则
+
+- 派生状态必须表达完整事实，例如 `IsRegionEditMode = IsEditMode && IsRegionWorkspace && IsRegionContext`。
+- Workspace、Context、Mode 任一变化时，必须同步通知所有依赖这些输入的派生属性。
+- 上下文专属 UI 不得只依赖 Workspace 名称推断可见性。
+- Headless/UI 测试必须先建立真实 Workspace，再切 Context，禁止用不可能的状态组合制造 Oracle。
+
+### 验证
+
+至少覆盖 Region Workspace + Terrain Context、Region Workspace + Region Context 两种组合，确认宿主槽、工具栏和派生状态一致。
+
+**来源任务**：XYT-T2-T-A-FIX-A-TERRAIN-CONTEXT · 2026-09-30
+**产品证据 Commit**：`115b4ea90a92b28f113c7de9e947c8d2da4d877f`
+**Witness**：同测试 RED→GREEN；Terrain scoped 与 Context/Mode lifecycle 回归通过。
