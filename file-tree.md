@@ -79,6 +79,7 @@ XuanYuEngine/
 ├── samples/                                      # 示例内容
 ├── .superpowers/                                 # SDD/任务过程资料
 ├── .xyt/                                         # XYT schema/report 配置
+├── .github/                                      # GitHub Actions 等远端仓库自动化
 ├── .gitattributes                                # Git 属性配置
 ├── .gitignore                                    # Git 忽略规则
 ├── NuGet.Config                                  # NuGet 源与包管理配置
