@@ -14,7 +14,9 @@ The audit found duplicate headings, non-monotonic historical dates, and repeated
 
 Each counted change is one event and one ledger row. Supported types are `FEATURE`, `FIX`, `STABILIZATION`, and `GOVERNANCE`.
 
-`FEATURE` means one independently describable and independently acceptable capability increment. It advances Process Version once. `FIX` means one observed Bug, Regression, or Acceptance Failure repaired into an independently verifiable result. Each real repair round advances once; FIX1/FIX2/FIX3 are never compressed. `STABILIZATION` advances once for a distinct hardening result. Under the audited XYE history, a governance-only change does not advance the product Process Version; it is still recorded as a `GOVERNANCE` ledger event when it is a material governance result.
+`FEATURE` means one independently describable and independently acceptable capability increment. It advances Process Version once. `FIX` means one observed product Bug, Regression, or Acceptance Failure repaired into an independently verifiable result. Each real product repair round advances once; FIX1/FIX2/FIX3 are never compressed. `STABILIZATION` advances once for a distinct product hardening result. A governance-only change does not advance the product Process Version; it is recorded as a `GOVERNANCE` ledger event when it is a material governance result.
+
+治理工具、Handoff、XYT、知识治理、版本治理自身的缺陷修复仍属于 `GOVERNANCE`，不因为它也是“Bug 修复”就消耗产品 `FIX` 版本。只有同一个变更同时改变了产品运行时行为，才另外按产品事实登记 `FIX`。历史上已经发生的版本事件不倒改；本规则自本次治理收口后向前生效。
 
 The version calculator preserves the repository format `vA.B.C.D[-suffix]`. A new FEATURE/FIX/STABILIZATION increments `D`; a current `-fixN` chain increments `N`. This is a compatibility rule for the current line, not a universal string format for other projects.
 
