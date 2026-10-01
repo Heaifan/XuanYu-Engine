@@ -16,6 +16,7 @@
 - `docs/governance/ui-spec.md`：UI 规范 1.0 讨论初稿（强约束 UI 默认标准与受控例外机制，待审订）
 - `docs/governance/debts/arch-world-debts.md`：受控债务登记
 - `docs/governance/shr-2026-08-closure.svg`：SHR-2026-08 考核收口图
+- `docs/governance/reports/`：阶段治理报告；`wave-2.5/` 保存 Wave 2.5 历史报告
 
 ## 开发知识库（knowledge/）
 
