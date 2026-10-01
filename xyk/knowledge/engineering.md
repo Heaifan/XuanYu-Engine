@@ -478,6 +478,16 @@ P3 不能由 Headless 补齐。必须先经仓库权威 Resolver / Build / Run �
 **证据**：INC-2026-09-29-003。
 
 ## K-HANDOFF-001 Stale Commit Mutex 必须有受控恢复路径
+
+### 2026-10-01 强化：交接同步不得自动丢弃本地内容
+
+当本地 `Ahead=0 / Behind>0` 时：
+- working tree clean：只允许 `merge --ff-only <upstream>`；
+- working tree dirty：必须返回 `DIRTY_BEHIND_REMOTE` 并保留全部 tracked / untracked 内容；
+- 禁止 Handoff 自动执行 `reset --hard`、`clean -fd`、stash、merge commit 或 rebase；
+- 无法 fast-forward 时必须阻断并交给人工处理。
+
+**实现证据**：`a846728cfd27dead3bd458abb41ba6ea6e607120`。
 **状态**：Active　**优先级**：P0　**证据等级**：E2  
 Commit Mutex 不能被普通 Agent 随意抢锁或删除；过期锁恢复必须证明原 Owner 已失效、当前基线可审计、工作区不被改写，并记录恢复事件。用户或 Coordinator 保留最终授权权。
 **证据**：XYT-L2 Convergence / Handoff Audit · 2026-09-29。
