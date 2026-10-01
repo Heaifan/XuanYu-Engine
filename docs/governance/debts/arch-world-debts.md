@@ -4,19 +4,12 @@
 > 债务不代表 R1 失败，而是"第一刀切开后暴露出的耦合"，须在指定轮次收口。
 > 在收口前，相关方向禁止新增依赖。治理序列见 `docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.md`。
 
-## D1 — TransformSession 暂居 World，含 Editor/Gizmo 语义（收口轮次：R4）
+## D1 — TransformSession 暂居 World，含 Editor/Gizmo 语义（原收口轮次：R4）
 
-- **现状**：`XuanYu.World.Transform.TransformSession` 直接 `using XuanYu.Core.Gizmo;`，
-  持有 `MoveGizmoAxis` / `PreviewTransform` / `TransformStartSnapshot`；`Begin()` 接收 `MoveGizmoAxis`，
-  `TryCommit()` 直接操作 `SceneStateOwner`。
-- **性质**：表达"用户拖 Gizmo → 建立编辑 Session → Preview → Commit/Cancel"，属 Editor Transaction /
-  Interaction，不是世界事实。
-- **物理层合法的根因**：`Gizmo` 本身错误藏在 `Core` 中，Editor 概念伪装成了 Core 类型；因此
-  `World → Core` 看起来合规，语义上却是 `World → Editor 概念`。
-- **裁定**：R1 为解决 `SceneStateOwner → GlobalWorld` 编译闭包不得不扩大迁移范围，且 R1 明确不同时做
-  Editor 剥离；`TransformSession` 现位于 World 为**过渡位置，非最终正确归属**。
-- **红线路令**：**禁止再新增 World 对 `Core.Gizmo` 的依赖**。R4 将其迁至 Editor 层。
-
+- **状态**：**已收口**。当前实现位于 `XuanYu.Editor/Transform/TransformSession*.cs`，不再位于 World。
+- **原问题**：Transform 编辑事务属于 Editor Interaction，却曾暂存在 World，并依赖 `Core.Gizmo`。
+- **收口结果**：TransformSession 的物理归属已经回到 Editor；World 不再承担该编辑事务。
+- **剩余边界**：`Core.Gizmo` 是否继续保留在 Core 属于独立结构问题，不再冒充 D1 未完成。
 ## D2 — SceneRenderSnapshot 污染 Core（收口轮次：R5）
 
 - **状态**：**已于 ARCH-WORLD R5 CLOSED 收口**。Render 生产路径已改为消费 `RenderProjection`，
@@ -33,11 +26,10 @@
 ## D3 — 测试程序集未严格映射生产层（收口轮次：R4/R5）
 
 - **状态**：ARCH-WORLD R6 判定为**非阻断退出后债务**。当前测试混层范围较广，
-  单独移动少量文件会制造假干净；后续进入真实功能开发时，按触碰范围逐步建立
-  `XuanYu.Editor.Tests` / 必要测试项目，不在 R6 大规模迁移既有 171 个测试。
-- **现状**：`XuanYu.World.Tests` 引用 World + Core + Editor.UI（含 `WorldCameraFramingTests` /
-  `WorldPartitionUiTests` / `WorldUi*` / `TransformSessionTests` 等 Editor/UI 性质测试）；
-  `XuanYu.Core.Tests` 引用 Core + World + Editor.UI（Picking / History 遗留）。
+  单独移动少量文件会制造假干净；后续按触碰范围逐步建立
+  `XuanYu.Editor.Tests` / 必要测试项目。当前 `XuanYu.World.Tests` 已发展为 554 个已跟踪文件，必须停止继续混入新的 Editor/UI 测试。
+- **现状**：`XuanYu.World.Tests` 当前引用 World + Core + Editor + Editor.UI + Render.Vulkan，内部同时存在 UI、UiRuntime、Viewport、MapEditing、Transform 等跨层测试；
+  `XuanYu.Core.Tests` 也仍引用 Core 之外的上层项目。
 - **性质**：仅为 Test Project，不破坏运行时架构，但不映射生产层边界。
 - **目标形态**：`Core.Tests → Core`；`World.Tests → World + Core`；`Editor.Tests → Editor + World + Core`。
   不阻挡 R2。
