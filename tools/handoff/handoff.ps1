@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [ValidateSet('prepare', 'join', 'status', 'close', 'lane-close', 'advance', 'commit-lock', 'commit-unlock', 'maintenance', 'repair', 'migrate-active', 'lane-state')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
@@ -630,11 +630,18 @@ if ($Mode -eq 'prepare') {
     if (-not $remoteFacts.Exists) { Stop-Handoff 'REMOTE_BRANCH_NOT_FOUND' "当前 branch 没有可验证的 upstream：$($facts.Upstream)" }
     if ($remoteFacts.Ahead -gt 0) { Stop-Handoff 'LOCAL_COMMITS_EXIST' "本地存在 $($remoteFacts.Ahead) 个 upstream 没有的正式 Commit。" }
     if ($remoteFacts.Behind -gt 0) {
-        if ($Config.RemoteWinsWhenBehind -ne $true) { Stop-Handoff 'REMOTE_BEHIND' '本地落后 upstream，但 RemoteWinsWhenBehind 未启用。' }
-        Invoke-Git @('reset', '--hard', $remoteFacts.Ref) | Out-Null
-        Invoke-Git @('clean', '-fd') | Out-Null
+        if ($Config.FastForwardWhenBehind -ne $true) {
+            Stop-Handoff 'REMOTE_BEHIND' '本地落后 upstream，但 FastForwardWhenBehind 未启用。'
+        }
+        if ($facts.Dirty.Count -gt 0) {
+            Stop-Handoff 'DIRTY_BEHIND_REMOTE' '本地落后 upstream 且工作区 dirty；禁止 reset/clean，必须先人工处理本地修改。'
+        }
+        Invoke-Git @('merge', '--ff-only', $remoteFacts.Ref) | Out-Null
         $facts = Get-Facts
         $remoteFacts = Get-RemoteFacts $facts
+        if ($remoteFacts.Ahead -ne 0 -or $remoteFacts.Behind -ne 0) {
+            Stop-Handoff 'FAST_FORWARD_INCOMPLETE' 'Fast-forward 后仍未与 upstream 收敛。'
+        }
     } elseif ($facts.Dirty.Count -gt 0 -and $WaveMode -ne 'convergence') { Stop-Handoff 'DIRTY_AT_REMOTE_TIP' 'Local 与 Remote 无 Commit 差异但工作区 dirty。' }
     $newFacts = Get-Facts
     $requestedConvergence = $WaveMode -eq 'convergence'

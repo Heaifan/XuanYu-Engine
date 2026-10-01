@@ -111,17 +111,17 @@ Ahead > 0
 ```text
 Ahead = 0
 Behind > 0
-→ REMOTE WINS
+clean → 只允许 fast-forward
+dirty → HANDOFF BLOCKED
 ```
 
-此时本地未提交 tracked 修改和 untracked 残留不得阻断交接。程序必须：
+程序必须遵守：
 
-- 丢弃 tracked 未提交修改；
-- 删除 non-ignored untracked 文件 / 目录；
-- 保持当前 branch 不变；
-- 将 Local HEAD 精确对齐当前 branch upstream；
-- 再次验证 Ahead / Behind = 0 / 0；
-- 验证 working tree clean。
+- 禁止 `reset --hard`、`clean -fd`、stash 或其它会丢弃本地内容的自动操作；
+- working tree clean 时只允许 `merge --ff-only <upstream>`；
+- working tree dirty 时返回 `DIRTY_BEHIND_REMOTE`，保留全部 tracked / untracked 内容并等待人工处理；
+- fast-forward 后再次验证 Ahead / Behind = 0 / 0；
+- 分支历史若无法 fast-forward，则阻断，不自动 merge / rebase。
 
 ### 3.3 Local 与 Remote 同一 Tip（仅 PREPARE）
 
@@ -193,7 +193,7 @@ Lane 完成与 Workspace Wave 关闭是两个不同动作。普通 Lane 必须�
 
 ## 9. Self Test / Dry Test
 
-`powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖祖先 baseline 下的并行 JOIN PASS、Commit Mutex 争抢/owner 校验/安全解锁、commit 后 advance 自动释放、dirty 保留、XYUI convergence `CONVERGENCE_EXCLUSIVE`、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED。`state-lifecycle.selftest.ps1` 额外覆盖 live upstream、旧 WIP expiry、stateless JOIN、Remote Wins、Local Ahead 安全保护与 maintenance gate；测试结束删除 fixture，不污染 canonical Workspace。
+`powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖祖先 baseline 下的并行 JOIN PASS、Commit Mutex 争抢/owner 校验/安全解锁、commit 后 advance 自动释放、dirty 保留、XYUI convergence `CONVERGENCE_EXCLUSIVE`、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED。`state-lifecycle.selftest.ps1` 额外覆盖 live upstream、旧 WIP expiry、stateless JOIN、Clean Fast-Forward、Dirty-Behind 安全阻断、Local Ahead 安全保护与 maintenance gate；测试结束删除 fixture，不污染 canonical Workspace。
 
 ### 9.1 Candidate-Scoped Final Evidence Gate
 
