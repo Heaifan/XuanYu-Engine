@@ -1,6 +1,6 @@
 using System.Reflection;
 using XuanYu.Core.Gizmo;
-using XuanYu.Core.History;
+using XuanYu.Editor.History;
 using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
