@@ -10,7 +10,6 @@ XuanYuEngine/
 │   │   └── WorldRayFactory.cs                    # 从视口/相机状态构造世界射线
 │   ├── Spatial/                                  # 通用空间 Bounds / Ray-AABB 等基础算法
 │   ├── Gizmo/                                    # Move/Rotate/Scale Gizmo 数学与布局基础
-│
 ├── XuanYu.World/                                 # 世界事实层；依赖 Core，保存可持久化/可查询的世界状态
 │   ├── Terrain/                                  # DEM/高度层、TerrainWorld、采样与地形元数据
 │   │   ├── TerrainWorld.cs                       # 地形世界聚合与查询入口
@@ -21,37 +20,31 @@ XuanYuEngine/
 │   ├── Scene/                                    # SceneStateOwner 与 World→Render 投影
 │   ├── GlobalWorld.cs                            # 全局世界聚合入口
 │   └── WorldQuery.cs                             # 世界查询入口
-│
 ├── XuanYu.Render.Abstractions/                   # 渲染层公共合同；RenderProjection、DrawPlan、Terrain/Map GPU 输入描述
 │   ├── RenderProjection.cs                       # 帧级渲染投影数据
 │   ├── RenderDrawPlan.cs                         # 渲染计划公共模型
 │   ├── TerrainRenderResource.cs                  # Terrain 渲染资源描述
-│
 ├── XuanYu.Render.Vulkan/                         # Vulkan 后端；依赖 Core + Render.Abstractions
 │   ├── Render/                                   # Vulkan 绘制实现与深度附件
 │   ├── Pipeline/                                 # Vulkan Pipeline 创建与管理
 │   ├── Bridge/                                   # Native Host / Vulkan 桥接
 │   └── Shaders/                                  # GLSL Shader 源
-│
 ├── XuanYu.Editor/                                # 编辑器领域层；依赖 Core + World，不包含具体 Avalonia 视图
 │   ├── MapEditing/                               # 地图编辑 Session、Snap、HitTest、Ground Pick、Region/Road 绘制
 │   │   ├── GroundPickResolver.cs                 # Ground/Surface 拾取解析
 │   ├── Transform/                                # 编辑器 Transform Session
 │   ├── Mode/                                     # EditorMode 生命周期与模式切换
-│
 ├── XuanYu.Editor.UI/                             # Avalonia 编辑器 UI；组合 Editor/World/Render 抽象与 XYUI
 │   ├── Vm/                                       # UI ViewModel 与交互编排
 │   ├── Viewport/                                 # 视口 UI、Navigation Gizmo、Native Host 路由
 │   ├── Input/                                    # Avalonia 输入到编辑器语义的适配
 │   ├── Diagnostic/                               # 诊断浮窗/Overlay
-│
 ├── XuanYu.Editor.App/                            # Avalonia 可执行入口与 Composition Root
 │   ├── Program.cs                                # 应用启动入口
 │   └── EditorCompositionRoot.cs                  # Editor/UI/Render/Vulkan 依赖装配
 ├── XuanYu.WarCore/                               # 战争模拟领域核心
 ├── XuanYu.Core.Tests/                            # Core 与部分 Render/Core 合同测试
 ├── XuanYu.World.Tests/                           # World + Editor/UI/Vulkan 集成与 Headless 测试集合
-│
 ├── XYT/                                          # 测试真实性与证据治理系统
 │   ├── Runtime/                                  # Runtime 能力与执行环境
 │   ├── Execution/                                # 测试执行器
@@ -69,7 +62,6 @@ XuanYuEngine/
 │   ├── governance/                               # XYUI 治理规则
 │   ├── audit/                                    # XYUI 审计资料
 │   └── packs/                                    # 可分发组件包
-│
 ├── tools/
 │   ├── handoff/                                  # Handoff 控制面、Candidate/Ownership/Work Release
 │   ├── governance/                               # Knowledge、Version、Test Truth 治理工具
@@ -80,7 +72,18 @@ XuanYuEngine/
 │   └── tests/                                    # 测试入口/辅助脚本
 ├── docs/                                         # 架构、治理、UI、知识、研究与里程碑文档
 ├── audit/                                        # 当前 tracked 审计证据/产物
-│
+├── XuanYu.Editor.Win/                            # Windows 辅助宿主
+├── XuanYu.WarCore.Tests/                         # WarCore 测试
+├── samples/                                      # 示例内容
+├── .superpowers/                                 # SDD/任务过程资料
+├── .xyt/                                         # XYT schema/report 配置
+├── .gitattributes                                # Git 属性配置
+├── .gitignore                                    # Git 忽略规则
+├── NuGet.Config                                  # NuGet 源与包管理配置
+├── xyui.bat                                      # XYUI 统一入口
+├── MAP-REGION-SNAP-R1-REVALIDATE-REQUIREMENTS.md # 当前 tracked 根目录需求/审计资料
+├── MAP-REGION-SNAP-R1-REVALIDATE-VERTEX-DRAG-AUDIT.zip # 当前 tracked 根目录审计包
+├── MAP-REGION-SNAP-R2-AUDIT.zip                  # 当前 tracked 根目录审计包
 ├── XuanYu.Engine.slnx                            # 主解决方案入口
 ├── Directory.Build.props                         # 全仓 .NET 构建/版本公共属性
 ├── run.bat                                       # 编辑器标准启动入口
