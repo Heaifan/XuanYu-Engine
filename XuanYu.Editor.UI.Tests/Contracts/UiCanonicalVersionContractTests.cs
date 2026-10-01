@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace XuanYu.World.Tests.UiTokens;
+namespace XuanYu.Editor.UI.Tests.Contracts;
 
 public sealed class UiCanonicalVersionContractTests
 {
