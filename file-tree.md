@@ -71,7 +71,9 @@ XuanYuEngine/
 │   ├── architecture/                             # 架构检查
 │   └── tests/                                    # 测试入口/辅助脚本
 ├── docs/                                         # 架构、治理、UI、知识、研究与里程碑文档
-├── audit/                                        # 当前 tracked 审计证据/产物
+├── audit/                                        # 当前 Git 已跟踪审计证据/产物
+│   ├── requirements/                             # 审计需求与验收要求
+│   └── packages/                                 # 原始审计压缩包
 ├── XuanYu.Editor.Win/                            # Windows 辅助宿主
 ├── XuanYu.WarCore.Tests/                         # WarCore 测试
 ├── samples/                                      # 示例内容
@@ -81,9 +83,6 @@ XuanYuEngine/
 ├── .gitignore                                    # Git 忽略规则
 ├── NuGet.Config                                  # NuGet 源与包管理配置
 ├── xyui.bat                                      # XYUI 统一入口
-├── MAP-REGION-SNAP-R1-REVALIDATE-REQUIREMENTS.md # 当前 tracked 根目录需求/审计资料
-├── MAP-REGION-SNAP-R1-REVALIDATE-VERTEX-DRAG-AUDIT.zip # 当前 tracked 根目录审计包
-├── MAP-REGION-SNAP-R2-AUDIT.zip                  # 当前 tracked 根目录审计包
 ├── XuanYu.Engine.slnx                            # 主解决方案入口
 ├── Directory.Build.props                         # 全仓 .NET 构建/版本公共属性
 ├── run.bat                                       # 编辑器标准启动入口
