@@ -20,10 +20,10 @@ XuanYuEngine/
 │   ├── Scene/                                    # SceneStateOwner 与 World→Render 投影
 │   ├── GlobalWorld.cs                            # 全局世界聚合入口
 │   └── WorldQuery.cs                             # 世界查询入口
-├── XuanYu.Render.Abstractions/                   # 渲染层公共合同；RenderProjection、DrawPlan、Terrain/Map GPU 输入描述
+├── XuanYu.Render.Abstractions/                   # 后端无关渲染层：公共合同、DrawPlan 与 CPU 渲染准备
+│   ├── Terrain/Build/                            # Terrain 分块、网格、法线等 CPU 构建算法
 │   ├── RenderProjection.cs                       # 帧级渲染投影数据
 │   ├── RenderDrawPlan.cs                         # 渲染计划公共模型
-│   ├── TerrainRenderResource.cs                  # Terrain 渲染资源描述
 ├── XuanYu.Render.Vulkan/                         # Vulkan 后端；依赖 Core + Render.Abstractions
 │   ├── Render/                                   # Vulkan 绘制实现与深度附件
 │   ├── Pipeline/                                 # Vulkan Pipeline 创建与管理
