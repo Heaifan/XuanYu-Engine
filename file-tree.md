@@ -33,6 +33,7 @@ XuanYuEngine/
 │   ├── MapEditing/                               # 地图编辑 Session、Snap、HitTest、Ground Pick、Region/Road 绘制
 │   │   ├── GroundPickResolver.cs                 # Ground/Surface 拾取解析
 │   ├── Transform/                                # 编辑器 Transform Session
+│   ├── History/                                  # Editor Undo/Redo 与变换历史所有权
 │   ├── Mode/                                     # EditorMode 生命周期与模式切换
 ├── XuanYu.Editor.UI/                             # Avalonia 编辑器 UI；组合 Editor/World/Render 抽象与 XYUI
 │   ├── Vm/                                       # UI ViewModel 与交互编排
@@ -80,9 +81,7 @@ XuanYuEngine/
 ├── .superpowers/                                 # SDD/任务过程资料
 ├── .xyt/                                         # XYT schema/report 配置
 ├── .github/                                      # GitHub Actions 等远端仓库自动化
-├── .gitattributes                                # Git 属性配置
-├── .gitignore                                    # Git 忽略规则
-├── NuGet.Config                                  # NuGet 源与包管理配置
+├── .gitattributes / .gitignore / NuGet.Config    # Git 属性、忽略与 NuGet 配置
 ├── xyui.bat                                      # XYUI 统一入口
 ├── XuanYu.Engine.slnx                            # 主解决方案入口
 ├── Directory.Build.props                         # 全仓 .NET 构建/版本公共属性
