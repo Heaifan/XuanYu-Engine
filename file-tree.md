@@ -1,40 +1,24 @@
 # XuanYuEngine 文件树
-
 > 当前 Git tracked tree 的结构视图。只描述“现在有什么、放在哪里、负责什么”；不记录历史状态、版本、迁移过程或生成物。
 > 目录优先表达职责边界；仅展开关键文件与关键入口，不把重复实现分片和测试逐项灌入本文件。
-
 ```text
 XuanYuEngine/
 ├── XuanYu.Core/                                  # 引擎最底层通用能力；不依赖上层项目
 │   ├── Space/                                    # 世界空间、相机、投影、Ray、Terrain 可见性/LOD 基础
 │   │   ├── CameraState.cs                        # 相机权威状态
 │   │   ├── ViewProjectionState.cs                # View/Projection 与 RenderOrigin 相关状态
-│   │   ├── ViewProjectionState.Projection.cs     # 投影矩阵构建与投影模式逻辑
-│   │   ├── WorldRay.cs                           # 世界射线数据结构
 │   │   └── WorldRayFactory.cs                    # 从视口/相机状态构造世界射线
-│   ├── Math/                                     # 双精度数学与基础旋转类型
 │   ├── Spatial/                                  # 通用空间 Bounds / Ray-AABB 等基础算法
-│   ├── Picking/                                  # 通用拾取基础
-│   ├── Transform/                                # 通用变换模型
-│   ├── Identity/                                 # EntityId 等稳定身份类型
-│   ├── Logging/                                  # 引擎日志模型
-│   ├── Scene/                                    # Core 层场景/渲染快照基础类型
-│   ├── Map/                                      # 地图表面采样等 Core 级类型
 │   ├── Gizmo/                                    # Move/Rotate/Scale Gizmo 数学与布局基础
-│   └── History/                                  # 编辑历史基础类型
 │
 ├── XuanYu.World/                                 # 世界事实层；依赖 Core，保存可持久化/可查询的世界状态
 │   ├── Terrain/                                  # DEM/高度层、TerrainWorld、采样与地形元数据
 │   │   ├── TerrainWorld.cs                       # 地形世界聚合与查询入口
-│   │   └── TerrainHeightLayer.cs                 # 高度数据层
 │   ├── Map/                                      # Map/Region/Road/Marker/Layer 等权威地图数据
-│   │   ├── WorldMapState.cs                      # 地图世界状态
 │   │   ├── WorldMapStateOwner.cs                 # 地图状态所有者
 │   │   ├── MapRegion.cs                          # Region 权威数据
 │   │   └── SurfaceBinding.cs                     # 地理对象表面绑定
 │   ├── Scene/                                    # SceneStateOwner 与 World→Render 投影
-│   ├── Spatial/                                  # 世界空间索引与查询
-│   ├── Geo/                                      # 地理坐标/地理辅助能力
 │   ├── GlobalWorld.cs                            # 全局世界聚合入口
 │   └── WorldQuery.cs                             # 世界查询入口
 │
@@ -42,53 +26,31 @@ XuanYuEngine/
 │   ├── RenderProjection.cs                       # 帧级渲染投影数据
 │   ├── RenderDrawPlan.cs                         # 渲染计划公共模型
 │   ├── TerrainRenderResource.cs                  # Terrain 渲染资源描述
-│   └── RenderVectorOverlayResource.cs            # Region/Road 等矢量 Overlay 渲染资源描述
 │
 ├── XuanYu.Render.Vulkan/                         # Vulkan 后端；依赖 Core + Render.Abstractions
 │   ├── Render/                                   # Vulkan 绘制实现与深度附件
 │   ├── Pipeline/                                 # Vulkan Pipeline 创建与管理
-│   ├── Device/                                   # Vulkan Device/Queue 能力
-│   ├── Swapchain/                                # Swapchain 生命周期
-│   ├── Session/                                  # Vulkan 渲染 Session
 │   ├── Bridge/                                   # Native Host / Vulkan 桥接
-│   ├── Diagnostic/                               # Vulkan 诊断
 │   └── Shaders/                                  # GLSL Shader 源
 │
 ├── XuanYu.Editor/                                # 编辑器领域层；依赖 Core + World，不包含具体 Avalonia 视图
 │   ├── MapEditing/                               # 地图编辑 Session、Snap、HitTest、Ground Pick、Region/Road 绘制
-│   │   ├── MapEditSession.cs                     # 地图编辑事务/状态主入口
 │   │   ├── GroundPickResolver.cs                 # Ground/Surface 拾取解析
-│   │   └── TerrainWorldGroundSurface.cs          # TerrainWorld 到编辑 Ground Surface 的适配
 │   ├── Transform/                                # 编辑器 Transform Session
 │   ├── Mode/                                     # EditorMode 生命周期与模式切换
-│   ├── Input/                                    # 编辑器输入语义
-│   ├── Camera/                                   # 编辑器相机行为
-│   ├── Workspace/                                # 编辑工作区状态
-│   ├── MapDocument/                              # 地图文档生命周期
-│   ├── SceneDocument/                            # 场景文档生命周期
-│   ├── Assets/                                   # 编辑器资源导入/管理
-│   └── Layering/                                 # 编辑层级/图层协调
 │
 ├── XuanYu.Editor.UI/                             # Avalonia 编辑器 UI；组合 Editor/World/Render 抽象与 XYUI
 │   ├── Vm/                                       # UI ViewModel 与交互编排
 │   ├── Viewport/                                 # 视口 UI、Navigation Gizmo、Native Host 路由
 │   ├── Input/                                    # Avalonia 输入到编辑器语义的适配
-│   ├── Top/ Left/ Right/ Foot/                   # 主编辑器四周功能区域
 │   ├── Diagnostic/                               # 诊断浮窗/Overlay
-│   ├── Design/                                   # UI Token 与设计资源
-│   ├── Notification/                             # 通知系统
-│   ├── Dialogs/                                  # 对话框
-│   ├── Workspace/                                # UI 工作区组合
-│   └── Root/                                     # UI 根组合与宿主
 │
 ├── XuanYu.Editor.App/                            # Avalonia 可执行入口与 Composition Root
 │   ├── Program.cs                                # 应用启动入口
 │   └── EditorCompositionRoot.cs                  # Editor/UI/Render/Vulkan 依赖装配
-├── XuanYu.Editor.Win/                            # WinForms/Windows 辅助宿主
 ├── XuanYu.WarCore/                               # 战争模拟领域核心
 ├── XuanYu.Core.Tests/                            # Core 与部分 Render/Core 合同测试
 ├── XuanYu.World.Tests/                           # World + Editor/UI/Vulkan 集成与 Headless 测试集合
-├── XuanYu.WarCore.Tests/                         # WarCore 测试
 │
 ├── XYT/                                          # 测试真实性与证据治理系统
 │   ├── Runtime/                                  # Runtime 能力与执行环境
@@ -118,23 +80,16 @@ XuanYuEngine/
 │   └── tests/                                    # 测试入口/辅助脚本
 ├── docs/                                         # 架构、治理、UI、知识、研究与里程碑文档
 ├── audit/                                        # 当前 tracked 审计证据/产物
-├── samples/                                      # 示例资产/示例内容
-├── .superpowers/                                 # SDD/任务过程资料
-├── .xyt/                                         # XYT schema/report 配置
 │
 ├── XuanYu.Engine.slnx                            # 主解决方案入口
 ├── Directory.Build.props                         # 全仓 .NET 构建/版本公共属性
-├── NuGet.Config                                  # NuGet 配置
 ├── run.bat                                       # 编辑器标准启动入口
 ├── xyt.ps1 / xyt.bat                             # XYT 统一入口
-├── xyui.bat                                      # XYUI 入口
 ├── AGENTS.md                                     # Agent 仓库级约束
 ├── changelog.md                                  # 变更记录
 └── file-tree.md                                  # 当前文件结构单一事实视图
 ```
-
 ## 维护规则
-
 - 只从 Git tracked tree 描述当前结构；`bin/`、`obj/`、缓存、临时生成物不进入。
 - 目录写“职责边界”，关键文件写“具体职责”；禁止用“C# 源码文件”“项目资源文件”这类无信息量模板。
 - 不在本文件记录版本、迁移历史、验收状态、债务状态或时间线；这些进入 changelog / governance / audit。
