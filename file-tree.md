@@ -44,7 +44,8 @@ XuanYuEngine/
 │   └── EditorCompositionRoot.cs                  # Editor/UI/Render/Vulkan 依赖装配
 ├── XuanYu.WarCore/                               # 战争模拟领域核心
 ├── XuanYu.Core.Tests/                            # Core 与部分 Render/Core 合同测试
-├── XuanYu.World.Tests/                           # World + Editor/UI/Vulkan 集成与 Headless 测试集合
+├── XuanYu.World.Tests/                           # 历史跨层综合测试；后续按职责逐步迁移
+├── XuanYu.Editor.Tests/                          # Editor 领域测试的新正式归属
 ├── XYT/                                          # 测试真实性与证据治理系统
 │   ├── Runtime/                                  # Runtime 能力与执行环境
 │   ├── Execution/                                # 测试执行器
@@ -52,7 +53,6 @@ XuanYuEngine/
 │   ├── Acceptance/                               # IPO / 验收映射
 │   ├── Integration/                              # 模块集成合同
 │   ├── Report/                                   # 报告生成
-│   └── tests/                                    # XYT 自测试
 ├── xyui/                                         # XYUI 独立 UI 组件/规范资产
 │   ├── avalonia/                                 # Avalonia 实现
 │   ├── source/                                   # 组件源码

@@ -37,6 +37,9 @@ jobs:
       - name: World 集成测试
         run: dotnet test XuanYu.World.Tests/XuanYu.World.Tests.csproj --configuration Release --no-build
 
+      - name: Editor 测试
+        run: dotnet test XuanYu.Editor.Tests/XuanYu.Editor.Tests.csproj --configuration Release --no-build
+
       - name: WarCore 测试
         run: dotnet test XuanYu.WarCore.Tests/XuanYu.WarCore.Tests.csproj --configuration Release --no-build
 
