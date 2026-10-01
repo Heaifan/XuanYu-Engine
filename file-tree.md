@@ -47,6 +47,7 @@ XuanYuEngine/
 ├── XuanYu.Core.Tests/                            # Core 与部分 Render/Core 合同测试
 ├── XuanYu.World.Tests/                           # 历史跨层综合测试；后续按职责逐步迁移
 ├── XuanYu.Editor.Tests/                          # Editor 领域测试的新正式归属
+├── XuanYu.Editor.UI.Tests/                       # Avalonia UI / Headless 测试正式归属
 ├── XYT/                                          # 测试真实性与证据治理系统
 │   ├── Runtime/                                  # Runtime 能力与执行环境
 │   ├── Execution/                                # 测试执行器
