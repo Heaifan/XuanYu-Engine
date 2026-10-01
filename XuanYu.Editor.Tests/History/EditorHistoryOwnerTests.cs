@@ -3,7 +3,7 @@ using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 
-namespace XuanYu.Core.Tests.History;
+namespace XuanYu.Editor.Tests.History;
 
 public sealed class EditorHistoryOwnerTests
 {

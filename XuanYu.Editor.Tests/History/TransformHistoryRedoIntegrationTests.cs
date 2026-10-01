@@ -6,7 +6,7 @@ using XuanYu.Core.Transform;
 
 using XuanYu.World.Scene;
 using XuanYu.Editor.Transform;
-namespace XuanYu.Core.Tests.History;
+namespace XuanYu.Editor.Tests.History;
 
 public sealed class TransformHistoryRedoIntegrationTests
 {
