@@ -75,9 +75,9 @@ XuanYuEngine/
 ├── audit/                                        # 当前 Git 已跟踪审计证据/产物
 │   ├── requirements/                             # 审计需求与验收要求
 │   └── packages/                                 # 原始审计压缩包
-├── XuanYu.Editor.Win/                            # Windows 辅助宿主
 ├── XuanYu.WarCore.Tests/                         # WarCore 测试
-├── samples/                                      # 示例内容
+├── samples/                                      # 示例与历史参考内容
+│   └── legacy/XuanYu.Editor.Win/                 # 旧 WinForms Core 自检骨架，不参与主解决方案
 ├── .superpowers/                                 # SDD/任务过程资料
 ├── .xyt/                                         # XYT schema/report 配置
 ├── .github/                                      # GitHub Actions 等远端仓库自动化

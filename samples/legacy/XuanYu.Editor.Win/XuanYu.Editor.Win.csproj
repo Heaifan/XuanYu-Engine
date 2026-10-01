@@ -8,6 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XuanYu.Core\XuanYu.Core.csproj" />
+    <ProjectReference Include="..\..\..\XuanYu.Core\XuanYu.Core.csproj" />
   </ItemGroup>
 </Project>
