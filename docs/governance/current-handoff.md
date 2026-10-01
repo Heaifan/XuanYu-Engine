@@ -7,7 +7,7 @@ Updated: 2026-10-01 (Asia/Shanghai)
 - Repository: `Heaifan/XuanYu-Engine`
 - Canonical workspace: the repository's registered canonical workspace
 - Branch: `feat/v0.3-world-authoring-r1`
-- HEAD / origin: `eee9b21e428646ba71b74ca350c526227b4884c8`
+- HEAD / origin: `926ad05884274decb08c7df7f11262571e5f0656`
 - Working tree: clean
 - Ahead / behind: `0 / 0`
 - Handoff: `development`, active wave, `HANDOFF JOIN PASS`
@@ -36,7 +36,7 @@ World Authoring R1 final convergence and governance handoff. The synchronized te
 - Status: `IDLE` / no active registered task.
 - Owner: not assigned by the active handoff wave (`Coordinator: null`).
 - Write scope: none until the next task is explicitly frozen.
-- Last commit: `eee9b21e`.
+- Last commit: `926ad058`.
 
 ## NEXT
 
