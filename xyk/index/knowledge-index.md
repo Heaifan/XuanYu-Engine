@@ -79,10 +79,14 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 | K-UI-002 | Knowledge | UI | 拖拽反馈必须保持 Pointer Grab Point 不变量 | P1 | E2 | XYUI4 DragFeedback / Coordinate Audit · 2026-09-28 | Active |
 | K-XYT-T2-TERRAIN-CONTEXT-001 | Knowledge | UI | 上下文派生状态必须绑定真实 Workspace 与 Context | P0 | E2 | XYT-T2-T-A-FIX-A-TERRAIN-CONTEXT · 2026-09-30 · 115b4ea9 | Active |
+| K-XYT-MAP-001 | Knowledge | Engineering | 正式测试选择必须经过 Change→Ownership→Capability→Required Tests | P0 | E3 | XYT-C · 0d75987c · 2026-09-29 | Active |
+| K-XYT-MAP-002 | Knowledge | Engineering | Agent 可以增加测试但不得删除 Required Tests | P0 | E3 | XYT-C · 0d75987c · 2026-09-29 | Active |
+| K-XYT-EXEC-001 | Knowledge | Engineering | 执行失败根因在证据不足时保持 UNKNOWN | P0 | E3 | XYT-D · 673dae7f · 2026-09-29 | Active |
+| K-XYT-AUDIT-001 | Knowledge | Engineering | 测试名称与目录不能授予证据等级 | P0 | E2 | XYT-G Legacy Audit · 2026-09-29 | Active |
 
 ## 分类文件
 
-- `engineering.md`：K-VAL-001～K-VAL-003、K-GOV-001～K-GOV-005
+- `engineering.md`：K-VAL-001～K-VAL-003、K-GOV-001～K-GOV-005、K-XYT-MAP-001～002、K-XYT-EXEC-001、K-XYT-AUDIT-001
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004

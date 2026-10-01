@@ -424,3 +424,29 @@ A/B 对照中，仅移除额外 `SetupWithoutStarting()`、让 `HeadlessUnitTest
 **关联 ERR**：ERR-20260928-002
 **关联 Experience**：EXP-TEST-001
 **关联 Knowledge**：K-VAL-002
+
+---
+
+## K-XYT-MAP-001 正式测试选择必须经过 Change → Ownership → Capability → Required Tests
+**状态**：Active　**优先级**：P0　**证据等级**：E3  
+**适用范围**：XYT 快速验证、模块收口、全局收口。
+- 必跑测试必须从实际变更出发，经文件归属和能力映射生成，不得由 Agent 凭感觉挑选。
+- 未知映射必须进入 `REVIEW_REQUIRED`，不得静默当作通过。
+- Agent 可以追加验证，但不能删减系统生成的 Required Tests。
+**证据**：XYT-C · `0d75987cff361cefd3ccd4864ea9c17fe17f3581` · 2026-09-29。
+
+## K-XYT-MAP-002 Agent 可以增加测试，但不得删除 Required Tests
+**状态**：Active　**优先级**：P0　**证据等级**：E3  
+若 Agent 认为某个 Required Test 不适用，必须走 Review / Governance 修改映射；不得在当前任务里自行移除、降级或绕过。
+**证据**：XYT-C · `0d75987cff361cefd3ccd4864ea9c17fe17f3581` · 2026-09-29。
+
+## K-XYT-EXEC-001 执行失败根因在证据不足时必须保持 UNKNOWN
+**状态**：Active　**优先级**：P0　**证据等级**：E3  
+FAIL、TIMEOUT、FLAKY 或 Harness 异常只说明执行结果；完成根因分类前必须保持 `UNKNOWN / UNCLASSIFIED`，不得自动升级成产品根因。应先完成 Failure Sweep，再区分 Product / Harness / Oracle / Environment / Unknown。
+**证据**：XYT-D · `673dae7f02c4d9c43a5a5fc83b1952233471f4d5` · 2026-09-29。
+
+## K-XYT-AUDIT-001 测试名称和目录不能授予证据等级
+**状态**：Active　**优先级**：P0　**证据等级**：E2  
+`Runtime`、`Vulkan`、`Performance`、`Integration`、`Real` 等名称不能自动获得更高证据等级。证据等级只能由测试实际跨越的验证边界决定；改名不改变正式证据等级。
+**证据**：XYT-G Legacy Audit · 2026-09-29；扫描 696 个测试源文件、2552 个测试方法，确认存在降级/重命名需求及 P3 真空。
+

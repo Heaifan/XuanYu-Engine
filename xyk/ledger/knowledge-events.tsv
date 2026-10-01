@@ -17,3 +17,7 @@ K-20260928-007	CREATE	K-VAL-003	Engineering	XYE-C0-LAST-MILE-FINAL-R1	516c83f9da
 K-20260928-007	STRENGTHEN	EXP-TEST-001	Engineering	XYE-C0-LAST-MILE-FINAL-R1	516c83f9da2e7be129e2f9e6560bf12958347fad	Headless lifecycle ownership and real TopLevel/Visual Tree requirement	ACTIVE
 K-20260928-007	CREATE	ERR-20260928-002	Incident	XYE-C0-LAST-MILE-FINAL-R1	516c83f9da2e7be129e2f9e6560bf12958347fad	Duplicate Avalonia Headless bootstrap caused false input failures	VERIFIED
 K-20261001-001	CREATE	K-XYT-T2-TERRAIN-CONTEXT-001	UI	XYT-T2-T-A-FIX-A-TERRAIN-CONTEXT	115b4ea90a92b28f113c7de9e947c8d2da4d877f	Same-test RED->GREEN; Terrain/Context scoped regression	ACTIVE
+K-20261001-002	CREATE	K-XYT-MAP-001	Engineering	XYT-C	0d75987cff361cefd3ccd4864ea9c17fe17f3581	Required test selection chain	ACTIVE
+K-20261001-002	CREATE	K-XYT-MAP-002	Engineering	XYT-C	0d75987cff361cefd3ccd4864ea9c17fe17f3581	Agent cannot remove required tests	ACTIVE
+K-20261001-002	CREATE	K-XYT-EXEC-001	Engineering	XYT-D	673dae7f02c4d9c43a5a5fc83b1952233471f4d5	Unknown root cause preserved until classified	ACTIVE
+K-20261001-002	CREATE	K-XYT-AUDIT-001	Engineering	XYT-G-LEGACY-AUDIT	-	Evidence tier follows actual boundary, not naming	ACTIVE
