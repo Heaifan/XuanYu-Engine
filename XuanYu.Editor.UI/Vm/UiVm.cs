@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia.Threading;
-using XuanYu.Core.History;
+using XuanYu.Editor.History;
 using XuanYu.Editor.Assets;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.SceneDocument;
