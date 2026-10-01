@@ -83,10 +83,17 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-XYT-MAP-002 | Knowledge | Engineering | Agent 可以增加测试但不得删除 Required Tests | P0 | E3 | XYT-C · 0d75987c · 2026-09-29 | Active |
 | K-XYT-EXEC-001 | Knowledge | Engineering | 执行失败根因在证据不足时保持 UNKNOWN | P0 | E3 | XYT-D · 673dae7f · 2026-09-29 | Active |
 | K-XYT-AUDIT-001 | Knowledge | Engineering | 测试名称与目录不能授予证据等级 | P0 | E2 | XYT-G Legacy Audit · 2026-09-29 | Active |
+| K-XYT-WIT-001 | Knowledge | Engineering | Regression Witness 必须由同一测试形成 RED→GREEN | P0 | E3 | XYT-J · 9e4c1a3d · 2026-09-29 | Active |
+| K-XYT-EVID-001 | Knowledge | Engineering | 证据失效必须按 Capability 隔离 | P0 | E2 | XYT-K · 32af17e9 · 2026-09-29 | Active |
+| K-XYT-CLOSE-001 | Knowledge | Engineering | 集成合同 READY 不等于产品收口 | P0 | E2 | XYT-L/FINAL · 18842310/475ab10d | Active |
+| K-XYT-P3-001 | Knowledge | Engineering | P3 必须走仓库权威构建和真实运行入口 | P0 | E2 | XYT-H · ccd3dbef · 2026-09-29 | Active |
+| K-XYT-HARNESS-001 | Knowledge | Engineering | 预期子进程失败不得污染父级 Selftest 退出码 | P0 | E2 | INC-2026-09-29-003 | Active |
+| K-HANDOFF-001 | Knowledge | Engineering | Stale Commit Mutex 必须有受控恢复路径 | P0 | E2 | XYT-L2/Handoff · 2026-09-29 | Active |
+| K-XYT-P3-002 | Knowledge | Engineering | P3 构建准备与 Runtime Probe 必须分开计时 | P1 | E2 | XYT-H2/H3 · 2026-09-29 | Active |
 
 ## 分类文件
 
-- `engineering.md`：K-VAL-001～K-VAL-003、K-GOV-001～K-GOV-005、K-XYT-MAP-001～002、K-XYT-EXEC-001、K-XYT-AUDIT-001
+- `engineering.md`：K-VAL-001～K-VAL-003、K-GOV-001～K-GOV-005、K-XYT-MAP-001～002、K-XYT-EXEC-001、K-XYT-AUDIT-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004

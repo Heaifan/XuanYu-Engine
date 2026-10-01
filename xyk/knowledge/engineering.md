@@ -450,3 +450,40 @@ FAIL、TIMEOUT、FLAKY 或 Harness 异常只说明执行结果；完成根因分
 `Runtime`、`Vulkan`、`Performance`、`Integration`、`Real` 等名称不能自动获得更高证据等级。证据等级只能由测试实际跨越的验证边界决定；改名不改变正式证据等级。
 **证据**：XYT-G Legacy Audit · 2026-09-29；扫描 696 个测试源文件、2552 个测试方法，确认存在降级/重命名需求及 P3 真空。
 
+---
+
+## K-XYT-WIT-001 Regression Witness 必须由同一测试形成 RED→GREEN
+**状态**：Active　**优先级**：P0　**证据等级**：E3  
+有效 Witness 必须绑定同一 `TestId`、明确的修复前/后 Commit 与前后证据。修复前 PASS、TestId 不一致为 INVALID；缺旧证据或身份不完整为 INCOMPLETE。没有旧状态证据不得升级为 RED_CONFIRMED。Witness 不替代 P3/P4。
+**证据**：XYT-J · `9e4c1a3de93c569bd24352867001c6c2ad10b869` · 2026-09-29。
+
+## K-XYT-EVID-001 证据失效必须按 Capability 隔离
+**状态**：Active　**优先级**：P0　**证据等级**：E2  
+证据应绑定 Commit、Version、Capability、TestId、TestSet 和证据等级。真实失效条件命中时只能从 VALID 变为 REVALIDATION_REQUIRED，不能直接推导 PRODUCT FAIL；重验应生成最小充分计划，不默认全量重跑。
+**证据**：XYT-K · `32af17e9dbe076fbd76dde331c751fe3479b0abf` · 2026-09-29。
+
+## K-XYT-CLOSE-001 集成合同 READY 不等于产品收口
+**状态**：Active　**优先级**：P0　**证据等级**：E2  
+只要真实 Runtime、Incident/Witness、关键证据重验或 P4 用户结论仍未满足，下游必须保持 Pending/Blocked。Fake/Fixture 集成通过不能升级成真实 Runtime 或产品通过。
+**证据**：XYT-L/FINAL · `18842310` / `475ab10d` · 2026-09-29。
+
+## K-XYT-P3-001 P3 必须走仓库权威构建和真实运行入口
+**状态**：Active　**优先级**：P0　**证据等级**：E2  
+P3 不能由 Headless 补齐。必须先经仓库权威 Resolver / Build / Run 得到身份明确的产物，再进入 App、窗口、Vulkan、Swapchain、Present 等目标真实边界。目标 EXE 未生成时优先判定 Harness/Prerequisite，不得直接判产品根因。
+**证据**：XYT-H · `ccd3dbef94864466ec2a7fc73c4ee6074e5809b2` · 2026-09-29。
+
+## K-XYT-HARNESS-001 预期子进程失败不得污染父级 Selftest 退出码
+**状态**：Active　**优先级**：P0　**证据等级**：E2  
+故意验证错误路径的子进程可以非零退出，但父级在全部断言通过后必须显式返回成功；真正断言失败必须保持非零。机器 Gate 同时检查可读结论和 Process Exit Code。
+**证据**：INC-2026-09-29-003。
+
+## K-HANDOFF-001 Stale Commit Mutex 必须有受控恢复路径
+**状态**：Active　**优先级**：P0　**证据等级**：E2  
+Commit Mutex 不能被普通 Agent 随意抢锁或删除；过期锁恢复必须证明原 Owner 已失效、当前基线可审计、工作区不被改写，并记录恢复事件。用户或 Coordinator 保留最终授权权。
+**证据**：XYT-L2 Convergence / Handoff Audit · 2026-09-29。
+
+## K-XYT-P3-002 P3 构建准备与 Runtime Probe 必须分开计时
+**状态**：Active　**优先级**：P1　**证据等级**：E2  
+Build Preparation 与 Runtime Probe 分开报告。身份一致的已验证产物可以复用；身份不一致才重建。各 P3 Capability 拥有独立时间预算，一个 TIMEOUT 不得覆盖另一个已经成立的 PASS。
+**证据**：XYT-H2/H3 · 2026-09-29。
+

@@ -21,3 +21,10 @@ K-20261001-002	CREATE	K-XYT-MAP-001	Engineering	XYT-C	0d75987cff361cefd3ccd4864e
 K-20261001-002	CREATE	K-XYT-MAP-002	Engineering	XYT-C	0d75987cff361cefd3ccd4864ea9c17fe17f3581	Agent cannot remove required tests	ACTIVE
 K-20261001-002	CREATE	K-XYT-EXEC-001	Engineering	XYT-D	673dae7f02c4d9c43a5a5fc83b1952233471f4d5	Unknown root cause preserved until classified	ACTIVE
 K-20261001-002	CREATE	K-XYT-AUDIT-001	Engineering	XYT-G-LEGACY-AUDIT	-	Evidence tier follows actual boundary, not naming	ACTIVE
+K-20261001-003	CREATE	K-XYT-WIT-001	Engineering	XYT-J	9e4c1a3de93c569bd24352867001c6c2ad10b869	Same-test RED to GREEN witness	ACTIVE
+K-20261001-003	CREATE	K-XYT-EVID-001	Engineering	XYT-K	32af17e9dbe076fbd76dde331c751fe3479b0abf	Capability-isolated evidence expiry	ACTIVE
+K-20261001-003	CREATE	K-XYT-CLOSE-001	Engineering	XYT-L-FINAL	475ab10dfdde94898725acf4607ee8d09ae1e9dc	Integration ready is not product closure	ACTIVE
+K-20261001-003	CREATE	K-XYT-P3-001	Engineering	XYT-H	ccd3dbef94864466ec2a7fc73c4ee6074e5809b2	Canonical real runtime path	ACTIVE
+K-20261001-003	CREATE	K-XYT-HARNESS-001	Engineering	XYT-HARNESS	-	Expected child failure exit normalization	ACTIVE
+K-20261001-003	CREATE	K-HANDOFF-001	Engineering	XYT-L2-HANDOFF	18842310247abac42b125816645afeccb6947dcb	Controlled stale mutex recovery	ACTIVE
+K-20261001-003	CREATE	K-XYT-P3-002	Engineering	XYT-H2-H3	ccd3dbef94864466ec2a7fc73c4ee6074e5809b2	Separate build preparation and runtime probe	ACTIVE
