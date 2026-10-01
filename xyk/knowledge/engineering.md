@@ -497,3 +497,20 @@ Commit Mutex 不能被普通 Agent 随意抢锁或删除；过期锁恢复必须
 Build Preparation 与 Runtime Probe 分开报告。身份一致的已验证产物可以复用；身份不一致才重建。各 P3 Capability 拥有独立时间预算，一个 TIMEOUT 不得覆盖另一个已经成立的 PASS。
 **证据**：XYT-H2/H3 · 2026-09-29。
 
+---
+
+## K-GOV-006 Windows PowerShell 5.1 中文脚本必须保留兼容编码
+**状态**：Active　**优先级**：P0　**证据等级**：E2  
+**适用范围**：需要同时支持 Windows PowerShell 5.1 的 `.ps1/.psd1` 治理脚本。
+
+### 工程规则
+- 脚本含中文或其它非 ASCII 文本且要被 Windows PowerShell 5.1 直接解析时，必须保留 UTF-8 BOM。
+- Agent / GitHub API 重写文本文件时不得无意去掉 BOM。
+- 改动后至少执行一次 `powershell.exe` 5.1 自测；只在 `pwsh` 通过不算兼容性证明。
+- 若明确采用无 BOM UTF-8，则脚本内容必须保持 ASCII-only，或由启动层显式使用兼容解码路径。
+
+### 事故证据
+2026-10-01 修改 `tools/handoff/handoff.ps1` 时 BOM 被移除，GitHub Windows Runner 的 PowerShell 5.1 在中文脚本中产生解析失败；恢复 BOM 后解析问题消失。
+
+**修复证据**：`33afb8936061efc01c242ddeb8bd8f4d8119c92c`。
+
