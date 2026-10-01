@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [ValidateSet('prepare', 'join', 'status', 'close', 'lane-close', 'advance', 'commit-lock', 'commit-unlock', 'maintenance', 'repair', 'migrate-active', 'lane-state')][string]$Mode = 'join',
     [ValidateSet('xye', 'xyui', 'integration', 'governance')][string]$Scope = 'xye',
