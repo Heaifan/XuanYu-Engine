@@ -28,3 +28,4 @@ K-20261001-003	CREATE	K-XYT-P3-001	Engineering	XYT-H	ccd3dbef94864466ec2a7fc73c4
 K-20261001-003	CREATE	K-XYT-HARNESS-001	Engineering	XYT-HARNESS	-	Expected child failure exit normalization	ACTIVE
 K-20261001-003	CREATE	K-HANDOFF-001	Engineering	XYT-L2-HANDOFF	18842310247abac42b125816645afeccb6947dcb	Controlled stale mutex recovery	ACTIVE
 K-20261001-003	CREATE	K-XYT-P3-002	Engineering	XYT-H2-H3	ccd3dbef94864466ec2a7fc73c4ee6074e5809b2	Separate build preparation and runtime probe	ACTIVE
+K-20261001-004	CREATE	K-GEO-003	Architecture	GROUND-AUTHORING-R1	67ca6fd5	SurfaceBinding authority and no silent terrain fallback	ACTIVE

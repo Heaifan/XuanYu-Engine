@@ -70,6 +70,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-PERF-001 | Knowledge | Performance | Preview 高频路径与 Commit 重路径必须分离 | P0 | E2 | v0.1.8.7-fix · 2026-06-25 00:18 · 26f2006 | Active |
 | K-GEO-001 | Knowledge | Architecture | 可编辑几何能力契约与 Snap/Topology 边界 | P0 | E1 | MAP-DATA-A-R2-F3-E1 · 2026-08-13 · 本轮提交 | Active |
 | K-GEO-002 | Decision | Architecture | R2 收口并以 Point Consumer 作为下一验证形态 | P0 | R2 | MAP-DATA-A-R2-CLOSEOUT · 2026-08-13 · 6a3d5b8 | Active |
+| K-GEO-003 | Knowledge | Architecture | 地理对象显式绑定 Ground Surface，Terrain 查询失败不得静默回退 | P0 | E2 | Ground Authoring R1 · 2026-09-29 · 403fcdf3→67ca6fd5 | Active |
 | DEC-XYE-XYUI-DUAL-LANE | Decision | Governance | XYE / XYUI Dual-Lane Development Model | P0 | R1 | XYE-XYUI-DUAL-LANE-R1 · 2026-09-27 | Active |
 
 | K-GOV-004 | Knowledge | Engineering | Governance Guard 必须共享显式 Bootstrap 且可独立执行 | P0 | E2 | GOV-BASELINE-RECOVERY-R1 · 2026-09-28 | Active |
@@ -94,7 +95,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 ## 分类文件
 
 - `engineering.md`：K-VAL-001～K-VAL-003、K-GOV-001～K-GOV-005、K-XYT-MAP-001～002、K-XYT-EXEC-001、K-XYT-AUDIT-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001
-- `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
+- `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001、K-GEO-003；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-004
 - `ui.md`：K-UI-001～K-UI-002、K-XYT-T2-TERRAIN-CONTEXT-001、K-DIAG-001

@@ -208,3 +208,24 @@ A = new A(B)
 该历史 Commit 信息里曾记录旧时期 Warning 容忍口径；这只是历史事实，**不覆盖当前全解决方案 0W0E 门禁**。
 
 **关联 Incident**：INC-2026-06-24-001
+
+---
+
+## K-GEO-003 地理对象必须显式绑定 Ground Surface，Terrain 查询失败不得静默回退
+**状态**：Active　**优先级**：P0　**证据等级**：E2  
+**适用范围**：Region、Road、Marker 及其它贴地编辑对象。
+
+### 工程规则
+- 逻辑位置保持 2D MapPoint / World XY；高度不是对象逻辑身份的一部分。
+- 对象通过 `SurfaceBinding` 明确绑定 ReferencePlane 或 Terrain。
+- 没有 Terrain 时允许使用 ReferencePlane。
+- 一旦存在 Terrain，Ray/Surface/Elevation 查询失败必须返回 INVALID；禁止静默回退到 Z=0 或 ReferencePlane。
+- Terrain Revision 只用于采样缓存失效和诊断，不进入对象永久身份。
+- 渲染高度必须由对象自己的 SurfaceBinding 解析，不能假定所有对象共享同一地表。
+
+**现行代码证据**：
+- `XuanYu.World/Map/SurfaceBinding.cs`
+- `XuanYu.Editor/MapEditing/GroundPickResolver.cs`
+- `XuanYu.Editor/MapEditing/TerrainWorldGroundSurface.cs`
+- Ground Authoring 提交链：`403fcdf3` → `3c966b07` → `e63e81ac` → `67ca6fd5`。
+
