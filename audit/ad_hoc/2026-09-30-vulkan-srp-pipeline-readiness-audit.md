@@ -1,0 +1,6 @@
+# Vulkan SRP pipeline readiness audit
+
+- On XuanYuEngine baseline `a41c96fc33bf1712b04c14ecdbc4c5e0dccfcaa5`, `CanRecordDraw(kind)` must be audited against the final pipeline used by `BindFramePipeline` and the draw handler. A switch default that checks the main scene pipeline is not valid for a pass with a dedicated pipeline, especially Terrain.
+- Missing dedicated pipelines must be an explicit skip plus diagnostic when the draw handler requires that pipeline. A fallback to the main scene pipeline is an SRP violation unless the shader interface, layout, vertex/index contract, and depth/blend semantics are explicitly identical.
+- Pipeline injection setters that rerecord command buffers need exception-safe ownership transfer. Creating a pipeline, injecting it, then assigning the owner afterward leaks the pipeline owner if rerecord throws; assign/rollback or dispose on failure.
+- Static source contracts are insufficient for Vulkan readiness truth. The minimum useful regression test must model independent main and dedicated pipeline handles and assert both directions: dedicated missing means the pass is not recordable even when main is ready; dedicated ready means it is recordable without requiring main readiness.

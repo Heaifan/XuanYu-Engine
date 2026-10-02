@@ -38,8 +38,6 @@ CHATGPT KNOWLEDGE AUDIT REQUIRED
 
 ChatGPT 审计 AI 负责搜索既有条目，判断 `CREATE / UPDATE / STRENGTHEN / RETIRE / NO DEPOSIT`，维护正式 Knowledge、Lesson、Incident、ERR、EXP 与索引。
 
-正式 XYK 唯一权威位置固定为 `xyk/main` 分支的 `xyk/**`；产品分支 `docs/knowledge/**` 仅为历史只读镜像，不得继续写入正式知识。
-
 审计顺序固定为：
 
 ```text

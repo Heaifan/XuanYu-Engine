@@ -16,13 +16,20 @@
 - `docs/governance/ui-spec.md`：UI 规范 1.0 讨论初稿（强约束 UI 默认标准与受控例外机制，待审订）
 - `docs/governance/debts/arch-world-debts.md`：受控债务登记
 - `docs/governance/shr-2026-08-closure.svg`：SHR-2026-08 考核收口图
-- `docs/governance/reports/`：阶段治理报告；`wave-2.5/` 保存 Wave 2.5 历史报告
 
-## 历史知识镜像（docs/knowledge/，只读）
+## 开发知识库（knowledge/）
 
-- `docs/knowledge/README.md`：历史镜像说明；本目录不再接受正式知识写入。
-- 正式知识库唯一权威位置：`xyk/main` 分支的 `xyk/**`。
-- 当前索引：`xyk/index/knowledge-index.md`；事件账本：`xyk/ledger/knowledge-events.tsv`。
+- `docs/knowledge/README.md`：知识库目的、字段、证据、生命周期与使用说明
+- `docs/knowledge/knowledge-index.md`：Knowledge / Lesson 类型化总索引
+- `docs/knowledge/engineering.md`：验证、治理与工程流程知识
+- `docs/knowledge/architecture.md`：空间、架构与组合根知识
+- `docs/knowledge/rendering.md`：Vulkan、Depth、Overlay 与 Native 渲染知识
+- `docs/knowledge/input.md`：Pointer 与 Mouse Capture 输入生命周期知识
+- `docs/knowledge/ui.md`：Avalonia 布局、命中区与 Runtime UI 知识
+- `docs/knowledge/data.md`：数据保存、加载事务与资产处理知识
+- `docs/knowledge/performance.md`：Preview/Commit 高频路径性能知识
+- `docs/knowledge/incidents.md`：代表性事故复盘与 Knowledge 映射
+- `docs/knowledge/lessons.md`：错误前提、停止条件与可复用教训
 
 ## 当前阶段（milestones/current/）
 

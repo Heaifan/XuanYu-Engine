@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="XuanYu.World.Tests" />
-    <InternalsVisibleTo Include="XuanYu.Editor.UI.Tests" />
   </ItemGroup>
 
   <ItemGroup>

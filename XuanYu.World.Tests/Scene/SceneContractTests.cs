@@ -1,5 +1,5 @@
 using XuanYu.Core.Gizmo;
-using XuanYu.Editor.History;
+using XuanYu.Core.History;
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Space;

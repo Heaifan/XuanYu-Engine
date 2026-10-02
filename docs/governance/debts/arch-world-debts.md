@@ -4,40 +4,43 @@
 > 债务不代表 R1 失败，而是"第一刀切开后暴露出的耦合"，须在指定轮次收口。
 > 在收口前，相关方向禁止新增依赖。治理序列见 `docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.md`。
 
-## D1 — TransformSession 暂居 World，含 Editor/Gizmo 语义（原收口轮次：R4）
+## D1 — TransformSession 暂居 World，含 Editor/Gizmo 语义（收口轮次：R4）
 
-- **状态**：**已收口**。当前实现位于 `XuanYu.Editor/Transform/TransformSession*.cs`，不再位于 World。
-- **原问题**：Transform 编辑事务属于 Editor Interaction，却曾暂存在 World，并依赖 `Core.Gizmo`。
-- **收口结果**：TransformSession 的物理归属已经回到 Editor；World 不再承担该编辑事务。
-- **剩余边界**：`Core.Gizmo` 是否继续保留在 Core 属于独立结构问题，不再冒充 D1 未完成。
-## D2 — SceneRenderSnapshot 污染 Core（Render 路径已收口，Core 语义债待拆）
+- **现状**：`XuanYu.World.Transform.TransformSession` 直接 `using XuanYu.Core.Gizmo;`，
+  持有 `MoveGizmoAxis` / `PreviewTransform` / `TransformStartSnapshot`；`Begin()` 接收 `MoveGizmoAxis`，
+  `TryCommit()` 直接操作 `SceneStateOwner`。
+- **性质**：表达"用户拖 Gizmo → 建立编辑 Session → Preview → Commit/Cancel"，属 Editor Transaction /
+  Interaction，不是世界事实。
+- **物理层合法的根因**：`Gizmo` 本身错误藏在 `Core` 中，Editor 概念伪装成了 Core 类型；因此
+  `World → Core` 看起来合规，语义上却是 `World → Editor 概念`。
+- **裁定**：R1 为解决 `SceneStateOwner → GlobalWorld` 编译闭包不得不扩大迁移范围，且 R1 明确不同时做
+  Editor 剥离；`TransformSession` 现位于 World 为**过渡位置，非最终正确归属**。
+- **红线路令**：**禁止再新增 World 对 `Core.Gizmo` 的依赖**。R4 将其迁至 Editor 层。
 
-- **状态**：**PARTIAL / 受控债务**。
-- **已收口部分**：Render 生产路径已经只消费 `RenderProjection`；`Render.Vulkan` 不再直接依赖
-  `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `DefaultEditorCamera`。这一部分保持 CLOSED。
-- **仍存在的问题**：`XuanYu.Core.Scene.SceneRenderSnapshot` 仍包含 `IsSelected`、`PreviewTransform`、
-  `ShowMoveGizmo` / `ShowRotateGizmo` / `ShowScaleGizmo`、`Camera` 等 Editor / Presentation 状态。
-  `SceneStateOwner` 产出世界快照，而 `UiVm` 又基于同一 DTO 叠加选择、预览、相机和 Gizmo 状态，
-  因此 Core 仍承担了上层组合语义。
-- **本轮裁定**：不为月度治理强行拆断 World → Editor → Render 现有链路。后续应把“世界场景事实快照”
-  与“编辑器帧级组合状态”拆成两个类型，再将 Gizmo/Camera/Preview 从 Core DTO 移出。
-- **禁止事项**：在债务关闭前，不得继续向 `SceneRenderSnapshot` 增加新的 Editor/UI 专属字段。
+## D2 — SceneRenderSnapshot 污染 Core（收口轮次：R5）
 
-## D3 — 测试程序集未严格映射生产层（进行中）
+- **状态**：**已于 ARCH-WORLD R5 CLOSED 收口**。Render 生产路径已改为消费 `RenderProjection`，
+  `Render.Vulkan` 不再引用 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `DefaultEditorCamera`；
+  `SceneRenderSnapshot` 仅保留为 World/Editor 上层组合快照，不再作为 Render 合同。
+- **原现状**：`XuanYu.Core.Scene.SceneRenderSnapshot` 含 `IsSelected` / `PreviewTransform` / `ShowMoveGizmo` /
+  `Camera`，乃至 `Camera ?? DefaultEditorCamera.Create(0)`；已迁 World 的 `SceneStateOwner` 仍实现
+  `ISceneRenderSnapshotSource` 并持有该快照。
+- **性质**：一个名义上的 `Core.Scene` 类型实际上知道选中状态、Gizmo 显示、编辑预览、编辑器默认相机——
+  明显的 Editor / Presentation 语义。
+- **收口裁定**：R5 采用最小 Render Projection，而非整体搬迁 Snapshot；Preview / Gizmo / Camera 在
+  Editor/UI 组合边界解析，Render 只见不可变帧级投影。该债务对 Render 生产路径已关闭。
 
-- **状态**：**PARTIAL / 非阻断退出后债务**。
-- **本轮已完成**：
-  - 已建立 `XuanYu.Editor.Tests`，新的 Editor 领域测试有独立归属；
-  - 已建立 `XuanYu.Editor.UI.Tests`，新的 Avalonia/Editor UI 合同测试有独立归属；
-  - 4 个 Editor History 测试已从 `Core.Tests` 迁入 `Editor.Tests`；
-  - UI 版本合同测试已迁入 `Editor.UI.Tests`；
-  - 两个新测试工程均已接入 GitHub CI。
-- **剩余现状**：`XuanYu.World.Tests` 仍引用 World + Core + Editor + Editor.UI + Render.Vulkan；
-  `XuanYu.Core.Tests` 仍引用 World + Editor + Editor.UI + Render.Vulkan。历史测试桶仍需按触碰范围逐步迁移，
-  禁止继续把新的 Editor/UI 测试塞回旧桶。
-- **目标形态**：`Core.Tests → Core`；`World.Tests → World + Core`；
-  `Editor.Tests → Editor`（必要时只向下引用）；`Editor.UI.Tests → Editor.UI`。
-- **迁移原则**：按真实职责和当前修改范围迁移，不做一次性数百文件“大扫除”制造假干净。
+## D3 — 测试程序集未严格映射生产层（收口轮次：R4/R5）
+
+- **状态**：ARCH-WORLD R6 判定为**非阻断退出后债务**。当前测试混层范围较广，
+  单独移动少量文件会制造假干净；后续进入真实功能开发时，按触碰范围逐步建立
+  `XuanYu.Editor.Tests` / 必要测试项目，不在 R6 大规模迁移既有 171 个测试。
+- **现状**：`XuanYu.World.Tests` 引用 World + Core + Editor.UI（含 `WorldCameraFramingTests` /
+  `WorldPartitionUiTests` / `WorldUi*` / `TransformSessionTests` 等 Editor/UI 性质测试）；
+  `XuanYu.Core.Tests` 引用 Core + World + Editor.UI（Picking / History 遗留）。
+- **性质**：仅为 Test Project，不破坏运行时架构，但不映射生产层边界。
+- **目标形态**：`Core.Tests → Core`；`World.Tests → World + Core`；`Editor.Tests → Editor + World + Core`。
+  不阻挡 R2。
 
 ## 红线程式
 

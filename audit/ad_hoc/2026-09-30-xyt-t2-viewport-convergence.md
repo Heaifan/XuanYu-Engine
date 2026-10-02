@@ -1,0 +1,7 @@
+# XYT-T2 Viewport/Input Truth Convergence
+
+- In the 2026-09-30 C-VIEWPORT audit, the shared Engine tree contained unrelated Terrain and governance dirty files. Those files were preserved and not used as final evidence; scoped evidence was rerun from the same HEAD in a candidate checkout with no dirty source/test files.
+- Avalonia Headless input was verified through official `MouseMove/MouseDown/MouseUp`, `Dispatcher.UIThread.RunJobs`, `Window.Close`, and fixture disposal. Headless/diagnostic/lifecycle/router scoped tests were 29/29 and Viewport scoped tests were 178/178. T3 was not inferred from these results.
+- Historical Headless failures were classified as TEST HARNESS ROOT CAUSE: async UI work had to stay inside `HeadlessUnitTestSession.Dispatch`; the fixture's `RunAsync` path and session lifecycle were relevant. A passing Headless test is still T2, not native/real runtime evidence.
+- RED sensitivity for `ViewportGestureLifecycleTests.Cancel_notifies_with_context_before_release_and_cleanup` was executed in a clean candidate: baseline pass; temporary mutation skipping `ReleaseCapture` failed with the expected event-order mismatch; source restoration passed. Mutation was not retained or committed.
+- For convergence reporting, use `CANDIDATE TREE MATCH = YES` only for the clean scoped candidate; shared-worktree ForeignDirty keeps global commit eligibility blocked. Keep evidence vocabulary at T0-T4 and classify Router state machine, Adapter/Forwarder, Synthetic Headless input, and Direct UiVm call separately from T3/T4 real-runtime acceptance.

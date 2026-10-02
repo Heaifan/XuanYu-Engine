@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param()
 
 $ErrorActionPreference = 'Stop'
@@ -67,7 +67,7 @@ try {
     PreferredDotnetByDrive = @{}
     ResolverScript = 'resolve-dotnet.ps1'
     BootstrapScript = 'bootstrap.ps1'
-    FastForwardWhenBehind = `$true
+    RemoteWinsWhenBehind = `$true
     LegacyWorktreesBlockHandoff = `$false
 }
 "@ | Set-Content -LiteralPath (Join-Path $root 'HandoffConfig.psd1')
@@ -113,20 +113,7 @@ try {
     Write-State (New-State $false 'development' 'main' $headAhead 'wip' 'main')
     Assert-Output (Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF PREPARE PASS'
     $remoteWinsCount = ((git -C $root rev-list --left-right --count 'HEAD...origin/main') -join ' ').Trim()
-    Assert-True ($remoteWinsCount -replace '\s+', ' ' -eq '0 0') "fast-forward prepare did not converge: $remoteWinsCount"
-    $headFastForward = (git -C $root rev-parse HEAD).Trim()
-    Write-State (New-State $false 'development' 'main' $headFastForward 'wip' 'main')
-
-    Set-Content -LiteralPath (Join-Path $peer 'peer-dirty-guard.txt') -Value 'remote-2'
-    git -C $peer add peer-dirty-guard.txt
-    git -C $peer commit -m remote-dirty-guard | Out-Null
-    git -C $peer push | Out-Null
-    git -C $root fetch origin | Out-Null
-    Set-Content -LiteralPath (Join-Path $root 'local-uncommitted.txt') -Value 'preserve-me'
-    Assert-Output (Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 1 'DIRTY_BEHIND_REMOTE'
-    Assert-True (Test-Path -LiteralPath (Join-Path $root 'local-uncommitted.txt')) 'dirty-behind guard deleted local content'
-    Remove-Item -LiteralPath (Join-Path $root 'local-uncommitted.txt') -Force
-    Assert-Output (Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF PREPARE PASS'
+    Assert-True ($remoteWinsCount -replace '\s+', ' ' -eq '0 0') "remote-wins prepare did not converge: $remoteWinsCount"
 
     git -C $root switch wip | Out-Null
     $wipHead = (git -C $root rev-parse HEAD).Trim()

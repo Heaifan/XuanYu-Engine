@@ -1,0 +1,7 @@
+# XYE-SRP-SLIMMING-R1-0-D Render Snapshot audit
+
+- In the audited checkout, no `SceneRenderSnapshot` type exists. `VulkanScene3dRenderFrameSnapshot.cs` is a helper that publishes `PresentedCameraSnapshot`, `PresentedNavigationOverlaySnapshot`, and `VulkanScene3dFrameResult` only after successful Present.
+- Current responsibilities are split: camera truth is `PresentedCameraSnapshot`; scene objects are `RenderScene`/draw-list input; grid is persistent vertex-buffer data plus a per-frame VP; overlay is a separate presented snapshot and upload path; visibility is distributed across selected entity, overlay hover/active, and ground cursor state; frame gating is `Scene3dFrameState`, while frame outcome is `VulkanScene3dFrameResult`.
+- Terrain Render Data is absent as a first-class snapshot in this checkout. Ground-related rendering is limited to the static grid and optional ground cursor; picking uses `SceneGroundPlane.Default` rather than terrain render data.
+- Future split candidates: `SceneStateSnapshot` for render-scene/entity and selection state; `RenderSnapshot` as a composition/envelope only; `CameraSnapshot` for presented camera pose/matrices/viewport/revisions; `TerrainRenderSnapshot` for terrain/grid/ground-cursor data and visibility. Do not create interfaces during this audit.
+- Governance rule: keep this lane read-only; do not repair or infer a unified snapshot until an explicit implementation task defines ownership and synchronization semantics.

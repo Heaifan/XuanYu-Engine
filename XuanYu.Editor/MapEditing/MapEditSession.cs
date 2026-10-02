@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using XuanYu.Editor.History;
+using XuanYu.Core.History;
 using XuanYu.Core.Results;
 using XuanYu.World.Map;
 

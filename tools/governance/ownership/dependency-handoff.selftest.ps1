@@ -5,7 +5,7 @@ $passed = 0
 $total = 16
 function Invoke-H3([string[]]$Arguments) {
     $ErrorActionPreference = 'Continue'
-    $out = @(& pwsh.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $entry @Arguments 2>&1)
+    $out = @(& powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $entry @Arguments 2>&1)
     [pscustomobject]@{ Code = $LASTEXITCODE; Text = ($out -join "`n") }
 }
 function Assert([bool]$Condition, [string]$Message) {

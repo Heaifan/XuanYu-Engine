@@ -1,0 +1,5 @@
+# Vulkan Terrain pipeline ownership transfer
+
+- In `E:\MyDoc\project-VSCode\XuanYuEngine` on `feat/v0.3-world-authoring-r1`, `VulkanRenderSession.AttachTerrainPipeline` created a `VulkanGraphicsPipelineOwner`, injected its handles into `VulkanClearFrameOwner`, and only then assigned `_terrainPipeline`; an exception during SetTerrainPipeline command-buffer rerecord therefore leaked the local owner.
+- Stable repair pattern: keep the created pipeline local, perform injection, make the session-field assignment the explicit transfer success point, and dispose the local owner in `finally` unless that point completed. A null create result must perform no injection, transfer, or disposal. Test observable disposal counts, not source text.
+- ClearFrame remains a receiver/rerecord owner, not the Session-level native pipeline owner. This task had no existing replacement path; do not invent replacement tests. Preserve ForeignDirty and report broader gate failures separately from lane-local lifecycle evidence.

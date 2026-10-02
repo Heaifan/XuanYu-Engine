@@ -4,15 +4,8 @@ $script = Join-Path $root 'handclap.ps1'
 $tmp = Join-Path ([IO.Path]::GetTempPath()) ('handclap-cli-' + [guid]::NewGuid())
 
 function Run([string[]]$CliArgs) {
-    $previous = $ErrorActionPreference
-    $ErrorActionPreference = 'Continue'
-    try {
-        $out = @(& pwsh -NoLogo -NoProfile -File $script @CliArgs 2>&1)
-        $code = $LASTEXITCODE
-    } finally {
-        $ErrorActionPreference = $previous
-    }
-    [pscustomobject]@{ Code = $code; Text = ($out -join "`n") }
+    $out = @(& pwsh -NoLogo -NoProfile -File $script @CliArgs 2>&1)
+    [pscustomobject]@{ Code = $LASTEXITCODE; Text = ($out -join "`n") }
 }
 function Need([bool]$Ok, [string]$Message) { if (!$Ok) { throw "CLI SELFTEST FAILED: $Message" } }
 

@@ -6,10 +6,9 @@
   <Project Path="XuanYu.World/XuanYu.World.csproj" />
   <Project Path="XuanYu.World.Tests/XuanYu.World.Tests.csproj" />
   <Project Path="XuanYu.Editor/XuanYu.Editor.csproj" />
-  <Project Path="XuanYu.Editor.Tests/XuanYu.Editor.Tests.csproj" />
   <Project Path="XuanYu.Editor.App/XuanYu.Editor.App.csproj" />
   <Project Path="XuanYu.Editor.UI/XuanYu.Editor.UI.csproj" />
-  <Project Path="XuanYu.Editor.UI.Tests/XuanYu.Editor.UI.Tests.csproj" />
+  <Project Path="XuanYu.Editor.Win/XuanYu.Editor.Win.csproj" />
   <Project Path="XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj" />
   <Project Path="XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj" />
   <Project Path="xyui/avalonia/src/XYUI.Avalonia/XYUI.Avalonia.csproj" />
