@@ -20,7 +20,7 @@ try {
     Pass (Run $flight @('-RepositoryRoot',$root,'inspect','-TaskId','GHOST-NORMAL')) 'RELEASED'
     Set-Content (Join-Path $root 'candidate.txt') dirty
     $c = Run $classifier @('-RepositoryRoot',$root,'-CurrentTaskId','OTHER','-DirtyPath','candidate.txt')
-    Pass $c 'FRIENDLY_RELEASED_DIRTY'; Pass $c 'GHOST-NORMAL'
+    Pass $c 'FRIENDLY_COMPLETED'; Pass $c 'GHOST-NORMAL'
     Pass (Run $flight @('-RepositoryRoot',$root,'close','-TaskId','GHOST-NORMAL','-CloseReason','absorbed')) 'CLOSED'
     $live = Run $flight @('-RepositoryRoot',$root,'list'); Pass $live 'ACTIVE TASKS: 0'; if ($live.Text -match 'GHOST-NORMAL') { throw 'CLOSED task remains in live registry' }
     $history = Join-Path $root '.git/xye-handoff/task-history.jsonl'; if (!(Test-Path $history)) { throw 'history registry was not created' }
@@ -37,10 +37,10 @@ try {
     Pass (Run $flight @('-RepositoryRoot',$root,'register','-TaskId','XYT','-Role','Writer','-Owner','xyt','-Workspace',$root,'-WriteScope','XuanYu.World/**','-ExpectedDependencies','SRP')) 'REGISTERED'
     Pass (Run $flight @('-RepositoryRoot',$root,'begin','-TaskId','XYT')) 'ACTIVE'
     $d = Run $classifier @('-RepositoryRoot',$root,'-CurrentTaskId','XYT','-DirtyPath','XuanYu.Render.Vulkan/shader.cs')
-    Pass $d 'FRIENDLY_ACTIVE_DEPENDENCY'; Pass $d 'SRP'
+    Pass $d 'FRIENDLY_ACTIVE'; Pass $d 'SRP'
     Pass (Run $flight @('-RepositoryRoot',$root,'release','-TaskId','SRP')) 'RELEASED'
     $d = Run $classifier @('-RepositoryRoot',$root,'-CurrentTaskId','XYT','-DirtyPath','XuanYu.Render.Vulkan/shader.cs')
-    Pass $d 'FRIENDLY_RELEASED_DIRTY'; Pass $d 'SRP'
+    Pass $d 'FRIENDLY_COMPLETED'; Pass $d 'SRP'
     $historyText = Get-Content -Raw $history; if ($historyText -notmatch 'GHOST-NORMAL') { throw 'CLOSED history is not traceable' }; if ($historyText -notmatch 'ABANDONED/ABANDONED_SELFTEST') { throw 'reap history reason is not traceable' }
     $files = Get-ChildItem (Join-Path $PSScriptRoot 'task-flight-plan*'); foreach ($f in $files) { if ((Get-Content $f.FullName).Count -gt 100) { throw "5+100 FAILED: $($f.Name)" } }
     Write-Host 'TASK FLIGHT PLAN LIFECYCLE SELFTEST PASS 10/10'

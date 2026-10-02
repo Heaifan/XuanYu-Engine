@@ -1,18 +1,10 @@
 $ErrorActionPreference = 'Stop'
-. (Join-Path $PSScriptRoot 'candidate-scope.ps1')
+. (Join-Path $PSScriptRoot '..\candidate\candidate-scope.ps1')
+. (Join-Path $PSScriptRoot '..\candidate\candidate-projection.ps1')
 function Read-TaskJson([string]$Path) { if (Test-Path -LiteralPath $Path -PathType Leaf) { return Get-Content -Raw -LiteralPath $Path | ConvertFrom-Json }; return $null }
 function Task-Items($Value, [string]$Name) { if ($null -eq $Value) { return @() }; if ($Value.PSObject.Properties.Name -contains $Name) { return @($Value.$Name) }; return @($Value) }
 function Task-Path([string]$Line) { $p = if ($Line.Length -gt 3) { $Line.Substring(3).Trim() } else { $Line.Trim() }; if ($p.Contains(' -> ')) { $p = ($p -split ' -> ')[-1] }; return $p.Trim('"') -replace '\\', '/' }
 function Invoke-TaskClassifier([string]$Script, [string]$Root, [string]$Path) { $out = @(& powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $Script -RepositoryRoot $Root -CurrentTaskId '__HANDOFF__' -DirtyPath $Path 2>$null); if ($out.Count) { try { $r=(($out -join "`n") | ConvertFrom-Json);$r|Add-Member NoteProperty Path $Path -Force;return $r } catch {} }; return $null }
-function Get-CandidateGateProjection([string]$Root,$Facts,$Tasks,$Classes,$State) {
-    $path=if($State -and $State.PSObject.Properties['candidatePath']){[string]$State.candidatePath}else{Join-Path $Root '.git\xye-handoff\candidate.json'}
-    $active=@($Tasks|? Status -eq 'ACTIVE');$repoTemp=@($Facts.Dirty);$repoUnknown=@($Classes|? Classification -eq 'UNKNOWN_DIRTY')
-    if(!(Test-Path -LiteralPath $path -PathType Leaf)){return [pscustomobject]@{RepositoryActiveTasks=$active.Count;RepositoryTEMP=$repoTemp.Count;RepositoryUnknownTemp=$repoUnknown.Count;CandidateScopedActiveWriters=0;ConsumedActiveForeignTemp=0;CandidateScopedUnknownTemp=0;CandidateScopedOwnershipConflict=0;CandidateChangedDuringCertification='NO';FinalEvidenceEligibility='NOT_CONFIGURED';CertificationAllowed='NOT_CONFIGURED'}}
-    $candidate=Get-Content -Raw -LiteralPath $path|ConvertFrom-Json;$closure=@(Candidate-Closure $candidate);$scoped=@($Classes|?{Candidate-InClosure ([string]$_.Path) $closure})
-    $writers=@($active|?{$_.TaskId -ne $candidate.OwnerTaskId -and (Candidate-TaskHits $_ $closure)});$dep=@($scoped|? Classification -eq 'FRIENDLY_ACTIVE_DEPENDENCY');$unknown=@($scoped|? Classification -eq 'UNKNOWN_DIRTY');$conflict=@($scoped|? Classification -eq 'OWNERSHIP_CONFLICT');$released=@($scoped|? Classification -eq 'FRIENDLY_RELEASED_DIRTY')
-    $blocked=$writers.Count+$dep.Count+$unknown.Count+$conflict.Count+$released.Count -gt 0
-    [pscustomobject]@{RepositoryActiveTasks=$active.Count;RepositoryTEMP=$repoTemp.Count;RepositoryUnknownTemp=$repoUnknown.Count;CandidateScopedActiveWriters=$writers.Count;ConsumedActiveForeignTemp=$dep.Count;CandidateScopedUnknownTemp=$unknown.Count;CandidateScopedOwnershipConflict=$conflict.Count;CandidateChangedDuringCertification='NO';FinalEvidenceEligibility=if($blocked){'NO'}else{'YES'};CertificationAllowed=if($blocked){'NO'}else{'YES'}}
-}
 function Get-TaskFlightReport([string]$Root, $Facts, $State) {
     $dir = Join-Path $Root '.git\xye-handoff'; $reg = Read-TaskJson (Join-Path $dir 'task-registry.json'); $tasks = Task-Items $reg 'tasks'
     $report = Read-TaskJson (Join-Path $dir 'task-reports.json'); $reports = Task-Items $report 'reports'
@@ -26,7 +18,7 @@ function Get-TaskFlightReport([string]$Root, $Facts, $State) {
 function Show-TaskFlightReport($Report) {
     Write-Host "ACTIVE TASKS: $($Report.Active.Count)"; $Report.Active | % { Write-Host "  $($_.TaskId) $($_.Owner) $($_.Status)" }
     Write-Host "RELEASED TASKS: $($Report.Released.Count)"; $Report.Released | % { Write-Host "  $($_.TaskId) $($_.Owner) $($_.Status)" }
-    foreach ($name in @('OWNED_DIRTY','FRIENDLY_ACTIVE_DIRTY','FRIENDLY_ACTIVE_DEPENDENCY','FRIENDLY_RELEASED_DIRTY','UNKNOWN_DIRTY','OWNERSHIP_CONFLICT')) { Write-Host "$name`: $(@($Report.Classes | ? Classification -eq $name).Count)" }
+    foreach ($name in @('FRIENDLY_ACTIVE','FRIENDLY_COMPLETED','FOREIGN_KNOWN','UNAUTHORIZED_DIRTY')) { Write-Host "$name`: $(@($Report.Classes | ? Classification -eq $name).Count)" }
     Write-Host "FinalEvidenceEligibility: $(if (@($Report.Classes | ? FinalEvidenceEligible -eq 'NO').Count -gt 0) { 'NO' } else { 'YES' })"
     Write-Host "ACTIVE TASK LEAK: $(if ($Report.LeakPresent) { 'PRESENT' } else { 'NONE' })"
     $g=$Report.CandidateGate

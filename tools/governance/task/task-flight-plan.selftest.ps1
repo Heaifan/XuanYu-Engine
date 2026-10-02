@@ -3,7 +3,12 @@ param()
 $ErrorActionPreference='Stop'
 $root=Join-Path $env:TEMP ('xye-flight-'+[guid]::NewGuid().ToString('N'))
 $script=Join-Path $PSScriptRoot 'task-flight-plan.ps1'
-function Run([string[]]$a){$o=@(& pwsh -NoLogo -NoProfile -File $script @a 2>&1);[pscustomobject]@{Code=$LASTEXITCODE;Text=$o -join "`n"}}
+function Run([string[]]$a){
+ $previous=$ErrorActionPreference; $ErrorActionPreference='Continue'
+ try {$o=@(& pwsh -NoLogo -NoProfile -File $script @a 2>&1);$code=$LASTEXITCODE}
+ finally {$ErrorActionPreference=$previous}
+ [pscustomobject]@{Code=$code;Text=$o -join "`n"}
+}
 function Ok($r,[string]$s){if($r.Code -ne 0 -or !$r.Text.Contains($s)){throw "SELFTEST FAILED: $s / $($r.Text)"}}
 function Bad($r,[string]$s){if($r.Code -eq 0 -or !$r.Text.Contains($s)){throw "SELFTEST FAILED: blocked $s / $($r.Text)"}}
 try {

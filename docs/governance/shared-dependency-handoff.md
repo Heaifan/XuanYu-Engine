@@ -1,6 +1,6 @@
 # Shared Dependency Handoff H3
 
-`tools/handoff/dependency-handoff.ps1` is the bounded protocol for shared-file ownership transfer. It stores its graph in `.git/xye-handoff/dependency-state.json`; this runtime state is local evidence and is not a product artifact.
+`tools/governance/ownership/dependency-handoff.ps1` is the bounded Ownership Authority for shared-file transfer. It stores its graph in `.git/xye-handoff/dependency-state.json`; this runtime state is local evidence and is not a product artifact.
 
 ## Lifecycle
 
@@ -18,4 +18,4 @@ Evidence is invalidated by exact dependency-file membership, not by lane or work
 
 ## Verification
 
-Run `powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools/handoff/dependency-handoff.selftest.ps1`. The selftest covers normal transfer, stale evidence, preserved implementation completion, unrelated files, two/three-node cycles, old-owner rejection, acquire-before-release, pre-acquire modification, UnknownDirty blocking, audit fields, regression, and integration closure.
+Run `powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools/governance/ownership/dependency-handoff.selftest.ps1`. The selftest covers normal transfer, stale evidence, preserved implementation completion, unrelated files, two/three-node cycles, old-owner rejection, acquire-before-release, pre-acquire modification, UnknownDirty blocking, audit fields, regression, and integration closure.

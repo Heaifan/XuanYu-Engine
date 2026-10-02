@@ -23,7 +23,7 @@ Deferred Capability Preflight
 Capability Tags
 ```
 
-任务必须先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再执行 `tools\handoff\handoff.cmd join --scope <lane>`。Lane、Ownership、Audit、Convergence 和跨 Lane 升级的唯一事实源是 `docs/governance/development-lanes.md`。
+任务必须先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再读取对应 `tools/governance/**` Authority owner 与 Candidate 依赖；不得调用旧 Handoff JOIN。Lane、Ownership、Audit、Convergence 和跨 Lane 升级的唯一事实源是 `docs/governance/development-lanes.md`。
 
 Feature 写入前必须完成 Candidate Tree、Planning/Execution Knowledge Preflight、Deferred Capability Preflight 和 Capability Tags。若命中的 Deferred Capability 为 `BLOCKING`，则 `CODING = BLOCKED`；不得用局部测试 PASS 绕过。
 

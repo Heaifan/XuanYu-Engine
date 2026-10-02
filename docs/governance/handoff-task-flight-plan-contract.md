@@ -44,4 +44,4 @@ CLOSED Task 不得重新 amend 或 write；拒绝操作不得恢复其 Live Regi
 
 ## Verification boundary
 
-独立回归入口：`tools/handoff/task-flight-plan-lifecycle.selftest.ps1`。它必须调用 canonical A/B 真实脚本，不得用 mock 或内嵌 registry model。另行执行 `task-flight-plan.selftest.ps1`、`task-dirty-classifier.selftest.ps1`、PowerShell 5.1 parse、pwsh test、`git diff --check`，并保持 `5+100`：相关 `task-flight-plan*` 文件单文件不超过 100 行。
+独立回归入口：`tools/governance/task/task-flight-plan-lifecycle.selftest.ps1`。它必须调用 canonical A/B 真实脚本，不得用 mock 或内嵌 registry model。另行执行 `tools/governance/task/task-flight-plan.selftest.ps1`、`task-dirty-classifier.selftest.ps1`、PowerShell 5.1 parse、pwsh test、`git diff --check`，并保持 `5+100`：相关 `task-flight-plan*` 文件单文件不超过 100 行。

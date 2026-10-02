@@ -5,7 +5,7 @@ $passed = 0
 $total = 16
 function Invoke-H3([string[]]$Arguments) {
     $ErrorActionPreference = 'Continue'
-    $out = @(& powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $entry @Arguments 2>&1)
+    $out = @(& pwsh.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $entry @Arguments 2>&1)
     [pscustomobject]@{ Code = $LASTEXITCODE; Text = ($out -join "`n") }
 }
 function Assert([bool]$Condition, [string]$Message) {
@@ -44,7 +44,7 @@ try {
     $old = Invoke-H3 @('-RepositoryRoot', $root, '-Mode', 'modify', '-Lane', 'A', '-File', $shared)
     Assert ($old.Code -ne 0 -and $old.Text -match 'WRITE_DENIED') 'old owner was allowed to modify'
     $unknown = Invoke-H3 @('-RepositoryRoot', $root, '-Mode', 'release', '-Lane', 'C', '-ToLane', 'B', '-File', $bar, '-UnknownDirty', 'mystery.bin')
-    Assert ($unknown.Code -ne 0 -and $unknown.Text -match 'UNKNOWN_DIRTY_BLOCKED') 'unknown dirty did not block transfer'
+    Assert ($unknown.Code -ne 0 -and $unknown.Text -match 'UNAUTHORIZED_DIRTY_BLOCKED') 'unauthorized dirty did not block transfer'
     $before = Invoke-H3 @('-RepositoryRoot', $root, '-Mode', 'acquire', '-Lane', 'B', '-File', $bar)
     Assert ($before.Code -ne 0 -and $before.Text -match 'ACQUIRE_BEFORE_RELEASE') 'acquire before release was allowed'
     Invoke-H3 @('-RepositoryRoot', $root, '-Mode', 'release', '-Lane', 'C', '-ToLane', 'B', '-File', $bar) | Out-Null
@@ -67,7 +67,7 @@ try {
     $cycle = Invoke-H3 @('-RepositoryRoot', $root, '-Mode', 'deadlock', '-Wait', 'A>B,B>A')
     Assert ($cycle.Code -ne 0 -and $cycle.Text -match 'CIRCULAR_HANDOFF_DEPENDENCY') 'two-node cycle was not detected'
     $three = Invoke-H3 @('-RepositoryRoot', $root, '-Mode', 'deadlock', '-Wait', 'A>B,B>C,C>A')
-    Assert ($three.Code -ne 0 -and $three.Text -match 'CIRCULAR_HANDOFF_DEPENDENCY' -and $three.Text -match 'A -> B -> C ->\s*A') ("three-node cycle was not detected: {0}" -f $three.Text)
+    Assert ($three.Code -ne 0 -and $three.Text -match 'CIRCULAR_HANDOFF_DEPENDENCY' -and $three.Text -match 'A\s+->\s+B\s+->\s+C\s+->\s*A') ("three-node cycle was not detected: {0}" -f $three.Text)
     'H3 SELFTEST PASS {0}/{1}' -f $passed, $total
 } finally {
     if (Test-Path -LiteralPath $root) { Remove-Item -LiteralPath $root -Recurse -Force }

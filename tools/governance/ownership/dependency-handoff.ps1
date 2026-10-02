@@ -31,7 +31,7 @@ try {
         Save- $s | ConvertTo-Json -Depth 12; exit 0
     }
     if ($Mode -eq 'release') {
-        if ($UnknownDirty.Count) { Fail UNKNOWN_DIRTY_BLOCKED 'Transfer requires a known dirty set.' }
+        if ($UnknownDirty.Count) { Fail UNAUTHORIZED_DIRTY_BLOCKED 'Transfer requires all dirty paths to be authorized or completed.' }
         $f = Relative-File $root $File; $l = Lane $s $Lane
         if (!$l -or $l.implementation -ne 'IMPLEMENTATION_COMPLETE' -or !$l.ownScopePass -or !$l.handoffReady) { Fail RELEASE_NOT_READY 'Owner must be implementation-complete, own-scope-pass, and handoff-ready.' }
         $old = FileRecord $s $f

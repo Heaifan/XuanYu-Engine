@@ -1,5 +1,7 @@
 # 玄域引擎同步与交接规范 v1.1
 
+> LEGACY / HISTORICAL：本 SOP 保留审计与迁移记录，不是 R3 当前推荐流程。当前模型是 Handclap Fact Plane + `tools/governance/**` Authority Plane；Handoff 为 ZERO-Authority Compatibility Shell。
+
 **XuanYu Engine Sync & Handoff Protocol**
 
 状态：正式规范  

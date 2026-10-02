@@ -62,7 +62,7 @@ distinct from a test-window mutation, which is `INVALID`.
 ## Handoff Runtime binding
 
 The Handoff Work Release path uses the same content-binding rule in
-`tools/handoff/work-release.common.ps1`. Its `ownershipSet` is the Candidate
+`tools/governance/release/work-release.common.ps1`. Its `ownershipSet` is the Candidate
 scope passed to the Runtime Fingerprint Builder at both release issue and
 validation. Each scoped dirty path contributes its porcelain status and
 SHA-256 content hash. This keeps H2 evidence checks and Handoff release checks

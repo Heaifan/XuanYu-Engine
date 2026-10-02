@@ -1,53 +1,36 @@
-# 当前交接状态
+# Current Handoff
 
-更新时间：2026-10-01（Asia/Shanghai）
+## R2 Architecture
 
-## Git 基线
+```text
+Handclap     = Event Ledger + ACK + Context Transfer = ZERO Authority
+Handoff      = Legacy compatibility shell = ZERO Authority
+Authority    = tools/governance/**
+```
 
-- 仓库：`Heaifan/XuanYu-Engine`
-- 标准工作区：仓库登记的 canonical workspace
-- 分支：`feat/v0.3-world-authoring-r1`
-- 交接观测基线提交：`926ad05884274decb08c7df7f11262571e5f0656`
-- 当前 HEAD：不在本文件固化；必须由 Git / Handoff 工具实时读取
-- 交接当时工作区：clean
-- 交接当时领先 / 落后：`0 / 0`
-- Handoff：`development`，活动 Wave，`HANDOFF JOIN PASS`
-- 本次交接审计期间 Handoff 改动：无
+Authority ownership is explicit:
 
-> “交接观测基线提交”只表示生成本交接记录时所依据的提交，不要求等于以后查看本文件时的实时 HEAD。
-> 禁止通过再次提交本文件来追赶“当前 HEAD”；实时提交号只能由工具读取。
+```text
+Candidate    = tools/governance/candidate/**
+Coordinator  = tools/governance/coordinator/**
+Ownership    = tools/governance/ownership/**
+Release      = tools/governance/release/**
+Task         = tools/governance/task/**
+Workspace    = tools/governance/workspace/**
+```
 
-## 当前阶段
+## Current Contract
 
-World Authoring R1 最终收敛与治理交接。同步后的技术基线仍为暂定状态，直到用户完成真实 App 的视觉与交互验收。
+- Handclap records events, acknowledgements, and context transfer only.
+- Handoff only forwards Handclap fact commands and rejects retired Authority commands.
+- PREPARE, JOIN, ADVANCE, CLOSE, RELEASE, ownership grant, mutex control, and Candidate gate are Legacy/Historical semantics, not the current recommended flow.
+- Authority selftests run through the owner under `tools/governance/**`; they do not call Legacy Handoff Authority.
+- Automated selftests establish technical evidence only; they do not establish product or real-device acceptance.
 
-## 最近完成
+## Evidence Boundary
 
-- 标准工作区曾从 `272d88d5` 快进到 `eee9b21e`。
-- 工具生命周期已与 Viewport Owner 同步，并将 Lane Close 与 Active-Wave Close 分离。
-- 已加入 Handoff Close Authority 治理修正，知识事件保持暂定状态。
-- 当次 Handoff 审计：`DirtyFiles=0`、`ACTIVE TASKS=0`、`FinalEvidenceEligibility=YES`、`CERTIFICATION ALLOWED=YES`。
+This document intentionally contains no branch, HEAD, Ahead/Behind, Dirty count, active-wave state, or other snapshot facts. Such facts belong in timestamped run evidence, not a long-lived current-handoff contract.
 
-## 当前决定与验收状态
+## R2 Convergence Result
 
-- GitHub 是正式跨设备代码来源。
-- canonical workspace 是唯一正式开发、验证、运行和验收基线。
-- 技术同步不等于用户验收。
-- World Authoring / Terrain 的 T3/T4 真实 App 视觉与交互验收仍待完成；不得仅凭本交接记录标记产品为 `CLOSED` 或 `USER ACCEPTED`。
-
-## 活动任务
-
-- 状态：`IDLE`，没有活动登记任务。
-- Owner：当前活动 Handoff Wave 未分配（`Coordinator: null`）。
-- 写入范围：下一个任务明确冻结前为 none。
-- 交接基线提交：`926ad058`。
-
-## 下一步
-
-运行标准 `run.bat`，完成待办的 T3/T4 真实 App 视觉与交互验收；记录证据后再更新技术状态和用户验收状态。
-
-## 交接合同
-
-- 下一位 Owner 加入同一个 canonical workspace 时，必须实时确认分支、SHA、clean 状态和 `0 / 0` 分叉状态。
-- 本交接记录不包含业务代码修改。
-- 当次同步操作没有执行 Build 或产品验收。
+R2 convergence is determined by the current unified test run, runtime legacy-caller scan, `git diff --check`, and the applicable 5+100 rule. No Commit or Push is implied by this document.

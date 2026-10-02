@@ -1,31 +1,49 @@
-# XuanYuEngine Workstation Handoff Protocol
+# XuanYuEngine Handoff Compatibility Protocol
 
 ## 1. Purpose
 
-本协议是 XuanYuEngine 每个开发会话的强制启动入口。
+本文件描述 R2 的兼容边界，不是当前开发流程的启动入口。
 
-每个 Workspace / Development Wave 由 Coordinator 执行一次 `prepare`；同一 Workspace 的其他并行 Session 执行只读 `join`。`join` 允许工作区因其他 Ownership Task 而 dirty，不执行 Git 同步。
+当前架构事实：
+
+```text
+Handclap = Event Ledger + ACK + Context Transfer = ZERO Authority
+Handoff  = Legacy compatibility shell = ZERO Authority
+Authority Plane = tools/governance/**
+```
+
+Candidate、Coordinator、Ownership、Release、Task、Workspace 的控制权分别由
+`tools/governance/` 下对应 Authority owner 持有。Handoff 不创建、推进、关闭、释放、授权、加锁或裁决 Candidate。
+
+当前推荐入口是直接调用对应 Authority owner 与 Handclap；不得把本文件中的 PREPARE、JOIN、ADVANCE、CLOSE 流程当作当前推荐流程。
+
+以下命令仅作为 Legacy / Historical 兼容语义保留：
 
 模式入口：
 
 ```text
-tools\handoff\handoff.cmd prepare  # 新 Wave / 跨电脑接管，可同步 Git
-tools\handoff\handoff.cmd join --scope xye|xyui|integration|governance
-                                     # 并行 Session，只读，允许 dirty
-tools\handoff\handoff.cmd advance --scope xye
-                                     # Coordinator 在 commit + push 后推进 Active Wave baseline
-tools\handoff\handoff.cmd status   # 只读状态
-tools\handoff\handoff.cmd close    # 收口后关闭 Active Wave
-tools\handoff\handoff.ps1 -Mode maintenance -Scope governance # Control Plane 修复前置检查
+prepare / join / advance / close / lane-close / migrate-active
+commit-lock / commit-unlock / maintenance / repair
 ```
 
-无参数等价于 `join --scope xye`。状态登记在 `.git\xye-handoff\state.json`，不进入 Git；JOIN 不在缺失 state 时创建它。
+当前 Handoff Shim 只允许转发 Handclap 的 `event`、`history`、`ack`、`context`、`help`；所有 Authority 命令返回 RETIRED。
 
-### 1.3 Task Flight Plan / ACTIVE TASK LEAK
+### R2 Selftest disposition
+
+- `process-runner.selftest.ps1`: `KEEP_AS_HANDOFF_COMPAT`。
+- `r2-contract-integration.selftest.ps1`: `KEEP_AS_HANDOFF_COMPAT`，验证 Shim 驱逐、Handclap 隔离和 runtime legacy caller。
+- `adversarial-selftest.ps1`: `HISTORICAL_UNCHANGED`；旧 Authority 集成历史，不作为当前入口。
+- `dirty-convergence.selftest.ps1`: `HISTORICAL_UNCHANGED`；旧 PREPARE dirty 语义历史，不作为当前入口。
+- `handoff.selftest.ps1`: `HISTORICAL_UNCHANGED`；旧生命周期/Mutex/Candidate 成功断言历史，不作为当前入口。
+- `state-lifecycle.selftest.ps1`: `HISTORICAL_UNCHANGED`；旧 state lifecycle 成功断言历史，不作为当前入口。
+
+上述历史文件保留原样用于审计追溯；R2 统一测试不执行其中的 Authority 成功断言。Authority 行为由 `tools/governance/**` 对应 owner selftest 覆盖。
+
+### Legacy / Historical 1.3 Task Flight Plan / ACTIVE TASK LEAK
 
 任务级 Registry 使用 `.git\xye-handoff\task-registry.json`，由 `task-flight-plan.ps1` 维护；`task-reports.json` 记录本波次任务报告状态。JOIN、STATUS、ADVANCE 会显示 `ACTIVE TASKS`、`RELEASED TASKS`、Dirty Classifier 分类与 `FinalEvidenceEligibility`。`COMPLETE`、`IMPLEMENTATION_COMPLETE` 或 `HANDOFF_READY` 报告若仍对应 Registry `ACTIVE`，即为 `TASK_STATE_LEAK`，Gate 为 `BLOCKED`，`COMMIT_ELIGIBILITY = NO`；不会自动猜测 release。正常完成必须先 `ACTIVE -> RELEASED`，异常遗留只能由 Coordinator 显式 `reap`。
 
-### 1.1 Active Wave 内的连续任务
+### Legacy / Historical 1.1 Active Wave 内的连续任务
 
 标准流程为：
 
@@ -51,21 +69,49 @@ Convergence Coordinator 为 `xye` 时，治理控制面修复可由 `governance`
 
 `state.json` 的 Wave 字段为：`mode=development|convergence|WIP_RESUME`、`coordinatorScope=xye|integration|governance|null`。WIP Resume 只能作为临时 state，必须记录 `sourceBranch`、`targetBranch`、`createdAt`、`expiryCondition`；不得写入 Repository Config。当前 Branch 到达 target 且 HEAD 与 target upstream 0/0 后，WIP 自动失效，旧 source 不再参与新的 PREPARE 比较。
 
-### 1.2 R3 Authority / Lane State
+### 1.2 Handclap Event Ledger
 
-R3 将 Lane 状态与 Coordinator 全局结论分离。Lane 状态只能沿以下单向序列迁移，默认起点为 `JOINED`，`FROZEN` 为终态：
+Handclap 拥有 Event Ledger、ACK 与 Context Transfer。它不拥有 Candidate、Coordinator、Ownership、Release、Task 或 Workspace Authority。
+
+Handoff 不再拥有 Lane 或任务生命周期状态机，不再推进、验证或阻断任何生命周期状态。
+
+Handclap 追加事件到 `.git\xye-handclap\events.jsonl`：
 
 ```text
-JOINED → ACTIVE → IMPLEMENTATION_COMPLETE → IMPLEMENTATION_HANDOFF_READY
-→ DEPENDENCY_RELEASED → REGRESSION_REQUIRED → PRODUCT_ACCEPTANCE_PENDING
-→ ACCEPTED → FROZEN
+CREATED
+STARTED
+TRANSFERRED
+COMMENTED
+COMPLETED_REPORTED
+CANCELLED_REPORTED
 ```
 
-阻塞/异常是独立表达，不是 Lane 主状态：`BLOCKED`、`CONFLICT`、`UNKNOWN_DIRTY`、`CANDIDATE_MISMATCH`、`EVIDENCE_STALE`、`HARNESS_FAILURE`。Lane 只可写 `IMPLEMENTATION STATUS`、`OWN-SCOPE TEST STATUS`、`BUILD STATUS`、`HANDOFF READINESS`、`PRODUCT ACCEPTANCE STATUS` 及上述异常记录。
+事件是事实记录，不是状态转换。`event` 入口不会修改 Task Registry、Wave state、Lane state、Gate、Candidate 或 Commit 资格。
 
-Lane 不得写入或输出 `GATE STATUS`、`PRODUCT REGRESSION`、`UNRESOLVED UNKNOWN`、`CANDIDATE TREE MATCH`、`COMMIT ELIGIBILITY`、`GLOBAL PASS`、`RELEASE READY`；这些字段只能由 `coordinatorScope` 对应的 Coordinator 写入。所有状态值中的 PASS 必须带类型：`IMPLEMENTATION_PASS`、`OWN_SCOPE_PASS`、`REGRESSION_PASS`、`PRODUCT_ACCEPTANCE_PASS` 或 `INTEGRATION_PASS`。裸 `PASS`、`ALL PASS`、`GLOBAL PASS`、`COMMIT ELIGIBLE` 必须明确拒绝。
+旧 `state.json` 中的 `laneStates`、状态字段和历史记录仍可读取，用于迁移与审计；新的 Handoff 写入不得再创建或更新这些状态字段。
 
-R2 的 `active=true` 且 `coordinatorScope=null` 状态仍可 JOIN、status 和继续使用，不得被直接废掉。显式 `migrate-active -CoordinatorScope <scope>` 执行 R2 → R3 迁移，保留 Wave、HEAD、dirty fingerprint 与已有 Lane 状态，写入 `schemaVersion=XYE-HANDOFF/3` 和 `authorityModel=R3-LANE-COORDINATOR`；迁移前不得覆盖已有 Coordinator Scope。
+Legacy / Historical：R2 的 `active=true`、JOIN、status 与 `migrate-active` 迁移语义只用于旧状态审计，不是当前推荐流程。
+
+### 1.3 Handoff Slimming R1 final acceptance
+
+Legacy Control 的最终验收只接受以下两种结果：
+
+- **A. Legacy exists but is non-executable**：旧入口可以作为迁移/审计痕迹保留，但调用必须明确返回 retired/removed 结果，不得写入生命周期状态或重新取得控制权。
+- **B. Legacy removed with complete migration record**：旧入口已移除，并且迁移记录完整、可追溯，足以证明其职责已由现行入口承接。
+
+其他状态不得标记为最终收口。特别是“仍可执行但暂时无人使用”不属于合法 Legacy Control 终态。
+
+本轮 Slimming 的架构事实是：**Handclap = Event Ledger + ACK + Context Transfer；Handoff = Legacy compatibility shell + History**。Handoff 只保留兼容转发与审计历史，不授予控制权。
+
+```text
+Handoff != Controller
+Handoff != Gate
+Handoff != Lock
+Handoff != Commit Authority
+Handoff != Release Authority
+```
+
+Task Registry、Wave state、Lane/Ownership、Gate、Candidate、Commit 和 Release 资格继续由各自权威负责，不能由 Handoff 重新取得。
 
 ## 2. Canonical Workspaces
 
@@ -81,7 +127,9 @@ E:\MyDoc\project-VSCode\XuanYuEngine
 
 盘符不同是预期行为。要求是每台机器只使用自己的一个 canonical workspace。
 
-## 3. Cross-machine authority
+## Legacy / Historical 3. Cross-machine authority
+
+本节是历史记录，不是 R2 当前推荐流程。
 
 GitHub Remote 是跨设备正式事实源。
 
@@ -111,17 +159,17 @@ Ahead > 0
 ```text
 Ahead = 0
 Behind > 0
-clean → 只允许 fast-forward
-dirty → HANDOFF BLOCKED
+→ REMOTE WINS
 ```
 
-程序必须遵守：
+此时本地未提交 tracked 修改和 untracked 残留不得阻断交接。程序必须：
 
-- 禁止 `reset --hard`、`clean -fd`、stash 或其它会丢弃本地内容的自动操作；
-- working tree clean 时只允许 `merge --ff-only <upstream>`；
-- working tree dirty 时返回 `DIRTY_BEHIND_REMOTE`，保留全部 tracked / untracked 内容并等待人工处理；
-- fast-forward 后再次验证 Ahead / Behind = 0 / 0；
-- 分支历史若无法 fast-forward，则阻断，不自动 merge / rebase。
+- 丢弃 tracked 未提交修改；
+- 删除 non-ignored untracked 文件 / 目录；
+- 保持当前 branch 不变；
+- 将 Local HEAD 精确对齐当前 branch upstream；
+- 再次验证 Ahead / Behind = 0 / 0；
+- 验证 working tree clean。
 
 ### 3.3 Local 与 Remote 同一 Tip（仅 PREPARE）
 
@@ -134,11 +182,11 @@ same tip + dirty
 
 这是为了避免 PREPARE 删除当前机器尚未跨设备交接的即时工作；JOIN 不受此规则阻断。
 
-## 4. Active Branch
+## Legacy / Historical 4. Active Branch
 
 当前权威开发分支来自 live Git：`git branch --show-current`；远端事实来自该 branch 的 upstream，默认回退为 `origin/<CurrentBranch>`。Ahead/Behind 永远比较 `HEAD...upstream`，不得比较持久化的旧 ActiveBranch 或旧 WIP 分支。
 
-## 5. SDK / Resolver
+## Legacy / Historical 5. SDK / Resolver
 
 Agent 不得根据 PATH 猜测 .NET SDK 是否存在。
 
@@ -159,7 +207,7 @@ scripts/resolve-dotnet.ps1
 
 只有 Resolver 实际失败后，才允许报告 SDK 不可用。
 
-## 6. JOIN 基线与 Lane 规则
+## Legacy / Historical 6. JOIN 基线与 Lane 规则
 
 JOIN 必须只读取 Git 事实：`rev-parse`、`branch --show-current`、`status`、`worktree list` 及正式 Resolver / Bootstrap。它不得执行 fetch、pull、reset、clean、checkout、switch、merge、rebase、stash、commit 或 push；Git 成败只看真实 Exit Code。
 
@@ -167,7 +215,7 @@ JOIN 必须允许 dirty；Active Wave 只有在 Branch 改变或 `baselineHead` 
 
 development 下所有 Lane JOIN 可通过 dirty。convergence 且 `coordinatorScope=xye` 时，`join --scope xyui` 返回 `HANDOFF BLOCKED` 与 `CONVERGENCE_EXCLUSIVE`；`join --scope xye` 与 XYE Coordinator status 允许。
 
-## 7. PREPARE / LANE CLOSE / GLOBAL CLOSE
+## Legacy / Historical 7. PREPARE / LANE CLOSE / GLOBAL CLOSE
 
 Active Wave 存在且未过期时 PREPARE 返回 `ACTIVE_WAVE`，不得同步。旧 Closed Wave 不阻塞新的普通 PREPARE。
 
@@ -177,7 +225,7 @@ Lane 完成与 Workspace Wave 关闭是两个不同动作。普通 Lane 必须�
 
 `prepare` 默认登记 `mode=development`；WIP Resume 必须通过本次命令显式提供 `-SourceBranch` 与 `-TargetBranch`，并只登记到 state。Control Plane Maintenance 仅在 canonical、clean、当前 branch/upstream 0/0 时通过，且只能修复 `tools/handoff/**` 与治理文档/测试。Active Wave 期间再次 PREPARE 永远阻断，已满足 expiry condition 的 WIP 除外。
 
-## 8. Legacy worktrees
+## Legacy / Historical 8. Legacy worktrees
 
 历史 worktree 是治理债务，不是当前跨电脑交接阻断条件。
 
@@ -191,9 +239,9 @@ Lane 完成与 Workspace Wave 关闭是两个不同动作。普通 Lane 必须�
 文件 ownership / mutex 边界
 ```
 
-## 9. Self Test / Dry Test
+## Legacy / Historical 9. Self Test / Dry Test
 
-`powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖祖先 baseline 下的并行 JOIN PASS、Commit Mutex 争抢/owner 校验/安全解锁、commit 后 advance 自动释放、dirty 保留、XYUI convergence `CONVERGENCE_EXCLUSIVE`、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED。`state-lifecycle.selftest.ps1` 额外覆盖 live upstream、旧 WIP expiry、stateless JOIN、Clean Fast-Forward、Dirty-Behind 安全阻断、Local Ahead 安全保护与 maintenance gate；测试结束删除 fixture，不污染 canonical Workspace。
+`powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\handoff\handoff.selftest.ps1` 在系统临时目录创建隔离 Git fixture，覆盖祖先 baseline 下的并行 JOIN PASS、Commit Mutex 争抢/owner 校验/安全解锁、commit 后 advance 自动释放、dirty 保留、XYUI convergence `CONVERGENCE_EXCLUSIVE`、JOIN/status 无 Git mutation、Active Wave prepare BLOCKED、dirty close BLOCKED。`state-lifecycle.selftest.ps1` 额外覆盖 live upstream、旧 WIP expiry、stateless JOIN、Remote Wins、Local Ahead 安全保护与 maintenance gate；测试结束删除 fixture，不污染 canonical Workspace。
 
 ### 9.1 Candidate-Scoped Final Evidence Gate
 
@@ -201,7 +249,7 @@ Lane 完成与 Workspace Wave 关闭是两个不同动作。普通 Lane 必须�
 
 用户层使用 `TEMP FILES`、`OWNED TEMP`、`FRIENDLY ACTIVE TEMP`、`FRIENDLY RELEASED TEMP`、`LEGACY TEMP`、`UNKNOWN TEMP`、`CONFLICT TEMP`；`DirtyFiles`、`ForeignDirty`、`UnknownDirty` 仅作为兼容字段，不拥有最终 Candidate Gate 裁决权。Handoff 不代表 XYT Truth-Reviewed、XYT Certified 或 XYT Pass。
 
-## 10. Successful final state
+## Legacy / Historical 10. Successful final state
 
 `HANDOFF JOIN PASS` 必须满足：
 
