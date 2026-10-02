@@ -8,9 +8,7 @@ namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    void FillScenePushConstants(float* target, RenderProjection projection, Vector3d position,
-        Vector3d rotation, Vector3d scale, float gizmoRingRadius, float selectionMode = 0.0f,
-        float? gizmoModeOverride = null)
+    ViewProjectionState CurrentViewProjectionState()
     {
         var viewport = new ViewportState(
             0,
@@ -21,8 +19,15 @@ public sealed unsafe partial class VulkanClearFrameOwner
             (int)_extent.Height,
             1,
             _swapchainOwner.ResourceGeneration);
-        var camera = projection.Camera with { Revision = _swapchainOwner.ResourceGeneration };
-        var state = camera.ToViewProjection(viewport);
+        var camera = _renderProjection.Camera with { Revision = _swapchainOwner.ResourceGeneration };
+        return camera.ToViewProjection(viewport);
+    }
+
+    void FillScenePushConstants(float* target, RenderProjection projection, Vector3d position,
+        Vector3d rotation, Vector3d scale, float gizmoRingRadius, float selectionMode = 0.0f,
+        float? gizmoModeOverride = null)
+    {
+        var state = CurrentViewProjectionState();
         var vulkanProjection = ToVulkanProjection(state.Projection);
         var viewProjection = state.View * vulkanProjection;
         FillMatrixTranspose(target, viewProjection);

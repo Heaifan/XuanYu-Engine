@@ -49,7 +49,8 @@ sealed partial class MapVectorOverlayBuilder(double height, double dpiScale = 1.
     public RenderVectorOverlayResource Build()
     {
         var bounds = Bounds();
-        return new(new("map-vector-overlay"), Revision(), _vertices, _indices, _primitives,
+        var revision = Revision();
+        return new(new("map-vector-overlay"), revision, _vertices, _indices, _primitives,
             bounds, _labels, _labelBitmaps);
     }
 

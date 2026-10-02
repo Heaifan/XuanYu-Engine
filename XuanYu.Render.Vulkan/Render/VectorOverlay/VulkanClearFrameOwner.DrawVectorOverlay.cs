@@ -9,7 +9,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         var model = _renderProjection.VectorOverlayResources.ElementAtOrDefault(index);
         if (model is null) return;
-        var gpu = _vectorOverlays.Get(model);
+        var gpu = _vectorOverlays.Get(model, CurrentViewProjectionState().RenderOrigin);
         if (gpu is null) return;
         var vertex = gpu.VertexBuffer.Buffer; ulong offset = 0;
         _vk.CmdBindVertexBuffers(cb, 0, 1, &vertex, &offset);
