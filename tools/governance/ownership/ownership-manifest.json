@@ -25,13 +25,13 @@
     { "path": "XuanYu.World.Tests/UiRuntime/TerrainOverlayElevationTests.cs", "owner": "C" },
     { "path": "tools/handoff/handoff.ps1", "owner": "GOVERNANCE" },
     { "path": "tools/handoff/dirty-convergence.selftest.ps1", "owner": "GOVERNANCE" },
-    { "path": "tools/handoff/candidate-scoped-gate.selftest.ps1", "owner": "GOVERNANCE" },
-    { "path": "tools/handoff/candidate-scope.ps1", "owner": "GOVERNANCE" },
-    { "path": "tools/handoff/candidate-fingerprint.ps1", "owner": "GOVERNANCE" },
-    { "path": "tools/handoff/candidate-gate.ps1", "owner": "GOVERNANCE" },
+    { "path": "tools/governance/candidate/candidate-scoped-gate.selftest.ps1", "owner": "CANDIDATE_AUTHORITY" },
+    { "path": "tools/governance/candidate/candidate-scope.ps1", "owner": "CANDIDATE_AUTHORITY" },
+    { "path": "tools/governance/candidate/candidate-fingerprint.ps1", "owner": "CANDIDATE_AUTHORITY" },
+    { "path": "tools/governance/candidate/candidate-gate.ps1", "owner": "CANDIDATE_AUTHORITY" },
     { "path": "tools/handoff/state-lifecycle.selftest.ps1", "owner": "GOVERNANCE" },
-    { "path": "tools/handoff/HandoffConfig.psd1", "owner": "GOVERNANCE" },
-    { "path": "tools/handoff/ownership-manifest.json", "owner": "GOVERNANCE" },
+    { "path": "tools/governance/workspace/HandoffConfig.psd1", "owner": "WORKSPACE_AUTHORITY" },
+    { "path": "tools/governance/ownership/ownership-manifest.json", "owner": "OWNERSHIP_AUTHORITY" },
     { "path": "tools/handoff/handoff.selftest.ps1", "owner": "GOVERNANCE" },
     { "path": "tools/handoff/HANDOFF-PROTOCOL.md", "owner": "GOVERNANCE" },
     { "path": "docs/governance/sync-handoff-sop.md", "owner": "GOVERNANCE" }
@@ -55,8 +55,8 @@
     ,{ "path": "XYT/tests/xyt.upload.selftest.ps1", "owner": "GOVERNANCE" }
     ,{ "path": "xyt.ps1", "owner": "GOVERNANCE" }
     ,{ "path": "xyt.bat", "owner": "GOVERNANCE" }
-    ,{ "path": "tools/handoff/migrate-active.ps1", "owner": "GOVERNANCE" }
-    ,{ "path": "tools/handoff/active-wave-migration.selftest.ps1", "owner": "GOVERNANCE" }
+    ,{ "path": "tools/governance/coordinator/migrate-active.ps1", "owner": "COORDINATOR_AUTHORITY" }
+    ,{ "path": "tools/governance/coordinator/active-wave-migration.selftest.ps1", "owner": "COORDINATOR_AUTHORITY" }
     ,{ "path": "XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs", "owner": "A" }
     ,{ "path": "XuanYu.Core/Space/TerrainFrustumCuller.cs", "owner": "A" }
     ,{ "path": "XuanYu.Core/Space/TerrainLodSelector.cs", "owner": "A" }
@@ -69,15 +69,31 @@
     ,{ "path": "XuanYu.World.Tests/Mode/EditorModeUiTests.cs", "owner": "C" }
     ,{ "path": "XuanYu.World.Tests/Viewport/ViewportInputRouterLifecycleTests.cs", "owner": "C" }
     ,{ "path": "XuanYu.World.Tests/Render/TerrainNavigationAllocationTests.cs", "owner": "B" }
-    ,{ "path": "tools/handoff/dependency-handoff.ps1", "owner": "GOVERNANCE" }
-    ,{ "path": "tools/handoff/dependency-handoff.common.ps1", "owner": "GOVERNANCE" }
-    ,{ "path": "tools/handoff/dependency-handoff.deadlock.ps1", "owner": "GOVERNANCE" }
-    ,{ "path": "tools/handoff/dependency-handoff.selftest.ps1", "owner": "GOVERNANCE" }
+    ,{ "path": "tools/governance/ownership/dependency-handoff.ps1", "owner": "OWNERSHIP_AUTHORITY" }
+    ,{ "path": "tools/governance/ownership/dependency-handoff.common.ps1", "owner": "OWNERSHIP_AUTHORITY" }
+    ,{ "path": "tools/governance/ownership/dependency-handoff.deadlock.ps1", "owner": "OWNERSHIP_AUTHORITY" }
+    ,{ "path": "tools/governance/ownership/dependency-handoff.selftest.ps1", "owner": "OWNERSHIP_AUTHORITY" }
     ,{ "path": "docs/governance/shared-dependency-handoff.md", "owner": "GOVERNANCE" }
     ,{ "path": "scripts/governance/xyt-executor-errors.ps1", "owner": "GOVERNANCE" }
     ,{ "path": "XYT/Execution/xyt-executor-deadlock.selftest.ps1", "owner": "GOVERNANCE" }
     ,{ "path": "tools/handoff/adversarial-selftest.ps1", "owner": "GOVERNANCE" }
     ,{ "path": "scripts/governance/xyt-executor.ps1", "owner": "GOVERNANCE" }
     ,{ "path": "scripts/governance/xyt-executor-scheduler.ps1", "owner": "GOVERNANCE" }
-  ]
-}
+    ,{ "path": "tools/governance/candidate/candidate-projection.ps1", "owner": "CANDIDATE_AUTHORITY" }
+    ,{ "path": "tools/governance/coordinator/close-authority.ps1", "owner": "COORDINATOR_AUTHORITY" }
+    ,{ "path": "tools/governance/release/work-release.ps1", "owner": "RELEASE_AUTHORITY" }
+    ,{ "path": "tools/governance/release/work-release.common.ps1", "owner": "RELEASE_AUTHORITY" }
+    ,{ "path": "tools/governance/release/work-release.issue.ps1", "owner": "RELEASE_AUTHORITY" }
+    ,{ "path": "tools/governance/release/work-release.assert.ps1", "owner": "RELEASE_AUTHORITY" }
+    ,{ "path": "tools/governance/task/task-dirty-classifier.ps1", "owner": "TASK_AUTHORITY" }
+    ,{ "path": "tools/governance/task/task-flight-plan.common.ps1", "owner": "TASK_AUTHORITY" }
+    ,{ "path": "tools/governance/task/task-flight-plan.handoff.ps1", "owner": "TASK_AUTHORITY" }
+    ,{ "path": "tools/governance/task/task-flight-plan.ps1", "owner": "TASK_AUTHORITY" }
+    ,{ "path": "tools/governance/release/dirty-content-fingerprint.selftest.ps1", "owner": "RELEASE_AUTHORITY" }
+    ,{ "path": "tools/governance/task/task-dirty-classifier.selftest.ps1", "owner": "TASK_AUTHORITY" }
+    ,{ "path": "tools/governance/task/task-flight-plan-lifecycle.selftest.ps1", "owner": "TASK_AUTHORITY" }
+    ,{ "path": "tools/governance/task/task-flight-plan.selftest.ps1", "owner": "TASK_AUTHORITY" }
+    ,{ "path": "tools/governance/workspace/authority-state.ps1", "owner": "WORKSPACE_AUTHORITY" }
+    ,{ "path": "tools/governance/workspace/unauthorized-dirty-recovery.ps1", "owner": "WORKSPACE_AUTHORITY" }
+    ,{ "path": "tools/governance/workspace/unauthorized-dirty-recovery.selftest.ps1", "owner": "WORKSPACE_AUTHORITY" }
+  ]}

@@ -9,8 +9,8 @@ function Assert([bool]$ok, [string]$message) { if (-not $ok) { throw $message } 
 function Run-Git([string[]]$gitArgs) { $out = @(& git -C $root @gitArgs 2>&1); if ($LASTEXITCODE -ne 0) { throw ($out -join "`n") }; $out }
 function Expect-Reject([scriptblock]$action) { try { & $action; throw 'expected rejection' } catch { if ($_.Exception.Message -notmatch 'Candidate Fingerprint changed') { throw } } }
 Run-Git @('init','-q'); Run-Git @('config','user.email','h2f@example.test'); Run-Git @('config','user.name','H2F'); Run-Git @('config','core.autocrlf','false')
-Set-Content (Join-Path $root 'owned.txt') 'base'; Set-Content (Join-Path $root 'foreign.txt') 'foreign'; New-Item (Join-Path $root 'tools\handoff') -ItemType Directory | Out-Null
-Set-Content (Join-Path $root 'tools\handoff\ownership-manifest.json') '{"version":1,"entries":[{"path":"owned.txt","owner":"GOVERNANCE"},{"path":"foreign.txt","owner":"FOREIGN"}]}'
+Set-Content (Join-Path $root 'owned.txt') 'base'; Set-Content (Join-Path $root 'foreign.txt') 'foreign'; New-Item (Join-Path $root 'tools\governance\ownership') -ItemType Directory -Force | Out-Null
+Set-Content (Join-Path $root 'tools\governance\ownership\ownership-manifest.json') '{"version":1,"entries":[{"path":"owned.txt","owner":"GOVERNANCE"},{"path":"foreign.txt","owner":"FOREIGN"}]}'
 New-Item (Join-Path $root 'docs\governance') -ItemType Directory | Out-Null; Set-Content (Join-Path $root 'docs\governance\version-events.tsv') 'EVT-H2F'; Run-Git @('add','-A'); Run-Git @('commit','-qm','base')
 $owned = Join-Path $root 'owned.txt'; $foreign = Join-Path $root 'foreign.txt'; $scope = @('owned.txt')
 Set-Content $owned 'AAA'; $a = Fingerprint $root $scope; Set-Content $owned 'BBB'; $b = Fingerprint $root $scope

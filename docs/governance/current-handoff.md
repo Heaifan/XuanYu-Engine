@@ -1,49 +1,36 @@
 # Current Handoff
 
-Updated: 2026-10-01 (Asia/Shanghai)
+## R2 Architecture
 
-## Git Baseline
+```text
+Handclap     = Event Ledger + ACK + Context Transfer = ZERO Authority
+Handoff      = Legacy compatibility shell = ZERO Authority
+Authority    = tools/governance/**
+```
 
-- Repository: `Heaifan/XuanYu-Engine`
-- Canonical workspace: the repository's registered canonical workspace
-- Branch: `feat/v0.3-world-authoring-r1`
-- HEAD / origin: `926ad05884274decb08c7df7f11262571e5f0656`
-- Working tree: clean
-- Ahead / behind: `0 / 0`
-- Handoff: `development`, active wave, `HANDOFF JOIN PASS`
-- Handoff mutation during audit: none
+Authority ownership is explicit:
 
-## Current Phase
+```text
+Candidate    = tools/governance/candidate/**
+Coordinator  = tools/governance/coordinator/**
+Ownership    = tools/governance/ownership/**
+Release      = tools/governance/release/**
+Task         = tools/governance/task/**
+Workspace    = tools/governance/workspace/**
+```
 
-World Authoring R1 final convergence and governance handoff. The synchronized technical baseline remains provisional until the user's real-App visual and interaction acceptance is completed.
+## Current Contract
 
-## Recently Completed
+- Handclap records events, acknowledgements, and context transfer only.
+- Handoff only forwards Handclap fact commands and rejects retired Authority commands.
+- PREPARE, JOIN, ADVANCE, CLOSE, RELEASE, ownership grant, mutex control, and Candidate gate are Legacy/Historical semantics, not the current recommended flow.
+- Authority selftests run through the owner under `tools/governance/**`; they do not call Legacy Handoff Authority.
+- Automated selftests establish technical evidence only; they do not establish product or real-device acceptance.
 
-- Fast-forwarded the canonical workspace from `272d88d5` to `eee9b21e`.
-- Synchronized the tool lifecycle with the viewport owner and isolated lane close from active-wave close.
-- Added the handoff close-authority governance correction and kept the knowledge event provisional.
-- Handoff audit: `DirtyFiles=0`, `ACTIVE TASKS=0`, `FinalEvidenceEligibility=YES`, `CERTIFICATION ALLOWED=YES`.
+## Evidence Boundary
 
-## Current Decisions and Acceptance
+This document intentionally contains no branch, HEAD, Ahead/Behind, Dirty count, active-wave state, or other snapshot facts. Such facts belong in timestamped run evidence, not a long-lived current-handoff contract.
 
-- GitHub is the formal cross-device code source.
-- The canonical workspace is the only formal development, verification, runtime, and acceptance baseline.
-- Technical synchronization does not equal user acceptance.
-- T3/T4 real-App visual and interaction acceptance for the World Authoring/Terrain work remains pending; do not mark the product `CLOSED` or `USER ACCEPTED` from this snapshot.
+## R2 Convergence Result
 
-## Active Tasks
-
-- Status: `IDLE` / no active registered task.
-- Owner: not assigned by the active handoff wave (`Coordinator: null`).
-- Write scope: none until the next task is explicitly frozen.
-- Last commit: `926ad058`.
-
-## NEXT
-
-Run the canonical `run.bat` and perform the pending T3/T4 real-App visual and interaction acceptance. Record the evidence and update the technical/user-acceptance status before any closure decision.
-
-## Handoff Contract
-
-- Next owner may join the same canonical workspace after confirming branch, SHA, clean status, and `0 / 0` divergence.
-- No business-code changes are part of this synchronization handoff.
-- No build or product acceptance was run in this sync operation.
+R2 convergence is determined by the current unified test run, runtime legacy-caller scan, `git diff --check`, and the applicable 5+100 rule. No Commit or Push is implied by this document.

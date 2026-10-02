@@ -18,7 +18,7 @@ function Fingerprint([string]$R,[string[]]$Scope=@()){
 function RegisteredPath([string]$R,[string]$Path){
     if($Path -match '^(tools/handoff/|tools/governance/|scripts/governance/|docs/|XYT/|xyt\.)'){return $true}
     if($Path -match '^xyui/'){return $true}
-    $m=Read-Json (Join-Path $R 'tools/handoff/ownership-manifest.json')
+    $m=Read-Json (Join-Path $R 'tools/governance/ownership/ownership-manifest.json')
     @($m.entries)|?{[string]$_.path -eq $Path}|Select-Object -First 1 -ExpandProperty path
 }
 function UnknownDirty([string]$R){ @((Current $R).Dirty|%{ if($_.Length -gt 3){$p=$_.Substring(3).Trim('"').Replace('\','/'); if(!(RegisteredPath $R $p)){$_} } }) }

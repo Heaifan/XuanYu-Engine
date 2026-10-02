@@ -25,8 +25,8 @@ function Consumes($task, [string]$owner, [string]$path, $scopes) {
     }
     return $false
 }
-function Result([string]$class, [string]$allowed, [string]$eligible, [string]$owner, [string]$status, $matched, [string]$consumed, [string]$reason) {
-    [pscustomobject]@{ Classification=$class; CodingAllowed=$allowed; FinalEvidenceEligible=$eligible; OwnerTaskId=$owner; OwnerStatus=$status; MatchedWriteScope=@($matched); DependencyConsumed=$consumed; Reason=$reason } | ConvertTo-Json -Depth 8
+function Result([string]$class, [string]$allowed, [string]$eligible, [string]$owner, [string]$status, $matched, [string]$reason, [string]$recovery='NONE') {
+    [pscustomobject]@{ Classification=$class; CodingAllowed=$allowed; FinalEvidenceEligible=$eligible; CandidateAllowed=($class -ne 'UNAUTHORIZED_DIRTY'); ReleaseAllowed=($class -ne 'UNAUTHORIZED_DIRTY'); OwnerTaskId=$owner; OwnerStatus=$status; MatchedWriteScope=@($matched); RecoveryWindow=$recovery; Reason=$reason } | ConvertTo-Json -Depth 8
 }
 $root = [IO.Path]::GetFullPath($RepositoryRoot)
 if (!$TaskRegistryPath) { $TaskRegistryPath = Join-Path $root '.git\xye-handoff\task-registry.json' }
@@ -37,15 +37,14 @@ $tasks = if ($registry) { Items $registry 'tasks' } else { @() }
 $current = @($tasks | Where-Object { [string]$_.TaskId -eq $CurrentTaskId }) | Select-Object -First 1
 $active = @($tasks | Where-Object { [string]$_.Status -eq 'ACTIVE' -and @($_.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }).Count })
 $matches = @($active | ForEach-Object { [pscustomobject]@{ Task=$_; Scopes=@($_.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }) } })
-if ($matches.Count -gt 1) { Result 'OWNERSHIP_CONFLICT' 'NO' 'NO' $matches[0].Task.TaskId $matches[0].Task.Status $matches.Scopes 'NO' 'Multiple ACTIVE tasks claim the dirty path.'; exit 0 }
-if ($current -and @($current.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }).Count) { $m=@($current.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }); Result 'OWNED_DIRTY' 'YES' 'YES' $CurrentTaskId $current.Status $m 'NO' 'Current Task WriteScope claims the dirty path.'; exit 0 }
+if ($matches.Count -gt 1) { Result 'UNAUTHORIZED_DIRTY' 'NO' 'NO' '' '' @() 'Multiple ACTIVE tasks claim the dirty path; ownership is not unique.' 'RECOVERY_WINDOW'; exit 0 }
+if ($current -and $current.Owner -and @($current.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }).Count) { $m=@($current.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }); Result 'FRIENDLY_ACTIVE' 'YES' 'YES' $CurrentTaskId $current.Status $m 'Task, Owner, and WriteScope explain the dirty path.'; exit 0 }
 if ($matches.Count -eq 1) {
-    $m=$matches[0]; $consumed=if ($current) { Consumes $current $m.Task.TaskId $DirtyPath $m.Scopes } else { $false }
-    if ($consumed) { Result 'FRIENDLY_ACTIVE_DEPENDENCY' 'YES' 'NO' $m.Task.TaskId $m.Task.Status $m.Scopes 'YES' 'ACTIVE owner is declared in ExpectedDependencies.'; exit 0 }
-    Result 'FRIENDLY_ACTIVE_DIRTY' 'YES' 'YES' $m.Task.TaskId $m.Task.Status $m.Scopes 'NO' 'Another ACTIVE Task owns the dirty path.'; exit 0
+    $m=$matches[0]; if ($m.Task.Owner) { Result 'FRIENDLY_ACTIVE' 'YES' 'YES' $m.Task.TaskId $m.Task.Status $m.Scopes 'Task, Owner, and WriteScope explain the dirty path.'; exit 0 }
 }
 $released = @($tasks | Where-Object { [string]$_.Status -eq 'RELEASED' -and @($_.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }).Count }) | Select-Object -First 1
-if ($released) { $m=@($released.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }); Result 'FRIENDLY_RELEASED_DIRTY' 'YES' 'NO' $released.TaskId $released.Status $m 'NO' 'RELEASED Task WriteScope explains the dirty path.'; exit 0 }
+if ($released -and $released.Owner) { $m=@($released.WriteScope | Where-Object { Hit $DirtyPath ([string]$_) }); Result 'FRIENDLY_COMPLETED' 'YES' 'NO' $released.TaskId $released.Status $m 'Completed Task, Owner, and WriteScope explain the dirty path.'; exit 0 }
 $files=if($dependency){Items $dependency 'files'}else{@()}; $record=@($files | Where-Object { Hit $DirtyPath ([string]$_.file) }) | Select-Object -First 1
-if ($record -and [string]$record.status -eq 'RELEASED') { $owner=[string]$(if($record.ownerTaskId){$record.ownerTaskId}elseif($record.taskId){$record.taskId}else{$record.owner}); Result 'FRIENDLY_RELEASED_DIRTY' 'YES' 'NO' $owner 'RELEASED' @($record.file) 'NO' 'Dependency ownership record marks the path RELEASED.'; exit 0 }
-Result 'UNKNOWN_DIRTY' 'NO' 'NO' '' '' @() 'NO' 'Task Registry and dependency ownership provide no explanation.'
+if ($record -and [string]$record.status -in @('KNOWN','FOREIGN_KNOWN')) { $owner=[string]$(if($record.ownerTaskId){$record.ownerTaskId}elseif($record.taskId){$record.taskId}else{$record.owner}); Result 'FOREIGN_KNOWN' 'NO' 'NO' $owner ([string]$record.status) @($record.file) 'A recorded external owner is known; current Task may not claim it.'; exit 0 }
+if ($record -and [string]$record.status -eq 'RELEASED') { $owner=[string]$(if($record.ownerTaskId){$record.ownerTaskId}elseif($record.taskId){$record.taskId}else{$record.owner}); Result 'FRIENDLY_COMPLETED' 'YES' 'NO' $owner 'RELEASED' @($record.file) 'Dependency ownership record marks the path completed.'; exit 0 }
+Result 'UNAUTHORIZED_DIRTY' 'NO' 'NO' '' '' @() 'No Task, Owner, and WriteScope explain the dirty path.' 'RECOVERY_WINDOW'

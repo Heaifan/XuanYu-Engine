@@ -75,7 +75,7 @@ try {
 
     $result = Invoke-Handoff @('-Mode', 'join', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
     Assert-Output $result 0 'HANDOFF JOIN PASS'
-    Assert-Output $result 0 'UNKNOWN_DIRTY: 2'
+    Assert-Output $result 0 'UNAUTHORIZED_DIRTY: 2'
     Assert-Output $result 0 'OwnDirty'
     Assert-Output $result 0 'ForeignDirty'
     Assert-Output $result 0 'Scope       : xyui'
@@ -121,30 +121,21 @@ try {
 
     $stateAfterB.coordinatorScope = 'xye'
     $stateAfterB | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Field', 'GATE STATUS', '-Value', 'REGRESSION_PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'AUTHORITY_REJECTED'
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xye', '-Field', 'GATE STATUS', '-Value', 'REGRESSION_PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'AUTHORITY PASS'
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Field', 'IMPLEMENTATION STATUS', '-Value', 'IMPLEMENTATION_PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'LANE STATE PASS'
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Field', 'IMPLEMENTATION STATUS', '-Value', 'PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'TYPED_PASS_REQUIRED'
+    $stateBeforeEvent = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')
     $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', 'IMPLEMENTATION_COMPLETE', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'ILLEGAL_STATE_TRANSITION'
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', 'ACTIVE', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'LANE STATE PASS'
-    foreach ($transition in @('IMPLEMENTATION_COMPLETE','IMPLEMENTATION_HANDOFF_READY','DEPENDENCY_RELEASED','REGRESSION_REQUIRED','PRODUCT_ACCEPTANCE_PENDING','ACCEPTED')) {
-        $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', $transition, '-RepositoryRoot', $root, '-AllowTestWorkspace')
-        Assert-Output $result 0 'LANE STATE PASS'
-    }
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', 'FROZEN', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'LANE STATE PASS'
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xye', '-ExceptionStatus', 'UNKNOWN_DIRTY', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'LANE STATE PASS'
-    $authorityState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    Assert-True ($authorityState.laneStates.xye.exceptions -contains 'UNKNOWN_DIRTY') 'exception status must be independent'
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Field', 'OWN-SCOPE TEST STATUS', '-Value', 'OWN_SCOPE_PASS', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'FROZEN_STATE'
+    Assert-Output $result 1 'HANDOFF_STATE_CONTROL_REMOVED'
+    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $stateBeforeEvent) 'legacy lane-state changed state.json'
+
+    $registryPath = Join-Path $stateDir 'task-registry.json'
+    $registryBeforeEvent = if (Test-Path $registryPath) { Get-Content -Raw $registryPath } else { '' }
+    $result = Invoke-Handoff @('-Mode', 'event', '-Scope', 'xyui', '-Event', 'STARTED', '-RepositoryRoot', $root, '-AllowTestWorkspace')
+    Assert-Output $result 0 'HANDOFF EVENT RECORDED'
+    $eventPath = Join-Path $stateDir 'handoff-events.jsonl'
+    Assert-True (Test-Path $eventPath) 'handoff event history was not created'
+    Assert-True ((Get-Content -Raw $eventPath) -match '"Event":"STARTED"') 'STARTED event was not recorded'
+    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $stateBeforeEvent) 'event changed state.json'
+    $registryAfterEvent = if (Test-Path $registryPath) { Get-Content -Raw $registryPath } else { '' }
+    Assert-True ($registryAfterEvent -eq $registryBeforeEvent) 'event changed Task Registry'
 
     Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'C'
     git -C $root add committed.txt

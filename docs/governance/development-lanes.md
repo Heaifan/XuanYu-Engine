@@ -5,9 +5,9 @@
 ## 1. Shared Workspace
 
 - 一个 canonical Workspace、一个当前分支、一个 HEAD；并行依靠文件 Ownership，不创建额外 Worktree。
-- 所有任务先声明 `Lane: XYE | XYUI | INTEGRATION | GOVERNANCE`，再执行 `handoff.cmd join --scope <lane>`。
-- `ForeignDirty != OwnershipConflict`。JOIN 只读取当前 Git 事实并允许其他 Lane dirty；写入文件重叠才是 Ownership Conflict。
-- Coordinator 在 Wave 开始执行 `prepare`；Convergence 时 Workspace Exclusive，其余 Lane Freeze。
+- 所有任务先声明 `Lane: XYE | XYUI | INTEGRATION | GOVERNANCE`，再读取对应 Authority owner 与 Candidate 依赖；不得调用旧 Handoff。
+- `ForeignDirty != OwnershipConflict`。Candidate 闭包与 Foreign Dirty 路径重叠才是当前 blocker。
+- Coordinator / Convergence 事实由 `tools/governance/coordinator/**` 负责；旧 `prepare` / `join` / `close` 仅属 Legacy/Historical。
 
 ## 2. Priority and Ownership
 

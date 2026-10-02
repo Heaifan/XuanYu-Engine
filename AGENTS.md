@@ -2,7 +2,7 @@
 
 > **本节优先于后续 Repository Bootstrap、Build/Test、任务规划和代码修改规则。**
 
-每个 Workspace / Development Wave：Coordinator 执行一次 `tools\handoff\handoff.cmd prepare` 建立 Workspace Baseline；同一 Workspace 的其他并行 Session 执行 `tools\handoff\handoff.cmd join`。JOIN 为只读操作，允许 Workspace 因其他 Ownership Task 而 dirty。Active Wave 期间禁止再次 PREPARE；Convergence / Commit / Push / Clean 后执行 `tools\handoff\handoff.cmd close`。不得自行猜测 Active Branch、Canonical Workspace、SDK 路径或本地 dirty 文件的保留优先级。
+R3 当前模型：Handclap 是 Fact Plane，Handoff 是 ZERO-Authority Legacy Compatibility Shell，Authority Plane 位于 `tools\governance/**`。旧 PREPARE/JOIN/ADVANCE/CLOSE 语义仅保留在 Legacy/Historical 资料中，不是当前推荐流程。
 
 交接权威顺序：
 
@@ -35,7 +35,7 @@ PATH 中没有 `dotnet` 不等于 SDK 不存在。
 
 ## Lane / Ownership
 
-每个任务先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再执行 `tools\handoff\handoff.cmd join --scope <lane>`。唯一 Lane 事实源为 [`docs/governance/development-lanes.md`](docs/governance/development-lanes.md)。
+每个任务先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再读取对应 Authority owner 与 Candidate 依赖。不得调用旧 Handoff JOIN；唯一 Lane 事实源为 [`docs/governance/development-lanes.md`](docs/governance/development-lanes.md)。
 
 - `P0 XYE FAST LANE`：主线优先；XYE 拥有 Engine 产品与测试文件。
 - `P1 XYUI CONTROLLED SUPPORT LANE`：默认仅 `xyui/**`，继续开发、审计、进入同一 Git/GitHub，但默认禁止自行 Commit/Push/Branch mutation。
@@ -58,8 +58,8 @@ PATH 中没有 `dotnet` 不等于 SDK 不存在。
 
 ```text
 -1. 声明 Lane：XYE / XYUI / INTEGRATION / GOVERNANCE
--2. Session Handoff：Coordinator 用 prepare；并行 Session 用 `join --scope <lane>`（JOIN PASS 后继续）
-0. Repository Bootstrap：由 prepare / join 按 Resolver Chain 执行 scripts/xye-bootstrap.ps1
+-2. Session Handoff：读取 Handclap Context 与 Authority owner evidence；不调用旧 Handoff
+0. Repository Bootstrap：按正式 Resolver Chain 执行 scripts/xye-bootstrap.ps1
 1. 接管核对 Git / 工作区
 2. Planning 阶段：MEDIUM / HIGH 或已登记任务域 → Knowledge Planning Preflight
 3. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
