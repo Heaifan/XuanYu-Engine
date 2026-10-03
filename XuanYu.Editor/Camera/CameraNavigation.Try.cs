@@ -9,7 +9,6 @@ public static partial class CameraNavigation
 {
     const double YawPerPixel = 0.008;
     const double PitchPerPixel = 0.006;
-    const double MaxPitch = 1.4835298641951802;
     const double MinDistance = 0.25;
     const double MinOrthoScale = 0.001;
     const double MaxOrthoScale = 1_000_000.0;
@@ -17,20 +16,13 @@ public static partial class CameraNavigation
     public static bool TryOrbit(CameraState start, Vector3d center, double dx, double dy, long revision,
         out CameraFrameResult result, out string failureReason)
     {
-        result = default; failureReason = "";
-        var offset = start.Position - center;
-        var distance = ClampDistance(offset.Length);
-        var yaw = global::System.Math.Atan2(offset.Y, offset.X) + (dx * YawPerPixel);
-        var pitch = global::System.Math.Asin(Clamp(offset.Z / distance, -1.0, 1.0)) + (dy * PitchPerPixel);
-        pitch = Clamp(pitch, -MaxPitch, MaxPitch);
-        var horizontal = global::System.Math.Cos(pitch) * distance;
-        var nextOffset = new Vector3d(
-            global::System.Math.Cos(yaw) * horizontal,
-            global::System.Math.Sin(yaw) * horizontal,
-            global::System.Math.Sin(pitch) * distance);
-        // F3-F3：Orbit 用世界 +Z 重建基（Right=Forward×WorldUp、Up=Right×Forward）——
-        // 地平线保持水平、无 Roll；顶/底视平行时 CameraBasis 自动回退备用参考轴。
-        return TryResult(start, center + nextOffset, center, revision, Vector3d.UnitZ,
+        if (!FrozenOrbitSession.TryBegin(start, center, out var session))
+        {
+            result = default; failureReason = "Orbit Pivot 与相机位置重合";
+            return false;
+        }
+
+        return session!.TryMoveTo(dx * YawPerPixel, dy * PitchPerPixel, revision,
             out result, out failureReason);
     }
 

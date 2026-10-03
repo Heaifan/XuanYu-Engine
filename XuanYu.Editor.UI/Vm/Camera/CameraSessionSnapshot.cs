@@ -1,5 +1,6 @@
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
+using XuanYu.Editor.Camera;
 
 namespace XuanYu.Editor.UI;
 
@@ -12,4 +13,5 @@ public sealed record CameraSessionSnapshot(
     CameraState StartCamera,
     Vector3d StartCenter,
     int Width,
-    int Height);
+    int Height,
+    FrozenOrbitSession? FrozenOrbit);

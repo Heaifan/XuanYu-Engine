@@ -9,7 +9,6 @@ public sealed partial class UiVm
 {
     CameraSessionSnapshot? _cameraSession;
     long _cameraSessionRevision;
-
     public Vector3d ObservationCenter => _observationCenter;
     public bool IsCameraNavigationActive => _cameraSession is not null;
 
@@ -18,71 +17,82 @@ public sealed partial class UiVm
         if (_cameraSession is not null || _editorState.InteractionSnapshot.HasCapture) return false;
         if (width <= 0 || height <= 0 || x < 0 || y < 0 || x > width || y > height) return false;
         var mode = shift ? CameraSessionMode.Pan : CameraSessionMode.Orbit;
-        _cameraSession = new CameraSessionSnapshot(
-            ++_cameraSessionRevision, pointerId, mode, x, y, _camera, _observationCenter, width, height);
-        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
-            "相机会话开始", $"模式={mode}；会话={_cameraSession.SessionId}");
+        var orbit = mode == CameraSessionMode.Orbit ? ResolveOrbitPivot(CurrentViewport) : null;
+        FrozenOrbitSession? frozenOrbit = null;
+        if (orbit is not null && !FrozenOrbitSession.TryBegin(_camera, orbit.Pivot, out frozenOrbit)) return false;
+        _cameraSession = new CameraSessionSnapshot(++_cameraSessionRevision, pointerId, mode, x, y, _camera,
+            _observationCenter, width, height, frozenOrbit);
+        if (orbit is not null) StartOrbitProbe(_cameraSession.SessionId, orbit);
+        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture, "相机会话开始",
+            $"模式={mode}；会话={_cameraSession.SessionId}");
         RefreshLogBindings();
         return true;
     }
-
     public bool PreviewCameraNavigation(long pointerId, double x, double y)
     {
         if (_cameraSession is not { } session || session.PointerId != pointerId) return false;
         var dx = x - session.StartX;
         var dy = y - session.StartY;
-        // F3-F2：失败安全——Try* 成功才应用；失败保留上次预览且不递增 Revision。
+        CameraFrameResult result;
         var ok = session.Mode == CameraSessionMode.Orbit
-            ? CameraNavigation.TryOrbit(session.StartCamera, session.StartCenter, dx, dy,
-                _cameraRevision + 1, out var result, out _)
-            : CameraNavigation.TryPan(session.StartCamera, session.StartCenter, dx, dy, session.Height,
-                _cameraRevision + 1, out result, out _);
+            ? TryPreviewFrozenOrbit(session, dx, dy, out result)
+            : CameraNavigation.TryPan(session.StartCamera, session.StartCenter, dx, dy,
+                session.Height, _cameraRevision + 1, out result, out _);
         if (!ok) return false;
         _cameraRevision = result.Camera.Revision;
         ApplyCameraResult(result);
         return true;
     }
-
     public bool EndCameraNavigation(long pointerId)
     {
         if (_cameraSession is not { } session || session.PointerId != pointerId) return false;
+        if (session.Mode == CameraSessionMode.Orbit) EndFrozenOrbit();
         _cameraSession = null;
-        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
-            "相机会话结束", $"模式={session.Mode}；会话={session.SessionId}");
+        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture, "相机会话结束",
+            $"模式={session.Mode}；会话={session.SessionId}");
         RefreshLogBindings();
         return true;
     }
-
     public bool CancelCameraNavigation(string reason)
     {
         if (_cameraSession is not { } session) return false;
+        if (session.Mode == CameraSessionMode.Orbit) EndFrozenOrbit();
         ApplyCameraFrame(new(session.StartCamera, session.StartCenter), "ViewReset");
         _cameraSession = null;
         PublishSceneRenderSnapshot();
-        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
-            "相机会话已取消", $"原因={reason}；会话={session.SessionId}");
+        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture, "相机会话已取消",
+            $"原因={reason}；会话={session.SessionId}");
         RefreshLogBindings();
         return true;
     }
-
+    bool TryPreviewFrozenOrbit(CameraSessionSnapshot session, double dx, double dy,
+        out CameraFrameResult result)
+    {
+        if (session.FrozenOrbit is null) { result = default; return false; }
+        var ok = session.FrozenOrbit.TryMoveTo(dx * 0.008, dy * 0.006, _cameraRevision + 1,
+            out result, out _);
+        if (ok) AddFrozenOrbitProbe(OrbitProbePhase.Move, new(dx, dy, 0));
+        return ok;
+    }
+    void EndFrozenOrbit()
+    {
+        AddFrozenOrbitProbe(OrbitProbePhase.End, Vector3d.Zero);
+        _orbitSession = null;
+    }
     void ApplyCameraResult(CameraFrameResult result)
     {
         ApplyCameraFrame(result, "OrbitOrPan");
-        // F3-F4：从标准正交视图开始自由环绕时退出标准视图——Orbit 输出透视（恢复自由观察）。
         if (_activeViewFace != "默认视角" && _camera.Mode == ProjectionMode.Perspective)
         {
             _activeViewFace = "默认视角";
             OnPropertyChanged(nameof(ActiveViewFace));
         }
-        // F3-D3：导航 Gizmo 实时跟随相机姿态。
         OnPropertyChanged(nameof(NavigationCamera));
         PublishSceneRenderSnapshot();
     }
-
     void ApplyCameraFrame(CameraFrameResult result, string writer)
     {
-        ViewportProbe.CameraWriter(writer, _camera, _observationCenter,
-            result.Camera, result.ObservationCenter);
+        ViewportProbe.CameraWriter(writer, _camera, _observationCenter, result.Camera, result.ObservationCenter);
         _camera = result.Camera;
         _observationCenter = result.ObservationCenter;
         ViewportProbe.CameraSnapshot("T1_CAMERA_AFTER", _camera, _observationCenter);

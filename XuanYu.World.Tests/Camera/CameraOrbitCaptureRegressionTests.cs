@@ -11,14 +11,14 @@ public sealed class CameraOrbitCaptureRegressionTests
     {
         var vm = new UiVm(null, () => true);
         vm.UpdateViewportFrame(800, 600);
-        var pivot = vm.ObservationCenter;
-
         Assert.True(vm.BeginCameraNavigation(1, 300, 300, false, 800, 600));
+        var begin = vm.OrbitProbeEvents.Single(e => e.Phase == OrbitProbePhase.Begin);
+        var resolvedPivotAtBegin = begin.Pivot;
         Assert.True(vm.PreviewCameraNavigation(1, 220, 180));
         Assert.True(vm.PreviewCameraNavigation(1, 620, 420));
 
-        Assert.Equal(pivot, vm.ObservationCenter);
         Assert.True(vm.EndCameraNavigation(1));
+        Assert.InRange(vm.ObservationCenter.DistanceTo(resolvedPivotAtBegin), 0, 1e-5);
     }
 
     [Fact]
@@ -61,4 +61,5 @@ public sealed class CameraOrbitCaptureRegressionTests
         EditorPointerButtons buttons, double x, double y) => new(
         kind, new(x, y), buttons, EditorPointerModifiers.None, 0, 1,
         new("native-hwnd"), 1);
+
 }

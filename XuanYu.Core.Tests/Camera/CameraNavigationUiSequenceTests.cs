@@ -41,13 +41,14 @@ public sealed partial class CameraNavigationUiSequenceTests
     public void Gizmo_orbit_commit_then_dolly_keeps_center()
     {
         var vm = NewVm();
-        var centerBefore = vm.ObservationCenter;
         Assert.True(vm.BeginCameraNavigation(7, 300, 300, false, 800, 600));
+        var begin = vm.OrbitProbeEvents.Single(e => e.Phase == OrbitProbePhase.Begin);
+        var resolvedPivotAtBegin = begin.Pivot;
         Assert.True(vm.PreviewCameraNavigation(7, 380, 220));
         Assert.True(vm.EndCameraNavigation(7));
-        Assert.Equal(centerBefore, vm.ObservationCenter);
+        Assert.InRange(vm.ObservationCenter.DistanceTo(resolvedPivotAtBegin), 0, 1e-5);
         vm.DollyCamera(1.0);
-        Assert.Equal(centerBefore, vm.ObservationCenter);
+        Assert.InRange(vm.ObservationCenter.DistanceTo(resolvedPivotAtBegin), 0, 1e-5);
         AssertValid(vm.RenderSnapshot.CameraState);
     }
 }
