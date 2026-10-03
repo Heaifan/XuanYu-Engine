@@ -3,277 +3,29 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'handoff.ps1'
-$root = Join-Path $env:TEMP ('xye-handoff-selftest-' + [guid]::NewGuid().ToString('N'))
-$remote = Join-Path (Split-Path $root) ((Split-Path $root -Leaf) + '-remote.git')
 
-function Assert-True([bool]$Condition, [string]$Message) {
-    if (-not $Condition) { throw "SELF TEST FAILED: $Message" }
-}
-
-function Invoke-Handoff([string[]]$Arguments) {
+function Invoke-Handoff([string]$Command, [string[]]$Arguments = @()) {
     $shell = (Get-Command pwsh.exe -ErrorAction SilentlyContinue).Source
     if ([string]::IsNullOrWhiteSpace($shell)) { $shell = 'powershell.exe' }
-    $output = @(& $shell -NoProfile -ExecutionPolicy Bypass -File $scriptPath @Arguments 2>&1)
-    [pscustomobject]@{ ExitCode = $LASTEXITCODE; Text = ($output -join [Environment]::NewLine) }
+    $old = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        $output = @(& $shell -NoProfile -ExecutionPolicy Bypass -File $scriptPath $Command @Arguments 2>&1)
+        [pscustomobject]@{ ExitCode = $LASTEXITCODE; Text = ($output -join "`n") }
+    } finally { $ErrorActionPreference = $old }
 }
 
-function Assert-Output($Result, [int]$ExitCode, [string]$Text) {
-    Assert-True ($Result.ExitCode -eq $ExitCode) "expected exit $ExitCode and '$Text', got $($Result.ExitCode): $($Result.Text)"
-    Assert-True $Result.Text.Contains($Text) "expected '$Text' in: $($Result.Text)"
-}
-
-try {
-    New-Item -ItemType Directory -Path $root -Force | Out-Null
-    git -C $root init -b main | Out-Null
-    git -C $root config user.email 'handoff-selftest@example.invalid'
-    git -C $root config user.name 'handoff-selftest'
-    Set-Content -LiteralPath (Join-Path $root 'README.md') -Value 'fixture'
-    git -C $root add README.md
-    git -C $root commit -m fixture | Out-Null
-    git init --bare $remote | Out-Null
-    git -C $root remote add origin $remote
-    git -C $root push -u origin main | Out-Null
-
-    $dotnet = Join-Path $root 'dotnet.cmd'
-    Set-Content -LiteralPath $dotnet -Value '@echo 9.9.9-selftest'
-    Set-Content -LiteralPath (Join-Path $root 'resolve-dotnet.ps1') -Value "Write-Output '$dotnet'"
-    Set-Content -LiteralPath (Join-Path $root 'bootstrap.ps1') -Value ''
-    @"
-@{
-    Remote = 'origin'
-    OwnershipManifest = 'tools\handoff\ownership-manifest.json'
-    CanonicalWorkspaces = @('$root')
-    PreferredDotnetByDrive = @{}
-    ResolverScript = 'resolve-dotnet.ps1'
-    BootstrapScript = 'bootstrap.ps1'
-}
-"@ | Set-Content -LiteralPath (Join-Path $root 'HandoffConfig.psd1')
-
-    git -C $root add HandoffConfig.psd1 bootstrap.ps1 resolve-dotnet.ps1 dotnet.cmd
-    git -C $root commit -m fixture-config | Out-Null
-    git -C $root push | Out-Null
-    $head = (git -C $root rev-parse HEAD).Trim()
-    $stateDir = Join-Path $root '.git\xye-handoff'
-    $result = Invoke-Handoff @('-Mode', 'prepare', '-WaveMode', 'development', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF PREPARE PASS'
-    $stateBefore = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')
-    Assert-True $stateBefore.Contains('"coordinatorScope": null') 'prepare must write coordinatorScope null'
-    $state = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    Assert-True ($null -eq $state.coordinatorScope) 'prepare coordinatorScope must be null'
-    Assert-True ($state.mode -eq 'development') 'prepare must create ordinary development mode'
-    Assert-True ($null -eq $state.PSObject.Properties['convergenceTargetBranch']) 'prepare must not persist stale convergence target'
-
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'ADVANCE NOOP: BASELINE_ALREADY_CURRENT'
-    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $stateBefore) 'advance noop changed state.json'
-
-    New-Item -ItemType Directory -Path (Join-Path $root 'xyui') -Force | Out-Null
-    New-Item -ItemType Directory -Path (Join-Path $root 'XuanYu.World') -Force | Out-Null
-    Set-Content -LiteralPath (Join-Path $root 'xyui\dirty.txt') -Value 'xyui'
-    Set-Content -LiteralPath (Join-Path $root 'XuanYu.World\dirty.txt') -Value 'xye'
-    $statusBefore = @(git -C $root status --porcelain=v1 --untracked-files=all)
-
-    $result = Invoke-Handoff @('-Mode', 'join', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF JOIN PASS'
-    Assert-Output $result 0 'UNAUTHORIZED_DIRTY: 2'
-    Assert-Output $result 0 'OwnDirty'
-    Assert-Output $result 0 'ForeignDirty'
-    Assert-Output $result 0 'Scope       : xyui'
-    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $stateBefore) 'join changed state.json'
-
-    $result = Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'Scope       : xye'
-    Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all) -join "`n" -eq ($statusBefore -join "`n")) 'join changed dirty files'
-    Assert-True ((git -C $root rev-parse HEAD).Trim() -eq $head) 'join changed HEAD'
-
-    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
-    $result = Invoke-Handoff @('-Mode', 'commit-unlock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF COMMIT-UNLOCK PASS'
-
-    $state.coordinatorScope = ''
-    $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'B'
-    git -C $root add committed.txt
-    git -C $root commit -m B | Out-Null
-    git -C $root push | Out-Null
-    $headB = (git -C $root rev-parse HEAD).Trim()
-    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
-    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-b', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'COMMIT_MUTEX_HELD'
-    $result = Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF JOIN PASS'
-    $result = Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'ACTIVE_WAVE_EXISTS'
-    git -C $root clean -fd | Out-Null
-    Assert-Output $result 1 'Current wave does not require a new prepare.'
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-b', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'COMMIT_MUTEX_OWNER_MISMATCH'
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF ADVANCE PASS'
-    $stateAfterB = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    Assert-True ($stateAfterB.baselineHead -eq $headB) 'advance did not move baseline to B'
-    Assert-True ($null -ne $stateAfterB.baselineAdvance) 'advance audit missing'
-    Assert-True ($null -eq $stateAfterB.coordinatorScope) 'legacy empty coordinatorScope must normalize to null'
-    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -match '"coordinatorScope"\s*:\s*null') 'advance must write coordinatorScope null'
-    Assert-Output (Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF JOIN PASS'
-
-    $stateAfterB.coordinatorScope = 'xye'
-    $stateAfterB | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $stateBeforeEvent = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'lane-state', '-Scope', 'xyui', '-Transition', 'IMPLEMENTATION_COMPLETE', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'HANDOFF_STATE_CONTROL_REMOVED'
-    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $stateBeforeEvent) 'legacy lane-state changed state.json'
-
-    $registryPath = Join-Path $stateDir 'task-registry.json'
-    $registryBeforeEvent = if (Test-Path $registryPath) { Get-Content -Raw $registryPath } else { '' }
-    $result = Invoke-Handoff @('-Mode', 'event', '-Scope', 'xyui', '-Event', 'STARTED', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF EVENT RECORDED'
-    $eventPath = Join-Path $stateDir 'handoff-events.jsonl'
-    Assert-True (Test-Path $eventPath) 'handoff event history was not created'
-    Assert-True ((Get-Content -Raw $eventPath) -match '"Event":"STARTED"') 'STARTED event was not recorded'
-    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $stateBeforeEvent) 'event changed state.json'
-    $registryAfterEvent = if (Test-Path $registryPath) { Get-Content -Raw $registryPath } else { '' }
-    Assert-True ($registryAfterEvent -eq $registryBeforeEvent) 'event changed Task Registry'
-
-    Set-Content -LiteralPath (Join-Path $root 'committed.txt') -Value 'C'
-    git -C $root add committed.txt
-    git -C $root commit -m C | Out-Null
-    git -C $root push | Out-Null
-    $headC = (git -C $root rev-parse HEAD).Trim()
-    $result = Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF JOIN PASS'
-    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'COMMIT_MUTEX_REQUIRED'
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 "New Baseline: $headC"
-    Assert-Output (Invoke-Handoff @('-Mode', 'join', '-RepositoryRoot', $root, '-AllowTestWorkspace')) 0 'HANDOFF JOIN PASS'
-
-    Set-Content -LiteralPath (Join-Path $root 'un pushed.txt') -Value 'ahead'
-    git -C $root add 'un pushed.txt'
-    git -C $root commit -m local-ahead | Out-Null
-    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
-    $result = Invoke-Handoff @('-Mode', 'commit-unlock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'COMMIT_MUTEX_UNADVANCED'
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'REMOTE_DIVERGED'
-    git -C $root push | Out-Null
-
-    $stateAfterC = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    $stateAfterC.branch = 'wrong-branch'
-    $stateAfterC | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'BRANCH_MISMATCH'
-    $stateAfterC.branch = 'main'
-    $stateAfterC.baselineHead = (git -C $root rev-list --max-parents=0 HEAD).Trim()
-    $stateAfterC.coordinatorScope = '   '
-    $stateAfterC | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF ADVANCE PASS'
-    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -match '"coordinatorScope"\s*:\s*null') 'whitespace coordinatorScope must write null'
-
-    $statusHead = (git -C $root rev-parse HEAD).Trim()
-    $statusDirty = @(git -C $root status --porcelain=v1 --untracked-files=all)
-    $statusState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'status', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF STATUS PASS'
-    Assert-True ((git -C $root rev-parse HEAD).Trim() -eq $statusHead) 'status changed HEAD'
-    Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all) -join "`n" -eq ($statusDirty -join "`n")) 'status changed dirty files'
-    Assert-True ((Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json')) -eq $statusState) 'status changed state.json'
-
-    $state = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    $state.mode = 'convergence'; $state.coordinatorScope = 'xye'; $state.baselineHead = $statusHead
-    $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'advance', '-Scope', 'integration', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'COORDINATOR_MISMATCH'
-    $result = Invoke-Handoff @('-Mode', 'join', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'CONVERGENCE_EXCLUSIVE'
-
-    $state.mode = 'development'; $state.coordinatorScope = $null
-    $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'prepare', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'ACTIVE_WAVE_EXISTS'
-    git -C $root clean -fd | Out-Null
-    $state.laneStates = [pscustomobject]@{
-        xye = [pscustomobject]@{ state = 'ACTIVE'; ownership = 'xye'; workRelease = 'xye' }
-        integration = [pscustomobject]@{ state = 'ACTIVE'; ownership = 'integration'; workRelease = 'integration' }
-        governance = [pscustomobject]@{ state = 'ACTIVE'; ownership = 'governance'; workRelease = 'governance' }
+function Assert-Result($Result, [int]$Code, [string]$Text) {
+    if ($Result.ExitCode -ne $Code -or $Result.Text -notmatch [regex]::Escape($Text)) {
+        throw "HANDOFF SELFTEST FAILED: expected $Code / $Text; got $($Result.ExitCode) / $($Result.Text)"
     }
-    $state.coordinatorScope = 'xye'
-    $state | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'COORDINATOR_REQUIRED'
-    $activeAfterUnauthorizedClose = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    Assert-True ([bool]$activeAfterUnauthorizedClose.active) 'non-Coordinator close must preserve Active Wave'
-    $result = Invoke-Handoff @('-Mode', 'lane-close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'LANE CLOSE PASS'
-    $afterLaneClose = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    Assert-True ([bool]$afterLaneClose.active) 'Lane close must not deactivate the Wave'
-    Assert-True ($afterLaneClose.laneStates.xyui.state -eq 'FROZEN') 'Lane close must freeze only its lane'
-    $result = Invoke-Handoff @('-Mode', 'lane-close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'LANE CLOSE PASS: ALREADY_CLOSED'
-    $result = Invoke-Handoff @('-Mode', 'join', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF JOIN PASS'
-    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'ACTIVE_LANES_EXIST'
-    $stillActive = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    Assert-True ([bool]$stillActive.active) 'Coordinator close must reject remaining active lanes'
-    Assert-True (@(git -C $root status --porcelain=v1 --untracked-files=all).Count -eq 0) 'fixture must be clean before close regression'
-    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'COORDINATOR_REQUIRED'
-    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'ACTIVE_LANES_EXIST'
-    foreach ($lane in @('xye','integration','governance')) {
-        $result = Invoke-Handoff @('-Mode', 'lane-close', '-Scope', $lane, '-RepositoryRoot', $root, '-AllowTestWorkspace')
-        Assert-Output $result 0 'LANE CLOSE PASS'
-    }
-    $registryPath = Join-Path $stateDir 'task-registry.json'
-    $activeTaskState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    $activeTaskState | Add-Member NoteProperty activeTasks @('ACTIVE') -Force
-    $activeTaskState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'ACTIVE_TASKS_EXIST'
-    $activeTaskState.activeTasks = @()
-    $activeTaskState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $resourceState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    $resourceState.laneStates.xye.ownership = 'held'
-    $resourceState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'OWNERSHIP_NOT_RELEASED'
-    $resourceState.laneStates.xye.ownership = $null
-    $resourceState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $stateDir 'state.json')
-    $result = Invoke-Handoff @('-Mode', 'commit-lock', '-Scope', 'xye', '-Owner', 'agent-a', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF COMMIT-LOCK PASS'
-    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'COMMIT_MUTEX_HELD'
-    Remove-Item -LiteralPath (Join-Path $stateDir 'commit-mutex.json') -Force
-    $result = Invoke-Handoff @('-Mode', 'close', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 0 'HANDOFF CLOSE PASS'
-    $closedState = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    Assert-True (-not [bool]$closedState.active) 'close must deactivate the wave'
-    Assert-True ($null -ne $closedState.closedAt) 'close must persist closedAt for legacy state'
-    $result = Invoke-Handoff @('-Mode', 'lane-close', '-Scope', 'xyui', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'NO_ACTIVE_WAVE'
-    $closedAfterLaneClose = Get-Content -Raw -LiteralPath (Join-Path $stateDir 'state.json') | ConvertFrom-Json
-    Assert-True (-not [bool]$closedAfterLaneClose.active) 'closed Wave must remain closed after Lane close'
-    $registryPath = Join-Path $stateDir 'task-registry.json'
-    $reportPath = Join-Path $stateDir 'task-reports.json'
-    [pscustomobject]@{ tasks = @([pscustomobject]@{ TaskId = 'LEAK'; Status = 'ACTIVE'; WriteScope = @('leak/**'); ExpectedDependencies = @() }) } |
-        ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $registryPath
-    [pscustomobject]@{ reports = @([pscustomobject]@{ TaskId = 'LEAK'; Status = 'COMPLETE' }) } |
-        ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $reportPath
-    $result = Invoke-Handoff @('-Mode', 'status', '-Scope', 'xye', '-RepositoryRoot', $root, '-AllowTestWorkspace')
-    Assert-Output $result 1 'TASK_STATE_LEAK'
-    Write-Host 'H1 SELFTEST 7/7 PASS'
-    Write-Host 'HANDOFF SELF TEST PASS'
-}
-finally {
-    if (Test-Path -LiteralPath $root) { Remove-Item -LiteralPath $root -Recurse -Force }
-    if (Test-Path -LiteralPath $remote) { Remove-Item -LiteralPath $remote -Recurse -Force }
 }
 
-exit 0
+Assert-Result (Invoke-Handoff 'help') 0 'Handclap commands: event, history, ack, context, help'
+
+foreach ($command in @('prepare', 'join', 'status', 'advance', 'close', 'lane-close',
+        'migrate-active', 'lane-state', 'commit-lock', 'commit-unlock', 'maintenance', 'repair')) {
+    Assert-Result (Invoke-Handoff $command) 1 'HANDOFF_COMMAND_RETIRED'
+}
+
+'HANDOFF ZERO-AUTHORITY SELFTEST PASS'
