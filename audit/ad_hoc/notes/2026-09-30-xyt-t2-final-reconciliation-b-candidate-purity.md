@@ -1,0 +1,6 @@
+# XYT-T2 final reconciliation B candidate purity
+
+- Read-only provenance audit in E:\\MyDoc\\project-VSCode\\XuanYuEngine: raw git status had 278 porcelain entries because 80 World renames appear as delete+untracked pairs. The handoff ForeignDirty=85 reconciles exactly as 83 xyui test-tree entries + 1 T-A report + 1 CursorAnchoredZoomRegressionTests.cs.
+- Provenance classification by handoff scope: CANDIDATE=193, KNOWN FOREIGN=85, GENERATED/EXCLUDED=0, UNKNOWN=0. Candidate includes 13 Core test entries, 4 product camera/render entries, 3 WarCore test entries, 171 World entries after excluding CursorAnchoredZoomRegressionTests.cs, and 2 B audit reports.
+- SDK-style test projects have default Compile globs and no Compile Remove entries. Therefore the foreign Cursor test is consumed by World.Tests and all 83 foreign xyui test-tree entries are consumed by XYUI.Avalonia.Tests. The T-A report is not compiled. Core.Tests=0 foreign files consumed; WarCore.Tests=0; World.Tests=1; XYUI.Tests=83.
+- Candidate Tree Match is NOT PROVEN / FAIL because foreign source is consumed by World.Tests and XYUI.Tests. Any adoption requires explicit CANDIDATE_ADOPTION_REQUIRED; no cleanup, restore, stash, reset, worktree, commit, or push was performed.

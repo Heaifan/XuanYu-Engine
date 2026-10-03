@@ -15,6 +15,6 @@
     ResolverScript = 'scripts\resolve-dotnet.ps1'
     BootstrapScript = 'scripts\xye-bootstrap.ps1'
 
-    RemoteWinsWhenBehind = $true
+    FastForwardWhenBehind = $true
     LegacyWorktreesBlockHandoff = $false
 }

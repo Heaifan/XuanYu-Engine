@@ -1,0 +1,6 @@
+# Handoff canonical re-entry C3
+
+- Bootstrap CWD is not execution authority. When Codex starts in `C:\Users\Heai\.codex\worktrees\...`, explicitly relocate to `E:\MyDoc\project-VSCode\XuanYuEngine` before repository inspection, testing, or modification.
+- C/C2 evidence from `G:\CodexData\worktrees\d062\XuanYuEngine` remains INVALID and must not be used to infer canonical file presence or absence. The canonical candidate was verified separately at HEAD `a41c96fc` on `feat/v0.3-world-authoring-r1`; all five A/B task-flight/task-dirty files were present.
+- The canonical lifecycle contract selftest exercised normal release, RELEASED dirty provenance, close/live-registry removal, interrupted ACTIVE, coordinator reap, terminal amend/write rejection, and SRP/XYT dependency classification. It failed closed because A-owned `task-flight-plan.ps1` audit history records reap as `Reason=coord/ABANDONED_SELFTEST` instead of a traceable `CloseReason=ABANDONED/ABANDONED_SELFTEST`.
+- Do not repair that mismatch from Governance-C: preserve A/B ownership and report the product contract blocker. `task-dirty-classifier.selftest.ps1` independently passed 6/6; the existing task-flight-plan selftest timed out under the nested host runner and is not a PASS claim.

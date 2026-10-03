@@ -1,0 +1,10 @@
+# XYE-SRP-SLIMMING-R1-0-B dependency audit
+
+- Current checkout was `a29c47f2` (`origin/main`) in detached HEAD with no working-tree changes.
+- No `UiVm` type/reference and no dedicated `Terrain` module/type were present. Terrain-like semantics are represented by Ground selection, World entities, RenderScene, and Scene3D routes.
+- Current application boundary is `EditorShellContext` plus `EditorShellRouteBuild`; it owns the composition graph and mutable cross-route state.
+- World ownership is `WorldState`; `WorldBootstrapRoute`/`EditorStartupBootstrapRoute` create and seed it. `WorldToRenderSceneBuilder` converts World to RenderScene. `ViewportRenderSceneStore` owns the mutable current RenderScene used by picking, transform application, frame submission, diagnostics, and startup Vulkan routes.
+- Input ownership is split between singleton `EditorInputService` (binding snapshot lifecycle), `EditorInputBindingSnapshot` (resolved bindings and active drag), `WindowsViewportInputTranslator` (raw translation), and `EditorViewportInputRoute` (command routing). The shell lifecycle initializes and subscribes the pipeline.
+- Scene3D lifecycle is owned by `Scene3dSessionLifecycle`/`Scene3dSessionState`, which create/clear `VulkanScene3dSession`, frame route, and submit route; native Vulkan resource lifetime is owned by `VulkanScene3dSession`.
+- SRP target boundary: UI should consume application view models/read-only projections; Application should orchestrate and own lifecycle; Domain should own World/Terrain state and invariants; Render should consume immutable render snapshots/scenes and own GPU resources; Input should translate events to semantic commands and not mutate World/Render directly.
+- Main risk: `EditorShellContext` is a broad state/service hub, and World plus RenderScene are updated through separate owners. Any future UiVm/Terrain introduction should establish one authoritative state path and explicit immutable snapshot boundaries before splitting files or adding interfaces.
