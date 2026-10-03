@@ -11,6 +11,7 @@ public static class MapRenderSnapshotProjection
 {
     public static MapRenderSnapshot Project(MapDefinition map, long changeSequence)
     {
+        if (!map.MapId.IsValid) return MapRenderSnapshot.Empty;
         var ground = map.Layers.FirstOrDefault(l => l.Kind == MapLayerKind.Ground);
         var boundary = map.Layers.FirstOrDefault(l => l.Kind == MapLayerKind.Boundary);
         return new MapRenderSnapshot(

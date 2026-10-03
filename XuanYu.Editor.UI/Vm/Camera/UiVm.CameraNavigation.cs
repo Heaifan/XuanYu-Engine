@@ -1,6 +1,7 @@
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Editor.Camera;
+using XuanYu.Core.Diagnostics;
 
 namespace XuanYu.Editor.UI;
 
@@ -55,8 +56,7 @@ public sealed partial class UiVm
     public bool CancelCameraNavigation(string reason)
     {
         if (_cameraSession is not { } session) return false;
-        _camera = session.StartCamera;
-        _observationCenter = session.StartCenter;
+        ApplyCameraFrame(new(session.StartCamera, session.StartCenter), "ViewReset");
         _cameraSession = null;
         PublishSceneRenderSnapshot();
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
@@ -67,8 +67,7 @@ public sealed partial class UiVm
 
     void ApplyCameraResult(CameraFrameResult result)
     {
-        _camera = result.Camera;
-        _observationCenter = result.ObservationCenter;
+        ApplyCameraFrame(result, "OrbitOrPan");
         // F3-F4：从标准正交视图开始自由环绕时退出标准视图——Orbit 输出透视（恢复自由观察）。
         if (_activeViewFace != "默认视角" && _camera.Mode == ProjectionMode.Perspective)
         {
@@ -78,5 +77,14 @@ public sealed partial class UiVm
         // F3-D3：导航 Gizmo 实时跟随相机姿态。
         OnPropertyChanged(nameof(NavigationCamera));
         PublishSceneRenderSnapshot();
+    }
+
+    void ApplyCameraFrame(CameraFrameResult result, string writer)
+    {
+        ViewportProbe.CameraWriter(writer, _camera, _observationCenter,
+            result.Camera, result.ObservationCenter);
+        _camera = result.Camera;
+        _observationCenter = result.ObservationCenter;
+        ViewportProbe.CameraSnapshot("T1_CAMERA_AFTER", _camera, _observationCenter);
     }
 }

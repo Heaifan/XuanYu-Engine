@@ -95,4 +95,5 @@ public sealed class MapSurfaceGeometryTests
 
         Assert.All(bounds, v => Assert.Equal(50.05f, v.Z));
     }
+
 }

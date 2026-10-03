@@ -14,7 +14,9 @@ public sealed class TerrainWorldGroundSurface(TerrainWorld world) : IGroundSurfa
 
     public SurfaceQueryResult QuerySurface(MapPoint worldXY)
     {
-        var geo = _mapping.ToGeographic(new(worldXY.X, worldXY.Y, 0));
+        GeographicPosition geo;
+        try { geo = _mapping.ToGeographic(new(worldXY.X, worldXY.Y, 0)); }
+        catch (ArgumentOutOfRangeException) { return SurfaceQueryResult.OutOfBounds; }
         var extent = world.Metadata.WorldExtent;
         var x = (geo.Longitude - extent.West) / (extent.East - extent.West);
         var y = (extent.North - geo.Latitude) / (extent.North - extent.South);

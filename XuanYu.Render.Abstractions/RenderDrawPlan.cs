@@ -1,3 +1,5 @@
+using XuanYu.Core.Diagnostics;
+
 namespace XuanYu.Render.Abstractions;
 
 // R4-R3-R2：实体绘制计划提取（帧级），供 Vulkan 与测试共同使用。
@@ -43,9 +45,12 @@ public static partial class RenderDrawPlan
             plan.Add(new FrameEntry(RenderDrawKind.Terrain, terrain.TriangleIndexCount, i));
         }
         var hasWorldTerrain = projection.TerrainResources.Count != 0;
+        var groundRequested = projection.HasMap && projection.Map.ShowGround && !hasWorldTerrain;
+        GroundProbeChain.DrawPlan(ViewportProbe.CurrentFrameId, projection, groundRequested,
+            !projection.HasMap ? "NO_MAP" : !projection.Map.ShowGround ? "SHOW_GROUND_FALSE" : hasWorldTerrain ? "WORLD_TERRAIN_PRESENT" : "REQUESTED");
         if (projection.HasMap)
         {
-            if (projection.Map.ShowGround && !hasWorldTerrain)
+            if (groundRequested)
                 plan.Add(new FrameEntry(RenderDrawKind.MapGround, MapGroundIndexCount));
             if (projection.Map.ShowBoundary) plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
         }

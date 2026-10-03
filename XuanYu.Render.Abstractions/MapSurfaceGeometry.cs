@@ -1,4 +1,5 @@
 using XuanYu.Core.Map;
+using XuanYu.Core.Math;
 
 namespace XuanYu.Render.Abstractions;
 
@@ -27,6 +28,22 @@ public static class MapSurfaceGeometryBuilder
         vertices[1] = V(halfW, -halfD, z);
         vertices[2] = V(halfW, halfD, z);
         vertices[3] = V(-halfW, halfD, z);
+        return new MapSurfaceGeometry(vertices, [0, 1, 2, 0, 2, 3]);
+    }
+
+    public static MapSurfaceGeometry BuildPatch(MapRenderSnapshot map,
+        ReferencePlanePatchPlacement patch, Vector3d renderOrigin)
+        => BuildPatch(patch, map.BaseHeightMeters, renderOrigin);
+
+    public static MapSurfaceGeometry BuildPatch(
+        ReferencePlanePatchPlacement patch, double elevationMeters, Vector3d renderOrigin)
+    {
+        var z = (float)(elevationMeters - renderOrigin.Z);
+        var vertices = new MapTerrainVertex[MapSurfaceGeometry.VertexCount];
+        vertices[0] = V(patch.MinX - renderOrigin.X, patch.MinY - renderOrigin.Y, z);
+        vertices[1] = V(patch.MaxX - renderOrigin.X, patch.MinY - renderOrigin.Y, z);
+        vertices[2] = V(patch.MaxX - renderOrigin.X, patch.MaxY - renderOrigin.Y, z);
+        vertices[3] = V(patch.MinX - renderOrigin.X, patch.MaxY - renderOrigin.Y, z);
         return new MapSurfaceGeometry(vertices, [0, 1, 2, 0, 2, 3]);
     }
 

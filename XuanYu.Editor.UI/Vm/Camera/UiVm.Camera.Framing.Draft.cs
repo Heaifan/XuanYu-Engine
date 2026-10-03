@@ -19,8 +19,7 @@ public sealed partial class UiVm
                 points, _camera.Forward, _camera.Up, _viewportAspect,
                 _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision, 75.0)
             : EditorCameraFraming.FrameDraftWithCenter(points, _viewportAspect, ++_cameraRevision);
-        _camera = frame.Camera;
-        _observationCenter = frame.ObservationCenter;
+        ApplyCameraFrame(frame, "FrameDraft");
         PublishSceneRenderSnapshot();
         FooterMessage = "聚焦：当前区域草稿已进入视野。";
         FooterState = "状态：就绪";

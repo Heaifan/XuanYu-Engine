@@ -22,7 +22,8 @@ public readonly record struct RenderProjection(
     ScaleIndicatorOverlayProjection ScaleIndicator = default,
     TerrainRenderResource? Terrain = null,
     TerrainRenderTransform TerrainTransform = default,
-    IReadOnlyList<TerrainRenderResource>? Terrains = null)
+    IReadOnlyList<TerrainRenderResource>? Terrains = null,
+    ReferencePlaneRenderSnapshot? ReferencePlane = null)
 {
     public int EntityCount => Entities.Count;
     public EditorViewportAssistState AssistState => Assist;
@@ -32,6 +33,9 @@ public readonly record struct RenderProjection(
     public IReadOnlyList<TerrainRenderResource> TerrainResources =>
         Terrains ?? (Terrain is null ? [] : [Terrain]);
     public bool HasTerrain => TerrainResources.Count > 0;
+    public bool HasReferencePlane => ReferencePlane.HasValue;
+    public ReferencePlaneRenderSnapshot EffectiveReferencePlane =>
+        ReferencePlane ?? ReferencePlaneRenderSnapshot.Default;
     public TerrainRenderTransform EffectiveTerrainTransform =>
         TerrainTransform.VerticalExaggeration > 0 ? TerrainTransform : TerrainRenderTransform.Default;
 }

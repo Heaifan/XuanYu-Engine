@@ -6,7 +6,7 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// GRID-UX-R1：地面网格每帧统一消费 ViewportMetricScale，并保留相邻 1/2/5 级。
+// GRID-UX-R1：地面网格每帧统一消费 ViewportMetricScale，并保留相邻 2 倍嵌套级。
 public sealed unsafe partial class VulkanClearFrameOwner
 {
     ViewportMetricScale _lastViewportMetric = new(1.0, 1.0, 1.0);

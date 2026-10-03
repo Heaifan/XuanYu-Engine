@@ -2,7 +2,7 @@ using System;
 
 namespace XuanYu.Render.Abstractions;
 
-// MAP-A-R3-D2-F1-V2：地图编辑器参考网格（100m 起步 + 1/2/5 十进制序列）。
+// MAP-A-R3-D2-F1-V3：地图编辑器参考网格（100m 起步 + 2 倍嵌套序列）。
 // 同一帧所有 Fragment 使用同一组 Fine/Coarse/权重——禁止逐 Fragment 选择 LOD。
 // 不持有相机、不调用 Vulkan、不保存地图数据；纯数学职责。
 public readonly record struct ReferenceGridLevels(
@@ -17,7 +17,7 @@ public static class ReferenceGridScale
     public const double MinSpacing = 100.0;
     public const double MaxSpacing = 1_000_000_000_000.0;
 
-    // idealSpacing → 1/2/5 序列相邻两级 + 对数域互补权重。
+    // idealSpacing → 2 倍嵌套序列相邻两级 + 对数域互补权重。
     // 边界连续：ideal 到达 coarse 时，旧 CoarseSpacing = 新 FineSpacing，
     // 权重从 (0,1) 无缝切到 (1,0)，同一世界间距不突跳。
     public static ReferenceGridLevels FromIdealSpacing(double idealSpacing)
@@ -46,40 +46,31 @@ public static class ReferenceGridScale
         return Compute(Math.Max(metric.MetersPerDipX, metric.MetersPerDipY));
     }
 
-    // 序列中最大的 ≤ ideal 成员（1/2/5 十进制：...0.01, 0.02, 0.05, 0.1...）。
+    // Grid 只允许 2 倍层级，保证 coarse 线是 fine 线的严格子集。
     static double PickFine(double ideal)
     {
-        var decade = Math.Pow(10.0, Math.Floor(Math.Log10(ideal)));
-        if (decade * 5.0 <= ideal) return decade * 5.0;
-        if (decade * 2.0 <= ideal) return decade * 2.0;
-        return decade;
+        if (ideal >= MaxSpacing / 2.0) return MaxSpacing;
+        var exponent = Math.Floor(Math.Log(ideal / MinSpacing, 2.0));
+        return Math.Min(MinSpacing * Math.Pow(2.0, exponent), MaxSpacing);
     }
 
-    // 1/2/5 序列中 fine 的下一个成员。
+    // 末级保持自身，禁止因不存在 NextLOD 把整体 alpha 淡出为 0。
     static double NextStep(double fine)
     {
-        var decade = Math.Pow(10.0, Math.Floor(Math.Log10(fine)));
-        if (fine >= decade * 5.0) return Math.Min(decade * 10.0, MaxSpacing);
-        if (fine >= decade * 2.0) return decade * 5.0;
-        return decade * 2.0;
+        return fine >= MaxSpacing / 2.0 ? fine : Math.Min(fine * 2.0, MaxSpacing);
     }
 
     public static double LargestNiceSpacingAtMost(double value)
     {
         if (!double.IsFinite(value) || value <= 0.0) return 0.0;
-        var decade = Math.Pow(10.0, Math.Floor(Math.Log10(value)));
-        if (decade * 5.0 <= value) return decade * 5.0;
-        if (decade * 2.0 <= value) return decade * 2.0;
-        return decade;
+        var exponent = Math.Floor(Math.Log(value / MinSpacing, 2.0));
+        return Math.Min(MinSpacing * Math.Pow(2.0, exponent), MaxSpacing);
     }
 
     public static double NextNiceSpacing(double spacing)
     {
         if (!double.IsFinite(spacing) || spacing <= 0.0) return 0.0;
-        var decade = Math.Pow(10.0, Math.Floor(Math.Log10(spacing)));
-        if (spacing >= decade * 5.0) return decade * 10.0;
-        if (spacing >= decade * 2.0) return decade * 5.0;
-        return decade * 2.0;
+        return spacing >= MaxSpacing / 2.0 ? MaxSpacing : spacing * 2.0;
     }
 
     // 对数域相位：fine 时 0，coarse 时 1。

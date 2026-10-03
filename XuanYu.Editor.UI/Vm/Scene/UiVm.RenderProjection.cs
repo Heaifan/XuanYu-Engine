@@ -41,6 +41,7 @@ public sealed partial class UiVm
                 IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip),
             terrain,
             new TerrainRenderTransform(VerticalExaggeration),
-            terrains);
+            terrains,
+            ReferencePlaneRenderSnapshot.Default);
     }
 }

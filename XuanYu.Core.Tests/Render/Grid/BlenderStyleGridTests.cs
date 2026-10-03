@@ -11,13 +11,13 @@ public sealed class BlenderStyleGridTests
 
     [Theory]
     [InlineData(100.0, 200.0)]
-    [InlineData(240.0, 500.0)]
-    [InlineData(600.0, 1000.0)]
+    [InlineData(240.0, 400.0)]
+    [InlineData(600.0, 800.0)]
     public void GridStepFriendlySeriesTest(double ideal, double expectedCoarse)
     {
         var levels = ReferenceGridScale.FromIdealSpacing(ideal);
         Assert.Equal(expectedCoarse, levels.CoarseSpacing);
-        Assert.Contains(levels.FineSpacing, new[] { 100.0, 200.0, 500.0, 1000.0 });
+        Assert.Equal(2.0, levels.CoarseSpacing / levels.FineSpacing);
     }
 
     [Fact]
@@ -43,6 +43,26 @@ public sealed class BlenderStyleGridTests
         var levels = ReferenceGridScale.FromIdealSpacing(190.0);
         Assert.True(levels.CoarseWeight > 0.0);
         Assert.True(levels.CoarseSpacing > levels.FineSpacing);
+    }
+
+    [Fact]
+    public void Adjacent_grid_levels_are_nested()
+    {
+        foreach (var ideal in new[] { 100.0, 150.0, 240.0, 600.0, 10_000.0, 1_000_000.0 })
+        {
+            var levels = ReferenceGridScale.FromIdealSpacing(ideal);
+            Assert.Equal(0.0, levels.CoarseSpacing % levels.FineSpacing, 6);
+        }
+    }
+
+    [Fact]
+    public void Last_grid_level_persists()
+    {
+        var levels = ReferenceGridScale.FromIdealSpacing(ReferenceGridScale.MaxSpacing);
+        Assert.Equal(ReferenceGridScale.MaxSpacing, levels.FineSpacing);
+        Assert.Equal(levels.FineSpacing, levels.CoarseSpacing);
+        Assert.Equal(1.0, levels.FineWeight);
+        Assert.Equal(0.0, levels.CoarseWeight);
     }
 
     [Fact]

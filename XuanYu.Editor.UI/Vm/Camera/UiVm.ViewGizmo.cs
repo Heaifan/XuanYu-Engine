@@ -34,7 +34,7 @@ public sealed partial class UiVm
         var position = center - (forward * distance);
         // F3-F4：六方向标准视图自动进入正交投影；正交尺度按当前透视可见高度推导（切换视觉连续）。
         var scale = OrthographicViewFactory.ScaleForDistance(distance, _camera.VerticalFovDegrees);
-        _camera = new CameraState(
+        var next = new CameraState(
             position, forward, up,
             _camera.VerticalFovDegrees,
             _camera.NearPlane,
@@ -42,7 +42,7 @@ public sealed partial class UiVm
             ++_cameraRevision,
             ProjectionMode.Orthographic,
             scale);
-        _observationCenter = center; // F3-F2：标准视角必须同步观察中心（计划八硬要求）。
+        ApplyCameraFrame(new(next, center), "ModeChange");
         _activeViewFace = name;
         OnPropertyChanged(nameof(ActiveViewFace));
         OnPropertyChanged(nameof(NavigationCamera));

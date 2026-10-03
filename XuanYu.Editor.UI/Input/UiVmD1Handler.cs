@@ -1,4 +1,5 @@
 using XuanYu.Core.Space;
+using XuanYu.Core.Diagnostics;
 using XuanYu.Editor.Input;
 using XuanYu.Editor.Input.Consumers;
 using XuanYu.Editor.Input.Lifecycle;
@@ -16,8 +17,19 @@ sealed class UiVmD1Handler(
         : p.Kind == EditorPointerEventKind.Pressed &&
         (_owner == GestureOwner.Camera ? p.Buttons.HasFlag(EditorPointerButtons.Middle) :
          _owner == GestureOwner.Gizmo ? _vm.HasSelection && !_vm.IsSelectTool : p.Buttons.HasFlag(EditorPointerButtons.Left));
-    public bool HandleWheel(EditorPointerEvent p) => CanClaim(p) && _vm.DollyCameraAtCursor(
-        p.WheelDelta, p.Position.X, p.Position.Y, _viewport());
+    public bool HandleWheel(EditorPointerEvent p)
+    {
+        if (!CanClaim(p)) return false;
+        var id = ViewportProbe.BeginWheel(p.Position.X, p.Position.Y, p.WheelDelta,
+            _vm.CurrentEditorModeText, _vm.ActiveTool);
+        var handled = false;
+        try
+        {
+            handled = _vm.DollyCameraAtCursor(p.WheelDelta, p.Position.X, p.Position.Y, _viewport());
+            return handled;
+        }
+        finally { ViewportProbe.EndWheel(id, handled); }
+    }
     public void Begin(ViewportGestureContext c)
     {
         if (_owner == GestureOwner.Camera) _vm.BeginCameraNavigation(c.PointerId, c.Input.Position.X, c.Input.Position.Y,

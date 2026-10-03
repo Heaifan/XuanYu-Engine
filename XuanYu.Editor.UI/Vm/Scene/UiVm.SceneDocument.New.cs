@@ -1,3 +1,5 @@
+using XuanYu.World.Map;
+
 namespace XuanYu.Editor.UI;
 
 // D4：新建场景（5+100 拆分自 UiVm.SceneDocument.cs）。
@@ -11,6 +13,7 @@ public sealed partial class UiVm
         _staticModelCatalog.Clear();
         _staticModelResources.Clear();
         _sceneState.ReplaceEntities([]);
+        MapSession.ResetToEmptyWorld();
         ResetCameraForSceneReplacement();
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "新建场景");
         FooterMessage = "已创建空白未命名场景。";

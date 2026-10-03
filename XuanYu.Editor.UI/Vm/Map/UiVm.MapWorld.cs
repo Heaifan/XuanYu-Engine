@@ -34,8 +34,7 @@ public sealed partial class UiVm
                 _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision)
             : XuanYu.Editor.Camera.EditorCameraFraming.FrameMapAllWithCenter(
                 corners, _viewportAspect, ++_cameraRevision);
-        _camera = frame.Camera;
-        _observationCenter = frame.ObservationCenter;
+        ApplyCameraFrame(frame, "FrameMap");
         _viewportCameraFramed = true;
         PublishSceneRenderSnapshot(); // F1：取景后必须发布新相机（与 FrameSelectedCamera 同模式）
         FooterMessage = $"{source}：整张地图已进入视野。";

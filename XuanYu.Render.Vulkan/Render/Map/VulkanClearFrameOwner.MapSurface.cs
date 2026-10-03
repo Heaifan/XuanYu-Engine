@@ -3,20 +3,19 @@ using XuanYu.Core.Map;
 using XuanYu.Core.Math;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Render.StaticModels;
-
+using XuanYu.Core.Diagnostics;
 namespace XuanYu.Render.Vulkan.Render;
-
-// MAP-A-R2-D3：有限 Flat 地面（4 顶点 6 索引）+ 四条边界（24 顶点细条）；资源判等用 ResourceKey（Rename 不重建）。
 public sealed unsafe partial class VulkanClearFrameOwner
 {
     VulkanStaticModelBuffer? _mapSurfaceVertexBuffer, _mapSurfaceIndexBuffer, _mapBoundsVertexBuffer;
     uint _mapSurfaceIndexCount, _mapBoundsVertexCount;
+    MapRenderSnapshot _mapSurfaceMap;
     long _lastConsumedMapSequence = long.MinValue;
     MapSurfaceResourceKey _mapSurfaceResourceKey;
     bool _hasMapSurfaceResourceKey;
-
     public void SetMapSurface(MapRenderSnapshot map)
     {
+        GroundProbeChain.Snapshot(ViewportProbe.CurrentFrameId, map, _renderProjection.TerrainResources.Count != 0);
         var update = MapSurfaceResourceUpdatePolicy.Decide(
             map, _lastConsumedMapSequence, _hasMapSurfaceResourceKey ? _mapSurfaceResourceKey : null);
         if (update.Kind == MapSurfaceResourceUpdateKind.RejectStale)
@@ -26,10 +25,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
         }
         if (update.Kind == MapSurfaceResourceUpdateKind.NoRebuild)
         {
+            _mapSurfaceMap = map;
             _lastConsumedMapSequence = map.SourceChangeSequence;
             return;
         }
         Log($"地图资源更新决策：处理={MapSurfaceResourceUpdateText.Of(update.Kind)}；序号={map.SourceChangeSequence}；资源键已变化=是；尺寸={map.WidthMeters:0.####}×{map.DepthMeters:0.####}；基础高度={map.BaseHeightMeters}");
+        _mapSurfaceMap = map;
         ClearMapSurface();
         _mapSurfaceResourceKey = update.Key; _hasMapSurfaceResourceKey = true;
         _lastConsumedMapSequence = map.SourceChangeSequence;
@@ -65,11 +66,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _mapBoundsVertexBuffer?.Dispose(); _mapBoundsVertexBuffer = null;
         _mapSurfaceIndexCount = 0;
         _mapBoundsVertexCount = 0;
+        _mapSurfacePatchReady = false;
         _hasMapSurfaceResourceKey = false;
     }
     void DrawMapSurface(CommandBuffer cb, float* scene)
     {
-        if (_mapSurfaceVertexBuffer is null || _mapSurfaceIndexBuffer is null) return;
+        if (_mapSurfaceVertexBuffer is null || _mapSurfaceIndexBuffer is null || !_mapSurfacePatchReady) { GroundProbeChain.DrawCommand(ViewportProbe.CurrentFrameId, false, true, _mapSurfaceVertexBuffer is not null, _mapSurfaceIndexBuffer is not null, 0, 0, "NONE", "NONE", "BUFFER_NOT_READY"); return; }
         var vb = _mapSurfaceVertexBuffer.Buffer;
         var ib = _mapSurfaceIndexBuffer.Buffer;
         ulong offset = 0;
@@ -79,6 +81,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             Vector3d.Zero, new Vector3d(1, 1, 1), 0.0f, gizmoModeOverride: -14.0f);
         PushSceneConstants(cb, scene);
         _vk.CmdDrawIndexed(cb, _mapSurfaceIndexCount, 1, 0, 0, 0);
+        GroundProbeChain.DrawCommand(ViewportProbe.CurrentFrameId, true, true, true, true, 4, (int)_mapSurfaceIndexCount, $"0x{vb.Handle:X}", $"0x{ib.Handle:X}", "NONE");
         BindProceduralVertexBuffer(cb);
     }
     void DrawMapBounds(CommandBuffer cb, float* scene)

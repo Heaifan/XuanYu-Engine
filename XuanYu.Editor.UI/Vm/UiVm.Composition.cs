@@ -6,6 +6,7 @@ using XuanYu.Editor.SceneDocument;
 using XuanYu.Render.Abstractions;
 using XuanYu.World;
 using XuanYu.World.Scene;
+using XuanYu.Core.Diagnostics;
 
 namespace XuanYu.Editor.UI;
 
@@ -26,6 +27,7 @@ public sealed partial class UiVm
         MapEditSession mapSession, Func<bool>? isWriteThread = null,
         IEditorDialogService? dialogService = null)
     {
+        ViewportProbe.RefreshLoadedAssemblies();
         ArgumentNullException.ThrowIfNull(sceneState); ArgumentNullException.ThrowIfNull(mapSession);
         _editorState = new EditorStateOwner(isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         _contextState = new EditorContextOwner(); _authoringState = new EditorAuthoringOwner();

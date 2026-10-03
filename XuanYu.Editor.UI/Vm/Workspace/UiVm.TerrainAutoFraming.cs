@@ -22,7 +22,7 @@ public sealed partial class UiVm
                 _camera.Up, _viewportAspect, _camera.Position.DistanceTo(_observationCenter),
                 ++_cameraRevision)
             : EditorCameraFraming.FrameAllWithCenter(points, _viewportAspect, ++_cameraRevision);
-        _camera = frame.Camera; _observationCenter = frame.ObservationCenter;
+        ApplyCameraFrame(frame, "FrameTerrain");
         _viewportCameraFramed = true;
         PublishSceneRenderSnapshot();
     }

@@ -3,6 +3,7 @@ using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Pipeline;
+using XuanYu.Core.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -38,5 +39,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         target[29] = (float)scale.Y;
         target[30] = (float)scale.Z;
         target[31] = _extent.Height;  // entityScale.w = viewportHeight
+        ViewportProbe.CpuGpuSnapshot(state.Camera, state.RenderOrigin, viewProjection);
     }
 }

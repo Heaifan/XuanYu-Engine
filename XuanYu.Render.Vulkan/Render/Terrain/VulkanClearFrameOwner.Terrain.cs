@@ -2,6 +2,7 @@ using Silk.NET.Vulkan;
 using XuanYu.Core.Space;
 using XuanYu.Core.Spatial;
 using XuanYu.Render.Abstractions;
+using XuanYu.Core.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -32,14 +33,21 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var cache = _terrainCache ??= new Terrain.VulkanTerrainGpuCache(_vk, _deviceOwner, _log);
         var resource = _renderProjection.TerrainResources[terrainIndex];
         var state = CurrentViewProjectionState();
+        TerrainProbeLogger.Center(state, resource);
         var draws = new List<TerrainChunkDraw>(); var culled = 0;
+        var probeChunks = 0;
         RetainTerrainLodStates(_renderProjection.TerrainResources);
         foreach (var chunk in cache.GetChunks(resource))
         {
             var b = chunk.WorldBounds; var origin = resource.WorldOrigin;
             var bounds = new SpatialAabb(new(origin.X + b.MinX, origin.Y + b.MinY, b.MinZ),
                 new(origin.X + b.MaxX, origin.Y + b.MaxY, b.MaxZ));
-            if (!TerrainFrustumCuller.Intersects(state, bounds)) { culled++; continue; }
+            if (!TerrainFrustumCuller.Intersects(state, bounds))
+            {
+                if (probeChunks++ < 2) TerrainProbeLogger.Chunk(
+                    state, chunk, origin, -1, false, false, resource.Revision);
+                culled++; continue;
+            }
             var lodKey = new TerrainLodStateKey(resource.TerrainId, resource.Revision,
                 chunk.ChunkX, chunk.ChunkY);
             var lod = (TerrainLodLevel)_terrainLodStates.Select(lodKey, state, bounds).Lod;
@@ -49,6 +57,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset); _vk.CmdBindIndexBuffer(cb, ib, 0, IndexType.Uint32);
             FillScenePushConstants(scene, _renderProjection, origin, default, new(1, 1, 1), 0, -16);
             PushSceneConstants(cb, scene); _vk.CmdDrawIndexed(cb, gpu.IndexCount, 1, 0, 0, 0);
+            if (probeChunks++ < 2) TerrainProbeLogger.Chunk(
+                state, chunk, origin, (int)lod, true, true, resource.Revision);
             draws.Add(new(chunk.ChunkX, chunk.ChunkY, (int)lod, (int)gpu.IndexCount / 3, (int)gpu.IndexCount));
         }
         var counts = cache.CreationCounts;

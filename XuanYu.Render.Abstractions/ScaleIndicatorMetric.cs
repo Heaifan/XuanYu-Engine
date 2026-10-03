@@ -18,11 +18,11 @@ public readonly record struct ScaleIndicatorMetric(
         if (!double.IsFinite(metersPerDip) || metersPerDip <= 0.0)
             return new ScaleIndicatorMetric(0.0, 0.0, "");
         var rawDistance = metersPerDip * FixedBarWidthDip;
-        var distance = ReferenceGridScale.LargestNiceSpacingAtMost(rawDistance);
-        var nextDistance = ReferenceGridScale.NextNiceSpacing(distance);
+        var distance = LargestBarSpacingAtMost(rawDistance);
+        var nextDistance = NextBarSpacing(distance);
         if (distance / metersPerDip < 80.0 && nextDistance / metersPerDip <= 160.0)
             distance = nextDistance;
-        var next = ReferenceGridScale.NextNiceSpacing(previousDistanceMeters);
+        var next = NextBarSpacing(previousDistanceMeters);
         if (previousDistanceMeters >= 100.0 && next > previousDistanceMeters &&
             rawDistance >= previousDistanceMeters * HysteresisRatio && rawDistance < next)
             distance = previousDistanceMeters;
@@ -33,4 +33,20 @@ public readonly record struct ScaleIndicatorMetric(
     static string Format(double meters) => meters >= 1000.0
         ? $"{(meters / 1000.0).ToString("0", CultureInfo.InvariantCulture)} km"
         : $"{meters.ToString("0", CultureInfo.InvariantCulture)} m";
+
+    static double LargestBarSpacingAtMost(double value)
+    {
+        var decade = Math.Pow(10.0, Math.Floor(Math.Log10(value)));
+        if (decade * 5.0 <= value) return decade * 5.0;
+        if (decade * 2.0 <= value) return decade * 2.0;
+        return decade;
+    }
+
+    static double NextBarSpacing(double spacing)
+    {
+        if (!double.IsFinite(spacing) || spacing <= 0.0) return 0.0;
+        var decade = Math.Pow(10.0, Math.Floor(Math.Log10(spacing)));
+        return spacing >= decade * 5.0 ? decade * 10.0
+            : spacing >= decade * 2.0 ? decade * 5.0 : decade * 2.0;
+    }
 }

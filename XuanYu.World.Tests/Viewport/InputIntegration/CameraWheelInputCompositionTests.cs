@@ -19,7 +19,7 @@ public sealed class CameraWheelInputCompositionTests
     }
 
     [Fact]
-    public void Perspective_wheel_preserves_cursor_world_anchor()
+    public void Perspective_wheel_preserves_camera_pivot_and_orientation()
     {
         var vm = new UiVm(null, () => true);
         vm.UpdateViewportFrame(800, 600);
@@ -27,16 +27,15 @@ public sealed class CameraWheelInputCompositionTests
         const double cursorY = 180;
         var viewport = vm.CurrentViewport;
         var before = vm.RenderSnapshot.CameraState;
-        var projection = ViewProjectionState.Create(before, viewport);
-        var ray = WorldRayFactory.FromViewportPoint(projection, cursorX, cursorY);
-        var distance = -ray.Origin.Z / ray.Direction.Z;
-        var anchor = ray.Origin + ray.Direction * distance;
+        var center = vm.ObservationCenter;
 
         vm.ViewportInput.Sink.Handle(Wheel(cursorX, cursorY, 1));
 
-        var afterProjection = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, viewport);
-        var screen = afterProjection.ProjectWorldPoint(anchor);
-        Assert.InRange(Math.Sqrt(Math.Pow(screen.X - cursorX, 2) + Math.Pow(screen.Y - cursorY, 2)), 0, 2);
+        var after = vm.RenderSnapshot.CameraState;
+        Assert.Equal(center, vm.ObservationCenter);
+        AssertVector(before.Forward, after.Forward);
+        AssertVector(before.Up, after.Up);
+        Assert.Equal(before.VerticalFovDegrees, after.VerticalFovDegrees);
         Assert.False(vm.ViewportInput.Router.State.IsActive);
     }
 
@@ -74,6 +73,13 @@ public sealed class CameraWheelInputCompositionTests
     static EditorPointerEvent Wheel(double x, double y, double delta) => new(EditorPointerEventKind.Wheel,
         new(x, y), EditorPointerButtons.None, EditorPointerModifiers.None, delta, 1,
         new("test"), 1);
+
+    static void AssertVector(XuanYu.Core.Math.Vector3d expected, XuanYu.Core.Math.Vector3d actual)
+    {
+        Assert.Equal(expected.X, actual.X, 12);
+        Assert.Equal(expected.Y, actual.Y, 12);
+        Assert.Equal(expected.Z, actual.Z, 12);
+    }
 
     sealed class Probe : IViewportD1ConsumerHandler
     {

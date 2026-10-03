@@ -27,7 +27,7 @@ public sealed class ReverseZWorldGridContractTests
     public void GridFriendlySeriesContinuity()
     {
         var levels = ReferenceGridScale.FromIdealSpacing(10_000_000.0);
-        Assert.True(levels.CoarseSpacing > levels.FineSpacing);
+        Assert.Equal(2.0, levels.CoarseSpacing / levels.FineSpacing);
     }
 
     [Fact]

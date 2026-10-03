@@ -6,6 +6,25 @@ namespace XuanYu.Editor.MapEditing;
 // MAP-A-R2-D2：文档生命周期（新建/替换/标记已保存）。
 public sealed partial class MapEditSession
 {
+    public EngineResult ResetToEmptyWorld()
+    {
+        if (!GuardWriteThread()) return Fail("NotOnWriteThread", "新建空世界必须在编辑写线程执行。");
+        _history.Clear();
+        var replacement = MapEmptyDefinition.Create();
+        RebuildRegionSpatialIndex(replacement);
+        _geometrySpatialIndex.Rebuild(replacement);
+        _currentMap = replacement;
+        _currentPath = null;
+        _savedStateId = null;
+        _changeSequence++;
+        SetSelection(MapSelection.Map);
+        NormalizeActiveLayer();
+        RaiseContentChanged(MapEditReason.NewMap);
+        RaiseDirtyChanged();
+        RaiseHistoryAvailabilityChanged();
+        return Ok();
+    }
+
     // 新建地图：全新 MapId/LayerId，清空历史与保存状态；不是普通 Undo 命令，
     // 不允许 Undo 回到上一份完全不同的文档。
     public EngineResult CreateNewMap()

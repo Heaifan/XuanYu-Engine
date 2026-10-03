@@ -70,13 +70,11 @@ public sealed partial class UiVm
         {
             var frame = EditorCameraFraming.FrameAllWithCenter(
                 _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position), _viewportAspect, ++_cameraRevision);
-            _camera = frame.Camera;
-            _observationCenter = frame.ObservationCenter;
+            ApplyCameraFrame(frame, "FrameAll");
         }
         else
         {
-            _camera = DefaultEditorCamera.Create(++_cameraRevision);
-            _observationCenter = DefaultEditorCamera.Target;
+            ApplyCameraFrame(new(DefaultEditorCamera.Create(++_cameraRevision), DefaultEditorCamera.Target), "ViewReset");
         }
         _viewportCameraFramed = true;
         PublishSceneRenderSnapshot();

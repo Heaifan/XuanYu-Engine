@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Fonts.Inter;
+using XuanYu.Core.Diagnostics;
 using XuanYu.Editor.UI;
 using EditorUiApp = XuanYu.Editor.UI.App;
 
@@ -14,6 +15,7 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        ViewportProbe.Initialize();
         AttachConsole(-1);
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
