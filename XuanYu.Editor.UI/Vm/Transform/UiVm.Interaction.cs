@@ -1,3 +1,6 @@
+using XuanYu.Core.Scene;
+using XuanYu.Editor.Input;
+
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
@@ -6,24 +9,20 @@ public sealed partial class UiVm
     public string InteractionOwner => _editorState.InteractionSnapshot.OwnerTool is "" ? "无" : _editorState.InteractionSnapshot.OwnerTool;
     public string InteractionPreview => _editorState.InteractionSnapshot.Preview is "" ? "无" : _editorState.InteractionSnapshot.Preview;
 
+    internal void CloseTerminalInteraction(EditorPointerEventKind reason)
+    {
+        if (_editorState.InteractionSnapshot.HasCapture)
+            CancelInteraction(reason.ToString());
+        CancelCameraNavigation(reason.ToString());
+        ClearTransientInteractionState(reason);
+    }
+
     void RunInteraction(string name)
     {
         if (name == "Begin") BeginInteraction();
         else if (name == "Preview") PreviewInteraction();
         else if (name == "Commit") CommitInteraction();
         else if (name == "Cancel") CancelInteraction("手动取消");
-    }
-
-    void BeginInteraction()
-    {
-        if (!CanBeginMoveInteraction()) return;
-        var result = _editorState.Begin(new BeginInteractionCommand(ActiveTool,
-            SelectionTitle, EditorInteractionPointerSnapshot.Empty));
-        if (result is null) return;
-        FooterState = "状态：捕获中";
-        FooterMessage = $"交互开始：{ActiveTool}";
-        LogInteraction("开始捕获", $"Session={result.Snapshot.SessionId}");
-        RaiseInteractionChanged();
     }
 
     void PreviewInteraction()
@@ -44,7 +43,9 @@ public sealed partial class UiVm
         var result = _editorState.Commit(new CommitInteractionCommand(
             snap.SessionId, snap.OwnerTool, snap.Pointer.PointerId));
         if (result is null) return;
-        var transformCommitted = _transformSession.TryCommit(snap.SessionId, _sceneState, out var commit);
+        var commit = default(SceneTransformCommitResult);
+        var transformCommitted = _transformSession.TryCreateCommand(snap.SessionId, out var command)
+            && command.TryApply(_worldMutation, out commit);
         _moveDragConstraint = null;
         _rotateDrag = null;
         _scaleDrag = null;

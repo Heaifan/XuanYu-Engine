@@ -7,13 +7,10 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    bool _isTerrainContext;
-    public bool IsTerrainContext => _isTerrainContext;
-    public bool IsRegionContext => !_isTerrainContext;
-    public string ContextButtonLabel => _isTerrainContext ? "地形" : "区域";
-    public string ContextToolbarButtonLabel => _isTerrainContext ? "地形"
-        : IsDrawingTransactionActive ? ActiveTool
-        : DrawButtonLabel == "绘制" ? "区域" : DrawButtonLabel;
+    public bool IsTerrainContext => _contextState.Snapshot.Context == EditorContextId.Terrain;
+    public bool IsRegionContext => !IsTerrainContext;
+    public string ContextButtonLabel => ApplicationState.ContextLabel;
+    public string ContextToolbarButtonLabel => ApplicationState.ToolbarLabel;
     public TerrainSourceData? TerrainSource { get; private set; }
     public TerrainWorld? TerrainWorld { get; private set; }
     public string TerrainStatus { get; private set; } = "未加载地形源。";
@@ -24,13 +21,13 @@ public sealed partial class UiVm
     public void EnterTerrainContext()
     {
         if (IsDrawingTransactionActive) return;
-        if (_isTerrainContext)
+        if (IsTerrainContext)
         {
             RaiseInspectorSelectionBindings();
             return;
         }
         CancelActiveInput("切换地形上下文");
-        _isTerrainContext = true;
+        _contextState.Change(new ChangeEditorContextCommand(EditorContextId.Terrain));
         SelectTool("选择", logTool: false);
         RaiseTerrainContextBindings();
         RaiseInspectorSelectionBindings();
@@ -39,9 +36,9 @@ public sealed partial class UiVm
     public void EnterRegionContext()
     {
         if (IsDrawingTransactionActive) return;
-        if (!_isTerrainContext) return;
+        if (!IsTerrainContext) return;
         CancelActiveInput("切换区域上下文");
-        _isTerrainContext = false;
+        _contextState.Change(new ChangeEditorContextCommand(EditorContextId.Region));
         SelectTool("选择", logTool: false);
         RaiseTerrainContextBindings();
     }

@@ -1,5 +1,7 @@
 namespace XuanYu.World.Terrain.Source;
 
+using XuanYu.World;
+
 public sealed class TerrainElevationTile : ITerrainElevationQuery
 {
     public TerrainElevationTile(string tileId, TerrainGeoBounds bounds,
@@ -43,12 +45,12 @@ public sealed class TerrainElevationTile : ITerrainElevationQuery
     public int Height => Raster.Height;
     public double ElevationAt(int row, int column) => Raster.ElevationMeters[row * Width + column];
 
-    public TerrainElevationResult GetElevation(double latitude, double longitude,
+    public ElevationQueryResult GetElevation(double latitude, double longitude,
         TerrainElevationInterpolation interpolation = TerrainElevationInterpolation.Bilinear)
     {
         if (latitude < Bounds.South || latitude > Bounds.North ||
             longitude < Bounds.West || longitude > Bounds.East)
-            return TerrainElevationResult.Invalid;
+            return ElevationQueryResult.OutOfBounds;
         var y = (Bounds.North - latitude) / (Bounds.North - Bounds.South) * (Height - 1);
         var x = (longitude - Bounds.West) / (Bounds.East - Bounds.West) * (Width - 1);
         return interpolation == TerrainElevationInterpolation.Nearest
@@ -56,7 +58,7 @@ public sealed class TerrainElevationTile : ITerrainElevationQuery
             : Bilinear(y, x);
     }
 
-    TerrainElevationResult Bilinear(double y, double x)
+    ElevationQueryResult Bilinear(double y, double x)
     {
         var y0 = Math.Clamp((int)Math.Floor(y), 0, Height - 1);
         var x0 = Math.Clamp((int)Math.Floor(x), 0, Width - 1);
@@ -66,14 +68,14 @@ public sealed class TerrainElevationTile : ITerrainElevationQuery
         var nw = ReadSample(y0, x0); var ne = ReadSample(y0, x1);
         var sw = ReadSample(y1, x0); var se = ReadSample(y1, x1);
         if (!nw.IsValid || !ne.IsValid || !sw.IsValid || !se.IsValid)
-            return TerrainElevationResult.Invalid;
-        return new(true, nw.ElevationMeters * (1 - fy) * (1 - fx) +
+            return ElevationQueryResult.NoData;
+        return ElevationQueryResult.Valid(nw.ElevationMeters * (1 - fy) * (1 - fx) +
             ne.ElevationMeters * (1 - fy) * fx + sw.ElevationMeters * fy * (1 - fx) +
             se.ElevationMeters * fy * fx);
     }
 
-    TerrainElevationResult ReadSample(int row, int column) =>
+    ElevationQueryResult ReadSample(int row, int column) =>
         Raster.NoDataMask[row * Width + column]
-            ? TerrainElevationResult.Invalid
-            : new(true, ElevationAt(row, column));
+            ? ElevationQueryResult.NoData
+            : ElevationQueryResult.Valid(ElevationAt(row, column));
 }

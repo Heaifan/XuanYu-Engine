@@ -2,7 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using XuanYu.Render.Abstractions;
+using XuanYu.Editor.MapEditing;
+using XuanYu.World.Scene;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Interaction;
 using XYUI.Avalonia.Spatial;
@@ -15,11 +18,16 @@ namespace XuanYu.Editor.UI;
 public sealed class App : Application
 {
     readonly INativeHostSurfaceBridgeFactory? _surfaceBridgeFactory;
+    readonly Func<Func<bool>, bool, (SceneStateOwner Scene, MapEditSession Map)>? _stateFactory;
 
     public App() { }
 
     public App(INativeHostSurfaceBridgeFactory surfaceBridgeFactory) =>
         _surfaceBridgeFactory = surfaceBridgeFactory;
+
+    public App(INativeHostSurfaceBridgeFactory surfaceBridgeFactory,
+        Func<Func<bool>, bool, (SceneStateOwner Scene, MapEditSession Map)> stateFactory)
+        : this(surfaceBridgeFactory) => _stateFactory = stateFactory;
 
     public override void Initialize()
     {
@@ -39,7 +47,13 @@ public sealed class App : Application
         {
             desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
             var window = new UiWin();
-            var vm = new UiVm(_surfaceBridgeFactory, seedInitialScene: false, dialogService: window);
+            var isWriteThread = () => Dispatcher.UIThread.CheckAccess();
+            var state = _stateFactory?.Invoke(isWriteThread, false);
+            var vm = state is { } dependencies
+                ? new UiVm(_surfaceBridgeFactory, dependencies.Scene, dependencies.Map,
+                    isWriteThread, window)
+                : new UiVm(_surfaceBridgeFactory, isWriteThread,
+                    seedInitialScene: false, dialogService: window);
             window.DataContext = vm;
             desktop.MainWindow = window;
         }

@@ -1,3 +1,5 @@
+using XuanYu.Editor.Transform;
+
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
@@ -26,7 +28,13 @@ public sealed partial class UiVm
             FooterMessage = error;
             return false;
         }
-        var commit = _sceneState.CommitTransformWithResult(key, next);
+        var command = new TransformCommand(
+            0, key, next, _worldMutation.WorldRevision);
+        if (!command.TryApply(_worldMutation, out var commit))
+        {
+            FooterMessage = "检查器提交失败：World 拒绝了变换提交。";
+            return false;
+        }
         if (!commit.Changed)
         {
             FooterMessage = "检查器数值未变化。";

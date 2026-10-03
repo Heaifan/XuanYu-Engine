@@ -30,11 +30,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
     // 前 40 float 填充 VP/InvVP/相机/视口；后 8 float 由各辅助 Pass 专用。
     void FillGridPushConstants(float[] scene, RenderProjection projection)
     {
-        var camera = projection.Camera;
         var viewport = new ViewportState(
             0, 0, _extent.Width, _extent.Height,
             (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
-        var state = camera.ToViewProjection(viewport);
+        var state = CurrentViewProjectionState();
+        var camera = projection.Camera;
         var vulkanProjection = ToVulkanProjection(state.Projection);
         var viewProjection = state.View * vulkanProjection;
         var inverseFinite = Matrix4x4.Invert(viewProjection, out var inverse);

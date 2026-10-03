@@ -1,6 +1,6 @@
 @{
     Remote = 'origin'
-    OwnershipManifest = 'tools\handoff\ownership-manifest.json'
+    OwnershipManifest = 'tools\governance\ownership\ownership-manifest.json'
 
     CanonicalWorkspaces = @(
         'D:\MyDoc\project-vsCode\XuanyuEngine'

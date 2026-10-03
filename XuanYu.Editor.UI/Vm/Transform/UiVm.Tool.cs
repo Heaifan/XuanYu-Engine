@@ -46,19 +46,14 @@ public sealed partial class UiVm
             return;
         }
 
+        var changingTool = EditorToolText.FromText(ActiveTool) != requestedTool;
+        if (changingTool) ViewportInput.CancelForToolChange();
         if (_editorState.ChangeTool(new ChangeEditorToolCommand(name)) is null)
         {
             RaiseToolChanged();
             return;
         }
-
-        ViewportInput.Dispatch(new EditorPointerEvent(EditorPointerEventKind.ToolChanged,
-            new(0, 0), EditorPointerButtons.None, EditorPointerModifiers.None, 0,
-            ViewportInput.Router.State.PointerId, new("tool"), 1));
-        if (requestedTool != EditorToolId.RegionDrawing)
-            EndRegionDrawingAfterToolChange();
-        if (requestedTool != EditorToolId.RoadDrawing)
-            EndRoadDrawingAfterToolChange();
+        ViewportInput.BeginInteractionEpoch();
 
         RaiseToolChanged();
         if (requestedTool == EditorToolId.RegionDrawing) BeginDrawingTransaction("区域面");

@@ -3,9 +3,7 @@ using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Transform;
 using XuanYu.World.Scene;
-
 namespace XuanYu.Editor.Transform;
-
 public sealed partial class TransformSession
 {
     public bool IsActive { get; private set; }
@@ -13,8 +11,9 @@ public sealed partial class TransformSession
     public MoveGizmoAxis Axis { get; private set; }
     public TransformStartSnapshot StartSnapshot { get; private set; }
     public PreviewTransform? Preview { get; private set; }
-
-    public bool Begin(long sessionId, SceneEntitySnapshot entity, MoveGizmoAxis axis)
+    long EntityRevision { get; set; }
+    public bool Begin(long sessionId, SceneEntitySnapshot entity, MoveGizmoAxis axis,
+        long entityRevision = 0)
     {
         if (sessionId <= 0) throw new ArgumentOutOfRangeException(nameof(sessionId));
         if (!entity.IsValid) return false;
@@ -22,11 +21,11 @@ public sealed partial class TransformSession
         IsActive = true;
         SessionId = sessionId;
         Axis = axis;
+        EntityRevision = entityRevision;
         StartSnapshot = new TransformStartSnapshot(entity.EntityKey, entity.Transform);
         Preview = new PreviewTransform(entity.Transform);
         return true;
     }
-
     public bool TryPreview(long sessionId, Vector3d position)
     {
         if (!Owns(sessionId)) return false;
@@ -47,27 +46,36 @@ public sealed partial class TransformSession
     public bool TryPreviewScale(long sessionId, Vector3d scale) =>
         TryPreviewTransform(sessionId, StartSnapshot.Transform.WithScale(scale));
 
-    public bool TryCommit(long sessionId, SceneStateOwner scene)
+    public bool TryCommit(long sessionId, IWorldTransformMutationContract world)
     {
-        return TryCommit(sessionId, scene, out _);
+        return TryCommit(sessionId, world, out _);
     }
 
     public bool TryCommit(
         long sessionId,
-        SceneStateOwner scene,
+        IWorldTransformMutationContract world,
         out SceneTransformCommitResult commit)
     {
         commit = default;
+        if (!TryCreateCommand(sessionId, out var command)) return false;
+        return command.TryApply(world, out commit);
+    }
+
+    public bool TryCreateRequest(long sessionId, out TransformRequest request)
+    {
+        request = default;
         if (!Owns(sessionId)) return false;
-        if (!scene.RenderSnapshot.HasEntity ||
-            scene.RenderSnapshot.Entity.EntityKey != StartSnapshot.EntityKey)
-        {
-            End();
-            return false;
-        }
-        var transform = Preview?.Transform ?? StartSnapshot.Transform;
+        request = new(sessionId, StartSnapshot.EntityKey,
+            Preview?.Transform ?? StartSnapshot.Transform, EntityRevision);
         End();
-        commit = scene.CommitTransformWithResult(StartSnapshot.EntityKey, transform);
+        return true;
+    }
+
+    public bool TryCreateCommand(long sessionId, out TransformCommand command)
+    {
+        command = default;
+        if (!TryCreateRequest(sessionId, out var request)) return false;
+        command = request.ToCommand();
         return true;
     }
 
@@ -84,6 +92,7 @@ public sealed partial class TransformSession
     {
         IsActive = false;
         SessionId = 0;
+        EntityRevision = 0;
         Preview = null;
         RotateAxis = null;
         ScaleHandle = null;

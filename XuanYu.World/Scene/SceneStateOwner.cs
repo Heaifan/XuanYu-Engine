@@ -9,6 +9,7 @@ namespace XuanYu.World.Scene;
 public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
 {
     readonly GlobalWorld _world;
+    readonly Dictionary<EntityId, long> _entityMutationRevisions = new();
     SceneRenderSnapshot _snapshot;
     EntityId _activeEntityKey;
 
@@ -34,6 +35,7 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
         }
         var entity = _world.Create("基础测试实体", WorldEntityTypes.LegacyMinimalTriangle,
             null, MinimalSceneEntityExtent);
+        TouchEntityMutation(entity.EntityKey);
         _activeEntityKey = entity.EntityKey;
         RefreshSnapshot();
     }
@@ -64,6 +66,7 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
         CommittedTransform transform)
     {
         _world.UpdateTransform(current.EntityKey, transform);
+        TouchEntityMutation(current.EntityKey);
         RefreshSnapshot();
         RenderSnapshotChanged?.Invoke(_snapshot);
         return new SceneTransformCommitResult(
@@ -83,6 +86,7 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
     public void ReplaceEntities(IReadOnlyList<WorldEntitySnapshot> entities)
     {
         _world.Replace(entities);
+        foreach (var entity in entities) TouchEntityMutation(entity.EntityKey);
         _activeEntityKey = Entities.FirstOrDefault().EntityKey;
         RefreshSnapshot();
         RenderSnapshotChanged?.Invoke(_snapshot);

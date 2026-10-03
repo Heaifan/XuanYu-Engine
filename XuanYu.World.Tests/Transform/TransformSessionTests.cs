@@ -3,11 +3,12 @@ using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Transform;
 using XuanYu.World.Scene;
+using XuanYu.World;
 using XuanYu.Editor.Transform;
 
 namespace XuanYu.World.Tests.Transform;
 
-public sealed class TransformSessionTests
+public sealed partial class TransformSessionTests
 {
     [Theory]
     [InlineData(MoveGizmoAxis.X, 2, 0, 0)]
@@ -77,10 +78,4 @@ public sealed class TransformSessionTests
         Assert.False(commit.Changed);
     }
 
-    static TransformSession Begin(SceneStateOwner scene, MoveGizmoAxis axis)
-    {
-        var session = new TransformSession();
-        Assert.True(session.Begin(17, scene.RenderSnapshot.Entity, axis));
-        return session;
-    }
 }

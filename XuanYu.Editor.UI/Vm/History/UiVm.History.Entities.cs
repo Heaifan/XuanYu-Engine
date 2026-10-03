@@ -1,5 +1,6 @@
 using XuanYu.Core.History;
 using XuanYu.Editor.Assets;
+using XuanYu.Editor.Transform;
 using XuanYu.World;
 
 namespace XuanYu.Editor.UI;
@@ -10,8 +11,9 @@ public sealed partial class UiVm
     {
         return entry switch
         {
-            TransformHistoryEntry transform => _sceneState.RestoreTransform(
-                transform.EntityKey, undo ? transform.Before : transform.After),
+            TransformHistoryEntry transform => new TransformCommand(
+                0, transform.EntityKey, undo ? transform.Before : transform.After,
+                _worldMutation.WorldRevision).TryApply(_worldMutation, out _),
             AddEntityHistoryEntry add => ApplyEntityPresence(add.Snapshot, !undo, add.Binding),
             DeleteEntityHistoryEntry delete => ApplyEntityPresence(delete.Snapshot, undo, delete.Binding),
             RenameEntityHistoryEntry rename => _sceneState.RenameEntity(

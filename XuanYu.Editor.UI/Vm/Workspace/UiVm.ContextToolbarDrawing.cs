@@ -6,14 +6,13 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    readonly AuthoringInputSession _authoringSession = new();
     public string? LastDrawTool { get; private set; }
     public string DrawButtonLabel => LastDrawTool is null ? "绘制" : LastDrawTool switch { "地图标记" => "点标记", "区域面" => "区域", _ => LastDrawTool };
-    public bool IsDrawingTransactionActive => _authoringSession.IsActive;
+    public bool IsDrawingTransactionActive => _authoringState.Snapshot.IsActive;
     public bool CanOpenContextSelector => !IsDrawingTransactionActive;
-    public string DrawingTransactionLabel => _authoringSession.Kind == AuthoringInputKind.Road
+    public string DrawingTransactionLabel => _authoringState.Snapshot.Kind == AuthoringInputKind.Road
         ? $"道路绘制中 · {RoadDrawingDraftPointCount}"
-        : _authoringSession.Kind == AuthoringInputKind.Region
+        : _authoringState.Snapshot.Kind == AuthoringInputKind.Region
             ? $"区域绘制中 · {RegionDrawingDraftVertexCount}" : "";
     public ICommand BeginLastDrawToolCommand => _beginLastDrawToolCommand ??=
         new RelayCommand(_ => _ = BeginLastDrawToolAsync());
@@ -62,22 +61,24 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(ContextToolbarButtonLabel));
     }
 
-    public bool CanUndoDrawingVertex => _authoringSession.Kind == AuthoringInputKind.Road
+    public bool CanUndoDrawingVertex => _authoringState.Snapshot.Kind == AuthoringInputKind.Road
         ? CanUndoRoadDrawingVertex : CanUndoRegionDrawingVertex;
-    public bool CanCompleteDrawing => _authoringSession.Kind == AuthoringInputKind.Road
+    public bool CanCompleteDrawing => _authoringState.Snapshot.Kind == AuthoringInputKind.Road
         ? CanCompleteRoadDrawing : CanCompleteRegionDrawing;
-    public bool CanCancelDrawing => _authoringSession.IsActive;
+    public bool CanCancelDrawing => _authoringState.Snapshot.IsActive;
 
     void BeginDrawingTransaction(string kind)
     {
         var inputKind = kind == "道路" ? AuthoringInputKind.Road : AuthoringInputKind.Region;
-        if (!_authoringSession.Begin(inputKind)) return;
+        if (_authoringState.Snapshot.IsActive) return;
+        _authoringState.Begin(new BeginAuthoringInputCommand(inputKind));
         RaiseContextToolbarDrawingBindings();
     }
 
     void EndDrawingTransaction()
     {
-        if (!_authoringSession.End()) return;
+        if (!_authoringState.Snapshot.IsActive) return;
+        _authoringState.End(new EndAuthoringInputCommand());
         RaiseContextToolbarDrawingBindings();
     }
 

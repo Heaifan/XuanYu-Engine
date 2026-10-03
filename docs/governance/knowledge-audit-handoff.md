@@ -2,6 +2,8 @@
 
 本文件是所有施工任务最终报告尾部的唯一规范文本。施工 Agent / Codex 必须在报告末尾原样附加以下交接块；该块不是知识条目，也不代表施工 Agent 已完成正式知识写回。
 
+固定交接块之前，报告正文必须包含 `Root Cause`、`Changed Files`、`Tests`、`Evidence`、`Known Risk` 与 `Candidate Lessons`。没有候选时，`Candidate Lessons` 明确写 `NONE`；存在候选时说明可复用规则及其证据，不得直接写入知识库。
+
 ```text
 ==================================================
 KNOWLEDGE / EXPERIENCE AUDIT HANDOFF

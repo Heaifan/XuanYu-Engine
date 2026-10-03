@@ -38,7 +38,7 @@ public sealed class VulkanPresentLoopContractTests
             Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..")),
             "XuanYu.Render.Vulkan", "Render", "ClearFrame"), "VulkanClearFrameOwner*.cs").Select(File.ReadAllText));
         Assert.DoesNotContain("ClearRenderProjection", loop); // Present 循环不清理投影
-        Assert.Contains("_hasRenderProjection = true;", owner); // Set 置真：持续状态语义保留
+        Assert.Contains("_frameState.Apply(projection)", owner); // FrameState 接管投影状态
     }
 
     [Fact]

@@ -24,7 +24,7 @@ public sealed class RegionVertexSnapResolverTests
     [Fact]
     public void Editor_snap_starts_enabled()
     {
-        Assert.True(XuanYu.Editor.UI.EditorToolSnapshot.Initial.IsSnapEnabled);
+        Assert.True(XuanYu.Editor.EditorToolSnapshot.Initial.IsSnapEnabled);
     }
 
     [Fact]

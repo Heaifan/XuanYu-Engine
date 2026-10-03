@@ -21,7 +21,8 @@ internal static class Program
     public static AppBuilder BuildAvaloniaApp()
     {
         var factory = EditorCompositionRoot.CreateSurfaceBridgeFactory();
-        return AppBuilder.Configure(() => new EditorUiApp(factory))
+        return AppBuilder.Configure(() => new EditorUiApp(factory,
+                EditorCompositionRoot.CreateEditorState))
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();

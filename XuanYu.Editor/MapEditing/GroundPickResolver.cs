@@ -34,7 +34,9 @@ public static class GroundPickResolver
         {
             var hit = ray.Origin + ray.Direction * distance;
             point = new(hit.X, hit.Y);
-            if (!terrain.TryGetElevation(point, out elevation)) return false;
+            var surface = terrain.QuerySurface(point);
+            if (!surface.IsValid) return false;
+            elevation = surface.SurfaceZ;
             var next = (elevation - ray.Origin.Z) / ray.Direction.Z;
             if (!double.IsFinite(next) || next < 0) return false;
             if (Math.Abs(next - distance) < 1e-7) return true;
@@ -42,6 +44,8 @@ public static class GroundPickResolver
         }
         var finalHit = ray.Origin + ray.Direction * distance;
         point = new(finalHit.X, finalHit.Y);
-        return terrain.TryGetElevation(point, out elevation);
+        var result = terrain.QuerySurface(point);
+        elevation = result.IsValid ? result.SurfaceZ : 0;
+        return result.IsValid;
     }
 }

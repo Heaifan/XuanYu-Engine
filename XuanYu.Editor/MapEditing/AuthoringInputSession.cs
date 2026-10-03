@@ -8,12 +8,19 @@ public enum AuthoringInputKind
     Road,
 }
 
+public sealed record AuthoringInputSnapshot(bool IsActive, AuthoringInputKind? Kind, GestureOwner Owner)
+{
+    public static AuthoringInputSnapshot Initial { get; } =
+        new(false, null, GestureOwner.None);
+}
+
 public sealed class AuthoringInputSession
 {
     public bool IsActive { get; private set; }
     public AuthoringInputKind? Kind { get; private set; }
     public GestureOwner Owner => Kind == AuthoringInputKind.Region ? GestureOwner.Region
         : Kind == AuthoringInputKind.Road ? GestureOwner.Road : GestureOwner.None;
+    public AuthoringInputSnapshot Snapshot => new(IsActive, Kind, Owner);
 
     public bool Begin(AuthoringInputKind kind)
     {

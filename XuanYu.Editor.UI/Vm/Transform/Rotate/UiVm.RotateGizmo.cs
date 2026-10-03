@@ -38,9 +38,10 @@ public sealed partial class UiVm
 
         var pointer = new EditorInteractionPointerSnapshot(pointerId, x, y, x, y, 0);
         var start = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}";
-        var result = _editorState.Begin(new BeginInteractionCommand(sessionTool, start, pointer));
+        var result = BeginEditorInteraction(new BeginInteractionCommand(sessionTool, start, pointer));
         if (result is null) return false;
-        if (!_transformSession.BeginRotate(result.Snapshot.SessionId, entity, axis.Value))
+        if (!_transformSession.BeginRotate(result.Snapshot.SessionId, entity, axis.Value,
+            _worldMutation.WorldRevision))
         {
             _editorState.Cancel(new CancelInteractionCommand(
                 result.Snapshot.SessionId, sessionTool, "Transform Session 启动失败"));

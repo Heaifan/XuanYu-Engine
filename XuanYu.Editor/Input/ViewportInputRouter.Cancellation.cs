@@ -5,7 +5,8 @@ namespace XuanYu.Editor.Input;
 public sealed partial class ViewportInputRouter
 {
     static bool IsGlobalCancel(EditorPointerEventKind kind) => kind is
-        EditorPointerEventKind.Escape or EditorPointerEventKind.Cancel or EditorPointerEventKind.CaptureLost
+        EditorPointerEventKind.Escape or EditorPointerEventKind.Cancel
+        or EditorPointerEventKind.CaptureLost
         or EditorPointerEventKind.FocusLost or EditorPointerEventKind.WindowDeactivated
         or EditorPointerEventKind.ToolChanged or EditorPointerEventKind.ModeChanged
         or EditorPointerEventKind.ViewportDisposed;

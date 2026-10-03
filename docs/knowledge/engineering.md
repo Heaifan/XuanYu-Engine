@@ -771,6 +771,14 @@ Commit Mutex 必须保持“不能被随意抢锁”的安全性，同时提供�
 
 未来 Handoff 应支持显式 recovery / takeover 流程，而不是在 stale lock 时依赖人工删除 `.git` 文件。
 
+### Handoff Slimming R1 边界更新
+
+Handoff 的生命周期控制已收缩为 `Event Ledger + Responsibility Record + History`：它记录和查询 `CREATED`、`STARTED`、`TRANSFERRED`、`COMMENTED`、`COMPLETED_REPORTED` 与 `CANCELLED_REPORTED` 事实事件，并保留事件中的责任记录及历史，但不再拥有 Lane、Task、Wave、Gate、Candidate 或 Commit/Release 资格的状态转换权。
+
+Handoff 不等于 Controller、Gate、Lock、Commit Authority 或 Release Authority。
+
+因此，Commit Mutex 的 stale recovery 仍是独立的控制面职责，不能通过 Handoff Event Ledger 事件伪造 owner、释放锁或取得提交资格。Legacy Control 的合法终态只有“存在但不可执行”或“已移除且迁移记录完整”两种。
+
 ---
 
 ## K-XYT-P3-002 P3 构建准备与 Runtime Probe 必须分离并受时间预算约束

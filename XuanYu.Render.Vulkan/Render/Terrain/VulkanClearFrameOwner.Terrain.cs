@@ -31,9 +31,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_terrainPipeline.Handle == 0 || _terrainPipelineLayout.Handle == 0 || !_renderProjection.HasTerrain) return;
         var cache = _terrainCache ??= new Terrain.VulkanTerrainGpuCache(_vk, _deviceOwner, _log);
         var resource = _renderProjection.TerrainResources[terrainIndex];
-        var viewport = new ViewportState(0, 0, _extent.Width, _extent.Height,
-            (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
-        var state = _renderProjection.Camera.ToViewProjection(viewport);
+        var state = CurrentViewProjectionState();
         var draws = new List<TerrainChunkDraw>(); var culled = 0;
         RetainTerrainLodStates(_renderProjection.TerrainResources);
         foreach (var chunk in cache.GetChunks(resource))

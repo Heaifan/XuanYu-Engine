@@ -2,9 +2,7 @@ using XuanYu.Core.Identity;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Spatial;
 using XuanYu.World;
-
 namespace XuanYu.World.Scene;
-
 public sealed partial class SceneStateOwner
 {
     public WorldEntitySnapshot CreateEntity(
@@ -15,11 +13,11 @@ public sealed partial class SceneStateOwner
     {
         var uniqueName = WorldEntityName.Unique(name, Entities);
         var entity = _world.Create(uniqueName, type, transform, extent ?? MinimalSceneEntityExtent);
+        TouchEntityMutation(entity.EntityKey);
         if (!_snapshot.HasEntity) _activeEntityKey = entity.EntityKey;
         PublishChanged();
         return entity;
     }
-
     public WorldEntitySnapshot AddCubeEntity()
     {
         var name = WorldEntityName.Unique("立方体", Entities);
@@ -27,15 +25,14 @@ public sealed partial class SceneStateOwner
         SetActiveEntity(entity.EntityKey);
         return entity;
     }
-
     public bool RestoreEntity(WorldEntitySnapshot snapshot)
     {
         if (!_world.Restore(snapshot)) return false;
+        TouchEntityMutation(snapshot.EntityKey);
         _activeEntityKey = snapshot.EntityKey;
         PublishChanged();
         return true;
     }
-
     public bool RenameEntity(EntityId entityKey, string requestedName, out string finalName)
     {
         finalName = "";
@@ -45,6 +42,7 @@ public sealed partial class SceneStateOwner
         finalName = WorldEntityName.Unique(trimmed, Entities, entityKey);
         if (entity.Name == finalName) return false;
         if (!_world.Rename(entityKey, finalName)) return false;
+        TouchEntityMutation(entityKey);
         PublishChanged();
         return true;
     }
@@ -52,6 +50,7 @@ public sealed partial class SceneStateOwner
     public bool DestroyEntity(EntityId entityKey)
     {
         if (!_world.Destroy(entityKey)) return false;
+        TouchEntityMutation(entityKey);
         if (_activeEntityKey == entityKey) SetActiveEntity(Entities.FirstOrDefault().EntityKey);
         else
         {
@@ -69,6 +68,7 @@ public sealed partial class SceneStateOwner
     public bool MoveEntityToRegion(EntityId entityKey, RegionKey region)
     {
         if (!_world.MoveToRegion(entityKey, region)) return false;
+        TouchEntityMutation(entityKey);
         RefreshSnapshot();
         RenderSnapshotChanged?.Invoke(_snapshot);
         return true;
@@ -77,6 +77,7 @@ public sealed partial class SceneStateOwner
     public bool SetEntityActivity(EntityId entityKey, WorldEntityActivity activity)
     {
         if (!_world.SetActivity(entityKey, activity)) return false;
+        TouchEntityMutation(entityKey);
         RefreshSnapshot();
         RenderSnapshotChanged?.Invoke(_snapshot);
         return true;

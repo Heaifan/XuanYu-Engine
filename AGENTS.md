@@ -199,4 +199,37 @@ Agent 错误权威库：
 - 当前仓库工具入口：`tools/governance/version-audit.ps1`、`version-next.ps1`、`version-selftest.ps1`、`version-metrics.ps1`；规则与跨项目模板见 `docs/governance/process-versioning.md` 和 `docs/governance/templates/process-version-governance-template.md`。
 - 正式 Acceptance 必须输出 `ACCEPTANCE IDENTITY`。Dirty=YES 只能作为显式 Dirty Runtime Probe，不得宣布正式 Product Closed。
 - 所有施工任务最终报告必须追加 `docs/governance/knowledge-audit-handoff.md` 的 `XYK CANDIDATE` 纯文本区块。AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY；候选不得写入 Codex memory、仓库文件、ad-hoc note 或其它知识存储。ChatGPT / XYK Coordinator 作为唯一 REVIEWER + WRITE AUTHORITY，后续决定接受、合并、修订、拒绝或过期。
-- `CHATGPT KNOWLEDGE AUDIT REQUIRED`
+
+固定交接格式以 `docs/governance/knowledge-audit-handoff.md` 为唯一规范。报告正文必须包含 `Root Cause`、`Changed Files`、`Tests`、`Evidence`、`Known Risk` 与 `Candidate Lessons`；任务结束必须请求 ChatGPT 审计结果并判断是否沉淀 Knowledge / Experience：
+
+```text
+==================================================
+KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
+==================================================
+
+请 ChatGPT 审计本任务结果，并判断是否存在可沉淀的知识/经验。
+如有，必须仅在本报告的 `XYK CANDIDATE` 区块中以纯文本输出，
+禁止写入任何知识库、经验库、Codex memory、ad-hoc note 或其它文件；
+正式入库由 ChatGPT / XYK Coordinator 后续决定。
+
+XYK CANDIDATE:
+NONE
+
+若存在候选，替换上面的 `NONE`，并仅在本报告中按下列字段输出：
+- ID/Category: <可选候选标识>
+- Problem: <发生了什么问题>
+- Root Cause: <根因>
+- Rule / Knowledge: <可复用知识>
+- Applies To: <适用范围>
+- Evidence: <本任务证据>
+- Expiry / Revalidation: <如适用>
+- Suggested Action: <后续治理/优化建议>
+
+AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY.
+候选不得被宣称为已沉淀、已写入或已更新；只有明确授予 XYK WRITE AUTHORITY
+时，ChatGPT / XYK Coordinator 才能另行审计并维护正式 XYK。
+
+CHATGPT KNOWLEDGE AUDIT REQUIRED
+```
+
+ChatGPT 审计必须先 `SEARCH EXISTING`，再决定 `UPDATE / STRENGTHEN`、`CREATE`、`RETIRE` 或 `NO DEPOSIT`。Knowledge 是长期稳定的工程事实或验证后约束；Experience 是错误路径、诊断与防复发经验。施工 Agent 只提交候选，不得自行写入或宣称正式沉淀。

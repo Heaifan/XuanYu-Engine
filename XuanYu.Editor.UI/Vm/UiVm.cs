@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Avalonia.Threading;
 using XuanYu.Core.History;
 using XuanYu.Editor.Assets;
+using XuanYu.Editor.Composition;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.SceneDocument;
 using XuanYu.Render.Abstractions;
@@ -14,6 +15,9 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     XuanYu.Render.Abstractions.IRenderProjectionSource
 {
     readonly EditorStateOwner _editorState;
+    readonly IWorldTransformMutationContract _worldMutation;
+    readonly EditorContextOwner _contextState;
+    readonly EditorAuthoringOwner _authoringState;
     readonly EditorHistoryOwner _historyOwner = new();
     readonly IEditorDialogService _dialogService = new NullEditorDialogService();
     readonly Dictionary<string, EditorTreeNode> _hierarchyNodeCache = new();
@@ -23,33 +27,6 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
     string _footerMessage = "已就绪。当前为空白未命名场景。", _footerState = "状态：就绪";
     bool _isLogOpen;
-    public UiVm() : this(null) { }
-    public UiVm(
-        INativeHostSurfaceBridgeFactory? surfaceBridgeFactory,
-        Func<bool>? isWriteThread = null,
-        bool seedInitialScene = true,
-        IEditorDialogService? dialogService = null)
-    {
-        _editorState = new EditorStateOwner(isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
-        _sceneState = new SceneStateOwner(_partitionStrategy, seedInitialScene);
-        _saveTransaction = new SceneDocumentSaveTransaction(_sceneStorage);
-        _loadTransaction = new SceneDocumentLoadTransaction(_sceneStorage, new GlbImportService(), _partitionStrategy);
-        _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();
-        if (seedInitialScene) _sceneState.EnsureEntityCount(10);
-        SurfaceBridgeFactory = surfaceBridgeFactory;
-        if (dialogService is not null) _dialogService = dialogService;
-        RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
-        SelectToolCommand = new RelayCommand(TrySelectTool, CanSelectTool); SwitchWorkspaceCommand = new RelayCommand(SwitchWorkspace); SelectRegionAuthoringModeCommand = new RelayCommand(SelectRegionAuthoringModeCommandTarget);
-        ToggleSnapCommand = new RelayCommand(_ => TryToggleSnap()); ToggleEditorModeCommand = new RelayCommand(_ => ToggleEditorMode());
-        InteractionCommand = new RelayCommand(name => RunInteraction(name?.ToString() ?? string.Empty));
-        ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
-        SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
-        ClearLogsCommand = new RelayCommand(_ => ClearLogs());
-        MapSession = new MapEditSession(isWriteThread: isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
-        // D5 二次纠偏（用户方案）：默认地图建立内存基线——初始未修改不误判为有未保存修改
-        MapSession.MarkBaseline();
-        AttachMapSession(MapSession); MapSession.ClearSelection(); InitializeMapManifest(); InitLogs(); ViewportInput = UiVmViewportInputComposition.Create(this);
-    }
     public event PropertyChangedEventHandler? PropertyChanged;
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }
     public ICommand RunCommand { get; }
@@ -65,7 +42,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems;
     public IReadOnlyList<string> ToolItems => UiText.ToolItems; public IReadOnlyList<InspectorFieldRow> DebugContextItems => BuildDebugContextItems(); public IReadOnlyList<InspectorFieldRow> DebugObjectItems => BuildDebugObjectItems();
     public IReadOnlyList<InspectorFieldRow> DebugToolItems => BuildDebugToolItems(); public IReadOnlyList<InspectorFieldRow> DebugInputItems => BuildDebugInputItems();
-    public string ActiveTool => _editorState.ToolSnapshot.ActiveToolText;
+    public string ActiveTool => ApplicationState.ActiveToolText;
     public bool IsSelectTool => IsTool(EditorToolId.Select);
     public bool IsMoveTool => IsTool(EditorToolId.Move);
     public bool IsRotateTool => IsTool(EditorToolId.Rotate);
@@ -74,13 +51,13 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public bool IsRegionDrawingTool => IsTool(EditorToolId.RegionDrawing);
     public bool IsSnapEnabled => _editorState.ToolSnapshot.IsSnapEnabled;
     public string SnapMode => _editorState.ToolSnapshot.SnapText; // F2：模式页已删，仅保留状态读取
-    public string SelectionTitle => _editorState.Snapshot.SelectionTitle;
-    public string SelectionKey => _editorState.Snapshot.SelectionKey;
-    public string SelectionSubtitle => _editorState.Snapshot.SelectionSubtitle;
-    public string SelectionPath => _editorState.Snapshot.SelectionPath;
+    public string SelectionTitle => ApplicationState.Selection.SelectionTitle;
+    public string SelectionKey => ApplicationState.Selection.SelectionKey;
+    public string SelectionSubtitle => ApplicationState.Selection.SelectionSubtitle;
+    public string SelectionPath => ApplicationState.Selection.SelectionPath;
     public string SelectedNodeKey => _selectedNodeKey;
     public string FooterMessage { get => _footerMessage; private set => Set(ref _footerMessage, value); }
-    public string FooterMode => $"工具：{ActiveTool}";
+    public string FooterMode => ApplicationState.StatusLabel;
     public string FooterState { get => _footerState; private set => SetFooterState(value); }
     public bool HasSelection => _editorState.Snapshot.HasSelection;
     public bool IsEmptySelection => !HasSelection;

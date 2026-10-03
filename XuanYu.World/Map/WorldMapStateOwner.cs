@@ -1,4 +1,5 @@
 using XuanYu.Core.Map;
+using XuanYu.World;
 
 namespace XuanYu.World.Map;
 
@@ -20,15 +21,14 @@ public sealed class WorldMapStateOwner
         _current = null;
     }
 
+    public SurfaceQueryResult QuerySurface(double worldX, double worldY) =>
+        _current?.QuerySurface(worldX, worldY) ?? SurfaceQueryResult.NoTerrain;
+
     // 世界 X/Y（水平面）→ 地表 Z。无地图或地图外返回失败。
     public bool TryGetSurfaceHeight(double worldX, double worldY, out double surfaceZ)
     {
-        if (_current is null)
-        {
-            surfaceZ = 0.0;
-            return false;
-        }
-
-        return _current.TryGetSurfaceHeight(worldX, worldY, out surfaceZ);
+        var result = QuerySurface(worldX, worldY);
+        surfaceZ = result.IsValid ? result.SurfaceZ : 0.0;
+        return result.IsValid;
     }
 }

@@ -8,7 +8,8 @@ public sealed partial class UiVm
     {
         if (!inViewport || !hostValid || !CanBeginMoveInteraction()) return false;
         var pointer = new EditorInteractionPointerSnapshot(pointerId, x, y, x, y, 0);
-        var result = _editorState.Begin(new BeginInteractionCommand(ActiveTool, SelectionTitle, pointer));
+        var result = BeginEditorInteraction(
+            new BeginInteractionCommand(ActiveTool, SelectionTitle, pointer));
         if (result is null) return false;
         FooterState = "状态：捕获中";
         FooterMessage = $"视口拖动开始：{pointer.Summary}";

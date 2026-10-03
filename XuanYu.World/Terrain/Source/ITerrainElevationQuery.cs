@@ -1,7 +1,9 @@
 namespace XuanYu.World.Terrain.Source;
 
+using XuanYu.World;
+
 public interface ITerrainElevationQuery
 {
-    TerrainElevationResult GetElevation(double latitude, double longitude,
+    ElevationQueryResult GetElevation(double latitude, double longitude,
         TerrainElevationInterpolation interpolation = TerrainElevationInterpolation.Bilinear);
 }

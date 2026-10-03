@@ -1,6 +1,7 @@
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Space;
+using XuanYu.Editor.Transform;
 using XuanYu.Render.Abstractions;
 using XuanYu.World.Scene;
 namespace XuanYu.Editor.UI;
@@ -10,7 +11,6 @@ public sealed partial class UiVm
     int _lastLoggedRenderEntityCount = -1;
     ViewportState? _lastViewport;
     public ViewportState CurrentViewport => _lastViewport ?? new(0, 0, 1, 1, 1, 1, 1, 1);
-
     public ISceneRenderSnapshotSource SceneSnapshotSource => this;
     public SceneRenderSnapshot RenderSnapshot
     {
@@ -54,16 +54,18 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(DebugObjectItems));
         OnPropertyChanged(nameof(LogSummary));
     }
-
     void CommitTestEntityPosition(Vector3d position)
     {
-        if (!_sceneState.RenderSnapshot.HasEntity) return;
-        if (!_sceneState.CommitPosition(position)) return;
+        var entity = _sceneState.RenderSnapshot.Entity;
+        if (!entity.IsValid) return;
+        var command = new TransformCommand(
+            0, entity.EntityKey, entity.Transform.WithPosition(position),
+            _worldMutation.WorldRevision);
+        if (!command.TryApply(_worldMutation, out var commit) || !commit.Changed) return;
         _logBus.Info(EditorLogSource.Render, EditorLogCategory.Command,
             "场景实体位置已提交",
             $"实体={EditorDisplayText.Entity(_sceneState.RenderSnapshot.Entity.EntityKey)}；位置={EditorDisplayText.Position(position)}");
     }
-
     void PublishSceneRenderSnapshot()
     {
         UpdateScaleIndicator();

@@ -7,7 +7,7 @@ param(
     [string[]]$OwnedFiles = @(), [string[]]$ConsumedDependencies = @(),
     [string]$TestCommand, [string]$TestScope, [ValidateSet('PASS','FAIL')][string]$TestResult,
     [string]$EvidenceClass, [string]$ProductAcceptanceState,
-    [string]$OwnershipSnapshotPath = 'tools/handoff/ownership-manifest.json'
+    [string]$OwnershipSnapshotPath = 'tools/governance/ownership/ownership-manifest.json'
 )
 $ErrorActionPreference = 'Stop'
 function Rel([string]$path) { ((Resolve-Path -LiteralPath $path).Path.Substring((Resolve-Path $RepositoryRoot).Path.Length)).TrimStart([char]92,[char]47).Replace([char]92,[char]47) }

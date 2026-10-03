@@ -1,4 +1,5 @@
 using Silk.NET.Vulkan;
+using XuanYu.Core.Math;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Render.StaticModels;
@@ -13,24 +14,24 @@ sealed class VulkanVectorOverlayCache : IDisposable
     public VulkanVectorOverlayCache(Vk vk, VulkanDeviceOwner device, Action<string>? log) =>
         (_vk, _device, _log) = (vk, device, log);
 
-    public VulkanVectorOverlayResource? Get(RenderVectorOverlayResource model)
+    public VulkanVectorOverlayResource? Get(RenderVectorOverlayResource model, Vector3d renderOrigin)
     {
-        if (_items.TryGetValue(model.Key, out var old) && old.Revision == model.Revision) return old;
+        if (_items.TryGetValue(model.Key, out var old) && old.Revision == model.Revision && old.RenderOrigin == renderOrigin) return old;
         if (!VulkanVectorOverlayValidator.Validate(model, out var error))
         { _log?.Invoke($"Vector Overlay 资源校验失败：{error}"); return old; }
-        var vertices = model.Vertices.Select(VulkanVectorOverlayVertex.From).ToArray();
+        var vertices = model.Vertices.Select(v => VulkanVectorOverlayVertex.From(v, renderOrigin)).ToArray();
         var indices = model.Indices.ToArray();
         var vertexBytes = vertices.Length * (int)VulkanVectorOverlayVertex.Stride;
         var indexBytes = indices.Length * sizeof(uint);
         if (old is not null && VulkanVectorOverlayBufferReusePolicy.CanReuse(old.VertexBuffer.CapacityBytes, vertexBytes)
             && VulkanVectorOverlayBufferReusePolicy.CanReuse(old.IndexBuffer.CapacityBytes, indexBytes)
             && old.VertexBuffer.TryUpdate(vertices) && old.IndexBuffer.TryUpdate(indices))
-        { old.Update(model.Revision, model.Primitives.ToArray(), model.LabelInstances.ToArray(), model.LabelBitmapResources.ToArray()); return old; }
+        { old.Update(model.Revision, renderOrigin, model.Primitives.ToArray(), model.LabelInstances.ToArray(), model.LabelBitmapResources.ToArray()); return old; }
         var vb = VulkanStaticModelBuffer.Create(_vk, _device, vertices, BufferUsageFlags.VertexBufferBit, out error);
         if (vb is null) { _log?.Invoke($"Vector Overlay 顶点缓冲创建失败：{error}"); return old; }
         var ib = VulkanStaticModelBuffer.Create(_vk, _device, indices, BufferUsageFlags.IndexBufferBit, out error);
         if (ib is null) { vb.Dispose(); _log?.Invoke($"Vector Overlay 索引缓冲创建失败：{error}"); return old; }
-        var next = new VulkanVectorOverlayResource(model.Key, model.Revision, vb, ib,
+        var next = new VulkanVectorOverlayResource(model.Key, model.Revision, renderOrigin, vb, ib,
             model.Primitives.ToArray(), model.LabelInstances.ToArray(), model.LabelBitmapResources.ToArray());
         _items[model.Key] = next; old?.Dispose(); return next;
     }

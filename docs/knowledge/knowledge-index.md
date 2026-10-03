@@ -1,6 +1,6 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-09-29
+> 最后治理更新：2026-10-03
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
 
 ## 任务域预检映射
@@ -15,7 +15,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；EXP-ARCH-001；`decisions/` 中相关 DEC；其他相关 ACTIVE EXP |
 | 空间 / 几何 | Camera、Screen↔World、Geometry、Snap、Topology | K-SPA-001、K-SPA-002、K-GEO-001、K-GEO-002；相关 DEC / EXP |
 | Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan、Shader、Texture、GPU Text、Vector Stroke | K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002、L-REN-001～L-REN-003、L-NATIVE-001；EXP-ARCH-001；其他相关 ACTIVE EXP |
-| Input | Pointer、Capture、手势 Owner、真实生产输入接线、平台输入 | K-INP-001～K-INP-004；EXP-TEST-001；其他相关 ACTIVE EXP |
+| Input | Pointer、Capture、手势 Owner、交互 Epoch、真实生产输入接线、平台输入 | K-INP-001～K-INP-005；EXP-TEST-001；其他相关 ACTIVE EXP |
 | UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标、Diagnostic | K-UI-001、K-DIAG-001；相关 `decisions/`；EXP-UI-001、EXP-UI-002；其他 UI 类 ACTIVE EXP |
 | Data / Save / Asset | 保存、加载、覆盖、资源归一化、异步确认 | K-DATA-001～K-DATA-003、K-ASSET-001、K-ASSET-002；DATA 类 ACTIVE EXP |
 | Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
@@ -23,7 +23,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | XYT / 测试治理 | xyt、测试选择、P0~P4、T0~T3、Runner、Executor、Incident、Lock、Report、IPO、Witness、Evidence、P3、Closure | K-VAL-002、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001、L-XYT-001；并读取 test-registry-policy / xyt-* contracts |
 | Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
 | Governance Convergence / Evidence | Candidate Tree、Deferred Capability、T0-T4、Regression Witness、Handoff ownership | K-GOV-001～K-GOV-003、K-VAL-001～K-VAL-002、EXP-GOVERNANCE-001；本轮候选结论必须先 SEARCH EXISTING，再由 ChatGPT 审计决定 UPDATE / STRENGTHEN / CREATE / RETIRE / NO DEPOSIT |
-| Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-004、K-DIAG-001、K-GOV-003、L-VAL-001、L-NATIVE-001、L-TEST-001；EXP-ARCH-001、EXP-TEST-001、EXP-UI-002、EXP-GOVERNANCE-001 |
+| Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-005、K-DIAG-001、K-GOV-003、L-VAL-001、L-NATIVE-001、L-TEST-001；EXP-ARCH-001、EXP-TEST-001、EXP-UI-002、EXP-GOVERNANCE-001 |
 
 任务若横跨多个域，只加载与当前 Scope 直接相关条目，不机械全文读取。
 
@@ -59,6 +59,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-INP-002 | Knowledge | Input | Win32 Mouse Capture 必须统一管理完整释放生命周期 | P0 | E2 | v0.1.8.10-fix · 2026-06-26 · 8d6e7fd | Active |
 | K-INP-003 | Knowledge | Input | Input Router 只有接入真实生产 Source 才算完成 | P0 | E2 | WAVE-2.5 E0/E5 · 2026-09-24 | Active |
 | K-INP-004 | Knowledge | Input | 平台输入编码必须在 Adapter 边界正规化 | P0 | E2 | Region Snap R1 · 2026-09-25 | Active |
+| K-INP-005 | Knowledge | Input | 交互终止必须绑定 Interaction Epoch | P0 | E1 (scoped, non-Integration) | DIRTY-CONVERGENCE-R1 / FIX-L3 · v0.3.0.6-fix · 03a8003e · 2026-10-03 · shared Workspace Dirty=YES | Active |
 | K-DIAG-001 | Knowledge | UI | Diagnostic 必须保持观察者与输入透明 | P0 | E2 | Diagnostic + Viewport R1 · 2026-09-25 | Active |
 | K-GOV-003 | Knowledge | Engineering | 当前仓库入口/Resolver 高于 Agent 历史环境记忆 | P0 | E2 | SDK resolver audit · 2026-09-25 | Active |
 | EXP-GOVERNANCE-003 | EXP | Engineering | Process Version Telemetry Must Advance | P0 | E2 | GLOBAL-PROCESS-VERSION-GOVERNANCE-R1 · 2026-09-28 | Active |
@@ -103,7 +104,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 - `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
-- `input.md`：K-INP-001～K-INP-004
+- `input.md`：K-INP-001～K-INP-005
 - `ui.md`：K-UI-001、K-DIAG-001
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001

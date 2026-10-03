@@ -16,7 +16,13 @@ public static class MapRegionRenderProjection
         RoadDrawingState roads, MapGeometryPreview? geometry, double dpiScale = 1.0,
         MapLabelBitmapCache? labelCache = null, IGroundSurface? ground = null)
     {
-        GroundElevationQuery? query = ground is null ? null : ground.TryGetElevation;
+        GroundElevationQuery? query = ground is null ? null :
+            (MapPoint point, out double elevation) =>
+            {
+                var result = ground.QuerySurface(point);
+                elevation = result.IsValid ? result.SurfaceZ : 0;
+                return result.IsValid;
+            };
         var builder = new MapVectorOverlayBuilder(map.Surface.BaseHeightMeters, dpiScale, labelCache, query);
         var layers = map.Layers.ToDictionary(layer => layer.LayerId);
         foreach (var region in map.Regions.Where(region =>
@@ -38,4 +44,5 @@ public static class MapRegionRenderProjection
         labelCache?.Trim(bitmap => resource.LabelBitmapResources.Any(x => x.CacheKey == bitmap.CacheKey));
         return resource;
     }
+
 }

@@ -5,6 +5,9 @@ public sealed class TerrainWorld
     public TerrainWorld(TerrainHeightLayer baseHeight, TerrainHeightLayer? editDelta = null)
         : this(baseHeight, FallbackMetadata(), editDelta) { }
 
+    public TerrainWorld(TerrainHeightLayer baseHeight, bool renderRowsSouthToNorth)
+        : this(baseHeight, FallbackMetadata(), null, renderRowsSouthToNorth) { }
+
     public TerrainWorld(TerrainHeightLayer baseHeight, TerrainMetadata metadata,
         TerrainHeightLayer? editDelta, bool renderRowsSouthToNorth = false)
     {
@@ -13,13 +16,19 @@ public sealed class TerrainWorld
         if (!EditDelta.IsEditable)
             throw new ArgumentException("EditDelta 必须是可编辑层。", nameof(editDelta));
         Metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
-        RenderRowsSouthToNorth = renderRowsSouthToNorth;
+        Storage = new TerrainWorldStorage(BaseHeight, EditDelta);
+        ElevationQuery = new TerrainElevationQuery(Storage);
+        RasterOrientation = new TerrainRasterOrientation(renderRowsSouthToNorth);
     }
 
     public TerrainHeightLayer BaseHeight { get; }
     public TerrainHeightLayer EditDelta { get; }
     public TerrainMetadata Metadata { get; }
-    public bool RenderRowsSouthToNorth { get; }
+    public TerrainWorldStorage Storage { get; }
+    public TerrainElevationQuery ElevationQuery { get; }
+    public TerrainRevision TerrainRevision => TerrainRevision.From(Storage);
+    public TerrainRasterOrientation RasterOrientation { get; }
+    public bool RenderRowsSouthToNorth => RasterOrientation.RowsSouthToNorth;
 
     public static TerrainWorld FromSource(Source.TerrainSourceData source) =>
         TerrainWorldFactory.FromSource(source);
@@ -30,26 +39,25 @@ public sealed class TerrainWorld
     public double QueryHeight(TerrainSampleCoordinate coordinate) =>
         GetFinalHeight(coordinate).Meters;
 
+    public XuanYu.World.ElevationQueryResult QueryElevation(
+        TerrainSampleCoordinate coordinate) => ElevationQuery.Query(coordinate);
+
     static TerrainMetadata FallbackMetadata() =>
         new(1, 1, new(1, 1), 0, 0, null, 0, new(0, 0, 1, 1));
 
     public TerrainHeightSample GetFinalHeight(TerrainSampleCoordinate coordinate)
-    {
-        var baseSample = BaseHeight.Read(coordinate);
-        if (baseSample.IsNoData) return TerrainHeightSample.NoData;
-        return TerrainHeightSample.Valid(baseSample.Meters + EditDelta.Read(coordinate).Meters);
-    }
+        => Storage.Read(coordinate);
 
     public bool TryGetFinalHeight(TerrainSampleCoordinate coordinate, out double meters)
     {
-        var finalSample = GetFinalHeight(coordinate);
-        if (finalSample.IsNoData)
+        var result = QueryElevation(coordinate);
+        if (!result.IsValid)
         {
             meters = 0.0;
             return false;
         }
 
-        meters = finalSample.Meters;
+        meters = result.ElevationMeters;
         return true;
     }
 }

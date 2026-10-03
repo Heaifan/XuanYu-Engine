@@ -1,4 +1,5 @@
 using XuanYu.Core.Map;
+using XuanYu.World;
 
 namespace XuanYu.World.Map;
 
@@ -32,16 +33,16 @@ public sealed record WorldMapState(
             SurfaceKind, BaseHeightMeters, AmplitudeMeters, WavelengthMeters,
             Seed, worldX, worldY);
 
+    public SurfaceQueryResult QuerySurface(double worldX, double worldY) =>
+        Contains(worldX, worldY)
+            ? SurfaceQueryResult.Valid(SampleHeight(worldX, worldY))
+            : SurfaceQueryResult.OutOfBounds;
+
     public bool TryGetSurfaceHeight(double worldX, double worldY, out double surfaceZ)
     {
-        if (!Contains(worldX, worldY))
-        {
-            surfaceZ = 0.0;
-            return false;
-        }
-
-        surfaceZ = SampleHeight(worldX, worldY);
-        return true;
+        var result = QuerySurface(worldX, worldY);
+        surfaceZ = result.IsValid ? result.SurfaceZ : 0.0;
+        return result.IsValid;
     }
 
     // MAP-A-R2-D3：从领域聚合投影（World 同层，零跨层依赖）。

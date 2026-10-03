@@ -19,17 +19,20 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     ImageView[] _views = []; VulkanDepthAttachment? _depthAttachment;
     Silk.NET.Vulkan.Pipeline _pipeline = default;
     PipelineLayout _pipelineLayout = default;
-    RenderProjection _renderProjection;
+    readonly VulkanFrameState _frameState = new();
+    readonly VulkanGpuResourceState _gpuResourceState = new();
     readonly VulkanStaticModelCache _staticModels;
     readonly VulkanVectorOverlayCache _vectorOverlays;
     VulkanStaticModelBuffer? _proceduralVertexBuffer;
-    bool _hasRenderProjection;
     Extent2D _extent;
     int _recordCommandDepth;
     int _recordCommandTraceCount;
     int _lastLoggedCommandEntityCount = -1;
     int _lastLoggedCommandViewCount = -1;
     bool _disposed;
+
+    RenderProjection _renderProjection => _frameState.Projection;
+    bool _hasRenderProjection => _frameState.HasProjection;
 
     public VulkanClearFrameOwner(Vk vk, VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner, int graphicsFamily, Action<string>? log)
     {

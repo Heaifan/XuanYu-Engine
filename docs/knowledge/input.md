@@ -177,3 +177,71 @@ Real Platform Event → Real Adapter → Editor Event → Production Router → 
 平台编码只能在 Adapter 内解释；Router、Consumer 和领域 Core 只消费统一语义，例如 `EditorKey.Alt` 与 `EditorPointerModifiers.Alt`。`0x0020` 不得凭经验映射为 Alt，必须依据平台合同区分 XBUTTON1 等真实含义。
 
 验证必须覆盖真实平台 Enum / Message Contract，再验证 Adapter 输出的统一语义。
+
+---
+
+## K-INP-005 交互终止必须绑定 Interaction Epoch
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1（单次 scoped 工程证据；非 Integration Evidence）
+**K Coordinator 裁决**：ADOPT · 2026-10-03（FIX-L3 原写入无 `docs/knowledge/**` Ownership；本次由 K Coordinator 审计采纳）
+**标签**：Interaction Epoch、Terminal Deduplication、ToolChanged、Late Commit
+**适用范围**：Viewport Router、Editor interaction session、Gizmo direct entry、Tool lifecycle 与 transient cleanup。
+
+**首次关键确认**：2026-10-03
+**Process Version**：`v0.3.0.6-fix`
+**Branch**：`feat/v0.3-world-authoring-r1`
+**Commit**：`03a8003e8e5dbb5beb7ee0460c190e3ecef1f83b`（验证时 HEAD；本轮工作区 Dirty=YES）
+**来源**：DIRTY-CONVERGENCE-R1 / FIX-L3
+
+### 问题
+
+仅覆盖 Router terminal dispatch 的测试，不能证明完整 lifecycle 已闭合：Router 可以进入 Idle，而真实 Editor interaction 仍可接受 Commit。若去重状态只在 Router 收到 Pressed 时复位，绕过 Router Pressed 的合法 direct interaction begin 会继承上一 epoch 的 `terminalHandled=true`。后续 Escape、Cancel、CaptureLost、FocusLost、WindowDeactivated 或 ViewportDisposed 可能不再关闭真实 Editor interaction，晚到 Commit 因而有机会提交已终止的会话。
+
+ToolChanged 还有独立的顺序要求：旧 Tool 的生命周期必须在 ToolSnapshot 改变前终止。Consumer 的 ToolChanged Cancel 若会重入 SelectTool，就可能抢先改变旧 Tool 上下文；无 draft 的绘制 transaction 也必须完成关闭。
+
+### 工程规则
+
+```text
+BEGIN INTERACTION
+→ open a new interaction epoch
+→ terminalHandled = false
+
+TERMINAL
+→ close the current Editor interaction and transient state once
+→ terminalHandled = true
+
+NEXT BEGIN
+→ open a new epoch
+→ terminalHandled = false
+```
+
+epoch 必须在成功建立 interaction 时开启，不得依赖某一种输入传输路径。所有 Commit 仍须由当前真实 Editor session 接受；Router Idle 本身不能证明 interaction 已终止。
+
+ToolChanged 的顺序是：旧 Tool terminal intent → Router / Editor interaction closure → owner、transaction、hover 与 snap cleanup → 新 Tool state。Terminal cleanup 保留持久地图选择，并清除 `_regionVertexSnap`。
+
+### 禁止做法
+
+- 只在 Router Pressed 或特定 Gizmo 方法内复位 terminal dedup。
+- terminal 后只检查 Router Idle，未检查 Editor interaction/session 是否仍可 Commit。
+- 改 Tool state 后才尝试用旧 Tool / owner 上下文清理生命周期。
+- 通用 terminal 通过 `ClearMapGeometrySelection(...)` 清除持久 Region、Road、Marker 或新建选择。
+- 将尚待产品决策的 Draft Retention Policy 混入 terminal 修复。
+
+### 验证方法
+
+- direct Move、Rotate、Scale begin 后，逐一触发 Escape、Cancel、CaptureLost、FocusLost、WindowDeactivated、ViewportDisposed；所有旧 session late Commit 必须失败。
+- 重复 terminal 在同一 epoch 只通知一次；下一 epoch 必须重新允许 terminal 通知。
+- ToolChanged 覆盖 Region owner、零节点 transaction、Region hover preview、Road owner/draft 与持久 selection。
+
+### 本轮验证证据
+
+DIRTY-CONVERGENCE-R1 / FIX-L3 提交给 K 的 scoped 验证记录：原报告的 8 个失败用例 8/8 PASS；direct terminal late-commit 回归 18/18 PASS；Region/Road lifecycle 11/11 PASS；UnifiedTerminalCoordinatorTests 11/11 PASS；InputIntegration 83/83 PASS；Viewport / Transform UI / Region / Road scoped set 258/258 PASS；受影响 Editor.UI Build 0 warning / 0 error；ARCH-A 与 5+100 PASS。此为 E1 单次 scoped 工程证据，不是 Integration Evidence、完整 Solution / Integration Gate 或远端验收。验证时 Branch=`feat/v0.3-world-authoring-r1`、HEAD=`03a8003e8e5dbb5beb7ee0460c190e3ecef1f83b`、Process Version=`v0.3.0.6-fix`、共享 Workspace Dirty=YES。
+
+**适用边界**：本条定义终止 epoch 与 lifecycle ordering，不改变 Region / Road Draft Retention Policy，也不替代真实 Native / UI 验收。
+
+**关联 Knowledge**：K-INP-001、K-INP-002
+**关联 Incident / ERR / EXP**：本轮未发现需记录的 Agent ERR；无 EXP 写回。
+
+---

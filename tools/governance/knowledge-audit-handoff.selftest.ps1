@@ -5,8 +5,7 @@ $required = @(
     'docs\governance\agent-completion-report-standard.md',
     'docs\dev-rules.md',
     'docs\codex-fast-execution-profile.md',
-    'docs\governance\sync-handoff-sop.md',
-    'docs\knowledge\README.md'
+    'docs\governance\sync-handoff-sop.md'
 )
 $marker = 'KNOWLEDGE / EXPERIENCE AUDIT HANDOFF'
 $requiredText = 'CHATGPT KNOWLEDGE AUDIT REQUIRED'
@@ -23,4 +22,10 @@ foreach ($term in @('Root Cause', 'Changed Files', 'Candidate Lessons', 'SEARCH 
 }
 if ($canonical -notmatch 'Knowledge is|Knowledge 是') { throw 'Knowledge definition missing' }
 if ($canonical -notmatch 'Experience is|Experience 是') { throw 'Experience definition missing' }
+$agents = Get-Content -Raw (Join-Path $root 'AGENTS.md')
+foreach ($term in @('Root Cause', 'Changed Files', 'Candidate Lessons', 'SEARCH EXISTING',
+        'UPDATE / STRENGTHEN', 'CREATE', 'RETIRE', 'NO DEPOSIT', 'XYK CANDIDATE',
+        'AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY')) {
+    if ($agents -notmatch [regex]::Escape($term)) { throw "AGENTS audit handoff missing: $term" }
+}
 Write-Output 'KNOWLEDGE AUDIT HANDOFF SELFTEST: PASS'
