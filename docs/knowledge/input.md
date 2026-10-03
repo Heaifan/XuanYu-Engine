@@ -163,7 +163,11 @@ Router、Consumer 和测试可以独立存在，但这不等于生产输入已�
 Real Platform Event → Real Adapter → Editor Event → Production Router → Arbitration → Owner → Consumer → Domain/Core
 ```
 
-禁止以“Router 可实例化”“Helper PASS”或“测试有 Router”代替生产接线证据；必须审计真实 Native/Avalonia Source 是否仍直接调用 UiVm 或 Consumer。
+真实接线还必须证明**决定交互语义的 payload 沿整条链保持完整**。例如 Cursor Screen XY、Wheel Delta、Pointer ID、Modifiers、Button 与 SurfaceSource 所需上下文，不能在中间 Handler 中被丢弃后再调用语义更弱的无参数接口。链路“经过了 Router”但关键 payload 已丢失，仍然属于生产接线失败。
+
+禁止以“Router 可实例化”“Helper PASS”或“测试有 Router”代替生产接线证据；必须审计真实 Native/Avalonia Source 是否仍直接调用 UiVm 或 Consumer，并验证最终 Consumer 实际收到的关键字段与平台事件一致。
+
+**2026-10-03 强化证据**：DEM-ZOOM-ANCHOR-DRIFT-R1 中，Wheel 事件已进入生产 Handler，但 `UiVmD1Handler.HandleWheel` 丢弃 Cursor XY 并调用无光标 Dolly，导致固定 Screen Anchor 漂移 `18.1115 px`。修复为 Screen XY → GroundPickResult → Anchored Pure Dolly 后，相关自动与真实 HGT 集成合同恢复。该事件证明“生产链存在”不足以证明输入语义被正确传递。
 
 ---
 

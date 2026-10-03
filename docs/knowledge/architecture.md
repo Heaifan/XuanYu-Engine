@@ -161,6 +161,80 @@ Screen A
 
 ---
 
+## K-SPA-003 Cursor-Anchored Zoom 必须保持 Screen→Surface 权威，Pure Dolly 不得修改 Pivot
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：Camera、Zoom、Dolly、Terrain、Picking、Screen Anchor、Surface Authority
+**适用范围**：Viewport Wheel、DEM Terrain、ReferencePlane fallback、Camera Navigation、Orbit Pivot、Terrain Tile Edge。
+
+**首次确认**：2026-10-03
+**来源任务**：DEM-ZOOM-ANCHOR-DRIFT-R1
+**Branch**：`feat/v0.3-world-authoring-r1`
+**代码 Commit**：待补证（修复尚未提交；验证基线 HEAD=`a3d5787ba7c4a52821cb32f0bc895b1334f1daf9`，共享 Workspace Dirty=YES）
+
+### 问题
+
+真实 DEM 导入后，Wheel Zoom 会让鼠标所指地形点发生屏幕漂移。修复前，Wheel 输入本来携带 Screen XY，但 `UiVmD1Handler.HandleWheel` 丢弃坐标并调用无光标参数的 `DollyCamera`；同时 Anchored Dolly 又同步平移 `ObservationCenter`，把纯缩放错误地变成了 Pivot / Focus mutation。Terrain 越界查询还会抛异常，令 SurfaceSource fallback 缺少显式状态。
+
+### 根因
+
+Zoom Anchor 的语义权威没有贯穿完整链路：输入层丢失了 Cursor XY，而 Camera mutation 又混入了 Orbit Pivot 职责。结果是“有 Wheel 路由”和“有 Dolly”都成立，但固定 Screen Anchor、Surface Source 与 Camera 不变量没有形成单一合同。
+
+### 工程规则
+
+Cursor-Anchored Zoom 的唯一权威链固定为：
+
+```text
+Wheel Screen XY
+→ GroundPickResult
+→ SurfaceSource + World XYZ
+→ Pure Dolly
+```
+
+- 有效 Terrain Hit 时，必须使用完整 Terrain World XYZ；不得把 Z 归零，也不得再由 ReferencePlane 覆盖。
+- Terrain 无效或越界时，必须返回可判定状态，再显式 fallback 到逻辑 ReferencePlane；不得用异常或静默默认值表达 Surface Source。
+- Pure Dolly 只允许修改 Camera Position。Forward、Up、FOV、Orbit Pivot、Focus、Target 与 RenderOrigin 必须保持不变。
+- Zoom 不是 Orbit，不得通过 `LookAt`、重算 Target、平移 ObservationCenter 或回到 DEM 中心来补偿漂移。
+- 输入路由不仅要“接通”，还必须把决定交互语义的 Screen XY / Wheel Delta 等 payload 原样保留到最终 Consumer。
+
+### 禁止做法
+
+- Handler 接收到 Cursor XY 后改调无光标 Dolly；
+- Terrain Hit 有效时 fallback 到 ReferencePlane 或强制 Z=0；
+- Anchored Dolly 同步平移 ObservationCenter / Pivot / Focus；
+- 用 smoothing、magic offset、经验比例或每帧 recenter 掩盖 Anchor 漂移；
+- 把 Terrain OutOfBounds 作为异常路径，让调用方猜测是否 fallback。
+
+### 验证方法
+
+固定同一 Screen XY，执行 Zoom In/Out round trip，并同时验证：
+
+```text
+Screen XY → Surface P0
+Zoom
+Screen XY → Surface P1
+
+World XY error
+World Z error
+Screen reprojection error
+Forward angular error
+Pivot / Focus invariance
+SurfaceSource invariance
+```
+
+至少覆盖平地、山坡、高差区域、Tile Edge 与 DEM 外 ReferencePlane 区域；多 Tile、LOD Surface Resolver 或 RenderOrigin 变更后必须重新验证。
+
+### 本轮证据
+
+修复前固定屏幕点误差为 `18.1115 px`，Pivot 从 `(3,2,4)` 变为 `(2.7,2.9,3.55)`。修复后 ReferencePlane 对照序列最大屏幕误差约 `0.000852 px`，In/Out round-trip Camera Position 误差 `8.35e-6`，Forward angular error `≤1e-9`；真实 HGT 集成测试中 Terrain World XY / Z error 均 `≤1e-5`，有效 Terrain Hit 未被 ReferencePlane 覆盖。Core Camera/Render/Map/Vulkan 373/373、DEM/Zoom/Viewport 17/17、真实 HGT Cursor Anchor 1/1 PASS。P4-C 真实用户操作验收仍为 PENDING，因此本条保持 E1，不宣称完整 Product Closure。
+
+**关联 Knowledge**：K-SPA-001、K-INP-003、K-VAL-002
+**关联 Lesson**：L-REN-002
+
+---
+
 ## K-ARCH-001 Composition Root 初始化顺序属于真实依赖合同
 
 **状态**：Active
