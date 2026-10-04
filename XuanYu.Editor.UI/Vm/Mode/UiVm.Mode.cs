@@ -20,6 +20,7 @@ public sealed partial class UiVm
 
     public bool ToggleEditorMode()
     {
+        CancelMarkerDrawing("模式切换");
         ViewportInput.CancelForModeChange();
         var transition = _modeManager.Toggle();
         if (!transition.Changed) return false;

@@ -14,13 +14,14 @@ public sealed partial class UiVm
     public async Task<bool> BeginMarkerPlacementAsync()
     {
         if (!CanRequestMarkerPlacement) return false;
+        if (!TryRequireCurrentMapManifestIdentity("点标记绘制")) return false;
         if (SelectedDataset?.Type != MapDatasetTypes.Marker)
         {
             DatasetCreateType = MapDatasetTypes.Marker;
-            if (!await CreateDatasetAsync()) return false;
+            if (!await CreateDatasetAsync("点标记绘制")) return false;
         }
         if (SelectedDataset is not { Type: MapDatasetTypes.Marker, Status: "正常", IsLocked: false } target) return false;
-        SetDatasetDrawingTarget(target.Id); SelectTool("标记放置");
+        SetDatasetDrawingTarget(target.Id); SelectTool("标记放置"); BeginMarkerDrawing();
         FooterMessage = $"已进入地图标记放置：{target.Name}。";
         return IsMarkerPlacementTool;
     }

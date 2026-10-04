@@ -25,7 +25,7 @@ sealed class UiVmMapBackend(UiVm vm, GestureOwner owner, Func<ViewportState> vie
         if (_owner == GestureOwner.MapEdit) _vm.TryBeginMapGeometryPointer(x, y, _viewport());
         if (_owner == GestureOwner.Region) _vm.RegionDrawingPointerPressed(x, y, _viewport());
         if (_owner == GestureOwner.Road) _vm.RoadDrawingPointerPressed(x, y, _viewport());
-        if (_owner == GestureOwner.Marker) _vm.MarkerPlacementPointerPressed(x, y, _viewport());
+        if (_owner == GestureOwner.Marker) _vm.BeginMarkerDrawing();
     }
     public void Update(ViewportGestureContext c)
     {
@@ -34,16 +34,19 @@ sealed class UiVmMapBackend(UiVm vm, GestureOwner owner, Func<ViewportState> vie
         if (_owner == GestureOwner.Region) _vm.RegionDrawingPointerMoved(x, y, _viewport(),
             c.Input.Modifiers.HasFlag(EditorPointerModifiers.Alt));
         if (_owner == GestureOwner.Road) _vm.RoadDrawingPointerMoved(x, y, _viewport());
+        if (_owner == GestureOwner.Marker) _vm.MarkerDrawingPointerMoved(x, y, _viewport());
     }
     public void Commit(ViewportGestureContext c)
     {
         var (x, y) = (c.Input.Position.X, c.Input.Position.Y);
         if (_owner == GestureOwner.MapEdit) _vm.CommitMapGeometryPointer(x, y, _viewport());
+        if (_owner == GestureOwner.Marker) _vm.MarkerDrawingPointerReleased(x, y, _viewport());
     }
     public void Cancel(ViewportCancellationContext c)
     {
         if (_owner == GestureOwner.MapEdit) _vm.CancelMapGeometryPointer(c.Reason.ToString());
         if (_owner == GestureOwner.Region) _vm.CancelRegionDrawingFromEscape();
         if (_owner == GestureOwner.Road) _vm.CancelRoadDrawingFromEscape();
+        if (_owner == GestureOwner.Marker) _vm.CancelMarkerDrawing(c.Reason.ToString());
     }
 }

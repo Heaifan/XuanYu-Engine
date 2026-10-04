@@ -57,7 +57,7 @@ public sealed partial class UiVm
     }
     public bool PreviewMapGeometryPointer(double x, double y, ViewportState viewport)
     {
-        if (_mapGeometryDrag is not { } drag || !TryPickRegionPoint(x, y, viewport, out var point)) return false;
+        if (_mapGeometryDrag is not { } drag || !TryPickMapPoint(x, y, viewport, out var point)) return false;
         point = ResolveGenericGeometrySnap(drag.Selection, point, x, y, viewport); // ResolveRegionVertexSnap legacy contract.
         var points = drag.OriginalPoints.SetItem(drag.VertexIndex, point);
         _mapGeometryPreview = new(drag.Selection, points);

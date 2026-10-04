@@ -15,7 +15,7 @@ public sealed partial class UiVm
     {
         if (!IsRoadDrawingTool) return false;
         if (!IsInsideViewport(x, y, viewport)) return true;
-        if (!TryPickRegionPoint(x, y, viewport, out var point)) return true;
+        if (!TryPickMapPoint(x, y, viewport, out var point)) return true;
         if (!_roadDrawing.IsActive)
         {
             var layer = MapLayerRules.Find(MapSession.CurrentMap.Layers, MapSession.ActiveRegionLayerId);
@@ -26,7 +26,7 @@ public sealed partial class UiVm
     }
     public bool RoadDrawingPointerMoved(double x, double y, ViewportState viewport)
     {
-        if (!IsRoadDrawingTool || !_roadDrawing.IsActive || !TryPickRegionPoint(x, y, viewport, out var point)) return false;
+        if (!IsRoadDrawingTool || !_roadDrawing.IsActive || !TryPickMapPoint(x, y, viewport, out var point)) return false;
         _roadDrawing.UpdatePointer(point); PublishSceneRenderSnapshot(); return true;
     }
     public bool CommitRoadDrawingFromEnter() { if (!IsRoadDrawingTool || !_roadDrawing.IsActive) return false; return CloseRoadDraft(); }

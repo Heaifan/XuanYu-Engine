@@ -47,7 +47,11 @@ public sealed partial class UiVm
         }
 
         var changingTool = EditorToolText.FromText(ActiveTool) != requestedTool;
-        if (changingTool) ViewportInput.CancelForToolChange();
+        if (changingTool)
+        {
+            CancelMarkerDrawing("工具切换");
+            ViewportInput.CancelForToolChange();
+        }
         if (_editorState.ChangeTool(new ChangeEditorToolCommand(name)) is null)
         {
             RaiseToolChanged();

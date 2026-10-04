@@ -4,9 +4,9 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    async Task<bool> EnsureDatasetRegistryAsync()
+    async Task<bool> EnsureDatasetRegistryAsync(string domain = "区域绘制")
     {
-        if (!TryRequireCurrentMapManifestIdentity()) return false;
+        if (!TryRequireCurrentMapManifestIdentity(domain)) return false;
         if (_datasetRegistry is not null) return true;
         var path = CurrentMapManifestPath;
         if (string.IsNullOrWhiteSpace(path))
@@ -19,9 +19,9 @@ public sealed partial class UiVm
         return true;
     }
 
-    public async Task<bool> CreateDatasetAsync()
+    public async Task<bool> CreateDatasetAsync(string domain = "区域绘制")
     {
-        if (!await EnsureDatasetRegistryAsync()) return DatasetFailed("无法初始化地图工作区，数据集未创建。");
+        if (!await EnsureDatasetRegistryAsync(domain)) return DatasetFailed("无法初始化地图工作区，数据集未创建。");
         try
         {
             var result = await _datasetRegistry!.CreateAutoAsync(DatasetCreateType);

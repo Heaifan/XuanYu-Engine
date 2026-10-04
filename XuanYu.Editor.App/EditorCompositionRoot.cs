@@ -17,5 +17,5 @@ public static class EditorCompositionRoot
         Func<bool> isWriteThread, bool seedInitialScene) =>
         (EditorRuntimeComposition.CreateScene(
                 new GridWorldPartitionStrategy(regionSize: 5), seedInitialScene),
-            EditorRuntimeComposition.CreateEmptyWorldMapSession(isWriteThread));
+            EditorRuntimeComposition.CreateMapSession(isWriteThread));
 }

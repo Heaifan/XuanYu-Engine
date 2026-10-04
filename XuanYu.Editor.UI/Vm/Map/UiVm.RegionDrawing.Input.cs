@@ -13,7 +13,7 @@ public sealed partial class UiVm
         return MapSurfacePicker.TryPickGround(MapSession.CurrentMap, projection, x, y, terrain, out result);
     }
 
-    bool TryPickRegionPoint(double x, double y, ViewportState viewport, out MapPoint point)
+    bool TryPickMapPoint(double x, double y, ViewportState viewport, out MapPoint point)
     {
         if (!TryPickGroundPoint(x, y, viewport, out var result))
         {

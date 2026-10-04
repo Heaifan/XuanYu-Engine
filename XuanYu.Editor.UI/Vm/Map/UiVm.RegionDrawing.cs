@@ -62,7 +62,7 @@ public sealed partial class UiVm
             return PreviewMapGeometryPointer(x, y, viewport);
         if (!IsRegionDrawingDraftActive && TryMapGeometryVertexHover(x, y, viewport)) return true;
         if (!IsRegionDrawingTool || !_regionDrawing.IsActive ||
-            !TryPickRegionPoint(x, y, viewport, out var point)) return false;
+            !TryPickMapPoint(x, y, viewport, out var point)) return false;
         if (_regionDrawing.Draft is not { Vertices.IsDefaultOrEmpty: false } draft) return false;
         point = ResolveRegionDrawingPoint(point, x, y, viewport, snapSuppressed);
         var first = draft.Vertices[0];
