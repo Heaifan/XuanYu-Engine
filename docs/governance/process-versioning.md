@@ -18,6 +18,12 @@ Each counted change is one event and one ledger row. Supported types are `FEATUR
 
 The version calculator preserves the repository format `vA.B.C.D[-suffix]`. A new FEATURE/FIX/STABILIZATION increments `D`; a current `-fixN` chain increments `N`. This is a compatibility rule for the current line, not a universal string format for other projects.
 
+### Changelog binding and monthly archives
+
+Version Events are historical facts consumed by Changelog Aggregation, not a permission for each parallel Lane to edit `changelog.md`. A Lane submits a `CHANGELOG CANDIDATE`; the Coordinator validates and deduplicates candidates after the Wave. Governance-only archive repair, encoding recovery, and monthly window maintenance use `Version Event: NONE` unless an already-recorded product event is being restored as historical text.
+
+The root changelog is UTF-8 without BOM and exposes only the current month plus the previous month. The previous-month root section is a Reference Mirror of `docs/archive/changelog/changelog-YYYY-MM.md`; the archive remains the historical Authority. `scripts/governance/changelog-gate.ps1` is fail-closed for encoding integrity, month window, archive completeness, month boundaries, mirror equality, parseability, and record-count preservation.
+
 ### Build and acceptance identity
 
 Formal records must contain:

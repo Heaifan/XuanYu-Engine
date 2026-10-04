@@ -7,6 +7,11 @@ public sealed partial class UiVm
 {
     bool CloseRegionDraft()
     {
+        if (!TryRequireCurrentMapManifestIdentity())
+        {
+            TerminateRegionDrawing(EditorPointerEventKind.Cancel, FooterMessage);
+            return false;
+        }
         ReleaseRegionPointerCapture(EditorPointerEventKind.Released);
         var draft = _regionDrawing.TakeDraftForClose();
         if (draft is null)
@@ -19,12 +24,11 @@ public sealed partial class UiVm
         var result = MapSession.CreateRegion(draft);
         if (!result.IsSuccess)
         {
-            FooterState = "状态：错误";
-            FooterMessage = result.Error?.Message ?? "区域闭合失败";
-            LogRegionDrawingError(FooterMessage);
+            var message = result.Error?.Message ?? "区域闭合失败";
+            TerminateRegionDrawing(EditorPointerEventKind.Cancel, message);
             return true;
         }
-        _regionDrawing.Cancel(); ClearRegionDrawingSnap(); RaiseRegionDrawingBindings(); EndDrawingTransaction();
+        TerminateRegionDrawing(EditorPointerEventKind.Released);
         SelectTool("选择", logTool: false); FooterState = "状态：就绪"; FooterMessage = "区域已创建";
         LogRegionDrawingCreated();
         PublishSceneRenderSnapshot(); return true;

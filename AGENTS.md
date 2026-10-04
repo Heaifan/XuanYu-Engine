@@ -198,6 +198,8 @@ Agent 错误权威库：
 - Planning 与 Execution 均执行 Knowledge Preflight；进入正式验收/Commit 前输出 `VERSION EVENT`（Change Type、Previous、Next、Reason）。不推进产品版本时输出 `Version Event: NONE` 与历史依据。
 - 当前仓库工具入口：`tools/governance/version-audit.ps1`、`version-next.ps1`、`version-selftest.ps1`、`version-metrics.ps1`；规则与跨项目模板见 `docs/governance/process-versioning.md` 和 `docs/governance/templates/process-version-governance-template.md`。
 - 正式 Acceptance 必须输出 `ACCEPTANCE IDENTITY`。Dirty=YES 只能作为显式 Dirty Runtime Probe，不得宣布正式 Product Closed。
+- Changelog 月度治理：根 `changelog.md` 只展示当前月与上月；每月首次治理冻结上月 `docs/archive/changelog/changelog-YYYY-MM.md`，上月根正文必须是 Archive 的 Reference Mirror，Archive 是历史 Authority。Changelog 文件统一使用 UTF-8 无 BOM，并由 `scripts/governance/changelog-gate.ps1` FAIL-CLOSED 校验。
+- 并行 Lane 默认只提交 `CHANGELOG CANDIDATE`，不得争抢根 changelog；Wave 结束后必须独立执行 `CHANGELOG AGGREGATION`，验证、去重、合并重要事实后才能进入 Changelog Gate 与收口。
 - 所有施工任务最终报告必须追加 `docs/governance/knowledge-audit-handoff.md` 的 `XYK CANDIDATE` 纯文本区块。AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY；候选不得写入 Codex memory、仓库文件、ad-hoc note 或其它知识存储。ChatGPT / XYK Coordinator 作为唯一 REVIEWER + WRITE AUTHORITY，后续决定接受、合并、修订、拒绝或过期。
 
 固定交接格式以 `docs/governance/knowledge-audit-handoff.md` 为唯一规范。报告正文必须包含 `Root Cause`、`Changed Files`、`Tests`、`Evidence`、`Known Risk` 与 `Candidate Lessons`；任务结束必须请求 ChatGPT 审计结果并判断是否沉淀 Knowledge / Experience：

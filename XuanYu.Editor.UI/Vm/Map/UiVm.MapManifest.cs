@@ -1,5 +1,5 @@
 using XuanYu.Editor.MapDocument;
-
+using XuanYu.World.Map;
 namespace XuanYu.Editor.UI;
 
 // MAP-DOC-A-R1：Map Workspace 只投影 Manifest 身份与容器数量，不复制 Editor State。
@@ -11,14 +11,11 @@ public sealed partial class UiVm
 
     public MapManifest CurrentMapManifest => _mapManifestOwner.CurrentManifest
         ?? MapManifest.FromMap(MapSession.CurrentMap);
-
     public string MapManifestIdText => CurrentMapManifest.Id;
 
     public string MapManifestCoordinateSystemText =>
         $"{CurrentMapManifest.CoordinateSystem.Type} / {CurrentMapManifest.CoordinateSystem.Unit}";
-
     public int DatasetCount => DatasetItems.Count;
-
     public string DatasetEmptyState => DatasetCount == 0
         ? "当前无数据集"
         : $"当前有 {DatasetCount} 个数据集";
@@ -42,10 +39,28 @@ public sealed partial class UiVm
             RaiseMapDocumentChanged();
             return false;
         }
+        if (!MapId.TryParse(result.Value.Id, out var loadedMapId))
+        {
+            _mapManifestOwner.MarkError("当前地图 Manifest.Id 非法。");
+            FooterState = "状态：不可用";
+            FooterMessage = "地图 Manifest 已拒绝：当前地图 Manifest.Id 非法。";
+            RaiseMapDocumentChanged();
+            return false;
+        }
+        var mapWithLoadedIdentity = MapSession.CurrentMap with { MapId = loadedMapId };
+        var identity = MapManifestIdentityValidator.Validate(mapWithLoadedIdentity.MapId, result.Value);
+        if (!identity.Succeeded)
+        {
+            _mapManifestOwner.MarkError(identity.Message);
+            FooterState = "状态：不可用";
+            FooterMessage = $"地图 Manifest 已拒绝：{identity.Message}";
+            RaiseMapDocumentChanged();
+            return false;
+        }
         var registry = new MapDatasetRegistry(path, result.Value);
         var documents = await registry.LoadFeatureDocumentsAsync();
         if (!documents.Succeeded || documents.Value is null) { FooterMessage = documents.Message; return false; }
-        var runtime = MapDatasetFeatureBinding.Build(MapSession.CurrentMap, result.Value, documents.Value);
+        var runtime = MapDatasetFeatureBinding.Build(mapWithLoadedIdentity, result.Value, documents.Value);
         if (!runtime.Succeeded || runtime.Value is null) { FooterMessage = runtime.Message; return false; }
         var replaced = MapSession.ReplaceCurrentMap(runtime.Value, true, path);
         if (!replaced.IsSuccess) { FooterMessage = replaced.Error!.Value.Message; return false; }

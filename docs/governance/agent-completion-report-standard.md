@@ -74,6 +74,12 @@ XYT Version Event Gate additionally reports `VERSION LEDGER`, `VERSION EVENT`, `
 
 ## 7. 治理 / 经验回写
 
+## 7.1 Changelog Candidate 与 Aggregation
+
+并行 Lane 完成时不得直接修改根 `changelog.md`，必须提交以下 `CHANGELOG CANDIDATE` 字段：Change Type、Important Change、Root Cause / Reason、User Visible Effect、Architecture / Governance Effect、Validation、Version Event、Remaining Blocker。所有 Lane 完成后由单一 Coordinator 执行 `CHANGELOG AGGREGATION`，完成 Candidate 验证、去重、合并与施工直播清除，再运行 Changelog Gate。
+
+月度切换冻结上月 Archive；根 changelog 仅保留当前月与上月，上月根段必须与 `docs/archive/changelog/changelog-YYYY-MM.md` 的 entry body 一致。Archive 是历史 Authority，根段是 Reference Mirror；编码统一为 UTF-8 无 BOM。任何编码、月份窗口、Archive 边界、镜像或历史记录数量检查失败均为 FAIL-CLOSED。
+
 没有治理回写时在报告中写 `XYK CANDIDATE: NONE`。
 
 存在候选时只能在报告纯文本 `XYK CANDIDATE` 区块中区分：

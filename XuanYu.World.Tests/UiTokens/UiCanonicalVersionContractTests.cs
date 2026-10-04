@@ -63,9 +63,9 @@ public sealed class UiCanonicalVersionContractTests
     }
 
     [Fact]
-    public void Changelog_starts_with_the_v03_baseline()
+    public void Changelog_contains_the_v03_baseline_entry()
     {
         var content = File.ReadAllText(RootPath("changelog.md"));
-        Assert.StartsWith($"## v{Versions().VersionPrefix}-fix ·", content.TrimStart());
+        Assert.Matches(@"(?m)^## v0\.3\.\d+\.\d+-fix ·", content);
     }
 }

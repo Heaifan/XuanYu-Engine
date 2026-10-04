@@ -1,32 +1,7 @@
-# 2026-10
-
-> Current month: active Changelog records only. Parallel lanes submit CHANGELOG CANDIDATE; the Coordinator writes after CHANGELOG AGGREGATION.
-
-## v0.3.0.9-fix · REGION FAILURE LIFECYCLE CLEANUP
-- 终止路径统一清理 Draft、Snap、Hover、Preview、transaction、Capture 与 Pointer transient state。
-- 恢复 `NotifyError`，保留 persistent semantic selection；Failure lifecycle regression 已纳入最终整合。
-- User P4: Region Drawing activation crash no longer reproduced in real App.
-- Remaining Known Issue: Region actual drawing remains unavailable; deferred to Drawing System R1 redesign.
-
-## v0.3.0.8-fix · REGION MANIFEST IDENTITY FAIL-CLOSED
-- 公开初始化路径校验 `MapId` 与 `Manifest.Id` 的一致性；null、empty、mismatch 均 fail-closed，不产生 partial commit。
-- 原 Region activation `Manifest.Id` crash path 已消除，并覆盖 identity consistency、failure rejection 与 recovery regression。
-
-## v0.3.0.7-fix · CHANGELOG GOVERNANCE RECOVERY
-- 修复 mixed encoding，恢复 monthly archive，补齐 August / September archives。
-- 恢复 current + previous month mirror rule 与 Changelog aggregation gate；Governance event 不重复消费产品版本。
-
-## v0.3.0.7-fix · FIX-L3 / LIFECYCLE INTEGRATION REGRESSION FIX
-- FIX-L3 已完成最终 Integration Gate，唯一事件由 PROVISIONAL 消费为 APPLIED。
-- 版本从 v0.3.0.6-fix 推进至 v0.3.0.7-fix；保持 Lifecycle terminal closure、late-commit rejection 与 Interaction Epoch 合同。
-
-## v0.3.0.6-fix · FIX-L3 / LIFECYCLE INTEGRATION REGRESSION FIX
-- 目标：收口交互终止的 Interaction Epoch，拒绝 terminal 后的 late commit，并统一 Router、Capture、Editor Interaction 与 UiVm transient 清理。
-- 状态：FIX-L3 为唯一事件，当前为 PROVISIONAL；下一目标为 v0.3.0.7-fix，本条不消费 .7。
-
-# 2026-09
-
-> Reference Mirror: the entry body below must match `docs/archive/changelog/changelog-2026-09.md` exactly.
+# changelog archive: 2026-09
+<!-- Records: 88; Month: 2026-09 -->
+> Archive Authority: frozen historical record for 2026-09.
+> Root `changelog.md` keeps this month as the one-month Reference Mirror.
 
 ## v0.3.0.5-fix · P1-FIX5 / CURSOR-ANCHORED ZOOM
 - 目标：修复鼠标滚轮缩放丢弃 `EditorPointerEvent.Position`，使 Perspective 与 Orthographic 都按 Terrain 或 ReferencePlane 锚点缩放。

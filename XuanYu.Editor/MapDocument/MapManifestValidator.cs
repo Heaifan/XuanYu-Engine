@@ -14,7 +14,7 @@ public static partial class MapManifestValidator
             return Fail("InvalidFormat", "地图 Manifest format 不受支持。", "format");
         if (manifest.Version != MapManifest.CurrentVersion)
             return Fail("UnsupportedVersion", "地图 Manifest version 不受支持。", "version");
-        if (!IdPattern.IsMatch(manifest.Id))
+        if (string.IsNullOrWhiteSpace(manifest.Id) || !IdPattern.IsMatch(manifest.Id))
             return Fail("InvalidId", "地图 ID 必须是小写字母、数字、短横线、下划线或点组成的稳定标识。", "id");
         if (string.IsNullOrWhiteSpace(manifest.Name))
             return Fail("InvalidName", "地图名称不能为空。", "name");

@@ -1,4 +1,5 @@
 using XuanYu.Editor.MapDocument;
+using XuanYu.Editor.Input;
 
 namespace XuanYu.Editor.UI;
 
@@ -12,6 +13,11 @@ public sealed partial class UiVm
     public async Task<bool> BeginRegionDrawingAsync()
     {
         if (!CanRequestRegionDrawing) return false;
+        if (!TryRequireCurrentMapManifestIdentity())
+        {
+            TerminateRegionDrawing(EditorPointerEventKind.Cancel, FooterMessage);
+            return false;
+        }
         _isRegionDrawingBootstrapBusy = true;
         RaiseRegionDrawingBootstrapBindings();
         try
@@ -70,8 +76,8 @@ public sealed partial class UiVm
 
     MapDatasetRow? RejectRegionDrawing(string message)
     {
+        TerminateRegionDrawing(EditorPointerEventKind.Cancel, message);
         FooterState = "状态：不可用";
-        FooterMessage = message;
         return null;
     }
 

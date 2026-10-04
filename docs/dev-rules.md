@@ -464,6 +464,15 @@ XYUI 默认只写 `xyui/**`，经 Audit PASS 和 Freeze 后由 Coordinator 批�
 
 `changelog.md` 记录实际重要变化，不记录开发直播。
 
+### Changelog Monthly Governance
+
+- Changelog 正式编码为 UTF-8 无 BOM；`changelog.md` 与 `docs/archive/changelog/changelog-YYYY-MM.md` 必须通过 raw-byte Encoding Integrity 检查，不得依赖编辑器默认编码。
+- 每月第一次治理冻结上月 Archive；根 `changelog.md` 只保留当前月与上月。上月在根中是 Reference Mirror，Archive 是历史 Authority；两者正文必须一致。
+- 已结束月份必须各有唯一 Archive，Archive 正文不得跨月；历史修正必须显式说明，不得静默重写。
+- 并行 Lane 默认不得修改 `changelog.md`。Lane 完成时只提交 `CHANGELOG CANDIDATE`：Change Type、Important Change、Root Cause / Reason、User Visible Effect、Architecture / Governance Effect、Validation、Version Event、Remaining Blocker。
+- 所有并行 Lane 完成后必须执行一次 `CHANGELOG AGGREGATION`：验证 Candidate、去重、合并实际 Fix / Feature、删除施工直播，再写入根 Changelog，并通过 `scripts/governance/changelog-gate.ps1`。
+- Changelog Gate FAIL-CLOSED，至少验证 Encoding Integrity、Root Month Window、Previous Month Archive/Mirror、Older Months、Archive Completeness/Boundary、Parseability 与 No Silent Loss。
+
 `file-tree.md` 只在：新增 / 删除 / 移动 / 重命名正式文件，或主要职责变化时更新；普通内部实现变化不更新。
 
 不得为了每个 Fix 新建 audit / final / final2 文档。

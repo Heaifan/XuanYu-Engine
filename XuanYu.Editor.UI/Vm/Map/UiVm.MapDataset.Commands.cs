@@ -6,6 +6,7 @@ public sealed partial class UiVm
 {
     async Task<bool> EnsureDatasetRegistryAsync()
     {
+        if (!TryRequireCurrentMapManifestIdentity()) return false;
         if (_datasetRegistry is not null) return true;
         var path = CurrentMapManifestPath;
         if (string.IsNullOrWhiteSpace(path))

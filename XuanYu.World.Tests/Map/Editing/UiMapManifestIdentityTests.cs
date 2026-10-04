@@ -1,6 +1,7 @@
 using System.IO;
 using XuanYu.Editor.MapDocument;
 using XuanYu.Editor.UI;
+using XuanYu.World.Map;
 
 namespace XuanYu.World.Tests.Map.Editing;
 
@@ -17,12 +18,13 @@ public sealed class UiMapManifestIdentityTests : IDisposable
     [Fact]
     public async Task Open_sequence_refreshes_display_id_immediately()
     {
-        await Save("manifest-a", "A");
-        await Save("manifest-b", "B");
-        await Save("manifest-c", "C");
+        var ids = new[] { MapId.New().Value, MapId.New().Value, MapId.New().Value };
+        await Save(ids[0], "A");
+        await Save(ids[1], "B");
+        await Save(ids[2], "C");
         var vm = new UiVm(null, () => true);
 
-        foreach (var id in new[] { "manifest-a", "manifest-b", "manifest-c", "manifest-b" })
+        foreach (var id in new[] { ids[0], ids[1], ids[2], ids[1] })
         {
             Assert.True(await vm.OpenMapManifestAsync(PathFor(id)));
             Assert.Equal(id, vm.MapIdText);
@@ -34,9 +36,10 @@ public sealed class UiMapManifestIdentityTests : IDisposable
     [Fact]
     public async Task Save_and_save_as_keep_the_current_id()
     {
-        await Save("manifest-a", "A");
+        var id = MapId.New().Value;
+        await Save(id, "A");
         var vm = new UiVm(null, () => true);
-        Assert.True(await vm.OpenMapManifestAsync(PathFor("manifest-a")));
+        Assert.True(await vm.OpenMapManifestAsync(PathFor(id)));
         var before = vm.CurrentMapManifest.Id;
 
         Assert.True(await vm.SaveMapManifestAsync(PathFor("saved-a")));

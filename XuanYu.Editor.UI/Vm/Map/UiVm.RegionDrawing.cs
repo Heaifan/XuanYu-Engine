@@ -84,11 +84,7 @@ public sealed partial class UiVm
     public bool CancelRegionDrawingFromEscape()
     {
         if (!_regionDrawing.IsActive && !IsRegionDrawingTool) return false;
-        ReleaseRegionPointerCapture(EditorPointerEventKind.Cancel);
-        _regionDrawing.Cancel();
-        ClearRegionDrawingSnap();
-        RaiseRegionDrawingBindings(); EndDrawingTransaction();
-        if (IsRegionDrawingTool) SelectTool("选择");
+        TerminateRegionDrawing(EditorPointerEventKind.Cancel);
         FooterMessage = "已取消区域绘制";
         FooterState = "状态：就绪";
         LogRegionDrawingCanceled();
