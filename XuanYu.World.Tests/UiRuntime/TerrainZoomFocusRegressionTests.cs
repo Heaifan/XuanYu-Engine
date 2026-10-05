@@ -17,6 +17,7 @@ public sealed class TerrainZoomFocusRegressionTests(ITestOutputHelper output)
         var path = WriteDem();
         try { Assert.True(await vm.ImportTerrainSourceAsync(path)); }
         finally { File.Delete(path); }
+        vm.RunCommand.Execute("查看全部");
 
         var anchor = TerrainCenter(vm);
         var camera = vm.RenderSnapshot.CameraState;

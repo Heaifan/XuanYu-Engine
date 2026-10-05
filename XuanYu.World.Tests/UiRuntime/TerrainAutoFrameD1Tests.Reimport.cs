@@ -28,8 +28,7 @@ public sealed partial class TerrainAutoFrameD1Tests
             var firstCenter = vm.ObservationCenter;
             await File.WriteAllBytesAsync(first, HgtBytes(30, 2));
             Assert.True(await vm.ImportTerrainSourcesAsync([first]));
-            Assert.NotEqual(firstCenter.Z, vm.ObservationCenter.Z);
-            Assert.Equal(TerrainWorldCenter(vm), vm.ObservationCenter);
+            Assert.Equal(firstCenter, vm.ObservationCenter);
         }
         finally { File.Delete(first); }
     }
@@ -38,6 +37,7 @@ public sealed partial class TerrainAutoFrameD1Tests
     public async Task Framing_uses_world_meters_instead_of_latitude_longitude_degrees()
     {
         var vm = await ImportAsync([("n23e121.hgt", 10, 2)]);
+        vm.RunCommand.Execute("查看全部");
 
         Assert.Equal(TerrainWorldCenter(vm), vm.ObservationCenter);
         Assert.True(vm.ObservationCenter.X > 1_000);
@@ -52,6 +52,7 @@ public sealed partial class TerrainAutoFrameD1Tests
         var changes = 0;
         vm.RenderProjectionChanged += _ => changes++;
         await ImportIntoAsync(vm, [("n23e121.hgt", 10, 2)]);
+        vm.RunCommand.Execute("查看全部");
 
         Assert.True(changes > 0);
         Assert.Equal(vm.RenderSnapshot.CameraState.Revision,

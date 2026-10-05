@@ -25,7 +25,7 @@ sealed class UiVmD1Handler(
         var handled = false;
         try
         {
-            handled = _vm.DollyCameraAtCursor(p.WheelDelta, p.Position.X, p.Position.Y, _viewport());
+            handled = _vm.DollyCamera(p.WheelDelta);
             return handled;
         }
         finally { ViewportProbe.EndWheel(id, handled); }

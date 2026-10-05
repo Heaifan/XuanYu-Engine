@@ -44,6 +44,7 @@ public sealed partial class TerrainAuthoringContinuityTests
         {
             WriteHgt(path, 100, 200, 300, 400);
             Assert.True(await vm.ImportTerrainSourceAsync(path));
+            vm.RunCommand.Execute("查看全部");
             AssertTerrainAuthoringFrame(vm, new(0, 0, 800, 600, 800, 600, 1, 1), 0);
             vm.EnterRegionContext();
             var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);

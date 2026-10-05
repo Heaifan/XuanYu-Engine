@@ -39,6 +39,7 @@ public sealed partial class TerrainAutoFrameD1Tests
     public async Task Terrain_bounds_remain_inside_viewport_after_resize()
     {
         var vm = await ImportAsync([("n23e121.hgt", 10, 2)]);
+        vm.RunCommand.Execute("查看全部");
         vm.UpdateViewportFrame(1600, 900);
         AssertTerrainBoundsFitViewport(vm);
     }

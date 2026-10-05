@@ -20,13 +20,14 @@ public sealed class TerrainDemCursorZoomRegressionTests
         var path = WriteDem();
         try { Assert.True(await vm.ImportTerrainSourceAsync(path)); }
         finally { File.Delete(path); }
+        vm.RunCommand.Execute("查看全部");
 
         Assert.NotNull(vm.TerrainWorld);
         var surface = new TerrainWorldGroundSurface(vm.TerrainWorld!);
         var before = vm.RenderSnapshot.CameraState;
         var hit = FindTerrainHit(before, surface, out var x, out var y);
         var pivot = vm.ObservationCenter;
-        vm.ViewportInput.Sink.Handle(Wheel(x, y, 1));
+        Assert.True(vm.DollyCameraAtCursor(1, x, y, Viewport));
         var after = vm.RenderSnapshot.CameraState;
         var next = FindTerrainHit(after, surface, out _, out _, x, y);
 

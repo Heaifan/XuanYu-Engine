@@ -27,7 +27,7 @@ public sealed class DemZoomAnchorRegressionTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void TerrainZoom_FixedScreenAnchor_PreservesReferenceSurfacePoint()
+    public void Cursor_anchor_capability_preserves_reference_surface_point()
     {
         var vm = new UiVm(null, () => true);
         vm.UpdateViewportFrame(800, 600);
@@ -36,7 +36,7 @@ public sealed class DemZoomAnchorRegressionTests(ITestOutputHelper output)
         var ray = WorldRayFactory.FromViewportPoint(ViewProjectionState.Create(before, Viewport), x, y);
         var distance = -ray.Origin.Z / ray.Direction.Z;
         var anchor = ray.Origin + ray.Direction * distance;
-        vm.ViewportInput.Sink.Handle(Wheel(x, y, 1));
+        Assert.True(vm.DollyCameraAtCursor(1, x, y, Viewport));
         var actual = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, Viewport)
             .ProjectWorldPoint(anchor);
         Assert.InRange(System.Math.Abs(actual.X - x), 0, 1e-3);
@@ -64,7 +64,7 @@ public sealed class DemZoomAnchorRegressionTests(ITestOutputHelper output)
         Trace(0, vm, anchor, x, y);
         for (var step = 1; step <= 20; step++)
         {
-            vm.ViewportInput.Sink.Handle(Wheel(x, y, step <= 10 ? 1 : -1));
+            Assert.True(vm.DollyCameraAtCursor(step <= 10 ? 1 : -1, x, y, Viewport));
             Trace(step, vm, anchor, x, y);
         }
         var actual = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, Viewport)

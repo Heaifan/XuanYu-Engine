@@ -3,7 +3,7 @@ using XuanYu.Editor.MapEditing;
 
 namespace XuanYu.Editor.UI;
 
-public enum OrbitPivotSource { Selection, Terrain, ReferencePlane, PreviousValidPivot }
+public enum OrbitPivotSource { Selection, Terrain, ReferencePlane, PreviousValidPivot, ObservationCenter }
 
 public sealed record OrbitPivotResolution(
     Vector3d Pivot,

@@ -9,24 +9,13 @@ public sealed class ViewportZoomGroundDriftRegressionTests
     static readonly ViewportState Viewport = new(0, 0, 800, 600, 800, 600, 1, 1);
 
     [Fact]
-    public void Production_wheel_zoom_keeps_screen_anchor_and_orientation_at_off_center_cursor()
+    public void Editor_wheel_result_is_independent_of_cursor_position()
     {
-        var vm = NewVm();
-        var before = vm.RenderSnapshot.CameraState;
-        var center = vm.ObservationCenter;
-        const double x = 620, y = 180;
-        var ray = WorldRayFactory.FromViewportPoint(ViewProjectionState.Create(before, Viewport), x, y);
-        var anchor = ray.Origin + ray.Direction * (-ray.Origin.Z / ray.Direction.Z);
-
-        vm.ViewportInput.Sink.Handle(Wheel(x, y, 1));
-
-        var after = vm.RenderSnapshot.CameraState;
-        var projected = ViewProjectionState.Create(after, Viewport).ProjectWorldPoint(anchor);
-        Assert.Equal(center, vm.ObservationCenter);
-        Assert.InRange(Distance(before.Forward, after.Forward), 0, 1e-9);
-        Assert.InRange(Distance(before.Up, after.Up), 0, 1e-9);
-        Assert.Equal(before.VerticalFovDegrees, after.VerticalFovDegrees);
-        Assert.InRange(ScreenDistance(new(x, y), projected), 0, 0.01);
+        var left = NewVm(); var right = NewVm();
+        left.ViewportInput.Sink.Handle(Wheel(20, 300, 1));
+        right.ViewportInput.Sink.Handle(Wheel(780, 300, 1));
+        Assert.Equal(left.RenderSnapshot.CameraState, right.RenderSnapshot.CameraState);
+        Assert.Equal(left.ObservationCenter, right.ObservationCenter);
     }
 
     [Fact]

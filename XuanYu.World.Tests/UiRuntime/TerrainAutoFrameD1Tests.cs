@@ -12,6 +12,7 @@ public sealed partial class TerrainAutoFrameD1Tests
         var vm = await ImportAsync([("n23e121.hgt", 10, 2)]);
 
         Assert.Equal(ProjectionMode.Perspective, vm.RenderSnapshot.CameraState.Mode);
+        vm.RunCommand.Execute("查看全部");
         AssertTerrainBoundsFitViewport(vm);
     }
 
@@ -23,6 +24,7 @@ public sealed partial class TerrainAutoFrameD1Tests
         Assert.Equal(2, vm.RenderProjection.Projection.TerrainResources.Count);
         Assert.NotEqual(vm.RenderProjection.Projection.TerrainResources[0].WorldOrigin,
             vm.RenderProjection.Projection.TerrainResources[1].WorldOrigin);
+        vm.RunCommand.Execute("查看全部");
         AssertTerrainBoundsFitViewport(vm);
     }
 
@@ -35,6 +37,7 @@ public sealed partial class TerrainAutoFrameD1Tests
         await ImportIntoAsync(vm, [("n23e121.hgt", 10, 2)]);
 
         Assert.Equal(ProjectionMode.Orthographic, vm.RenderSnapshot.CameraState.Mode);
+        vm.RunCommand.Execute("查看全部");
         AssertTerrainBoundsFitViewport(vm);
     }
 
@@ -47,6 +50,7 @@ public sealed partial class TerrainAutoFrameD1Tests
         await ImportIntoAsync(vm, [("n23e121.hgt", 10, 2), ("n23e122.hgt", 20, 3)]);
 
         Assert.Equal(ProjectionMode.Orthographic, vm.RenderSnapshot.CameraState.Mode);
+        vm.RunCommand.Execute("查看全部");
         AssertTerrainBoundsFitViewport(vm);
     }
 
@@ -59,8 +63,8 @@ public sealed partial class TerrainAutoFrameD1Tests
 
         await ImportIntoAsync(vm, [("n23e121.hgt", 10, 2)]);
 
-        Assert.Equal(TerrainWorldCenter(vm), vm.ObservationCenter);
-        Assert.True(vm.RenderSnapshot.CameraState.Revision > revision);
+        Assert.Equal(XuanYu.Core.Math.Vector3d.Zero, vm.ObservationCenter);
+        Assert.Equal(revision, vm.RenderSnapshot.CameraState.Revision);
     }
 
 }

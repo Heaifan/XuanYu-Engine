@@ -17,7 +17,7 @@ public sealed partial class UiVm
         if (_cameraSession is not null || _editorState.InteractionSnapshot.HasCapture) return false;
         if (width <= 0 || height <= 0 || x < 0 || y < 0 || x > width || y > height) return false;
         var mode = shift ? CameraSessionMode.Pan : CameraSessionMode.Orbit;
-        var orbit = mode == CameraSessionMode.Orbit ? ResolveOrbitPivot(CurrentViewport) : null;
+        var orbit = mode == CameraSessionMode.Orbit ? ResolveOrbitPivot() : null;
         FrozenOrbitSession? frozenOrbit = null;
         if (orbit is not null && !FrozenOrbitSession.TryBegin(_camera, orbit.Pivot, out frozenOrbit)) return false;
         _cameraSession = new CameraSessionSnapshot(++_cameraSessionRevision, pointerId, mode, x, y, _camera,

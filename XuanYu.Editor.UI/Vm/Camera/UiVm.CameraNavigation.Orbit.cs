@@ -1,5 +1,4 @@
 using XuanYu.Core.Math;
-using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 
 namespace XuanYu.Editor.UI;
@@ -10,21 +9,8 @@ public sealed partial class UiVm
     OrbitSessionState? _orbitSession;
     public IReadOnlyList<OrbitProbeEvent> OrbitProbeEvents => _orbitProbeEvents;
 
-    OrbitPivotResolution ResolveOrbitPivot(ViewportState viewport)
-    {
-        if (TrySelectedEntityKey(out var key) && _sceneState.TryGetEntity(key, out var entity))
-            return OrbitPivotAuthority.Resolve(entity.Transform.Position,
-                GroundPickResult.Invalid, GroundPickResult.Invalid, _observationCenter);
-        var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        var centerX = viewport.LogicalX + (viewport.LogicalWidth * 0.5);
-        var centerY = viewport.LogicalY + (viewport.LogicalHeight * 0.5);
-        var ray = WorldRayFactory.FromViewportPoint(projection, centerX, centerY);
-        var terrain = TerrainWorld is null ? null : new TerrainWorldGroundSurface(TerrainWorld);
-        var terrainHit = GroundPickResolver.Resolve(ray, terrain, MapSession.CurrentMap.Surface.BaseHeightMeters);
-        var planeHit = terrainHit.IsValid ? GroundPickResult.Invalid :
-            GroundPickResolver.Resolve(ray, null, MapSession.CurrentMap.Surface.BaseHeightMeters);
-        return OrbitPivotAuthority.Resolve(null, terrainHit, planeHit, _observationCenter);
-    }
+    OrbitPivotResolution ResolveOrbitPivot() => new(_observationCenter,
+        OrbitPivotSource.ObservationCenter, GroundPickResult.Invalid, GroundPickResult.Invalid);
 
     void StartOrbitProbe(long sessionId, OrbitPivotResolution resolution)
     {
