@@ -265,8 +265,13 @@ K-SPA-003 的 Screen→Surface Zoom 技术 capability 曾被提升为通用 Edit
 - 默认 Editor / Empty World 的 `ObservationCenter` 为 World Origin `(0,0,0)`。
 - Editor Wheel Zoom 与 Orbit 共用当前 `ObservationCenter`；Zoom 不依赖鼠标位置，也不执行 GroundPick、Terrain Query、Surface Resolve 或 viewport ray repick。
 - Orbit Begin 冻结当时的 `ObservationCenter` 为该 Session Pivot；Orbit Move 不重新解析 Surface 或刷新 Pivot。
-- 只有明确改变观察中心的操作可改变 `ObservationCenter`，例如 Pan、Explicit Focus、Explicit Frame / View command，或另有产品授权的 Center Change。
-- 普通 Zoom 与 Orbit 不改变 Navigation Center。DEM Import 本身不得将 Terrain、GroundPick 或 Render Bounds 提升为新的 Center Authority。
+- `ObservationCenter` 只能由已定义的 Center Authority Event 改变：Empty World 初始化设为 World Origin；初次建立内容并执行 Initial Content Establishment Auto Frame 时，设为该 framing 的中心；Pan、Explicit Focus、Explicit Frame / View command 及其它正式授权的 View Reframe 操作可设为各自结果中心。
+- 普通 Zoom、Orbit、Selection、Terrain LOD、Terrain refresh 与普通 Render update 不改变 Navigation Center。新内容的初次建立若触发正式 Auto Frame，是明确的 framing authority event，不属于任意数据状态变化；后续普通数据/渲染变化不得隐式夺取中心。
+- Editor Wheel 与 Orbit 仍只读取当前 `ObservationCenter`；内容建立后，它们继承 Auto Frame 产生的新中心，不重新使用鼠标、GroundPick 或 Render Surface 选择中心。
+
+### 2026-10-05 治理澄清
+
+原文“DEM Import 本身不得改变 Navigation Center”范围过宽，遗漏了 4277 中已验证产品流程包含的 Initial Content Establishment Auto Frame。该规则现澄清为：普通数据状态变化不得任意修改 Navigation Center；正式的初次内容建立自动取景与显式 View Reframe 是合法 Center Authority Event。此澄清不恢复 Cursor-Anchored Editor Zoom，也不改变 K-SPA-003 capability 的范围。
 
 ### Gameplay / 显式 Screen Navigation capability
 

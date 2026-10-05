@@ -15,7 +15,13 @@ Zoom Authority 必须按产品上下文区分：
 
 - **Editor：** 当前 `ObservationCenter` 是 Navigation Center。默认 Empty World 中它是 World Origin `(0,0,0)`。Editor Wheel Zoom 与 Orbit 围绕同一当前中心；Orbit Begin 将中心冻结为当前 Session Pivot。
 - **Gameplay / 明确 Screen-Anchored Navigation：** 可以使用 K-SPA-003 的 Screen→Surface Anchored Dolly capability。保留 Mouse Cursor Screen XY、SurfaceSource 与有效命中语义。
-- **中心变更：** Pan、Explicit Focus、Explicit Frame / View command 或其它明确获准的操作可以更新 `ObservationCenter`。普通 Zoom、Orbit 与 DEM Import 不得擅自改变 Navigation Center。
+- **中心变更：** Empty World 初始化设为 World Origin。初次建立内容并执行 Initial Content Establishment Auto Frame 时，`ObservationCenter` 更新为 framing center；Pan、Explicit Focus、Explicit Frame / View command 或其它正式授权的 View Reframe 操作也可更新中心。普通 Zoom、Orbit、Selection、Terrain LOD、Terrain refresh 与普通 Render update 不改变 Navigation Center。
+
+## 2026-10-05 治理澄清：初次内容建立自动取景
+
+原决定将“DEM Import 不得改变 Navigation Center”写得过于绝对，遗漏了已验证产品基线 4277 的 Initial Content Establishment Auto Frame。现明确：普通数据状态变化不得任意修改 Navigation Center；初次内容建立触发的正式 Auto Frame 属于合法 Center Authority Event，生成的 framing center 随后同时供 Editor Zoom 与 Orbit 使用。后续普通 Terrain refresh / LOD / render update 不得隐式重设中心。
+
+本澄清不改变 Editor Wheel 的 `ObservationCenter` policy，不恢复 Cursor-Anchored Editor Zoom，也不删除 K-SPA-003 的 Screen→Surface capability。
 
 ## 治理决定
 
