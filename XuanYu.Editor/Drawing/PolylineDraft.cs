@@ -3,7 +3,7 @@ using XuanYu.World.Map;
 
 namespace XuanYu.Editor.Drawing;
 
-public sealed class PolylineDraft
+public sealed class PolylineDraft : IDrawingDraft
 {
     readonly List<MapPoint> _points = [];
     readonly ReadOnlyCollection<MapPoint> _readOnlyPoints;

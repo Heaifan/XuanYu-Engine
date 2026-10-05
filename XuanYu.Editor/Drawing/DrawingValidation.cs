@@ -31,9 +31,6 @@ public static class DrawingValidation
     {
         var input = points ?? Array.Empty<MapPoint>();
         var minimum = MinimumRequired(kind);
-        if (input.Count < minimum)
-            return DrawingValidationResult.Invalid(
-                DrawingValidationFailureCategory.TooFewPoints, minimum, input.Count);
         for (var index = 0; index < input.Count; index++)
         {
             if (!double.IsFinite(input[index].X) || !double.IsFinite(input[index].Y))
@@ -43,6 +40,9 @@ public static class DrawingValidation
                 return DrawingValidationResult.Invalid(
                     DrawingValidationFailureCategory.AdjacentDuplicatePoint, minimum, input.Count);
         }
+        if (input.Count < minimum)
+            return DrawingValidationResult.Invalid(
+                DrawingValidationFailureCategory.TooFewPoints, minimum, input.Count);
         return DrawingValidationResult.Valid(minimum, input.Count);
     }
 

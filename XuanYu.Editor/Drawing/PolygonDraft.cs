@@ -3,7 +3,7 @@ using XuanYu.World.Map;
 
 namespace XuanYu.Editor.Drawing;
 
-public sealed class PolygonDraft
+public sealed class PolygonDraft : IDrawingDraft
 {
     readonly List<MapPoint> _points = [];
     readonly ReadOnlyCollection<MapPoint> _readOnlyPoints;
