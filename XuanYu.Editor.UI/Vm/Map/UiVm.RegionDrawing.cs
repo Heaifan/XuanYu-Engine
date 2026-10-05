@@ -70,12 +70,14 @@ public sealed partial class UiVm
         if (!projection.TryProjectWorldPoint(new(
                 first.X, first.Y, MapSession.CurrentMap.Surface.BaseHeightMeters), out var firstScreen))
         {
-            _regionDrawing.UpdatePointer(point, closeCandidate: false);
+            _regionDrawing.UpdatePointer(point, closeCandidate: false,
+                RegionDrawingDrawingSnapCandidate());
             PublishSceneRenderSnapshot();
             return true;
         }
         var distance = Math.Sqrt(Math.Pow(firstScreen.X - x, 2) + Math.Pow(firstScreen.Y - y, 2));
-        _regionDrawing.UpdatePointer(point, distance <= ScaleGizmoScreenSize.CenterHitRadiusDip);
+        _regionDrawing.UpdatePointer(point, distance <= ScaleGizmoScreenSize.CenterHitRadiusDip,
+            RegionDrawingDrawingSnapCandidate());
         RaiseRegionDrawingBindings();
         PublishSceneRenderSnapshot();
         return true;

@@ -2,12 +2,12 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    public bool CanUndoRoadDrawingVertex => _roadDrawing.CanUndo;
-    public bool CanRedoRoadDrawingVertex => _roadDrawing.CanRedo;
-    public bool CanCompleteRoadDrawing => _roadDrawing.IsActive && _roadDrawing.Draft?.CanComplete == true;
-    public bool CanCancelRoadDrawing => _roadDrawing.IsActive;
-    public bool UndoRoadDrawingVertex() { if (!_roadDrawing.UndoVertex()) return false; RaiseRoadDrawingBindings(); PublishSceneRenderSnapshot(); return true; }
-    public bool RedoRoadDrawingVertex() { if (!_roadDrawing.RedoVertex()) return false; RaiseRoadDrawingBindings(); PublishSceneRenderSnapshot(); return true; }
+    public bool CanUndoRoadDrawingVertex => RoadDrawingController.CanUndo;
+    public bool CanRedoRoadDrawingVertex => RoadDrawingController.CanRedo;
+    public bool CanCompleteRoadDrawing => RoadDrawingController.CanComplete;
+    public bool CanCancelRoadDrawing => RoadDrawingController.IsActive;
+    public bool UndoRoadDrawingVertex() { if (!RoadDrawingController.Undo()) return false; _roadDrawing.ProjectFrom(RoadDrawingController.Session, RoadDrawingController.Metadata); RaiseRoadDrawingBindings(); PublishSceneRenderSnapshot(); return true; }
+    public bool RedoRoadDrawingVertex() { if (!RoadDrawingController.Redo()) return false; _roadDrawing.ProjectFrom(RoadDrawingController.Session, RoadDrawingController.Metadata); RaiseRoadDrawingBindings(); PublishSceneRenderSnapshot(); return true; }
     public bool CompleteRoadDrawing() => CommitRoadDrawingFromEnter();
     public bool CancelRoadDrawing() => CancelRoadDrawingFromEscape();
     void RaiseRoadDrawingBindings()

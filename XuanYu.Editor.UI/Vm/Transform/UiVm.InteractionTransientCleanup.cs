@@ -10,13 +10,14 @@ public sealed partial class UiVm
             _mapGeometryPreview is not null || _regionVertexSnap.IsSnapped ||
             _geometrySnap.IsSnapped || _selectedMapGeometryVertexIndex >= 0;
         var hadDrawingTransient = IsDrawingTransactionActive || _regionDrawing.IsActive ||
-            _roadDrawing.IsActive || _regionDrawingSnap.IsSnapped;
+            RoadDrawingController.IsActive || _roadDrawing.IsActive || _regionDrawingSnap.IsSnapped;
         _moveDragConstraint = null;
         _rotateDrag = null;
         _scaleDrag = null;
         ClearNavigationGizmoInteractionState();
         _regionDrawing.Cancel();
-        _roadDrawing.Cancel();
+        RoadDrawingController.Cancel();
+        _roadDrawing.Clear();
         ClearRegionDrawingSnap();
         _mapGeometryDrag = null;
         _selectedMapGeometryVertexIndex = -1;

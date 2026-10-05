@@ -13,14 +13,16 @@ public sealed partial class UiVm
             return false;
         }
         ReleaseRegionPointerCapture(EditorPointerEventKind.Released);
-        var draft = _regionDrawing.TakeDraftForClose();
-        if (draft is null)
+        var request = _regionDrawing.Controller.Complete();
+        if (request is null)
         {
             FooterMessage = "区域至少需要三个顶点才能闭合。";
             LogRegionDrawingError(FooterMessage);
             return true;
         }
-        draft = draft with { DisplayName = MapObjectNameAllocator.Region(MapSession.CurrentMap, draft.DisplayName) };
+        var draft = RegionDrawingAdapter.ToDraft(request, _regionDrawing.Controller.LayerId,
+            MapObjectNameAllocator.Region(MapSession.CurrentMap, _regionDrawing.Controller.DisplayName),
+            _regionDrawing.Controller.Kind, _regionDrawing.Controller.SurfaceBinding);
         var result = MapSession.CreateRegion(draft);
         if (!result.IsSuccess)
         {
@@ -28,6 +30,7 @@ public sealed partial class UiVm
             TerminateRegionDrawing(EditorPointerEventKind.Cancel, message);
             return true;
         }
+        _regionDrawing.Controller.ClearAfterCommit();
         TerminateRegionDrawing(EditorPointerEventKind.Released);
         SelectTool("选择", logTool: false); FooterState = "状态：就绪"; FooterMessage = "区域已创建";
         LogRegionDrawingCreated();

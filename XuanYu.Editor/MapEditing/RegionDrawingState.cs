@@ -1,92 +1,56 @@
-using System.Collections.Immutable;
+using XuanYu.Editor.Drawing;
 using XuanYu.World.Map;
 
 namespace XuanYu.Editor.MapEditing;
 
 public sealed class RegionDrawingState
 {
-    readonly Stack<ImmutableArray<MapPoint>> _undo = new();
-    readonly Stack<ImmutableArray<MapPoint>> _redo = new();
-    public MapRegionDraft? Draft { get; private set; }
-    public MapPoint? Cursor { get; private set; }
-    public bool IsCloseCandidate { get; private set; }
-    public bool IsActive => Draft is not null;
-    public bool CanUndo => _undo.Count > 0;
-    public bool CanRedo => _redo.Count > 0;
+    readonly RegionDrawingController _controller;
+
+    public RegionDrawingState() : this(new RegionDrawingController()) { }
+    public RegionDrawingState(RegionDrawingController controller) => _controller = controller;
+    public RegionDrawingController Controller => _controller;
+    public MapRegionDraft? Draft => _controller.Draft;
+    public MapPoint? Cursor => _controller.Cursor;
+    public bool IsCloseCandidate => _controller.IsCloseCandidate;
+    public bool IsActive => _controller.IsActive;
+    public bool CanUndo => _controller.CanUndo;
+    public bool CanRedo => _controller.CanRedo;
 
     public void Start(MapLayerId layerId, string displayName, MapRegionKind kind,
         SurfaceBinding? surfaceBinding = null)
     {
-        ClearHistory();
-        Draft = new MapRegionDraft(layerId, displayName, kind, ImmutableArray<MapPoint>.Empty)
-        {
-            SurfaceBinding = surfaceBinding ?? SurfaceBinding.ReferencePlane
-        };
-        Cursor = null;
-        IsCloseCandidate = false;
+        _controller.Begin(layerId, displayName, kind, surfaceBinding ?? SurfaceBinding.ReferencePlane);
     }
 
     public bool AddVertex(MapPoint point)
     {
-        if (Draft is null) return false;
-        if (!Draft.Vertices.IsDefaultOrEmpty && Draft.Vertices[^1] == point)
-        {
-            Cursor = point;
-            IsCloseCandidate = false;
-            return false;
-        }
-        _undo.Push(Draft.Vertices);
-        _redo.Clear();
-        Draft = Draft with { Vertices = Draft.Vertices.Add(point) };
-        Cursor = point;
-        IsCloseCandidate = false;
-        return true;
+        return _controller.AcceptPoint(point).Disposition == DrawingInputDisposition.Accepted;
     }
 
     public bool UndoVertex()
     {
-        if (Draft is not { } draft || _undo.Count == 0) return false;
-        _redo.Push(draft.Vertices);
-        Draft = draft with { Vertices = _undo.Pop() };
-        Cursor = Draft.Vertices.Length == 0 ? null : Draft.Vertices[^1];
-        IsCloseCandidate = false;
-        return true;
+        return _controller.Undo();
     }
 
     public bool RedoVertex()
     {
-        if (Draft is not { } draft || _redo.Count == 0) return false;
-        _undo.Push(draft.Vertices);
-        Draft = draft with { Vertices = _redo.Pop() };
-        Cursor = Draft.Vertices.Length == 0 ? null : Draft.Vertices[^1];
-        IsCloseCandidate = false;
-        return true;
+        return _controller.Redo();
     }
 
-    public void UpdatePointer(MapPoint point, bool closeCandidate)
+    public void UpdatePointer(MapPoint point, bool closeCandidate,
+        DrawingSnapCandidate? candidate = null)
     {
-        if (Draft is null) return;
-        Cursor = point;
-        IsCloseCandidate = closeCandidate && Draft.CanClose;
+        _controller.UpdatePreview(point, candidate, closeCandidate);
     }
 
     public MapRegionDraft? TakeDraftForClose()
     {
-        if (Draft is not { } draft || !draft.CanClose) return null;
-        return draft;
+        return _controller.CanComplete ? _controller.Draft : null;
     }
 
     public void Cancel()
     {
-        ClearHistory();
-        Draft = null;
-        Cursor = null;
-        IsCloseCandidate = false;
-    }
-
-    void ClearHistory()
-    {
-        _undo.Clear();
-        _redo.Clear();
+        _controller.Cancel();
     }
 }

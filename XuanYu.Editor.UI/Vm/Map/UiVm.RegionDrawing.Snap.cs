@@ -1,4 +1,5 @@
 using XuanYu.Core.Space;
+using XuanYu.Editor.Drawing;
 using XuanYu.Editor.MapEditing;
 using XuanYu.World.Map;
 
@@ -44,4 +45,13 @@ public sealed partial class UiVm
         _regionDrawingSnapSuppressed = false;
         _regionDrawingSnap.Clear();
     }
+
+    DrawingSnapCandidate? RegionDrawingDrawingSnapCandidate() => _regionDrawingSnap.Kind switch
+    {
+        RegionSnapKind.Vertex => new(_regionDrawingSnap.TargetPoint, DrawingSnapKind.Vertex,
+            _regionDrawingSnap.TargetRegionId?.ToString(), null, _regionDrawingSnap.TargetVertexIndex, true),
+        RegionSnapKind.Edge => new(_regionDrawingSnap.TargetPoint, DrawingSnapKind.Edge,
+            _regionDrawingSnap.TargetRegionId?.ToString(), null, _regionDrawingSnap.TargetSegmentIndex, true),
+        _ => null
+    };
 }
