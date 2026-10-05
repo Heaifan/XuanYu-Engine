@@ -48,14 +48,11 @@ public sealed class EditorNavigationCenterContinuityTests
     }
 
     [Fact]
-    public async Task Dem_import_does_not_change_navigation_center()
+    public async Task Import_zoom_and_orbit_keep_initial_terrain_framing_center()
     {
         var vm = new UiVm(null, () => true, seedInitialScene: false);
         vm.UpdateViewportFrame(800, 600);
-        Assert.True(vm.BeginCameraNavigation(9, 400, 300, true, 800, 600));
-        Assert.True(vm.PreviewCameraNavigation(9, 430, 320));
-        Assert.True(vm.EndCameraNavigation(9));
-        var center = vm.ObservationCenter;
+        var oldCenter = vm.ObservationCenter;
         var path = Path.Combine(Path.GetTempPath(), $"n23e121-{Guid.NewGuid():N}.hgt");
         var bytes = new byte[8];
         for (var i = 0; i < 4; i++) BinaryPrimitives.WriteInt16BigEndian(bytes.AsSpan(i * 2), (short)(i + 1));
@@ -63,7 +60,12 @@ public sealed class EditorNavigationCenterContinuityTests
         {
             await File.WriteAllBytesAsync(path, bytes);
             Assert.True(await vm.ImportTerrainSourceAsync(path));
+            var center = vm.ObservationCenter;
+            Assert.NotEqual(oldCenter, center);
+            Assert.True(vm.DollyCamera(1));
             Assert.Equal(center, vm.ObservationCenter);
+            Assert.True(vm.BeginCameraNavigation(1, 400, 300, false, 800, 600));
+            Assert.Equal(center, vm.OrbitProbeEvents.Last().Pivot);
         }
         finally { File.Delete(path); }
     }

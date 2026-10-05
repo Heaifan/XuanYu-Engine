@@ -32,11 +32,12 @@ public sealed partial class UiVm
 
     void ActivateTerrainTiles(TerrainTileSet tiles)
     {
+        var initialEstablishment = _terrainTiles is null;
         _terrainTiles = tiles; _terrainTile = tiles.Tiles[0];
         if (tiles.Tiles.Count == 1) ActivateSingleTerrain(_terrainTile);
         else ActivateMultiTerrain(tiles);
         RebuildTerrainRenderResources();
-        OnTerrainRuntimeEstablished(tiles);
+        if (initialEstablishment) OnTerrainRuntimeEstablished(tiles);
         EnterTerrainContext();
         PublishSceneRenderSnapshot();
     }

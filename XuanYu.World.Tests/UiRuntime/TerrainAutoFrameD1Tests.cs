@@ -55,7 +55,7 @@ public sealed partial class TerrainAutoFrameD1Tests
     }
 
     [Fact]
-    public async Task Import_updates_navigation_center_and_camera_revision()
+    public async Task Terrain_import_autoframe_establishes_navigation_center()
     {
         var vm = NewVm();
         vm.UpdateViewportFrame(800, 600);
@@ -63,8 +63,8 @@ public sealed partial class TerrainAutoFrameD1Tests
 
         await ImportIntoAsync(vm, [("n23e121.hgt", 10, 2)]);
 
-        Assert.Equal(XuanYu.Core.Math.Vector3d.Zero, vm.ObservationCenter);
-        Assert.Equal(revision, vm.RenderSnapshot.CameraState.Revision);
+        Assert.Equal(TerrainWorldCenter(vm), vm.ObservationCenter);
+        Assert.True(vm.RenderSnapshot.CameraState.Revision > revision);
     }
 
 }
