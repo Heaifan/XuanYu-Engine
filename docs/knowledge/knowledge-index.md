@@ -1,6 +1,6 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-10-03
+> 最后治理更新：2026-10-05
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
 
 ## 任务域预检映射
@@ -13,7 +13,8 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 |---|---|---|
 | 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-003；EXP-GOVERNANCE-001；再检查其他相关 ACTIVE EXP |
 | 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；EXP-ARCH-001；`decisions/` 中相关 DEC；其他相关 ACTIVE EXP |
-| 空间 / 几何 | Camera、Screen↔World、Geometry、Snap、Topology | K-SPA-001～K-SPA-003、K-GEO-001、K-GEO-002；相关 DEC / EXP |
+| 空间 / 几何 | Camera、Navigation、Zoom、Screen↔World、Geometry、Snap、Topology | K-SPA-001～K-SPA-004、K-GEO-001、K-GEO-002、DEC-CAM-001；相关 DEC / EXP |
+| Editor Center Navigation | Editor Navigation Center、Zoom / Orbit 共用 ObservationCenter、Pan 后 Center、Gameplay Cursor Anchor scope | K-SPA-003、K-SPA-004、DEC-CAM-001 |
 | Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan、Shader、Texture、GPU Text、Vector Stroke | K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002、L-REN-001～L-REN-003、L-NATIVE-001；EXP-ARCH-001；其他相关 ACTIVE EXP |
 | Input | Pointer、Capture、手势 Owner、交互 Epoch、真实生产输入接线、平台输入 | K-INP-001～K-INP-005；EXP-TEST-001；其他相关 ACTIVE EXP |
 | UI / Inspector | Layout、Measure/Arrange、Inspector、冻结交互、稳定属性编辑目标、Diagnostic | K-UI-001、K-DIAG-001；相关 `decisions/`；EXP-UI-001、EXP-UI-002；其他 UI 类 ACTIVE EXP |
@@ -42,7 +43,8 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-GOV-002 | Knowledge | Engineering | 治理成果必须建立自动防回潮门禁 | P1 | E3 | 8.8-0 · 2026-06-23 23:09:45 · 4c4d82c | Active |
 | K-SPA-001 | Knowledge | Architecture | 大地图 Screen↔World CPU 链使用双精度并做往返验证 | P0 | E2 | v0.2.25.12-rz · 2026-08-10 12:20:03 · 0594c4c | Active |
 | K-SPA-002 | Knowledge | Architecture | 斜视 Metric 具有方向性，失败保持上一合法状态 | P1 | E1 | v0.2.25.17-stab · 2026-08-10 · c307c66 | Active |
-| K-SPA-003 | Knowledge | Architecture | Cursor-Anchored Zoom 保持 Screen→Surface 权威，Pure Dolly 不修改 Pivot | P0 | E1 | DEM-ZOOM-ANCHOR-DRIFT-R1 · 2026-10-03 · code commit 待补证 | Active |
+| K-SPA-003 | Knowledge | Architecture | Cursor-Anchored Zoom Capability 保持 Screen→Surface 权威，Pure Dolly 不修改 Pivot | P0 | E1 | DEM-ZOOM-ANCHOR-DRIFT-R1 · 2026-10-03 · capability scope clarified 2026-10-05 | Active |
+| K-SPA-004 | Knowledge | Architecture | Editor / Gameplay Zoom Authority 必须按产品上下文分离 | P0 | E1 | EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1 · 2026-10-05 · baseline 4277b242 | Active |
 | K-ARCH-001 | Knowledge | Architecture | Composition Root 初始化顺序属于依赖合同 | P0 | E1 | v0.1.7.1-fix · 2026-06-24 11:45 · 359e3ce | Active |
 | K-ARCH-002 | Knowledge | Architecture | 产品模式持续膨胀时先建立 Workspace 边界 | P1 | E1 | MAP-A → EDITOR-A · 2026-08-11 · 6724079 | Active |
 | K-REN-001 | Knowledge | Rendering | Editor Overlay 不得用世界坐标偏移制造视觉层级 | P0 | E2 | v0.2.25.13-rz · 2026-08-10 13:37:23 · ef12f4b | Active |
@@ -74,6 +76,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-GEO-001 | Knowledge | Architecture | 可编辑几何能力契约与 Snap/Topology 边界 | P0 | E1 | MAP-DATA-A-R2-F3-E1 · 2026-08-13 · 本轮提交 | Active |
 | K-GEO-002 | Decision | Architecture | R2 收口并以 Point Consumer 作为下一验证形态 | P0 | R2 | MAP-DATA-A-R2-CLOSEOUT · 2026-08-13 · 6a3d5b8 | Active |
 | DEC-XYE-XYUI-DUAL-LANE | Decision | Governance | XYE / XYUI Dual-Lane Development Model | P0 | R1 | XYE-XYUI-DUAL-LANE-R1 · 2026-09-27 | Active |
+| DEC-CAM-001 | Decision | Architecture | Editor 与 Gameplay 的 Zoom Authority 按产品上下文分离 | P0 | R1 | EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1 · 2026-10-05 · baseline 4277b242 | Active |
 
 | K-GOV-004 | Knowledge | Engineering | ChatGPT 审计通过后默认立即写回 XYK | P0 | E1 | XYT 建设治理裁决 · 2026-09-29 | Active |
 | K-XYT-MAP-001 | Knowledge | Engineering | 正式测试选择必须经过 Change→Ownership→Capability→Required Tests | P0 | E3 | XYT-C · 0d75987c · 2026-09-29 | Active |
@@ -103,7 +106,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 ## 分类文件
 
 - `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001
-- `architecture.md`：K-SPA-001～K-SPA-003、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
+- `architecture.md`：K-SPA-001～K-SPA-004、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-005
 - `ui.md`：K-UI-001、K-DIAG-001
@@ -113,6 +116,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 - `lessons.md`：L-ARCH-001、L-REN-001～L-REN-003、L-VAL-001、L-NATIVE-001、L-TEST-001、L-XYT-001 及后续复盘
 - `decisions/`：已批准并仍有长期约束价值的 DEC
 - `decisions/xye-xyui-dual-lane-development-model.md`：XYE / XYUI One Workspace / Dual Lane 决策
+- `decisions/editor-gameplay-zoom-authority-context-split.md`：Editor / Gameplay Zoom Authority Scope Split
 - `docs/governance/agent-error-log.md`：Agent 真实错误事实
 - `docs/governance/agent-experience-rules.md`：去重后的防复发经验规则
 

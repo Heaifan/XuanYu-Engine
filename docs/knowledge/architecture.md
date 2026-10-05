@@ -161,13 +161,18 @@ Screen A
 
 ---
 
-## K-SPA-003 Cursor-Anchored Zoom 必须保持 Screen→Surface 权威，Pure Dolly 不得修改 Pivot
+## K-SPA-003 Cursor-Anchored Zoom Capability 必须保持 Screen→Surface 权威，Pure Dolly 不得修改 Pivot
 
+**原始标题（2026-10-03）**：Cursor-Anchored Zoom 必须保持 Screen→Surface 权威，Pure Dolly 不得修改 Pivot
 **状态**：Active
+**Editor 全局适用解释**：SUPERSEDED
+**Superseded By**：K-SPA-004
 **优先级**：P0
 **证据等级**：E1
 **标签**：Camera、Zoom、Dolly、Terrain、Picking、Screen Anchor、Surface Authority
-**适用范围**：Viewport Wheel、DEM Terrain、ReferencePlane fallback、Camera Navigation、Orbit Pivot、Terrain Tile Edge。
+**适用范围**：Gameplay 或明确要求 Screen-Anchored Navigation 的交互；DEM Terrain、ReferencePlane fallback、Surface Source、Terrain Tile Edge。
+
+**上下文边界**：本条约束 Screen→Surface Anchored Dolly capability，不再定义所有 Editor Wheel Zoom 的产品策略。原先将本条解释为“Editor Wheel 必须使用 Cursor Anchor”的全局规则，已由 K-SPA-004 supersede；Cursor Anchor capability 保留并继续有效。
 
 **首次确认**：2026-10-03
 **来源任务**：DEM-ZOOM-ANCHOR-DRIFT-R1
@@ -182,7 +187,7 @@ Screen A
 
 Zoom Anchor 的语义权威没有贯穿完整链路：输入层丢失了 Cursor XY，而 Camera mutation 又混入了 Orbit Pivot 职责。结果是“有 Wheel 路由”和“有 Dolly”都成立，但固定 Screen Anchor、Surface Source 与 Camera 不变量没有形成单一合同。
 
-### 工程规则
+### Capability 规则
 
 Cursor-Anchored Zoom 的唯一权威链固定为：
 
@@ -232,6 +237,66 @@ SurfaceSource invariance
 
 **关联 Knowledge**：K-SPA-001、K-INP-003、K-VAL-002
 **关联 Lesson**：L-REN-002
+
+**Governance Supersede**：事件 `EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1`；原 Editor 全局适用解释已由 K-SPA-004 取代。原事故、根因、验证数值与 capability 规则保留。
+
+---
+
+## K-SPA-004 Editor / Gameplay Zoom Authority 必须按产品上下文分离
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：Camera、Navigation Center、ObservationCenter、Editor Zoom、Gameplay Zoom、Orbit、Product Policy
+**适用范围**：Editor Navigation；Gameplay 或明确要求 Screen-Anchored Navigation 的交互。
+
+**确认日期**：2026-10-05
+**来源任务**：`GOVERNANCE-SUPERSEDE-K-SPA-003-EDITOR-NAVIGATION-R1`
+**Effective Baseline**：`4277b242391e273080c4c19b82c9acf53b348843`（用户报告为 LAST USER-VERIFIED GOOD，P4 PASS）
+**Supersedes**：K-SPA-003 将 Cursor-Anchored Zoom 提升为全局 Editor Wheel Zoom policy 的解释；不取代 K-SPA-003 的 Screen→Surface capability。
+
+### 问题
+
+K-SPA-003 的 Screen→Surface Zoom 技术 capability 曾被提升为通用 Editor Zoom Authority。技术能力存在，不代表所有产品上下文都必须使用该能力。Editor Navigation 与 Gameplay / 显式 Screen-Anchored Navigation 必须分开定义。
+
+### Editor 产品合同
+
+- Editor Navigation Center 的权威是当前 `ObservationCenter`。
+- 默认 Editor / Empty World 的 `ObservationCenter` 为 World Origin `(0,0,0)`。
+- Editor Wheel Zoom 与 Orbit 共用当前 `ObservationCenter`；Zoom 不依赖鼠标位置，也不执行 GroundPick、Terrain Query、Surface Resolve 或 viewport ray repick。
+- Orbit Begin 冻结当时的 `ObservationCenter` 为该 Session Pivot；Orbit Move 不重新解析 Surface 或刷新 Pivot。
+- 只有明确改变观察中心的操作可改变 `ObservationCenter`，例如 Pan、Explicit Focus、Explicit Frame / View command，或另有产品授权的 Center Change。
+- 普通 Zoom 与 Orbit 不改变 Navigation Center。DEM Import 本身不得将 Terrain、GroundPick 或 Render Bounds 提升为新的 Center Authority。
+
+### Gameplay / 显式 Screen Navigation capability
+
+Gameplay 或明确要求 Screen-Anchored Navigation 的交互可以使用 K-SPA-003 capability：
+
+```text
+Screen XY → GroundPickResult → SurfaceSource + World XYZ → Anchored Dolly
+```
+
+Screen XY 可以来自 Mouse Cursor。Router 必须保留决定交互语义的输入 payload；有效 Surface 命中、SurfaceSource 与 fallback 必须明确。该 capability 不构成 Editor Wheel policy，也不得作为 Editor 使用 Cursor Anchor 的强制条件。
+
+### Governance Supersede Record
+
+- 事件：`EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1`
+- 原因：产品上下文此前未区分 Editor 与 Gameplay，导致 capability rule 被误提升为全局 product authority。
+- 决策：Scope Split / Supersede。K-SPA-003 的 Editor 全局 policy 解读由本条替代；其技术 capability 与历史事故证据保留。
+- Effective Baseline：`4277b242391e273080c4c19b82c9acf53b348843`
+- 批准：USER PRODUCT AUTHORITY + CHATGPT KNOWLEDGE AUDIT
+- 日期：2026-10-05
+- Version Event：NONE
+
+### 替代证据与边界
+
+- 用户报告 4277 (`fix: reconcile frozen orbit pivot contract`) 已通过 P4：DEM Import、DEM Orbit No-Refresh、DEM Orbit No-Flicker、Grid、ScaleBar、Pan 与 Navigation Chain 均 PASS。该验收事实来自用户授权/报告；本治理改动不伪称重新执行 P4。
+- 用户明确决策：Editor Zoom / Orbit 共享稳定 Navigation Center；默认是 World Origin，Pan / Explicit Focus 后使用新的 ObservationCenter。
+- 用户报告恢复候选 `fa55953a`、`d10adb31`、`8fb7e8ae`、`f75badb4` 均为 P4 FAIL；这些失败候选不用于定义本条合同。
+- K-SPA-003 的 Screen XY payload、GroundPick SurfaceSource、完整 Screen→Surface capability 与有效命中不得被 fallback 静默覆盖等工程知识继续有效。
+
+**关联 Knowledge**：K-SPA-001、K-SPA-002、K-SPA-003、K-VAL-002
+**关联 DEC**：DEC-CAM-001
 
 ---
 
