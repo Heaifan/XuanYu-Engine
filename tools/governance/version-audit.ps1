@@ -10,7 +10,9 @@ $branch = (git -C $RepoRoot branch --show-current).Trim()
 $head = (git -C $RepoRoot rev-parse HEAD).Trim()
 $short = (git -C $RepoRoot rev-parse --short=8 HEAD).Trim()
 $dirty = [bool](git -C $RepoRoot status --porcelain)
-$remote = (git -C $RepoRoot rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>$null).Trim()
+$remoteOutput = git -C $RepoRoot rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>$null
+if ($LASTEXITCODE -eq 0 -and $remoteOutput) { $remote = ([string]$remoteOutput).Trim() }
+else { $remote = ''; $global:LASTEXITCODE = 0 }
 $remoteHead = if ($remote) { (git -C $RepoRoot rev-parse $remote).Trim() } else { 'UNAVAILABLE' }
 $counts = @{}
 foreach ($line in (Get-Content (Join-Path $RepoRoot 'changelog.md') | Where-Object { $_ -match '^##\s+(v\S+)' })) {
