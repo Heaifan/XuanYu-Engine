@@ -74,6 +74,7 @@
     ,{ "path": "changelog.md", "owner": "GOVERNANCE" }
     ,{ "path": "docs/governance/version-events.tsv", "owner": "GOVERNANCE" }
     ,{ "path": "tools/governance/version-audit.ps1", "owner": "GOVERNANCE" }
+    ,{ "path": "docs/governance/agent-experience-rules.md", "owner": "GOVERNANCE" }
     ,{ "path": "XuanYu.Editor.UI/Vm/Transform/UiVm.ViewportAssist.cs", "owner": "A" }
     ,{ "path": "XuanYu.Editor/Input/ViewportInputComposition.cs", "owner": "C" }
     ,{ "path": "XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.PushConstants.cs", "owner": "A" }

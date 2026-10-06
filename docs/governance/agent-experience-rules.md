@@ -416,6 +416,8 @@ Agent 将另一台电脑或旧阶段的绝对路径当成当前事实，绕过�
 
 规则：必须先执行 Version Preflight，并明确 Previous、Next、Change Type 与 Reason。一个独立 Feature、一个独立 Fix、以及连续修复的每一轮都必须留下独立 Version Event；不得用 Commit SHA 替代递增，不得复用已有正式 Version，不得为减少版本号隐藏返工次数。治理-only 是否推进产品 Version 服从项目已审计历史，若不推进必须显式输出 `Version Event: NONE` 及依据。
 
+追加（2026-10-06）：消费事件前同时核对 `Directory.Build.props` 单一版本源与 Version Ledger。确认目标版本未被其他 APPLIED 事件占用，并把新事件绑定到实际产品 Commit；历史事件与 Commit 不得为迁就当前版本而重挂。若版本审计脚本查询可选 upstream，而分支没有配置 upstream，应将 Remote/Ahead-Behind 明确报告为 unavailable/N/A 并成功结束；不能把预期缺省误报为审计失败，也不能吞掉其他 Git 错误。
+
 验证 / 自动化：`tools/governance/version-next.ps1` 只计算下一值；`version-selftest.ps1` 验证 FEATURE、FIX、连续 FIX、未知类型和非法版本；`version-events.tsv` 一行一个事件。
 
 Superseded by：
