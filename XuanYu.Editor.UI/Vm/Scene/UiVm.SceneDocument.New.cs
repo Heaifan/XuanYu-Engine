@@ -13,7 +13,9 @@ public sealed partial class UiVm
         _staticModelCatalog.Clear();
         _staticModelResources.Clear();
         _sceneState.ReplaceEntities([]);
+        _mapWorkingStorage.Discard();
         MapSession.ResetToEmptyWorld();
+        ResetMapManifestFromCurrentMap();
         ResetCameraForSceneReplacement();
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "新建场景");
         FooterMessage = "已创建空白未命名场景。";

@@ -10,7 +10,7 @@ public sealed partial class MapEditSession
     {
         if (!GuardWriteThread()) return Fail("NotOnWriteThread", "新建空世界必须在编辑写线程执行。");
         _history.Clear();
-        var replacement = MapEmptyDefinition.Create();
+        var replacement = MapDefaultDefinition.CreateDefault();
         RebuildRegionSpatialIndex(replacement);
         _geometrySpatialIndex.Rebuild(replacement);
         _currentMap = replacement;
