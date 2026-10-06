@@ -32,7 +32,15 @@ public sealed record EditorApplicationState(
             "区域面" => "区域",
             _ => LastAuthoringTool ?? "绘制"
         };
-    public string StatusLabel => $"工具：{ActiveToolText}";
+    public string StatusLabel
+    {
+        get
+        {
+            var workspace = EditorWorkspaceDefinitions.Resolve(Workspace).DisplayName;
+            var context = Mode == EditorModeId.Manage ? $"管理模式 · 编辑目标：{workspace}" : workspace;
+            return $"{context} · 工具：{ActiveToolText}";
+        }
+    }
 }
 
 public static class EditorApplicationStateProjection

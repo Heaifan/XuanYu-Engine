@@ -50,6 +50,8 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(CanRequestRegionDrawing));
         OnPropertyChanged(nameof(CanRequestRoadDrawing));
         OnPropertyChanged(nameof(IsMapEditorMode));
+        OnPropertyChanged(nameof(WorkspaceSelectorId));
+        OnPropertyChanged(nameof(FooterMode));
         RaiseLayerContextBindings();
     }
 }

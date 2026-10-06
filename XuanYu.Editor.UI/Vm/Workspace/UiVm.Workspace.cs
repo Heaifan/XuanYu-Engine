@@ -11,6 +11,7 @@ public sealed partial class UiVm
 
     public EditorWorkspaceDefinition CurrentWorkspace => _workspaceManager.CurrentWorkspace;
     public string CurrentWorkspaceDisplayName => CurrentWorkspace.DisplayName;
+    public string WorkspaceSelectorId => IsManageMode ? "management" : "feature-editing";
     public bool IsMapWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.MapEditor;
     public bool IsRegionWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.RegionEditor;
     ICommand? _selectFeatureWorkspaceCommand;

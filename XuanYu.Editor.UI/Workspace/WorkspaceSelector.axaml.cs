@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Data;
 using XYUI.Avalonia.Controls;
 
 namespace XuanYu.Editor.UI;
@@ -12,11 +13,13 @@ public partial class WorkspaceSelector : UserControl
     public WorkspaceSelector()
     {
         InitializeComponent();
-        _switcher = new(new XYWorkspaceState(ManagementId),
+        _switcher = new(
             new XYWorkspaceItem(ManagementId, "管理模式"),
             new XYWorkspaceItem(FeatureId, "要素编辑"),
             new XYWorkspaceItem("scene-editing", "场景编辑（暂未开放）", false),
             new XYWorkspaceItem("debug", "调试（暂未开放）", false));
+        _switcher.Bind(XYWorkspaceSwitcher.SelectedWorkspaceIdProperty,
+            new Binding(nameof(UiVm.WorkspaceSelectorId)) { Mode = BindingMode.OneWay });
         _switcher.Name = "WorkspaceSelector";
         _switcher.Trigger.Name = "WorkspaceSelectorButton";
         XYDiagnostic.SetDebugId(_switcher, "XYE.TOP.WORKSPACE");

@@ -28,27 +28,36 @@ public sealed class XYWorkspaceChangeRequest : EventArgs
 
 public sealed partial class XYWorkspaceSwitcher : Border
 {
+    public static readonly StyledProperty<string?> SelectedWorkspaceIdProperty =
+        AvaloniaProperty.Register<XYWorkspaceSwitcher, string?>(nameof(SelectedWorkspaceId));
     internal const double CompactWidth = 168;
     internal const double PopupMaxWidth = 240;
     readonly Popup _popup = new() { Placement = PlacementMode.Bottom, IsLightDismissEnabled = true };
     readonly XYMenu _menu = new() { Classes = { "xyui-workspace-menu" } };
+    readonly XYWorkspaceState? _state;
     IActivatableLifetime? _applicationLifetime;
     WindowBase? _hostWindow;
     public XYButton Trigger { get; } = new() { Height = 34, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Center, Variant = XyuiButtonVariant.Secondary, Classes = { "xyui-workspace-trigger" } };
     public IReadOnlyList<XYWorkspaceItem> Workspaces { get; }
-    public XYWorkspaceState State { get; }
+    public XYWorkspaceState State => _state ?? throw new InvalidOperationException("Controlled switchers have no local state.");
+    public string? SelectedWorkspaceId { get => GetValue(SelectedWorkspaceIdProperty); set => SetValue(SelectedWorkspaceIdProperty, value); }
     public XYMenu WorkspaceMenu => _menu;
     public Popup WorkspacePopup => _popup;
-    public string CurrentWorkspace => Workspaces.FirstOrDefault(x => x.Id == State.CurrentWorkspaceId)?.Label ?? "未命名工作区";
+    public string CurrentWorkspace => Workspaces.FirstOrDefault(x => x.Id == CurrentId)?.Label ?? "未命名工作区";
+    string? CurrentId => SelectedWorkspaceId ?? _state?.CurrentWorkspaceId;
     public event EventHandler<XYWorkspaceChangeRequest>? WorkspaceChangeRequested;
     public event EventHandler<string>? WorkspaceChanged;
     public event EventHandler? ManageRequested;
 
+    static XYWorkspaceSwitcher() => SelectedWorkspaceIdProperty.Changed
+        .AddClassHandler<XYWorkspaceSwitcher>((switcher, _) => switcher.Refresh());
     public XYWorkspaceSwitcher(string current, params string[] workspaces) : this(CreateState(current, workspaces), CreateItems(current, workspaces)) { }
     public XYWorkspaceSwitcher(XYWorkspaceState state, params XYWorkspaceItem[] workspaces) : this(state, (IEnumerable<XYWorkspaceItem>)workspaces) { }
-    public XYWorkspaceSwitcher(XYWorkspaceState state, IEnumerable<XYWorkspaceItem> workspaces)
+    public XYWorkspaceSwitcher(XYWorkspaceState state, IEnumerable<XYWorkspaceItem> workspaces) : this(state, workspaces, true) { }
+    public XYWorkspaceSwitcher(params XYWorkspaceItem[] workspaces) : this(null, workspaces, true) { }
+    XYWorkspaceSwitcher(XYWorkspaceState? state, IEnumerable<XYWorkspaceItem> workspaces, bool controlled)
     {
-        State = state; Workspaces = workspaces.ToArray(); Classes.Add("xyui-workspace-switcher");
+        _state = state; Workspaces = workspaces.ToArray(); Classes.Add("xyui-workspace-switcher");
         Trigger.Click += (_, _) => Toggle(); _popup.Closed += (_, _) => ClosePopup(); _menu.Closed += (_, _) => ClosePopup(); _popup.Child = _menu; Child = Build(); Refresh();
     }
     static XYWorkspaceState CreateState(string current, string[] labels) { var items = CreateItems(current, labels); return new XYWorkspaceState(items.FirstOrDefault(x => x.Label == current)?.Id ?? current); }

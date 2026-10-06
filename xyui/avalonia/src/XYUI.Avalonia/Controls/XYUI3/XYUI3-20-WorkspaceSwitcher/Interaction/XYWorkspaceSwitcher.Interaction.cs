@@ -18,7 +18,7 @@ public sealed partial class XYWorkspaceSwitcher
     }
     XYMenuItem WorkspaceItem(XYWorkspaceItem workspace)
     {
-        var item = new XYMenuItem { Label = workspace.Label, Icon = workspace.Icon, IsEnabled = workspace.IsEnabled, IsChecked = workspace.Id == State.CurrentWorkspaceId, CheckKind = XyuiMenuCheckKind.Radio, IsSelected = workspace.Id == State.CurrentWorkspaceId };
+        var item = new XYMenuItem { Label = workspace.Label, Icon = workspace.Icon, IsEnabled = workspace.IsEnabled, IsChecked = workspace.Id == CurrentId, CheckKind = XyuiMenuCheckKind.Radio, IsSelected = workspace.Id == CurrentId };
         item.Classes.Add("xyui-workspace-item"); item.RebuildVisual();
         item.SelectionRequested += (_, _) => SelectWorkspace(workspace.Id); return item;
     }
@@ -30,16 +30,19 @@ public sealed partial class XYWorkspaceSwitcher
     public void SelectWorkspace(string id)
     {
         var item = Workspaces.FirstOrDefault(x => x.Id == id || x.Label == id); if (item is null || !item.IsEnabled) return;
+        if (item.Id == CurrentId) return;
         if (WorkspaceChangeRequested is null) { CommitWorkspace(item.Id); return; }
-        var request = new XYWorkspaceChangeRequest(item); WorkspaceChangeRequested.Invoke(this, request); if (request.IsAccepted) CommitWorkspace(item.Id);
+        var request = new XYWorkspaceChangeRequest(item); WorkspaceChangeRequested.Invoke(this, request);
+        if (request.IsAccepted && SelectedWorkspaceId is null) CommitWorkspace(item.Id);
     }
     public void CommitWorkspace(string id)
     {
-        var item = Workspaces.FirstOrDefault(x => x.Id == id); if (item is null || !item.IsEnabled) return; State.Commit(item.Id); Refresh(); ClosePopup(); WorkspaceChanged?.Invoke(this, item.Id);
+        var item = Workspaces.FirstOrDefault(x => x.Id == id); if (item is null || !item.IsEnabled || SelectedWorkspaceId is not null || _state is null || item.Id == CurrentId) return;
+        _state.Commit(item.Id); Refresh(); ClosePopup(); WorkspaceChanged?.Invoke(this, item.Id);
     }
     public void Open()
     {
-        var triggerWidth = Trigger.Bounds.Width > 0 ? Trigger.Bounds.Width : Width > 0 ? Width : CompactWidth; _popup.PlacementTarget = Trigger; _popup.Width = double.NaN; _popup.MinWidth = triggerWidth; _popup.MaxWidth = PopupMaxWidth; _menu.Width = double.NaN; _menu.MinWidth = triggerWidth; _menu.MaxWidth = PopupMaxWidth; _popup.IsOpen = true; _menu.Open(); foreach (var item in _menu.Items.OfType<XYMenuItem>()) { var selected = Workspaces.Any(x => x.Label == item.Label && x.Id == State.CurrentWorkspaceId); item.IsChecked = selected; item.IsSelected = selected; }
+        var triggerWidth = Trigger.Bounds.Width > 0 ? Trigger.Bounds.Width : Width > 0 ? Width : CompactWidth; _popup.PlacementTarget = Trigger; _popup.Width = double.NaN; _popup.MinWidth = triggerWidth; _popup.MaxWidth = PopupMaxWidth; _menu.Width = double.NaN; _menu.MinWidth = triggerWidth; _menu.MaxWidth = PopupMaxWidth; _popup.IsOpen = true; _menu.Open(); foreach (var item in _menu.Items.OfType<XYMenuItem>()) { var selected = Workspaces.Any(x => x.Label == item.Label && x.Id == CurrentId); item.IsChecked = selected; item.IsSelected = selected; }
     }
     void Toggle() { if (_popup.IsOpen) ClosePopup(); else Open(); }
     public void ClosePopup() { if (_popup.IsOpen) _popup.IsOpen = false; _menu.Close(); }
