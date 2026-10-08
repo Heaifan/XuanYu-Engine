@@ -2,9 +2,7 @@ using XuanYu.Core.Math;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
 using XuanYu.World.Map;
-
 namespace XuanYu.World.Tests.Camera;
-
 public sealed class OrbitPivotAuthorityTests
 {
     [Fact]
@@ -18,7 +16,6 @@ public sealed class OrbitPivotAuthorityTests
         Assert.Equal(OrbitPivotSource.Terrain, result.Source);
         Assert.Equal(new Vector3d(3, 4, 8), result.Pivot);
     }
-
     [Fact]
     public void TerrainOutOfBounds_UsesExplicitReferencePlaneFallback()
     {
@@ -30,7 +27,6 @@ public sealed class OrbitPivotAuthorityTests
         Assert.Equal(OrbitPivotSource.ReferencePlane, result.Source);
         Assert.Equal(new Vector3d(30, 40, 2), result.Pivot);
     }
-
     [Fact]
     public void InvalidSurfaces_KeepPreviousValidPivot()
     {

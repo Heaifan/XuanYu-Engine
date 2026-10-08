@@ -23,5 +23,5 @@ function RegisteredPath([string]$R,[string]$Path){
 }
 function UnknownDirty([string]$R){ @((Current $R).Dirty|%{ if($_.Length -gt 3){$p=$_.Substring(3).Trim('"').Replace('\','/'); if(!(RegisteredPath $R $p)){$_} } }) }
 function State([string]$R){ Read-Json (JsonPath $R 'state.json') }
-function VersionEvent([string]$R,[string]$Id){ $p=Join-Path $R 'docs/governance/version-events.tsv'; if(!(Test-Path $p)){return $false}; @(Get-Content $p|?{$_ -match [regex]::Escape($Id)}).Count -gt 0 }
+function VersionEvent([string]$R,[string]$Id){ if([string]::IsNullOrWhiteSpace($Id) -or $Id -ceq 'EventId'){return $false};$p=Join-Path $R 'docs/governance/version-events.tsv';if(!(Test-Path $p)){return $false};foreach($line in Get-Content -LiteralPath $p){$event=([string]$line -split "`t",2)[0].Trim();if($event -ceq $Id -and $event -cne 'EventId'){return $true}};return $false }
 function Lock([string]$P){ $d=Split-Path $P; New-Item -ItemType Directory -Force $d|Out-Null; try{return [IO.File]::Open($P,[IO.FileMode]::OpenOrCreate,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)}catch{Fail OWNERSHIP_MUTEX_BUSY 'Ownership registry is locked.'} }

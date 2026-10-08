@@ -22,7 +22,20 @@ Set-Content $foreign 'foreign-C'; $consumedA = Fingerprint $root @('foreign.txt'
 Assert ($consumedA -ne $consumedB) 'H2F-04 consumed ForeignDirty content must change fingerprint'
 $stateDir = Join-Path $root '.git\xye-handoff'; New-Item $stateDir -ItemType Directory -Force | Out-Null
 $head = (Run-Git @('rev-parse','HEAD')).Trim(); [pscustomobject]@{active=$true;mode='development';coordinatorScope='xye';baselineHead=$head;waveId='H2F'} | ConvertTo-Json | Set-Content (Join-Path $stateDir 'state.json')
+$registryDir = Join-Path $root '.git\xye-handoff'; [pscustomobject]@{tasks=@([pscustomobject]@{TaskId='H2F';Status='ACTIVE'})} | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $registryDir 'task-registry.json')
+$script:allowSyntheticOwnerEvidence = $false
+$script:ownerEvidenceCalls = 0
+function Assert-OwnerAuthorization([string]$Repository,[string]$Url,[string]$Action,[string]$Target,[string]$Detail,[string]$Baseline) {
+    $script:ownerEvidenceCalls++
+    if (-not $script:allowSyntheticOwnerEvidence) { throw 'AUTHORIZATION_REQUIRED: test fixture has no owner grant.' }
+    if ($Action -ne 'work-release-issue' -or $Target -ne 'H2F' -or $Detail -ne 'EVT-H2F' -or $Baseline -ne (git -C $Repository rev-parse HEAD).Trim()) { throw 'H2F owner authorization fixture scope mismatch' }
+    [pscustomobject]@{CommentId='H2F-OWNER-FIXTURE';Author='Heaifan';Url='fixture://owner-authorization'}
+}
+function Consume-OwnerAuthorization([string]$Repository,$Grant) { if ($Grant.Author -ne 'Heaifan') { throw 'H2F fixture owner evidence mismatch' } }
+$denied = $false; try { Issue-Release $root ([pscustomobject]@{TaskId='H2F';LaneId='GOVERNANCE';OwnershipSet=@('owned.txt');VersionEventId='EVT-H2F'}) | Out-Null } catch { $denied = $_.Exception.Message -match 'AUTHORIZATION_REQUIRED' }; Assert $denied 'H2F-05 unauthenticated Issue must be rejected'
+$script:allowSyntheticOwnerEvidence = $true
 $release = Issue-Release $root ([pscustomobject]@{TaskId='H2F';LaneId='GOVERNANCE';OwnershipSet=@('owned.txt');VersionEventId='EVT-H2F'})
+Assert ($script:ownerEvidenceCalls -eq 2) 'H2F-06 authorization verifier must run for denied and allowed Issue'
 Set-Content $owned 'during-test'; Expect-Reject { Validate-Release $root $release.token 'GOVERNANCE' 'H2F' @('owned.txt') }
 Write-Output 'H2F DIRTY CONTENT FINGERPRINT SELFTEST: PASS'
 Write-Output 'Cases: 5'

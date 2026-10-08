@@ -7,6 +7,7 @@ param(
     [string]$CurrentVersion,
     [string]$CandidateId,
     [string]$CandidateFingerprint,
+    [ValidateSet('AUTO','PRE-COMMIT','POST-COMMIT')][string]$Phase = 'AUTO',
     [switch]$FormalAcceptance,
     [switch]$RequireClean
 )
@@ -18,7 +19,8 @@ if (-not (Test-Path -LiteralPath $LedgerPath)) {
     throw "VERSION LEDGER: BLOCKED - missing $LedgerPath"
 }
 . (Join-Path $PSScriptRoot 'version-event-gate.lib.ps1')
-$result = Get-XytVersionEventGateResult $RepoRoot $LedgerPath $ChangeType $EventId $CurrentVersion $CandidateId $CandidateFingerprint $FormalAcceptance $RequireClean
+if ($Phase -eq 'AUTO') { $Phase = if ($RequireClean) { 'POST-COMMIT' } else { 'PRE-COMMIT' } }
+$result = Get-XytVersionEventGateResult $RepoRoot $LedgerPath $ChangeType $EventId $CurrentVersion $CandidateId $CandidateFingerprint $FormalAcceptance $RequireClean $Phase
 $event = 'MISSING / NONE'
 if ($result.Event) {
     $event = "$($result.Event.EventId) / $($result.Event.Status)"
@@ -27,12 +29,15 @@ $missingEvent = if ($result.Reason -like '*MISSING EVENT*') { 'BLOCKED' } else {
 $missingBump = if ($result.Reason -like '*BUMP*') { 'BLOCKED' } else { 'PASS' }
 $duplicate = if ($result.DuplicateEvents.Count -or $result.DuplicateVersions.Count) { 'BLOCKED' } else { 'PASS' }
 $binding = 'UNBOUND'
-if ($result.Event -and $result.Event.CandidateId -and $result.Event.AppliedVersion) {
+if ($result.Event -and $result.Event.Type -ne 'GOVERNANCE' -and $result.Event.CandidateId -and $result.Event.AppliedVersion) {
     $binding = "$($result.Event.CandidateId)@$($result.Event.AppliedVersion)"
 }
-$eligibility = if ($result.Status -eq 'PASS' -and $FormalAcceptance) { 'YES' } else { 'NO' }
-$push = if ($result.Status -eq 'PASS' -and $FormalAcceptance) { 'ALLOWED' } else { 'DENIED' }
+$eligibility = if ($Phase -eq 'PRE-COMMIT') {
+    if ($result.Status -eq 'PASS') { 'DEFERRED (EVENT PREFLIGHT ONLY)' } else { 'NO' }
+} elseif ($result.Status -eq 'PASS') { 'POST-COMMIT IDENTITY: CLEAN' } else { 'NO' }
+$push = 'DEFERRED (REMOTE TIP AND PUSH GATES REQUIRED)'
 Write-Output "VERSION LEDGER: $LedgerPath"
+Write-Output "GATE PHASE: $Phase"
 Write-Output "VERSION EVENT: $event"
 Write-Output "FIX COUNTER: $($result.FixCounter)"
 Write-Output "FEATURE COUNTER: $($result.FeatureCounter)"

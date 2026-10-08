@@ -21,6 +21,10 @@ function New-Row {
     }
 }
 
+function New-GovernanceRow([string]$Id = 'GOV-A', [string]$Baseline = 'v0.3.0.9-fix', [string]$Applied = $Baseline, [string]$Status = 'RESERVED') {
+    [pscustomobject]@{ EventId=$Id; TaskId='GOV-TASK'; Type='GOVERNANCE'; Name='Governance recovery'; BaselineVersion=$Baseline; AppliedVersion=$Applied; Status=$Status; AcceptanceEvidence='source-only governance maintenance'; AcceptedTime=''; CandidateId='-'; CommitId='-' }
+}
+
 function Invoke-Case {
     param([string]$Name, [object[]]$Rows, [hashtable]$Arguments, [string]$Expected)
     $path = Join-Path $temp "$Name.tsv"
@@ -47,6 +51,8 @@ function New-Arguments {
 
 [void](Invoke-Case 'missing' @() (New-Arguments 'FIX' '' 'v0.3.0.0-r1' 'CAND-A' '' $true) 'MISSING EVENT GATE')
 [void](Invoke-Case 'feature-missing' @() (New-Arguments 'FEATURE' '' 'v0.3.0.0-r1' 'CAND-F' '' $true) 'MISSING EVENT GATE')
+[void](Invoke-Case 'governance-missing' @() (New-Arguments 'GOVERNANCE' '' 'v0.3.0.9-fix' '' '' $false) 'MISSING EVENT GATE')
+[void](Invoke-Case 'governance-case-mismatch' @(New-GovernanceRow) (New-Arguments 'GOVERNANCE' 'gov-a' 'v0.3.0.9-fix' '' '' $false) 'MISSING EVENT GATE')
 [void](Invoke-Case 'pending' @(New-Row) (New-Arguments 'FIX' 'XYT-A' 'v0.3.0.0-r1' 'CAND-A' '' $false) 'VERSION EVENT: RESERVED')
 [void](Invoke-Case 'no-bump' @(New-Row 'XYT-A' 'ACCEPTED') (New-Arguments 'FIX' 'XYT-A' 'v0.3.0.0-r1' 'CAND-A' '' $true) 'MISSING BUMP GATE')
 $one = New-Row 'XYT-A' 'APPLIED' 'v0.3.0.1-fix'
@@ -60,4 +66,35 @@ $wrong = New-Row 'XYT-A' 'APPLIED' 'v0.3.0.4-fix'
 [void](Invoke-Case 'wrong' @($wrong) (New-Arguments 'FIX' 'XYT-A' 'v0.3.0.4-fix' 'CAND-A' 'CAND-A@v0.3.0.4-fix' $true) 'MISSING BUMP GATE')
 [void](Invoke-Case 'fingerprint' @($one) (New-Arguments 'FIX' 'XYT-A' 'v0.3.0.1-fix' 'CAND-A' 'CAND-A@v0.3.0.2-fix' $true) 'CANDIDATE VERSION BINDING')
 [void](Invoke-Case 'duplicate' @($one, $one) (New-Arguments 'FIX' 'XYT-A' 'v0.3.0.1-fix' 'CAND-A' 'CAND-A@v0.3.0.1-fix' $true) 'DUPLICATE GATE')
+$gov = Invoke-Case 'governance-reserved' @(New-GovernanceRow) (New-Arguments 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false) 'GOVERNANCE EVENT'
+if ($gov.FixCounter -ne 0 -or $gov.FeatureCounter -ne 0) { throw 'Governance event incorrectly advanced a product counter' }
+[void](Invoke-Case 'governance-stale-baseline' @(New-GovernanceRow 'GOV-A' 'v0.3.0.8-fix') (New-Arguments 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false) 'GOVERNANCE BASELINE')
+$noEvidence = New-GovernanceRow; $noEvidence.AcceptanceEvidence = ''
+[void](Invoke-Case 'governance-no-evidence' @($noEvidence) (New-Arguments 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false) 'GOVERNANCE EVENT EVIDENCE')
+[void](Invoke-Case 'governance-product-bump' @(New-GovernanceRow 'GOV-A' 'v0.3.0.9-fix' 'v0.3.0.10-fix') (New-Arguments 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false) 'GOVERNANCE VERSION ADVANCE')
+[void](Invoke-Case 'governance-wrong-type' @(New-GovernanceRow) (New-Arguments 'FIX' 'GOV-A' 'v0.3.0.9-fix' '' '' $false) 'CHANGE TYPE')
+$phaseRepo = Join-Path $temp 'phase-repo'
+New-Item -ItemType Directory $phaseRepo | Out-Null
+New-Item -ItemType Directory (Join-Path $phaseRepo 'tools\governance') -Force | Out-Null
+Copy-Item (Join-Path $root 'tools\governance\version-lib.ps1') (Join-Path $phaseRepo 'tools\governance\version-lib.ps1')
+git -C $phaseRepo init -q
+git -C $phaseRepo config user.email governance-test@example.invalid
+git -C $phaseRepo config user.name GovernanceTest
+git -C $phaseRepo config core.autocrlf false
+git -C $phaseRepo add tools/governance/version-lib.ps1
+git -C $phaseRepo commit -qm 'test fixture'
+'clean' | Set-Content (Join-Path $phaseRepo 'state.txt')
+git -C $phaseRepo add state.txt
+git -C $phaseRepo commit -qm baseline
+'candidate' | Set-Content (Join-Path $phaseRepo 'state.txt')
+$phaseLedger = Join-Path $temp 'governance-phase.tsv'
+@(New-GovernanceRow) | Export-Csv $phaseLedger -Delimiter "`t" -NoTypeInformation -Encoding UTF8
+$pre = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $false 'PRE-COMMIT'
+if ($pre.Status -ne 'PASS') { throw "PRE-COMMIT rejected a dirty prepared Candidate: $($pre.Reason)" }
+$preCleanFlag = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true 'PRE-COMMIT'
+if ($preCleanFlag.Status -ne 'BLOCKED' -or $preCleanFlag.Reason -notlike '*POST-COMMIT ONLY*') { throw 'PRE-COMMIT accepted the POST-COMMIT RequireClean flag' }
+$post = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true 'POST-COMMIT'
+if ($post.Status -ne 'BLOCKED' -or $post.Reason -notlike '*POST-COMMIT IDENTITY*') { throw 'POST-COMMIT accepted a dirty worktree' }
+$autoPost = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true
+if ($autoPost.Status -ne 'BLOCKED' -or $autoPost.Reason -notlike '*POST-COMMIT IDENTITY*') { throw 'AUTO did not map -RequireClean to POST-COMMIT' }
 Write-Output 'VERSION EVENT GATE SELFTEST PASS'
