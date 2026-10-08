@@ -109,4 +109,6 @@
     ,{ "path": "tools/governance/workspace/authority-state.ps1", "owner": "WORKSPACE_AUTHORITY" }
     ,{ "path": "tools/governance/workspace/unauthorized-dirty-recovery.ps1", "owner": "WORKSPACE_AUTHORITY" }
     ,{ "path": "tools/governance/workspace/unauthorized-dirty-recovery.selftest.ps1", "owner": "WORKSPACE_AUTHORITY" }
+    ,{ "path": "tools/governance/workspace/safe-fast-forward.ps1", "owner": "WORKSPACE_AUTHORITY" }
+    ,{ "path": "tools/governance/workspace/safe-fast-forward.selftest.ps1", "owner": "WORKSPACE_AUTHORITY" }
   ]}

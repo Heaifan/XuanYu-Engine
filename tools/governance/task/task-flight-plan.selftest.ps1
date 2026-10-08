@@ -10,16 +10,21 @@ try {
  New-Item -ItemType Directory -Force $root|Out-Null; git -C $root init -q; git -C $root config user.email test@example.invalid; git -C $root config user.name test
  Set-Content (Join-Path $root 'seed') seed; git -C $root add seed; git -C $root commit -qm seed
  $base=(git -C $root rev-parse HEAD).Trim()
- Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','A','-Role','Writer','-Owner','one','-Workspace',$root,'-WriteScope','src/a')) 'REGISTERED'
+ Bad (Run @('-RepositoryRoot',$root,'register','-TaskId','NO-LANE','-Role','Writer','-Owner','one','-Workspace',$root,'-WriteScope','src/a')) 'LANE_REQUIRED'
+ Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','A','-Lane','governance','-Role','GitIndexWriter','-Owner','one','-Workspace',$root,'-WriteScope','src/**;tests/a.cs','-ExpectedDependencies','CORE;UI')) 'REGISTERED'
+ $task=(Get-Content (Join-Path $root '.git/xye-handoff/task-registry.json') -Raw|ConvertFrom-Json).tasks[0]
+ if($task.Lane -ne 'governance' -or $task.BaselineHead -ne $base -or $task.WriteScope.Count -ne 2 -or $task.ExpectedDependencies.Count -ne 2){throw 'single task declaration lost Lane, BaseSHA, WriteScope, or DependsOn'}
  Ok (Run @('-RepositoryRoot',$root,'begin','-TaskId','A')) 'ACTIVE'
- Ok (Run @('-RepositoryRoot',$root,'list')) 'A'
+ $listed=Run @('-RepositoryRoot',$root,'list'); Ok $listed 'A'; foreach($fact in @('Lane=governance','Owner=one',"BaseSHA=$base",'WriteScope=/src/**,/tests/a.cs','Status=ACTIVE','DependsOn=CORE,UI','GitIndexWriter=one/A')){Ok $listed $fact}
+ Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','INDEX-CONTENDER','-Lane','governance','-Role','GitIndexWriter','-Owner','two','-Workspace',$root,'-WriteScope','docs/**')) 'REGISTERED'
+ Bad (Run @('-RepositoryRoot',$root,'begin','-TaskId','INDEX-CONTENDER')) 'GIT_INDEX_WRITER_CONFLICT'
  Ok (Run @('-RepositoryRoot',$root,'release','-TaskId','A')) 'RELEASED'
  Ok (Run @('-RepositoryRoot',$root,'list')) 'ACTIVE TASKS: 0'; Ok (Run @('-RepositoryRoot',$root,'inspect','-TaskId','A')) 'RELEASED'
  Bad (Run @('-RepositoryRoot',$root,'close','-TaskId','A','-CloseReason','done')) 'AUTHORIZATION_REQUIRED'; if((Get-Content (Join-Path $root '.git/xye-handoff/task-registry.json') -Raw|ConvertFrom-Json).tasks[0].Status -ne 'RELEASED'){throw 'unauthorized Close changed Task Registry'}
- Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','B','-Role','Writer','-Owner','two','-Workspace',$root,'-WriteScope','same')) 'REGISTERED'; Ok (Run @('-RepositoryRoot',$root,'begin','-TaskId','B')) 'ACTIVE'
- Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','C','-Role','Writer','-Owner','three','-Workspace',$root,'-WriteScope','same')) 'REGISTERED'; Bad (Run @('-RepositoryRoot',$root,'begin','-TaskId','C')) 'OWNERSHIP_CONFLICT'
- Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','D','-Role','Writer','-Owner','four','-Workspace',$root,'-WriteScope','free')) 'REGISTERED'; Bad (Run @('-RepositoryRoot',$root,'amend','-TaskId','D','-AddWriteScope','same')) 'OWNERSHIP_CONFLICT'
- Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','E','-Role','Writer','-Owner','five','-Workspace',$root,'-WriteScope','ghost')) 'REGISTERED'; Ok (Run @('-RepositoryRoot',$root,'begin','-TaskId','E')) 'ACTIVE'; Bad (Run @('-RepositoryRoot',$root,'reap','-TaskId','E','-Coordinator','coord','-Reason','ABANDONED_SELFTEST')) 'AUTHORIZATION_REQUIRED'; if(@((Get-Content (Join-Path $root '.git/xye-handoff/task-registry.json') -Raw|ConvertFrom-Json).tasks|? TaskId -eq 'E').Count -ne 1){throw 'unauthorized Reap removed Task'}
+ Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','B','-Lane','xye','-Role','Writer','-Owner','two','-Workspace',$root,'-WriteScope','same')) 'REGISTERED'; Ok (Run @('-RepositoryRoot',$root,'begin','-TaskId','B')) 'ACTIVE'
+ Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','C','-Lane','xye','-Role','Writer','-Owner','three','-Workspace',$root,'-WriteScope','same')) 'REGISTERED'; Bad (Run @('-RepositoryRoot',$root,'begin','-TaskId','C')) 'OWNERSHIP_CONFLICT'
+ Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','D','-Lane','governance','-Role','Writer','-Owner','four','-Workspace',$root,'-WriteScope','free')) 'REGISTERED'; Bad (Run @('-RepositoryRoot',$root,'amend','-TaskId','D','-AddWriteScope','same')) 'OWNERSHIP_CONFLICT'
+ Ok (Run @('-RepositoryRoot',$root,'register','-TaskId','E','-Lane','governance','-Role','Writer','-Owner','five','-Workspace',$root,'-WriteScope','ghost')) 'REGISTERED'; Ok (Run @('-RepositoryRoot',$root,'begin','-TaskId','E')) 'ACTIVE'; Bad (Run @('-RepositoryRoot',$root,'reap','-TaskId','E','-Coordinator','coord','-Reason','ABANDONED_SELFTEST')) 'AUTHORIZATION_REQUIRED'; if(@((Get-Content (Join-Path $root '.git/xye-handoff/task-registry.json') -Raw|ConvertFrom-Json).tasks|? TaskId -eq 'E').Count -ne 1){throw 'unauthorized Reap removed Task'}
  Ok (Run @('-RepositoryRoot',$root,'release','-TaskId','B')) 'RELEASED'; Ok (Run @('-RepositoryRoot',$root,'release','-TaskId','B')) 'already RELEASED'
  $files=Get-ChildItem (Join-Path $PSScriptRoot 'task-flight-plan*'); foreach($f in $files){if((Get-Content $f.FullName).Count -gt 100){throw "5+100: $($f.Name)"}}
  $reg=Get-Content (Join-Path $root '.git/xye-handoff/task-registry.json') -Raw|ConvertFrom-Json; if(!$reg.tasks){throw 'atomic registry unreadable'}

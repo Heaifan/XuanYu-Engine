@@ -4,13 +4,17 @@
 
 R3 当前模型：Handclap 是 Fact Plane，Handoff 是 ZERO-Authority Legacy Compatibility Shell，Authority Plane 位于 `tools\governance/**`。旧 PREPARE/JOIN/ADVANCE/CLOSE 语义仅保留在 Legacy/Historical 资料中，不是当前推荐流程。
 
-交接权威顺序：
+跨设备同步安全：
 
 ```text
-本地独有正式 Commit > GitHub Remote > 本地未提交 / untracked 残留
+先 fetch，再只读核对当前 branch、HEAD、upstream tip、Ahead/Behind、index、tracked dirty、untracked dirty 与 Writer/Ownership。
+任何 tracked / untracked / Foreign / Unknown dirty 都必须原样保全并暂停同步；不得自动 reset、clean、stash、checkout 或覆盖。
+只有 index 与 worktree clean、Ahead = 0 且 Behind > 0 时才允许 git pull --ff-only；本地独有 Commit、分叉或事实不明时暂停并报告。
 ```
 
-当本地相对 Active Remote **Ahead = 0 且 Behind > 0** 时，执行 **REMOTE WINS**：本地未提交 tracked 修改和 untracked 残留不得阻断同步，由交接程序清理并精确对齐远端。只有本地存在 Remote 没有的正式 Commit 时才阻断自动覆盖。
+`REMOTE WINS` 语义已彻底废止。
+
+远端更新不能授权丢弃本地未提交内容；clean fast-forward 以外的恢复必须由 Owner 根据实际冲突作出明确处置。
 
 .NET SDK 必须由交接程序通过正式 `scripts/resolve-dotnet.ps1` Resolver Chain 解析。已登记首选路径：
 
@@ -42,7 +46,7 @@ PATH 中没有 `dotnet` 不等于 SDK 不存在。
 - `P0.5 INTEGRATION`：必须明确声明，并提供 XYE Consumer 与 XYUI Runtime/Public Contract 的 Ownership 文件表；真实 Consumer 破坏才是 Blocker。
 - `GOVERNANCE`：仅治理文档、Handoff 与 Lane 规则；不借治理 Lane 修改产品代码。
 
-`ForeignDirty != OwnershipConflict`：其他 Lane 的 dirty 可以使 JOIN 通过；只有即将写入的文件与当前 Ownership 冲突才阻断。共享编译出现 `Compile-RED` 时 XYE 优先恢复 Green，XYUI 必须修复自身造成的红灯。Convergence 时 Coordinator 独占 Workspace，其他 Lane Freeze；普通 Agent 禁止创建 / 切换 Branch 或额外 Worktree。
+`ForeignDirty != OwnershipConflict`：仅当计划写入的路径与现存 Ownership 重叠，或实际依赖消费该 Dirty 时阻断；未知归属只暂停受影响路径。共享编译出现 `Compile-RED` 时 XYE 优先恢复 Green，XYUI 必须修复自身造成的红灯。Convergence 时 Coordinator 独占 Workspace，其他 Lane Freeze；普通 Agent 禁止创建 / 切换 Branch 或额外 Worktree。
 
 ## 不可侵犯红线
 
@@ -63,7 +67,7 @@ PATH 中没有 `dotnet` 不等于 SDK 不存在。
 1. 接管核对 Git / 工作区
 2. Planning 阶段：MEDIUM / HIGH 或已登记任务域 → Knowledge Planning Preflight
 3. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
-4. Execution 阶段：Handoff JOIN + Task State 后、第一处文件写入前 → Knowledge Execution Preflight
+4. Execution 阶段：基于当前 HEAD 核对 Task Registry、Lane、Owner、WriteScope、依赖、branch、dirty 与唯一 Git Writer 后、第一处文件写入前 → Knowledge Execution Preflight
 5. 实装
 6. 按 GATE-L / GATE-M / GATE-H 验证
 7. Knowledge Writeback 判断
@@ -81,6 +85,8 @@ Loaded:
 Hard Constraints:
 Conflict Check: PASS | BLOCKED
 ```
+
+正常任务在开始时一次登记有界的 `TaskId + Lane + Owner + WriteScope + BaseSHA + DependsOn`。`WriteScope` 应预先包含直接相关测试与必要审计记录；任务范围内不逐文件重复索取手谕。越界 Owner、生产 Authority 状态变更、放弃他人未完成任务、高风险数据迁移、真实 Release、历史改写及 P4 产品验收仍遵循各自独立的明确授权边界。
 
 如果 `Conflict Check = BLOCKED`，禁止修改代码或治理文件。ACTIVE P0 Knowledge 只有显式 Governance Supersede（更新原条目状态、提供新证据并获治理批准）才能被新实现推翻；不得静默改写历史条目。
 

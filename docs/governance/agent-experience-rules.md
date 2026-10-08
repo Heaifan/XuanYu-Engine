@@ -214,7 +214,7 @@ Occurrences：1
 
 ### EXECUTION PREFLIGHT
 
-发生在执行 Agent 完成 handoff JOIN + Task State 之后、第一处文件写入之前。必须基于 Current Repository HEAD 重新执行，不能相信 Planner 已经查过。
+发生在执行 Agent 基于当前 Repository HEAD 核对 Task Registry、Lane、Owner、WriteScope、依赖、branch、dirty 与唯一 Git Writer 之后、第一处文件写入之前。不得依赖或调用旧 Handoff JOIN，也不能相信 Planner 已经查过。
 
 ### CONFLICT RULE
 

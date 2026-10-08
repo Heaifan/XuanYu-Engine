@@ -4,11 +4,11 @@
 
 **XuanYu Engine Sync & Handoff Protocol**
 
-状态：正式规范  
-适用对象：ChatGPT、Codex、Gemini 及其他参与玄域引擎开发的 AI Agent  
-适用场景：换电脑、换聊天、换 Agent、长时间中断后恢复开发、多人/多 Agent 交接
+状态：LEGACY / HISTORICAL（非当前可执行规范）
+适用对象：ChatGPT、Codex、Gemini 及其他参与玄域引擎开发的 AI Agent
+适用场景：历史流程审计与迁移追溯；不得作为当前同步或开发强制入口
 
-> v1.1 核心修订：正式确立 **Single Canonical Workspace + Sequential Handoff**。普通开发与 Agent 交接不再默认创建 Codex/Gemini/Integration 长期 worktree；同一功能链默认顺序写入唯一正式工作区。任何与本规则冲突的旧 Prompt、旧任务书、Agent 习惯或临时方案，以本 SOP 为准。
+> v1.1 核心修订（历史记录）：正式确立 **Single Canonical Workspace + Sequential Handoff**。本文件中的旧命令、JOIN/逐文件授权要求及同步清理步骤均仅作历史审计，不能覆盖 R3 当前治理入口、安全同步规则或有界任务一次授权约定。
 
 ## Control Plane lifecycle repair
 

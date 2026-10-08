@@ -6,7 +6,7 @@
 
 - 一个 canonical Workspace、一个当前分支、一个 HEAD；并行依靠文件 Ownership，不创建额外 Worktree。
 - 所有任务先声明 `Lane: XYE | XYUI | INTEGRATION | GOVERNANCE`，再读取对应 Authority owner 与 Candidate 依赖；不得调用旧 Handoff。
-- `ForeignDirty != OwnershipConflict`。Candidate 闭包与 Foreign Dirty 路径重叠才是当前 blocker。
+- `ForeignDirty != OwnershipConflict`。仅 Candidate 闭包、WriteScope 或实际依赖消费与 Foreign Dirty 重叠时才阻断；未知归属只暂停受影响路径。
 - Coordinator / Convergence 事实由 `tools/governance/coordinator/**` 负责；旧 `prepare` / `join` / `close` 仅属 Legacy/Historical。
 
 ## 2. Priority and Ownership
@@ -61,7 +61,7 @@
 
 ## 7. Convergence
 
-Coordinator 宣布 Convergence 后写入 Handoff `mode=convergence` 与 `coordinatorScope=xye|integration|governance`；该 Workspace 独占。若 `coordinatorScope=xye`，XYUI JOIN 返回 `HANDOFF BLOCKED / CONVERGENCE_EXCLUSIVE`；XYE Coordinator 的 status/join 允许。Convergence 完成后执行 close；dirty close 返回 `DIRTY_ON_CLOSE`。
+Coordinator 宣布 Convergence 后，Coordinator Authority 记录 `mode=convergence` 与 `coordinatorScope=xye|integration|governance`；该 Workspace 独占。若 `coordinatorScope=xye`，XYUI 的冲突写入暂停，XYE Coordinator 可继续其有界收口。Convergence 完成后按 Coordinator Authority 的 owner 操作关闭；dirty close 返回 `DIRTY_ON_CLOSE`。
 
 ## 8. Compile-RED Rule
 

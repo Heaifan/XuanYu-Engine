@@ -22,6 +22,14 @@ REGISTERED -> ACTIVE -> release -> RELEASED -> close -> CLOSED
 - close 只允许吸收 RELEASED candidate；CLOSED Task 必须从 Live Registry 清除，同时在 history 中保留 TaskId、状态事件与 CloseReason。
 - `COMPLETE + ACTIVE = TASK_STATE_LEAK`，这是本事故的专门回归条件。
 
+## Bounded task declaration and shared facts
+
+新 Task 在开始时一次登记 `TaskId + Lane + Owner + WriteScope + BaseSHA + DependsOn`。`task-flight-plan.ps1 register` 的 `Lane` 必填；`BaselineHead` 是 Registry 内既有的 BaseSHA 字段，避免复制第二份基线事实。多个 WriteScope 与 DependsOn 可用分号在同一任务声明中列出。
+
+WriteScope 必须一次覆盖任务模块、直接相关测试与必要审计记录。同一已声明范围内不逐文件重取授权；越界 Owner、生产 Authority 状态变更、放弃他人未完成任务、高风险数据、Release 或历史改写仍走各自明确的单独授权。
+
+`list` 投影当前 branch/HEAD/dirty 路径、ACTIVE/REGISTERED TaskId、Lane、Owner、Role、BaseSHA、WriteScope、Status 和 DependsOn；已释放任务通过 `inspect` 查询历史。`Role=GitIndexWriter` 是单一 stage/commit Writer claim，同一 Workspace 同时只能有一个 ACTIVE claim；它不代替 Ownership 检查，也不允许 claim owner 处理范围外文件。
+
 ## Interrupted ownership
 
 Agent 中断而未 release 时，Task 必须保持 `ACTIVE` 并继续占用 WriteScope。不得通过 TTL、timeout 或进程退出自动 release。只有显式提供 Coordinator 与 Reason 的 `reap` 才能释放 ownership，并以 `CloseReason=ABANDONED/<reason>` 写入历史；缺少 Coordinator 的 reap 必须拒绝。

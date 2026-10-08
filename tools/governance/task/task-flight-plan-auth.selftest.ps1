@@ -8,7 +8,7 @@ function Deny($r){if($r.Code -eq 0 -or $r.Text -notmatch 'AUTHORIZATION_REQUIRED
 try{
  New-Item -ItemType Directory -Force $root|Out-Null;git -C $root init -q;git -C $root config user.email test@example.invalid;git -C $root config user.name test
  Set-Content (Join-Path $root seed) seed;git -C $root add seed;git -C $root commit -qm seed
- $base=@('-RepositoryRoot',$root,'-Role','Writer','-Workspace',$root,'-WriteScope','owned')
+ $base=@('-RepositoryRoot',$root,'-Lane','governance','-Role','Writer','-Workspace',$root,'-WriteScope','owned')
  $created=Run (@($base)+@('register','-TaskId','RELEASED-TASK','-Owner','owner'));if($created.Code){throw 'fixture registration failed'}
  $begun=Run @('-RepositoryRoot',$root,'begin','-TaskId','RELEASED-TASK');if($begun.Code){throw 'fixture activation failed'}
  $released=Run @('-RepositoryRoot',$root,'release','-TaskId','RELEASED-TASK');if($released.Code){throw "fixture release failed: $($released.Text)"}
@@ -30,7 +30,7 @@ try{
  $hist=Get-Content (HistPath $taskRoot)|%{$_|ConvertFrom-Json};if($hist[-1].Event -ne 'TRANSFERRED' -or $hist[-1].AuthorizationEvidence.Author -ne 'Heaifan'){throw 'transfer evidence missing from history'}
  $broken=Join-Path $root 'rollback';New-Item -ItemType Directory -Force $broken|Out-Null;git -C $broken init -q;git -C $broken config user.email test@example.invalid;git -C $broken config user.name test;Set-Content (Join-Path $broken seed) seed;git -C $broken add seed;git -C $broken commit -qm seed
  $brokenState=Join-Path $broken '.git/xye-handoff';New-Item (Join-Path $brokenState 'task-history.jsonl') -ItemType Directory -Force|Out-Null
- $failure=Run @('-RepositoryRoot',$broken,'register','-TaskId','ROLLBACK','-Role','Writer','-Owner','agent','-Workspace',$broken,'-WriteScope','owned');if($failure.Code -eq 0 -or (Test-Path (Join-Path $brokenState 'task-registry.json'))){throw 'failed registry/history commit left partial state'}
+ $failure=Run @('-RepositoryRoot',$broken,'register','-TaskId','ROLLBACK','-Lane','governance','-Role','Writer','-Owner','agent','-Workspace',$broken,'-WriteScope','owned');if($failure.Code -eq 0 -or (Test-Path (Join-Path $brokenState 'task-registry.json'))){throw 'failed registry/history commit left partial state'}
  if(!(Test-Path (Join-Path $brokenState 'task-transaction.json'))){throw 'failed state transaction was not recoverable'};Remove-Item (Join-Path $brokenState 'task-history.jsonl') -Recurse -Force
  $recovered=Run @('-RepositoryRoot',$broken,'list');if($recovered.Code -ne 0 -or (Test-Path (Join-Path $brokenState 'task-transaction.json'))){throw 'pending registry/history transaction did not recover'}
  if(!(Get-Content (Join-Path $brokenState 'task-history.jsonl') -Raw).Contains('TRANSACTION_ROLLED_BACK')){throw 'task transaction recovery was not audited'}

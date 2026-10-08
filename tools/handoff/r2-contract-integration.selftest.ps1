@@ -23,6 +23,32 @@ foreach ($command in $legacy) {
     Assert-True ($handoff -notmatch "(?i)HANDOFF $command PASS") "Handoff still claims $command PASS"
 }
 
+$agents = Read-Source 'AGENTS.md'
+$devRules = Read-Source 'docs/dev-rules.md'
+$lanes = Read-Source 'docs/governance/development-lanes.md'
+$experience = Read-Source 'docs/governance/agent-experience-rules.md'
+$protocol = Read-Source 'tools/handoff/HANDOFF-PROTOCOL.md'
+$config = Read-Source 'tools/governance/workspace/HandoffConfig.psd1'
+$safeSync = Read-Source 'tools/governance/workspace/safe-fast-forward.ps1'
+Assert-True ($agents -match '(?i)REMOTE WINS.*废止') 'current entry does not explicitly retire Remote Wins'
+Assert-True ($agents -notmatch '(?im)^.*REMOTE WINS.*(清理并|自动覆盖|清理本地)') 'current entry still directs destructive Remote Wins cleanup'
+Assert-True ($agents -match '未提交|uncommitted' -and $agents -match 'reset、clean、stash、checkout') 'current entry lacks a dirty-preservation stop rule'
+Assert-True ($agents -notmatch '(?im)^.*Execution.*Handoff JOIN') 'AGENTS Execution still requires retired JOIN'
+Assert-True ($devRules -notmatch '(?i)JOIN 可在') 'dev-rules still relies on JOIN'
+Assert-True ($lanes -notmatch '(?i)JOIN 返回|JOIN 可') 'current lane contract still relies on JOIN'
+Assert-True ($experience -notmatch '(?i)handoff JOIN \+ Task State') 'Execution Knowledge Preflight still depends on JOIN'
+Assert-True ($protocol -match '(?i)RETIRED / DATA-SAFETY OVERRIDE' -and $protocol -match '(?i)REMOTE WINS') 'legacy Remote Wins section lacks a retirement warning'
+Assert-True ($config -match 'FastForwardWhenBehind\s*=\s*\$false') 'workspace config still enables behind fast-forward'
+$bootstrap = Read-Source 'scripts/xye-bootstrap.ps1'
+Assert-True ($safeSync -match 'SYNC_BLOCKED_DIRTY' -and $safeSync -match 'SYNC_BLOCKED_LOCAL_AHEAD' -and $safeSync -match 'merge --ff-only') 'safe sync entry lacks dirty/ahead guard or ff-only'
+foreach ($source in @($handoff,$bootstrap,$safeSync)) {
+    Assert-True ($source -notmatch '(?i)git\s+(reset\s+--hard|clean\s+-[a-z]*f|checkout\s+--\s+\.|restore\s+--source|stash\s+drop)') 'active entry contains a destructive sync command'
+}
+foreach ($command in @('join','prepare')) {
+    $output = @(& pwsh -NoLogo -NoProfile -File (Join-Path $PSScriptRoot 'handoff.ps1') $command 2>&1)
+    if ($LASTEXITCODE -eq 0 -or ($output -join "`n") -notmatch 'HANDOFF_COMMAND_RETIRED') { throw "Legacy $command was not denied" }
+}
+
 foreach ($file in $handclap) {
     $source = Get-Content -Raw $file.FullName
     Assert-True ($source -notmatch $authorityCalls) "Handclap authority leak: $($file.Name)"

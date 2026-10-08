@@ -25,9 +25,11 @@ Capability Tags
 
 任务必须先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再读取对应 `tools/governance/**` Authority owner 与 Candidate 依赖；不得调用旧 Handoff JOIN。Lane、Ownership、Audit、Convergence 和跨 Lane 升级的唯一事实源是 `docs/governance/development-lanes.md`。
 
+开始时一次声明 `TaskId + Lane + Owner + WriteScope + BaseSHA + DependsOn`；WriteScope 同时列入直接相关测试与必要审计文件。不得对同一有界任务逐文件重复索取授权。扩展到无关 Owner、生产 Authority 状态、高风险数据、Release、历史改写或 P4 验收仍走对应的明确授权。
+
 Feature 写入前必须完成 Candidate Tree、Planning/Execution Knowledge Preflight、Deferred Capability Preflight 和 Capability Tags。若命中的 Deferred Capability 为 `BLOCKING`，则 `CODING = BLOCKED`；不得用局部测试 PASS 绕过。
 
-共享 Workspace 只保留一个当前分支和一个 HEAD；普通 Agent 禁止创建 / 切换 Branch 和额外 Worktree。`ForeignDirty != OwnershipConflict`：JOIN 可在其他 Lane dirty 时通过，只有写入范围与 Ownership 冲突才阻断。
+共享 Workspace 只保留一个当前分支和一个 HEAD；普通 Agent 禁止创建 / 切换 Branch 和额外 Worktree。`ForeignDirty != OwnershipConflict`：只有写入范围与 Ownership 重叠或实际消费冲突依赖才阻断，未知归属只暂停受影响路径。
 
 必须确认当前分支、HEAD、远端 tip、工作区与任务范围一致。未知修改不得覆盖。
 

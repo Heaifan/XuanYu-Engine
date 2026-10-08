@@ -154,6 +154,8 @@ Ahead > 0
 
 ### 3.2 Local Ahead = 0 且 Behind > 0（仅 PREPARE）
 
+> **RETIRED / DATA-SAFETY OVERRIDE:** 本节旧 REMOTE WINS 行为仅保留为历史证据，禁止执行。任何 tracked、untracked、Foreign 或 Unknown dirty 都必须保全；禁止 reset、clean、stash、checkout、restore 或覆盖。当前安全同步规则以 `AGENTS.md` 为准，只允许 clean worktree 上的 fast-forward。
+
 如果本地没有独有正式 Commit，但落后于当前 branch upstream：
 
 ```text

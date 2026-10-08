@@ -14,10 +14,10 @@ try {
     New-Item -ItemType Directory -Force $root | Out-Null; git -C $root init -q
     git -C $root config user.email test@example.invalid; git -C $root config user.name test
     Set-Content (Join-Path $root 'seed.txt') seed; git -C $root add seed.txt; git -C $root commit -qm seed
-    $a = @('-RepositoryRoot',$root,'register','-TaskId','GHOST-NORMAL','-Role','Writer','-Owner','agent-c','-Workspace',$root,'-WriteScope','candidate.txt')
+    $a = @('-RepositoryRoot',$root,'register','-TaskId','GHOST-NORMAL','-Lane','xye','-Role','Writer','-Owner','agent-c','-Workspace',$root,'-WriteScope','candidate.txt')
     Pass (Run $flight $a) 'REGISTERED'; Pass (Run $flight @('-RepositoryRoot',$root,'begin','-TaskId','GHOST-NORMAL')) 'ACTIVE'
     Pass (Run $flight @('-RepositoryRoot',$root,'release','-TaskId','GHOST-NORMAL')) 'RELEASED'
-    $list = Run $flight @('-RepositoryRoot',$root,'list'); Pass $list 'ACTIVE TASKS: 0'; if ($list.Text -match 'GHOST-NORMAL') { throw 'ACTIVE TASK LEAK: normal task remains listed' }
+    $list = Run $flight @('-RepositoryRoot',$root,'list'); Pass $list 'ACTIVE TASKS: 0'; if($list.Text -match 'GHOST-NORMAL'){throw 'released history leaked into the active task projection'}
     Pass (Run $flight @('-RepositoryRoot',$root,'inspect','-TaskId','GHOST-NORMAL')) 'RELEASED'
     Set-Content (Join-Path $root 'candidate.txt') dirty
     $c = Run $classifier @('-RepositoryRoot',$root,'-CurrentTaskId','OTHER','-DirtyPath','candidate.txt')
@@ -28,16 +28,16 @@ try {
     $history = Join-Path $root '.git/xye-handoff/task-history.jsonl'; if (!(Test-Path $history)) { throw 'history registry was not created' }
     Deny (Run $flight @('-RepositoryRoot',$root,'amend','-TaskId','GHOST-NORMAL','-AddWriteScope','forbidden.txt'))
     Deny (Run $flight @('-RepositoryRoot',$root,'write','-TaskId','GHOST-NORMAL','-Path','candidate.txt'))
-    Pass (Run $flight @('-RepositoryRoot',$root,'register','-TaskId','GHOST-ABANDONED','-Role','Writer','-Owner','agent-i','-Workspace',$root,'-WriteScope','interrupted.txt')) 'REGISTERED'
+    Pass (Run $flight @('-RepositoryRoot',$root,'register','-TaskId','GHOST-ABANDONED','-Lane','xye','-Role','Writer','-Owner','agent-i','-Workspace',$root,'-WriteScope','interrupted.txt')) 'REGISTERED'
     Pass (Run $flight @('-RepositoryRoot',$root,'begin','-TaskId','GHOST-ABANDONED')) 'ACTIVE'
     $before = Run $flight @('-RepositoryRoot',$root,'list'); Pass $before 'GHOST-ABANDONED'; if ($before.Text -match 'TTL|TIMEOUT') { throw 'ACTIVE ownership was automatically released' }
     Deny (Run $flight @('-RepositoryRoot',$root,'reap','-TaskId','GHOST-ABANDONED','-Reason','ABANDONED_SELFTEST'))
     DenyAuthorization (Run $flight @('-RepositoryRoot',$root,'reap','-TaskId','GHOST-ABANDONED','-Coordinator','coord','-Reason','ABANDONED_SELFTEST'))
     $after = Run $flight @('-RepositoryRoot',$root,'list'); Pass $after 'GHOST-ABANDONED'; Pass (Run $flight @('-RepositoryRoot',$root,'inspect','-TaskId','GHOST-ABANDONED')) 'ACTIVE'
     Pass (Run $flight @('-RepositoryRoot',$root,'release','-TaskId','GHOST-ABANDONED')) 'RELEASED'
-    Pass (Run $flight @('-RepositoryRoot',$root,'register','-TaskId','SRP','-Role','Writer','-Owner','srp','-Workspace',$root,'-WriteScope','XuanYu.Render.Vulkan/**')) 'REGISTERED'
+    Pass (Run $flight @('-RepositoryRoot',$root,'register','-TaskId','SRP','-Lane','xye','-Role','Writer','-Owner','srp','-Workspace',$root,'-WriteScope','XuanYu.Render.Vulkan/**')) 'REGISTERED'
     Pass (Run $flight @('-RepositoryRoot',$root,'begin','-TaskId','SRP')) 'ACTIVE'
-    Pass (Run $flight @('-RepositoryRoot',$root,'register','-TaskId','XYT','-Role','Writer','-Owner','xyt','-Workspace',$root,'-WriteScope','XuanYu.World/**','-ExpectedDependencies','SRP')) 'REGISTERED'
+    Pass (Run $flight @('-RepositoryRoot',$root,'register','-TaskId','XYT','-Lane','integration','-Role','Writer','-Owner','xyt','-Workspace',$root,'-WriteScope','XuanYu.World/**','-ExpectedDependencies','SRP')) 'REGISTERED'
     Pass (Run $flight @('-RepositoryRoot',$root,'begin','-TaskId','XYT')) 'ACTIVE'
     $d = Run $classifier @('-RepositoryRoot',$root,'-CurrentTaskId','XYT','-DirtyPath','XuanYu.Render.Vulkan/shader.cs')
     Pass $d 'FRIENDLY_ACTIVE'; Pass $d 'SRP'

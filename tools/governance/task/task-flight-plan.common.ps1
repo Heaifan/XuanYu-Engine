@@ -18,7 +18,8 @@ function Save([string]$R,$Reg,$Task,[string]$Event,[string]$Reason='', [string]$
 }
 function NormWorkspace([string]$P){([IO.Path]::GetFullPath($P)).Replace('\','/').TrimEnd('/').ToLowerInvariant()}
 function NormScope([string]$P,[string]$W){$p=$P.Trim().Replace('\','/');if([IO.Path]::IsPathRooted($p)){$full=NormWorkspace $p;$base=NormWorkspace $W;if($full -eq $base){return '/'};if($full.StartsWith($base+'/')){return $full.Substring($base.Length+1)}};return ('/'+$p.TrimStart('/').TrimEnd('/')).ToLowerInvariant()}
-function Scopes([string[]]$Paths,[string]$W){@($Paths|?{![string]::IsNullOrWhiteSpace($_)}|%{NormScope $_ $W}|sort -Unique)}
+function Values([string[]]$Items){@($Items|%{$_ -split ';'}|?{![string]::IsNullOrWhiteSpace($_)}|%{$_.Trim()})}
+function Scopes([string[]]$Paths,[string]$W){@(Values $Paths|%{NormScope $_ $W}|sort -Unique)}
 function Overlap([string]$A,[string]$B){$x=$A.TrimEnd('/');$y=$B.TrimEnd('/');return $x -eq $y -or $x.StartsWith($y+'/') -or $y.StartsWith($x+'/')}
 function Conflict($Reg,[string[]]$Wanted,[string]$TaskId,[string]$WantedWorkspace){foreach($t in @($Reg.tasks|?{$_.Status -eq 'ACTIVE' -and $_.TaskId -ne $TaskId})){if((NormWorkspace ([string]$t.Workspace)) -ne (NormWorkspace $WantedWorkspace)){continue};foreach($a in $Wanted){foreach($b in @($t.WriteScope)){if(Overlap $a $b){return $t}}}};return $null}
 function Head([string]$R){$h=git -C $R rev-parse HEAD 2>$null;if($LASTEXITCODE){Fail GIT_FAILED 'cannot read HEAD'};return ($h.Trim())}
