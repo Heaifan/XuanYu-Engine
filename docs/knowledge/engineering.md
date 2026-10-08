@@ -820,3 +820,37 @@ P3-01 这类关键 marker 已全部出现后，应立即记录 PASS 并主动回
 - 每个 P3 Capability 的独立 Duration / Timeout。
 
 这样才能识别“真实 Runtime 本身慢”还是“每次都在重复 Build / 等无效 Timeout”。
+
+---
+
+## K-GOV-005 跨设备 Git 同步必须保全未提交内容，只有干净且可快进时才能更新 HEAD
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1（已提交的源码与机器测试报告；ChatGPT 未独立复跑）
+**标签**：Git、Sync、Data Safety、Canonical Workspace、Fast-Forward、ForeignDirty、UT-07
+**适用范围**：玄域引擎唯一 canonical workspace 的换机同步、Agent 交接、远端快进与自动化更新入口。
+
+**首次确认**：2026-10-08
+**来源**：XYE-UTOPIA-R1-M1 / UT-07，Commit `bb336011c3af78f1fd273dd3a84b099e6cacec9f`；GitHub [Issue #9 M1 回报](https://github.com/Heaifan/XuanYu-Engine/issues/9#issuecomment-6062767696)。
+
+### 问题与根因
+
+旧 `AGENTS.md` 在 `Ahead=0 / Behind>0` 时要求执行 `REMOTE WINS`，允许交接程序清理本地 tracked 修改和 untracked 内容。这把“远端 Commit 是版本事实源”错误推广为“可以自动丢弃本机未提交的真实工作成果”；在共享工作区、多 Codex 并行时存在数据丢失风险。
+
+### 工程规则
+
+1. 同步前先核对真实 branch、HEAD、upstream、Ahead/Behind、Git index、tracked/untracked/foreign/unknown dirty 和当前 Writer/Ownership。**任何未提交内容和未知归属都必须保留原样；不得为同步自动 reset、clean、stash、checkout 或强制覆盖**。只暂停受影响的写入/同步，不牵连无关任务。
+2. 安全自动推进 HEAD 的必要条件是 **index 与 worktree clean，Ahead=0，Behind>0，且可证明 `--ff-only` 成立**。本地独有 Commit、分叉、状态变化或事实不明时停止并保留现场。
+3. Fetch 后必须再次核查状态；正式快进使用 `git merge --ff-only <verified-upstream-tip>` 或等价安全入口，随后验证实际 HEAD 与目标一致、工作区仍 clean。结果必须报告真实命令退出码；局部检查不能冒充全程无竞态。
+4. `Remote HEAD` 高于本地不是覆盖许可，`work-release=IDLE`、无锁也不是清理许可。真正需要整理 Dirty 时，先查 Task/Ownership 并按明确的路径级交接处理；不创建第二 Worktree 或随意改写历史。
+
+### 已有机器化证据
+
+`tools/governance/workspace/safe-fast-forward.ps1` 与 `safe-fast-forward.selftest.ps1` 在 M1 入库。Codex 报告隔离 Git Fixture **5/5 PASS**：tracked dirty、untracked 路径冲突、ForeignDirty、本地独有 Commit 均被拒绝且文件保留；完全 clean 的 behind 分支允许安全快进。R2 Contract Integration、ARCH-A/5+100 据报通过。上述测试报告与实际 Commit 已关联，但 ChatGPT 未在本机重新运行。
+
+### 验证边界和复核点
+
+这组 5/5 测试**未证明**并行 Writer 在最后一次 Dirty 检查与 `merge --ff-only` 之间产生修改时必被阻断，也未覆盖 Git 忽略文件和异常 hook 的全部路径。未来修改同步器时须增加状态竞态、ignored/untracked 冲突以及失败后不清理的专项负例。不得把“5/5 通过”解释为所有并发时序已经安全。
+
+**关联**：K-GOV-001（Commit 为版本事实身份）、K-GOV-002（治理规则需机器防回潮）、K-HANDOFF-001（提交锁恢复；不同于同步安全）。

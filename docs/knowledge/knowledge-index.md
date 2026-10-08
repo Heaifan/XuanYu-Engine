@@ -1,6 +1,6 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-10-05
+> 最后治理更新：2026-10-08
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
 
 ## 任务域预检映射
@@ -11,7 +11,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 | 任务域 | 典型触发 | 优先读取 |
 |---|---|---|
-| 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-003；EXP-GOVERNANCE-001；再检查其他相关 ACTIVE EXP |
+| 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-005；EXP-GOVERNANCE-001；再检查其他相关 ACTIVE EXP |
 | 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；EXP-ARCH-001；`decisions/` 中相关 DEC；其他相关 ACTIVE EXP |
 | 空间 / 几何 | Camera、Navigation、Zoom、Screen↔World、Geometry、Snap、Topology | K-SPA-001～K-SPA-004、K-GEO-001、K-GEO-002、DEC-CAM-001；相关 DEC / EXP |
 | Editor Center Navigation | Editor Navigation Center、Zoom / Orbit 共用 ObservationCenter、Pan 后 Center、Gameplay Cursor Anchor scope | K-SPA-003、K-SPA-004、DEC-CAM-001 |
@@ -22,8 +22,9 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | Performance | Preview、Commit、高频路径 | K-PERF-001；相关 ACTIVE EXP |
 | Global Migration / Refactor | Reverse-Z、Projection、Renderer、Depth Policy、Input Architecture、Persistence Migration、Workspace Architecture | 相关领域 K/L；EXP-GOVERNANCE-002；EXP-ARCH-001 |
 | XYT / 测试治理 | xyt、测试选择、P0~P4、T0~T3、Runner、Executor、Incident、Lock、Report、IPO、Witness、Evidence、P3、Closure | K-VAL-002、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001、L-XYT-001；并读取 test-registry-policy / xyt-* contracts |
+| Git 同步 / Workspace 交接 | 跨设备同步、Git Fetch/Fast-Forward、Remote Ahead/Behind、ForeignDirty、自动清理风险 | K-GOV-005、K-GOV-001、K-GOV-002、K-HANDOFF-001（仅真实 Commit Mutex 相关时） |
 | Agent 历史错误 | 当前任务命中已知错误模式 | `docs/governance/agent-error-log.md` + `docs/governance/agent-experience-rules.md` 中命中的 ACTIVE EXP |
-| Governance Convergence / Evidence | Candidate Tree、Deferred Capability、T0-T4、Regression Witness、Handoff ownership | K-GOV-001～K-GOV-003、K-VAL-001～K-VAL-002、EXP-GOVERNANCE-001；本轮候选结论必须先 SEARCH EXISTING，再由 ChatGPT 审计决定 UPDATE / STRENGTHEN / CREATE / RETIRE / NO DEPOSIT |
+| Governance Convergence / Evidence | Candidate Tree、Deferred Capability、T0-T4、Regression Witness、Handoff ownership | K-GOV-001～K-GOV-005、K-VAL-001～K-VAL-002、EXP-GOVERNANCE-001；本轮候选结论必须先 SEARCH EXISTING，再由 ChatGPT 审计决定 UPDATE / STRENGTHEN / CREATE / RETIRE / NO DEPOSIT |
 | Diagnostic / Viewport | Diagnostic、Viewport、NativeControlHost、Vulkan、Popup、Pointer、Capture、Input Router | K-VAL-001、K-VAL-002、K-NATIVE-001、K-NATIVE-002、K-INP-001～K-INP-005、K-DIAG-001、K-GOV-003、L-VAL-001、L-NATIVE-001、L-TEST-001；EXP-ARCH-001、EXP-TEST-001、EXP-UI-002、EXP-GOVERNANCE-001 |
 
 任务若横跨多个域，只加载与当前 Scope 直接相关条目，不机械全文读取。
@@ -79,6 +80,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | DEC-CAM-001 | Decision | Architecture | Editor 与 Gameplay 的 Zoom Authority 按产品上下文分离 | P0 | R1 | EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1 · 2026-10-05 · baseline 4277b242 | Active |
 
 | K-GOV-004 | Knowledge | Engineering | ChatGPT 审计通过后默认立即写回 XYK | P0 | E1 | XYT 建设治理裁决 · 2026-09-29 | Active |
+| K-GOV-005 | Knowledge | Engineering | 跨设备 Git 同步必须保全未提交内容，只允许干净快进 | P0 | E1 | XYE-UTOPIA-R1-M1 · bb336011 · 2026-10-08 | Active |
 | K-XYT-MAP-001 | Knowledge | Engineering | 正式测试选择必须经过 Change→Ownership→Capability→Required Tests | P0 | E3 | XYT-C · 0d75987c · 2026-09-29 | Active |
 | K-XYT-MAP-002 | Knowledge | Engineering | Agent 可以增加测试但不得删除 Required Tests | P0 | E3 | XYT-C · 0d75987c · 2026-09-29 | Active |
 | K-XYT-INC-001 | Knowledge | Engineering | T0 默认局部隔离，不默认全局停线 | P0 | E3 | XYT-E · bac12aec · 2026-09-29 | Active |
@@ -105,7 +107,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 ## 分类文件
 
-- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-004、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001
+- `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-005、K-XYT-MAP-001～002、K-XYT-INC-001～004、K-XYT-EXEC-001、K-XYT-AUDIT-001～002、K-XYT-TAX-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001
 - `architecture.md`：K-SPA-001～K-SPA-004、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002
 - `input.md`：K-INP-001～K-INP-005
