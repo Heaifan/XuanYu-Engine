@@ -420,5 +420,7 @@ Agent 将另一台电脑或旧阶段的绝对路径当成当前事实，绕过�
 
 验证 / 自动化：`tools/governance/version-next.ps1` 只计算下一值；`version-selftest.ps1` 验证 FEATURE、FIX、连续 FIX、未知类型和非法版本；`version-events.tsv` 一行一个事件。
 
+追加（2026-10-08 / XYE-UTOPIA-R1-M2）：**治理事件必须将 PRE-COMMIT 与 POST-COMMIT 区分为两个证据阶段。** \`GOVERNANCE\` 不增加产品版本，但不能免除真实事件闭环。PRE-COMMIT 允许合法 Dirty Candidate，只核验精确 EventId、变更类型、产品版本不推进和已有证据；\`-RequireClean\` 属于 POST-COMMIT。POST-COMMIT 必须同时核验 Ledger \`APPLIED\`、非空 AcceptedTime、有效且从 HEAD 可达的来源 CommitId、clean 工作区。一个可达 CommitId 仍需由实际 diff/候选范围核对其来源意义；仅凭 branch clean 或可达一个无关 Commit，不证明任务内容已经集成。相关负例见 \`scripts/governance/version-event-gate.selftest.ps1\`，M2 源码 \`e0bcb346\`、账本结账 \`ca8f6b68\`。正式产品 FIX/FEATURE 的版本递增合同保持不变。
+
 Superseded by：
 无

@@ -854,3 +854,37 @@ P3-01 这类关键 marker 已全部出现后，应立即记录 PASS 并主动回
 这组 5/5 测试**未证明**并行 Writer 在最后一次 Dirty 检查与 `merge --ff-only` 之间产生修改时必被阻断，也未覆盖 Git 忽略文件和异常 hook 的全部路径。未来修改同步器时须增加状态竞态、ignored/untracked 冲突以及失败后不清理的专项负例。不得把“5/5 通过”解释为所有并发时序已经安全。
 
 **关联**：K-GOV-001（Commit 为版本事实身份）、K-GOV-002（治理规则需机器防回潮）、K-HANDOFF-001（提交锁恢复；不同于同步安全）。
+
+---
+
+## K-GOV-006 Scoped Candidate 与全局门禁、旧 Wave 恢复必须按真实依赖范围分层
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1（已验证提交及 Codex 机器测试报告；ChatGPT 未复跑 Windows 自测）
+**标签**：Candidate Closure、Global Architecture Gate、Baseline Debt、Task Ownership、Stale Wave、Governance
+**适用范围**：共享 canonical workspace 的 Candidate Gate、Task/Wave Coordinator、5+100 历史债分类和正式 Git 收口。
+
+**首次确认**：2026-10-08
+**来源**：XYE-UTOPIA-R1-M2，源码 Commit \`e0bcb346431915e5406c2a26a4942f43ee93f2c0\`，事件结账 Commit \`ca8f6b68a3f4e7a7e995595c3182d78926e5e069\`；[Issue #9 M2 测试报告](https://github.com/Heaifan/XuanYu-Engine/issues/9#issuecomment-6063468521)。
+
+### 已确认的问题与根因
+
+旧路径把与当前 Candidate 既无 Ownership 冲突、也无实际依赖的历史 ACTIVE Task、旧 Wave 或仓库已有 5+100 债务直接当作 Candidate 自身失败。这会把「整个仓库存在未完成历史事实」误写成「本任务不可安全继续」。
+
+### 工程规则
+
+1. **Candidate 只按它实际消费的闭包判定局部资格**：本次文件、Build/Test/Runtime 依赖、Truth/Registry/Harness，连同 Writer Scope 与 OPEN DependsOn。与闭包无关的旧 ACTIVE Task、Foreign Dirty 或 Stale Wave 只能作为全局背景事实，不能凭存在本身宣称 \`CANDIDATE_SCOPE_FAIL\`。同路径 Owner、实际消费的 Foreign Dirty、未知文件、OPEN DependsOn、Candidate 自身 101+ 行和认证过程指纹变化仍须 BLOCKED。
+2. **局部成功不代替全局成功**。分别展示 \`CandidateScopeStatus\`、\`GlobalBaselineStatus\`、\`OverallGateStatus\` 和 \`CommitEligibility\`。当 Scope PASS 但 Global Architecture FAIL，报告真实 \`GLOBAL_KNOWN_BASELINE_FAIL\` 且 \`CommitEligibility=NO\`；全局未运行时只能标记 NOT_ESTABLISHED，不能虚报 PASS。5+100 的 100 行上限不降低。
+3. **Wave 恢复须有正面范围证明**。历史/过期事实只有在严格证明目标 Lane/任务范围与活跃 Task、Freeze Candidate Owner、活动 Release、Ownership Lock、Commit Mutex 不冲突，且保留旧 Wave history、Task Registry、OPEN Dependency、\`P4_PENDING\` 后，才可通过当前受支持的恢复路径。失败必须保持原状态。不得把「Stale」直接解释为允许覆盖或合法 Task Close/Reap。
+4. **恢复能力受实现范围限制**：M2 的 \`Wave-ScopePatterns\` 目前只为 governance Scope 提供可验证模式；对缺少范围证明的其它 Scope 必须拒绝，不能从此知识条目推断任意 xye/integration Wave 都能安全恢复。
+
+### 源码及反例证据
+
+\`tools/governance/candidate/candidate-scope.ps1\` 的 \`Candidate-Outcome\` 区分 scoped/global/commit 状态；\`candidate-scoped-gate.selftest.ps1\` 报告 16/16；\`coordinator/wave-init.scope.ps1\` 与 \`wave-init.selftest.ps1\` 覆盖同范围冲突、旧 Candidate/OPEN Dependency 保留、Stale Wave 有证据恢复；\`close-authority.selftest.ps1\` 保护 Global Close 对未决 ACTIVE 的拒绝。Codex 报告 R2 Convergence 11/11、ARCH-A PASS，GitHub Commit 已核验；并非 ChatGPT 独立执行 Windows 测试。
+
+### 复核边界
+
+这些结论依赖真实且最新的 Closure/Owner/Dirty/GlobalArchitectureStatus 输入，不能把 Agent 自报的模拟 Facts 当成完整集成证据。对新引入的跨 Lane Wave 或新依赖类型，应重新补局部与全局的正反测试，再声明可恢复。
+
+**关联知识**：K-GOV-002（自动防回潮测试）；K-GOV-005（Git 同步不丢 Dirty，主题不同）；K-GOV-001（Commit 身份）。
