@@ -12,4 +12,4 @@ XYT-FIRST-OP-HOTFIX-R1-G2-A	XYT-FIRST-OP-HOTFIX-R1-G2	FIX	DEM JITTER / CAMERA RE
 XYT-FIRST-OP-HOTFIX-R1-G2-B	XYT-FIRST-OP-HOTFIX-R1-G2	FIX	DEM PERFORMANCE	v0.3.0.0-r1		INVESTIGATING			XYT-CAND-B
 XYT-FIRST-OP-HOTFIX-R1-G2-C	XYT-FIRST-OP-HOTFIX-R1-G2	FIX	MODE / POINTER / CAPTURE LIFECYCLE	v0.3.0.0-r1		PROVISIONAL			XYT-CAND-C
 
-XYE-UTOPIA-R1-M2	XYE-UTOPIA-R1-M2	GOVERNANCE	Utopia governance reform M2	v0.3.0.9-fix	v0.3.0.9-fix	RESERVED	Implementation in progress; governance only; no product version advance.		-	-	2026-10-08	v0.3.0.9-fix	Governance	UT-06/03/04/05 governance sources and negative regressions	v0.3.0.9-fix	-	-	K-GOV-005	-
+XYE-UTOPIA-R1-M2	XYE-UTOPIA-R1-M2	GOVERNANCE	Utopia governance reform M2	v0.3.0.9-fix	v0.3.0.9-fix	APPLIED	Source commit e0bcb346431915e5406c2a26a4942f43ee93f2c0; R2 authority convergence 11/11; ARCH-A PASS; version/candidate/wave/close negative regressions PASS; governance only, product version unchanged.	2026-10-08T15:36:17Z	-	e0bcb346431915e5406c2a26a4942f43ee93f2c0	2026-10-08	v0.3.0.9-fix	Governance	UT-06/03/04/05 governance sources and negative regressions	v0.3.0.9-fix	-	-	K-GOV-005	-
