@@ -21,8 +21,8 @@ function New-Row {
     }
 }
 
-function New-GovernanceRow([string]$Id = 'GOV-A', [string]$Baseline = 'v0.3.0.9-fix', [string]$Applied = $Baseline, [string]$Status = 'RESERVED') {
-    [pscustomobject]@{ EventId=$Id; TaskId='GOV-TASK'; Type='GOVERNANCE'; Name='Governance recovery'; BaselineVersion=$Baseline; AppliedVersion=$Applied; Status=$Status; AcceptanceEvidence='source-only governance maintenance'; AcceptedTime=''; CandidateId='-'; CommitId='-' }
+function New-GovernanceRow([string]$Id = 'GOV-A', [string]$Baseline = 'v0.3.0.9-fix', [string]$Applied = $Baseline, [string]$Status = 'RESERVED', [string]$Commit = '-') {
+    [pscustomobject]@{ EventId=$Id; TaskId='GOV-TASK'; Type='GOVERNANCE'; Name='Governance recovery'; BaselineVersion=$Baseline; AppliedVersion=$Applied; Status=$Status; AcceptanceEvidence='source-only governance maintenance'; AcceptedTime=$(if($Status -eq 'APPLIED'){'2026-10-09T00:00:00Z'}else{''}); CandidateId='-'; CommitId=$Commit }
 }
 
 function Invoke-Case {
@@ -93,8 +93,22 @@ $pre = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A
 if ($pre.Status -ne 'PASS') { throw "PRE-COMMIT rejected a dirty prepared Candidate: $($pre.Reason)" }
 $preCleanFlag = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true 'PRE-COMMIT'
 if ($preCleanFlag.Status -ne 'BLOCKED' -or $preCleanFlag.Reason -notlike '*POST-COMMIT ONLY*') { throw 'PRE-COMMIT accepted the POST-COMMIT RequireClean flag' }
+$preparedCommit=(git -C $phaseRepo rev-parse HEAD).Trim()
+@(New-GovernanceRow 'GOV-A' 'v0.3.0.9-fix' 'v0.3.0.9-fix' 'APPLIED' $preparedCommit) | Export-Csv $phaseLedger -Delimiter "`t" -NoTypeInformation -Encoding UTF8
 $post = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true 'POST-COMMIT'
 if ($post.Status -ne 'BLOCKED' -or $post.Reason -notlike '*POST-COMMIT IDENTITY*') { throw 'POST-COMMIT accepted a dirty worktree' }
 $autoPost = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true
 if ($autoPost.Status -ne 'BLOCKED' -or $autoPost.Reason -notlike '*POST-COMMIT IDENTITY*') { throw 'AUTO did not map -RequireClean to POST-COMMIT' }
+git -C $phaseRepo add state.txt; git -C $phaseRepo commit -qm 'prepared governance result'; $sourceCommit=(git -C $phaseRepo rev-parse HEAD).Trim()
+@(New-GovernanceRow 'GOV-A' 'v0.3.0.9-fix' 'v0.3.0.9-fix' 'APPLIED' $sourceCommit) | Export-Csv $phaseLedger -Delimiter "`t" -NoTypeInformation -Encoding UTF8
+$postApplied = Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true 'POST-COMMIT'
+if ($postApplied.Status -ne 'PASS') { throw "POST-COMMIT rejected an applied event tied to an ancestor commit: $($postApplied.Reason)" }
+$missingCommit=New-GovernanceRow 'GOV-A' 'v0.3.0.9-fix' 'v0.3.0.9-fix' 'APPLIED'
+@( $missingCommit ) | Export-Csv $phaseLedger -Delimiter "`t" -NoTypeInformation -Encoding UTF8
+$postMissingCommit=Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true 'POST-COMMIT'
+if ($postMissingCommit.Status -ne 'BLOCKED' -or $postMissingCommit.Reason -notlike '*GOVERNANCE COMMIT IDENTITY*') { throw 'POST-COMMIT accepted APPLIED without a source CommitId' }
+$notAncestor=New-GovernanceRow 'GOV-A' 'v0.3.0.9-fix' 'v0.3.0.9-fix' 'APPLIED' ('f'*40)
+@( $notAncestor ) | Export-Csv $phaseLedger -Delimiter "`t" -NoTypeInformation -Encoding UTF8
+$postWrongCommit=Get-XytVersionEventGateResult $phaseRepo $phaseLedger 'GOVERNANCE' 'GOV-A' 'v0.3.0.9-fix' '' '' $false $true 'POST-COMMIT'
+if ($postWrongCommit.Status -ne 'BLOCKED' -or $postWrongCommit.Reason -notlike '*GOVERNANCE COMMIT IDENTITY*') { throw 'POST-COMMIT accepted a nonexistent source CommitId' }
 Write-Output 'VERSION EVENT GATE SELFTEST PASS'

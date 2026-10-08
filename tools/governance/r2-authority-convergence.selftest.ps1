@@ -5,7 +5,10 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $tests = @(
     'candidate/candidate-scoped-gate.selftest.ps1',
+    'coordinator/wave-init.selftest.ps1',
+    'coordinator/close-authority.selftest.ps1',
     'coordinator/active-wave-migration.selftest.ps1',
+    '../../scripts/governance/version-event-gate.selftest.ps1',
     'ownership/dependency-handoff.selftest.ps1',
     'release/dirty-content-fingerprint.selftest.ps1',
     'task/task-dirty-classifier.selftest.ps1',

@@ -111,4 +111,12 @@
     ,{ "path": "tools/governance/workspace/unauthorized-dirty-recovery.selftest.ps1", "owner": "WORKSPACE_AUTHORITY" }
     ,{ "path": "tools/governance/workspace/safe-fast-forward.ps1", "owner": "WORKSPACE_AUTHORITY" }
     ,{ "path": "tools/governance/workspace/safe-fast-forward.selftest.ps1", "owner": "WORKSPACE_AUTHORITY" }
+    ,{ "path": "docs/governance/xyt-version-event-gate.md", "owner": "GOVERNANCE" }
+    ,{ "path": "scripts/governance/version-event-gate.lib.ps1", "owner": "GOVERNANCE" }
+    ,{ "path": "scripts/governance/version-event-gate.selftest.ps1", "owner": "GOVERNANCE" }
+    ,{ "path": "tools/governance/coordinator/wave-init.ps1", "owner": "COORDINATOR_AUTHORITY" }
+    ,{ "path": "tools/governance/coordinator/wave-init.scope.ps1", "owner": "COORDINATOR_AUTHORITY" }
+    ,{ "path": "tools/governance/coordinator/wave-init.selftest.ps1", "owner": "COORDINATOR_AUTHORITY" }
+    ,{ "path": "tools/governance/coordinator/close-authority.selftest.ps1", "owner": "COORDINATOR_AUTHORITY" }
+    ,{ "path": "tools/governance/r2-authority-convergence.selftest.ps1", "owner": "GOVERNANCE" }
   ]}

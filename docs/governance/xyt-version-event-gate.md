@@ -52,7 +52,10 @@ separately verify the exact staged Candidate, staged diff-check, scope/purity,
 tests, and applicable architecture gates.
 
 After a successful commit, run `-Phase POST-COMMIT -RequireClean` to verify the
-working tree is clean. This confirms clean identity only; it does not replace
+working tree is clean. For `GOVERNANCE`, POST-COMMIT additionally requires the
+ledger row to be `APPLIED`, an acceptance timestamp, and a `CommitId` that names
+an existing commit reachable from HEAD. A clean branch alone is insufficient.
+This confirms clean identity only; it does not replace
 the pre-commit Candidate checks, establish remote equality, or waive any global
 architecture gate. Governance events never waive those checks.
 

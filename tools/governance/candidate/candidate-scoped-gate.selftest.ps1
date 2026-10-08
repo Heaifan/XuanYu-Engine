@@ -30,6 +30,17 @@ try {
     $r=Run $a ([pscustomobject]@{ActiveTasks=@();DirtyRecords=@();ReleasedRecords=@()}) $fp $fp; Assert ($r.CandidateChangedDuringCertification -eq 'NO' -and $r.CertificationAllowed -eq 'YES') 'case 8'
     $base.DirtyRecords=@([pscustomobject]@{Path='legacy/x.tmp';Classification='FRIENDLY_COMPLETED'});$r=Run $a $base; Assert ($r.CertificationAllowed -eq 'YES') 'case 9'
     $a.BuildDependencies=@('legacy/**');$r=Run $a $base; Assert ($r.FinalEvidenceEligibility -eq 'NO') 'case 10'
+    $a.BuildDependencies=@('core/**');$a|Add-Member NoteProperty ExpectedDependencies @() -Force;$a|Add-Member NoteProperty DependsOn @() -Force
+    $historyRepo=[pscustomobject]@{ActiveTasks=@([pscustomobject]@{TaskId='OLD-C';Status='ACTIVE';WriteScope=@('docs/other/**')});DirtyRecords=@();ReleasedRecords=@();RepositoryUnknownTemp=0;GlobalArchitectureStatus='FAIL';HistoricalBaselineDebt=@([pscustomobject]@{Path='XuanYu.World.Tests/Camera/OrbitPivotAuthorityTests.cs';Lines=104});WaveStatus='STALE_ANCESTOR'}
+    $r=Run $a $historyRepo;Assert ($r.CandidateScopeStatus -eq 'CANDIDATE_SCOPE_PASS' -and $r.GlobalBaselineStatus -eq 'FAIL' -and $r.OverallGateStatus -eq 'GLOBAL_KNOWN_BASELINE_FAIL' -and $r.CommitEligibility -eq 'NO') 'case 11: unrelated active task, stale Wave, and historical global debt are reported separately'
+    $a.ExpectedDependencies=@('RenderProjection OPEN');$r=Run $a $historyRepo;Assert ($r.CandidateScopeStatus -eq 'CANDIDATE_SCOPE_FAIL' -and $r.OpenDependencies -eq 1) 'case 12: OPEN DependsOn blocks candidate'
+    $a.ExpectedDependencies=@();$historyRepo.GlobalArchitectureStatus='PASS';$historyRepo.ActiveTasks=@([pscustomobject]@{TaskId='OVERLAP';Status='ACTIVE';WriteScope=@('src/**')});$r=Run $a $historyRepo;Assert ($r.CandidateScopeStatus -eq 'CANDIDATE_SCOPE_FAIL' -and $r.CandidateScopedActiveWriters -eq 1) ('case 13: same-scope Owner remains blocked / '+($r|ConvertTo-Json -Compress))
+    $historyRepo.ActiveTasks=@();[IO.File]::WriteAllLines((Join-Path $root 'src/a.cs'),[string[]](1..101|%{"line $_"}));$r=Run $a $historyRepo;Assert ($r.CandidateScopeStatus -eq 'CANDIDATE_SCOPE_FAIL' -and $r.LineLimitViolations -eq 1) 'case 14: candidate-owned 101-line source is blocked'
+    [IO.File]::WriteAllLines((Join-Path $root 'src/a.cs'),[string[]](1..100|%{"line $_"}));$r=Run $a $historyRepo;Assert ($r.CandidateScopeStatus -eq 'CANDIDATE_SCOPE_PASS' -and $r.LineLimitViolations -eq 0) 'case 15: candidate-owned 100-line source passes'
+    . (Join-Path $PSScriptRoot 'candidate-projection.ps1');$control=Join-Path $root '.git/xye-handoff';New-Item -ItemType Directory -Force $control|Out-Null;$candidatePath=Join-Path $control 'candidate.json';$a|ConvertTo-Json -Depth 10|Set-Content $candidatePath
+    $facts=[pscustomobject]@{Dirty=@();GlobalArchitectureStatus='FAIL';HistoricalBaselineDebt=@([pscustomobject]@{Path='legacy.cs';Lines=104});WaveStatus='STALE_ANCESTOR';RepositoryUnknownTemp=0}
+    $projection=Get-CandidateGateProjection $root $facts @([pscustomobject]@{TaskId='OLD-C';Status='ACTIVE';WriteScope=@('docs/other/**')}) @() ([pscustomobject]@{candidatePath=$candidatePath})
+    Assert ($projection.CandidateScopeStatus -eq 'CANDIDATE_SCOPE_PASS' -and $projection.GlobalBaselineStatus -eq 'FAIL' -and $projection.OverallGateStatus -eq 'GLOBAL_KNOWN_BASELINE_FAIL' -and $projection.CommitEligibility -eq 'NO') 'case 16: live projection separates Candidate scope and Global Gate'
     Assert ((Get-Content $gate).Count -le 100) '5+100 gate'
-    'CANDIDATE-SCOPED GATE SELFTEST PASS 10/10'
+    'CANDIDATE-SCOPED GATE SELFTEST PASS 16/16'
 } finally {if(Test-Path $root){Remove-Item $root -Recurse -Force}}

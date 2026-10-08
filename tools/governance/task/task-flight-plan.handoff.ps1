@@ -22,6 +22,7 @@ function Show-TaskFlightReport($Report) {
     Write-Host "FinalEvidenceEligibility: $(if (@($Report.Classes | ? FinalEvidenceEligible -eq 'NO').Count -gt 0) { 'NO' } else { 'YES' })"
     Write-Host "ACTIVE TASK LEAK: $(if ($Report.LeakPresent) { 'PRESENT' } else { 'NONE' })"
     $g=$Report.CandidateGate
+    Write-Host "CANDIDATE SCOPE STATUS: $($g.CandidateScopeStatus)";Write-Host "GLOBAL BASELINE STATUS: $($g.GlobalBaselineStatus)";Write-Host "OVERALL GATE STATUS: $($g.OverallGateStatus)";Write-Host "COMMIT ELIGIBILITY: $($g.CommitEligibility)";Write-Host "WAVE STATUS: $($g.WaveStatus)";Write-Host "HISTORICAL BASELINE DEBT: $($g.HistoricalBaselineDebtCount)";Write-Host "OPEN DEPENDENCIES: $($g.OpenDependencies)";Write-Host "CANDIDATE 5+100 VIOLATIONS: $($g.LineLimitViolations)"
     Write-Host "REPOSITORY ACTIVE TASKS: $($g.RepositoryActiveTasks)";Write-Host "REPOSITORY TEMP: $($g.RepositoryTEMP)";Write-Host "REPOSITORY UNKNOWN TEMP: $($g.RepositoryUnknownTemp)"
     Write-Host "CANDIDATE-SCOPED ACTIVE WRITERS: $($g.CandidateScopedActiveWriters)";Write-Host "CONSUMED ACTIVE FOREIGN TEMP: $($g.ConsumedActiveForeignTemp)";Write-Host "CANDIDATE-SCOPED UNKNOWN TEMP: $($g.CandidateScopedUnknownTemp)";Write-Host "CANDIDATE-SCOPED OWNERSHIP CONFLICT: $($g.CandidateScopedOwnershipConflict)";Write-Host "CANDIDATE CHANGED DURING CERTIFICATION: $($g.CandidateChangedDuringCertification)";Write-Host "FINAL EVIDENCE ELIGIBILITY: $($g.FinalEvidenceEligibility)";Write-Host "CERTIFICATION ALLOWED: $($g.CertificationAllowed)"
 }

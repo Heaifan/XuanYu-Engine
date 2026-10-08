@@ -1,3 +1,10 @@
+function Test-GovernanceCommit([string]$Root,[string]$CommitId) {
+    if ($CommitId -notmatch '^(?i)[0-9a-f]{7,40}$') { return $false }
+    & git -C $Root cat-file -e "$CommitId^{commit}" 2>$null
+    if ($LASTEXITCODE -ne 0) { return $false }
+    & git -C $Root merge-base --is-ancestor $CommitId HEAD 2>$null
+    return $LASTEXITCODE -eq 0
+}
 function Get-XytVersionEventGateResult {
     param([string]$RepoRoot, [string]$LedgerPath, [string]$ChangeType, [string]$EventId,
         [string]$CurrentVersion, [string]$CandidateId, [string]$CandidateFingerprint,
@@ -37,6 +44,9 @@ function Get-XytVersionEventGateResult {
         elseif ($event.CandidateId -and $event.CandidateId -ne '-') { Block 'GOVERNANCE CANDIDATE BINDING: BLOCKED' }
         elseif ($event.Status -notin @('RESERVED','PROVISIONAL','APPLIED')) { Block 'GOVERNANCE EVENT STATUS: BLOCKED' }
         elseif ([string]::IsNullOrWhiteSpace([string]$event.AcceptanceEvidence)) { Block 'GOVERNANCE EVENT EVIDENCE: BLOCKED' }
+        elseif ($Phase -eq 'POST-COMMIT' -and $event.Status -ne 'APPLIED') { Block 'GOVERNANCE EVENT STATUS: POST-COMMIT REQUIRES APPLIED' }
+        elseif ($Phase -eq 'POST-COMMIT' -and [string]::IsNullOrWhiteSpace([string]$event.AcceptedTime)) { Block 'GOVERNANCE EVENT ACCEPTED TIME: BLOCKED' }
+        elseif ($Phase -eq 'POST-COMMIT' -and !(Test-GovernanceCommit $RepoRoot ([string]$event.CommitId))) { Block 'GOVERNANCE COMMIT IDENTITY: BLOCKED' }
         elseif ($Phase -eq 'POST-COMMIT' -and $RequireClean -and (git -C $RepoRoot status --porcelain)) { Block 'POST-COMMIT IDENTITY: NO (DIRTY)' }
         else { $reason='GOVERNANCE EVENT: recorded without advancing product Process Version.' }
     }
