@@ -445,6 +445,14 @@ A/B 对照中，仅移除额外 `SetupWithoutStarting()`、让 `HeadlessUnitTest
 FAIL、TIMEOUT、FLAKY 或 Harness 异常只说明执行结果；完成根因分类前必须保持 `UNKNOWN / UNCLASSIFIED`，不得自动升级成产品根因。应先完成 Failure Sweep，再区分 Product / Harness / Oracle / Environment / Unknown。
 **证据**：XYT-D · `673dae7f02c4d9c43a5a5fc83b1952233471f4d5` · 2026-09-29。
 
+### 2026-10-09 强化：独立自测与嵌套全套入口须分别认定
+
+在 XYE-GOVERNANCE-SIMPLIFICATION-R1 / C2 中，XYT 独立 Runtime 自测报告 PASS，但顶层 `XYT/tests/xyt.selftest.ps1` 经「全局收口 → xyt-runtime.selftest.ps1」嵌套执行时持续无进展，未获得父进程退出码及测试后的快照核对。该轮顶层测试状态只能记为 **INCOMPLETE / 未确认 PASS**；等待链根因仍为 **UNKNOWN**。不可将独立子测试 PASS 推断为父级全套 PASS，也不可据此推断产品故障。
+
+**执行规则**：独立运行与父 Runner 嵌套运行是不同的验证上下文。发现嵌套等待时，先只读保留父子进程 PID、命令行、时间、最后输出和退出状态；排查并发共享文件/构建输出、子进程等待和结果捕获，但不得在证据不足时认定任何一种为根因。若未拿到退出码与结束快照，则保持全套 INCOMPLETE；明确终止/超时须分别按实际事实报告。稳定最终集成树后重验受影响范围；验证窗口内相关文件变化时，依 K-XYT-EVID-001 判断证据是否需重验，不默认全量重跑。
+
+**证据边界**：C2 交接报告，2026-10-09 18:12 启动的顶层自测，基线 `79476c4c48dac03efbda2338da3298d3cf2a97b2`；该报告仅有启动前 XYT 快照，缺少退出状态和结束快照。此条记载施工报告观察，不声称 ChatGPT 已独立复跑 Windows 测试。待 Parent 查明等待链并取得最终验证后复核。
+
 ## K-XYT-AUDIT-001 测试名称和目录不能授予证据等级
 **状态**：Active　**优先级**：P0　**证据等级**：E2  
 `Runtime`、`Vulkan`、`Performance`、`Integration`、`Real` 等名称不能自动获得更高证据等级。证据等级只能由测试实际跨越的验证边界决定；改名不改变正式证据等级。
