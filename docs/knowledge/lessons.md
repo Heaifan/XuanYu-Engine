@@ -273,3 +273,11 @@ Region Drawing 同时跨 Pointer、Picking、MapPoint、Draft、Vector Overlay�
 **适用范围**：平台 Adapter、Input Router、Source Contract、Runtime Wiring。
 
 人工构造的错误平台值、把 Source Contains 当成 Runtime Wiring、或只验证 Helper PASS，都可能让错误实现稳定绿灯。跨平台行为测试必须从真实平台 Enum / Message Contract 开始，随后覆盖 Adapter、统一模型、Router、Consumer 和领域结果。
+
+### 2026-10-09 · NativeControlHost 的 Headless 输入边界（A-POINTER-01）
+
+在 `Avalonia.Headless` 的 800×600 Window 中，`VulkanNativeHost` 可见且 Bounds 为 `(1,1,798,598)`，但没有 Native HWND（`_hwnd=0`）。对窗口 `(51,101)` 调用 `InputHitTest` 返回 `null`；`MouseMove/MouseDown` 的路由 Source 是根 `Panel`，NativeControlHost 没收到 Pointer 事件，Router 仍为 `Owner=None`。因此这类 Headless Window 输入不能证明 `VulkanNativeHost.OnPointer*` 或 HWND 生产入口已经接线。
+
+同一用例另行通过生产 `AvaloniaViewportInputForwarder` 输入一个明确标注为 synthetic 的平台样本，Router 随后取得 `Region` Capture，Domain hit count 与 Draft vertex 均为 1。普通 Headless Button 点击 2/2 通过；这只证明 Headless 对普通 Avalonia 控件可用，不证明 NativeControlHost 子 HWND 可被 Headless 命中。该样本同时确认 Router→Region Consumer→Ground Pick→有效 Layer→Draft 下游路径可工作，不覆盖真实平台 Source。
+
+**复用规则**：NativeControlHost 无 HWND 且 Headless `InputHitTest` 未命中时，将失败先分类为 Headless/测试前提边界；保留 Headless 可覆盖的下游合同，并用 Windows Native P3 验证 HWND Source。产品输入是否正确必须保持 UNKNOWN，直到真实 Native 输入证据到达 Adapter / Router / Consumer。
