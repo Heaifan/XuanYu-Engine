@@ -463,6 +463,17 @@ Parent 补齐了 C2 交接时缺失的结束证据：`XYT/tests/xyt.selftest.ps1
 
 **来源**：XYE-GOVERNANCE-SIMPLIFICATION-R1 Parent 集成恢复报告，2026-10-09。ChatGPT 未独立复跑 Windows 测试。
 
+### 2026-10-09 治理精简正式收口：基线复现与间歇性失败必须区分
+
+本轮产品治理精简 Parent 于 `7cc8be331496e1cb750142aaad4e7c5195919635` 提交 131 项治理/XYT 改动，未修改所述两项产品测试路径。Parent 提供了两种**不同**的测试失败证据：
+
+- **Core（已在旧基线复现）**：`EmptyWorldBaselineContractTests.New_scene_returns_to_empty_world_without_map_roundtrip` 在本轮测试中断言 `Assert.False()` 失败、实际为 `true`；在本轮施工前干净基线 `79476c4c48dac03efbda2338da3298d3cf2a97b2` 的同项复测得到同样失败。可归为**本轮之前已存在的失败**，但并不表示问题已修复。
+- **XYUI（间歇性失败）**：`XYUI3FinalNavigationTests.Bottom_navigation_primary_action_floating_hit_target_does_not_change_destination` 全套运行时浮动按钮命中断言失败；干净基线上的聚焦运行通过，本轮聚焦重跑 3/3 通过，并有此前全套运行间歇失败记录。分类为**已有间歇性失败**，尚不能确定其触发条件或稳定根因；聚焦 PASS 不得冲销全套 FAIL。
+
+**可复用规则**：集成失败归因要保留测试身份、实际断言、命令/模式、测试对象版本与快照、干净施工前基线的同项结果、历史复现以及本轮依赖变更情况。**基线复现**才有直接证据支持“本轮前已失败”；**全套失败而聚焦通过**说明执行上下文敏感或不稳定，不能自行断言已修复、当前回归或产品代码根因。测试文件未改不能单独证明失败是历史遗留。无足够证据继续标注 UNKNOWN，后续以复现与真实 P3/P4 结果重验；不得把局部 PASS 宣布为产品全套 PASS。
+
+**证据边界**：以上 Core、XYUI 运行及本地 clean 状态据 2026-10-09 Parent 最终核验报告；ChatGPT 核实了 GitHub 产品提交及分支 HEAD，未独立执行 Windows 测试。本次产品 P3 Runtime 未运行，P4 人工验收待完成。
+
 ## K-XYT-AUDIT-001 测试名称和目录不能授予证据等级
 **状态**：Active　**优先级**：P0　**证据等级**：E2  
 `Runtime`、`Vulkan`、`Performance`、`Integration`、`Real` 等名称不能自动获得更高证据等级。证据等级只能由测试实际跨越的验证边界决定；改名不改变正式证据等级。
