@@ -32,5 +32,5 @@ K-20261001-004	CREATE	K-GEO-003	Architecture	GROUND-AUTHORING-R1	67ca6fd5	Surfac
 K-20261001-005	STRENGTHEN	K-INP-001	Input	MODE-INPUT-LIFECYCLE	a5dc4d64	Tool change terminates owner/capture/preview lifecycle	ACTIVE
 K-20261001-006	STRENGTHEN	K-HANDOFF-001	Governance	HANDOFF-SAFE-FAST-FORWARD	a846728cfd27dead3bd458abb41ba6ea6e607120	Dirty-behind blocks; clean-behind fast-forward only	ACTIVE
 K-20261001-007	CREATE	K-GOV-006	Governance	HANDOFF-PS51-ENCODING	33afb8936061efc01c242ddeb8bd8f4d8119c92c	PowerShell 5.1 non-ASCII scripts preserve compatible encoding	ACTIVE
-K-20261009-001	STRENGTHEN	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-C2	79476c4c48dac03efbda2338da3298d3cf2a97b2	Interim nested XYT full selftest incomplete; K commit 7602d26e	ACTIVE
-K-20261009-002	UPDATE	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-PARENT	79476c4c48dac03efbda2338da3298d3cf2a97b2	Follow-up exit 0 and stable XYT hash; knowledge update 9d0c224f	ACTIVE
+K-20261009-001	STRENGTHEN	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-C2	-	Interim nested XYT full selftest incomplete; K commit 7602d26e; uncommitted product changes on HEAD 79476c4c	ACTIVE
+K-20261009-002	UPDATE	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-PARENT	-	Follow-up exit 0 and stable XYT hash; knowledge update 9d0c224f; uncommitted product changes on HEAD 79476c4c	ACTIVE
