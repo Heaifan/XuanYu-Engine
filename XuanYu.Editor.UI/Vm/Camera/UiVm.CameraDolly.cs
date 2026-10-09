@@ -4,6 +4,7 @@ using XuanYu.Core.Diagnostics;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
+using XuanYu.World;
 
 namespace XuanYu.Editor.UI;
 
@@ -36,10 +37,37 @@ public sealed partial class UiVm
             RefreshLogBindings();
             return false;
         }
+        if (cursorX is null) result = ConstrainDollyToTerrain(result);
         TraceFarDolly(result);
         _cameraRevision = result.Camera.Revision;
         ApplyCameraResult(result);
         return true;
+    }
+
+    CameraFrameResult ConstrainDollyToTerrain(CameraFrameResult result)
+    {
+        if (TerrainWorld is not { } world || result.Camera.Mode != ProjectionMode.Perspective)
+            return result;
+        var start = _camera.Position;
+        var end = result.Camera.Position;
+        var step = Math.Max(1, Math.Min(world.Metadata.ResolutionX, world.Metadata.ResolutionY));
+        var count = Math.Clamp((int)Math.Ceiling(start.DistanceTo(end) / step), 1, 64);
+        var surface = new TerrainWorldGroundSurface(world);
+        var lastSafe = start;
+        for (var i = 1; i <= count; i++)
+        {
+            var position = start + ((end - start) * (i / (double)count));
+            var query = surface.QuerySurface(new(position.X, position.Y));
+            if (query.Status == WorldQueryStatus.OutOfBounds) { lastSafe = position; continue; }
+            if (!query.IsValid || position.Z <= query.SurfaceZ * VerticalExaggeration + result.Camera.NearPlane)
+                break;
+            lastSafe = position;
+        }
+        if (lastSafe == end) return result;
+        var camera = result.Camera;
+        return result with { Camera = new(lastSafe, camera.Forward, camera.Up,
+            camera.VerticalFovDegrees, camera.NearPlane, camera.FarPlane,
+            camera.Revision, camera.Mode, camera.OrthographicScale) };
     }
 
     GroundPickResult ResolveZoomAnchor(double x, double y, ViewportState viewport)
