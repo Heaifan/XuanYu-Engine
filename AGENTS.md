@@ -1,241 +1,32 @@
-# SESSION HANDOFF — MANDATORY
+# XuanYu Engine AI 开发入口
 
-> **本节优先于后续 Repository Bootstrap、Build/Test、任务规划和代码修改规则。**
+> 开发规则唯一权威来源：[`docs/玄域引擎_AI开发宪法.md`](docs/玄域引擎_AI开发宪法.md)。本文件仅提供安全入口和导航，不另设审批、治理体系或重复门禁。
 
-R3 当前模型：Handclap 是 Fact Plane，Handoff 是 ZERO-Authority Legacy Compatibility Shell，Authority Plane 位于 `tools\governance/**`。旧 PREPARE/JOIN/ADVANCE/CLOSE 语义仅保留在 Legacy/Historical 资料中，不是当前推荐流程。
+## 角色与权限
 
-跨设备同步安全：
+- 用户提出需求、确定优先级和产品方向，并作最终产品验收。
+- ChatGPT 负责规划、审计、维护开发宪法和独立 XYK。
+- 执行 AI 按任务范围开发、验证并如实报告；不得自行 Commit / Push。
+- Parent 汇总任务负责集成，并是本轮唯一 Commit / Push Owner。
 
-```text
-先 fetch，再只读核对当前 branch、HEAD、upstream tip、Ahead/Behind、index、tracked dirty、untracked dirty 与 Writer/Ownership。
-任何 tracked / untracked / Foreign / Unknown dirty 都必须原样保全并暂停同步；不得自动 reset、clean、stash、checkout 或覆盖。
-只有 index 与 worktree clean、Ahead = 0 且 Behind > 0 时才允许 git pull --ff-only；本地独有 Commit、分叉或事实不明时暂停并报告。
-```
+## 仓库与安全入口
 
-`REMOTE WINS` 语义已彻底废止。
+- Repository Bootstrap / Resolver First：写入前执行 `scripts/xye-bootstrap.ps1`，确认实际仓库、branch、HEAD、upstream、Ahead/Behind 和 Dirty 状态。
+- .NET SDK 由 `scripts/resolve-dotnet.ps1` Resolver Chain 解析；正式命令使用 `scripts/xye-dotnet.ps1`。PATH 中没有 `dotnet` 不代表 SDK 不存在。
+- Dirty 文件必须原样保全。不得自动 reset、clean、stash、checkout 或覆盖；未知修改只阻断与其重叠或依赖的操作。
+- 跨设备同步先 fetch 并只读核对。只有 index/worktree clean、Ahead=0 且 Behind>0 时允许 `git pull --ff-only`；否则暂停同步并报告。
+- 写入前明确 Owner、WriteScope 和依赖；同一路径同一时段只能有一个写入者。不可确认来源或范围冲突时先停止受影响的操作。
 
-远端更新不能授权丢弃本地未提交内容；clean fast-forward 以外的恢复必须由 Owner 根据实际冲突作出明确处置。
+## 工作与证据
 
-.NET SDK 必须由交接程序通过正式 `scripts/resolve-dotnet.ps1` Resolver Chain 解析。已登记首选路径：
+- MEDIUM / HIGH 及索引登记的任务域，按宪法执行 PLANNING 与 EXECUTION Knowledge Preflight；入口为 [`docs/knowledge/knowledge-index.md`](docs/knowledge/knowledge-index.md)。XYK 是独立知识系统，不属于 XYT 或普通任务 WriteScope。
+- XYT 负责测试、回归和验收证据。按宪法风险级别选择必要 Build、Test、静态检查或真实运行验证；不得把未执行或局部结果报告为通过或全量。
+- 自动验证不代替用户产品验收。真实 UI、渲染、输入或生命周期要求未获用户验收时，报告为待验收。
+- 报告说明 Changed、Verified、Residual Risk；施工任务附 `XYK CANDIDATE` 纯文本区块。不要直接写入 XYK。
 
-- 私人电脑：`D:\MyApp\sdk-dotnet\dotnet.exe`
-- 工作电脑：`E:\MyApp\sdk-dotnet\dotnet.exe`
+## 规则导航
 
-PATH 中没有 `dotnet` 不等于 SDK 不存在。
-
-# AGENTS.md — XuanYu Engine（玄域引擎）AI 协作入口
-
-> 仓库内 AI 编码工具统一入口。  
-> **唯一权威规则：`docs/玄域引擎_AI开发宪法.md`（3.1）。**
-> 代码硬规则：`docs/CODE_CONSTITUTION.md`。  
-> 执行手册：`docs/dev-rules.md`。
-
-## 项目
-
-- C# 游戏编辑器（Avalonia UI + Vulkan 渲染）
-- 解决方案：`XuanYu.Engine.slnx`
-- GitHub 是正式跨设备事实源；当前分支和远端关系每轮以实际仓库核对为准
-- XYUI 是仓库内一等内置子系统，Canonical 根固定为 `xyui/`
-
-## Lane / Ownership
-
-每个任务先声明 `Lane: XYE / XYUI / INTEGRATION / GOVERNANCE`，再读取对应 Authority owner 与 Candidate 依赖。不得调用旧 Handoff JOIN；唯一 Lane 事实源为 [`docs/governance/development-lanes.md`](docs/governance/development-lanes.md)。
-
-- `P0 XYE FAST LANE`：主线优先；XYE 拥有 Engine 产品与测试文件。
-- `P1 XYUI CONTROLLED SUPPORT LANE`：默认仅 `xyui/**`，继续开发、审计、进入同一 Git/GitHub，但默认禁止自行 Commit/Push/Branch mutation。
-- `P0.5 INTEGRATION`：必须明确声明，并提供 XYE Consumer 与 XYUI Runtime/Public Contract 的 Ownership 文件表；真实 Consumer 破坏才是 Blocker。
-- `GOVERNANCE`：仅治理文档、Handoff 与 Lane 规则；不借治理 Lane 修改产品代码。
-
-`ForeignDirty != OwnershipConflict`：仅当计划写入的路径与现存 Ownership 重叠，或实际依赖消费该 Dirty 时阻断；未知归属只暂停受影响路径。共享编译出现 `Compile-RED` 时 XYE 优先恢复 Green，XYUI 必须修复自身造成的红灯。Convergence 时 Coordinator 独占 Workspace，其他 Lane Freeze；普通 Agent 禁止创建 / 切换 Branch 或额外 Worktree。
-
-## 不可侵犯红线
-
-1. **5+100**：所有手写 `.cs` / `.axaml` / `.js` 单文件 ≤100 行；无临时例外、无复杂文件例外、无“单职责即可超限”例外。
-2. **事实真实性**：Evidence Before Claim；未执行不得称通过，局部不得冒充全量，本地不得冒充远端，推测不得冒充根因。
-3. **唯一事实源**：UI / Renderer / Inspector / Snapshot / 索引只能投影或派生领域事实。
-4. **分层边界**：`Editor.UI` 不得直接依赖 Vulkan 实现；`Render.Abstractions` 不得引用 `Silk.NET.Vulkan`。
-5. **高频性能**：PointerMoved / Hover / DragPreview / RenderFrame 等正式主链不得依赖可预见的大规模 O(N) 全量扫描或重型副作用。
-6. **失败不得掩盖**：空 catch、弱化断言、删测试、跳门禁、伪造结果均禁止。
-7. **敏感信息与 AI 私有过程禁入库**。
-
-## 每轮入口
-
-```text
--1. 声明 Lane：XYE / XYUI / INTEGRATION / GOVERNANCE
--2. Session Handoff：读取 Handclap Context 与 Authority owner evidence；不调用旧 Handoff
-0. Repository Bootstrap：按正式 Resolver Chain 执行 scripts/xye-bootstrap.ps1
-1. 接管核对 Git / 工作区
-2. Planning 阶段：MEDIUM / HIGH 或已登记任务域 → Knowledge Planning Preflight
-3. Task State：Task / Risk / Goal / Scope / Gate / Stop / Prohibited
-4. Execution 阶段：基于当前 HEAD 核对 Task Registry、Lane、Owner、WriteScope、依赖、branch、dirty 与唯一 Git Writer 后、第一处文件写入前 → Knowledge Execution Preflight
-5. 实装
-6. 按 GATE-L / GATE-M / GATE-H 验证
-7. Knowledge Writeback 判断
-8. 原子 Commit → Push → 远端 tip 复核
-9. 需要真机时进入“待真机验收”
-```
-
-Planning / Execution Knowledge Preflight 必须输出：
-
-```text
-Knowledge Preflight
-Phase: PLANNING | EXECUTION
-Task Domain:
-Loaded:
-Hard Constraints:
-Conflict Check: PASS | BLOCKED
-```
-
-正常任务在开始时一次登记有界的 `TaskId + Lane + Owner + WriteScope + BaseSHA + DependsOn`。`WriteScope` 应预先包含直接相关测试与必要审计记录；任务范围内不逐文件重复索取手谕。越界 Owner、生产 Authority 状态变更、放弃他人未完成任务、高风险数据迁移、真实 Release、历史改写及 P4 产品验收仍遵循各自独立的明确授权边界。
-
-如果 `Conflict Check = BLOCKED`，禁止修改代码或治理文件。ACTIVE P0 Knowledge 只有显式 Governance Supersede（更新原条目状态、提供新证据并获治理批准）才能被新实现推翻；不得静默改写历史条目。
-
-任何 Build / Test / Run / SDK 判断前，必须先执行 Repository Bootstrap，遵守 Repository Bootstrap / Resolver First，或通过 `run.bat` 进入同一 Resolver Chain。只有 `scripts/resolve-dotnet.ps1` 实际失败后，才允许报告 .NET SDK 不可用；PATH 中没有 `dotnet` 不等于 SDK 不存在。正式 .NET 命令统一通过 `scripts/xye-dotnet.ps1`。
-
-不再强制“普通目标 ≤3”，也不要求每条中间报告重复完整 TODO。限制未解决依赖链、失控并行和 Scope Expansion。
-
-## 风险与验证
-
-### LOW → GATE-L
-
-- 最小相关 Build / 编译验证
-- 相关专项测试
-- 5+100
-- `git diff --check`
-- Scope 检查
-
-纯文档任务不无意义运行完整代码 Build。
-
-### MEDIUM → GATE-M
-
-- 受影响项目 Build
-- 受影响测试集
-- 相关架构检查
-- 专项回归
-- 5+100
-- `git diff --check`
-
-### HIGH → GATE-H
-
-- 完整 Solution Build：0 Warning / 0 Error
-- 当前适用正式测试套件
-- Architecture Gate
-- 5+100
-- 专项回归
-- `git diff --check`
-- 任务要求的运行 / 真机 / 数据闭环
-
-`scripts/xye-dotnet.ps1 build` / `scripts/xye-dotnet.ps1 test` 始终串行；完整门禁按风险和可信基线节点执行，而不是每个微编辑都重复执行。
-
-## 两次失败规则
-
-同一根因假设 + 同一路径修复连续失败两次后，停止该假设。
-
-只有收集新证据、说明旧假设为何失效并建立新假设后才能继续；禁止无新证据第三次重复撞同一路径。
-
-## Scope
-
-允许当前根因所必需的受控邻接修复，但必须：
-
-- 与根因直接相关；
-- 不改公共 API；
-- 不改 Schema；
-- 不引入新依赖；
-- 不改变无关行为；
-- 可由当前任务验证。
-
-否则停止扩围。
-
-## 知识与经验入口
-
-开发前索引：`docs/knowledge/knowledge-index.md`
-
-长期职责：
-
-```text
-DEC        已批准长期决策
-Knowledge  经工程证据验证的规律
-Lesson     错误前提 / 停止条件 / 教训
-ERR        Agent 实际犯错事实
-EXP        防复发经验规则
-```
-
-Agent 错误权威库：
-
-- `docs/governance/agent-error-log.md`
-- `docs/governance/agent-experience-rules.md`
-
-正式 ERR / EXP 由 ChatGPT 创建、修改、合并和关闭；Codex / Gemini / 其他执行 Agent 只读并按任务加载。
-
-## 人工验收
-
-人工 / 真机使用中文 IPO：
-
-```text
-序号
-路径
-输入 I
-过程 P
-输出 O
-```
-
-必须使用当前 UI 真实中文路径，输出必须可观察、可判定。
-
-普通 LOW / MEDIUM 局部任务不强制 IPO，可使用 `Changed / Verified / Residual Risk`。
-
-## Git
-
-正式成果以原子、可验证节点 Commit，不要求每个微小编辑单独提交。
-
-未经用户批准禁止 Force Push、Rebase、改写历史、删除远端分支、创建 / 合并 PR、Tag、Release。
-
-必须实际核验远端 tip 后才能声明 Push 完成和本地 / 远端一致。
-
-## 收口
-
-自动测试通过不等于需要真机的 UI、渲染、输入、生命周期阶段 CLOSED。
-
-达到 Goal + Gate + 必要文档 + Commit/Push/远端复核后停止当前开发轮；需要真机时等待用户验收，不主动扩展下一阶段。
-
-## Version Governance
-
-- Process Version 是开发过程遥测；Commit SHA 是历史唯一身份，正式记录必须同时包含 Version、Commit、Branch、Dirty。
-- 一个独立 FEATURE、FIX 或 STABILIZATION 完成后必须产生一个 Version Event；连续 FIX 每一轮分别计数，不得用 SHA 替代或事后合并。
-- Planning 与 Execution 均执行 Knowledge Preflight；进入正式验收/Commit 前输出 `VERSION EVENT`（Change Type、Previous、Next、Reason）。不推进产品版本时输出 `Version Event: NONE` 与历史依据。
-- 当前仓库工具入口：`tools/governance/version-audit.ps1`、`version-next.ps1`、`version-selftest.ps1`、`version-metrics.ps1`；规则与跨项目模板见 `docs/governance/process-versioning.md` 和 `docs/governance/templates/process-version-governance-template.md`。
-- 正式 Acceptance 必须输出 `ACCEPTANCE IDENTITY`。Dirty=YES 只能作为显式 Dirty Runtime Probe，不得宣布正式 Product Closed。
-- 所有施工任务最终报告必须追加 `docs/governance/knowledge-audit-handoff.md` 的 `XYK CANDIDATE` 纯文本区块。AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY；候选不得写入 Codex memory、仓库文件、ad-hoc note 或其它知识存储。ChatGPT / XYK Coordinator 作为唯一 REVIEWER + WRITE AUTHORITY，后续决定接受、合并、修订、拒绝或过期。
-
-固定交接格式以 `docs/governance/knowledge-audit-handoff.md` 为唯一规范。报告正文必须包含 `Root Cause`、`Changed Files`、`Tests`、`Evidence`、`Known Risk` 与 `Candidate Lessons`；任务结束必须请求 ChatGPT 审计结果并判断是否沉淀 Knowledge / Experience：
-
-```text
-==================================================
-KNOWLEDGE / EXPERIENCE AUDIT HANDOFF
-==================================================
-
-请 ChatGPT 审计本任务结果，并判断是否存在可沉淀的知识/经验。
-如有，必须仅在本报告的 `XYK CANDIDATE` 区块中以纯文本输出，
-禁止写入任何知识库、经验库、Codex memory、ad-hoc note 或其它文件；
-正式入库由 ChatGPT / XYK Coordinator 后续决定。
-
-XYK CANDIDATE:
-NONE
-
-若存在候选，替换上面的 `NONE`，并仅在本报告中按下列字段输出：
-- ID/Category: <可选候选标识>
-- Problem: <发生了什么问题>
-- Root Cause: <根因>
-- Rule / Knowledge: <可复用知识>
-- Applies To: <适用范围>
-- Evidence: <本任务证据>
-- Expiry / Revalidation: <如适用>
-- Suggested Action: <后续治理/优化建议>
-
-AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY.
-候选不得被宣称为已沉淀、已写入或已更新；只有明确授予 XYK WRITE AUTHORITY
-时，ChatGPT / XYK Coordinator 才能另行审计并维护正式 XYK。
-
-CHATGPT KNOWLEDGE AUDIT REQUIRED
-```
-
-ChatGPT 审计必须先 `SEARCH EXISTING`，再决定 `UPDATE / STRENGTHEN`、`CREATE`、`RETIRE` 或 `NO DEPOSIT`。Knowledge 是长期稳定的工程事实或验证后约束；Experience 是错误路径、诊断与防复发经验。施工 Agent 只提交候选，不得自行写入或宣称正式沉淀。
+- 开发原则、权限、验证与交付：[`docs/玄域引擎_AI开发宪法.md`](docs/玄域引擎_AI开发宪法.md)
+- 代码专属硬规则：[`docs/CODE_CONSTITUTION.md`](docs/CODE_CONSTITUTION.md)
+- Bootstrap、Resolver、命令和执行细节：[`docs/dev-rules.md`](docs/dev-rules.md)
+- XYK 知识索引：[`docs/knowledge/knowledge-index.md`](docs/knowledge/knowledge-index.md)

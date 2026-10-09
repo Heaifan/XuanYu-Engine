@@ -17,7 +17,8 @@ function Invoke-XytReportOperation([hashtable]$Arguments) {
         }
         'upload' {
             $result = Invoke-XytReport -Operation Upload -RepositoryRoot $RepoRoot -ReportPath $Arguments.ReportPath -AggregatePath $Arguments.AggregatePath -DryRun:$Arguments.DryRun
-            $result | ConvertTo-Json -Depth 8 -Compress
+            if ($result.Mode -eq 'DRY_RUN') { Write-Output "UPLOAD DRY RUN: PASS ($($result.ReportId))" }
+            else { $result | ConvertTo-Json -Depth 8 -Compress }
         }
         'test' {
             $result = Invoke-XytReportTest -RepositoryRoot $RepoRoot -TestCommand $Arguments.TestCommand -OutputRoot $Arguments.OutputRoot -TestMode $Arguments.TestMode -TestSetVersion $Arguments.TestSetVersion -AffectedCapability @($Arguments.AffectedCapability) -Timestamp $Arguments.Timestamp

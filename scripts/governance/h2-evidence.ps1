@@ -6,8 +6,7 @@ param(
     [string]$EvidenceId, [string]$LaneId, [string]$SessionId, [string]$WorkspaceIdentity,
     [string[]]$OwnedFiles = @(), [string[]]$ConsumedDependencies = @(),
     [string]$TestCommand, [string]$TestScope, [ValidateSet('PASS','FAIL')][string]$TestResult,
-    [string]$EvidenceClass, [string]$ProductAcceptanceState,
-    [string]$OwnershipSnapshotPath = 'tools/governance/ownership/ownership-manifest.json'
+    [string]$EvidenceClass, [string]$ProductAcceptanceState
 )
 $ErrorActionPreference = 'Stop'
 function Rel([string]$path) { ((Resolve-Path -LiteralPath $path).Path.Substring((Resolve-Path $RepositoryRoot).Path.Length)).TrimStart([char]92,[char]47).Replace([char]92,[char]47) }
@@ -29,11 +28,10 @@ function NewFingerprint([string[]]$scopeOwned = $OwnedFiles, [string[]]$scopeDep
     $tracked = [ordered]@{}; foreach ($path in $trackedDirty) { $tracked[$path] = HashFile (Join-Path $RepositoryRoot $path) }
     $untrackedContent = [ordered]@{}; foreach ($path in $untracked) { $untrackedContent[$path] = HashFile (Join-Path $RepositoryRoot $path) }
     $dependencies = [ordered]@{}; foreach ($path in $scopeDependencies | Sort-Object -Unique) { $p = $path.Replace('\','/').TrimStart('./'); $dependencies[$p] = HashFile (Join-Path $RepositoryRoot $p) }
-    $ownership = Join-Path $RepositoryRoot $OwnershipSnapshotPath
     $record = [ordered]@{
         HEAD = (Invoke-H2Git @('rev-parse','HEAD') | Select-Object -First 1).Trim(); StagedFiles = $staged; DirtyFiles = $dirty
         TrackedDirtyContentHash = (JsonHash $tracked); RelevantUntrackedFiles = $untrackedContent
-        ConsumedDependencySnapshot = $dependencies; OwnershipSnapshot = HashFile $ownership
+        ConsumedDependencySnapshot = $dependencies
     }
     $record.DirtyDigest = JsonHash ([ordered]@{ Tracked = $tracked; Untracked = $untrackedContent })
     $record.FingerprintId = JsonHash $record
@@ -47,7 +45,7 @@ function NewPacket($before) {
     [pscustomobject][ordered]@{ EvidenceId = [guid]::NewGuid().ToString('N'); LaneId = $LaneId; SessionId = $SessionId; WorkspaceIdentity = $WorkspaceIdentity; BaselineHead = (Invoke-H2Git @('rev-parse','HEAD') | Select-Object -First 1).Trim(); CandidateHead = $before.HEAD; DirtyDigest = $before.DirtyDigest; OwnedFiles = @($OwnedFiles); ConsumedDependencies = @($ConsumedDependencies); TestCommand = $TestCommand; TestScope = $TestScope; TestResult = 'NOT_EXECUTED'; EvidenceClass = $EvidenceClass; Timestamp = [DateTime]::UtcNow.ToString('o'); ProductAcceptanceState = $ProductAcceptanceState; EvidenceStatus = 'VALID'; Reason = $null; FingerprintBefore = $before; FingerprintAfter = $null }
 }
 function Reason($a, $b) {
-    if ($a.HEAD -ne $b.HEAD) { return 'HEAD_CHANGED' }; if ($a.OwnershipSnapshot -ne $b.OwnershipSnapshot) { return 'OWNERSHIP_CHANGED' }; if ((JsonHash $a.ConsumedDependencySnapshot) -ne (JsonHash $b.ConsumedDependencySnapshot)) { return 'DEPENDENCY_CHANGED' }; if ($a.TrackedDirtyContentHash -ne $b.TrackedDirtyContentHash -or (JsonHash $a.RelevantUntrackedFiles) -ne (JsonHash $b.RelevantUntrackedFiles)) { return 'DIRTY_CONTENT_CHANGED' }; return 'CANDIDATE_TREE_CHANGED'
+    if ($a.HEAD -ne $b.HEAD) { return 'HEAD_CHANGED' }; if ((JsonHash $a.ConsumedDependencySnapshot) -ne (JsonHash $b.ConsumedDependencySnapshot)) { return 'DEPENDENCY_CHANGED' }; if ($a.TrackedDirtyContentHash -ne $b.TrackedDirtyContentHash -or (JsonHash $a.RelevantUntrackedFiles) -ne (JsonHash $b.RelevantUntrackedFiles)) { return 'DIRTY_CONTENT_CHANGED' }; return 'CANDIDATE_TREE_CHANGED'
 }
 function Find($items) { $x = @($items | Where-Object { $_.EvidenceId -eq $EvidenceId }); if ($x.Count -ne 1) { throw "EvidenceId not found or ambiguous: $EvidenceId" }; $x[0] }
 $packet = $null; $store = @(ReadStore)

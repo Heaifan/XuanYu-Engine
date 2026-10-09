@@ -13,15 +13,8 @@ param(
     [string]$At,
     [string]$ReportPath,
     [string]$AggregatePath,
-    [string]$ChangeType,
-    [string]$EventId,
-    [string]$CurrentVersion,
-    [string]$CandidateId,
-    [string]$CandidateFingerprint,
     [string]$TestCommand,
-    [switch]$DryRun,
-    [switch]$FormalAcceptance,
-    [switch]$RequireClean
+    [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
 $RepoRoot = Split-Path -Parent $PSScriptRoot
@@ -61,7 +54,6 @@ try {
         'aggregate' { Invoke-XytReportOperation $arguments }
         'upload' { Invoke-XytReportOperation $arguments }
         'test' { Invoke-XytReportOperation $arguments }
-        'version-gate' { Invoke-XytVersionGate $arguments }
         '全局收口' {
             Write-Output 'XYT STARTUP REPORT'
             Write-Output 'Mode: GLOBAL_CLOSEOUT'

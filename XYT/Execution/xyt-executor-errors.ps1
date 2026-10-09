@@ -7,6 +7,4 @@ class XytDependencyError : System.Exception {
     }
 }
 
-function New-XytDependencyError([string]$CyclePath) {
-    [XytDependencyError]::new($CyclePath)
-}
+function New-XytDependencyError([string]$Path) { [XytDependencyError]::new($Path) }

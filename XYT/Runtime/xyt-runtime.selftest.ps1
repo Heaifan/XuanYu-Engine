@@ -1,6 +1,21 @@
 ﻿$ErrorActionPreference='Stop'; $env:XYT_SKIP_GIT='1'; $root=Split-Path -Parent (Split-Path -Parent $PSScriptRoot); $pwsh=(Get-Command pwsh).Source
 $module=Join-Path $root 'XYT\Runtime\xyt-runtime.ps1'; $tmp=Join-Path ([IO.Path]::GetTempPath()) ('xyt-runtime-'+[guid]::NewGuid().ToString('N')); New-Item -ItemType Directory $tmp|Out-Null
-function Run([string]$name,[string]$code,[int]$expect,[hashtable]$extra=@{}){$out=Join-Path $tmp "$name.out"; $args=@('-NoProfile','-File',$module,'-Capability','P3-01','-CandidateId',"CAND-$name",'-AppCommand',$pwsh,'-AppScript',$code,'-TimeoutSeconds','2','-StdoutDrainTimeoutSeconds','1','-StderrDrainTimeoutSeconds','1','-EvidenceWriteTimeoutSeconds','1','-EvidenceRoot',$tmp); foreach($key in $extra.Keys){$args+="-$key"; if($extra[$key] -isnot [switch]){$args+=[string]$extra[$key]}}; & $pwsh @args *> $out; if($LASTEXITCODE -ne $expect){throw "$name exit=$LASTEXITCODE expected=$expect"}; $r=Get-ChildItem $tmp -Filter 'P3-01-*.json'|Where-Object Name -notlike '*.start.json'|Sort-Object LastWriteTime -Descending|Select-Object -First 1; $s=Get-ChildItem $tmp -Filter 'P3-01-*.start.json'|Sort-Object LastWriteTime -Descending|Select-Object -First 1; if(!$r -or !$s){throw "$name no evidence"}; $record=Get-Content -Raw $r.FullName|ConvertFrom-Json;$start=Get-Content -Raw $s.FullName|ConvertFrom-Json;if($start.RecordPhase -ne 'START'){throw "$name missing START record"}; foreach($field in 'StartTime','EndTime','DurationMs','CandidateId','RuntimeTestId','Status','Reason','HarnessStatus'){if([string]::IsNullOrWhiteSpace([string]$record.$field)){throw "$name missing $field"}}; $record}
+function Run([string]$name,[string]$code,[int]$expect,[hashtable]$extra=@{}) {
+    $out=Join-Path $tmp "$name.out"
+    $args=@('-NoProfile','-File',$module,'-Capability','P3-01','-CandidateId',"CAND-$name",'-AppCommand',$pwsh)
+    if(-not [string]::IsNullOrEmpty($code)){$args+=@('-AppScript',$code)}
+    $args+=@('-TimeoutSeconds','2','-StdoutDrainTimeoutSeconds','1','-StderrDrainTimeoutSeconds','1','-EvidenceWriteTimeoutSeconds','1','-EvidenceRoot',$tmp)
+    foreach($key in $extra.Keys){$args+="-$key"; if($extra[$key] -isnot [switch]){$args+=[string]$extra[$key]}}
+    & $pwsh @args *> $out
+    if($LASTEXITCODE -ne $expect){throw "$name exit=$LASTEXITCODE expected=$expect"}
+    $r=Get-ChildItem $tmp -Filter 'P3-01-*.json'|Where-Object Name -notlike '*.start.json'|Sort-Object LastWriteTime -Descending|Select-Object -First 1
+    $s=Get-ChildItem $tmp -Filter 'P3-01-*.start.json'|Sort-Object LastWriteTime -Descending|Select-Object -First 1
+    if(!$r -or !$s){throw "$name no evidence"}
+    $record=Get-Content -Raw $r.FullName|ConvertFrom-Json;$start=Get-Content -Raw $s.FullName|ConvertFrom-Json
+    if($start.RecordPhase -ne 'START'){throw "$name missing START record"}
+    foreach($field in 'StartTime','EndTime','DurationMs','CandidateId','RuntimeTestId','Status','Reason','HarnessStatus'){if([string]::IsNullOrWhiteSpace([string]$record.$field)){throw "$name missing $field"}}
+    $record
+}
 try {
     $markers='【VulkanSurface】创建 Vulkan Surface 成功;逻辑设备 创建成功;Swapchain 创建成功;首帧 呈现 成功'
     $pass=Run 'pass' "Write-Output '$markers'" 0; if($pass.Status -ne 'PASS'){throw 'normal exit did not pass'}

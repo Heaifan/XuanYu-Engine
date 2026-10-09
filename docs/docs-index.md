@@ -1,16 +1,13 @@
 # 玄域引擎 docs 索引
 
-> 本文档只回答「哪类文档在哪里」；完整文件职责见 `file-tree.md`。分类依据：SHR-2026-08-R2 文档治理（2026-08-03）。
+> 本文档只回答「哪类文档在哪里」；完整文件职责见 `file-tree.md`。当前正式体系为 AI 开发宪法、XYT 测试与证据、独立 XYK 知识与经验。保留的旧交接报告只作历史记录，不授予运行审批权。
 
 ## 治理文档（docs/ 根目录 + governance/）
 
 - `docs/玄域引擎_AI开发宪法.md`：最高长期治理规则（唯一宪法事实源）
 - `docs/dev-rules.md`：开发硬规则执行手册
 - `docs/CODE_CONSTITUTION.md`：代码与架构硬规则
-- `docs/governance/版本号规范与历史映射.md`：版本格式与历史编号映射
-- `docs/governance/dev-rules-understanding.md`：dev-rules 解释
 - `docs/governance/diagnostic-safety.md`：诊断日志与 UI 调度安全规范
-- `docs/governance/sync-handoff-sop.md`：玄域引擎跨电脑/跨 Agent 同步与交接唯一正式流程
 - `docs/governance/knowledge-audit-handoff.md`：施工完成后的 ChatGPT Knowledge / Experience 审计交接唯一规范
 - `docs/governance/NAMING_RULES.md`、`naming-XuanYu-Engine.md`：命名与品牌规范
 - `docs/governance/ui-spec.md`：UI 规范 1.0 讨论初稿（强约束 UI 默认标准与受控例外机制，待审订）
@@ -105,6 +102,11 @@
 
 - `docs/archive/changelog/`：changelog 月度归档（changelog-YYYY-MM.md，索引见 changelog.md）
 - `docs/archive/superseded/`：已被新文档取代但仍保留审计历史（旧规则、旧仓库审计）
+
+## 历史治理资料（不作为当前规则）
+
+- `docs/governance/版本号规范与历史映射.md`：仅供追溯既有版本号与历史记录，不规定当前版本规则。
+- `docs/governance/dev-rules-understanding.md`：旧执行规则的解释材料，现行规则以 AI 开发宪法和 `docs/dev-rules.md` 为准。
 
 ## 查找旧阶段证据
 

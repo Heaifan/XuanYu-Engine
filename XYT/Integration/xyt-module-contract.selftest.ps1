@@ -1,34 +1,24 @@
-﻿param()
-
 $ErrorActionPreference = 'Stop'
-
-function Assert([bool]$condition, [string]$message) {
-    if (-not $condition) { throw $message }
-}
-
-function New-Envelope([string]$kind, [string]$status, [hashtable]$data) {
-    [pscustomobject]@{ schema = 'XYT-INTEGRATION.v1'; kind = $kind; runId = 'fixture-001'; status = $status; exitCode = 0; data = $data; references = @(); warnings = @() }
-}
-
-$plan = New-Envelope 'planner' 'PASS' @{ planId = 'plan-fixture-001'; requiresRealRuntime = $true; tests = @(@{ testId = 'T-UNIT'; command = 'fixture'; dependsOn = @() }) }
-$execution = New-Envelope 'execution' 'PASS' @{ planId = $plan.data.planId; results = @(@{ testId = 'T-UNIT'; status = 'PASS'; exitCode = 0 }) }
-$runtime = New-Envelope 'runtime' 'PENDING' @{ sourceKind = 'FIXTURE_RUNTIME'; schema = 'XYT-P3-R1/1'; Result = 'PASS'; ExitCode = 0; MissingMarkers = @() }
-$incident = New-Envelope 'incident' 'PASS' @{ severity = 'T3'; classification = 'NO_INCIDENT'; lockDecision = 'CONTINUE'; evidenceRefs = @() }
-$witness = New-Envelope 'witness' 'PASS' @{ required = $false; complete = $true }
-$report = New-Envelope 'report' 'PASS' @{ sourceKinds = @('AUTOMATED_TEST', 'FIXTURE_RUNTIME'); executionStatus = $execution.status; runtimeStatus = $runtime.status }
-$ipo = New-Envelope 'ipo' 'PENDING' @{ verdict = 'P4 PENDING'; items = @(@{ 路径 = 'fixture'; 判定 = 'P4 PENDING' }) }
-
-Assert ($plan.data.planId -eq $execution.data.planId) 'Planner output was not accepted by Executor.'
-Assert ($plan.data.requiresRealRuntime -and $runtime.data.sourceKind -eq 'FIXTURE_RUNTIME') 'Fixture Runtime boundary was lost.'
-Assert ($report.data.executionStatus -eq 'PASS' -and $report.data.runtimeStatus -eq 'PENDING') 'Report did not preserve source statuses.'
-Assert ($ipo.data.verdict -eq 'P4 PENDING') 'IPO fixture was auto-promoted.'
-
-$closure = 'BLOCKED'
-$reasons = @('REAL_RUNTIME_REQUIRED', 'P4_PENDING')
-Assert ($closure -eq 'BLOCKED' -and $reasons.Count -eq 2) 'Closure Gate incorrectly closed.'
-Assert ($incident.data.lockDecision -eq 'CONTINUE' -and $witness.data.complete) 'Incident/Witness contract did not connect.'
-
-Write-Output 'XYT INTEGRATION CONTRACT SELFTEST PASS'
-Write-Output 'INTEGRATION CONTRACT: READY'
-Write-Output 'REAL RUNTIME: NOT PROVEN (fixture only)'
-exit 0
+$root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$temp = Join-Path ([IO.Path]::GetTempPath()) ('xyt-integration-' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $temp | Out-Null
+try {
+    $planPath = Join-Path $temp 'plan.json'; $resultPath = Join-Path $temp 'execution.json'
+    [ordered]@{ planId='XYT-INTEGRATION'; tests=@([ordered]@{testId='T-UNIT'; command='Write-Output evidence-linked; exit 0'; timeoutSeconds=20}) } | ConvertTo-Json -Depth 6 | Set-Content $planPath
+    $executor = Join-Path $PSScriptRoot '..\Execution\xyt-executor.ps1'
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $executor -PlanPath $planPath -OutputPath $resultPath | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'XYT executor did not finish the integration plan.' }
+    $execution = Get-Content -Raw $resultPath | ConvertFrom-Json
+    if ($execution.status -ne 'PASS' -or $execution.results[0].testId -ne 'T-UNIT') { throw 'Executor result did not retain the executed test.' }
+    . (Join-Path $PSScriptRoot '..\Report\xyt-report.ps1')
+    $report = Invoke-XytReport -Operation Report -RepositoryRoot $root -OutputRoot $temp -TestMode 'UNIT' -TestSetVersion 'TSET-XYT-v1.0' -AffectedCapability @('XYT') -Status $execution.status -Evidence @($resultPath)
+    $record = Get-Content -Raw $report.JsonPath | ConvertFrom-Json
+    $head = (& git -C $root rev-parse HEAD).Trim()
+    if ($record.Status -ne $execution.status -or $record.Commit -ne $head -or @($record.Evidence) -notcontains $resultPath) { throw 'Report lost execution status, raw evidence, or current commit identity.' }
+    $ipoPath = Join-Path $PSScriptRoot '..\Acceptance\xyt-ipo.ps1'; $ipoOut = Join-Path $temp 'ipo.json'
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ipoPath -Capability 'mode-switch' -Version $record.Version -Commit $record.Commit -Branch $record.Branch -OutputPath $ipoOut | Out-Null
+    if ($LASTEXITCODE -ne 0 -or (Get-Content -Raw $ipoOut | ConvertFrom-Json).Items[0].判定 -ne 'P4 PENDING') { throw 'IPO generator did not preserve user-owned P4 verdict.' }
+    'XYT INTEGRATION CONTRACT SELFTEST PASS'
+    'EXECUTOR -> REPORT -> IPO: PASS'
+    'REAL RUNTIME: NOT PROVEN'
+} finally { Remove-Item -LiteralPath $temp -Recurse -Force -ErrorAction SilentlyContinue }

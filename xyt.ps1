@@ -4,9 +4,7 @@ param(
     [string]$AffectedCapability, [ValidateSet('PASS','FAIL','BLOCKED','TIMEOUT','FLAKY')][string]$Status = 'PASS',
     [string[]]$Evidence, [string]$Timestamp, [string]$OutputRoot, [string]$InputRoot,
     [ValidateSet('month','quarter','year')][string]$Period, [string]$At, [string]$ReportPath,
-    [string]$AggregatePath, [string]$ChangeType, [string]$EventId, [string]$CurrentVersion,
-    [string]$CandidateId, [string]$CandidateFingerprint, [string]$TestCommand,
-    [switch]$DryRun, [switch]$FormalAcceptance, [switch]$RequireClean
+    [string]$AggregatePath, [string]$TestCommand, [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
 $router = Join-Path $PSScriptRoot 'XYT\xyt-router.ps1'

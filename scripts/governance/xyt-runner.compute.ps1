@@ -1,6 +1,4 @@
-function Find-XytOwner($File, $Mapping, $Ownership) {
-    $entry = @($Ownership.entries) | Where-Object { $_.path -eq $File } | Select-Object -First 1
-    if ($entry) { return [pscustomobject]@{ name = [string]$entry.owner; source = 'ownership-manifest' } }
+function Find-XytOwner($File, $Mapping) {
     $rule = @($Mapping.ownershipRules) | Where-Object { Test-XytPattern $File $_.pattern } | Select-Object -First 1
     if ($rule) { return [pscustomobject]@{ name = [string]$rule.owner; source = 'fixed-pattern' } }
     return [pscustomobject]@{ name = 'UNKNOWN'; source = 'unresolved' }
@@ -10,10 +8,10 @@ function Expand-XytTests($Repo, $Test) {
     $pattern = Join-Path $Repo ($Test -replace '/', '\')
     return @(Get-ChildItem -Path $pattern -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Substring($Repo.Length + 1).Replace('\', '/') })
 }
-function Get-XytPlan($Repo, $Files, $Mapping, $Ownership, $Supplement, $AgentTests) {
+function Get-XytPlan($Repo, $Files, $Mapping, $Supplement, $AgentTests) {
     $required = [System.Collections.Generic.List[object]]::new(); $changed = @(); $disputes = [System.Collections.Generic.List[string]]::new()
     foreach ($file in $Files) {
-        $owner = Find-XytOwner $file $Mapping $Ownership
+        $owner = Find-XytOwner $file $Mapping
         $caps = @($Mapping.capabilityRules | Where-Object { Test-XytPattern $file $_.pattern })
         if ($owner.name -eq 'UNKNOWN' -or $caps.Count -eq 0) { [void]$disputes.Add("${file}: ownership/capability unresolved") }
         $tests = @($Mapping.testRules | Where-Object { $_.owner -eq $owner.name -or @($_.capabilities | Where-Object { $caps.capability -contains $_ }).Count -gt 0 })

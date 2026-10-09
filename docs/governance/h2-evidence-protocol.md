@@ -1,5 +1,10 @@
 # H2 Evidence Packet and Candidate Tree Protocol
 
+> HISTORICAL: this protocol describes the retired Candidate Tree and Handoff
+> Work Release model. It is retained as historical XYT evidence context, not
+> as a current approval or execution authority. Current test execution and
+> evidence rules are defined by the Constitution and XYT runtime.
+
 H2 evidence is a bounded observation of one Candidate Tree. A test result is
 retained even when the observation is no longer admissible governance evidence.
 `TestResult=PASS` therefore does not imply `EvidenceStatus=VALID`.

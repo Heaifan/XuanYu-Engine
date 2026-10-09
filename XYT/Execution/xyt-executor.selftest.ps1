@@ -2,7 +2,7 @@
 param()
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
-$executor = Join-Path $root 'scripts\governance\xyt-executor.ps1'
+$executor = Join-Path $PSScriptRoot 'xyt-executor.ps1'
 $temp = Join-Path ([IO.Path]::GetTempPath()) ('xyt-execution-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $temp | Out-Null
 try {
@@ -33,12 +33,17 @@ try {
     if ($byId['flaky'].status -ne 'FLAKY' -or $byId['flaky'].attempts -ne 2) { throw 'FLAKY contract failed' }
     if ($byId['timeout'].status -ne 'TIMEOUT') { throw 'TIMEOUT contract failed' }
     if ($byId['blocked'].status -ne 'BLOCKED_BY') { throw 'BLOCKED_BY contract failed' }
-    if ($byId['sweep-pass'].status -ne 'PASS' -or $byId['sweep-fail'].status -ne 'FAIL') { throw 'failure sweep stopped early' }
+    if ($byId['sweep-pass'].status -ne 'PASS' -or $byId['sweep-fail'].status -ne 'FAIL') { throw "failure sweep stopped early: pass=$($byId['sweep-pass'] | ConvertTo-Json -Compress) fail=$($byId['sweep-fail'] | ConvertTo-Json -Compress)" }
     if (-not $byId['cost-warning'].costWarning) { throw 'cost warning contract failed' }
     if ($byId['unclassified'].status -ne 'UNCLASSIFIED') { throw 'UNCLASSIFIED contract failed' }
     $a = $byId['parallel-a']; $b = $byId['parallel-b']; $s = $byId['serial']
     if (-not ([datetime]$a.startedAt -lt [datetime]$b.endedAt -and [datetime]$b.startedAt -lt [datetime]$a.endedAt)) { throw 'parallel contract failed' }
     if ([datetime]$s.startedAt -lt [datetime]$a.endedAt) { throw 'dependency serial contract failed' }
+    $cyclePlan = Join-Path $temp 'cycle.json'; $cycleResult = Join-Path $temp 'cycle-result.json'
+    [ordered]@{ planId='cycle'; tests=@([ordered]@{testId='A';dependsOn=@('B');command='exit 0'},[ordered]@{testId='B';dependsOn=@('A');command='exit 0'}) } | ConvertTo-Json -Depth 6 | Set-Content $cyclePlan
+    & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $executor -PlanPath $cyclePlan -OutputPath $cycleResult | Out-Null
+    $cycleCode = $LASTEXITCODE; $cycle = Get-Content -Raw $cycleResult | ConvertFrom-Json
+    if ($cycleCode -ne 2 -or $cycle.errorCode -ne 'CIRCULAR_TEST_DEPENDENCY' -or $cycle.cyclePath -notmatch 'A -> B -> A') { throw 'Local executor cycle contract failed.' }
     'XYT EXECUTOR SELFTEST: PASS'
     exit 0
 }

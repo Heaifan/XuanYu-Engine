@@ -10,7 +10,7 @@ try {
     foreach ($field in @('Version','Commit','Branch','TestMode','TestSetVersion','Timestamp')) { if ([string]::IsNullOrWhiteSpace([string]$record.$field)) { throw "Missing $field" } }
     if ($record.Status -ne 'PASS' -or @($record.AffectedCapabilities).Count -ne 2) { throw 'Report fields were not preserved.' }
     foreach ($status in @('FAIL','BLOCKED','TIMEOUT','FLAKY')) {
-        $item = Invoke-XytReport -Operation Report -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -OutputRoot $temp -TestMode 'UNIT' -TestSetVersion 'set-1' -AffectedCapability 'XYT' -Status $status
+        $item = Invoke-XytReport -Operation Report -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -OutputRoot $temp -TestMode 'UNIT' -TestSetVersion 'set-1' -AffectedCapability 'XYT' -Status $status -Timestamp '2026-09-29T11:00:00Z'
         if ((Get-Content $item.JsonPath -Raw | ConvertFrom-Json).Status -ne $status) { throw "Status $status was not preserved." }
     }
     $bad = $false
@@ -25,6 +25,9 @@ try {
     if (-not (Test-Path $quarter.JsonPath) -or -not (Test-Path $year.JsonPath)) { throw 'Quarter or year aggregate was not created.' }
     $upload = Invoke-XytReport -Operation Upload -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -ReportPath $report.JsonPath -DryRun
     if ($upload.Status -ne 'PASS' -or $upload.Mode -ne 'DRY_RUN') { throw 'Upload DryRun did not pass.' }
+    $blocked = $false
+    try { Invoke-XytReport -Operation Upload -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -ReportPath $report.JsonPath | Out-Null } catch { $blocked = $_.Exception.Message -like '*parent-managed publication*' }
+    if (-not $blocked) { throw 'Non-dry-run upload did not defer publication to Parent.' }
     'XYT REPORT MODULE SELFTEST: PASS'
 }
 finally { Remove-Item -LiteralPath $temp -Recurse -Force -ErrorAction SilentlyContinue }

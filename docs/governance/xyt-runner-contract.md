@@ -1,15 +1,14 @@
-# XYT-C Runner Contract
+# XYT Test Selection Contract
 
 ## Purpose
 
-`scripts/governance/xyt-runner.ps1` converts a changed-file list or Git diff range into the smallest test set supported by repository facts. It is a governance sub-check; it does not replace GATE-L/M/H.
+`scripts/governance/xyt-runner.ps1` converts a changed-file list or Git diff range into the smallest test set supported by XYT's fixed mapping. It selects tests and reports ambiguity; it does not grant approval or commit authority.
 
 ## Fixed mapping
 
-1. Exact entries in `tools/handoff/ownership-manifest.json` win.
-2. Otherwise `docs/governance/xyt-test-mapping.json` applies fixed path rules.
+1. `docs/governance/xyt-test-mapping.json` applies fixed path-to-owner, capability, and test rules.
 3. Capability matches select test rules; the union is the mandatory set.
-4. Unresolved ownership or capability produces `REVIEW_REQUIRED` and never silently reduces the set.
+4. An unresolved path, owner, or capability produces `REVIEW_REQUIRED` and never silently reduces the set.
 
 ## Add-only rule
 

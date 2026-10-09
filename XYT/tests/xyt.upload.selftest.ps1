@@ -4,8 +4,10 @@ $entry = Join-Path $root 'xyt.ps1'
 $outputRoot = Join-Path ([System.IO.Path]::GetTempPath()) ('xyt-upload-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $outputRoot | Out-Null
 try {
+    $savedPreference = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
     $missing = & pwsh.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $entry upload -ReportPath (Join-Path $outputRoot 'missing.json') -DryRun 2>&1
-    if ($LASTEXITCODE -eq 0) { throw 'Missing report upload unexpectedly succeeded.' }
+    $missingCode = $LASTEXITCODE; $ErrorActionPreference = $savedPreference
+    if ($missingCode -eq 0) { throw 'Missing report upload unexpectedly succeeded.' }
     if (($missing -join "`n") -notlike '*REPORT UPLOAD BLOCKED*') { throw 'Missing report was not reported as blocked.' }
     $report = & pwsh.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $entry report -TestMode 'UNIT' -TestSetVersion 'set-1' -AffectedCapability 'XYT' -Status PASS -OutputRoot $outputRoot 2>&1
     if ($LASTEXITCODE -ne 0) { throw ($report -join "`n") }

@@ -14,6 +14,7 @@ try {
     }
     $a = Invoke-Runner 'fixed' @('scripts/governance/test-evidence-gate.ps1')
     if ($a.status -ne 'PASS' -or @($a.requiredTests).Count -eq 0) { throw 'fixed mapping failed' }
+    if ($a.changedFiles[0].mapping -ne 'fixed-pattern') { throw 'XYT ownership must resolve from its fixed mapping' }
     $b = Invoke-Runner 'agent-add' @('XuanYu.World/Map/MapMarker.cs') @('World.Tests/Map/MapMarkerTests.cs')
     if (@($b.requiredTests) -notcontains 'World.Tests/Map/MapMarkerTests.cs') { throw 'agent test was not retained' }
     if (@($b.requiredTests) -notcontains 'XuanYu.World.Tests/') { throw 'agent input removed fixed required test' }

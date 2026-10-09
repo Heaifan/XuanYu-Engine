@@ -1,7 +1,7 @@
-# 玄域引擎 AI 开发宪法 3.3
+# 玄域引擎 AI 开发宪法 3.4
 
-**版本：** 3.3
-**修订日期：** 2026-09-30
+**版本：** 3.4
+**修订日期：** 2026-10-09
 **维护者：** 用户指定的宪法维护 AI——ChatGPT  
 **生效条件：** 经用户批准并提交至玄域引擎正式仓库  
 **适用范围：** 玄域引擎、《兵无常势》及基于玄域引擎开展的代码、测试、文档、审计、规划、验收与 Git 操作
@@ -33,6 +33,16 @@
 └── 第四编：验证、交付与基线
 ```
 
+正式治理只保留三个体系：
+
+```text
+AI 开发宪法：开发规则、证据要求与角色权限的唯一权威
+XYT：测试、回归与验收证据
+XYK：独立的长期知识、经验与决策
+```
+
+`AGENTS.md` 和 `docs/dev-rules.md` 仅提供入口及执行细节，不构成额外权威体系；工具、台账、注册表和报告只提供事实或证据，不产生独立审批权。
+
 ---
 
 # 第一编：不可侵犯原则
@@ -54,6 +64,19 @@
 用户拥有产品方向、重大架构、Schema、公共契约、依赖、长期治理、真机验收、Tag、Release 与合并的最终决策权。
 
 执行 Agent 不得自行修改、弱化或解释性绕过本宪法。宪法正式修改只由用户或用户指定的宪法维护 AI 执行。
+
+职责固定如下：
+
+```text
+用户：负责需求、决定优先级与产品方向、作最终产品验收
+ChatGPT：负责规划、审计、维护本宪法和 XYK
+执行 AI：按已确定的任务开发、执行验证并如实报告
+Parent 汇总任务：统筹子任务、集成与交付；是唯一 Commit / Push Owner
+```
+
+子任务和执行 AI 不得 Commit 或 Push。用户向子任务提出紧急提交要求时，子任务只向 Parent 报告并转交请求，由 Parent 汇总任务处理。Parent 的 Git 权限不授权其越过用户对 Release、历史改写等事项的决定权。
+
+本宪法是唯一开发规则来源。`AGENTS.md` 只提供接管、安全和入口指引；`docs/CODE_CONSTITUTION.md` 保留代码专属硬规则；`docs/dev-rules.md` 保留命令和执行细节。其它流程、工具、Registry 和报告不得复制、扩展或另设与本宪法冲突的审批权。外部资料仅提供事实或技术证据；只有用户和本宪法规定的决策边界具有审批效力，未通过的真实技术验证按本宪法处理。
 
 ## 第二条　仓库事实高于记忆
 
@@ -250,7 +273,7 @@ Task
 Risk
 Goal
 Scope
-Gate
+Validation
 Stop Condition
 Prohibited
 ```
@@ -351,6 +374,14 @@ Cancel 恢复会话开始前状态，不残留部分提交，延迟输入不得�
 
 来源不明修改必须报告，不得擅自删除、stash、rebase、force push、合并或创建“恢复仓库”。
 
+Dirty File 本身不代表错误、违规或可清理。先核对任务登记、Owner、WriteScope、依赖和修改来源；未知来源的 tracked 或 untracked 修改必须原样保护。只暂停与未知修改重叠或依赖该修改的操作，不得据此覆盖、清理或扩大阻断范围。
+
+跨设备同步必须先 fetch，再只读核对 branch、HEAD、upstream tip、Ahead/Behind、index、tracked / untracked dirty 与 Writer/Ownership。只有 index 和 worktree 均 clean、Ahead=0 且 Behind>0 时可 `git pull --ff-only`；其它情形暂停同步并报告。远端状态不授权丢弃本地内容。
+
+并行任务开始前必须明确文件 Owner 和 WriteScope；同一文件同一时段只能有一个写入 Owner。需要多人修改同一文件时，先协调先后顺序或交由 Parent 汇总任务统一集成，禁止无协调并行写入。XYT 可以并行执行满足依赖关系且不争用共享资源的测试；测试依赖、共享编译资源、Fixture 与锁仍按各自合同串行或隔离。
+
+施工任务写入前明确 Owner、WriteScope、BaseSHA、DependsOn、风险、目标、验证方式、停止条件和禁止事项；WriteScope 包含直接相关测试与必要记录。同一有界范围不逐文件重复登记。MEDIUM / HIGH 或知识索引已登记任务域，须在规划与首次写入前分别执行 Knowledge Preflight。实际依赖失败、写入范围冲突或本宪法规定的用户决策边界，才阻止相应操作。
+
 ## 第二十条　知识预检是任务输入，不是收尾装饰
 
 MEDIUM / HIGH 任务，以及 `docs/knowledge/knowledge-index.md` 已登记的任务域，在设计或写入前必须执行 **Knowledge Preflight**：
@@ -375,16 +406,13 @@ Loaded:
 
 ## 第二十一条　知识治理职责
 
-AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY.
+EXECUTION AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY.
 
-知识候选必须随任务报告输出，不得由执行 Agent 自行写入任何知识/经验文件。
-知识与经验候选只能作为最终报告中的纯文本交给 ChatGPT / XYK Coordinator；
-正式知识是否接受、合并、修订、拒绝或过期，由 ChatGPT / XYK Coordinator 审计决定。
+XYK 是独立维护的知识系统，不属于 XYT 测试系统或普通任务写入范围。知识候选必须随任务报告输出，不得由执行 Agent 自行写入任何知识/经验文件。知识与经验候选只能作为最终报告中的纯文本交给 ChatGPT；正式条目的搜索、审计、接受、合并、修订、拒绝、退役与写入由 ChatGPT 负责。
 
-除非任务明确授予 `XYK WRITE AUTHORITY`，任何 Agent 都不得把知识候选持久化到
-Codex memory 目录、仓库文件、`ad_hoc` / `notes`、Markdown、JSON/YAML、TXT
-或其它 Agent 自建知识存储。普通任务 Agent 的默认权限是 `XYK PROPOSER`；
-ChatGPT / XYK Coordinator 才是 `XYK REVIEWER + WRITE AUTHORITY`。
+执行 Agent 的默认权限是 `XYK PROPOSER`，不得把知识候选持久化到 Codex memory
+目录、仓库文件、`ad_hoc` / `notes`、Markdown、JSON/YAML、TXT 或其它 Agent 自建知识存储。
+ChatGPT 作为 XYK 唯一维护者，负责正式条目的审计与写入。
 
 长期治理资料职责固定为：
 
@@ -403,14 +431,13 @@ Plan/Audit   = 过程材料，不自动成为长期知识
 
 正式 ERR 唯一事实源：`docs/governance/agent-error-log.md`。  
 正式 EXP 唯一事实源：`docs/governance/agent-experience-rules.md`。
-上述正式库只可由 ChatGPT / XYK Coordinator 在明确授权下维护；执行 Agent
-不得以任务收尾、经验复盘或“知识沉淀”为由自行写回。
+上述正式库只可由 ChatGPT 维护；执行 Agent 不得以任务收尾、经验复盘或“知识沉淀”为由自行写回。
 
 ## 第二十二条　Agent 错误记录权限
 
 `agent-error-log.md` 只记录 Agent 真正犯过的错误，不记录普通 Bug 或正常修改。
 
-正式 ERR 的创建、根因修订、状态关闭由 ChatGPT 执行；Codex、Gemini 和其他执行 Agent只读，可提交候选错误、引用 ERR-ID、修复问题并提供验证证据。
+正式 ERR 的创建、根因修订、状态关闭由 ChatGPT 执行；执行 AI 只读，可提交候选错误、引用 ERR-ID、修复问题并提供验证证据。
 
 错误类型：
 
@@ -447,14 +474,13 @@ NONE
 存在候选时，必须使用 `XYK CANDIDATE` 区块，按 Problem、Root Cause、
 Rule / Knowledge、Applies To、Evidence、Expiry / Revalidation、Suggested
 Action 以纯文本描述。该区块不得写入任何知识库、经验库、Codex memory、
-ad-hoc note 或其它文件；正式入库由 ChatGPT / XYK Coordinator 后续决定。
+ad-hoc note 或其它文件；正式入库由 ChatGPT 后续决定。
 
-Agent 只能报告 `XYK CANDIDATE: PRESENT` 或 `XYK CANDIDATE: NONE`，不得报告
+执行 AI 只能报告 `XYK CANDIDATE: PRESENT` 或 `XYK CANDIDATE: NONE`，不得报告
 “已沉淀至经验库”“已写入知识库”“已更新 memory”或“已保存至 Codex memories”，
-除非本任务明确具有 `XYK WRITE AUTHORITY`。
+并不得声称 XYK Candidate 已正式入库。
 
-Plan、Audit、临时日志、阶段直播默认不是长期知识。只有 ChatGPT / XYK Coordinator
-审计接受并在明确授权下写入的长期结论，才可进入正式知识库。
+Plan、Audit、临时日志、阶段直播默认不是长期知识。只有 ChatGPT 审计接受并写入的长期结论，才可进入正式知识库。
 
 ## 第二十四条　经验规则的合并、强化与升格
 
@@ -471,7 +497,7 @@ EXP 出现以下任一情况时，可由 ChatGPT 提出 `CONSTITUTION_CANDIDATE`
 能够机器防止的重复错误，应优先沿以下路径升级：
 
 ```text
-ERR → EXP → Regression Test / Static Check / Runtime Gate / Architecture Gate
+ERR → EXP → XYT 回归测试 / 相关静态验证
 ```
 
 ## 第二十五条　知识生命周期与去重
@@ -522,23 +548,13 @@ Residual Risk
 
 真机 IPO 必须写真实中文 UI 路径、输入 I、过程 P、输出 O，输出必须可观察、可判定。
 
-## 第二十八条　XYE / XYUI Dual-Lane Development Model
+## 第二十八条　协作与写入所有权
 
-玄域引擎采用 **One Workspace / One Current Branch / Dual Lane**：
+XYUI 是仓库内一等子系统，Canonical 根固定为 `xyui/`。各任务按明确的文件 Owner 与 WriteScope 协作；同一路径同一时段只能由一个 Owner 写入。并行工作不得引入对未声明文件的写入或互相覆盖。
 
-```text
-P0   XYE FAST LANE
-P0.5 XYE × XYUI INTEGRATION
-P1   XYUI CONTROLLED SUPPORT LANE
-```
+每个执行 Agent 只修改其获分配范围。遇到共享文件、依赖或资源冲突时，协调写入顺序或交由 Parent 汇总任务集成。XYT 可并行执行依赖已满足、且不争用共享资源的测试。Parent 汇总任务独占本轮集成和 Git Commit / Push；其他 Agent 不得执行 Git 写操作。
 
-优先级固定为：`XYE > INTEGRATION > XYUI`。XYUI 是仓库内一等内置子系统，Canonical 根固定为 `xyui/`；它继续开发、审计并进入同一 Git / GitHub，但普通 XYUI 失败不得阻断 XYE。只有 XYUI Runtime / Public Contract 实际影响 XYE Consumer 时，才升级为 P0.5 Integration Blocker。
-
-共享 Workspace 只允许一个当前分支和一个 HEAD。普通 Agent 不得创建 / 切换 Branch，不得创建额外 Worktree。并行开发依靠文件 Ownership 与 Lane-scoped Build/Test；Convergence 时由 Coordinator 独占 Workspace，其他 Lane Freeze。
-
-XYUI 默认只拥有 `xyui/**`，默认禁止自行 Commit、Push、Branch mutation；经 Audit PASS、Freeze 后由 Coordinator 批量 Stage、原子 Commit、Push 并复核远端。XYUI 普通视觉问题、Gallery 失败和非公共 Runtime Contract 失败保持 P1，不得伪装为 XYE 阻断。
-
-该决策的理由与交接、审计和升级合同见 `docs/knowledge/decisions/xye-xyui-dual-lane-development-model.md` 与唯一 Lane 事实源 `docs/governance/development-lanes.md`。
+XYT 是测试、回归和验收证据系统，不拥有产品方向或产品验收权限。XYK 是独立知识系统，记录长期知识、经验与决策；不得并入 XYT 或普通施工 WriteScope。
 
 ---
 
@@ -573,7 +589,7 @@ XYUI 默认只拥有 `xyui/**`，默认禁止自行 Commit、Push、Branch mutat
 
 - 完整解决方案 Build，0 Warning / 0 Error；
 - Core / World / WarCore / XYUI 等当前适用的正式测试；
-- Architecture Gate；
+- 相关架构边界检查；
 - **5+100**；
 - 相关专项回归；
 - `git diff --check`；
@@ -601,150 +617,13 @@ XYUI 默认只拥有 `xyui/**`，默认禁止自行 Commit、Push、Branch mutat
 
 未完成必要真机验收时只能报告“待真机验收”，不得提前 CLOSED。
 
-## 第三十二条　XYE PRODUCT-GATE GOVERNANCE
+## 第三十二条　XYT 证据与用户产品验收
 
-### 1. 子任务 / Lane 没有产品验收权
+XYT 负责测试、回归与验收证据，包括自动测试结果、真实运行证据、测试边界和待验收项。XYT 的记录、报告和技术检查不授予独立审批权，也不能替代用户的产品验收决定。
 
-A / B / C 等并行 Lane 的最终状态只能是：
+证据只能支持其实际覆盖范围。静态合同、单元测试、集成测试、Build、5+100 或 `git diff --check` 不能单独证明用户可见功能已经完成。较低层证据不能覆盖真实运行或用户验收中的失败；未执行、环境阻断、未知与待验收必须如实保留。
 
-```text
-LOCAL VERIFIED
-READY FOR INTEGRATION
-```
-
-或：
-
-```text
-LOCAL BLOCKED
-```
-
-除非该 Lane 本身就是唯一 Product Integration Owner，否则禁止输出以下结论：
-
-```text
-PASS
-功能已修复
-问题已解决
-READY FOR USER ACCEPTANCE
-```
-
-### 2. 局部测试不能证明产品完成
-
-以下结果只能作为局部证据，不得据此推导用户问题已经解决：
-
-- Unit Tests PASS；
-- Contract Tests PASS；
-- Build 0W0E；
-- 5+100 PASS；
-- `git diff --check` PASS。
-
-### 3. 证据等级固定且不得越级覆盖
-
-产品证据优先级固定为：
-
-```text
-用户真机验收
->
-Canonical run.bat 产品 E2E
->
-Integration Tests
->
-Module / Unit Tests
->
-Static Contract Tests
-```
-
-高等级证据失败时，低等级证据无权覆盖。例如 Contract Tests 100/100 PASS，但用户真机没有 Grid，最终状态必须是：
-
-```text
-INTEGRATION BLOCKED
-```
-
-### 4. 每波并行任务必须冻结 User Story Done Definition
-
-每一波并行任务开始前，Coordinator 必须冻结唯一的 User Story Done Definition。所有 A / B / C 等子任务都只是实现该目标的手段，不得自行改变产品完成标准。
-
-示例：
-
-```text
-Terrain DONE =
-run.bat
-→ 导入正式 3601×3601 DEM
-→ Terrain 可见
-→ RenderSession 存活
-→ Zoom / Orbit / Pan 正常
-→ 性能明显改善
-```
-
-### 5. Convergence 必须运行真实产品路径
-
-Convergence 禁止只执行 Build、Unit Tests 或 Contract Tests。必须按用户真实路径验证：
-
-- Terrain：真实 Import HGT；
-- Grid：真实打开 Empty Scene；
-- Picking：真实走 Picking Runtime Path；
-- Vulkan：真实完成 Present。
-
-真实产品路径无法执行时，状态只能是：
-
-```text
-UNVERIFIED
-```
-
-或：
-
-```text
-INTEGRATION BLOCKED
-```
-
-禁止报告 PASS。
-
-### 6. 跨 Lane 接口由中央 Integration Owner 负责
-
-以下接口必须由中央 Integration Owner 验证，不得把各 Lane 的局部状态相加后视为产品正确：
-
-```text
-A 输出 → B 输入
-B 输出 → C 输入
-Cache → Builder
-Snapshot → Renderer
-CPU → GPU
-Shader Source → Runtime
-UI → Runtime
-```
-
-`A LOCAL VERIFIED + B LOCAL VERIFIED + C LOCAL VERIFIED` 不等于产品正确。
-
-### 7. 用户验收前必须形成 Candidate
-
-只有中央 E2E 验证通过后，才允许：
-
-1. 更新版本；
-2. 固定精确 Stage；
-3. Commit；
-4. Push；
-5. 核对 `Local HEAD = Remote HEAD` 且 `Ahead / Behind = 0 / 0`；
-6. 再次执行 `run.bat`。
-
-用户验收必须针对明确的 Version 与明确的 Commit。禁止将大量 Dirty、旧 Commit 或旧版本标题交给用户验收。
-
-### 8. READY FOR USER ACCEPTANCE 的版本责任
-
-任何状态达到 `READY FOR USER ACCEPTANCE` 之前，必须完成 Version / Candidate Identity 更新。禁止代码已经发生实质变化，但窗口仍显示旧版本或旧 Commit。
-
-### 9. 最终状态词统一
-
-```text
-地方 Lane：       LOCAL VERIFIED / LOCAL BLOCKED
-中央 Integration：INTEGRATION VERIFIED / INTEGRATION BLOCKED
-交用户前：        READY FOR USER ACCEPTANCE
-用户最终：        ACCEPTED / REJECTED
-```
-
-上述状态词不得混用。
-
-### 10. 反报喜硬门禁
-
-未完成 Frozen User Story 的真实 E2E 时，任何报告若使用“PASS、已修复、已解决、完成、可验收”等产品完成性结论，均属于 `GOVERNANCE FAIL`，不得进入下一阶段。
+产品目标和用户可观察的完成条件由用户决定。涉及 UI、渲染、输入、生命周期或真实操作的任务，按其风险执行必要运行验证，并在需要人工验收时取得用户实际验收证据。自动验证通过不代表用户已接受；未完成必要验收时报告“待验收”，不得宣称产品关闭。
 
 ## 第三十三条　Git 交付
 
@@ -752,54 +631,21 @@ Git 提交以**原子、可验证成果**为单位，不要求每个微小编辑
 
 同一可信验证节点内可以包含多个彼此相关、已冻结范围内的小修改。
 
-正式验收或正式交付成果最终必须进入远端权威基线。
+正式验收或正式交付成果最终必须进入远端权威基线。所有子任务禁止 Commit / Push；只有 Parent 汇总任务拥有本轮提交权限，并负责精确集成、原子 Commit、Push 和远端 tip 复核。子任务不得因用户提出紧急提交要求而越级操作，必须报告并转交 Parent。
 
 禁止：Force Push、Rebase、改写历史、删除远端分支、创建 / 合并 PR、创建 / 删除 Tag 或 Release，除非用户明确批准。
 
 Commit 不等于 Push；Push 不等于远端一致；必须实际核验远端分支 tip 后才能声明已交付。
 
-## 第三十四条　版本与发布
+## 第三十四条　产品版本与发布
 
-当前规定的版本源必须保持一致。Tag、Release 和冻结必须在自动门禁、必要真机验收、阶段 CLOSED 且用户明确批准后执行。
+产品版本只按实际产品功能或修复及仓库当前产品版本源维护。治理文档、工具或流程的简化与删除本身，不构成推进产品版本的理由。Commit SHA 是代码状态的可追溯身份；不得另设独立版本事件、版本台账或版本门禁体系。Tag、Release 和产品冻结须经必要验证、用户验收（适用时）与用户明确批准。
 
-## 第三十五条　Milestone 知识收口
+## 第三十五条　XYK 知识审计
 
-正式 Milestone 在 CLOSED 前执行一次 `Milestone Knowledge Review`，但不得为每个小 Fix 制造重型知识审计。审计前，候选仍只能存在于任务最终报告纯文本中。
+XYK 独立于开发规则和 XYT，负责长期知识、经验与决策。执行 AI 只在最终报告中提交 `XYK CANDIDATE` 纯文本，不得自行写入正式 XYK 或其它知识存储。ChatGPT 负责搜索既有条目、审计候选并决定正式维护；普通任务不因此增加额外审批门禁。
 
-候选只进入以下一种：
-
-```text
-KNOWLEDGE
-LESSON
-ERR
-EXP
-CHANGELOG_ONLY
-BACKLOG
-REJECTED
-CONSTITUTION_CANDIDATE
-```
-
-复盘阶段不得顺手扩大产品 Scope。
-
-## 第三十六条　月度健康治理
-
-每个自然月至少检查一次：
-
-- `file-tree.md` 与仓库结构；
-- changelog 重复和膨胀；
-- 重复事实源；
-- 5+100；
-- 架构边界与权威状态；
-- 高频性能主链；
-- 技术债扩散；
-- 知识索引是否被实际使用；
-- ERR 是否存在未关闭或根因不明；
-- EXP 是否重复、失效或适合升级机器门禁；
-- SUPERSEDED / RETIRED 状态是否正确。
-
-普通措辞和目录美观不得阻断主线。
-
-## 第三十七条　最终报告最小事实集
+## 第三十六条　最终报告最小事实集
 
 发生正式仓库写入的开发轮，最终报告至少包含：
 
@@ -835,7 +681,7 @@ CONSTITUTION_CANDIDATE
 
 # 附则
 
-1. 本宪法 3.1 生效后，与本版本冲突的旧条款自动失效。
+1. 本宪法 3.4 经用户批准并进入正式仓库后生效；与本版本冲突的旧规则和旧治理流程条款停止适用。
 2. `docs/CODE_CONSTITUTION.md`、`docs/dev-rules.md`、`AGENTS.md` 必须与本宪法保持一致。
 3. 具体构建命令和模块级技术合同放入 `docs/dev-rules.md` 或正式架构文档，不重复塞回宪法。
 4. 其他 Agent 发现宪法与仓库事实冲突时必须报告，不得擅自改宪法。

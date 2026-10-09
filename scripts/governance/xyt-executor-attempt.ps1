@@ -1,4 +1,4 @@
- $runnerPath = Join-Path (Split-Path -Parent $PSScriptRoot) '..\tools\handoff\process-runner.ps1'
+ $runnerPath = Join-Path $PSScriptRoot 'xyt-process-runner.ps1'
 
 function Start-XytAttempt {
     param([pscustomobject]$Spec, [int]$Attempt)
@@ -12,7 +12,7 @@ function Start-XytAttempt {
             if ($workingDirectory) { Set-Location -LiteralPath $workingDirectory }
             $shell = (Get-Command pwsh.exe -ErrorAction SilentlyContinue).Source
             if (!$shell) { $shell = (Get-Command powershell.exe).Source }
-            $run = Invoke-HandoffProcess -FilePath $shell -WorkingDirectory $workingDirectory -Arguments @('-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',$command)
+            $run = Invoke-XytProcess -FilePath $shell -WorkingDirectory $workingDirectory -Arguments @('-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',$command)
             [pscustomobject]@{ exitCode = [int]$run.ExitCode; output = $run.Stdout + $run.Stderr }
         } catch {
             [pscustomobject]@{ exitCode = 1; output = $_ | Out-String }

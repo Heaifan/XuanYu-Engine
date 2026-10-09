@@ -1,5 +1,9 @@
 # XYT-T2 Test Truth Control Plane
 
+> HISTORICAL: this document describes the retired Wave / Lane / Merge
+> Eligibility control model. It is preserved as historical XYT review material
+> and does not define current execution authority or approval gates.
+
 状态：`T2-CANDIDATE / WAVE-T-A`，不是 `T2 truth-reviewed`。
 
 ## 1. Record contract

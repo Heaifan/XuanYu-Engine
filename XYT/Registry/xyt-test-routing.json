@@ -1,0 +1,13 @@
+{
+  "schema": "XYT-TEST-ROUTING/1",
+  "rules": [
+    { "pattern": "XuanYu.Core/*", "tests": ["XuanYu.Core.Tests/"] },
+    { "pattern": "XuanYu.World/*", "tests": ["XuanYu.World.Tests/"] },
+    { "pattern": "XuanYu.Editor*/*", "tests": ["XuanYu.World.Tests/"] },
+    { "pattern": "XuanYu.WarCore/*", "tests": ["XuanYu.WarCore.Tests/"] },
+    { "pattern": "xyui/*", "tests": ["xyui/avalonia/tests/XYUI.Avalonia.Tests/"] },
+    { "pattern": "XYT/*", "tests": ["XYT/**/*.selftest.ps1"] },
+    { "pattern": "xyt.ps1", "tests": ["XYT/**/*.selftest.ps1"] },
+    { "pattern": "xyt.bat", "tests": ["XYT/**/*.selftest.ps1"] }
+  ]
+}

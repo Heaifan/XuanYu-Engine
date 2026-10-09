@@ -10,13 +10,3 @@ function Invoke-XytChild([string]$Label, [string]$Path, [string[]]$Arguments = @
 function Invoke-XytSelftest([string]$Label, [string]$RelativePath) {
     Invoke-XytChild $Label (Join-Path $RepoRoot $RelativePath)
 }
-
-function Invoke-XytVersionGate([hashtable]$Arguments) {
-    $path = Join-Path $RepoRoot 'scripts\governance\version-event-gate.ps1'
-    $forward = @('-RepoRoot', $RepoRoot, '-ChangeType', $Arguments.ChangeType, '-EventId', $Arguments.EventId,
-        '-CurrentVersion', $Arguments.CurrentVersion, '-CandidateId', $Arguments.CandidateId,
-        '-CandidateFingerprint', $Arguments.CandidateFingerprint)
-    if ($Arguments.FormalAcceptance) { $forward += '-FormalAcceptance' }
-    if ($Arguments.RequireClean) { $forward += '-RequireClean' }
-    Invoke-XytChild 'VersionGate' $path $forward
-}
