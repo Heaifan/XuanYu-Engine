@@ -34,3 +34,4 @@ K-20261001-006	STRENGTHEN	K-HANDOFF-001	Governance	HANDOFF-SAFE-FAST-FORWARD	a84
 K-20261001-007	CREATE	K-GOV-006	Governance	HANDOFF-PS51-ENCODING	33afb8936061efc01c242ddeb8bd8f4d8119c92c	PowerShell 5.1 non-ASCII scripts preserve compatible encoding	ACTIVE
 K-20261009-001	STRENGTHEN	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-C2	-	Interim nested XYT full selftest incomplete; K commit 7602d26e; uncommitted product changes on HEAD 79476c4c	ACTIVE
 K-20261009-002	UPDATE	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-PARENT	-	Follow-up exit 0 and stable XYT hash; knowledge update 9d0c224f; uncommitted product changes on HEAD 79476c4c	ACTIVE
+K-20261009-003	STRENGTHEN	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-PARENT	7cc8be331496e1cb750142aaad4e7c5195919635	Clean baseline Core fail; XYUI intermittent full suite; K commit e4735196	ACTIVE
