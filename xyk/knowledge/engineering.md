@@ -453,6 +453,16 @@ FAIL、TIMEOUT、FLAKY 或 Harness 异常只说明执行结果；完成根因分
 
 **证据边界**：C2 交接报告，2026-10-09 18:12 启动的顶层自测，基线 `79476c4c48dac03efbda2338da3298d3cf2a97b2`；该报告仅有启动前 XYT 快照，缺少退出状态和结束快照。此条记载施工报告观察，不声称 ChatGPT 已独立复跑 Windows 测试。待 Parent 查明等待链并取得最终验证后复核。
 
+### 2026-10-09 Parent 后续核验：顶层 XYT 自测正常结束
+
+Parent 补齐了 C2 交接时缺失的结束证据：`XYT/tests/xyt.selftest.ps1` 最终退出码为 0；运行前后 37 个 XYT 文件的 SHA256 均为 `959803C315097C5A491E30A864C22DAD4CFDA327A7CDEDF9A10DD9B23BD4CB52`，报告中的当前 XYT 快照一致。独立 Runtime harness 再次退出码 0。子 PowerShell 依次验证通过、失败、超时、崩溃、无 GUI、流读取超时和证据写入故障；合成超时用例约 15.4 秒。当前证据不支持“死锁”判断。
+
+**结论更新**：此前 C2 交接时的 `INCOMPLETE / UNKNOWN` 是当时正确的暂定记录；补齐退出码和相同 XYT 快照后，本次顶层 XYT 自测改判为 **PASS（据 Parent 报告）**。这不代表全部产品测试 PASS，也不代表真实 P3 Runtime 或 P4 验收已完成。Parent 同时报出 Core、XYUI 各一项产品测试失败，尚需独立核查。
+
+**经验**：嵌套 PowerShell 自测可能包含耗时的串行合成故障用例。判定卡死前，应检查父子进程、用例耗时、退出码和测试前后关联文件哈希；后续证据能够更新先前状态，但不得抹掉历史观察。
+
+**来源**：XYE-GOVERNANCE-SIMPLIFICATION-R1 Parent 集成恢复报告，2026-10-09。ChatGPT 未独立复跑 Windows 测试。
+
 ## K-XYT-AUDIT-001 测试名称和目录不能授予证据等级
 **状态**：Active　**优先级**：P0　**证据等级**：E2  
 `Runtime`、`Vulkan`、`Performance`、`Integration`、`Real` 等名称不能自动获得更高证据等级。证据等级只能由测试实际跨越的验证边界决定；改名不改变正式证据等级。
