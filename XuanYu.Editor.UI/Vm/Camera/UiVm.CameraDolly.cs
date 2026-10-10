@@ -1,21 +1,16 @@
 using XuanYu.Editor.Camera;
 using XuanYu.Core.Diagnostics;
-
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.World;
-
 namespace XuanYu.Editor.UI;
-
 public sealed partial class UiVm
 {
     public bool DollyCamera(double wheelDelta)
         => DollyCameraCore(wheelDelta, null, null, null, "DollyCamera");
-
     public bool DollyCameraAtCursor(double wheelDelta, double cursorX, double cursorY, ViewportState viewport)
         => DollyCameraCore(wheelDelta, cursorX, cursorY, viewport, "DollyCameraAtCursor");
-
     bool DollyCameraCore(double wheelDelta, double? cursorX, double? cursorY, ViewportState? viewport, string operation)
     {
         if (_cameraSession is not null || _editorState.InteractionSnapshot.HasCapture) return false;
@@ -43,7 +38,6 @@ public sealed partial class UiVm
         ApplyCameraResult(result);
         return true;
     }
-
     CameraFrameResult ConstrainDollyToTerrain(CameraFrameResult result, double wheelDelta)
     {
         if (TerrainWorld is not { } world || result.Camera.Mode != ProjectionMode.Perspective)
@@ -54,8 +48,10 @@ public sealed partial class UiVm
         var startQuery = surface.QuerySurface(new(start.X, start.Y));
         var startInside = startQuery.IsValid &&
             start.Z <= startQuery.SurfaceZ * VerticalExaggeration + result.Camera.NearPlane;
-        if (wheelDelta < 0 && startInside)
-            return result;
+        var recoveringFromInside = wheelDelta < 0 && startInside;
+        var previousClearance = recoveringFromInside
+            ? start.Z - startQuery.SurfaceZ * VerticalExaggeration - result.Camera.NearPlane
+            : 0.0;
         var step = Math.Max(1, Math.Min(world.Metadata.ResolutionX, world.Metadata.ResolutionY));
         var count = Math.Clamp((int)Math.Ceiling(start.DistanceTo(end) / step), 1, 64);
         var lastSafe = start;
@@ -63,8 +59,11 @@ public sealed partial class UiVm
         {
             var position = start + ((end - start) * (i / (double)count));
             var query = surface.QuerySurface(new(position.X, position.Y));
-            if (query.Status == WorldQueryStatus.OutOfBounds) { lastSafe = position; continue; }
-            if (!query.IsValid || position.Z <= query.SurfaceZ * VerticalExaggeration + result.Camera.NearPlane)
+            if (query.Status == WorldQueryStatus.OutOfBounds) { lastSafe = position; continue; } else if (!query.IsValid) break;
+            var clearance = position.Z - query.SurfaceZ * VerticalExaggeration - result.Camera.NearPlane;
+            if (recoveringFromInside && clearance + 1e-6 < previousClearance) break;
+            if (recoveringFromInside) { lastSafe = position; previousClearance = clearance; recoveringFromInside = clearance <= 0; continue; }
+            if (clearance <= 0)
                 break;
             lastSafe = position;
         }
@@ -76,7 +75,6 @@ public sealed partial class UiVm
             camera.VerticalFovDegrees, camera.NearPlane, farPlane,
             camera.Revision, camera.Mode, camera.OrthographicScale) };
     }
-
     GroundPickResult ResolveZoomAnchor(double x, double y, ViewportState viewport)
     {
         if (x < viewport.LogicalX || y < viewport.LogicalY ||
