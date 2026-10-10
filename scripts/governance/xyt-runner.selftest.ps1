@@ -6,9 +6,16 @@ New-Item -ItemType Directory -Path $tmp | Out-Null
 try {
     function Invoke-Runner($name, $files, $agentTests = @(), $supplementPath = '') {
         $input = Join-Path $tmp "$name.txt"
-        $files | Set-Content -LiteralPath $input -Encoding UTF8
+        if (@($files).Count -eq 0) { Set-Content -LiteralPath $input -Value '' -Encoding UTF8 }
+        else { $files | Set-Content -LiteralPath $input -Encoding UTF8 }
         $out = Join-Path $tmp "$name.json"
         & $runner -ChangedListPath $input -OutputPath $out -AgentTests $agentTests -SupplementPath $supplementPath | Out-Null
+        $script:LastRunnerExit = $LASTEXITCODE
+        return (Get-Content -Raw $out | ConvertFrom-Json)
+    }
+    function Invoke-Empty-DiffRange($name) {
+        $out = Join-Path $tmp "$name.json"
+        & $runner -DiffRange 'HEAD..HEAD' -OutputPath $out | Out-Null
         $script:LastRunnerExit = $LASTEXITCODE
         return (Get-Content -Raw $out | ConvertFrom-Json)
     }
@@ -20,6 +27,16 @@ try {
     if (@($b.requiredTests) -notcontains 'XuanYu.World.Tests/') { throw 'agent input removed fixed required test' }
     $c = Invoke-Runner 'dispute' @('unknown/feature.xyz')
     if ($c.status -ne 'REVIEW_REQUIRED' -or $script:LastRunnerExit -ne 2 -or @($c.disputes).Count -eq 0) { throw 'unknown mapping was not disputed with exit 2' }
+    $empty = Invoke-Runner 'empty-scope' @()
+    if ($empty.status -ne 'REVIEW_REQUIRED' -or $script:LastRunnerExit -ne 2 -or
+        @($empty.disputes | Where-Object { $_ -like '*changed-file scope is empty*' }).Count -eq 0) {
+        throw 'empty changed-file scope must be disputed with exit 2'
+    }
+    $emptyDiff = Invoke-Empty-DiffRange 'empty-diff-range'
+    if ($emptyDiff.status -ne 'REVIEW_REQUIRED' -or $script:LastRunnerExit -ne 2 -or
+        @($emptyDiff.disputes | Where-Object { $_ -like '*changed-file scope is empty*' }).Count -eq 0) {
+        throw 'empty DiffRange must be disputed with exit 2'
+    }
     $d = Invoke-Runner 'supplement' @('XuanYu.Editor/MapEditing/MapGeometryHitTester.cs') @() (Join-Path $tmp 'supplement.json')
     if (@($d.supplementalTests).Count -ne 0) { throw 'missing supplement should stay empty' }
     $supplement = [pscustomobject]@{ items = @([pscustomobject]@{ test = 'extra/test'; reason = 'AI risk review'; source = 'agent-judgment' }) }

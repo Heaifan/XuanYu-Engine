@@ -1,11 +1,13 @@
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Space;
+using XuanYu.Editor.MapDocument;
 using XuanYu.Editor.UI;
 using XuanYu.Editor.Composition;
 using XuanYu.World;
 using XuanYu.World.Scene;
 using XuanYu.Render.Abstractions;
+using XuanYu.World.Map;
 
 namespace XuanYu.Core.Tests.Render;
 
@@ -48,10 +50,33 @@ public sealed class EmptyWorldBaselineContractTests
     public void New_scene_returns_to_empty_world_without_map_roundtrip()
     {
         var vm = CreateEmptyWorldVm();
+        vm.NewBlankScene();
+        var previousMapId = vm.MapSession.CurrentMap.MapId;
+        Assert.True(vm.MapSession.UpdateMapProperties(20000, 8000, 100).IsSuccess);
+        Assert.True(vm.MapSession.Undo().IsSuccess);
+        Assert.True(vm.MapSession.CanRedo);
+        Assert.True(vm.MapSession.Redo().IsSuccess);
+        Assert.True(vm.MapSession.CanUndo);
 
         vm.NewBlankScene();
 
-        Assert.False(vm.RenderProjection.Projection.HasMap);
+        var map = vm.MapSession.CurrentMap;
+        var manifest = vm.CurrentMapManifest;
+        Assert.NotEqual(previousMapId, map.MapId);
+        Assert.True(MapDefinitionValidator.Validate(map).Succeeded);
+        Assert.True(map.MapId.IsValid);
+        Assert.True(MapManifestValidator.Validate(manifest).Succeeded);
+        Assert.Equal(map.MapId.Value, manifest.Id);
+        Assert.Empty(manifest.Datasets);
+        Assert.Equal(new[] { MapLayerKind.Ground, MapLayerKind.Boundary, MapLayerKind.Region },
+            map.Layers.Select(layer => layer.Kind));
+        Assert.Single(MapLayerStack.RegionLayers(map.Layers));
+        Assert.Empty(map.Regions);
+        Assert.Empty(map.Roads);
+        Assert.Empty(map.Markers);
+        Assert.False(vm.MapSession.CanUndo);
+        Assert.False(vm.MapSession.CanRedo);
+        Assert.True(vm.RenderProjection.Projection.HasMap);
         Assert.True(vm.RenderProjection.Projection.HasReferencePlane);
         Assert.Empty(vm.RenderSnapshot.Entities);
     }

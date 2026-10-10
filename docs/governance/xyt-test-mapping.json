@@ -1,32 +1,52 @@
 {
   "schema": "XYT-C/1",
   "ownershipRules": [
+    { "pattern": "Directory.Build.props", "owner": "BUILD-CONFIG" },
     { "pattern": "scripts/governance/*", "owner": "GOVERNANCE" },
     { "pattern": "docs/governance/*", "owner": "GOVERNANCE" },
+    { "pattern": "XuanYu.Core.Tests/*", "owner": "XYE-CORE-TESTS" },
     { "pattern": "XuanYu.World/*", "owner": "XYE-WORLD" },
     { "pattern": "XuanYu.Editor/*", "owner": "XYE-EDITOR" },
     { "pattern": "XuanYu.Editor.UI/*", "owner": "XYE-UI" },
+    { "pattern": "XuanYu.Render.Abstractions/*", "owner": "XYE-RENDER-ABSTRACTIONS" },
+    { "pattern": "XuanYu.Render.Vulkan/*", "owner": "XYE-RENDER-VULKAN" },
+    { "pattern": "XuanYu.World.Tests/*", "owner": "XYE-WORLD-TESTS" },
     { "pattern": "xyui/*", "owner": "XYUI" },
     { "pattern": "XYT/*", "owner": "XYT" },
     { "pattern": "xyt.ps1", "owner": "XYT" },
-    { "pattern": "xyt.bat", "owner": "XYT" }
+    { "pattern": "xyt.bat", "owner": "XYT" },
+    { "pattern": "changelog.md", "owner": "RELEASE-METADATA" },
+    { "pattern": "docs/knowledge/*", "owner": "KNOWLEDGE" },
+    { "pattern": "docs/qa/*", "owner": "QA-EVIDENCE" }
   ],
   "capabilityRules": [
+    { "pattern": "Directory.Build.props", "capability": "build-config" },
     { "pattern": "scripts/governance/*", "capability": "governance" },
     { "pattern": "docs/governance/*", "capability": "governance" },
+    { "pattern": "XuanYu.Core.Tests/*", "capability": "core-tests" },
     { "pattern": "XuanYu.World/*", "capability": "world" },
     { "pattern": "XuanYu.Editor/*", "capability": "editor" },
     { "pattern": "XuanYu.Editor.UI/*", "capability": "ui" },
+    { "pattern": "XuanYu.Render.Abstractions/*", "capability": "render" },
+    { "pattern": "XuanYu.Render.Vulkan/*", "capability": "render" },
+    { "pattern": "XuanYu.World.Tests/*", "capability": "world-tests" },
     { "pattern": "xyui/*", "capability": "xyui" },
     { "pattern": "XYT/*", "capability": "xyt" },
     { "pattern": "xyt.ps1", "capability": "xyt" },
-    { "pattern": "xyt.bat", "capability": "xyt" }
+    { "pattern": "xyt.bat", "capability": "xyt" },
+    { "pattern": "changelog.md", "capability": "release-metadata" },
+    { "pattern": "docs/knowledge/*", "capability": "knowledge" },
+    { "pattern": "docs/qa/*", "capability": "qa-evidence" }
   ],
   "testRules": [
     { "owner": "GOVERNANCE", "capabilities": ["governance"], "test": "scripts/governance/*selftest.ps1" },
+    { "owner": "XYE-CORE-TESTS", "capabilities": ["core-tests"], "test": "XuanYu.Core.Tests/" },
     { "owner": "XYE-WORLD", "capabilities": ["world"], "test": "XuanYu.World.Tests/" },
     { "owner": "XYE-EDITOR", "capabilities": ["editor"], "test": "XuanYu.World.Tests/" },
     { "owner": "XYE-UI", "capabilities": ["ui"], "test": "XuanYu.World.Tests/" },
+    { "owner": "XYE-RENDER-ABSTRACTIONS", "capabilities": ["render"], "test": "XuanYu.World.Tests/" },
+    { "owner": "XYE-RENDER-VULKAN", "capabilities": ["render"], "test": "XuanYu.World.Tests/" },
+    { "owner": "XYE-WORLD-TESTS", "capabilities": ["world-tests"], "test": "XuanYu.World.Tests/" },
     { "owner": "XYUI", "capabilities": ["xyui"], "test": "xyui/avalonia/tests/XYUI.Avalonia.Tests/" },
     { "owner": "XYT", "capabilities": ["xyt"], "test": "XYT/tests/xyt.selftest.ps1" }
   ]
