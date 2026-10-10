@@ -9,9 +9,15 @@ namespace XuanYu.Editor.UI;
 // 快照不含会话/历史/Dirty/路径；SourceChangeSequence 来自会话单调递增序号。
 public static class MapRenderSnapshotProjection
 {
-    public static MapRenderSnapshot Project(MapDefinition map, long changeSequence)
+    public static MapRenderSnapshot Project(MapDefinition map, long changeSequence,
+        long sessionGeneration = 0)
     {
-        if (!map.MapId.IsValid) return MapRenderSnapshot.Empty;
+        if (!map.MapId.IsValid)
+            return MapRenderSnapshot.Empty with
+            {
+                SourceChangeSequence = changeSequence,
+                SessionGeneration = sessionGeneration
+            };
         var ground = map.Layers.FirstOrDefault(l => l.Kind == MapLayerKind.Ground);
         var boundary = map.Layers.FirstOrDefault(l => l.Kind == MapLayerKind.Boundary);
         return new MapRenderSnapshot(
@@ -26,6 +32,7 @@ public static class MapRenderSnapshotProjection
             changeSequence,
             IsVisible: true,
             ShowGround: ground?.IsVisible ?? true,
-            ShowBoundary: boundary?.IsVisible ?? true);
+            ShowBoundary: boundary?.IsVisible ?? true,
+            SessionGeneration: sessionGeneration);
     }
 }

@@ -20,8 +20,17 @@ public static class MapSurfaceResourceUpdatePolicy
         MapRenderSnapshot snapshot,
         long lastConsumedSequence,
         MapSurfaceResourceKey? currentKey)
+        => Decide(snapshot, lastConsumedGeneration: 0, lastConsumedSequence, currentKey);
+
+    public static MapSurfaceResourceUpdate Decide(
+        MapRenderSnapshot snapshot,
+        long lastConsumedGeneration,
+        long lastConsumedSequence,
+        MapSurfaceResourceKey? currentKey)
     {
-        if (snapshot.SourceChangeSequence < lastConsumedSequence)
+        if (snapshot.SessionGeneration < lastConsumedGeneration ||
+            snapshot.SessionGeneration == lastConsumedGeneration &&
+            snapshot.SourceChangeSequence < lastConsumedSequence)
             return new MapSurfaceResourceUpdate(MapSurfaceResourceUpdateKind.RejectStale, default);
         var key = MapSurfaceResourceKey.From(snapshot);
         var kind = currentKey == key

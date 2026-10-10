@@ -15,7 +15,8 @@ public sealed partial class UiVm
 
     void AttachMapSession(MapEditSession session)
     {
-        _mapRenderSnapshot = MapRenderSnapshotProjection.Project(session.CurrentMap, session.ChangeSequence);
+        _mapRenderSnapshot = MapRenderSnapshotProjection.Project(
+            session.CurrentMap, session.ChangeSequence, session.SessionGeneration);
         _mapWorld.Load(WorldMapState.From(session.CurrentMap));
         session.ContentChanged += OnMapContentChanged;
         session.SelectionChanged += OnMapSelectionChanged;
@@ -78,7 +79,8 @@ public sealed partial class UiVm
             ResetMapManifestFromCurrentMap();
         else if (e.Reason == MapEditReason.Replace && _mapManifestOwner.CurrentPath is null)
             _mapManifestOwner.SetBaseline(MapManifest.FromMap(e.CurrentMap));
-        _mapRenderSnapshot = MapRenderSnapshotProjection.Project(e.CurrentMap, e.ChangeSequence);
+        _mapRenderSnapshot = MapRenderSnapshotProjection.Project(
+            e.CurrentMap, e.ChangeSequence, MapSession.SessionGeneration);
         _mapWorld.Load(WorldMapState.From(e.CurrentMap));
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
             $"地图渲染快照已发布：原因={FormatMapEditReason(e.Reason)}；序号={e.ChangeSequence}；" +

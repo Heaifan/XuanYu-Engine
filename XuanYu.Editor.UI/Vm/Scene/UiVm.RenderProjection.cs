@@ -23,7 +23,12 @@ public sealed partial class UiVm
         var terrains = CachedTerrainRenderResources();
         var terrain = terrains?.FirstOrDefault();
         var map = IsTerrainContext && terrains is { Count: > 0 }
-            ? MapRenderSnapshot.Empty : _mapRenderSnapshot;
+            ? MapRenderSnapshot.Empty with
+            {
+                SessionGeneration = MapSession.SessionGeneration,
+                SourceChangeSequence = MapSession.ChangeSequence
+            }
+            : _mapRenderSnapshot;
         if (!IsTerrainContext && terrains is { Count: > 0 }) map = map with { ShowGround = false };
         return SceneRenderProjectionAdapter.TryCreate(
             snapshot,

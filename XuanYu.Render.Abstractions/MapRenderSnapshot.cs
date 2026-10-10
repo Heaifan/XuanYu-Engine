@@ -21,7 +21,8 @@ public readonly record struct MapRenderSnapshot(
     long SourceChangeSequence,
     bool IsVisible = true,
     bool ShowGround = true,
-    bool ShowBoundary = true)
+    bool ShowBoundary = true,
+    long SessionGeneration = 0)
 {
     public static MapRenderSnapshot Empty { get; } =
         new("", 0, 0, MapSurfaceKind.Flat, 0, 0, 1, 0, 0, false, false, false);

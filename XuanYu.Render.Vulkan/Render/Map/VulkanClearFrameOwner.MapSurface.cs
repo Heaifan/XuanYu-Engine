@@ -10,22 +10,23 @@ public sealed unsafe partial class VulkanClearFrameOwner
     VulkanStaticModelBuffer? _mapSurfaceVertexBuffer, _mapSurfaceIndexBuffer, _mapBoundsVertexBuffer;
     uint _mapSurfaceIndexCount, _mapBoundsVertexCount;
     MapRenderSnapshot _mapSurfaceMap;
-    long _lastConsumedMapSequence = long.MinValue;
+    long _lastConsumedMapGeneration = long.MinValue, _lastConsumedMapSequence = long.MinValue;
     MapSurfaceResourceKey _mapSurfaceResourceKey;
     bool _hasMapSurfaceResourceKey;
     public void SetMapSurface(MapRenderSnapshot map)
     {
         GroundProbeChain.Snapshot(ViewportProbe.CurrentFrameId, map, _renderProjection.TerrainResources.Count != 0);
         var update = MapSurfaceResourceUpdatePolicy.Decide(
-            map, _lastConsumedMapSequence, _hasMapSurfaceResourceKey ? _mapSurfaceResourceKey : null);
+            map, _lastConsumedMapGeneration, _lastConsumedMapSequence,
+            _hasMapSurfaceResourceKey ? _mapSurfaceResourceKey : null);
         if (update.Kind == MapSurfaceResourceUpdateKind.RejectStale)
         {
-            Log($"地图资源更新决策：处理={MapSurfaceResourceUpdateText.Of(update.Kind)}；接收序号={map.SourceChangeSequence}；已消费序号={_lastConsumedMapSequence}");
+            Log($"地图资源更新决策：处理={MapSurfaceResourceUpdateText.Of(update.Kind)}；接收代次={map.SessionGeneration}；已消费代次={_lastConsumedMapGeneration}；接收序号={map.SourceChangeSequence}；已消费序号={_lastConsumedMapSequence}");
             return;
         }
         if (update.Kind == MapSurfaceResourceUpdateKind.NoRebuild)
         {
-            _mapSurfaceMap = map;
+            _mapSurfaceMap = map; _lastConsumedMapGeneration = map.SessionGeneration;
             _lastConsumedMapSequence = map.SourceChangeSequence;
             return;
         }
@@ -33,7 +34,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _mapSurfaceMap = map;
         ClearMapSurface();
         _mapSurfaceResourceKey = update.Key; _hasMapSurfaceResourceKey = true;
-        _lastConsumedMapSequence = map.SourceChangeSequence;
+        _lastConsumedMapGeneration = map.SessionGeneration; _lastConsumedMapSequence = map.SourceChangeSequence;
         if (!map.HasMap) return;
         if (!CreateMapBuffers(MapSurfaceGeometryBuilder.Build(map), MapBoundsGeometryBuilder.Build(map), map))
             ClearMapSurface();

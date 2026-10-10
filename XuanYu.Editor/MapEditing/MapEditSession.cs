@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Threading;
 using XuanYu.Core.History;
 using XuanYu.Core.Results;
 using XuanYu.World.Map;
@@ -11,6 +12,7 @@ namespace XuanYu.Editor.MapEditing;
 // IsDirty = 无文件路径 或 无保存点 或 当前状态 != 保存状态（D2 合同）。
 public sealed partial class MapEditSession
 {
+    static long s_nextSessionGeneration;
     readonly EditorHistoryOwner _history = new();
     readonly Func<bool> _isWriteThread;
     readonly GeometrySpatialIndex _geometrySpatialIndex = new();
@@ -22,6 +24,7 @@ public sealed partial class MapEditSession
 
     public MapEditSession(MapDefinition? initialMap = null, Func<bool>? isWriteThread = null)
     {
+        SessionGeneration = Interlocked.Increment(ref s_nextSessionGeneration);
         _currentMap = initialMap ?? MapDefaultDefinition.CreateDefault();
         _isWriteThread = isWriteThread ?? (() => true);
         _activeRegionLayerId = FirstRegionLayerId(_currentMap);
@@ -30,6 +33,9 @@ public sealed partial class MapEditSession
     }
 
     public MapDefinition CurrentMap => _currentMap;
+
+    /// <summary>Process-unique monotonic identity for this map editing lifecycle.</summary>
+    public long SessionGeneration { get; }
 
     static MapLayerId FirstRegionLayerId(MapDefinition map) =>
         MapLayerStack.RegionLayers(map.Layers).FirstOrDefault()?.LayerId ?? MapLayerId.New();
