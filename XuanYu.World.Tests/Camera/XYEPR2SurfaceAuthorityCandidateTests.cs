@@ -56,4 +56,24 @@ public sealed class XYEPR2SurfaceAuthorityCandidateTests
         Assert.Equal(50, sourceBilinearCenter.ElevationMeters);
         Assert.Equal(200, exaggeratedTriangleCenter);
     }
+
+    [Fact]
+    public void Narrow_ridge_is_missing_from_coarse_lod_triangle_mesh()
+    {
+        using var stream = TerrainImportFixture.HgtStream(
+            0, 100, 0,
+            0, 100, 0,
+            0, 100, 0);
+        var world = TerrainWorld.FromElevationTile(
+            new HgtTerrainElevationTileReader().Read(stream, "n23e121"));
+        var field = world.ToHeightfield();
+        var chunk = TerrainChunkPartitioner.Partition(field, "ridge", 1).Single();
+        var mesh = TerrainChunkMeshBuilder.Build(field, chunk, TerrainLodLevel.Lod1, 5);
+
+        Assert.Equal(100, world.QueryElevation(new(1, 1)).ElevationMeters);
+        Assert.Equal(0, mesh.Vertices[0].Z);
+        Assert.Equal(0, mesh.Vertices[1].Z);
+        Assert.Equal(0, mesh.Vertices[2].Z);
+        Assert.Equal(0, mesh.Vertices[3].Z);
+    }
 }

@@ -263,7 +263,7 @@ K-SPA-003 的 Screen→Surface Zoom 技术 capability 曾被提升为通用 Edit
 
 - Editor Navigation Center 的权威是当前 `ObservationCenter`。
 - 默认 Editor / Empty World 的 `ObservationCenter` 为 World Origin `(0,0,0)`。
-- Editor Wheel Zoom 与 Orbit 共用当前 `ObservationCenter`；Zoom 不依赖鼠标位置，也不执行 GroundPick、Terrain Query、Surface Resolve 或 viewport ray repick。
+- Editor Wheel Zoom 与 Orbit 共用当前 `ObservationCenter`；Zoom 不依赖鼠标位置，不执行 GroundPick、Surface Resolve 或 viewport ray repick。Dolly 地形净空可按下方 Scope Clarification，对候选相机路径位置做只读 Surface 查询；不得用它选择导航中心。
 - Orbit Begin 冻结当时的 `ObservationCenter` 为该 Session Pivot；Orbit Move 不重新解析 Surface 或刷新 Pivot。
 - `ObservationCenter` 只能由已定义的 Center Authority Event 改变：Empty World 初始化设为 World Origin；初次建立内容并执行 Initial Content Establishment Auto Frame 时，设为该 framing 的中心；Pan、Explicit Focus、Explicit Frame / View command 及其它正式授权的 View Reframe 操作可设为各自结果中心。
 - 普通 Zoom、Orbit、Selection、Terrain LOD、Terrain refresh 与普通 Render update 不改变 Navigation Center。新内容的初次建立若触发正式 Auto Frame，是明确的 framing authority event，不属于任意数据状态变化；后续普通数据/渲染变化不得隐式夺取中心。
@@ -282,6 +282,14 @@ Screen XY → GroundPickResult → SurfaceSource + World XYZ → Anchored Dolly
 ```
 
 Screen XY 可以来自 Mouse Cursor。Router 必须保留决定交互语义的输入 payload；有效 Surface 命中、SurfaceSource 与 fallback 必须明确。该 capability 不构成 Editor Wheel policy，也不得作为 Editor 使用 Cursor Anchor 的强制条件。
+
+### 2026-10-10 Scope Clarification：候选相机只读净空查询
+
+用户产品权威裁定：允许 Editor Wheel 在应用 Dolly 地形约束时，对**候选相机位置**执行狭义只读 Surface 查询，以检查相机净空。该查询只返回净空约束所需数据，不得执行 GroundPick、重选导航中心或改变 `Anchor`、Orbit Pivot、`ObservationCenter`；Editor Wheel 的缩放权威仍是当前 `ObservationCenter`。
+
+该许可不等同于批准任意 Terrain Query。实现必须固定被约束的 Surface（源高度场、TerrainWorld 查询面或渲染 LOD 面不得混称），并定义 NoData、无效数据、查询失败、垂直夸张及边缘/采样策略；失败时不得静默改用未经声明的平面或另一 Surface。当前 Wave 2 CPU 合成测试不能证明真实 DEM 或 Vulkan 可见表面的净空，真实 Runtime/P4 仍独立验收。
+
+此澄清限定 K-SPA-004 中“Editor Wheel 不执行 Terrain Query”的范围，不恢复 Cursor Anchor，不修改 ObservationCenter Authority，也不追认未验证的 Surface 等价关系。
 
 ### Governance Supersede Record
 

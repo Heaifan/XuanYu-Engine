@@ -65,8 +65,10 @@ public sealed partial class UiVm
         }
         if (lastSafe == end) return result;
         var camera = result.Camera;
+        var farPlane = Math.Max(camera.NearPlane * 10.0,
+            lastSafe.DistanceTo(result.ObservationCenter) * 4.0);
         return result with { Camera = new(lastSafe, camera.Forward, camera.Up,
-            camera.VerticalFovDegrees, camera.NearPlane, camera.FarPlane,
+            camera.VerticalFovDegrees, camera.NearPlane, farPlane,
             camera.Revision, camera.Mode, camera.OrthographicScale) };
     }
 
