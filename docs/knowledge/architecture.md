@@ -291,6 +291,20 @@ Screen XY 可以来自 Mouse Cursor。Router 必须保留决定交互语义的�
 
 此澄清限定 K-SPA-004 中“Editor Wheel 不执行 Terrain Query”的范围，不恢复 Cursor Anchor，不修改 ObservationCenter Authority，也不追认未验证的 Surface 等价关系。
 
+### 2026-10-10 XYK Strengthen：起点入地时的 Zoom-Out 脱困
+
+**Problem**：Editor Camera 的起点已经处于有效地形内部时，地形净空约束可能导致 Zoom-Out 无法移动。
+
+**Root Cause**：旧的 `ConstrainDollyToTerrain` 在候选路径首次触发不安全判断时停止，保留 `lastSafe=start`，阻止相机脱困。
+
+**Evidence**：`XYEPR2-NAV-SAFETY-INSIDE-001` 修复前 1 FAIL、修复后 1 PASS；Evidence Level 为 CPU 确定性回归，Commit=`5b464dcd219cf07d1569c56e5dbd05e6656beed2`，不等同于 Windows/Vulkan P3。
+
+**Rule**：当相机起点已经处于已声明 Terrain Surface 的无净空状态时，普通 Editor Zoom-Out 应具有向外恢复能力。恢复过程必须保持 `ObservationCenter`、Zoom Anchor 和 Orbit Pivot 权威不变。相机开始向外移动不代表已经脱离地形；完整安全保证需要额外证明最终有效净空、路径状态及必要的失败处理。
+
+**Known Limits**：64 段路径采样、NoData、Tile 边缘、高山脊、Render LOD 和真实 Vulkan 可见表面尚未完整证明。
+
+**Suggested Action**：本条作为 K-SPA-004 的 STRENGTHEN 增量，不新建重复 Knowledge ID；继续为窄峰、边缘、NoData、真实 NASADEM/HGT 和 Vulkan 可视表面补充独立证据。
+
 ### Governance Supersede Record
 
 - 事件：`EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1`
