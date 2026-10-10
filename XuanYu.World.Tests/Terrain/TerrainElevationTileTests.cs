@@ -37,7 +37,8 @@ public sealed class TerrainElevationTileTests
         Assert.Equal(3601, world.Metadata.Width);
         Assert.Equal(513, snapshot.Heightfield.Width);
         Assert.Equal(513, snapshot.Heightfield.Height);
-        Assert.Equal(7, snapshot.CellSizeMeters);
+        Assert.Equal(7.03125, snapshot.CellSizeMeters);
+        Assert.Equal(7.03125, snapshot.Heightfield.CellSizeYMeters);
         Assert.Equal(123, snapshot.Heightfield.ElevationAt(512, 512));
     }
 
@@ -54,7 +55,7 @@ public sealed class TerrainElevationTileTests
         Assert.Equal(30, snapshot.Heightfield.ElevationAt(2, 2));
         Assert.Equal(0.5, snapshot.Metadata.ResolutionX);
         Assert.Equal(0.5, snapshot.Metadata.ResolutionY);
-        Assert.Equal(1.0, snapshot.Heightfield.CellSizeMeters);
+        Assert.Equal(0.5, snapshot.Heightfield.CellSizeMeters);
     }
 
     static string WriteHgt(string name, short[] values)

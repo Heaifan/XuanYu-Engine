@@ -13,9 +13,13 @@ public sealed class TerrainLodStateCache
 
     public TerrainLodSelection Select(TerrainLodStateKey key,
         ViewProjectionState state, SpatialAabb bounds)
+        => Select(key, state, bounds, 240, 240);
+
+    public TerrainLodSelection Select(TerrainLodStateKey key,
+        ViewProjectionState state, SpatialAabb bounds, int cellCountX, int cellCountY)
     {
         var previous = _previous.TryGetValue(key, out var value) ? value : -1;
-        var selection = TerrainLodSelector.Select(state, bounds, previous);
+        var selection = TerrainLodSelector.Select(state, bounds, cellCountX, cellCountY, previous);
         _previous[key] = selection.Lod;
         return selection;
     }

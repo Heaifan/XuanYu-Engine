@@ -4,12 +4,12 @@ namespace XuanYu.Render.Abstractions;
 
 static class TerrainNormalBuilder
 {
-    public static Vector3d Build(TerrainHeightfield field, double cellSize,
+    public static Vector3d Build(TerrainHeightfield field, double cellSizeX, double cellSizeY,
         TerrainRenderTransform transform, int row, int column)
     {
         if (!TryHeight(field, transform, row, column, out var center)) return Vector3d.UnitZ;
-        var dx = Gradient(field, transform, row, column, center, cellSize, true);
-        var dy = Gradient(field, transform, row, column, center, cellSize, false);
+        var dx = Gradient(field, transform, row, column, center, cellSizeX, true);
+        var dy = Gradient(field, transform, row, column, center, cellSizeY, false);
         var normal = new Vector3d(-dx, -dy, 1).Normalize();
         return IsFinite(normal) && !normal.IsZero ? normal : Vector3d.UnitZ;
     }

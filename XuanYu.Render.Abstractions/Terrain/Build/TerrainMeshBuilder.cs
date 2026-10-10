@@ -9,9 +9,10 @@ public static class TerrainMeshBuilder
         for (var row = 0; row < field.Height; row++)
             for (var column = 0; column < field.Width; column++)
             {
-                var normal = TerrainNormalBuilder.Build(field, resource.CellSizeMeters, transform, row, column);
+                var normal = TerrainNormalBuilder.Build(field, resource.CellSizeMeters,
+                    resource.CellSizeYMeters, transform, row, column);
                 vertices.Add(new(column * resource.CellSizeMeters,
-                    row * resource.CellSizeMeters,
+                    row * resource.CellSizeYMeters,
                     transform.VisualHeight(field.ElevationAt(row, column)),
                     normal.X,
                     normal.Y, normal.Z));

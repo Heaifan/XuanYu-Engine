@@ -50,7 +50,7 @@ public sealed class TerrainZoomFocusRegressionTests(ITestOutputHelper output)
         {
             var field = resource.Heightfield;
             var x = (field.Width - 1) * resource.CellSizeMeters;
-            var y = (field.Height - 1) * resource.CellSizeMeters;
+            var y = (field.Height - 1) * resource.CellSizeYMeters;
             var min = field.ElevationMeters.Min(); var max = field.ElevationMeters.Max();
             return new[] { new Vector3d(resource.WorldOrigin.X, resource.WorldOrigin.Y, min),
                 new Vector3d(resource.WorldOrigin.X + x, resource.WorldOrigin.Y + y, max) };

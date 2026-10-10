@@ -84,7 +84,7 @@ public sealed partial class TerrainAutoFrameD1Tests
             var field = resource.Heightfield;
             var heights = field.ElevationMeters.Select(value => value * exaggeration).ToArray();
             var x = (field.Width - 1) * resource.CellSizeMeters;
-            var y = (field.Height - 1) * resource.CellSizeMeters;
+            var y = (field.Height - 1) * resource.CellSizeYMeters;
             var min = heights.Min(); var max = heights.Max();
             var origin = resource.WorldOrigin;
             yield return new(origin.X, origin.Y, min); yield return new(origin.X + x, origin.Y, min);

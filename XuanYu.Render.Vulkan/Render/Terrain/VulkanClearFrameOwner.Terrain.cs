@@ -39,7 +39,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
         RetainTerrainLodStates(_renderProjection.TerrainResources);
         foreach (var chunk in cache.GetChunks(resource))
         {
-            var b = chunk.WorldBounds; var origin = resource.WorldOrigin;
+            var transform = _renderProjection.EffectiveTerrainTransform;
+            var skirtDrop = Math.Max(1, Math.Max(resource.Heightfield.CellSizeMeters,
+                resource.Heightfield.CellSizeYMeters) * transform.VerticalExaggeration);
+            var b = chunk.WorldBounds.WithVerticalExaggeration(transform, skirtDrop);
+            var origin = resource.WorldOrigin;
             var bounds = new SpatialAabb(new(origin.X + b.MinX, origin.Y + b.MinY, b.MinZ),
                 new(origin.X + b.MaxX, origin.Y + b.MaxY, b.MaxZ));
             if (!TerrainFrustumCuller.Intersects(state, bounds))
@@ -50,7 +54,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
             }
             var lodKey = new TerrainLodStateKey(resource.TerrainId, resource.Revision,
                 chunk.ChunkX, chunk.ChunkY);
-            var lod = (TerrainLodLevel)_terrainLodStates.Select(lodKey, state, bounds).Lod;
+            var lod = (TerrainLodLevel)_terrainLodStates.Select(lodKey, state, bounds,
+                chunk.CellCountX, chunk.CellCountY).Lod;
             var gpu = cache.GetOrCreate(resource, chunk, lod, _renderProjection.EffectiveTerrainTransform);
             if (gpu is null) continue;
             var vb = gpu.Vertices.Buffer; var ib = gpu.Indices.Buffer; ulong offset = 0;

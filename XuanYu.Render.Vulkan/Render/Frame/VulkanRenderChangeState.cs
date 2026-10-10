@@ -40,9 +40,9 @@ internal static class VulkanRenderChangeConsumer
     }
 
     static bool SameTerrain(RenderProjection a, RenderProjection b) =>
-        a.TerrainResources.Select(x => (x.TerrainId, x.Revision, x.CellSizeMeters,
+        a.TerrainResources.Select(x => (x.TerrainId, x.Revision, x.CellSizeMeters, x.Heightfield.CellSizeYMeters,
             x.WorldOrigin)).SequenceEqual(b.TerrainResources.Select(x =>
-            (x.TerrainId, x.Revision, x.CellSizeMeters, x.WorldOrigin)));
+            (x.TerrainId, x.Revision, x.CellSizeMeters, x.Heightfield.CellSizeYMeters, x.WorldOrigin)));
 
     static bool SameOverlay(RenderProjection a, RenderProjection b) =>
         a.VectorOverlayResources.Select(x => (x.Key, x.Revision)).SequenceEqual(

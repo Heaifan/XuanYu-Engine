@@ -33,9 +33,10 @@ public static class TerrainChunkPartitioner
                 min = Math.Min(min, value);
                 max = Math.Max(max, value);
             }
-        var size = field.CellSizeMeters;
+        var sizeX = field.CellSizeMeters;
+        var sizeY = field.CellSizeYMeters;
         return new(id, revision, chunkX, chunkY, startX, startY, countX, countY,
-            new(startX * size, startY * size, min, (startX + countX) * size,
-                (startY + countY) * size, max), min, max);
+            new(startX * sizeX, startY * sizeY, min, (startX + countX) * sizeX,
+                (startY + countY) * sizeY, max), min, max);
     }
 }

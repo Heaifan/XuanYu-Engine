@@ -10,7 +10,7 @@ public static class TerrainProbeLogger
     {
         if (!ViewportProbe.Enabled) return;
         var width = (resource.Heightfield.Width - 1) * resource.CellSizeMeters;
-        var depth = (resource.Heightfield.Height - 1) * resource.CellSizeMeters;
+        var depth = (resource.Heightfield.Height - 1) * resource.CellSizeYMeters;
         var center = resource.WorldOrigin + new Vector3d(width / 2, depth / 2, 0);
         var projected = state.TryProjectWorldPoint(center, out var screen);
         ViewportProbe.Log("terrain", $"[TERRAIN-CENTER] TerrainId={resource.TerrainId};TerrainBoundsCenterWorld={center};Screen=({screen.X:0.###},{screen.Y:0.###});InsideViewport={projected && screen.X >= 0 && screen.Y >= 0 && screen.X <= state.Viewport.LogicalWidth && screen.Y <= state.Viewport.LogicalHeight};CameraPosition={state.Camera.Position};Forward={state.Camera.Forward};ObservationCenter=UNKNOWN;RenderOrigin={state.RenderOrigin};Bounds={resource.Metadata.WorldExtent}");

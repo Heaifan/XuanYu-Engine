@@ -18,6 +18,8 @@ public sealed record TerrainRenderResource(
     TerrainRenderAvailability Availability = TerrainRenderAvailability.Available)
 {
     public TerrainRenderMetadata Metadata => Heightfield.Metadata;
+    public double CellSizeYMeters => Heightfield.CellSizeYMeters != Heightfield.CellSizeMeters
+        ? Heightfield.CellSizeYMeters : CellSizeMeters;
     public int TriangleIndexCount => (Heightfield.Width - 1) * (Heightfield.Height - 1) * 6;
     public bool IsAvailable => Availability == TerrainRenderAvailability.Available;
 }

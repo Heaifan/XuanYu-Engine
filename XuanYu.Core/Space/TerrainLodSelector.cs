@@ -10,9 +10,14 @@ public static class TerrainLodSelector
     public const int MaxLod = 4;
 
     public static TerrainLodSelection Select(ViewProjectionState state, SpatialAabb bounds, int previousLod = -1)
+        => Select(state, bounds, 240, 240, previousLod);
+
+    public static TerrainLodSelection Select(ViewProjectionState state, SpatialAabb bounds,
+        int cellCountX, int cellCountY, int previousLod = -1)
     {
         var projectedPixels = ProjectedPixels(state, bounds);
-        var baseCellPixels = projectedPixels / 240.0;
+        var baseCellPixels = projectedPixels /
+            global::System.Math.Max(cellCountX, cellCountY);
         var candidate = Candidate(baseCellPixels);
         var lod = Stabilize(baseCellPixels, candidate, previousLod);
         return new TerrainLodSelection(lod, projectedPixels, baseCellPixels);

@@ -12,8 +12,6 @@ public static class TerrainRenderProjectionAdapter
         if (maxSamples < 2) throw new ArgumentOutOfRangeException(nameof(maxSamples));
         var width = Math.Min(maxSamples, world.Metadata.Width);
         var height = Math.Min(maxSamples, world.Metadata.Height);
-        var stride = Math.Max(1, (int)Math.Floor(Math.Max(world.Metadata.Width - 1,
-            world.Metadata.Height - 1) / (double)Math.Max(width - 1, height - 1)));
         var values = new double[width * height];
         var mask = new bool[values.Length];
         for (var y = 0; y < height; y++)
@@ -35,8 +33,10 @@ public static class TerrainRenderProjectionAdapter
             metadata.MaxElevation, metadata.NoData, metadata.NoDataCount,
             new(metadata.WorldExtent.West, metadata.WorldExtent.South,
                 metadata.WorldExtent.East, metadata.WorldExtent.North));
-        return new TerrainHeightfield(width, height, values, mask,
-            renderMetadata, Math.Max(1.0, metadata.ResolutionX * stride));
+        var cellSizeX = metadata.ResolutionX * (metadata.Width - 1d) / (width - 1d);
+        var cellSizeY = metadata.ResolutionY * (metadata.Height - 1d) / (height - 1d);
+        return new TerrainHeightfield(width, height, values, mask, renderMetadata,
+            cellSizeX, cellSizeY);
     }
 
     public static TerrainRenderResource ToRenderSnapshot(this TerrainWorld world,

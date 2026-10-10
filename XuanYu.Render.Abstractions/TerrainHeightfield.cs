@@ -7,7 +7,8 @@ public sealed record TerrainHeightfield
             TerrainRenderMetadata.Empty, 1.0) { }
 
     public TerrainHeightfield(int width, int height, IReadOnlyList<double> elevationMeters,
-        IReadOnlyList<bool> noDataMask, TerrainRenderMetadata metadata, double cellSizeMeters)
+        IReadOnlyList<bool> noDataMask, TerrainRenderMetadata metadata, double cellSizeMeters,
+        double? cellSizeYMeters = null)
     {
         if (width < 2 || height < 2) throw new ArgumentOutOfRangeException(nameof(width));
         if (elevationMeters.Count != width * height)
@@ -15,7 +16,8 @@ public sealed record TerrainHeightfield
         if (noDataMask.Count != elevationMeters.Count)
             throw new ArgumentException("NoData 掩码数量与高程样本不一致。", nameof(noDataMask));
         Width = width; Height = height; ElevationMeters = elevationMeters.ToArray();
-        NoDataMask = noDataMask.ToArray(); Metadata = metadata; CellSizeMeters = cellSizeMeters;
+        NoDataMask = noDataMask.ToArray(); Metadata = metadata;
+        CellSizeMeters = cellSizeMeters; CellSizeYMeters = cellSizeYMeters ?? cellSizeMeters;
     }
 
     public int Width { get; }
@@ -24,5 +26,6 @@ public sealed record TerrainHeightfield
     public IReadOnlyList<bool> NoDataMask { get; }
     public TerrainRenderMetadata Metadata { get; }
     public double CellSizeMeters { get; }
+    public double CellSizeYMeters { get; }
     public double ElevationAt(int row, int column) => ElevationMeters[row * Width + column];
 }

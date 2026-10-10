@@ -39,9 +39,9 @@ public static class TerrainChunkMeshBuilder
         int x, int y, TerrainRenderTransform transform)
     {
         var normal = TerrainNormalBuilder.Build(field, field.CellSizeMeters,
-            transform, y, x);
+            field.CellSizeYMeters, transform, y, x);
         return new((x - chunk.StartSampleX) * field.CellSizeMeters,
-            (y - chunk.StartSampleY) * field.CellSizeMeters,
+            (y - chunk.StartSampleY) * field.CellSizeYMeters,
             transform.VisualHeight(field.ElevationAt(y, x)),
             normal.X, normal.Y, normal.Z);
     }
@@ -78,7 +78,8 @@ public static class TerrainChunkMeshBuilder
         foreach (var i in edge)
         {
             var v = vertices[i];
-            vertices.Add(v with { Z = v.Z - Math.Max(1, field.CellSizeMeters * exaggeration) });
+            vertices.Add(v with { Z = v.Z - Math.Max(1,
+                Math.Max(field.CellSizeMeters, field.CellSizeYMeters) * exaggeration) });
         }
         var edgeArray = edge.ToArray();
         for (var i = 0; i < count - 1; i++)

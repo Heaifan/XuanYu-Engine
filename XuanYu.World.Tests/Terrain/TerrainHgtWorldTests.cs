@@ -52,4 +52,22 @@ public sealed class TerrainHgtWorldTests
         Assert.Equal(2, resource.Metadata.ResolutionX);
         Assert.Equal(3, resource.Metadata.ResolutionY);
     }
+
+    [Fact]
+    public void Render_mesh_preserves_distinct_x_and_y_sample_spacing()
+    {
+        var world = new TerrainWorld(
+            TerrainHeightLayer.CreateBase(3, 4, Enumerable.Range(0, 12)
+                .Select(value => (double)value).ToArray(), new bool[12]),
+            new TerrainMetadata(3, 4, new(2, 3), 0, 11, null, 0,
+                new(0, 0, 2, 3)), null);
+        var resource = world.ToRenderSnapshot("anisotropic", 1);
+        var chunk = TerrainChunkPartitioner.Partition(
+            resource.Heightfield, resource.TerrainId, resource.Revision).Single();
+        var mesh = TerrainChunkMeshBuilder.Build(
+            resource.Heightfield, chunk, TerrainLodLevel.Lod0, 1);
+
+        Assert.Equal(4, mesh.SurfaceVertices[^1].X);
+        Assert.Equal(9, mesh.SurfaceVertices[^1].Y);
+    }
 }

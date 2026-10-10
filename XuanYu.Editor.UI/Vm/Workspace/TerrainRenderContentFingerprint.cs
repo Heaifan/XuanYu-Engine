@@ -10,6 +10,7 @@ static class TerrainContentFingerprint
         var hash = 1469598103934665603UL;
         Add(ref hash, heightfield.Width); Add(ref hash, heightfield.Height);
         Add(ref hash, heightfield.CellSizeMeters);
+        Add(ref hash, heightfield.CellSizeYMeters);
         for (var index = 0; index < heightfield.ElevationMeters.Count; index++)
         {
             Add(ref hash, heightfield.ElevationMeters[index]);
