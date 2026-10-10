@@ -59,6 +59,21 @@ Resource / Pipeline Contract
 
 ### 当前推荐分层示例
 
+### 2026-10-10 · XYE-PRODUCT-RECOVERY-R2 Wave 2 验证补充
+
+**代码检查点**：`.11-fix` `95a3bab1e91c7ca1053e993bcead18c9854c616a`；`.12-fix` `43a80d456ff9a73cbbd9d9251f05df248e6d133b`。以下仅记录 CPU / policy 层证据，不代表 Vulkan Runtime P3 或用户 P4。
+
+- 地形净空必须声明所约束的表面。`TerrainWorldGroundSurface` 栅格查询、源高度场 bilinear 查询、渲染下采样后的 LOD 三角面插值与 Vertical Exaggeration 是不同计算链；合成数据上的测试能证明它们不可默认等价，不能证明真实 DEM 像素净空。
+- 路径保护按栅格分辨率取样并受 64 段上限约束时，长路径可能出现大于一个栅格间距的采样间隔。窄峰、NoData 带和边缘变化的遗漏风险必须单独覆盖；CPU 样点通过不等于整段路径连续安全。
+- Dolly 路径受 Terrain 限制后，FarPlane 应按最终受约束 Camera 位姿重算。Wave 2 同一 TestId 从预期 519.675m / 实际 441.723m 的 RED 转为专项 PASS；该证据不覆盖 Orbit、真实 DEM 或 Vulkan P3。
+- `SourceChangeSequence` 只在所属 `MapEditSession` 生命周期内排序。跨 Session 的渲染更新需比较 `(SessionGeneration, SourceChangeSequence)`，并让 clear projection 带有当前 Session token；仅有 `RejectStale` 的策略结果不能证明 GPU 缓冲区实际泄漏或已释放。
+
+检查点证据：Surface Authority 5/5、FarPlane 1/1、Generation 6/6；未经筛选 World 2271/2271。真实 Vulkan Buffer Dispose / 重建未运行；Native HWND/Vulkan P3 `PARTIAL / NOT PASS`（仅窗口/模块证据，未操作输入，也未证明 Device/Swapchain/Present），用户 P4 `PENDING`。XYT 路径映射仍 `REVIEW_REQUIRED`。
+
+---
+
+### 当前推荐分层示例
+
 当 UI 框架具备成熟字体排版能力，但最终视觉必须出现在 Vulkan Native Viewport 中时，可采用：
 
 ```text

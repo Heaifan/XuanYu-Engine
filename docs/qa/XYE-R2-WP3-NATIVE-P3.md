@@ -1,6 +1,6 @@
 # XYE-R2 WP3-C：Windows Native HWND Input P3 IPO
 
-状态：`PLANNED` / `P3 NOT RUN` / `P4 PENDING`
+状态：`P3 PARTIAL / NOT PASS` / `Native input NOT RUN` / `P4 PENDING`
 基线：`recovery/editor-center-navigation-r1` @ `4cecf8c8ef1edd91be583362ac77c4f5c2ca4d8b`（启动审计时 Parent Bootstrap 报告 clean；本文件不代表后续工作区仍 clean）
 Owner：Parent 负责独占 Build/Test/Windows App/Win32/Vulkan Runtime；WP3-C 负责本 IPO 与只读接线审计。
 范围：仅验证 Native HWND 上真实鼠标输入进入现有生产 Router，并到达 Map/Region/Road/Marker 的产品动作和终止清理。本文不授权改生产代码或增加 Harness。
@@ -86,8 +86,8 @@ Owner：Parent 负责独占 Build/Test/Windows App/Win32/Vulkan Runtime；WP3-C 
 
 - 源码接线审计：已执行，只能说明存在预期调用路径。
 - Synthetic / Adapter / Headless 合同：源码可见，不能代表本轮运行；其历史测试执行结果不在本 Lane 重跑，也不把它们升格。
-- 真实 Windows HWND Native P3：`NOT RUN`（Parent 尚未分配独占 Runtime 时段）。
-- Vulkan 与 Native App 身份、真实消费/提交、Capture 生命周期：`UNKNOWN` / 尚无运行证据。
+- 真实 Windows App/窗口启动：已部分执行；真实 Windows HWND Operator Input P3：`NOT RUN`，本轮总体 `PARTIAL / NOT PASS`。
+- Vulkan LogicalDevice/Swapchain/Present、真实消费/提交、OS/Router Capture 生命周期：`UNKNOWN` / 尚无充分运行证据。
 - 用户真实操作、视觉/交互和产品任务验收 P4：`PENDING`，只能由用户裁决。
 - Build/Test/XYT Gate、产品版本事件、提交/推送：本 Lane 均未执行；本文件不触发产品版本事件，不提交。
 
@@ -101,4 +101,68 @@ Evidence: 本次源码审计 + 当前 WP3-C IPO；真实运行证据 NOT RUN。
 Status: Candidate only; 请求 ChatGPT 搜索现有 K-INP-003、K-NATIVE-001、K-VAL-002、K-XYT-P3-* 后裁定 UPDATE / STRENGTHEN / CREATE / NO DEPOSIT。不得由本 Lane 写入 XYK。
 ```
 
-请 ChatGPT 审计并沉淀知识经验。
+## ChatGPT 审计记录（2026-10-10 UTC+08:00）
+
+**审计范围**：本 IPO、仓库入口状态、当前 Editor 进程可见性、对应 XYK 条目与 P3 证据边界。产品代码保持只读；未启动 Editor、未构造输入事件、未执行 Build/Test。
+
+**当前仓库观察**：Bootstrap 在本次审计开始时报告仓库 `E:\MyDoc\project-VSCode\XuanYuEngine`、分支 `recovery/editor-center-navigation-r1`、HEAD `15f119875ce2c880bbe4670150d622353ec92954`、WorkingTree `clean`、SDK `10.0.400`、Resolver `scripts/resolve-dotnet.ps1`、状态 `READY`。随后只读状态检查发现 WriteScope 外出现未跟踪文件 `XuanYu.World.Tests/Camera/XYEPR2NavigationSafetyFarPlaneTests.cs` 与 `XuanYu.World.Tests/Camera/XYEPR2SurfaceAuthorityQueryTests.cs`；来源未知，本轮未读取、修改或清理。该状态漂移使先前 Bootstrap clean 不能代表当前工作区仍 clean。
+
+**Runtime 前提**：IPO 将 Windows App / Win32 / Vulkan Runtime 独占执行权分配给 Parent，并要求 Parent 明确分配独占时段。本轮可见上下文和仓库记录中没有该时段的分配事实；进程枚举也未发现名称匹配 `XuanYu`、`Editor` 或 `玄域` 的运行进程。因此真实 Native P3 本次为 `NOT RUN`，不是 `PASS`、`FAIL` 或 `BLOCKED` 产品结论。没有实际启动 EXE、HWND、Vulkan Device/Swapchain、场景操作、鼠标输入、截图或运行日志；逐跳链路、Region/Road/Marker、终止/Capture、DPI/边缘命中均保持 `UNKNOWN`，P4 保持 `PENDING`。
+
+**XYK 裁定**：PLANNING 与 EXECUTION Knowledge Preflight 均命中现有 K-INP-001～005、K-NATIVE-001/002、K-VAL-001/002；另直接核对 K-XYT-P3-001/002。候选的证据边界已由 K-INP-003（真实生产 Source 接线）、K-XYT-P3-001（权威构建/真实运行身份）及 K-XYT-P3-002（构建准备与 Runtime Probe 分离）覆盖；K-INP-001/002/004 和 K-NATIVE-002 覆盖 Owner、Capture 与坐标/DPI 相关约束。当前没有真实 P3 新证据可用于 UPDATE/STRENGTHEN，也没有发现需要 CREATE 的知识缺口，裁定 `NO DEPOSIT`。本裁定只记录在本 WriteScope 文档，不直接写入 XYK。
+
+**继续条件**：Parent 分配独占 Windows App/Win32/Vulkan Runtime 时段并确认运行产物后，按上方 IPO 执行；每次真实尝试单独保存完整运行身份和逐跳证据。如发现产品 RED，另交 Parent 建立独立 FIX，不在本 Lane 修改产品行为。
+
+## Runtime 槽位记录（2026-10-10，UTC+08:00）
+
+Run ID：`XYE-R2-WP3-C-20261010-102930`（本地 IPO 尝试编号，不是正式 XYT `testId`）
+结果：`PARTIAL / NOT PASS`。只完成现有 App 启动与窗口/模块观察；没有 Operator-generated Native input，也没有完成完整 IPO。
+
+### Bootstrap 与运行产物身份
+
+- 命令：`& '.\scripts\xye-bootstrap.ps1'`；退出码 `0`，State `READY`，SDK `10.0.400`，Resolver `scripts/resolve-dotnet.ps1`。
+- 仓库：`E:\MyDoc\project-VSCode\XuanYuEngine`；分支 `recovery/editor-center-navigation-r1`；HEAD `15f119875ce2c880bbe4670150d622353ec92954`。
+- Bootstrap / `git status --short` 均显示 WorkingTree `DIRTY`。本次启动前观察到的 Dirty paths：
+  - `Directory.Build.props`
+  - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraDolly.cs`
+  - `XuanYu.Editor.UI/Vm/Map/MapRenderSnapshotProjection.cs`
+  - `XuanYu.Editor.UI/Vm/Map/UiVm.MapRender.cs`
+  - `XuanYu.Editor.UI/Vm/Scene/UiVm.RenderProjection.cs`
+  - `XuanYu.Editor/MapEditing/MapEditSession.cs`
+  - `XuanYu.Render.Abstractions/MapRenderSnapshot.cs`
+  - `XuanYu.Render.Abstractions/MapSurfaceResourceUpdatePolicy.cs`
+  - `XuanYu.Render.Vulkan/Render/Map/VulkanClearFrameOwner.MapSurface.cs`
+  - `XuanYu.World.Tests/Camera/XYEPR2SurfaceAuthorityCandidateTests.cs`
+  - `XuanYu.World.Tests/Render/XYEPR2GenerationPolicyTests.cs`
+  - `changelog.md`
+  - `docs/knowledge/architecture.md`
+  - `docs/knowledge/rendering.md`
+  - `docs/qa/XYE-R2-WP3-NATIVE-P3.md`
+  - untracked `XuanYu.World.Tests/Camera/XYEPR2NavigationSafetyFarPlaneTests.cs`
+  - untracked `XuanYu.World.Tests/Camera/XYEPR2SurfaceAuthorityQueryTests.cs`
+  - untracked `XuanYu.World.Tests/Render/XYEPR2GenerationWave2EpochPolicyTests.cs`
+- 产物为已有输出，不在本 Lane 构建：
+  - EXE：`XuanYu.Editor.App/bin/Debug/net10.0/XuanYu.Editor.App.exe`，SHA-256 `9A1BEBAF62794E4C177F1873FD9DC8C92135ABA8A12F2D3342CAD07B662CFA61`。
+  - App DLL：`XuanYu.Editor.App/bin/Debug/net10.0/XuanYu.Editor.App.dll`，SHA-256 `21281F531E9469EAA60B3170136E8D004B4AB42A62540B6DD733B671C3D89C04`。
+  - App 标题报告 `v0.3.0.12-fix+15f119875ce2c880bbe4670150d622353ec92954 - 未命名场景`。
+  - 输出目录还包含 `XuanYu.Editor.UI.dll`、`XuanYu.Editor.dll`、`XuanYu.Render.Vulkan.dll`、`XuanYu.Render.Abstractions.dll`、`XuanYu.World.dll`；当时 DLL 写入时间在相关源码修改时间之后。它们证明运行目录有装配产物，不替代由本轮重新 Build 得到的可复现性声明。
+
+### 实际启动与可观察事实
+
+- 启动命令：`Start-Process -FilePath <上述 EXE 完整路径> -WorkingDirectory <EXE 所在目录> -PassThru`；命令退出码 `0`。
+- PID `30724`，启动时间 `2026-10-10 10:29:30 +08:00`，进程仍 Responding；主标题见上。首次进程窗口处于最小化状态；使用 Win32 `ShowWindow(SW_SHOWNORMAL)`、`SetWindowPos` 与 `SetForegroundWindow` 恢复/置前成功，随后主窗口矩形为 `(100,100)-(1380,900)`，DPI `96`。
+- 真实窗口：主 HWND `0x406A4`。枚举到可见子 HWND `0x280608`，Window Class `XuanYuVulkanViewport`。截图显示 Editor UI 和 Native Viewport。
+- Windows 设备枚举：`NVIDIA GeForce RTX 3060`，驱动 `32.0.15.9186`；另有 `GameViewer Virtual Display Adapter`。
+- 进程模块中可见 `vulkan-1.dll`、`Avalonia.Vulkan.dll`、`Silk.NET.Vulkan.dll`、`Silk.NET.Vulkan.Extensions.KHR.dll` 与 `XuanYu.Render.Vulkan.dll`。这只证明相关模块已加载；没有取得应用实际 Physical/Logical Device、Swapchain 或 Present 证据，不能声明 Vulkan P3 PASS。
+- 截图：`docs/qa/evidence/XYE-R2-WP3-C/20261010-run01/02-editor-window-before-input.png`，1280×800，SHA-256 `AB5E2231A0C4391B6FB84D2B35D562A7117F23719B286A7451354D3435983DB7`。较早的 `01-editor-window-before-input.png` 是最小化窗口的 160×28 黑图，不作为 UI 证据。
+- App 窗口内显示日志区域 `全部 41 / 信息 41 / 警告 0 / 错误 0`，但未导出逐条日志；运行目录未发现 `.log` 文件。
+
+### 未执行 / 未确认
+
+- 没有操作者实际 Move/Down/Up；没有将一笔真实鼠标事件从 OS HWND 逐跳关联到 Adapter、Production Router、Owner/Capture、GroundPick、Region/Road/Marker Consumer 或 Domain Commit。
+- 没有新建场景并添加合法 Layer 后执行 Region/Road/Marker 全流程；没有 Undo/Redo、Esc、Tool/Mode Change、CaptureLost、KillFocus、窗口外释放或 DPI 交互证据。
+- `GetCapture()` 在真实手势前后、`SetCapture/ReleaseCapture` 结果、Vulkan Device/Swapchain/Present 与帧输出均未记录，保持 `UNKNOWN`。
+- 本轮未运行任何 Build/Test/XYT；未修改生产代码、Harness、csproj、XYT 映射、XYK 或断言；未执行 Git 写操作，未提交。
+- 因缺少操作者输入和关键 Vulkan 运行证据，Run 结果保持 `PARTIAL / NOT PASS`；不得归因为产品 PASS 或产品 FAIL。用户 P4 仍为 `PENDING`。
+
+本次 App 保持打开以便后续获授权的操作者实际完成鼠标 IPO；当前 UI 状态和启动本身不能代替后续交互证据。
