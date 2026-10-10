@@ -18,7 +18,8 @@ public sealed partial class UiVm
     {
         var map = MapSession.CurrentMap;
         var path = MapSession.CurrentFilePath;
-        if (map is null || path is null)
+        if (map is null || path is null ||
+            !string.Equals(Path.GetExtension(path), ".xymap", StringComparison.OrdinalIgnoreCase))
             return snapshot;
         return snapshot with
         {
@@ -46,6 +47,12 @@ public sealed partial class UiVm
         if (!result.Succeeded || result.Value is null)
         {
             MarkMapReferenceInvalid(mapRef.AssetPath, result.Message);
+            return;
+        }
+
+        if (!string.Equals(result.Value.MapId.ToString(), mapRef.MapId, StringComparison.Ordinal))
+        {
+            MarkMapReferenceInvalid(mapRef.AssetPath, "地图 ID 与场景引用不匹配");
             return;
         }
 
