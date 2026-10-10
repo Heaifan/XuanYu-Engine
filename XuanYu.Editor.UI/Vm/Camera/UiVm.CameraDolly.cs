@@ -37,22 +37,27 @@ public sealed partial class UiVm
             RefreshLogBindings();
             return false;
         }
-        if (cursorX is null) result = ConstrainDollyToTerrain(result);
+        if (cursorX is null) result = ConstrainDollyToTerrain(result, wheelDelta);
         TraceFarDolly(result);
         _cameraRevision = result.Camera.Revision;
         ApplyCameraResult(result);
         return true;
     }
 
-    CameraFrameResult ConstrainDollyToTerrain(CameraFrameResult result)
+    CameraFrameResult ConstrainDollyToTerrain(CameraFrameResult result, double wheelDelta)
     {
         if (TerrainWorld is not { } world || result.Camera.Mode != ProjectionMode.Perspective)
             return result;
         var start = _camera.Position;
         var end = result.Camera.Position;
+        var surface = new TerrainWorldGroundSurface(world);
+        var startQuery = surface.QuerySurface(new(start.X, start.Y));
+        var startInside = startQuery.IsValid &&
+            start.Z <= startQuery.SurfaceZ * VerticalExaggeration + result.Camera.NearPlane;
+        if (wheelDelta < 0 && startInside)
+            return result;
         var step = Math.Max(1, Math.Min(world.Metadata.ResolutionX, world.Metadata.ResolutionY));
         var count = Math.Clamp((int)Math.Ceiling(start.DistanceTo(end) / step), 1, 64);
-        var surface = new TerrainWorldGroundSurface(world);
         var lastSafe = start;
         for (var i = 1; i <= count; i++)
         {
