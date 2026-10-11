@@ -50,6 +50,16 @@ public readonly record struct CameraState
         OrthographicScale = mode == ProjectionMode.Orthographic ? orthographicScale : 0.0;
     }
 
+    CameraState(CameraState source, double farPlane)
+    {
+        if (!double.IsFinite(farPlane) || farPlane <= source.NearPlane)
+            throw new ArgumentOutOfRangeException(nameof(farPlane));
+        Position = source.Position; Forward = source.Forward; Right = source.Right; Up = source.Up;
+        VerticalFovDegrees = source.VerticalFovDegrees; NearPlane = source.NearPlane;
+        FarPlane = farPlane; Revision = source.Revision; Mode = source.Mode;
+        OrthographicScale = source.OrthographicScale;
+    }
+
     public Vector3d Position { get; }
 
     public Vector3d Forward { get; }
@@ -70,6 +80,9 @@ public readonly record struct CameraState
 
     // 正交视图高度（米）；透视模式下恒为 0。
     public double OrthographicScale { get; }
+
+    public CameraState WithFarPlane(double farPlane) =>
+        farPlane == FarPlane ? this : new CameraState(this, farPlane);
 
     static void ValidateFinite(Vector3d vector, string name)
     {

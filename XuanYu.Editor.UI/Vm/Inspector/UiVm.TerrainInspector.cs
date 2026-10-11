@@ -24,6 +24,7 @@ public sealed partial class UiVm
             OnPropertyChanged(nameof(VerticalExaggerationText));
             OnPropertyChanged(nameof(InspectorProperties));
             OnPropertyChanged(nameof(InspectorFields));
+            _camera = ApplyFarPlanePolicy(_camera);
             PublishSceneRenderSnapshot();
         }
     }

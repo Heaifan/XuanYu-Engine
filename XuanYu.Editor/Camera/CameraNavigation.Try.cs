@@ -7,6 +7,7 @@ namespace XuanYu.Editor.Camera;
 // 所有产生新相机姿态的路径统一经 TryResult → CameraBasis 正交基生成（唯一路径）。
 public static partial class CameraNavigation
 {
+    public const double MaxDistanceMeters = 1_000_000.0;
     const double YawPerPixel = 0.008;
     const double PitchPerPixel = 0.006;
     const double MinDistance = 0.25;
@@ -57,10 +58,9 @@ public static partial class CameraNavigation
             return false;
         }
 
-        var far = FarPlaneFor(start.NearPlane, position.DistanceTo(center));
         result = new CameraFrameResult(
             new CameraState(position, forward, up,
-                start.VerticalFovDegrees, start.NearPlane, far, revision, mode, orthographicScale),
+                start.VerticalFovDegrees, start.NearPlane, start.FarPlane, revision, mode, orthographicScale),
             center);
         return true;
     }

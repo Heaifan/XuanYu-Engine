@@ -18,7 +18,7 @@ public sealed class RenderLogNoiseContractTests
     public void Periodic_traces_do_not_emit_every_hundredth_cycle()
     {
         var command = Read("XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Trace.cs");
-        var snapshot = Read("XuanYu.Editor.UI/Vm/Scene/UiVm.Scene.cs");
+        var snapshot = Read("XuanYu.Editor.UI/Vm/Scene/UiVm.SceneSnapshotTrace.cs");
         Assert.DoesNotContain("% 100", command);
         Assert.DoesNotContain("% 100", snapshot);
         Assert.Contains("if (_gridTraceLogged || !_hasRenderProjection || !allGridPipelinesReady) return;", command);

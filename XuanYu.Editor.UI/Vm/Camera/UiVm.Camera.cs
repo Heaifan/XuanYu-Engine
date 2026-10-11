@@ -59,7 +59,12 @@ public sealed partial class UiVm
         var physicalH = Math.Max(1, (int)Math.Round(height * _viewportDpiScale));
         _lastViewport = new ViewportState(0, 0, width, height, physicalW, physicalH,
             _viewportDpiScale, Math.Max(_cameraRevision, 1));
-        if (_viewportCameraFramed) return;
+        if (_viewportCameraFramed)
+        {
+            ApplyCameraFrame(new(_camera, _observationCenter), "ViewportResize");
+            PublishSceneRenderSnapshot();
+            return;
+        }
         _viewportCameraFramed = true;
         FrameAllCamera("启动看全");
     }

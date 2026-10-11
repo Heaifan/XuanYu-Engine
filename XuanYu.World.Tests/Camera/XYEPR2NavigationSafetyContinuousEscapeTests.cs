@@ -52,8 +52,8 @@ public sealed class XYEPR2NavigationSafetyContinuousEscapeTests
                     validClearance |= after.Position.Z - query.SurfaceZ * vm.VerticalExaggeration - after.NearPlane > 0;
 
                 Assert.Equal(center, vm.ObservationCenter);
-                var expectedFar = Math.Max(after.NearPlane * 10.0,
-                    after.Position.DistanceTo(center) * 4.0);
+                var expectedFar = TerrainFarPlanePolicy.Resolve(after, vm.CurrentViewport,
+                    TerrainFarPlaneTestBounds.For(vm));
                 Assert.Equal(expectedFar, after.FarPlane);
             }
 

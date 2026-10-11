@@ -7,8 +7,6 @@ using XuanYu.World.Scene;
 namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
-    int _renderSnapshotPublishCount;
-    int _lastLoggedRenderEntityCount = -1;
     ViewportState? _lastViewport;
     public ViewportState CurrentViewport => _lastViewport ?? new(0, 0, 1, 1, 1, 1, 1, 1);
     public ISceneRenderSnapshotSource SceneSnapshotSource => this;
@@ -68,20 +66,12 @@ public sealed partial class UiVm
     }
     void PublishSceneRenderSnapshot()
     {
+        _camera = RefreshFarPlanePolicyForGeometryChange(_camera);
         UpdateScaleIndicator();
         var snapshot = RenderSnapshot;
         TraceRenderSnapshotPublish(snapshot.Entities.Count);
         RenderSnapshotChanged?.Invoke(snapshot);
         RenderProjectionChanged?.Invoke(CreateRenderProjection(snapshot));
-    }
-
-    void TraceRenderSnapshotPublish(int entityCount)
-    {
-        _renderSnapshotPublishCount++;
-        if (_renderSnapshotPublishCount != 1) return;
-        _lastLoggedRenderEntityCount = entityCount;
-        TraceSelection("PublishSceneRenderSnapshot摘要", 1,
-            $"次数={_renderSnapshotPublishCount}；实体数={entityCount}");
     }
 
     IReadOnlyList<InspectorFieldRow> BuildDebugObjectItems()

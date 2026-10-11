@@ -11,7 +11,6 @@ public sealed partial class UiVm
     long _cameraSessionRevision;
     public Vector3d ObservationCenter => _observationCenter;
     public bool IsCameraNavigationActive => _cameraSession is not null;
-
     public bool BeginCameraNavigation(long pointerId, double x, double y, bool shift, int width, int height)
     {
         if (_cameraSession is not null || _editorState.InteractionSnapshot.HasCapture) return false;
@@ -92,8 +91,9 @@ public sealed partial class UiVm
     }
     void ApplyCameraFrame(CameraFrameResult result, string writer)
     {
-        ViewportProbe.CameraWriter(writer, _camera, _observationCenter, result.Camera, result.ObservationCenter);
-        _camera = result.Camera;
+        var finalCamera = ApplyFarPlanePolicy(result.Camera);
+        ViewportProbe.CameraWriter(writer, _camera, _observationCenter, finalCamera, result.ObservationCenter);
+        _camera = finalCamera;
         _observationCenter = result.ObservationCenter;
         ViewportProbe.CameraSnapshot("T1_CAMERA_AFTER", _camera, _observationCenter);
     }

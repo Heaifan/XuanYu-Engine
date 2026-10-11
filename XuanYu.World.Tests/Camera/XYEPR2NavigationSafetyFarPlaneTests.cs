@@ -30,8 +30,8 @@ public sealed class XYEPR2NavigationSafetyFarPlaneTests(ITestOutputHelper output
 
         var final = vm.RenderSnapshot.CameraState;
         var targetDepth = (center - final.Position).Dot(final.Forward);
-        var expectedFarPlane = Math.Max(final.NearPlane * 10.0,
-            final.Position.DistanceTo(center) * 4.0);
+        var expectedFarPlane = TerrainFarPlanePolicy.Resolve(final, vm.CurrentViewport,
+            TerrainFarPlaneTestBounds.For(vm));
         output.WriteLine($"candidate={candidate.Camera.Position}; candidateFar={candidate.Camera.FarPlane:R}");
         output.WriteLine($"lastSafe={final.Position}; center={vm.ObservationCenter}; forward={final.Forward}");
         output.WriteLine($"near={final.NearPlane:R}; far={final.FarPlane:R}; " +

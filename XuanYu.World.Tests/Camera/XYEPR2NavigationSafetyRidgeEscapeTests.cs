@@ -61,8 +61,8 @@ public sealed class XYEPR2NavigationSafetyRidgeEscapeTests
 
                 Assert.True(after.Position.DistanceTo(center) + 1e-9 >= before.Position.DistanceTo(center));
                 Assert.Equal(center, vm.ObservationCenter);
-                Assert.Equal(Math.Max(after.NearPlane * 10.0,
-                    after.Position.DistanceTo(center) * 4.0), after.FarPlane);
+                Assert.Equal(TerrainFarPlanePolicy.Resolve(after, vm.CurrentViewport,
+                    TerrainFarPlaneTestBounds.For(vm)), after.FarPlane);
             }
             Assert.True(lastValidClearance >= previousClearance - 1e-6,
                 $"Zoom-Out recovery regressed after the ridge: {lastValidClearance:R}; sample={startSample}.");

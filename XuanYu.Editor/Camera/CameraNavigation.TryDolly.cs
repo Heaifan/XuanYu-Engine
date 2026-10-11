@@ -43,10 +43,9 @@ public static partial class CameraNavigation
         var distance = ClampDistance(start.Position.DistanceTo(center));
         var nextDistance = ClampDistance(distance * global::System.Math.Pow(0.85, wheelDelta));
         var position = start.Position + (start.Forward * (distance - nextDistance));
-        var far = FarPlaneFor(start.NearPlane, position.DistanceTo(center));
         result = new CameraFrameResult(
             new CameraState(position, start.Forward, start.Up, start.VerticalFovDegrees,
-                start.NearPlane, far, revision, start.Mode, start.OrthographicScale), center);
+                start.NearPlane, start.FarPlane, revision, start.Mode, start.OrthographicScale), center);
         return true;
     }
 
@@ -62,10 +61,9 @@ public static partial class CameraNavigation
     {
         result = default; failureReason = "";
         var position = start.Position + translation;
-        var far = FarPlaneFor(start.NearPlane, position.DistanceTo(center));
         result = new CameraFrameResult(
             new CameraState(position, start.Forward, start.Up, start.VerticalFovDegrees,
-                start.NearPlane, far, revision, ProjectionMode.Perspective),
+                start.NearPlane, start.FarPlane, revision, ProjectionMode.Perspective),
             center);
         return true;
     }

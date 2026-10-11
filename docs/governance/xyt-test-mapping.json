@@ -18,6 +18,7 @@
     { "pattern": "xyt.ps1", "owner": "XYT" },
     { "pattern": "xyt.bat", "owner": "XYT" },
     { "pattern": "changelog.md", "owner": "RELEASE-METADATA" },
+    { "pattern": "file-tree.md", "owner": "RELEASE-METADATA" },
     { "pattern": "docs/knowledge/*", "owner": "KNOWLEDGE" },
     { "pattern": "docs/qa/*", "owner": "QA-EVIDENCE" }
   ],
@@ -39,6 +40,7 @@
     { "pattern": "xyt.ps1", "capability": "xyt" },
     { "pattern": "xyt.bat", "capability": "xyt" },
     { "pattern": "changelog.md", "capability": "release-metadata" },
+    { "pattern": "file-tree.md", "capability": "release-metadata" },
     { "pattern": "docs/knowledge/*", "capability": "knowledge" },
     { "pattern": "docs/qa/*", "capability": "qa-evidence" }
   ],

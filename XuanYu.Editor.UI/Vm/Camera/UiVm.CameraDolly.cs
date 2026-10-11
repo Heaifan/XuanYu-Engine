@@ -33,9 +33,9 @@ public sealed partial class UiVm
             return false;
         }
         if (cursorX is null) result = ConstrainDollyToTerrain(result, wheelDelta);
-        TraceFarDolly(result);
         _cameraRevision = result.Camera.Revision;
         ApplyCameraResult(result);
+        TraceFarDolly(new(_camera, _observationCenter));
         return true;
     }
     CameraFrameResult ConstrainDollyToTerrain(CameraFrameResult result, double wheelDelta)
@@ -69,10 +69,8 @@ public sealed partial class UiVm
         }
         if (lastSafe == end) return result;
         var camera = result.Camera;
-        var farPlane = Math.Max(camera.NearPlane * 10.0,
-            lastSafe.DistanceTo(result.ObservationCenter) * 4.0);
         return result with { Camera = new(lastSafe, camera.Forward, camera.Up,
-            camera.VerticalFovDegrees, camera.NearPlane, farPlane,
+            camera.VerticalFovDegrees, camera.NearPlane, camera.FarPlane,
             camera.Revision, camera.Mode, camera.OrthographicScale) };
     }
     GroundPickResult ResolveZoomAnchor(double x, double y, ViewportState viewport)
