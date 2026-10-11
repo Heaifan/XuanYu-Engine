@@ -11,7 +11,10 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     ViewProjectionState CurrentViewProjectionState()
     {
-        return _frameState.GetViewProjection(_extent, _swapchainOwner.ResourceGeneration);
+        var state = _frameState.GetViewProjection(_extent, _swapchainOwner.ResourceGeneration);
+        if (!TerrainReplayOptions.Enabled) return state;
+        var camera = TerrainReplayOptions.ApplyCamera(state.Camera, TerrainReplayOptions.Variant);
+        return camera == state.Camera ? state : ViewProjectionState.Create(camera, state.Viewport);
     }
 
     void FillScenePushConstants(float* target, RenderProjection projection, Vector3d position,

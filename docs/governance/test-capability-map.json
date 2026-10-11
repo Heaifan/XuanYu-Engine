@@ -123,6 +123,17 @@
       "productInvariants": [
         "Core state and transform contracts remain deterministic for tested inputs"
       ]
+    },
+    {
+      "capabilityId": "CAP-TERRAIN-REPLAY-CLIP",
+      "name": "Terrain replay and reverse-Z clip metrics",
+      "module": "XuanYu.Core.Tests",
+      "minimumEvidenceLevel": "P1",
+      "defaultBlockingScope": "TEST_SET",
+      "productInvariants": [
+        "Diagnostic replay variants change only their declared render decision",
+        "Chunk bounds clip metrics match the configured reverse-Z near and far planes"
+      ]
     }
   ]
 }

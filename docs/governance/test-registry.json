@@ -1,6 +1,6 @@
 {
   "schemaVersion": "XYT-G-REG-v1.1",
-  "updatedAt": "2026-09-29",
+  "updatedAt": "2026-10-11",
   "migrationSource": "docs/governance/xyt-legacy-test-audit.md and docs/governance/xyt-legacy-registry-migration-plan.md",
   "evidenceCanonical": "P0-P4",
   "incidentCanonical": "T0-T3; not stored in evidenceLevel",
@@ -18425,6 +18425,49 @@
       "auditAction": "KEEP",
       "auditRisk": "LOW",
       "capabilityResolution": "REVIEW_REQUIRED"
+    },
+    {
+      "testId": "XYT-B-0004",
+      "module": "XuanYu.Core.Tests",
+      "evidenceLevel": "P1",
+      "targetCapability": [
+        "CAP-TERRAIN-REPLAY-CLIP"
+      ],
+      "productInvariants": [
+        "Diagnostic replay variants change only their declared render decision",
+        "FarPlane threshold diagnostics preserve frozen camera pose"
+      ],
+      "prerequisites": [],
+      "blockingScope": "TEST_SET",
+      "evidenceType": [
+        "UNIT"
+      ],
+      "maxDurationSeconds": 30,
+      "testSetVersion": "TSET-TERRAIN-REPLAY-v1.0",
+      "testPath": "XuanYu.Core.Tests/Diagnostics/TerrainReplayOptionsTests.cs",
+      "status": "ACTIVE",
+      "owner": "WP2"
+    },
+    {
+      "testId": "XYT-B-0005",
+      "module": "XuanYu.Core.Tests",
+      "evidenceLevel": "P1",
+      "targetCapability": [
+        "CAP-TERRAIN-REPLAY-CLIP"
+      ],
+      "productInvariants": [
+        "Reverse-Z FarPlane clip classification changes only when the threshold crosses the frozen chunk bounds"
+      ],
+      "prerequisites": [],
+      "blockingScope": "TEST_SET",
+      "evidenceType": [
+        "UNIT"
+      ],
+      "maxDurationSeconds": 30,
+      "testSetVersion": "TSET-TERRAIN-REPLAY-v1.0",
+      "testPath": "XuanYu.Core.Tests/Space/TerrainFrustumCullReasonTests.cs",
+      "status": "ACTIVE",
+      "owner": "WP2"
     }
   ]
 }

@@ -5,11 +5,12 @@ namespace XuanYu.Core.Diagnostics;
 
 public static partial class ViewportProbe
 {
-    public static long BeginWheel(double x, double y, double delta, string mode, string tool)
+    public static long BeginWheel(double x, double y, double delta, string mode, string tool,
+        string handler = "UiVmD1Handler")
     {
         if (!Enabled) return 0;
         var id = NewWheel(); SetWheel(id);
-        Log("input-camera", $"[INPUT] Wheel={id};Pointer=({x:0.###},{y:0.###});Delta={delta:0.###};ActiveMode={mode};ActiveTool={tool};Handler=UiVmD1Handler");
+        Log("input-camera", $"[INPUT] Wheel={id};Pointer=({x:0.###},{y:0.###});Delta={delta:0.###};ActiveMode={mode};ActiveTool={tool};Handler={handler}");
         return id;
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using XuanYu.Core.Diagnostics;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Swapchain;
@@ -84,15 +85,12 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
             if (!HandleAcquireResult(res)) break;
             if (!ResetFence(device)) break;
             if (!SubmitFrame(device, idx, stage)) break;
+            var gpuFrameId = TerrainReplayOptions.Enabled
+                ? ViewportProbe.NextPresentedFrameId() : 0;
+            if (TerrainReplayOptions.Enabled)
+                ViewportProbe.FrameSubmitted(gpuFrameId, idx);
             submitted = true;
-            var pres = PresentFrame(khr, swapchain, idx);
-            if (pres == Result.ErrorOutOfDateKhr)
-            {
-                if (!(_onOutOfDate?.Invoke("QueuePresent") ?? true)) break;
-                continue;
-            }
-            if (!Check(pres, "QueuePresent", allowSuboptimal: true)) break;
-            if (!_firstPresentLogged) LogFirstPresent(idx);
+            if (!HandlePresent(khr, swapchain, idx, gpuFrameId)) break;
         }
     }
 

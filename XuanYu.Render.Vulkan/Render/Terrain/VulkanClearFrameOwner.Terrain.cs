@@ -46,24 +46,35 @@ public sealed unsafe partial class VulkanClearFrameOwner
             var origin = resource.WorldOrigin;
             var bounds = new SpatialAabb(new(origin.X + b.MinX, origin.Y + b.MinY, b.MinZ),
                 new(origin.X + b.MaxX, origin.Y + b.MaxY, b.MaxZ));
-            if (!TerrainFrustumCuller.Intersects(state, bounds))
+            var reject = TerrainFrustumCuller.TryGetRejectPlane(state, bounds, out var rejectPlane);
+            if (TerrainReplayOptions.ShouldCull(!reject,
+                TerrainReplayOptions.Enabled ? TerrainReplayOptions.Variant : TerrainReplayVariant.Baseline))
             {
-                if (probeChunks++ < 2) TerrainProbeLogger.Chunk(
-                    state, chunk, origin, -1, false, false, resource.Revision);
+                ProbeTerrainChunk(probeChunks++, state, chunk, bounds, origin, -1, false,
+                    resource.Revision, rejectPlane, 0, "FRUSTUM_PLANE");
                 culled++; continue;
             }
             var lodKey = new TerrainLodStateKey(resource.TerrainId, resource.Revision,
                 chunk.ChunkX, chunk.ChunkY);
-            var lod = (TerrainLodLevel)_terrainLodStates.Select(lodKey, state, bounds,
-                chunk.CellCountX, chunk.CellCountY).Lod;
+            var lod = SelectReplayTerrainLod(lodKey, state, bounds, chunk);
             var gpu = cache.GetOrCreate(resource, chunk, lod, _renderProjection.EffectiveTerrainTransform);
-            if (gpu is null) continue;
+            if (gpu is null)
+            {
+                ProbeTerrainChunk(probeChunks++, state, chunk, bounds, origin, (int)lod,
+                    true, resource.Revision, -1, 0, "GPU_RESOURCE_UNAVAILABLE");
+                continue;
+            }
             var vb = gpu.Vertices.Buffer; var ib = gpu.Indices.Buffer; ulong offset = 0;
             _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset); _vk.CmdBindIndexBuffer(cb, ib, 0, IndexType.Uint32);
             FillScenePushConstants(scene, _renderProjection, origin, default, new(1, 1, 1), 0, -16);
             PushSceneConstants(cb, scene); _vk.CmdDrawIndexed(cb, gpu.IndexCount, 1, 0, 0, 0);
-            if (probeChunks++ < 2) TerrainProbeLogger.Chunk(
-                state, chunk, origin, (int)lod, true, true, resource.Revision);
+            var diagnosticVariant = TerrainReplayOptions.Enabled
+                ? TerrainReplayOptions.Variant : TerrainReplayVariant.Baseline;
+            var drawResult = reject && diagnosticVariant == TerrainReplayVariant.DisableChunkCulling
+                ? "AB_CULLING_DISABLED" : "DRAW_RECORDED";
+            ProbeTerrainChunk(probeChunks++, state, chunk, bounds, origin, (int)lod,
+                true, resource.Revision, reject ? rejectPlane : -1,
+                (int)gpu.IndexCount, drawResult);
             draws.Add(new(chunk.ChunkX, chunk.ChunkY, (int)lod, (int)gpu.IndexCount / 3, (int)gpu.IndexCount));
         }
         var counts = cache.CreationCounts;

@@ -6,7 +6,11 @@ namespace XuanYu.Core.Space;
 
 public static class TerrainFrustumCuller
 {
-    public static bool Intersects(ViewProjectionState state, SpatialAabb bounds)
+    public static bool Intersects(ViewProjectionState state, SpatialAabb bounds) =>
+        !TryGetRejectPlane(state, bounds, out _);
+
+    public static bool TryGetRejectPlane(ViewProjectionState state, SpatialAabb bounds,
+        out int rejectPlane)
     {
         for (var plane = 0; plane < 6; plane++)
         {
@@ -22,11 +26,13 @@ public static class TerrainFrustumCuller
 
             if (outside)
             {
-                return false;
+                rejectPlane = plane;
+                return true;
             }
         }
 
-        return true;
+        rejectPlane = -1;
+        return false;
     }
 
     internal static Vector4 Transform(Matrix4x4 matrix, Vector3d point) =>

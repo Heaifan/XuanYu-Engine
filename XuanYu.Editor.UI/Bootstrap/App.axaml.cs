@@ -56,6 +56,7 @@ public sealed class App : Application
                     seedInitialScene: false, dialogService: window);
             window.DataContext = vm;
             desktop.MainWindow = window;
+            TerrainCameraReplayRunner.Attach(window, vm, desktop);
         }
 
         base.OnFrameworkInitializationCompleted();
