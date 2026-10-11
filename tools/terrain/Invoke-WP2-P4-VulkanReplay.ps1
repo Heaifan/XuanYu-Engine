@@ -191,5 +191,3 @@ foreach ($spec in $runSpecs) {
 }
 Write-Output "Replay output: $root"
 Write-Output "Terrain SHA256: $terrainHash"
-
-\n

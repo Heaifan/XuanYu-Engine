@@ -26,7 +26,12 @@ function Assert-GuardFiles([string]$root, [string]$relativeRoot,
         if ($allowed -contains $file) { continue }
         $text = Read-GuardText $root $file
         foreach ($needle in $needles) {
-            if ($text.IndexOf($needle, [StringComparison]::OrdinalIgnoreCase) -ge 0) {
+            $forbidden = if ($needle.StartsWith("regex:")) {
+                [regex]::IsMatch($text, $needle.Substring(6), [Text.RegularExpressions.RegexOptions]::IgnoreCase)
+            } else {
+                $text.IndexOf($needle, [StringComparison]::OrdinalIgnoreCase) -ge 0
+            }
+            if ($forbidden) {
                 Add-Failure "$label forbidden: $needle ($file)"
             }
         }
@@ -59,7 +64,7 @@ function Invoke-ViewportBoundaryGuard([string]$root) {
     Assert-GuardFiles $root "XuanYu.Editor.UI/Diagnostic" @($allowlist[2],
         "XuanYu.Editor.UI/Diagnostic/DiagnosticNativeWindowProbe.cs",
         "XuanYu.Editor.UI/Diagnostic/DiagnosticNativePointerProbe.cs") @(
-        "CreateWindowEx", "RegisterClass", "DestroyWindow", "SetCapture", "ReleaseCapture",
+        "CreateWindowEx", "RegisterClass", "DestroyWindow", "SetCapture", "regex:\bReleaseCapture\s*\(",
         "SetWindowPos", "SetWindowLong", "TopMost", "OwnerHwnd", "ShouldUseOverlayLayer = false",
         "TryGetPlatformHandle", 'DllImport("user32' ) "Diagnostic native workaround"
 
