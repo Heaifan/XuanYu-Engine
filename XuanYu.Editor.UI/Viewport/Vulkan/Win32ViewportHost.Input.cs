@@ -23,14 +23,7 @@ static partial class Win32ViewportHost
         if (InputSinks.TryGetValue(hWnd, out var sink) && IsPointerMessage(msg))
         {
             if (msg == WM_MOUSEMOVE) TrackMouseLeave(hWnd);
-            var before = GetCapture();
-            if (msg is WM_LBUTTONDOWN or WM_MBUTTONDOWN) SetCapture(hWnd);
-            var after = GetCapture();
-            var target = msg == WM_CAPTURECHANGED ? lParam : 0;
-            var point = ReadPoint(hWnd, msg, lParam);
-            sink(new NativePointerMessage(
-                msg, (int)wParam, point.X, point.Y, hWnd, before, after, target,
-                IsAltDown(), 1, IsMetaDown()));
+            sink(CreateDiagnosticPointerMessage(hWnd, msg, wParam, lParam));
         }
         RouteKeyboardMessage(hWnd, msg, wParam, lParam);
         return DefWindowProc(hWnd, msg, wParam, lParam);

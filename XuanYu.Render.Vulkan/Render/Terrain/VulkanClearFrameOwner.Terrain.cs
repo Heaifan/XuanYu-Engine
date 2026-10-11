@@ -56,12 +56,14 @@ public sealed unsafe partial class VulkanClearFrameOwner
             }
             var lodKey = new TerrainLodStateKey(resource.TerrainId, resource.Revision,
                 chunk.ChunkX, chunk.ChunkY);
-            var lod = SelectReplayTerrainLod(lodKey, state, bounds, chunk);
+            var lodSelection = SelectReplayTerrainLod(lodKey, state, bounds,
+                chunk, out var previousLod, out var lod);
             var gpu = cache.GetOrCreate(resource, chunk, lod, _renderProjection.EffectiveTerrainTransform);
             if (gpu is null)
             {
                 ProbeTerrainChunk(probeChunks++, state, chunk, bounds, origin, (int)lod,
-                    true, resource.Revision, -1, 0, "GPU_RESOURCE_UNAVAILABLE");
+                    true, resource.Revision, -1, 0, "GPU_RESOURCE_UNAVAILABLE",
+                    lodSelection, previousLod);
                 continue;
             }
             var vb = gpu.Vertices.Buffer; var ib = gpu.Indices.Buffer; ulong offset = 0;
@@ -74,7 +76,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 ? "AB_CULLING_DISABLED" : "DRAW_RECORDED";
             ProbeTerrainChunk(probeChunks++, state, chunk, bounds, origin, (int)lod,
                 true, resource.Revision, reject ? rejectPlane : -1,
-                (int)gpu.IndexCount, drawResult);
+                (int)gpu.IndexCount, drawResult, lodSelection, previousLod);
             draws.Add(new(chunk.ChunkX, chunk.ChunkY, (int)lod, (int)gpu.IndexCount / 3, (int)gpu.IndexCount));
         }
         var counts = cache.CreationCounts;

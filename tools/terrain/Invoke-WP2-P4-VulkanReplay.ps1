@@ -3,7 +3,10 @@ param(
     [string]$TerrainPath = '',
     [string[]]$Variants = @('baseline', 'far-expanded', 'cull-off', 'lod0', 'near-small'),
     [double[]]$FarPlaneThresholds = @(),
-    [int]$TimeoutSeconds = 240
+    [int]$TimeoutSeconds = 240,
+    [switch]$NativeInputReplay,
+    [int]$NativeWheelCount = 40,
+    [int]$NativeOrbitSteps = 8
 )
 
 function Get-TreeFingerprint([string]$base, [string[]]$paths) {
@@ -71,6 +74,7 @@ public static class Wp2ReplayWindow
     static extern bool ReadRect(IntPtr hwnd, out Rect rect);
     [DllImport("user32.dll")] public static extern bool PrintWindow(
         IntPtr hwnd, IntPtr hdc, uint flags);
+    [DllImport("user32.dll")] public static extern bool AllowSetForegroundWindow(int processId);
     public static int[] Bounds(IntPtr hwnd) {
         if (!ReadRect(hwnd, out var r)) throw new InvalidOperationException("GetWindowRect failed");
         return new[] { r.L, r.T, r.R, r.B };
@@ -98,18 +102,33 @@ foreach ($spec in $runSpecs) {
     $env:XYE_TERRAIN_REPLAY_HGT = $TerrainPath
     $env:XYE_TERRAIN_REPLAY_OUTPUT = $dir
     $env:XYE_TERRAIN_REPLAY_RUN_ID = $runId
+    if ($NativeInputReplay) { $env:XYE_TERRAIN_NATIVE_INPUT_REPLAY = '1' }
+    else { Remove-Item Env:XYE_TERRAIN_NATIVE_INPUT_REPLAY -ErrorAction SilentlyContinue }
     $stdout = Join-Path $dir 'stdout.log'
     $stderr = Join-Path $dir 'stderr.log'
     $process = Start-Process -FilePath $exe -WorkingDirectory $publish `
         -WindowStyle Normal -RedirectStandardOutput $stdout `
         -RedirectStandardError $stderr -PassThru
+    $foregroundPermissionGranted = [Wp2ReplayWindow]::AllowSetForegroundWindow($process.Id)
     $watch = [Diagnostics.Stopwatch]::StartNew()
+    $nativeJob = $null
     try {
+        if ($NativeInputReplay) {
+            $nativeJob = Start-Job -FilePath (Join-Path $PSScriptRoot 'Invoke-WP2-P4-NativeInputEvents.ps1') `
+                -ArgumentList $dir, $process.Id, $NativeWheelCount, $NativeOrbitSteps, 3, $TimeoutSeconds
+        }
         while (-not $process.HasExited) {
             $process.Refresh()
+            if ($nativeJob -and $nativeJob.State -eq 'Failed') {
+                throw "Native input driver failed: $(Receive-Job $nativeJob -Keep | Out-String)"
+            }
             $replayLog = Join-Path $dir 'replay.log'
-            if ((Test-Path -LiteralPath $replayLog) -and
-                (Select-String -Path $replayLog -Pattern '\[REPLAY-COMPLETE\]' -Quiet)) {
+            $completionLog = if ($NativeInputReplay) { Join-Path $dir 'native-input.log' } else { $replayLog }
+            $completionPattern = if ($NativeInputReplay) {
+                '\[NATIVE-REPLAY-COMPLETE\]'
+            } else { '\[REPLAY-COMPLETE\]' }
+            if ((Test-Path -LiteralPath $completionLog) -and
+                (Select-String -Path $completionLog -Pattern $completionPattern -Quiet)) {
                 $process.WaitForExit(10000)
                 if (-not $process.HasExited) {
                     throw 'Replay completed but editor process did not exit within 10 seconds.'
@@ -142,6 +161,7 @@ foreach ($spec in $runSpecs) {
                     $capture = [ordered]@{ captureType='Windows PrintWindow target'; runId=$runId
                         variant=$variant; farPlaneOverride=$request.FarPlaneOverride
                         gpuFrameId=$request.FrameId
+                        nativeInputEventId=$request.NativeInputEventId
                         viewportFrameId=$request.ViewportFrameId; processId=$process.Id
                         windowHandle=$targetWindow.ToInt64()
                         buildIdentity=$request.BuildIdentity; cameraPosition=$request.CameraPosition
@@ -162,9 +182,13 @@ foreach ($spec in $runSpecs) {
                         capturedAt=[DateTimeOffset]::UtcNow.ToString('O') }
                     $capture | ConvertTo-Json -Depth 4 | Set-Content `
                         -LiteralPath ($request.ScreenshotPath + '.json') -Encoding utf8
-                    Set-Content -LiteralPath $ack -Value 'CAPTURED' -NoNewline
+                    $ackTemp = $ack + '.tmp'
+                    Set-Content -LiteralPath $ackTemp -Value 'CAPTURED' -NoNewline
+                    [IO.File]::Move($ackTemp, $ack, $true)
                 } catch {
-                    Set-Content -LiteralPath $ack -Value ("FAILED: " + $_.Exception.Message) -NoNewline
+                    $ackTemp = $ack + '.tmp'
+                    Set-Content -LiteralPath $ackTemp -Value ("FAILED: " + $_.Exception.Message) -NoNewline
+                    [IO.File]::Move($ackTemp, $ack, $true)
                 }
             }
             if ($watch.Elapsed.TotalSeconds -gt $TimeoutSeconds) {
@@ -174,17 +198,27 @@ foreach ($spec in $runSpecs) {
         }
         $process.WaitForExit()
         $replayLog = Join-Path $dir 'replay.log'
-        if (-not (Test-Path $replayLog) -or -not (Select-String -Path $replayLog -Pattern '\[REPLAY-COMPLETE\]' -Quiet)) {
+        $completionLog = if ($NativeInputReplay) { Join-Path $dir 'native-input.log' } else { $replayLog }
+        $completionPattern = if ($NativeInputReplay) {
+            '\[NATIVE-REPLAY-COMPLETE\]'
+        } else { '\[REPLAY-COMPLETE\]' }
+        if (-not (Test-Path $completionLog) -or -not (Select-String -Path $completionLog -Pattern $completionPattern -Quiet)) {
             throw "Replay did not complete for $runName; inspect $replayLog and stderr.log"
+        }
+        if ($nativeJob -and $nativeJob.State -eq 'Failed') {
+            throw "Native input driver failed: $(Receive-Job $nativeJob -Keep | Out-String)"
         }
         [ordered]@{ variant=$runName; policyVariant=$variant; farPlaneThreshold=$spec.Far
             runId=$runId; sourceHead=$head
+            foregroundPermissionGranted=$foregroundPermissionGranted
             sourceDirty=$dirty; buildTimeUtc=$stamp; terrainPath=$TerrainPath
             terrainSha256=$terrainHash; sourceTreeFingerprint=$sourceFingerprint
             publishedOutputFingerprint=$publishFingerprint
             exitCode=$process.ExitCode; status='COMPLETE' } |
             ConvertTo-Json | Set-Content -LiteralPath (Join-Path $dir 'run.manifest.json') -Encoding utf8
     } finally {
+        if ($nativeJob -and $nativeJob.State -in @('Running','NotStarted')) { Stop-Job $nativeJob }
+        if ($nativeJob) { Remove-Job $nativeJob -Force }
         if (-not $process.HasExited) { $process.Kill(); $process.WaitForExit() }
         $process.Dispose()
     }

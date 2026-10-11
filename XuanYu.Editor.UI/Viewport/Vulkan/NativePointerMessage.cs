@@ -11,7 +11,8 @@ public readonly record struct NativePointerMessage(
     nint CaptureTarget,
     bool AltDown = false,
     long PointerId = 1,
-    bool MetaDown = false)
+    bool MetaDown = false,
+    long DiagnosticEventId = 0)
 {
     public const uint Move = 0x0200;
     public const uint MouseLeave = 0x02a3;

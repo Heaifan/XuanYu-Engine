@@ -40,7 +40,8 @@ internal static class TerrainReplayCapture
         var requestPath = Path.Combine(output, $"{stage}.capture.request.json");
         var ackPath = requestPath + ".ack";
         var request = new TerrainReplayCaptureRequest(runId, stage, frame,
-            ViewportProbe.CurrentFrameId, TerrainReplayOptions.Variant.ToString(),
+            ViewportProbe.CurrentFrameId, ViewportProbe.CurrentNativeInputId,
+            TerrainReplayOptions.Variant.ToString(),
             farOverride, Process.GetCurrentProcess().Id,
             window.Title ?? string.Empty, image, ViewportProbeIdentity.Current(),
             Environment.GetEnvironmentVariable("XYE_PROBE_SOURCE_FINGERPRINT") ?? "UNKNOWN",
@@ -67,6 +68,7 @@ internal static class TerrainReplayCapture
 
 internal sealed record TerrainReplayCaptureRequest(
     string RunId, string Stage, long FrameId, long ViewportFrameId,
+    long NativeInputEventId,
     string Variant, double? FarPlaneOverride, int ProcessId,
     string WindowTitle, string ScreenshotPath, string BuildIdentity,
     string SourceTreeFingerprint, string PublishedOutputFingerprint,

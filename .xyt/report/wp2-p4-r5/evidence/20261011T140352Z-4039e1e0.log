@@ -1,0 +1,28 @@
+  XuanYu.Core -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Core\bin\Release\net10.0\XuanYu.Core.dll
+  XYUI.Avalonia -> E:\MyDoc\project-VSCode\XuanYuEngine\xyui\avalonia\src\XYUI.Avalonia\bin\Release\net10.0\XYUI.Avalonia.dll
+  XuanYu.World -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.World\bin\Release\net10.0\XuanYu.World.dll
+  XuanYu.Render.Abstractions -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Render.Abstractions\bin\Release\net10.0\XuanYu.Render.Abstractions.dll
+  XuanYu.Editor -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Editor\bin\Release\net10.0\XuanYu.Editor.dll
+  XuanYu.Render.Vulkan -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Render.Vulkan\bin\Release\net10.0\XuanYu.Render.Vulkan.dll
+  XuanYu.Editor.UI -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Editor.UI\bin\Release\net10.0\XuanYu.Editor.UI.dll
+  XuanYu.Core.Tests -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Core.Tests\bin\Release\net10.0\XuanYu.Core.Tests.dll
+E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Core.Tests\bin\Release\net10.0\XuanYu.Core.Tests.dll (.NETCoreApp,Version=v10.0)的测试运行
+总共 1 个测试文件与指定模式相匹配。
+[xUnit.net 00:00:00.79]     XuanYu.Core.Tests.Camera.DemOrbitFrozenPivotR1CTests.TerrainEdgeOrbit_UsesStableSource [SKIP]
+  已跳过 XuanYu.Core.Tests.Camera.DemOrbitFrozenPivotR1CTests.TerrainEdgeOrbit_UsesStableSource [1 ms]
+[xUnit.net 00:00:00.80]     XuanYu.Core.Tests.Camera.DemOrbitFrozenPivotR1CTests.TerrainOrbit_UsesTerrainXYZ [SKIP]
+  已跳过 XuanYu.Core.Tests.Camera.DemOrbitFrozenPivotR1CTests.TerrainOrbit_UsesTerrainXYZ [1 ms]
+
+已通过! - 失败:     0，通过:   523，已跳过:     2，总计:   525，持续时间: 295 ms - XuanYu.Core.Tests.dll (net10.0)
+  XuanYu.Core -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Core\bin\Release\net10.0\XuanYu.Core.dll
+  XYUI.Avalonia -> E:\MyDoc\project-VSCode\XuanYuEngine\xyui\avalonia\src\XYUI.Avalonia\bin\Release\net10.0\XYUI.Avalonia.dll
+  XuanYu.World -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.World\bin\Release\net10.0\XuanYu.World.dll
+  XuanYu.Render.Abstractions -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Render.Abstractions\bin\Release\net10.0\XuanYu.Render.Abstractions.dll
+  XuanYu.Editor -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Editor\bin\Release\net10.0\XuanYu.Editor.dll
+  XuanYu.Render.Vulkan -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Render.Vulkan\bin\Release\net10.0\XuanYu.Render.Vulkan.dll
+  XuanYu.Editor.UI -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.Editor.UI\bin\Release\net10.0\XuanYu.Editor.UI.dll
+  XuanYu.World.Tests -> E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.World.Tests\bin\Release\net10.0\XuanYu.World.Tests.dll
+E:\MyDoc\project-VSCode\XuanYuEngine\XuanYu.World.Tests\bin\Release\net10.0\XuanYu.World.Tests.dll (.NETCoreApp,Version=v10.0)的测试运行
+总共 1 个测试文件与指定模式相匹配。
+
+已通过! - 失败:     0，通过:  2296，已跳过:     0，总计:  2296，持续时间: 43 s - XuanYu.World.Tests.dll (net10.0)

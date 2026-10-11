@@ -10,6 +10,8 @@ public sealed class TerrainLodStateCache
     readonly Dictionary<TerrainLodStateKey, int> _previous = [];
 
     public int Count => _previous.Count;
+    public int PreviousLod(TerrainLodStateKey key) =>
+        _previous.TryGetValue(key, out var value) ? value : -1;
 
     public TerrainLodSelection Select(TerrainLodStateKey key,
         ViewProjectionState state, SpatialAabb bounds)
@@ -18,7 +20,7 @@ public sealed class TerrainLodStateCache
     public TerrainLodSelection Select(TerrainLodStateKey key,
         ViewProjectionState state, SpatialAabb bounds, int cellCountX, int cellCountY)
     {
-        var previous = _previous.TryGetValue(key, out var value) ? value : -1;
+        var previous = PreviousLod(key);
         var selection = TerrainLodSelector.Select(state, bounds, cellCountX, cellCountY, previous);
         _previous[key] = selection.Lod;
         return selection;

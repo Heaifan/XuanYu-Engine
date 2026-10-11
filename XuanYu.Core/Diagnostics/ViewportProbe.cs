@@ -7,16 +7,21 @@ public static partial class ViewportProbe
 {
     static readonly object Sync = new();
     static readonly AsyncLocal<long> Wheel = new();
+    static readonly AsyncLocal<long> NativeInput = new();
     static bool _initialized;
     static long _frame;
     static long _wheel;
     static long _lastWheel;
+    static long _nativeInput;
+    static long _lastNativeInput;
     static string _directory = "";
 
     public static bool Enabled => string.Equals(
         Environment.GetEnvironmentVariable("XYE_PROBE_VIEWPORT"), "1", StringComparison.Ordinal);
     public static long CurrentFrameId => Interlocked.Read(ref _frame);
     public static long CurrentWheelEventId => Wheel.Value != 0 ? Wheel.Value : Interlocked.Read(ref _lastWheel);
+    public static long CurrentNativeInputId => NativeInput.Value != 0
+        ? NativeInput.Value : Interlocked.Read(ref _lastNativeInput);
 
     public static void Initialize()
     {
@@ -44,6 +49,14 @@ public static partial class ViewportProbe
 
     public static void SetWheel(long id) { Wheel.Value = id; Interlocked.Exchange(ref _lastWheel, id); }
     public static long NewWheel() => !Enabled ? 0 : Interlocked.Increment(ref _wheel);
+    public static long NewNativeInput() => !Enabled ? 0 : Interlocked.Increment(ref _nativeInput);
+    public static long SetNativeInput(long id)
+    {
+        var previous = NativeInput.Value;
+        if (id != 0) { NativeInput.Value = id; Interlocked.Exchange(ref _lastNativeInput, id); }
+        return previous;
+    }
+    public static void RestoreNativeInput(long id) => NativeInput.Value = id;
 
     public static void RefreshLoadedAssemblies()
     {
@@ -57,7 +70,8 @@ public static partial class ViewportProbe
     {
         if (!Enabled) return;
         Initialize();
-        var line = $"{DateTimeOffset.Now:O};Frame={CurrentFrameId};Wheel={CurrentWheelEventId};{message}{Environment.NewLine}";
+        var line = $"{DateTimeOffset.Now:O};Frame={CurrentFrameId};Wheel={CurrentWheelEventId};" +
+            $"NativeInput={CurrentNativeInputId};{message}{Environment.NewLine}";
         lock (Sync) File.AppendAllText(Path.Combine(_directory, $"{file}.log"), line);
     }
 

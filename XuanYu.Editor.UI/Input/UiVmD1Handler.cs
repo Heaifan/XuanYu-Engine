@@ -32,8 +32,17 @@ sealed class UiVmD1Handler(
     }
     public void Begin(ViewportGestureContext c)
     {
-        if (_owner == GestureOwner.Camera) _vm.BeginCameraNavigation(c.PointerId, c.Input.Position.X, c.Input.Position.Y,
-            c.Input.Modifiers.HasFlag(EditorPointerModifiers.Shift), (int)_viewport().LogicalWidth, (int)_viewport().LogicalHeight);
+        if (_owner == GestureOwner.Camera)
+        {
+            _vm.BeginCameraNavigation(c.PointerId, c.Input.Position.X, c.Input.Position.Y,
+                c.Input.Modifiers.HasFlag(EditorPointerModifiers.Shift),
+                (int)_viewport().LogicalWidth, (int)_viewport().LogicalHeight);
+            if (ViewportProbe.Enabled)
+                ViewportProbe.Log("input-camera",
+                    $"[NATIVE-GESTURE] Phase=Begin;Owner={_owner};Pointer={c.PointerId};" +
+                    $"Position={c.Input.Position};CameraRevision={_vm.RenderSnapshot.CameraState.Revision};" +
+                    $"Pivot={_vm.ObservationCenter}");
+        }
         else if (_owner == GestureOwner.Gizmo) _vm.BeginViewportPointer(c.PointerId, c.Input.Position.X, c.Input.Position.Y, true, true);
         else _vm.PickViewportPointer(c.Input.Position.X, c.Input.Position.Y, (int)_viewport().LogicalWidth,
             (int)_viewport().LogicalHeight, _viewport().PhysicalWidth, _viewport().PhysicalHeight, _viewport().DpiScale, _viewport().Revision, true);
@@ -41,11 +50,23 @@ sealed class UiVmD1Handler(
     public void Update(ViewportGestureContext c)
     {
         if (_owner == GestureOwner.Camera) _vm.PreviewCameraNavigation(c.PointerId, c.Input.Position.X, c.Input.Position.Y);
+        if (_owner == GestureOwner.Camera)
+        {
+            if (ViewportProbe.Enabled) ViewportProbe.Log("input-camera",
+                $"[NATIVE-GESTURE] Phase=Update;Owner={_owner};Pointer={c.PointerId};" +
+                $"Position={c.Input.Position};CameraRevision={_vm.RenderSnapshot.CameraState.Revision};" +
+                $"Pivot={_vm.ObservationCenter}");
+        }
         if (_owner == GestureOwner.Gizmo) _vm.PreviewViewportPointer(c.PointerId, c.Input.Position.X, c.Input.Position.Y);
     }
     public void Commit(ViewportGestureContext c)
     {
         if (_owner == GestureOwner.Camera) _vm.EndCameraNavigation(c.PointerId);
+        if (_owner == GestureOwner.Camera)
+            if (ViewportProbe.Enabled)
+                ViewportProbe.Log("input-camera",
+                    $"[NATIVE-GESTURE] Phase=Commit;Owner={_owner};Pointer={c.PointerId};" +
+                    $"CameraRevision={_vm.RenderSnapshot.CameraState.Revision};Pivot={_vm.ObservationCenter}");
         if (_owner == GestureOwner.Gizmo) _vm.CommitViewportPointer(c.PointerId, c.Input.Position.X, c.Input.Position.Y);
     }
     public void Cancel(ViewportCancellationContext c)

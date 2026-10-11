@@ -33,7 +33,8 @@ public static class TerrainProbeLogger
 
     public static void Chunk(ViewProjectionState state, TerrainChunkDescriptor chunk,
         SpatialAabb worldBounds, Vector3d origin, int lod, bool visible, bool submitted, int revision,
-        int rejectedPlane = -1, int indexCount = 0, string result = "DRAW_RECORDED")
+        int rejectedPlane = -1, int indexCount = 0, string result = "DRAW_RECORDED",
+        TerrainLodSelection? selection = null, int previousLod = -1)
     {
         if (!ViewportProbe.Enabled) return;
         var clip = TerrainClipBoundsMetrics.Measure(state, worldBounds);
@@ -47,6 +48,9 @@ public static class TerrainProbeLogger
             $"Cells={chunk.CellCountX}x{chunk.CellCountY};LOD={lod};" +
             $"CullResult={cull};RejectPlane={PlaneName(rejectedPlane)};" +
             $"Result={result};DrawRecorded={draw};IndexCount={indexCount};" +
+            $"PreviousLod={previousLod};AutoLod={selection?.Lod ?? -1};" +
+            $"ProjectedPixels={selection?.ProjectedPixels ?? 0:0.########};" +
+            $"BaseCellPixels={selection?.BaseCellPixels ?? 0:0.########};" +
             $"ClipFrontCorners={clip.FrontFacingCornerCount};" +
             $"ClipFarOutsideCorners={clip.FarOutsideCornerCount};" +
             $"ClipNearOutsideCorners={clip.NearOutsideCornerCount};" +
