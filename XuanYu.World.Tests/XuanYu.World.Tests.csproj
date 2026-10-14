@@ -18,6 +18,12 @@
     <ProjectReference Include="..\XuanYu.Core\XuanYu.Core.csproj" />
     <ProjectReference Include="..\XuanYu.Editor\XuanYu.Editor.csproj" />
     <ProjectReference Include="..\XuanYu.Editor.UI\XuanYu.Editor.UI.csproj" />
+    <ProjectReference Include="..\XuanYu.Editor.App\XuanYu.Editor.App.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\XuanYu.Editor.Control.Cli\XuanYu.Editor.Control.Cli.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\XuanYu.Render.Vulkan\XuanYu.Render.Vulkan.csproj" />
   </ItemGroup>
 

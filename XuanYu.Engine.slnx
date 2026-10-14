@@ -7,6 +7,7 @@
   <Project Path="XuanYu.World.Tests/XuanYu.World.Tests.csproj" />
   <Project Path="XuanYu.Editor/XuanYu.Editor.csproj" />
   <Project Path="XuanYu.Editor.App/XuanYu.Editor.App.csproj" />
+  <Project Path="XuanYu.Editor.Control.Cli/XuanYu.Editor.Control.Cli.csproj" />
   <Project Path="XuanYu.Editor.UI/XuanYu.Editor.UI.csproj" />
   <Project Path="XuanYu.Editor.Win/XuanYu.Editor.Win.csproj" />
   <Project Path="XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj" />

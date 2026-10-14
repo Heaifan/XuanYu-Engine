@@ -12,6 +12,7 @@ using XYUI.Avalonia.Spatial;
 using XYUI.Avalonia.Theme;
 using XYUI.Avalonia.Typography;
 using XYUI.Avalonia.Vector;
+using XuanYu.Editor.UI.XycControl;
 
 namespace XuanYu.Editor.UI;
 
@@ -47,6 +48,8 @@ public sealed class App : Application
         {
             desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
             var window = new UiWin();
+            window.ShowActivated = desktop.Args?.Contains("--xyc-stdio") != true;
+            window.ShowInTaskbar = desktop.Args?.Contains("--xyc-stdio") != true;
             var isWriteThread = () => Dispatcher.UIThread.CheckAccess();
             var state = _stateFactory?.Invoke(isWriteThread, false);
             var vm = state is { } dependencies
@@ -55,8 +58,9 @@ public sealed class App : Application
                 : new UiVm(_surfaceBridgeFactory, isWriteThread,
                     seedInitialScene: false, dialogService: window);
             window.DataContext = vm;
+            var xyc = XycAppSession.TryStart(desktop.Args ?? [], vm, desktop);
             desktop.MainWindow = window;
-            TerrainCameraReplayRunner.Attach(window, vm, desktop);
+            if (!xyc) TerrainCameraReplayRunner.Attach(window, vm, desktop);
         }
 
         base.OnFrameworkInitializationCompleted();
