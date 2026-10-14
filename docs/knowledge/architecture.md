@@ -441,4 +441,23 @@ A1 报告：隔离 Editor 导入哈希核对的 NASADEM `n24e121`，以 XYC 指�
 
 此条只强化 XYC 自动化**呈现与捕获证据的可归属性**；不改变 Editor Center Zoom/Orbit 权威、Renderer 深度语义或用户最终 P4 裁决，也**不构成新的开发全局门禁**。第一次证据只限用户提供的本地运行报告，后续取得图片与 manifest 后复核其实际内容。
 
+### 2026-10-14 A1b 窗口式帧关联验证（STRENGTHEN，E1 不升级）
+
+A1b 施工报告在真实 NASADEM `n24e121`、隔离 Editor 上完成 `20 km → 2 km → Editor Orbit → 20 km`。对四个目标 CameraRevision 均等待一致的 RenderSnapshot Revision 与 Vulkan Presented Frame，报告 `CaptureHold=True` 并在 `PrintWindow` 后释放；`QueuePresent=SUCCESS`。实际对应如下：
+
+| 阶段 | Camera / RenderSnapshot Revision | Presented Frame | PNG SHA-256 前16位 |
+|---|---:|---:|---|
+| 初始 20 km | 4 / 4 | 889 | `9BD82F6C3838C73B` |
+| 2 km | 5 / 5 | 891 | `7A6B58FA2B5412DB` |
+| Editor Orbit | 6 / 6 | 893 | `054E2D13CB7612E7` |
+| 最终 20 km | 7 / 7 | 895 | `FC77EAE378645F7C` |
+
+四张图 SHA-256 各不相同，施工报告称逐张核对尺度与视角符合阶段预期。**本阶段结论仅为 WINDOWED 测试路径得到可信度更高的阶段对应证据，不是 OFFSCREEN PASS**；原始 PNG、`run-manifest.json` 和 `present.log` 位于本机 ignored 目录 `artifacts/diagnostics/xyc-r0-a1/8ae17cd86868403599a5ecc6adcfa648/`，本次 XYK 审计未独立读取，因此仍标注 E1 / 外部报告，待原件复核。
+
+**机制边界：** `vkQueuePresentKHR` 成功与排队顺序不能直接证明 Windows DWM/PrintWindow 捕获的像素就是对应的 GPU 图像；捕获暂停、Revision 与呈现帧关联、图片语义核对可以增强窗口式诊断的可信度，但无法替代独立 Vulkan GPU readback、离屏 RenderTarget 或用户 P4。
+
+**根因分离：** A1 原有 Orbit/20 km 重复 PNG 的根因仍为 UNKNOWN。A1b 另发现并修复测试脚本构造 20 km Pose 时浅拷贝连带修改 2 km Pose 的问题，不能倒推出原 A1 重复 PNG 由浅拷贝引起。相机姿态测试数据应使用互不共享可变嵌套对象的独立 Pose，并由四阶段回读/渲染结果检查其未串改。此处是**测试脚本缺陷的独立经验**，不是新产品相机根因。
+
+**集成状态：** 本次 A1b 施工报告称全解 Build 0W0E、3562 PASS / 2 SKIP / 0 FAIL、World.Tests 2309/2309；施工代码在本机 `c16ec8b6` 的 Dirty 工作区，远端此时只有之前的 XYK 文档提交。不可将本条 XYK 记录写成 A1b 产品代码已 Commit/Push 或远端 CI 复跑通过。
+
 **关联知识**：K-XYC-001、K-REN-005、K-VAL-001、K-VAL-002。
