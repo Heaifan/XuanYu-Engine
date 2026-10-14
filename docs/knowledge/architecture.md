@@ -405,3 +405,40 @@ XYC P0 在 `XuanYu.Editor.UI/Control/` 引入命令处理、标准输入输出 H
 - P0 的 CLI 目前默认向测试子进程传递诊断写入参数，且测试路径使用 Windows `.exe`。默认只读与跨平台测试分层属于后续待解决的设计缺口，**不能把尚未实现的约束登记为已验证能力**。
 
 **关联 Knowledge**：K-VAL-001、K-VAL-002、K-SPA-004。
+
+---
+
+## K-XYC-002 相机状态回读与窗口截图必须证明呈现帧关联
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E1（2026-10-14 A1 本地运行报告；原始 E 盘截图与 manifest 待独立复核）
+**标签**：XYC、Vulkan、CameraRevision、Presented Frame、Capture Freshness、Runtime Evidence
+**适用范围**：XYC 自动化视口 A/B 测试、Editor Vulkan 窗口式截图、相机/比例尺/LOD/Orbit 视觉对照；不专门约束纯逻辑状态查询。
+
+**首次证据日期**：2026-10-14
+**来源任务**：XYC-R0-A1 / GitHub Issue #30 及其阶段报告
+**运行案例**：`artifacts/diagnostics/xyc-r0-a1/065f0d7ae3dd45dda5b2291045810437/`（本机 ignored 诊断目录，未包含于远端提交）
+**代码基线**：本地报告 `c16ec8b64abad9e79e204b6e19ef93ebfca44e3e`，包含未提交 A1 变更；本轮知识审计不能据远端基线声称新实现已验证。
+**独立复核状态**：PENDING（相关 PNG 和 `run-manifest.json` 仅有本机路径；审计时尚未获取原始内容）
+
+### 观察与尚未解释的差异
+
+A1 报告：隔离 Editor 导入哈希核对的 NASADEM `n24e121`，以 XYC 指定 2 km 姿态并回读 CameraRevision 4，窗口 PrintWindow 截图显示 `2 km`；真实 Editor Orbit 后 CameraRevision 5、ObservationCenter 不变；20 km 状态回读 CameraRevision 6 且 ScaleBar=`20 km`，但其 PNG 与 Orbit PNG 的 SHA-256 完全一致，故**20 km 视觉证据无效**。当前尚无法确认具体根因属于截图文件复用、Windows 合成窗口缓存、采集时机、Present 关联缺失或真实渲染路径；不能据此确认 GPU 渲染器故障。
+
+### 工程知识
+
+**命令成功 ≠ 新渲染帧已呈现 ≠ 当前截图来自该帧。** CameraRevision/SceneRevision 回读仅证明控制路径及权威数据已更新；在视觉验收中必须说明截图与对应相机/场景状态和 GPU 帧之间的关联。对于 `PrintWindow`，必须声明 `WINDOWED / PrintWindow` 来源，不能冒称直接的 Vulkan GPU image readback 或用户 P4。
+
+### 验证方法
+
+1. 保留 `runId`、stage、requestId、相机 Revision、场景/Terrain Revision、视口尺寸、图像路径、图片 SHA-256、CaptureMethod 与具体捕获请求/确认时间；能取得时绑定 RenderSnapshot / PresentedFrameId 及消费的 CameraRevision；缺失事实明确为 `UNKNOWN`。
+2. 当用例要求可见差异（例如 2 km 与 20 km 比例尺）时，对截图内容做可见目标校验，配合哈希/帧身份证据；在关联无法证明时保持 `PARTIAL`，不得通过固定等待毫秒或仅令帧计数变化强造 PASS。
+3. **重复 PNG 哈希不是跨所有场景的通用失败条件**：真实画面可能合法完全相同。只有当预期画面语义应变化且证据仍不匹配时，才判该视觉验收用例证据无效。
+4. 如果窗口式采集不能可靠建立来源链，则单独保留其窗口诊断用途，转用真实 Vulkan render-target→GPU copy/readback 证据进行更高等级验证。
+
+### 适用边界
+
+此条只强化 XYC 自动化**呈现与捕获证据的可归属性**；不改变 Editor Center Zoom/Orbit 权威、Renderer 深度语义或用户最终 P4 裁决，也**不构成新的开发全局门禁**。第一次证据只限用户提供的本地运行报告，后续取得图片与 manifest 后复核其实际内容。
+
+**关联知识**：K-XYC-001、K-REN-005、K-VAL-001、K-VAL-002。
