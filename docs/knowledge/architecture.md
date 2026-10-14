@@ -374,3 +374,34 @@ A = new A(B)
 该历史 Commit 信息里曾记录旧时期 Warning 容忍口径；这只是历史事实，**不覆盖当前全解决方案 0W0E 门禁**。
 
 **关联 Incident**：INC-2026-06-24-001
+
+---
+
+## K-XYC-001 自动化控制复用 Editor 相机权威，以执行后回读验证成功
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E1（单轮代码与进程 E2E 证据；独立复跑待补）
+**标签**：XYC、Agent Automation、Camera Authority、Runtime State、XYT
+**适用范围**：XYC CLI、未来本机 MCP Adapter、Editor 自动化相机操作及独立测试实例。
+
+**首次确认**：2026-10-14
+**来源任务**：XYC-P0 / GitHub Issue #29
+**证据 Commit**：`c16ec8b64abad9e79e204b6e19ef93ebfca44e3e`
+
+### 已确认事实
+
+XYC P0 在 `XuanYu.Editor.UI/Control/` 引入命令处理、标准输入输出 Host、相机 Adapter；`UiVmXycRuntime` 通过 UI Dispatcher 访问 `UiVm` 的相机状态，`WriteXycCamera` 应用 CameraState / ObservationCenter 并更新相机 Revision。Windows 进程 E2E 测试在真实 CLI → Editor App 子进程链中执行两次姿态修改，并检查再查询的坐标和 Revision。施工报告称 World.Tests 2302/2302 PASS；本次 XYK 审计核对了源码和提交，未独立运行 Windows 构建或测试。
+
+### 工程知识
+
+自动化 Agent 不应通过系统鼠标/键盘注入或直接写 Renderer 缓存代替 Editor 领域操作。控制 Adapter 应通过拥有写权限的正式执行线程和唯一状态所有者修改相机；命令的成功依据是执行后从同一实例的权威相机状态、ObservationCenter 与 Revision **重新读取** 的结果，而不是收到请求、发出输入或回显所要求的姿态。
+
+### 验证方法与适用边界
+
+- 相同实例中执行 `camera.inspect → camera.set-test-pose → camera.inspect`；至少两次不同姿态，检查实际 Position、Forward、ObservationCenter、Revision；非法输入和越权操作不得产生成功结果。
+- `runtime.info` 应真实说明隔离模式、协议与渲染能力；当前 P0 声明 `windowed-editor-instance; offscreen=NOT-IMPLEMENTED`。
+- 这一闭环只证明**命令/相机权威数据路径**；不证明 GPU Vulkan 图像正确、后台离屏渲染、Windows Native 输入完整性或用户 P4。GPU 视觉问题必须分别补真实 GPU 图像、Frame/Camera/Scene 身份及像素证据。
+- P0 的 CLI 目前默认向测试子进程传递诊断写入参数，且测试路径使用 Windows `.exe`。默认只读与跨平台测试分层属于后续待解决的设计缺口，**不能把尚未实现的约束登记为已验证能力**。
+
+**关联 Knowledge**：K-VAL-001、K-VAL-002、K-SPA-004。

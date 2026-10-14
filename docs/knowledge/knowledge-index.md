@@ -13,6 +13,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 |---|---|---|
 | 通用验证 / 交付 | Build、测试、真机、产物、Git 基线 | K-VAL-001、K-VAL-002、K-GOV-001～K-GOV-006；EXP-GOVERNANCE-001；再检查其他相关 ACTIVE EXP |
 | 架构 / 状态所有权 | 分层、Composition Root、Workspace、事实源 | K-ARCH-001、K-ARCH-002；EXP-ARCH-001；`decisions/` 中相关 DEC；其他相关 ACTIVE EXP |
+| XYC / 引擎原生自动化控制 | CLI、Agent、测试实例、结构化命令、相机状态回读 | K-XYC-001、K-VAL-001、K-VAL-002、K-SPA-004；相关 ACTIVE EXP |
 | 空间 / 几何 | Camera、Navigation、Zoom、Screen↔World、Geometry、Snap、Topology | K-SPA-001～K-SPA-004、K-GEO-001、K-GEO-002、DEC-CAM-001；相关 DEC / EXP |
 | Editor Center Navigation | Editor Navigation Center、Zoom / Orbit 共用 ObservationCenter、Pan 后 Center、Gameplay Cursor Anchor scope | K-SPA-003、K-SPA-004、DEC-CAM-001 |
 | Rendering / Native | Overlay、Depth、Grid、NativeHost、Vulkan、Shader、Texture、GPU Text、Vector Stroke | K-REN-001～K-REN-005、K-NATIVE-001～K-NATIVE-002、L-REN-001～L-REN-003、L-NATIVE-001；EXP-ARCH-001；其他相关 ACTIVE EXP |
@@ -48,6 +49,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-SPA-003 | Knowledge | Architecture | Cursor-Anchored Zoom Capability 保持 Screen→Surface 权威，Pure Dolly 不修改 Pivot | P0 | E1 | DEM-ZOOM-ANCHOR-DRIFT-R1 · 2026-10-03 · capability scope clarified 2026-10-05 | Active |
 | K-SPA-004 | Knowledge | Architecture | Editor / Gameplay Zoom Authority 必须按产品上下文分离 | P0 | E1 | EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1 · 2026-10-05 · baseline 4277b242 | Active |
 | K-ARCH-001 | Knowledge | Architecture | Composition Root 初始化顺序属于依赖合同 | P0 | E1 | v0.1.7.1-fix · 2026-06-24 11:45 · 359e3ce | Active |
+| K-XYC-001 | Knowledge | Architecture | 自动化控制复用 Editor 相机权威，以执行后回读验证成功 | P1 | E1 | XYC-P0 · 2026-10-14 · c16ec8b6 | Active |
 | K-ARCH-002 | Knowledge | Architecture | 产品模式持续膨胀时先建立 Workspace 边界 | P1 | E1 | MAP-A → EDITOR-A · 2026-08-11 · 6724079 | Active |
 | K-REN-001 | Knowledge | Rendering | Editor Overlay 不得用世界坐标偏移制造视觉层级 | P0 | E2 | v0.2.25.13-rz · 2026-08-10 13:37:23 · ef12f4b | Active |
 | K-REN-002 | Knowledge | Rendering | 共面 Overlay 应由独立 Depth Policy 与 Draw Order 表达 | P0 | E2 | v0.2.25.15-stab · 2026-08-10 14:22:43 · 751da52 | Active |
