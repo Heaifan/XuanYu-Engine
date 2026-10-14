@@ -12,6 +12,9 @@ internal static class TerrainNativeInputReplay
     public static async Task RunAsync(UiVm vm, Window window, string output,
         string runId, long afterFrame)
     {
+        vm.RunCommand.Execute("查看全部");
+        afterFrame = await ViewportProbe.WaitForPresentedFrameAsync(
+            afterFrame, TimeSpan.FromSeconds(15));
         var ready = Path.Combine(output, "native-input.ready.json");
         var command = Path.Combine(output, "native-input.next.json");
         File.WriteAllText(ready, JsonSerializer.Serialize(new
@@ -39,11 +42,20 @@ internal static class TerrainNativeInputReplay
             }
             if (request is null) throw new InvalidDataException("Native input command could not be read.");
             File.Delete(command);
-            var nextFrame = ViewportProbe.LastPresentedFrame;
-            ViewportProbe.ArmFrameCapture();
             File.WriteAllText(Path.Combine(output, request.Stage + ".armed"), "ARMED");
             try
             {
+                var inputComplete = Path.Combine(output,
+                    request.Stage + ".input-complete");
+                var inputTimer = System.Diagnostics.Stopwatch.StartNew();
+                while (!File.Exists(inputComplete))
+                {
+                    if (inputTimer.Elapsed > TimeSpan.FromSeconds(30))
+                        throw new TimeoutException($"等待原生输入确认超时：{request.Stage}");
+                    await Task.Delay(10);
+                }
+                var nextFrame = ViewportProbe.LastPresentedFrame;
+                ViewportProbe.ArmFrameCapture();
                 var frame = await ViewportProbe.WaitForPresentedFrameAsync(
                     nextFrame, TimeSpan.FromSeconds(30));
                 await TerrainReplayCapture.RequestAsync(vm, window, output, runId,

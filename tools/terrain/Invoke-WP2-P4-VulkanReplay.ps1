@@ -5,7 +5,10 @@ param(
     [double[]]$FarPlaneThresholds = @(),
     [int]$TimeoutSeconds = 240,
     [switch]$NativeInputReplay,
-    [int]$NativeWheelCount = 40,
+    [string]$NativeTargetScaleLabel = '2 km',
+    [int]$NativeMaxWheelSteps = 60,
+    [int]$NativeMaxPostScaleWheelSteps = 20,
+    [switch]$NativeOrbitOnly,
     [int]$NativeOrbitSteps = 8
 )
 
@@ -25,7 +28,7 @@ function Get-TreeFingerprint([string]$base, [string[]]$paths) {
 
 $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-$root = Join-Path $repo 'artifacts\diagnostics\wp2-p4-r3'
+$root = Join-Path $repo 'artifacts\diagnostics\wp2-p4-r7'
 New-Item -ItemType Directory -Force -Path $root | Out-Null
 if ([string]::IsNullOrWhiteSpace($TerrainPath)) {
     $TerrainPath = Join-Path $root 'n23e121.hgt'
@@ -36,7 +39,7 @@ $terrainHash = (Get-FileHash -LiteralPath $TerrainPath -Algorithm SHA256).Hash
 $head = (& git -C $repo rev-parse HEAD).Trim()
 $dirty = if ((git -C $repo status --porcelain=v1).Count -gt 0) { 'YES' } else { 'NO' }
 $stamp = [DateTimeOffset]::UtcNow.ToString('O')
-$publish = Join-Path $root 'app'
+$publish = Join-Path $root 'publish-v1'
 New-Item -ItemType Directory -Force -Path $publish | Out-Null
 $buildLog = Join-Path $root 'publish.log'
 & (Join-Path $repo 'scripts\xye-dotnet.ps1') publish `
@@ -70,8 +73,12 @@ using System.Runtime.InteropServices;
 public static class Wp2ReplayWindow
 {
     [StructLayout(LayoutKind.Sequential)] struct Rect { public int L, T, R, B; }
+    [StructLayout(LayoutKind.Sequential)] struct ClientRect { public int L, T, R, B; }
     [DllImport("user32.dll", EntryPoint="GetWindowRect")]
     static extern bool ReadRect(IntPtr hwnd, out Rect rect);
+    [DllImport("user32.dll", EntryPoint="GetClientRect")]
+    static extern bool ReadClientRect(IntPtr hwnd, out ClientRect rect);
+    [DllImport("user32.dll")] static extern uint GetDpiForWindow(IntPtr hwnd);
     [DllImport("user32.dll")] public static extern bool PrintWindow(
         IntPtr hwnd, IntPtr hdc, uint flags);
     [DllImport("user32.dll")] public static extern bool AllowSetForegroundWindow(int processId);
@@ -79,6 +86,11 @@ public static class Wp2ReplayWindow
         if (!ReadRect(hwnd, out var r)) throw new InvalidOperationException("GetWindowRect failed");
         return new[] { r.L, r.T, r.R, r.B };
     }
+    public static int[] ClientSize(IntPtr hwnd) {
+        if (!ReadClientRect(hwnd, out var r)) throw new InvalidOperationException("GetClientRect failed");
+        return new[] { r.R-r.L, r.B-r.T };
+    }
+    public static uint Dpi(IntPtr hwnd) => GetDpiForWindow(hwnd);
 }
 '@
 
@@ -114,8 +126,11 @@ foreach ($spec in $runSpecs) {
     $nativeJob = $null
     try {
         if ($NativeInputReplay) {
+            $nativeReplayMode = if ($NativeOrbitOnly) { 'orbit-only' } else { 'zoom-and-orbit' }
             $nativeJob = Start-Job -FilePath (Join-Path $PSScriptRoot 'Invoke-WP2-P4-NativeInputEvents.ps1') `
-                -ArgumentList $dir, $process.Id, $NativeWheelCount, $NativeOrbitSteps, 3, $TimeoutSeconds
+                -ArgumentList $dir, $process.Id, $NativeTargetScaleLabel,
+                    $NativeMaxWheelSteps, $NativeMaxPostScaleWheelSteps,
+                    $nativeReplayMode, $NativeOrbitSteps, 3, $TimeoutSeconds
         }
         while (-not $process.HasExited) {
             $process.Refresh()
@@ -158,6 +173,19 @@ foreach ($spec in $runSpecs) {
                         $bitmap.Save($request.ScreenshotPath, [Drawing.Imaging.ImageFormat]::Png)
                     } finally { $graphics.Dispose(); $bitmap.Dispose() }
                     $imageHash = (Get-FileHash -LiteralPath $request.ScreenshotPath -Algorithm SHA256).Hash
+                    $nativePlan = Get-Content -LiteralPath (Join-Path $dir 'native-input.plan.json') -Raw | ConvertFrom-Json
+                    $viewportHandle = [IntPtr]$nativePlan.viewportHwnd
+                    $rendererLog = Join-Path $dir 'viewport.log'
+                    $rendererFrame = $null
+                    if (Test-Path -LiteralPath $rendererLog) {
+                        $framePattern = 'Frame=' + [regex]::Escape([string]$request.ViewportFrameId) + ';.*\[R7-RENDER-VIEWPORT\].*ViewportFrameId=' + [regex]::Escape([string]$request.ViewportFrameId) + ';'
+                        $frameLine = Get-Content -LiteralPath $rendererLog | Where-Object { $_ -match $framePattern } | Select-Object -Last 1
+                        if ($frameLine -match 'SwapchainExtent=(\d+x\d+);FramebufferGeneration=(\d+);SwapchainGeneration=(\d+)') {
+                            $rendererFrame = [ordered]@{ viewportFrameId=[long]$request.ViewportFrameId
+                                swapchainExtent=$Matches[1]; framebufferGeneration=[int]$Matches[2]
+                                swapchainGeneration=[int]$Matches[3]; raw=$frameLine }
+                        }
+                    }
                     $capture = [ordered]@{ captureType='Windows PrintWindow target'; runId=$runId
                         variant=$variant; farPlaneOverride=$request.FarPlaneOverride
                         gpuFrameId=$request.FrameId
@@ -167,7 +195,7 @@ foreach ($spec in $runSpecs) {
                         buildIdentity=$request.BuildIdentity; cameraPosition=$request.CameraPosition
                         sourceTreeFingerprint=$request.SourceTreeFingerprint
                         publishedOutputFingerprint=$request.PublishedOutputFingerprint
-                        cameraForward=$request.CameraForward; fov=$request.Fov
+                        cameraForward=$request.CameraForward; cameraUp=$request.CameraUp; fov=$request.Fov
                         sourceNearPlane=$request.NearPlane; sourceFarPlane=$request.FarPlane
                         effectiveNearPlane=$request.EffectiveNearPlane
                         effectiveFarPlane=$request.EffectiveFarPlane
@@ -175,6 +203,16 @@ foreach ($spec in $runSpecs) {
                         observationCenter=$request.ObservationCenter
                         renderOrigin=$request.RenderOrigin
                         terrainId=$request.TerrainId; terrainRevision=$request.TerrainRevision
+                        vmViewport=$request.VmViewport; scaleBar=$request.ScaleBar; warnings=$request.Warnings
+                        vmProjectionAspect=$request.VmProjectionAspect; resizeEvents=$request.ResizeEvents
+                        rendererViewport=$rendererFrame
+                        rendererProjectionAspect=if ($rendererFrame) {
+                            $dims=$rendererFrame.swapchainExtent -split 'x'; [double]$dims[0]/[double]$dims[1]
+                        } else {$null}
+                        nativeViewportHwnd=$nativePlan.viewportHwnd
+                        nativeViewportClientPhysical=[Wp2ReplayWindow]::ClientSize($viewportHandle)
+                        nativeViewportDpi=[Wp2ReplayWindow]::Dpi($viewportHandle)
+                        nativeViewportCaptureTimeUtc=[DateTimeOffset]::UtcNow.ToString('O')
                         physicalViewport=@($request.PhysicalWidth,$request.PhysicalHeight)
                         windowBounds=$bounds; physicalImageSize=@($width,$height)
                         terrainPath=$TerrainPath; terrainSha256=$terrainHash

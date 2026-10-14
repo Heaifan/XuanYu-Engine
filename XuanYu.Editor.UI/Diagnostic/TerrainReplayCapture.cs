@@ -46,12 +46,21 @@ internal static class TerrainReplayCapture
             window.Title ?? string.Empty, image, ViewportProbeIdentity.Current(),
             Environment.GetEnvironmentVariable("XYE_PROBE_SOURCE_FINGERPRINT") ?? "UNKNOWN",
             Environment.GetEnvironmentVariable("XYE_PROBE_PUBLISH_FINGERPRINT") ?? "UNKNOWN",
-            camera.Position, camera.Forward, camera.VerticalFovDegrees,
+            camera.Position, camera.Forward, camera.Up, camera.VerticalFovDegrees,
             camera.NearPlane, camera.FarPlane,
             renderCamera.NearPlane, renderCamera.FarPlane,
             camera.Revision, vm.ObservationCenter, projection.RenderOrigin,
             terrain?.TerrainId ?? "NONE", terrain?.Revision ?? -1,
-            viewport.PhysicalWidth, viewport.PhysicalHeight);
+            viewport.PhysicalWidth, viewport.PhysicalHeight, viewport,
+            TerrainReplayScaleCapture.Capture(vm, camera, viewport),
+            viewport.LogicalWidth / viewport.LogicalHeight,
+            vm.DiagnosticLogEntries.Where(x => x.Source == EditorLogSource.Render &&
+                    x.Category == EditorLogCategory.Backend).TakeLast(20)
+                .Select(x => new { x.Time, x.Level, x.Source, x.Category,
+                    x.Message, x.Detail, x.CorrelationId }).ToArray(),
+            vm.DiagnosticLogEntries.Where(x => x.Level == EditorLogLevel.Warning)
+                .Select(x => new { x.Time, x.Level, x.Source, x.Category,
+                    x.Message, x.Detail, x.CorrelationId, x.RepeatCount }).ToArray());
         await File.WriteAllTextAsync(requestPath,
             JsonSerializer.Serialize(request, new JsonSerializerOptions { WriteIndented = true }));
         ViewportProbe.Log("replay", $"[CAPTURE-REQUEST] Stage={stage};" +
@@ -72,8 +81,9 @@ internal sealed record TerrainReplayCaptureRequest(
     string Variant, double? FarPlaneOverride, int ProcessId,
     string WindowTitle, string ScreenshotPath, string BuildIdentity,
     string SourceTreeFingerprint, string PublishedOutputFingerprint,
-    object CameraPosition, object CameraForward, double Fov, double NearPlane,
+    object CameraPosition, object CameraForward, object CameraUp, double Fov, double NearPlane,
     double FarPlane, double EffectiveNearPlane, double EffectiveFarPlane,
     long CameraRevision, object ObservationCenter,
     object RenderOrigin, string TerrainId, int TerrainRevision,
-    int PhysicalWidth, int PhysicalHeight);
+    int PhysicalWidth, int PhysicalHeight, object VmViewport,
+    object ScaleBar, double VmProjectionAspect, object ResizeEvents, object Warnings);

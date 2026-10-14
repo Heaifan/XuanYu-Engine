@@ -23,6 +23,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     void RecordDraw(CommandBuffer cb)
     {
         if (ViewportProbe.CurrentFrameId == 0) ViewportProbe.BeginFrame();
+        LogR7ViewportFrame();
         GroundProbeChain.FrameSeen(ViewportProbe.CurrentFrameId, _hasRenderProjection);
         var viewport = new[] { new Viewport { X = 0, Y = 0, Width = _extent.Width,
             Height = _extent.Height, MinDepth = 0, MaxDepth = 1 } };
