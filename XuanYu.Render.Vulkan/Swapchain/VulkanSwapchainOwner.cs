@@ -22,15 +22,16 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
     Format _format;
     Extent2D _extent;
     uint _resourceGeneration;
+    bool _readbackEnabled;
     bool _disposed;
 
     public const string DeviceExtensionName = "VK_KHR_swapchain"; // VK4-C：LogicalDevice 创建时必须启用的设备扩展
 
     VulkanSwapchainOwner(Vk vk, Instance instance, VulkanDeviceOwner deviceOwner, SurfaceKHR surface,
-        PhysicalDevice physicalDevice, KhrSwapchain khr, SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, Action<string>? log)
+        PhysicalDevice physicalDevice, KhrSwapchain khr, SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool readbackEnabled, Action<string>? log)
     {
         _vk = vk; _instance = instance; _deviceOwner = deviceOwner; _surface = surface;
-        _physicalDevice = physicalDevice; _khr = khr; _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent; _log = log;
+        _physicalDevice = physicalDevice; _khr = khr; _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent; _readbackEnabled = readbackEnabled; _log = log;
     }
 
     public static VulkanSwapchainOwner? Create(Vk vk, Instance instance, VulkanDeviceOwner? deviceOwner,
@@ -41,10 +42,10 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
         { Log(log, VulkanSwapchainLogFormatter.Failed("缺 VK_KHR_swapchain 设备扩展")); return null; }
         try
         {
-        var (swapchain, images, views, format, extent, ok) = VulkanSwapchainBuilder.Build(vk, instance, physicalDevice, surface, khr, deviceOwner.LogicalDevice, width, height, log);
+        var (swapchain, images, views, format, extent, ok, readbackEnabled) = VulkanSwapchainBuilder.Build(vk, instance, physicalDevice, surface, khr, deviceOwner.LogicalDevice, width, height, log);
         if (!ok) return null;
         Log(log, VulkanSwapchainLogFormatter.Created(extent, views.Length));
-        return new VulkanSwapchainOwner(vk, instance, deviceOwner, surface, physicalDevice, khr, swapchain, images, views, format, extent, log);
+        return new VulkanSwapchainOwner(vk, instance, deviceOwner, surface, physicalDevice, khr, swapchain, images, views, format, extent, readbackEnabled, log);
         }
         catch (Exception ex) { Log(log, VulkanSwapchainLogFormatter.Failed($"创建异常：{ex.Message}")); return null; }
     }
@@ -57,10 +58,10 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
         _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain 重建开始", $"请求尺寸={width}x{height}"));
         try
         {
-            var (swapchain, images, views, format, extent, ok) = VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice, _surface, _khr, _deviceOwner.LogicalDevice, width, height, _log, _swapchain);
+            var (swapchain, images, views, format, extent, ok, readbackEnabled) = VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice, _surface, _khr, _deviceOwner.LogicalDevice, width, height, _log, _swapchain);
             if (!ok) return false;
             DestroyImagesAndViews();
-            _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent;
+            _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent; _readbackEnabled = readbackEnabled;
             _resourceGeneration++;
             Log(_log, VulkanSwapchainLogFormatter.Recreated(_extent, views.Length));
             _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain 重建完成", $"物理尺寸={extent.Width}x{extent.Height}"));

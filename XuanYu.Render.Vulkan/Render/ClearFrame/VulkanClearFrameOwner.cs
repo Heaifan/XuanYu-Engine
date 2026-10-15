@@ -4,6 +4,7 @@ using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Render.StaticModels;
 using XuanYu.Render.Vulkan.Render.VectorOverlay;
+using XuanYu.Render.Vulkan.Render.Readback;
 using XuanYu.Render.Vulkan.Swapchain;
 namespace XuanYu.Render.Vulkan.Render;
 public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
@@ -16,6 +17,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     CommandPool _commandPool;
     CommandBuffer[] _commandBuffers = [];
     Framebuffer[] _framebuffers = [];
+    VulkanReadbackBuffer[] _readbackBuffers = [];
     ImageView[] _views = []; VulkanDepthAttachment? _depthAttachment;
     Silk.NET.Vulkan.Pipeline _pipeline = default;
     PipelineLayout _pipelineLayout = default;
@@ -69,9 +71,12 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
         DestroyFramebuffers();
         _extent = _swapchainOwner.Extent;
         _views = _swapchainOwner.ImageViews.ToArray();
+        RebuildReadbackBuffers();
         _framebuffers = new Framebuffer[_views.Length];
         if (!CreateFramebuffers()) return false;
         _framebufferGeneration++;
         _log?.Invoke(VulkanResizeTracer.Stage(generation, "帧缓冲重建完成", $"物理尺寸={_extent.Width}x{_extent.Height}；帧缓冲={_framebuffers.Length} 张；命令缓冲已重录"));
         return RecordCommandBuffers(_views);
-    } }
+    }
+
+}

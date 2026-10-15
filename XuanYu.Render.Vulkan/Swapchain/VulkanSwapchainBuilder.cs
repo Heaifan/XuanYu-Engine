@@ -3,24 +3,34 @@ using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
 using VulkanDevice = Silk.NET.Vulkan.Device;
 using XuanYu.Render.Vulkan.Device;
+using XuanYu.Core.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Swapchain;
 
 // VK4-C：Swapchain 构建细节（创建 Swapchain + 取 Images + 建 ImageViews）。纯逻辑，不持有状态。
 public static unsafe class VulkanSwapchainBuilder
 {
-    public static (SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool ok) Build(
+    public static (SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool ok, bool readbackEnabled) Build(
         Vk vk, Instance instance, PhysicalDevice physicalDevice, SurfaceKHR surface,
         KhrSwapchain khr, VulkanDevice device, int width, int height, Action<string>? log, SwapchainKHR oldSwapchain = default)
     {
         var caps = VulkanSwapchainCapabilities.Query(vk, instance, physicalDevice, surface, width, height, log);
         if (!caps.Success || caps.Caps is null) return default;
         var chosen = caps.Caps.Value;
+        var usage = VulkanSwapchainUsagePolicy.Select(chosen.SupportedUsage,
+            TerrainReplayOptions.Enabled);
+        if ((usage & ImageUsageFlags.ColorAttachmentBit) == 0)
+        {
+            Log(log, "Swapchain 缺少 ColorAttachment usage 支持");
+            return default;
+        }
         var swapchain = CreateSwapchain(khr, device, surface, chosen, oldSwapchain, log);
         if (swapchain.Handle == 0) return default;
         var (images, views) = CreateImagesAndViews(vk, khr, device, swapchain, chosen.Format.Format, log);
         if (views.Length != images.Length) return default;
-        return (swapchain, images, views, chosen.Format.Format, chosen.Extent, true);
+        var readback = (usage & ImageUsageFlags.TransferSrcBit) != 0;
+        Log(log, $"【VulkanReadback】Swapchain TransferSrc={(readback ? "SUPPORTED" : "UNAVAILABLE")}");
+        return (swapchain, images, views, chosen.Format.Format, chosen.Extent, true, readback);
     }
 
     static SwapchainKHR CreateSwapchain(KhrSwapchain khr, VulkanDevice device, SurfaceKHR surface, SwapchainCaps caps, SwapchainKHR oldSwapchain, Action<string>? log)
@@ -34,7 +44,8 @@ public static unsafe class VulkanSwapchainBuilder
             ImageColorSpace = caps.Format.ColorSpace,
             ImageExtent = caps.Extent,
             ImageArrayLayers = 1,
-            ImageUsage = ImageUsageFlags.ColorAttachmentBit,
+            ImageUsage = VulkanSwapchainUsagePolicy.Select(caps.SupportedUsage,
+                TerrainReplayOptions.Enabled),
             ImageSharingMode = SharingMode.Exclusive,
             PreTransform = caps.Transform,
             CompositeAlpha = CompositeAlphaFlagsKHR.OpaqueBitKhr,

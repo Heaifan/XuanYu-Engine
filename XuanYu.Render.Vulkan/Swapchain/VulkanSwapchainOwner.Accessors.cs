@@ -10,6 +10,9 @@ public sealed unsafe partial class VulkanSwapchainOwner
     public Extent2D Extent => _extent;
     public uint ResourceGeneration => _resourceGeneration;
     public ReadOnlySpan<ImageView> ImageViews => _imageViews;
+    public ReadOnlySpan<Image> Images => _images;
+    public bool ReadbackEnabled => _readbackEnabled;
+    public string FormatName => _format.ToString();
     public SwapchainKHR Swapchain => _swapchain;
     public KhrSwapchain Khr => _khr!;
 

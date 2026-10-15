@@ -1,6 +1,7 @@
 using System;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
+using XuanYu.Core.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Swapchain;
 
@@ -35,8 +36,11 @@ public static unsafe class VulkanSwapchainCapabilities
         uint minImages = caps.MinImageCount + 1;
         if (caps.MaxImageCount != 0 && minImages > caps.MaxImageCount) minImages = caps.MaxImageCount;
 
-        Log(log, $"【VulkanSwapchain】能力查询成功；请求逻辑尺寸={width}x{height}；Surface 当前尺寸={caps.CurrentExtent.Width}x{caps.CurrentExtent.Height}；选择物理尺寸={extent.Width}x{extent.Height}；格式={format.Format}；呈现模式={presentMode}；最小图像数={minImages}");
-        return VulkanSwapchainCapabilitiesResult.Ok(new SwapchainCaps(format, presentMode, extent, minImages, caps.CurrentTransform));
+        Log(log, $"【VulkanSwapchain】能力查询成功；请求逻辑尺寸={width}x{height}；Surface 当前尺寸={caps.CurrentExtent.Width}x{caps.CurrentExtent.Height}；选择物理尺寸={extent.Width}x{extent.Height}；格式={format.Format}；呈现模式={presentMode}；最小图像数={minImages}；SupportedUsage={caps.SupportedUsageFlags}");
+        if (TerrainReplayOptions.Enabled)
+            ViewportProbe.Log("present", $"[SURFACE-USAGE] SupportedUsage={caps.SupportedUsageFlags};" +
+                $"TransferSrcSupported={(caps.SupportedUsageFlags & ImageUsageFlags.TransferSrcBit) != 0}");
+        return VulkanSwapchainCapabilitiesResult.Ok(new SwapchainCaps(format, presentMode, extent, minImages, caps.CurrentTransform, caps.SupportedUsageFlags));
     }
 
     static SurfaceFormatKHR ChooseFormat(SurfaceFormatKHR[] formats)
@@ -72,7 +76,8 @@ public readonly record struct SwapchainCaps(
     PresentModeKHR PresentMode,
     Extent2D Extent,
     uint MinImageCount,
-    SurfaceTransformFlagsKHR Transform);
+    SurfaceTransformFlagsKHR Transform,
+    ImageUsageFlags SupportedUsage);
 
 public readonly record struct VulkanSwapchainCapabilitiesResult(bool Success, SwapchainCaps? Caps, string Error)
 {

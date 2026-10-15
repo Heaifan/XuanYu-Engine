@@ -12,7 +12,6 @@ public static partial class ViewportProbe
     public static ViewportPresentedFrame? LastPresented => Volatile.Read(ref _lastPresented);
     public static long LastPresentedFrame => LastPresented?.FrameId ?? 0;
     public static long LastPresentedCameraRevision => LastPresented?.CameraRevision ?? -1;
-
     public static long NextPresentedFrameId() => Interlocked.Increment(ref _nextPresentedFrame);
 
     public static bool ArmFrameCapture(long cameraRevision = 0)

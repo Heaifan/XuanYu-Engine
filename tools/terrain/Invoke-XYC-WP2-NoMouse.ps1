@@ -168,17 +168,45 @@ try {
     $set20 = Send-Xyc 'camera.set-test-pose' $pose20
     $pose20Read = Send-Xyc 'camera.inspect' @{}
     $stage20 = Capture-PresentedStage 'pose-20km' '20 km' $runtime $pose20Read $set20 ([long]$stageOrbit.Scene.observedState.presentedFrameId)
+    $gpuCaptures = foreach ($stage in @($initial20,$stage2,$stageOrbit,$stage20)) {
+        $frameId = [long]$stage.Scene.observedState.presentedFrameId
+        $revision = [long]$stage.Scene.observedState.presentedCameraRevision
+        $gpuPath = Join-Path $runDir ('gpu-frame-{0:D8}-camera-{1:D8}.png' -f $frameId,$revision)
+        $metadataPath = [IO.Path]::ChangeExtension($gpuPath,'.json')
+        if (-not (Test-Path -LiteralPath $gpuPath) -or -not (Test-Path -LiteralPath $metadataPath)) {
+            throw "GPU readback missing for FrameId=$frameId CameraRevision=$revision."
+        }
+        $gpuMetadata = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json
+        $gpuHash = (Get-FileHash -LiteralPath $gpuPath -Algorithm SHA256).Hash
+        if ($gpuMetadata.frameId -ne $frameId -or $gpuMetadata.cameraRevision -ne $revision -or
+            $gpuMetadata.source -ne 'VulkanSwapchainImage-GPU-Readback' -or $gpuMetadata.sha256 -ne $gpuHash) {
+            throw "GPU readback provenance/hash mismatch for FrameId=$frameId CameraRevision=$revision."
+        }
+        if ([string]::IsNullOrWhiteSpace($gpuMetadata.device) -or $gpuMetadata.device -eq 'UNKNOWN') {
+            throw "GPU device identity missing for FrameId=$frameId CameraRevision=$revision."
+        }
+        [ordered]@{stage=$stage.Record.stage;frameId=$frameId;cameraRevision=$revision;
+            image=$gpuPath;imageSha256=$gpuHash;format=$gpuMetadata.format;
+            source=$gpuMetadata.source;device=$gpuMetadata.device;buildIdentity=$gpuMetadata.build;
+            sceneId=$stage.Record.sceneId;sceneRevision=$stage.Record.sceneRevision;
+            terrainId=$stage.Record.terrainId;terrainRevision=$stage.Record.terrainRevision}
+    }
+    if ($gpuCaptures[1].imageSha256 -eq $gpuCaptures[2].imageSha256) {
+        throw 'The 2 km and Orbit GPU readbacks are identical.'
+    }
     $null = Send-Xyc 'session.close' @{}
     $process.WaitForExit(10000) | Out-Null
-    [ordered]@{ runId=$runId; classification='PARTIAL / WINDOWED'; offscreen='NOT RUN';
+    [ordered]@{ runId=$runId; classification='GPU READBACK PASS / WINDOWED'; offscreen='NOT RUN';
         mouseKeyboardForegroundInjection='NONE'; sourceHgt=$dem; sourceSha256=$expectedHash;
+        gpuReadbacks=$gpuCaptures;
         startupScene=$scene0.observedState; initial20km=$initial20.Record; pose2km=$stage2.Record;
         editorOrbit2km=$stageOrbit.Record; pose20km=$stage20.Record; commandTrace=$commandTrace;
         commands=@('runtime.info','scene.inspect','camera.inspect','camera.set-test-pose','camera.orbit','capture.arm','capture.release','session.close') } |
         ConvertTo-Json -Depth 24 | Set-Content -LiteralPath (Join-Path $runDir 'run-manifest.json') -Encoding utf8
-    Write-Output "XYC WINDOWED PARTIAL: $runDir"
-    Write-Output "2 km PNG SHA256: $($stage2.Record.imageSha256)"
-    Write-Output "20 km PNG SHA256: $($stage20.Record.imageSha256)"
+    Write-Output "XYC GPU READBACK PASS / WINDOWED; TRUE OFFSCREEN NOT RUN: $runDir"
+    Write-Output "2 km GPU PNG SHA256: $($gpuCaptures[1].imageSha256)"
+    Write-Output "Orbit GPU PNG SHA256: $($gpuCaptures[2].imageSha256)"
+    Write-Output "20 km GPU PNG SHA256: $($gpuCaptures[3].imageSha256)"
 }
 finally {
     if (-not $process.HasExited) { $process.Kill($true); $process.WaitForExit() }

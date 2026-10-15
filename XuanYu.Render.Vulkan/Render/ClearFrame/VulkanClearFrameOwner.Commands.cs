@@ -47,7 +47,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 if (!Ok(result, "AllocateCommandBuffers")) return false;
                 for (var i = 0; i < next.Length; i++)
                 {
-                    if (RecordOne(next[i], _framebuffers[i])) continue;
+                    if (RecordOne(next[i], _framebuffers[i], i)) continue;
                     _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)next.Length, next);
                     return false;
                 }
@@ -64,7 +64,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         }
     }
 
-    bool RecordOne(CommandBuffer cb, Framebuffer fb)
+    bool RecordOne(CommandBuffer cb, Framebuffer fb, int imageIndex)
     {
         var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo };
         if (!Ok(_vk.BeginCommandBuffer(cb, &begin), "BeginCommandBuffer")) return false;
@@ -84,6 +84,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk.CmdBeginRenderPass(cb, &rp, SubpassContents.Inline);
         RecordDraw(cb);
         _vk.CmdEndRenderPass(cb);
+        RecordReadback(cb, imageIndex);
         return Ok(_vk.EndCommandBuffer(cb), "EndCommandBuffer");
     }
 
