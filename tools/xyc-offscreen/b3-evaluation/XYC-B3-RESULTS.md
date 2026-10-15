@@ -19,7 +19,7 @@ SSE 0.5/1/2/4 px 相对 Auto LOD 分别减少 8.6%、8.6%、21.5%、42.8% 三角
 
 ## 连续视角检查
 
-Parent 运行了 baseline 与 SSE 4 px 的真实 Vulkan 固定轨迹，各 8 帧：俯视、near-oblique、高起伏敏感、chunk-entry、近裁剪面压力、A→B→A。所有相机字段、HGT/P​​NG hash、图像尺寸验证通过，A→B→A 返回相机相同。SSE 4 px 与 baseline 的八张配对 PNG 中七张完全一致；sequence-B 有 0.064% 像素的 RGB 通道最大差超过 8，平均 RGB MAE 为 0.019。GPU 时间和每帧 chunk/LOD/三角形计数见 raw `trajectory-sse-4/runtime.json`。
+Parent 运行 baseline 与 SSE 0.5/1/2/4 px 的真实 Vulkan 固定轨迹，各 8 帧：俯视、near-oblique、高起伏敏感、chunk-entry、近裁剪面压力、A→B→A。所有相机字段、HGT/PNG hash、图像尺寸验证通过，各自 A→B→A 返回相机相同。四个 SSE 配置与 baseline 的八张配对图里，七个姿态均逐像素一致；sequence-B 变化像素率按 0.5/1/2/4 px 依次为 0.0075%、0.0075%、0.0139%、0.0637%，4 px 平均 RGB MAE 0.019。每档 GPU 时间和每帧 chunk/LOD/三角形计数见 `results/20261015-202400/trajectory-runtime-*.json` 与 `trajectory-differences*.json`。
 
 ## 误差口径与结论
 
@@ -32,6 +32,7 @@ Parent 运行了 baseline 与 SSE 4 px 的真实 Vulkan 固定轨迹，各 8 帧
 
 - 图表和静态结果见 [B3 结果图](results/20261015-202400/gpu-cost.svg)、[性能-网格误差 Pareto](results/20261015-202400/pareto-final-mesh.svg)、[可见 chunk 误差](results/20261015-202400/gpu-vs-visible-chunk-error.svg) 和 [误差层分解](results/20261015-202400/error-layers.svg)。
 - 真实 Vulkan 样图：[SSE 4 px near-oblique](results/20261015-202400/sse4-near-oblique.png)、[LOD+1 图像差异](results/20261015-202400/lod-bias-1-near-oblique-diff.png)、[SSE 4 px sequence-B 差异](results/20261015-202400/sse4-sequence-B-diff.png)。
+- 四阈值的连续轨迹数据：[运行统计目录](results/20261015-202400/)，其中 `trajectory-runtime-sse05/sse1/sse2/sse4.json` 与对应的 `trajectory-differences-sse05/sse1/sse2/sse4.json` 可逐姿态核对。
 - 可机读证据：[进程统计 CSV](results/20261015-202400/processes.csv)、[配置汇总 CSV](results/20261015-202400/summaries.csv)、[成对波动比值](results/20261015-202400/paired-ratios.csv)、[405 项 chunk/LOD 误差表](results/20261015-202400/error-table.json)、[GPU 状态快照](results/20261015-202400/gpu-process-environment.jsonl)、[轨迹差异数据](results/20261015-202400/trajectory-differences.json)。
 - GPU 轮换矩阵：`tools/xyc-offscreen/Invoke-XYC-B3.ps1`
 - 误差表生成：`XuanYu.OffscreenTerrain.dll --b3-errors --source <hgt> --out <new.json> --samples 2049 --chunk 240`

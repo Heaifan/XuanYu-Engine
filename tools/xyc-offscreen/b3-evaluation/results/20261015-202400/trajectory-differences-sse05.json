@@ -1,0 +1,58 @@
+[
+  {
+    "capture": "top-down",
+    "rgbMae": 0.0,
+    "changedPixelPct": 0.0,
+    "maskXorPct": 0.0,
+    "diffPng": "diff-top-down.png"
+  },
+  {
+    "capture": "near-oblique",
+    "rgbMae": 0.0,
+    "changedPixelPct": 0.0,
+    "maskXorPct": 0.0,
+    "diffPng": "diff-near-oblique.png"
+  },
+  {
+    "capture": "high-relief-sensitive",
+    "rgbMae": 0.0,
+    "changedPixelPct": 0.0,
+    "maskXorPct": 0.0,
+    "diffPng": "diff-high-relief-sensitive.png"
+  },
+  {
+    "capture": "chunk-entry",
+    "rgbMae": 0.0,
+    "changedPixelPct": 0.0,
+    "maskXorPct": 0.0,
+    "diffPng": "diff-chunk-entry.png"
+  },
+  {
+    "capture": "near-plane-stress",
+    "rgbMae": 0.0,
+    "changedPixelPct": 0.0,
+    "maskXorPct": 0.0,
+    "diffPng": "diff-near-plane-stress.png"
+  },
+  {
+    "capture": "sequence-A-before",
+    "rgbMae": 0.0,
+    "changedPixelPct": 0.0,
+    "maskXorPct": 0.0,
+    "diffPng": "diff-sequence-A-before.png"
+  },
+  {
+    "capture": "sequence-B",
+    "rgbMae": 0.0019933912489149305,
+    "changedPixelPct": 0.007502237955729167,
+    "maskXorPct": 0.0008900960286458334,
+    "diffPng": "diff-sequence-B.png"
+  },
+  {
+    "capture": "sequence-A-return",
+    "rgbMae": 0.0,
+    "changedPixelPct": 0.0,
+    "maskXorPct": 0.0,
+    "diffPng": "diff-sequence-A-return.png"
+  }
+]
