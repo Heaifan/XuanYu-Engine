@@ -22,6 +22,24 @@ public sealed class TerrainChunkPartitionerTests
     }
 
     [Fact]
+    public void DiagnosticChunkSizePartitionsAtRequestedCellCount()
+    {
+        var chunks = TerrainChunkPartitioner.Partition(Field(962, 962), "terrain", 1, 480);
+        Assert.Equal(9, chunks.Count);
+        Assert.Equal(480, chunks[0].CellCountX);
+        Assert.Equal(480, chunks[0].CellCountY);
+        Assert.Equal(480, chunks[1].StartSampleX);
+        Assert.Equal(1, chunks[^1].CellCountX);
+    }
+
+    [Fact]
+    public void RejectsNonPositiveDiagnosticChunkSize()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            TerrainChunkPartitioner.Partition(Field(3, 3), "terrain", 1, 0));
+    }
+
+    [Fact]
     public void ChunkBoundsAndMinMaxAreCorrect()
     {
         var field = Field(3, 3, [1, 2, 9, 4, 5, 6, 7, 8, 3]);

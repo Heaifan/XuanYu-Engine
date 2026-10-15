@@ -6,18 +6,22 @@ public static class TerrainChunkPartitioner
 
     public static IReadOnlyList<TerrainChunkDescriptor> Partition(
         TerrainHeightfield field, string terrainId, int revision)
+        => Partition(field, terrainId, revision, CellsPerChunk);
+
+    internal static IReadOnlyList<TerrainChunkDescriptor> Partition(
+        TerrainHeightfield field, string terrainId, int revision, int cellsPerChunk)
     {
         ArgumentNullException.ThrowIfNull(field);
+        if (cellsPerChunk <= 0) throw new ArgumentOutOfRangeException(nameof(cellsPerChunk));
         if (string.IsNullOrWhiteSpace(terrainId))
             throw new ArgumentException("TerrainId 不能为空。", nameof(terrainId));
         var chunks = new List<TerrainChunkDescriptor>();
         var cellsX = field.Width - 1;
         var cellsY = field.Height - 1;
-        for (var y = 0; y < cellsY; y += CellsPerChunk)
-            for (var x = 0; x < cellsX; x += CellsPerChunk)
-                chunks.Add(Create(field, terrainId, revision, x / CellsPerChunk, y / CellsPerChunk,
-                    x, y, Math.Min(CellsPerChunk, cellsX - x),
-                    Math.Min(CellsPerChunk, cellsY - y)));
+        for (var y = 0; y < cellsY; y += cellsPerChunk)
+            for (var x = 0; x < cellsX; x += cellsPerChunk)
+                chunks.Add(Create(field, terrainId, revision, x / cellsPerChunk, y / cellsPerChunk,
+                    x, y, Math.Min(cellsPerChunk, cellsX - x), Math.Min(cellsPerChunk, cellsY - y)));
         return chunks;
     }
 

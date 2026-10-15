@@ -19,10 +19,13 @@ sealed class VulkanTerrainGpuCache : IDisposable
 
     public IReadOnlyList<TerrainChunkDescriptor> GetChunks(TerrainRenderResource resource)
     {
+        var cells = XuanYu.Core.Diagnostics.TerrainReplayOptions.Enabled
+            ? XuanYu.Core.Diagnostics.TerrainReplayOptions.ChunkCellsOverride
+            : TerrainChunkPartitioner.CellsPerChunk;
         var key = $"{resource.TerrainId}:{resource.Revision}";
         return _chunks.TryGetValue(key, out var chunks) ? chunks :
             _chunks[key] = TerrainChunkPartitioner.Partition(
-                resource.Heightfield, resource.TerrainId, resource.Revision);
+                resource.Heightfield, resource.TerrainId, resource.Revision, cells);
     }
 
     public VulkanTerrainGpuResource? GetOrCreate(TerrainRenderResource resource,

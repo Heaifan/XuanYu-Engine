@@ -10,7 +10,8 @@ public enum TerrainReplayVariant
     ExpandedFarPlane,
     DisableChunkCulling,
     FixedLod0,
-    ReducedNearPlane
+    ReducedNearPlane,
+    LodBiasOne
 }
 
 public static class TerrainReplayOptions
@@ -31,6 +32,10 @@ public static class TerrainReplayOptions
         TryParseVariant(Environment.GetEnvironmentVariable("XYE_TERRAIN_AB"), out var variant)
             ? variant : TerrainReplayVariant.Baseline;
 
+    public static int ChunkCellsOverride => Enabled && int.TryParse(
+        Environment.GetEnvironmentVariable("XYE_TERRAIN_CHUNK_CELLS"), out var cells) && cells > 0
+        ? cells : 240;
+
     public static bool TryParseVariant(string? value, out TerrainReplayVariant variant)
     {
         variant = value switch
@@ -39,6 +44,7 @@ public static class TerrainReplayOptions
             "far-expanded" => TerrainReplayVariant.ExpandedFarPlane,
             "cull-off" => TerrainReplayVariant.DisableChunkCulling,
             "lod0" => TerrainReplayVariant.FixedLod0,
+            "lod-bias-1" => TerrainReplayVariant.LodBiasOne,
             "near-small" => TerrainReplayVariant.ReducedNearPlane,
             _ => (TerrainReplayVariant)(-1)
         };
@@ -73,6 +79,10 @@ public static class TerrainReplayOptions
     public static bool ShouldCull(bool intersects, TerrainReplayVariant variant) =>
         !intersects && variant != TerrainReplayVariant.DisableChunkCulling;
 
-    public static int SelectLod(int selectedLod, TerrainReplayVariant variant) =>
-        variant == TerrainReplayVariant.FixedLod0 ? 0 : selectedLod;
+    public static int SelectLod(int selectedLod, TerrainReplayVariant variant) => variant switch
+    {
+        TerrainReplayVariant.FixedLod0 => 0,
+        TerrainReplayVariant.LodBiasOne => global::System.Math.Min(4, selectedLod + 1),
+        _ => selectedLod
+    };
 }

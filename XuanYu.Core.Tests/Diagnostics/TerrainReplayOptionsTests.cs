@@ -11,6 +11,7 @@ public sealed class TerrainReplayOptionsTests
     [InlineData("far-expanded", TerrainReplayVariant.ExpandedFarPlane)]
     [InlineData("cull-off", TerrainReplayVariant.DisableChunkCulling)]
     [InlineData("lod0", TerrainReplayVariant.FixedLod0)]
+    [InlineData("lod-bias-1", TerrainReplayVariant.LodBiasOne)]
     [InlineData("near-small", TerrainReplayVariant.ReducedNearPlane)]
     public void Parses_only_named_diagnostic_variants(string value,
         TerrainReplayVariant expected)
@@ -43,6 +44,10 @@ public sealed class TerrainReplayOptionsTests
             TerrainReplayVariant.FixedLod0));
         Assert.Equal(3, TerrainReplayOptions.SelectLod(3,
             TerrainReplayVariant.Baseline));
+        Assert.Equal(4, TerrainReplayOptions.SelectLod(3,
+            TerrainReplayVariant.LodBiasOne));
+        Assert.Equal(1, TerrainReplayOptions.SelectLod(0,
+            TerrainReplayVariant.LodBiasOne));
     }
 
     [Theory]
