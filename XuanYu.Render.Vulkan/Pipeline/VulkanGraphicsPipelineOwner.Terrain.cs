@@ -9,7 +9,7 @@ namespace XuanYu.Render.Vulkan.Pipeline;
 internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
     internal static VulkanGraphicsPipelineOwner? CreateTerrain(Vk vk, VulkanDeviceOwner device,
-        VulkanClearFrameOwner clear, VulkanSwapchainOwner swap, Action<string>? log)
+        VulkanClearFrameOwner clear, Action<string>? log)
     {
         var vert = VulkanShaderModuleOwner.Create(vk, device, ShaderBytecodeTerrainVert.Code);
         var frag = VulkanShaderModuleOwner.Create(vk, device, ShaderBytecodeTerrainFrag.Code);

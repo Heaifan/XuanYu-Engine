@@ -27,66 +27,6 @@ public sealed unsafe partial class VulkanDeviceOwner : IDisposable
     public Queue GraphicsQueue => _graphicsQueue;
     public Queue PresentQueue => _presentQueue;
 
-    public static VulkanDeviceOwner? Create(Vk vk, VulkanPhysicalDeviceSelection sel, string requiredDeviceExtension, Action<string>? log = null)
-    {
-        if (!sel.Success || sel.Handle.Handle == 0 || sel.Queue is null)
-        {
-            Log(log, "【VulkanDevice】LogicalDevice 创建跳过：VK4-A 未产出可用物理设备选择");
-            return null;
-        }
-        var q = sel.Queue!;
-        Log(log, $"【VulkanDevice】开始创建 LogicalDevice；物理设备：{sel.Device?.Name ?? "未知设备"}");
-        Log(log, $"【VulkanDevice】使用的 Graphics 队列族：{q.GraphicsFamily}；Present 队列族：{q.PresentFamily}");
-        float priority = 1.0f;
-        var gci = new DeviceQueueCreateInfo
-        {
-            SType = StructureType.DeviceQueueCreateInfo,
-            QueueFamilyIndex = (uint)q.GraphicsFamily,
-            QueueCount = 1,
-            PQueuePriorities = &priority
-        };
-        DeviceQueueCreateInfo* pQueues;
-        int count;
-        if (q.SameFamily)
-        {
-            pQueues = &gci; count = 1;
-        }
-        else
-        {
-            var pci = new DeviceQueueCreateInfo
-            {
-                SType = StructureType.DeviceQueueCreateInfo,
-                QueueFamilyIndex = (uint)q.PresentFamily,
-                QueueCount = 1,
-                PQueuePriorities = &priority
-            };
-            var arr = stackalloc DeviceQueueCreateInfo[2];
-            arr[0] = gci; arr[1] = pci; pQueues = arr; count = 2;
-        }
-        var dci = new DeviceCreateInfo
-        {
-            SType = StructureType.DeviceCreateInfo,
-            QueueCreateInfoCount = (uint)count,
-            PQueueCreateInfos = pQueues
-        };
-        var extBytes = System.Text.Encoding.ASCII.GetBytes(requiredDeviceExtension); // VK4-C：启用所需设备扩展（当前 VK_KHR_swapchain）才能建 Swapchain
-        var extMem = stackalloc byte[extBytes.Length + 1];
-        extBytes.CopyTo(new Span<byte>(extMem, extBytes.Length)); extMem[extBytes.Length] = 0;
-        byte* pExt = extMem; dci.EnabledExtensionCount = 1; dci.PpEnabledExtensionNames = &pExt;
-        var result = vk.CreateDevice(sel.Handle, &dci, null, out var device);
-        if (result != Result.Success)
-        {
-            Log(log, $"【VulkanDevice】LogicalDevice 创建失败：{result}");
-            return null;
-        }
-        Log(log, "【VulkanDevice】LogicalDevice 创建成功");
-        vk.GetDeviceQueue(device, (uint)q.GraphicsFamily, 0, out var gq);
-        Queue pq = gq;
-        if (!q.SameFamily) vk.GetDeviceQueue(device, (uint)q.PresentFamily, 0, out pq);
-        Log(log, "【VulkanDevice】Queue 获取成功（Graphics + Present）");
-        return new VulkanDeviceOwner(vk, device, sel.Handle, gq, pq, log);
-    }
-
     public void Dispose()
     {
         if (_disposed) return;

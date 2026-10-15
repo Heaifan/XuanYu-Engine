@@ -37,4 +37,27 @@ public static unsafe class VulkanInstanceCreateInfoBuilder
             create(createInfo);
         }
     }
+
+    public static void BuildOffscreenAndUse(Action<InstanceCreateInfo> create)
+    {
+        var appName = Encoding.UTF8.GetBytes("XuanYu Engine Offscreen\0");
+        fixed (byte* pApp = appName)
+        {
+            var appInfo = new ApplicationInfo
+            {
+                SType = StructureType.ApplicationInfo,
+                PApplicationName = pApp,
+                PEngineName = pApp,
+                ApiVersion = ApiVersion
+            };
+            var createInfo = new InstanceCreateInfo
+            {
+                SType = StructureType.InstanceCreateInfo,
+                PApplicationInfo = &appInfo,
+                EnabledExtensionCount = 0,
+                PpEnabledExtensionNames = null
+            };
+            create(createInfo);
+        }
+    }
 }

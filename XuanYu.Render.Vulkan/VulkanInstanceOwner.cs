@@ -25,17 +25,35 @@ public sealed unsafe class VulkanInstanceOwner : IDisposable
     }
 
     public static VulkanInstanceResult CreateWithResult(Vk vk)
+        => CreateWithResult(vk, offscreen: false);
+
+    public static VulkanInstanceOwner CreateOffscreen(Vk vk)
+    {
+        var r = CreateWithResult(vk, offscreen: true);
+        if (!r.Success) throw new InvalidOperationException(
+            VulkanInstanceLogFormatter.CreateFailed(r.ErrorType, r.ErrorMessage));
+        return r.Owner!;
+    }
+
+    public static VulkanInstanceResult CreateOffscreenWithResult(Vk vk)
+        => CreateWithResult(vk, offscreen: true);
+
+    static VulkanInstanceResult CreateWithResult(Vk vk, bool offscreen)
     {
         try
         {
             Instance created = default; Result createResult = Result.Success;
-            VulkanInstanceCreateInfoBuilder.BuildAndUse(ci => createResult = vk.CreateInstance(&ci, null, out created));
+            Action<Action<InstanceCreateInfo>> build = offscreen
+                ? VulkanInstanceCreateInfoBuilder.BuildOffscreenAndUse
+                : VulkanInstanceCreateInfoBuilder.BuildAndUse;
+            build(ci => createResult = vk.CreateInstance(&ci, null, out created));
             if (createResult != Result.Success)
             {
                 Console.WriteLine(VulkanInstanceLogFormatter.CreateFailed("VkResult", createResult.ToString()));
                 return new VulkanInstanceResult(false, null, 0, "VkResult", createResult.ToString());
             }
-            Console.WriteLine(VulkanInstanceLogFormatter.Created(VulkanInstanceCreateInfoBuilder.ApiVersion));
+            Console.WriteLine(VulkanInstanceLogFormatter.Created(
+                VulkanInstanceCreateInfoBuilder.ApiVersion, surfaceExtensionsEnabled: !offscreen));
             return new VulkanInstanceResult(true, new VulkanInstanceOwner(vk, created), VulkanInstanceCreateInfoBuilder.ApiVersion);
         }
         catch (Exception ex)

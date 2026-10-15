@@ -10,7 +10,7 @@ namespace XuanYu.Render.Vulkan.Device;
 // VK4-A：物理设备选择器。在已有 Instance + Surface 前提下枚举并选择可用于渲染/呈现的设备。
 // 严禁：创建 VkDevice / VkQueue、建立 Swapchain / ImageView、清屏、Present。
 // 可接触 VkPhysicalDevice，但只返回纯数据结果，不把 Vulkan 句柄泄漏给上层（含 UI）。
-public sealed unsafe class VulkanPhysicalDeviceSelector
+public sealed unsafe partial class VulkanPhysicalDeviceSelector
 {
     public static VulkanPhysicalDeviceSelection Select(
         Vk vk, Instance instance, SurfaceKHR surface, Action<string>? log = null)

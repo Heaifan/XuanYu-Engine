@@ -11,6 +11,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             $"ViewportFrameId={ViewportProbe.CurrentFrameId};" +
             $"SwapchainExtent={_extent.Width}x{_extent.Height};" +
             $"FramebufferGeneration={_framebufferGeneration};" +
-            $"SwapchainGeneration={_swapchainOwner.ResourceGeneration}");
+            $"SwapchainGeneration={_swapchainOwner?.ResourceGeneration ?? 0};" +
+            $"Offscreen={_offscreenTarget is not null}");
     }
 }

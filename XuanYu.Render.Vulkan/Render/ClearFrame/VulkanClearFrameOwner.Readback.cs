@@ -11,9 +11,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         foreach (var buffer in _readbackBuffers) buffer.Dispose();
         _readbackBuffers = [];
-        if (!TerrainReplayOptions.Enabled || !_swapchainOwner.ReadbackEnabled) return;
+        if (_offscreenTarget is null &&
+            (!TerrainReplayOptions.Enabled || !_swapchainOwner!.ReadbackEnabled)) return;
         var size = (ulong)_extent.Width * _extent.Height * 4;
-        var buffers = new VulkanReadbackBuffer[_swapchainOwner.Images.Length];
+        var buffers = new VulkanReadbackBuffer[_offscreenTarget is null
+            ? _swapchainOwner!.Images.Length : 1];
         for (var i = 0; i < buffers.Length; i++)
         {
             var buffer = VulkanReadbackBuffer.Create(_vk, _deviceOwner, size);
@@ -29,8 +31,9 @@ public sealed unsafe partial class VulkanClearFrameOwner
         Log($"【VulkanReadback】真实 Terrain RenderPass 读回缓冲已创建；图像数={buffers.Length}；尺寸={_extent.Width}x{_extent.Height}");
         _vk.GetPhysicalDeviceProperties(_deviceOwner.PhysicalDevice, out var properties);
         var device = Encoding.UTF8.GetString(properties.DeviceName, 256).TrimEnd('\0');
-        ViewportProbe.LogGpuReadbackCapability(device, _swapchainOwner.FormatName,
-            _swapchainOwner.ReadbackEnabled);
+        ViewportProbe.LogGpuReadbackCapability(device,
+            _offscreenTarget is null ? _swapchainOwner!.FormatName : _offscreenTarget.Format.ToString(),
+            _offscreenTarget is not null || _swapchainOwner!.ReadbackEnabled);
     }
 
     public bool TryReadbackPresentedImage(uint imageIndex, out byte[] pixels)
@@ -44,12 +47,13 @@ public sealed unsafe partial class VulkanClearFrameOwner
     void RecordReadback(CommandBuffer cb, int imageIndex)
     {
         if (imageIndex >= _readbackBuffers.Length) return;
-        var image = _swapchainOwner.Images[imageIndex];
+        var image = _offscreenTarget?.Image ?? _swapchainOwner!.Images[imageIndex];
         var range = new ImageSubresourceRange { AspectMask = ImageAspectFlags.ColorBit,
             LevelCount = 1, LayerCount = 1 };
         var toTransfer = new ImageMemoryBarrier { SType = StructureType.ImageMemoryBarrier,
             SrcAccessMask = AccessFlags.ColorAttachmentWriteBit, DstAccessMask = AccessFlags.TransferReadBit,
-            OldLayout = ImageLayout.PresentSrcKhr, NewLayout = ImageLayout.TransferSrcOptimal,
+            OldLayout = _offscreenTarget is null ? ImageLayout.PresentSrcKhr : ImageLayout.TransferSrcOptimal,
+            NewLayout = ImageLayout.TransferSrcOptimal,
             SrcQueueFamilyIndex = Vk.QueueFamilyIgnored, DstQueueFamilyIndex = Vk.QueueFamilyIgnored,
             Image = image, SubresourceRange = range };
         _vk.CmdPipelineBarrier(cb, PipelineStageFlags.ColorAttachmentOutputBit,
@@ -59,12 +63,15 @@ public sealed unsafe partial class VulkanClearFrameOwner
             ImageExtent = new Extent3D(_extent.Width, _extent.Height, 1) };
         var buffer = _readbackBuffers[imageIndex].Buffer;
         _vk.CmdCopyImageToBuffer(cb, image, ImageLayout.TransferSrcOptimal, buffer, 1, &copy);
-        var toPresent = new ImageMemoryBarrier { SType = StructureType.ImageMemoryBarrier,
-            SrcAccessMask = AccessFlags.TransferReadBit, DstAccessMask = AccessFlags.MemoryReadBit,
-            OldLayout = ImageLayout.TransferSrcOptimal, NewLayout = ImageLayout.PresentSrcKhr,
-            SrcQueueFamilyIndex = Vk.QueueFamilyIgnored, DstQueueFamilyIndex = Vk.QueueFamilyIgnored,
-            Image = image, SubresourceRange = range };
-        _vk.CmdPipelineBarrier(cb, PipelineStageFlags.TransferBit,
-            PipelineStageFlags.BottomOfPipeBit, 0, 0, null, 0, null, 1, &toPresent);
+        if (_offscreenTarget is null)
+        {
+            var toPresent = new ImageMemoryBarrier { SType = StructureType.ImageMemoryBarrier,
+                SrcAccessMask = AccessFlags.TransferReadBit, DstAccessMask = AccessFlags.MemoryReadBit,
+                OldLayout = ImageLayout.TransferSrcOptimal, NewLayout = ImageLayout.PresentSrcKhr,
+                SrcQueueFamilyIndex = Vk.QueueFamilyIgnored, DstQueueFamilyIndex = Vk.QueueFamilyIgnored,
+                Image = image, SubresourceRange = range };
+            _vk.CmdPipelineBarrier(cb, PipelineStageFlags.TransferBit,
+                PipelineStageFlags.BottomOfPipeBit, 0, 0, null, 0, null, 1, &toPresent);
+        }
     }
 }

@@ -10,7 +10,7 @@ public sealed partial class VulkanRenderSession
     void AttachTerrainPipeline(Vk vk)
     {
         // CREATE -> LOCAL OWNERSHIP; transfer is complete only after the session field is assigned.
-        var pipeline = VulkanGraphicsPipelineOwner.CreateTerrain(vk, _deviceOwner, _clearFrame, _swapchainOwner, _log);
+        var pipeline = VulkanGraphicsPipelineOwner.CreateTerrain(vk, _deviceOwner, _clearFrame, _log);
         TryTransferTerrainPipeline(
             pipeline,
             inject: value => _clearFrame.SetTerrainPipeline(value.Pipeline, value.Layout),

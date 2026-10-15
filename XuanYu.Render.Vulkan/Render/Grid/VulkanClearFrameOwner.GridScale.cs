@@ -17,7 +17,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var dpi = projection.ViewportDpiScale;
         var viewport = new ViewportState(
             0, 0, _extent.Width / dpi, _extent.Height / dpi,
-            (int)_extent.Width, (int)_extent.Height, dpi, _swapchainOwner.ResourceGeneration);
+            (int)_extent.Width, (int)_extent.Height, dpi, _swapchainOwner?.ResourceGeneration ?? 0);
         const double height = 0.0; // GRID-RW-2A：World Reference Plane 固定 Z=0，不随 MapGround 移动。
         var metricValid = ViewportMetricScale.TryCreate(projection.Camera, viewport, height, out var metric);
         if (metricValid)
@@ -32,7 +32,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         var viewport = new ViewportState(
             0, 0, _extent.Width, _extent.Height,
-            (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
+            (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner?.ResourceGeneration ?? 0);
         var state = CurrentViewProjectionState();
         var camera = projection.Camera;
         var vulkanProjection = ToVulkanProjection(state.Projection);

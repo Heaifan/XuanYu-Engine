@@ -6,8 +6,9 @@ public static class VulkanInstanceLogFormatter
     public static string FormatVersion(uint version) =>
         $"{version >> 22}.{(version >> 12) & 0x3ff}.{version & 0xfff}";
 
-    public static string Created(uint apiVersion) =>
-        $"【VulkanInstance】创建 Vulkan 实例成功；API 版本：{FormatVersion(apiVersion)}；启用扩展：VK_KHR_surface、VK_KHR_win32_surface";
+    public static string Created(uint apiVersion, bool surfaceExtensionsEnabled = true) =>
+        $"【VulkanInstance】创建 Vulkan 实例成功；API 版本：{FormatVersion(apiVersion)}；启用扩展：" +
+        (surfaceExtensionsEnabled ? "VK_KHR_surface、VK_KHR_win32_surface" : "无（Surface-free）");
 
     public static string Disposed(nint handle) =>
         handle == 0

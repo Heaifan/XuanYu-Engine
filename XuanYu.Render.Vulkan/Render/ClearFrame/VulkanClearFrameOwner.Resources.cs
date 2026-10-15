@@ -10,14 +10,15 @@ public sealed unsafe partial class VulkanClearFrameOwner
         AttachmentDescription* attachments = stackalloc AttachmentDescription[2];
         attachments[0] = new AttachmentDescription
         {
-            Format = _swapchainOwner.Format,
+            Format = _offscreenTarget?.Format ?? _swapchainOwner!.Format,
             Samples = SampleCountFlags.Count1Bit,
             LoadOp = AttachmentLoadOp.Clear,
             StoreOp = AttachmentStoreOp.Store,
             StencilLoadOp = AttachmentLoadOp.DontCare,
             StencilStoreOp = AttachmentStoreOp.DontCare,
             InitialLayout = ImageLayout.Undefined,
-            FinalLayout = ImageLayout.PresentSrcKhr
+            FinalLayout = _offscreenTarget is null
+                ? ImageLayout.PresentSrcKhr : ImageLayout.TransferSrcOptimal
         };
         attachments[1] = new AttachmentDescription
         {

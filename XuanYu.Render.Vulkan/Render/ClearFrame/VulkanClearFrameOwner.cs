@@ -11,7 +11,8 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
 {
     readonly Vk _vk;
     readonly VulkanDeviceOwner _deviceOwner;
-    readonly VulkanSwapchainOwner _swapchainOwner;
+    readonly VulkanSwapchainOwner? _swapchainOwner;
+    readonly VulkanOffscreenColorTarget? _offscreenTarget;
     readonly Action<string>? _log;
     RenderPass _renderPass;
     CommandPool _commandPool;
@@ -44,6 +45,11 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
         _proceduralVertexBuffer = VulkanStaticModelBuffer.Create(vk, deviceOwner,
             new VulkanStaticModelVertex[RenderDrawPlan.RotateGizmoVertexCount],
             BufferUsageFlags.VertexBufferBit, out _);
+        Initialize(graphicsFamily);
+    }
+
+    void Initialize(int graphicsFamily)
+    {
         try
         {
             BuildRenderPass();
@@ -61,16 +67,19 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
 
     public bool RebuildFramebuffers(uint generation = 0, bool force = false)
     {
+        var nextExtent = _offscreenTarget?.Extent ?? _swapchainOwner!.Extent;
         if (!force && _framebuffers.Length > 0 &&
-            _extent.Width == _swapchainOwner.Extent.Width && _extent.Height == _swapchainOwner.Extent.Height)
+            _extent.Width == nextExtent.Width && _extent.Height == nextExtent.Height)
         {
             Log(VulkanClearFrameLogFormatter.Skipped($"同尺寸跳过帧缓冲重建（{_extent.Width}x{_extent.Height}）"));
             return true;
         }
         _log?.Invoke(VulkanResizeTracer.Stage(generation, "帧缓冲重建开始", "开始"));
         DestroyFramebuffers();
-        _extent = _swapchainOwner.Extent;
-        _views = _swapchainOwner.ImageViews.ToArray();
+        _extent = nextExtent;
+        _views = _offscreenTarget is null
+            ? _swapchainOwner!.ImageViews.ToArray()
+            : [_offscreenTarget.View];
         RebuildReadbackBuffers();
         _framebuffers = new Framebuffer[_views.Length];
         if (!CreateFramebuffers()) return false;
