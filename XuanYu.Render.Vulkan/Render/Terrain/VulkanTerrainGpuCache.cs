@@ -12,6 +12,8 @@ sealed class VulkanTerrainGpuCache : IDisposable
     readonly LinkedList<TerrainChunkGpuKey> _lru = [];
     readonly Dictionary<string, IReadOnlyList<TerrainChunkDescriptor>> _chunks = [];
     int _meshBuilds; int _vertexUploads; int _indexUploads; int _bufferCreates;
+    public double MeshBuildMilliseconds { get; private set; }
+    public double UploadMilliseconds { get; private set; }
     public VulkanTerrainGpuCache(Vk vk, VulkanDeviceOwner device, Action<string>? log) =>
         (_vk, _device, _log) = (vk, device, log);
 
@@ -29,7 +31,9 @@ sealed class VulkanTerrainGpuCache : IDisposable
         var key = new TerrainChunkGpuKey(resource.TerrainId, resource.Revision,
             transform.VerticalExaggeration, chunk.ChunkX, chunk.ChunkY, lod);
         if (_resources.TryGetValue(key, out var current)) { Touch(key); return current; }
-        var next = VulkanTerrainGpuResource.Create(_vk, _device, resource, chunk, lod, transform, out var error);
+        var next = VulkanTerrainGpuResource.Create(_vk, _device, resource, chunk, lod, transform,
+            out var error, out var meshMs, out var uploadMs);
+        MeshBuildMilliseconds += meshMs; UploadMilliseconds += uploadMs;
         if (next is null) { _log?.Invoke($"Terrain Chunk GPU 资源创建失败：{error}"); return null; }
         _resources[key] = next; _lru.AddLast(key);
         _meshBuilds++; _vertexUploads++; _indexUploads++; _bufferCreates += 2;

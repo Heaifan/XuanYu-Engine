@@ -81,9 +81,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
             ClearValueCount = 2,
             PClearValues = clears
         };
+        _timestampQuery?.RecordStart(cb);
         _vk.CmdBeginRenderPass(cb, &rp, SubpassContents.Inline);
         RecordDraw(cb);
         _vk.CmdEndRenderPass(cb);
+        _timestampQuery?.RecordEnd(cb);
         RecordReadback(cb, imageIndex);
         return Ok(_vk.EndCommandBuffer(cb), "EndCommandBuffer");
     }

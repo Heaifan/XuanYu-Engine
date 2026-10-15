@@ -13,6 +13,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
     Terrain.VulkanTerrainGpuCache? _terrainCache;
     readonly TerrainLodStateCache _terrainLodStates = new();
     public TerrainRenderStats TerrainStats { get; private set; }
+    public double TerrainMeshBuildMilliseconds => _terrainCache?.MeshBuildMilliseconds ?? 0;
+    public double TerrainUploadMilliseconds => _terrainCache?.UploadMilliseconds ?? 0;
 
     public void SetTerrainPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
     {

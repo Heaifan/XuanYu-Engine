@@ -56,6 +56,8 @@ public sealed class VulkanOffscreenDeviceTests
         cancelled.Cancel();
         Assert.Throws<OperationCanceledException>(() => renderer.RenderRgba(cancelled.Token));
         var pixels = renderer.RenderRgba();
+        if (renderer.GpuTimestampSupported)
+            Assert.True(renderer.LastGpuRenderMilliseconds is >= 0);
         Assert.Equal(128 * 128 * 4, pixels.Length);
         Assert.True(pixels.Chunk(4).Select(pixel => string.Join(',', pixel)).Distinct().Count() > 10);
     }

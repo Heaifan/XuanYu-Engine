@@ -4,6 +4,7 @@ using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Render.StaticModels;
 using XuanYu.Render.Vulkan.Render.VectorOverlay;
+using XuanYu.Render.Vulkan.Benchmark;
 using XuanYu.Render.Vulkan.Render.Readback;
 using XuanYu.Render.Vulkan.Swapchain;
 namespace XuanYu.Render.Vulkan.Render;
@@ -19,6 +20,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     CommandBuffer[] _commandBuffers = [];
     Framebuffer[] _framebuffers = [];
     VulkanReadbackBuffer[] _readbackBuffers = [];
+    VulkanGpuTimestampQuery? _timestampQuery;
     ImageView[] _views = []; VulkanDepthAttachment? _depthAttachment;
     Silk.NET.Vulkan.Pipeline _pipeline = default;
     PipelineLayout _pipelineLayout = default;

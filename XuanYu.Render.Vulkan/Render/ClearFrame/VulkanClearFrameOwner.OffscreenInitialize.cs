@@ -4,6 +4,7 @@ using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Render.Readback;
 using XuanYu.Render.Vulkan.Render.StaticModels;
 using XuanYu.Render.Vulkan.Render.VectorOverlay;
+using XuanYu.Render.Vulkan.Benchmark;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -18,6 +19,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _proceduralVertexBuffer = VulkanStaticModelBuffer.Create(vk, deviceOwner,
             new VulkanStaticModelVertex[RenderDrawPlan.RotateGizmoVertexCount],
             BufferUsageFlags.VertexBufferBit, out _);
+        _timestampQuery = VulkanGpuTimestampQuery.TryCreate(vk, deviceOwner, checked((uint)graphicsFamily));
         Initialize(graphicsFamily);
     }
 }

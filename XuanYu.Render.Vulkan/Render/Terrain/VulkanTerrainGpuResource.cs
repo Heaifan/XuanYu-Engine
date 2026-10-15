@@ -2,6 +2,7 @@ using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Render.StaticModels;
+using System.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Render.Terrain;
 
@@ -18,8 +19,10 @@ sealed class VulkanTerrainGpuResource : IDisposable
 
     public static VulkanTerrainGpuResource? Create(Vk vk, VulkanDeviceOwner device,
         TerrainRenderResource resource, TerrainChunkDescriptor chunk, TerrainLodLevel lod,
-        TerrainRenderTransform transform, out string error)
+        TerrainRenderTransform transform, out string error, out double meshBuildMs,
+        out double uploadMs)
     {
+        meshBuildMs = 0; uploadMs = 0;
         if (!chunk.Matches(resource.TerrainId, resource.Revision))
         {
             error = "Terrain Chunk 的 TerrainId 或 Revision 不匹配。";
@@ -30,15 +33,19 @@ sealed class VulkanTerrainGpuResource : IDisposable
             error = "Terrain Chunk 的采样范围不合法。";
             return null;
         }
+        var buildTimer = Stopwatch.StartNew();
         var mesh = TerrainChunkMeshBuilder.Build(resource.Heightfield, chunk, lod,
             transform.VerticalExaggeration);
         var vertices = mesh.Vertices.Select(v => new VulkanStaticModelVertex(
             (float)(v.X + chunk.StartSampleX * resource.CellSizeMeters),
             (float)(v.Y + chunk.StartSampleY * resource.CellSizeYMeters), (float)v.Z,
             (float)v.Nx, (float)v.Ny, (float)v.Nz, 0, 0)).ToArray();
+        buildTimer.Stop(); meshBuildMs = buildTimer.Elapsed.TotalMilliseconds;
+        var uploadTimer = Stopwatch.StartNew();
         var vb = VulkanStaticModelBuffer.Create(vk, device, vertices, BufferUsageFlags.VertexBufferBit, out error);
-        if (vb is null) return null;
+        if (vb is null) { uploadMs = uploadTimer.Elapsed.TotalMilliseconds; return null; }
         var ib = VulkanStaticModelBuffer.Create(vk, device, mesh.Indices.ToArray(), BufferUsageFlags.IndexBufferBit, out error);
+        uploadTimer.Stop(); uploadMs = uploadTimer.Elapsed.TotalMilliseconds;
         if (ib is null) { vb.Dispose(); return null; }
         return new VulkanTerrainGpuResource(vb, ib, (uint)mesh.Indices.Count);
     }

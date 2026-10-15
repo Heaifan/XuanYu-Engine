@@ -29,6 +29,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_commandBuffers.Length > 0)
             _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)_commandBuffers.Length, _commandBuffers);
         if (_commandPool.Handle != 0) _vk.DestroyCommandPool(_deviceOwner.LogicalDevice, _commandPool, null);
+        _timestampQuery?.Dispose(); _timestampQuery = null;
         if (_renderPass.Handle != 0) _vk.DestroyRenderPass(_deviceOwner.LogicalDevice, _renderPass, null);
         Log(VulkanClearFrameLogFormatter.Disposed());
     }

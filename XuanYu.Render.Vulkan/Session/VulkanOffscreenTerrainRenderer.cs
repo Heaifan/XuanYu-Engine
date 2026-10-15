@@ -19,6 +19,12 @@ public sealed unsafe class VulkanOffscreenTerrainRenderer : IDisposable
     bool _disposed;
 
     public TerrainRenderStats TerrainStats => _frame?.TerrainStats ?? default;
+    public double? LastGpuRenderMilliseconds => _frame?.LastGpuRenderMilliseconds;
+    public bool GpuTimestampSupported => _frame?.GpuTimestampSupported ?? false;
+    public uint GpuTimestampValidBits => _frame?.GpuTimestampValidBits ?? 0;
+    public double GpuTimestampPeriodNanoseconds => _frame?.GpuTimestampPeriodNanoseconds ?? 0;
+    public double TerrainMeshBuildMilliseconds => _frame?.TerrainMeshBuildMilliseconds ?? 0;
+    public double TerrainUploadMilliseconds => _frame?.TerrainUploadMilliseconds ?? 0;
 
     public VulkanOffscreenTerrainRenderer(RenderProjection projection, uint width, uint height,
         Action<string>? log = null)
@@ -58,6 +64,16 @@ public sealed unsafe class VulkanOffscreenTerrainRenderer : IDisposable
             if (_device is null) throw new ObjectDisposedException(nameof(VulkanOffscreenTerrainRenderer));
             _vk.GetPhysicalDeviceProperties(_device.PhysicalDevice, out var properties);
             return System.Text.Encoding.UTF8.GetString(properties.DeviceName, 256).TrimEnd('\0');
+        }
+    }
+
+    public uint DeviceDriverVersion
+    {
+        get
+        {
+            if (_device is null) throw new ObjectDisposedException(nameof(VulkanOffscreenTerrainRenderer));
+            _vk.GetPhysicalDeviceProperties(_device.PhysicalDevice, out var properties);
+            return properties.DriverVersion;
         }
     }
 

@@ -5,6 +5,11 @@ namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
 {
+    public double? LastGpuRenderMilliseconds { get; private set; }
+    public bool GpuTimestampSupported => _timestampQuery is not null;
+    public uint GpuTimestampValidBits => _timestampQuery?.ValidBits ?? 0;
+    public double GpuTimestampPeriodNanoseconds => _timestampQuery?.PeriodNanoseconds ?? 0;
+
     public byte[] RenderOffscreenAndReadback(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -33,6 +38,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 }
             }
             cancellationToken.ThrowIfCancellationRequested();
+            LastGpuRenderMilliseconds = _timestampQuery is not null &&
+                _timestampQuery.TryReadMilliseconds(out var elapsed) ? elapsed : null;
             return _readbackBuffers[0].Read();
         }
         finally { _vk.DestroyFence(_deviceOwner.LogicalDevice, fence, null); }
