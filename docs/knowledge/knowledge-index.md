@@ -50,7 +50,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-SPA-004 | Knowledge | Architecture | Editor / Gameplay Zoom Authority 必须按产品上下文分离 | P0 | E1 | EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1 · 2026-10-05 · baseline 4277b242 | Active |
 | K-ARCH-001 | Knowledge | Architecture | Composition Root 初始化顺序属于依赖合同 | P0 | E1 | v0.1.7.1-fix · 2026-06-24 11:45 · 359e3ce | Active |
 | K-XYC-001 | Knowledge | Architecture | 自动化控制复用 Editor 相机权威，以执行后回读验证成功 | P1 | E1 | XYC-P0 · 2026-10-14 · c16ec8b6 | Active |
-| K-XYC-002 | Knowledge | Rendering / Automation | 相机状态回读与窗口截图必须证明呈现帧关联 | P1 | E1 | XYC-R0-A1/A1b · 2026-10-14 · 四帧窗口报告待原件复核 | Active |
+| K-XYC-002 | Knowledge | Rendering / Automation | 相机状态回读与窗口截图必须证明呈现帧关联 | P1 | E1 | A1/A1b 2026-10-14；A2a 2026-10-15 本机 GPU 实验报告 | Active |
 | K-ARCH-002 | Knowledge | Architecture | 产品模式持续膨胀时先建立 Workspace 边界 | P1 | E1 | MAP-A → EDITOR-A · 2026-08-11 · 6724079 | Active |
 | K-REN-001 | Knowledge | Rendering | Editor Overlay 不得用世界坐标偏移制造视觉层级 | P0 | E2 | v0.2.25.13-rz · 2026-08-10 13:37:23 · ef12f4b | Active |
 | K-REN-002 | Knowledge | Rendering | 共面 Overlay 应由独立 Depth Policy 与 Draw Order 表达 | P0 | E2 | v0.2.25.15-stab · 2026-08-10 14:22:43 · 751da52 | Active |

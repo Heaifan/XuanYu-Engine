@@ -460,4 +460,14 @@ A1b 施工报告在真实 NASADEM `n24e121`、隔离 Editor 上完成 `20 km →
 
 **集成状态：** 本次 A1b 施工报告称全解 Build 0W0E、3562 PASS / 2 SKIP / 0 FAIL、World.Tests 2309/2309；施工代码在本机 `c16ec8b6` 的 Dirty 工作区，远端此时只有之前的 XYK 文档提交。不可将本条 XYK 记录写成 A1b 产品代码已 Commit/Push 或远端 CI 复跑通过。
 
+### 2026-10-15 A2a GPU 独立读回实验（STRENGTHEN，E1 不升级）
+
+本地执行 Agent 报告：在 RTX 3060 上启动三次独立进程，每次成功用**不依赖 Vulkan Surface/Swapchain 的独立 VkImage** 执行 GPU clear、image layout transition、Image→Buffer copy、Fence(5s) 等待和 host map，生成 PNG；4096 个已知像素断言均 PASS，实验项目 Build 0W/0E，报告设备资源释放正常。PNG SHA-256 为 `D274BCE646328E01303493B8DC79075B311CFB63D031E749CE2A79C65C5B2341`。
+
+原始实验日志、PNG 和源代码位于本机 ignored `artifacts/xyc-r0-a2a-probe/`，用户报告时均**未集成到产品源码、未提交到 GitHub、未执行完整 XYT**；本次 XYK 审计未独立读取本机原件或重跑真实 GPU。工作基线 `c16ec8b6` 后方为远端三笔 XYK 文档提交（截至本证据报告），工作区有 A1/A1b owned Dirty 和两处 Foreign Dirty。此处只记录报告的单次实验结论，不升格为产品验收。
+
+**适用知识及证据边界**：独立 VkImage 的 GPU 已知颜色图案 readback 可证明最小 Vulkan GPU→host→PNG 管线在该 RTX 3060 环境中可行；不能证明 XYE 现有 Terrain RenderPass 采用合法 TransferSrc ImageUsage、正确布局/屏障/format、与 Camera/RenderSnapshot/FrameId 关联，也不能证明真实 NASADEM Terrain 被渲染。实验未创建 Surface/Swapchain，只能证明**独立清屏读回实验不依赖窗口**，不能宣告基于 XYE Terrain RenderSnapshot 的 `TRUE_OFFSCREEN` 完成。未来接入前必须核查目标 Image 的 usage/format features、copy 执行点、GPU→host 同步与非 coherent memory invalidate（若适用），并验证真实地形像素内容、帧身份、重复运行后的资源回收。
+
+**下一次复验点**：XYC-R0-A2 Issue #31；将实验模块通过现有 Renderer 写入范围安全集成后，在真实 `n24e121` RenderPass 输出 GPU-origin PNG，随后才在无窗口 Host 复用同一 Scene/Terrain 画面。A2a=`PARTIAL`，A2b=`OFFSCREEN_PARTIAL`；用户 P4=`PENDING`。
+
 **关联知识**：K-XYC-001、K-REN-005、K-VAL-001、K-VAL-002。
