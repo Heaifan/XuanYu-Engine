@@ -1,0 +1,37 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='900' height='560'>
+<rect width='100%' height='100%' fill='white'/>
+<text x='20' y='32' font-size='21'>Error layers (only supplied values)</text>
+<path d='M90 65.0h760' stroke='#ddd'/>
+<path d='M90 147.0h760' stroke='#ddd'/>
+<path d='M90 229.0h760' stroke='#ddd'/>
+<path d='M90 311.0h760' stroke='#ddd'/>
+<path d='M90 393.0h760' stroke='#ddd'/>
+<path d='M90 475.0h760' stroke='#ddd'/>
+<path d='M90 65v410h760' fill='none' stroke='#333'/>
+<text x='470.0' y='544' text-anchor='middle'>Evidence item index</text>
+<text x='18' y='270.0' transform='rotate(-90 18 270.0)' text-anchor='middle'>World error P95 (m)</text>
+<circle cx='153.33' cy='179.28' r='5' fill='#59A14F'><title>2049-auto source→heightfield: 1, 10.37</title></circle>
+<text x='160.33' y='172.28' font-size='11'>2049-auto source→heightfield</text>
+<circle cx='216.67' cy='244.59' r='5' fill='#59A14F'><title>2049-auto source→final mesh: 2, 8.08</title></circle>
+<text x='223.67' y='237.59' font-size='11'>2049-auto source→final mesh</text>
+<circle cx='280.00' cy='179.28' r='5' fill='#59A14F'><title>2049-lod-bias-1 source→heightfield: 3, 10.37</title></circle>
+<text x='287.00' y='172.28' font-size='11'>2049-lod-bias-1 source→heightfield</text>
+<circle cx='343.33' cy='65.00' r='5' fill='#59A14F'><title>2049-lod-bias-1 source→final mesh: 4, 14.38</title></circle>
+<text x='350.33' y='58.00' font-size='11'>2049-lod-bias-1 source→final mesh</text>
+<circle cx='406.67' cy='179.28' r='5' fill='#59A14F'><title>SSE-0.5px source→heightfield: 5, 10.37</title></circle>
+<text x='413.67' y='172.28' font-size='11'>SSE-0.5px source→heightfield</text>
+<circle cx='470.00' cy='251.43' r='5' fill='#59A14F'><title>SSE-0.5px source→final mesh: 6, 7.84</title></circle>
+<text x='477.00' y='244.43' font-size='11'>SSE-0.5px source→final mesh</text>
+<circle cx='533.33' cy='179.28' r='5' fill='#59A14F'><title>SSE-1px source→heightfield: 7, 10.37</title></circle>
+<text x='540.33' y='172.28' font-size='11'>SSE-1px source→heightfield</text>
+<circle cx='596.67' cy='251.43' r='5' fill='#59A14F'><title>SSE-1px source→final mesh: 8, 7.84</title></circle>
+<text x='603.67' y='244.43' font-size='11'>SSE-1px source→final mesh</text>
+<circle cx='660.00' cy='179.28' r='5' fill='#59A14F'><title>SSE-2px source→heightfield: 9, 10.37</title></circle>
+<text x='667.00' y='172.28' font-size='11'>SSE-2px source→heightfield</text>
+<circle cx='723.33' cy='238.63' r='5' fill='#59A14F'><title>SSE-2px source→final mesh: 10, 8.289</title></circle>
+<text x='730.33' y='231.63' font-size='11'>SSE-2px source→final mesh</text>
+<circle cx='786.67' cy='179.28' r='5' fill='#59A14F'><title>SSE-4px source→heightfield: 11, 10.37</title></circle>
+<text x='793.67' y='172.28' font-size='11'>SSE-4px source→heightfield</text>
+<circle cx='850.00' cy='134.07' r='5' fill='#59A14F'><title>SSE-4px source→final mesh: 12, 11.96</title></circle>
+<text x='857.00' y='127.07' font-size='11'>SSE-4px source→final mesh</text>
+</svg>

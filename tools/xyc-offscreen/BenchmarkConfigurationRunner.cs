@@ -19,7 +19,9 @@ internal static class BenchmarkConfigurationRunner
         try
         {
             BenchmarkFailureFactory.CheckMemoryBudget(sampleCount);
-            terrain = tile.ToRenderSnapshot($"{tile.TileId}-{sampleCount}-{poseName}", 1, sampleCount);
+            var terrainId = Environment.GetEnvironmentVariable("XYE_B3_FIXED_TERRAIN") == "1"
+                ? tile.TileId : $"{tile.TileId}-{sampleCount}-{poseName}";
+            terrain = tile.ToRenderSnapshot(terrainId, 1, sampleCount);
             sampleTimer.Stop();
             var pose = BenchmarkPoseFactory.Create(terrain).Single(x => x.Name == poseName);
             camera = pose.Camera;

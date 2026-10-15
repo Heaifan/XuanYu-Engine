@@ -54,6 +54,13 @@ public sealed unsafe class VulkanOffscreenTerrainRenderer : IDisposable
         (_frame ?? throw new ObjectDisposedException(nameof(VulkanOffscreenTerrainRenderer)))
             .RenderOffscreenAndReadback(cancellationToken);
 
+    public void UpdateProjection(RenderProjection projection)
+    {
+        if (_disposed || _frame is null) throw new ObjectDisposedException(nameof(VulkanOffscreenTerrainRenderer));
+        if (!projection.HasTerrain) throw new ArgumentException("RenderProjection 必须包含 Terrain", nameof(projection));
+        _frame.SetRenderProjection(projection);
+    }
+
     public byte[] RenderPng(CancellationToken cancellationToken = default) => VulkanPngEncoder.EncodeRgba(
         checked((int)_target!.Extent.Width), checked((int)_target.Extent.Height), RenderRgba(cancellationToken));
 

@@ -13,6 +13,13 @@ public sealed class TerrainLodStateCache
     public int PreviousLod(TerrainLodStateKey key) =>
         _previous.TryGetValue(key, out var value) ? value : -1;
 
+    public void Remember(TerrainLodStateKey key, int lod)
+    {
+        if (lod is < TerrainLodSelector.MinLod or > TerrainLodSelector.MaxLod)
+            throw new ArgumentOutOfRangeException(nameof(lod));
+        _previous[key] = lod;
+    }
+
     public TerrainLodSelection Select(TerrainLodStateKey key,
         ViewProjectionState state, SpatialAabb bounds)
         => Select(key, state, bounds, 240, 240);

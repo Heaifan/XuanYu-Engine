@@ -1,0 +1,113 @@
+{
+  "device": "NVIDIA GeForce RTX 3060",
+  "driverVersion": 2559967232,
+  "buildIdentity": "HEAD=9429be62288cd58c56ff7a9b6608857afb4c6175;B3=VIS;DIRTY=YES",
+  "width": 1024,
+  "height": 768,
+  "frameRows": [
+    {
+      "id": "top-down",
+      "cameraRevision": 2,
+      "gpuMs": 5.295872,
+      "triangles": 468480,
+      "visibleChunks": 4,
+      "drawCalls": 4,
+      "lod0": 4,
+      "lod1": 0,
+      "lod2": 0,
+      "lod3": 0,
+      "lod4": 0
+    },
+    {
+      "id": "near-oblique",
+      "cameraRevision": 3,
+      "gpuMs": 21.522944,
+      "triangles": 1910496,
+      "visibleChunks": 21,
+      "drawCalls": 21,
+      "lod0": 18,
+      "lod1": 3,
+      "lod2": 0,
+      "lod3": 0,
+      "lod4": 0
+    },
+    {
+      "id": "high-relief-sensitive",
+      "cameraRevision": 4,
+      "gpuMs": 2.949856,
+      "triangles": 234240,
+      "visibleChunks": 2,
+      "drawCalls": 2,
+      "lod0": 2,
+      "lod1": 0,
+      "lod2": 0,
+      "lod3": 0,
+      "lod4": 0
+    },
+    {
+      "id": "chunk-entry",
+      "cameraRevision": 5,
+      "gpuMs": 5.285536,
+      "triangles": 468480,
+      "visibleChunks": 4,
+      "drawCalls": 4,
+      "lod0": 4,
+      "lod1": 0,
+      "lod2": 0,
+      "lod3": 0,
+      "lod4": 0
+    },
+    {
+      "id": "near-plane-stress",
+      "cameraRevision": 6,
+      "gpuMs": 22.090784,
+      "triangles": 1954240,
+      "visibleChunks": 19,
+      "drawCalls": 19,
+      "lod0": 19,
+      "lod1": 0,
+      "lod2": 0,
+      "lod3": 0,
+      "lod4": 0
+    },
+    {
+      "id": "sequence-A-before",
+      "cameraRevision": 7,
+      "gpuMs": 22.115296,
+      "triangles": 1957312,
+      "visibleChunks": 21,
+      "drawCalls": 21,
+      "lod0": 19,
+      "lod1": 2,
+      "lod2": 0,
+      "lod3": 0,
+      "lod4": 0
+    },
+    {
+      "id": "sequence-B",
+      "cameraRevision": 8,
+      "gpuMs": 22.10208,
+      "triangles": 1957312,
+      "visibleChunks": 21,
+      "drawCalls": 21,
+      "lod0": 19,
+      "lod1": 2,
+      "lod2": 0,
+      "lod3": 0,
+      "lod4": 0
+    },
+    {
+      "id": "sequence-A-return",
+      "cameraRevision": 9,
+      "gpuMs": 22.988512,
+      "triangles": 1957312,
+      "visibleChunks": 21,
+      "drawCalls": 21,
+      "lod0": 19,
+      "lod1": 2,
+      "lod2": 0,
+      "lod3": 0,
+      "lod4": 0
+    }
+  ]
+}

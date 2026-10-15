@@ -12,6 +12,10 @@ public sealed class TerrainReplayOptionsTests
     [InlineData("cull-off", TerrainReplayVariant.DisableChunkCulling)]
     [InlineData("lod0", TerrainReplayVariant.FixedLod0)]
     [InlineData("lod-bias-1", TerrainReplayVariant.LodBiasOne)]
+    [InlineData("sse-0.5", TerrainReplayVariant.SseBudgetHalfPixel)]
+    [InlineData("sse-1", TerrainReplayVariant.SseBudgetOnePixel)]
+    [InlineData("sse-2", TerrainReplayVariant.SseBudgetTwoPixels)]
+    [InlineData("sse-4", TerrainReplayVariant.SseBudgetFourPixels)]
     [InlineData("near-small", TerrainReplayVariant.ReducedNearPlane)]
     public void Parses_only_named_diagnostic_variants(string value,
         TerrainReplayVariant expected)
@@ -71,6 +75,15 @@ public sealed class TerrainReplayOptionsTests
     {
         Assert.False(TerrainReplayOptions.TryParseFarPlane(value, out _));
     }
+
+    [Theory]
+    [InlineData(TerrainReplayVariant.SseBudgetHalfPixel, 0.5)]
+    [InlineData(TerrainReplayVariant.SseBudgetOnePixel, 1.0)]
+    [InlineData(TerrainReplayVariant.SseBudgetTwoPixels, 2.0)]
+    [InlineData(TerrainReplayVariant.SseBudgetFourPixels, 4.0)]
+    [InlineData(TerrainReplayVariant.Baseline, null)]
+    public void Returns_pixel_budget_only_for_sse_variants(TerrainReplayVariant variant, double? expected) =>
+        Assert.Equal(expected, TerrainReplayOptions.SseBudgetPixels(variant));
 
     [Fact]
     public void Far_plane_threshold_preserves_frozen_camera_pose()

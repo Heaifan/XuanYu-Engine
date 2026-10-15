@@ -11,7 +11,11 @@ public enum TerrainReplayVariant
     DisableChunkCulling,
     FixedLod0,
     ReducedNearPlane,
-    LodBiasOne
+    LodBiasOne,
+    SseBudgetHalfPixel,
+    SseBudgetOnePixel,
+    SseBudgetTwoPixels,
+    SseBudgetFourPixels
 }
 
 public static class TerrainReplayOptions
@@ -45,6 +49,10 @@ public static class TerrainReplayOptions
             "cull-off" => TerrainReplayVariant.DisableChunkCulling,
             "lod0" => TerrainReplayVariant.FixedLod0,
             "lod-bias-1" => TerrainReplayVariant.LodBiasOne,
+            "sse-0.5" => TerrainReplayVariant.SseBudgetHalfPixel,
+            "sse-1" => TerrainReplayVariant.SseBudgetOnePixel,
+            "sse-2" => TerrainReplayVariant.SseBudgetTwoPixels,
+            "sse-4" => TerrainReplayVariant.SseBudgetFourPixels,
             "near-small" => TerrainReplayVariant.ReducedNearPlane,
             _ => (TerrainReplayVariant)(-1)
         };
@@ -78,6 +86,15 @@ public static class TerrainReplayOptions
 
     public static bool ShouldCull(bool intersects, TerrainReplayVariant variant) =>
         !intersects && variant != TerrainReplayVariant.DisableChunkCulling;
+
+    public static double? SseBudgetPixels(TerrainReplayVariant variant) => variant switch
+    {
+        TerrainReplayVariant.SseBudgetHalfPixel => 0.5,
+        TerrainReplayVariant.SseBudgetOnePixel => 1.0,
+        TerrainReplayVariant.SseBudgetTwoPixels => 2.0,
+        TerrainReplayVariant.SseBudgetFourPixels => 4.0,
+        _ => null
+    };
 
     public static int SelectLod(int selectedLod, TerrainReplayVariant variant) => variant switch
     {

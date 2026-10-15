@@ -1,0 +1,3250 @@
+{
+  "schema": "XYC-B3-SSE-ERRORS/1",
+  "terrainId": "n24e121",
+  "revision": 1,
+  "samples": 2049,
+  "chunkCells": 240,
+  "sourceSha256": "BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1",
+  "errors": [
+    {
+      "ChunkX": 0,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.648888888889132,
+      "MaxVisualErrorMeters": 101.84444444444466
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 23.53777777777782,
+      "MaxVisualErrorMeters": 122.14666666666653
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 47.20888888888862,
+      "MaxVisualErrorMeters": 155.16444444444437
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 102.79999999999995,
+      "MaxVisualErrorMeters": 257.4222222222222
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 207.69777777777767,
+      "MaxVisualErrorMeters": 444.2266666666667
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.34222222222229,
+      "MaxVisualErrorMeters": 126.4622222222215
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 18.568888888888978,
+      "MaxVisualErrorMeters": 171.8844444444435
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 39.279999999999745,
+      "MaxVisualErrorMeters": 155.58222222222162
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 86.37333333333345,
+      "MaxVisualErrorMeters": 211.6533333333332
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 164.8311111111111,
+      "MaxVisualErrorMeters": 351.3244444444447
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 13.533333333333303,
+      "MaxVisualErrorMeters": 112.54222222222256
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 21.54222222222188,
+      "MaxVisualErrorMeters": 125.98666666666668
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 42.65777777777839,
+      "MaxVisualErrorMeters": 154.73333333333426
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 91.8844444444444,
+      "MaxVisualErrorMeters": 261.10666666666657
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 170.48000000000002,
+      "MaxVisualErrorMeters": 328.9466666666658
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 15.484444444445217,
+      "MaxVisualErrorMeters": 115.07111111111135
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 24.413333333332957,
+      "MaxVisualErrorMeters": 141.05333333333306
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 46.59999999999866,
+      "MaxVisualErrorMeters": 174.86222222222227
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 96.66222222222314,
+      "MaxVisualErrorMeters": 286.8800000000001
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 187.44888888888954,
+      "MaxVisualErrorMeters": 424.63111111111107
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 17.026666666663914,
+      "MaxVisualErrorMeters": 118.86666666666633
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 26.70666666666989,
+      "MaxVisualErrorMeters": 145.15555555555375
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 51.577777777777555,
+      "MaxVisualErrorMeters": 204.991111111108
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 109.400000000001,
+      "MaxVisualErrorMeters": 314.4266666666638
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 217.95555555555507,
+      "MaxVisualErrorMeters": 480.8044444444429
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 3.480000000000018,
+      "MaxVisualErrorMeters": 97.15555555555534
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 5.675555555555604,
+      "MaxVisualErrorMeters": 119.2533333333214
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.502222222223168,
+      "MaxVisualErrorMeters": 108.79555555555669
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 22.693333333333285,
+      "MaxVisualErrorMeters": 190.38222222222498
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 61.22222222222274,
+      "MaxVisualErrorMeters": 385.0799999999986
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 0,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 0,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 0,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 0,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 0,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 16.266666666667334,
+      "MaxVisualErrorMeters": 115.50666666666712
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 24.89333333333343,
+      "MaxVisualErrorMeters": 136.77333333333354
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 46.24888888888904,
+      "MaxVisualErrorMeters": 154.24888888888927
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 98.36000000000013,
+      "MaxVisualErrorMeters": 245.0622222222222
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 195.73777777777786,
+      "MaxVisualErrorMeters": 420.5866666666666
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 12.680000000000064,
+      "MaxVisualErrorMeters": 103.91555555555396
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 19.746666666666897,
+      "MaxVisualErrorMeters": 109.32888888888738
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 40.52000000000044,
+      "MaxVisualErrorMeters": 127.16888888888843
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 86.31111111111113,
+      "MaxVisualErrorMeters": 183.4444444444439
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 179.77333333333263,
+      "MaxVisualErrorMeters": 343.5733333333337
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.493333333332885,
+      "MaxVisualErrorMeters": 86.79999999999973
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 18.73777777777832,
+      "MaxVisualErrorMeters": 88.00444444444565
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 39.33333333333303,
+      "MaxVisualErrorMeters": 134.1066666666684
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 84.28888888888832,
+      "MaxVisualErrorMeters": 206.66666666666652
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 173.50666666666666,
+      "MaxVisualErrorMeters": 353.4755555555553
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 16.408888888892307,
+      "MaxVisualErrorMeters": 122.39555555555671
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 25.186666666666497,
+      "MaxVisualErrorMeters": 133.31999999999744
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 47.86666666666633,
+      "MaxVisualErrorMeters": 160.55111111111273
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 99.75111111111164,
+      "MaxVisualErrorMeters": 233.31999999999994
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 205.50222222222214,
+      "MaxVisualErrorMeters": 390.5111111111114
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 17.924444444445726,
+      "MaxVisualErrorMeters": 134.35555555555447
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 27.75555555555684,
+      "MaxVisualErrorMeters": 136.28444444444222
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 54.5644444444448,
+      "MaxVisualErrorMeters": 225.38666666666563
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 115.74666666666553,
+      "MaxVisualErrorMeters": 387.3066666666657
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 223.97333333333518,
+      "MaxVisualErrorMeters": 486.6533333333334
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 16.24444444444498,
+      "MaxVisualErrorMeters": 128.52000000000544
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 25.200000000005957,
+      "MaxVisualErrorMeters": 135.91111111111263
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 47.631111111110386,
+      "MaxVisualErrorMeters": 182.1688888888841
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 103.14666666666801,
+      "MaxVisualErrorMeters": 305.4977777777831
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 198.71555555555506,
+      "MaxVisualErrorMeters": 434.6044444444433
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 64.95555555555535
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 80.80444444444441
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 88.99111111110884
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 131.79999999999842
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 216.86666666666457
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 1,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 1,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 1,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 1,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 1,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 16.022222222222354,
+      "MaxVisualErrorMeters": 133.18666666666627
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 24.822222222220717,
+      "MaxVisualErrorMeters": 149.808888888889
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 46.73777777777673,
+      "MaxVisualErrorMeters": 150.57333333333236
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 97.59999999999945,
+      "MaxVisualErrorMeters": 225.59555555555562
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 207.48000000000047,
+      "MaxVisualErrorMeters": 350.6533333333332
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 15.52000000000021,
+      "MaxVisualErrorMeters": 114.83999999999924
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 24.32888888888874,
+      "MaxVisualErrorMeters": 156.0844444444449
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 46.586666666666815,
+      "MaxVisualErrorMeters": 174.6222222222209
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 99.58666666666704,
+      "MaxVisualErrorMeters": 286.4533333333345
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 209.3422222222223,
+      "MaxVisualErrorMeters": 544.8622222222225
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.244444444444753,
+      "MaxVisualErrorMeters": 130.31555555555428
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 18.262222222222135,
+      "MaxVisualErrorMeters": 146.67111111111535
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 37.77333333333422,
+      "MaxVisualErrorMeters": 163.7644444444477
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 82.52888888888879,
+      "MaxVisualErrorMeters": 185.61333333333255
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 169.63999999999965,
+      "MaxVisualErrorMeters": 313.4666666666669
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.431111111111022,
+      "MaxVisualErrorMeters": 125.28888888888378
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 22.23111111110984,
+      "MaxVisualErrorMeters": 154.63555555555422
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 42.840000000001055,
+      "MaxVisualErrorMeters": 144.42666666666764
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 88.5155555555557,
+      "MaxVisualErrorMeters": 202.2444444444459
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 181.0711111111109,
+      "MaxVisualErrorMeters": 378.27555555555546
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.306666666668661,
+      "MaxVisualErrorMeters": 140.10666666666793
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 23.444444444445026,
+      "MaxVisualErrorMeters": 148.85777777777025
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 46.01777777777761,
+      "MaxVisualErrorMeters": 200.94222222222197
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 93.74666666666553,
+      "MaxVisualErrorMeters": 219.90666666666584
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 170.9422222222206,
+      "MaxVisualErrorMeters": 346.4755555555548
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 17.706666666673755,
+      "MaxVisualErrorMeters": 127.05333333332874
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 27.817777777772335,
+      "MaxVisualErrorMeters": 159.1955555555587
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 52.19111111111056,
+      "MaxVisualErrorMeters": 186.49333333333834
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 113.46222222222355,
+      "MaxVisualErrorMeters": 297.1466666666613
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 222.2177777777788,
+      "MaxVisualErrorMeters": 463.11111111111245
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 9.564444444445144,
+      "MaxVisualErrorMeters": 127.20000000000846
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 15.377777777779897,
+      "MaxVisualErrorMeters": 139.3200000000022
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 31.49777777777814,
+      "MaxVisualErrorMeters": 150.4933333333338
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 66.31555555555337,
+      "MaxVisualErrorMeters": 231.93777777777683
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 127.86666666666787,
+      "MaxVisualErrorMeters": 360.37333333332924
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 2,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 2,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 2,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 2,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 2,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.479999999999109,
+      "MaxVisualErrorMeters": 121.6533333333332
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 22.751111111111186,
+      "MaxVisualErrorMeters": 140.99555555555526
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 43.81777777777734,
+      "MaxVisualErrorMeters": 147.5955555555554
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 92.49777777777695,
+      "MaxVisualErrorMeters": 215.8844444444444
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 196.33333333333348,
+      "MaxVisualErrorMeters": 389.19555555555576
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 16.120000000002165,
+      "MaxVisualErrorMeters": 117.99111111110597
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 25.306666666667752,
+      "MaxVisualErrorMeters": 127.08444444444558
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 46.6977777777779,
+      "MaxVisualErrorMeters": 183.18222222222266
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 98.9911111111112,
+      "MaxVisualErrorMeters": 282.746666666666
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 187.52888888888833,
+      "MaxVisualErrorMeters": 403.23111111111075
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.035555555557949,
+      "MaxVisualErrorMeters": 118.07555555555882
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 22.777777777778283,
+      "MaxVisualErrorMeters": 149.95111111110873
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 45.751111111110276,
+      "MaxVisualErrorMeters": 171.2311111111103
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 95.72000000000207,
+      "MaxVisualErrorMeters": 259.3955555555558
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 185.10666666666702,
+      "MaxVisualErrorMeters": 401.4311111111101
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 12.177777777779738,
+      "MaxVisualErrorMeters": 131.6222222222268
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 19.54666666666617,
+      "MaxVisualErrorMeters": 129.33777777777323
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 40.19555555555553,
+      "MaxVisualErrorMeters": 143.23111111110984
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 87.5066666666662,
+      "MaxVisualErrorMeters": 205.8622222222225
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 169.25777777777876,
+      "MaxVisualErrorMeters": 363.8266666666659
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 13.275555555553183,
+      "MaxVisualErrorMeters": 98.72444444444181
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 21.99555555555662,
+      "MaxVisualErrorMeters": 139.08444444444694
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 43.506666666665296,
+      "MaxVisualErrorMeters": 154.3422222222198
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 89.4844444444443,
+      "MaxVisualErrorMeters": 240.24444444444407
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 165.07555555555564,
+      "MaxVisualErrorMeters": 374.15999999999804
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.622222222218625,
+      "MaxVisualErrorMeters": 121.99111111111267
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 23.524444444442565,
+      "MaxVisualErrorMeters": 133.28444444445154
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 46.89777777777931,
+      "MaxVisualErrorMeters": 185.24444444444612
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 98.1199999999991,
+      "MaxVisualErrorMeters": 224.83555555555523
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 195.36000000000126,
+      "MaxVisualErrorMeters": 393.56444444444423
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.773333333331266,
+      "MaxVisualErrorMeters": 128.097777777778
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 20.115555555554465,
+      "MaxVisualErrorMeters": 148.0888888888888
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 40.57333333333497,
+      "MaxVisualErrorMeters": 176.30222222222523
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 83.19999999999972,
+      "MaxVisualErrorMeters": 215.84888888888975
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 162.11999999999898,
+      "MaxVisualErrorMeters": 351.7688888888881
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 33.11999999999887
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 41.85333333333119
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 98.888888888888
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 185.58222222222403
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 202.40888888888912
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 3,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 3,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 3,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 3,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 3,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 12.115555555554238,
+      "MaxVisualErrorMeters": 119.47999999999911
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 19.90666666666391,
+      "MaxVisualErrorMeters": 110.71111111110963
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 42.1066666666668,
+      "MaxVisualErrorMeters": 123.36888888889007
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 91.12888888888892,
+      "MaxVisualErrorMeters": 231.86666666666656
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 179.1155555555565,
+      "MaxVisualErrorMeters": 390.2311111111119
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.431111111113523,
+      "MaxVisualErrorMeters": 99.11555555555378
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 18.799999999999955,
+      "MaxVisualErrorMeters": 120.57333333333145
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 40.488888888888596,
+      "MaxVisualErrorMeters": 177.84444444444102
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 86.20000000000232,
+      "MaxVisualErrorMeters": 249.1911111111117
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 166.6488888888889,
+      "MaxVisualErrorMeters": 388.1288888888896
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 12.728888888889742,
+      "MaxVisualErrorMeters": 115.44888888889136
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 20.9022222222211,
+      "MaxVisualErrorMeters": 130.17777777777974
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 43.173333333334085,
+      "MaxVisualErrorMeters": 174.91111111111059
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 93.28444444444449,
+      "MaxVisualErrorMeters": 229.51111111111095
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 183.3422222222216,
+      "MaxVisualErrorMeters": 364.57777777777824
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 13.359999999998763,
+      "MaxVisualErrorMeters": 119.4044444444412
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 21.857777777778892,
+      "MaxVisualErrorMeters": 145.53333333333194
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 43.88000000000466,
+      "MaxVisualErrorMeters": 163.7777777777767
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 89.13333333333367,
+      "MaxVisualErrorMeters": 246.38666666666745
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 173.11555555555503,
+      "MaxVisualErrorMeters": 372.6266666666661
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.013333333329683,
+      "MaxVisualErrorMeters": 95.53777777777782
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 18.333333333335304,
+      "MaxVisualErrorMeters": 107.06222222222118
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 37.96444444444421,
+      "MaxVisualErrorMeters": 142.41333333333637
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 80.08000000000084,
+      "MaxVisualErrorMeters": 204.897777777775
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 160.75111111111278,
+      "MaxVisualErrorMeters": 362.0000000000002
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.87111111111426,
+      "MaxVisualErrorMeters": 114.87555555555446
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 19.697777777776537,
+      "MaxVisualErrorMeters": 133.4533333333295
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 40.559999999998126,
+      "MaxVisualErrorMeters": 151.58222222222344
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 84.03111111111002,
+      "MaxVisualErrorMeters": 201.76444444444428
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 167.08888888888873,
+      "MaxVisualErrorMeters": 321.8977777777782
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 12.311111111110904,
+      "MaxVisualErrorMeters": 134.80000000000473
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 20.893333333334112,
+      "MaxVisualErrorMeters": 146.33333333333348
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 45.13777777777261,
+      "MaxVisualErrorMeters": 159.16888888888946
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 94.86666666666667,
+      "MaxVisualErrorMeters": 261.6933333333334
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 170.5599999999995,
+      "MaxVisualErrorMeters": 388.0888888888876
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 6.77777777777851,
+      "MaxVisualErrorMeters": 70.64888888888152
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.542222222223131,
+      "MaxVisualErrorMeters": 101.27111111110582
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 25.791111111111036,
+      "MaxVisualErrorMeters": 95.03555555555238
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 54.75555555555698,
+      "MaxVisualErrorMeters": 186.51999999999987
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 111.76444444444408,
+      "MaxVisualErrorMeters": 328.50666666666905
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 4,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 4,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 4,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 4,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 4,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 8.595555555555393,
+      "MaxVisualErrorMeters": 95.07555555555689
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 15.386666666666542,
+      "MaxVisualErrorMeters": 127.76444444444428
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 33.03999999999792,
+      "MaxVisualErrorMeters": 124.05777777777735
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 66.16444444444437,
+      "MaxVisualErrorMeters": 207.67555555555793
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 122.62666666666814,
+      "MaxVisualErrorMeters": 297.7688888888881
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 10.244444444442252,
+      "MaxVisualErrorMeters": 98.8311111111102
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 17.262222222223045,
+      "MaxVisualErrorMeters": 102.57333333333372
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 36.70666666666807,
+      "MaxVisualErrorMeters": 108.60000000000059
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 77.07555555555564,
+      "MaxVisualErrorMeters": 187.16888888888752
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 145.0400000000011,
+      "MaxVisualErrorMeters": 316.85777777777605
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 12.231111111112568,
+      "MaxVisualErrorMeters": 115.61777777777797
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 20.199999999999363,
+      "MaxVisualErrorMeters": 142.32000000000244
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 41.106666666663386,
+      "MaxVisualErrorMeters": 153.95999999999992
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 91.20444444444536,
+      "MaxVisualErrorMeters": 211
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 171.88000000000034,
+      "MaxVisualErrorMeters": 347.03999999999996
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 12.262222222224864,
+      "MaxVisualErrorMeters": 110.4755555555571
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 19.817777777777792,
+      "MaxVisualErrorMeters": 111.56000000000222
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 40.7822222222203,
+      "MaxVisualErrorMeters": 146.07555555555882
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 90.34222222222047,
+      "MaxVisualErrorMeters": 217.99111111111233
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 176.2577777777783,
+      "MaxVisualErrorMeters": 346.20000000000005
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 10.542222222224154,
+      "MaxVisualErrorMeters": 88.8977777777759
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 17.81333333333498,
+      "MaxVisualErrorMeters": 123.3777777777766
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 37.39555555555421,
+      "MaxVisualErrorMeters": 149.22222222222717
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 78.48444444444385,
+      "MaxVisualErrorMeters": 186.63111111111505
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 147.77777777777715,
+      "MaxVisualErrorMeters": 377.8088888888867
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 7.431111111110567,
+      "MaxVisualErrorMeters": 58.19111111110806
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 13.19555555555553,
+      "MaxVisualErrorMeters": 68.3288888888859
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 28.666666666667197,
+      "MaxVisualErrorMeters": 86.7333333333338
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 58.57333333333611,
+      "MaxVisualErrorMeters": 144.39999999999964
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 114.60000000000116,
+      "MaxVisualErrorMeters": 250.41777777777725
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 6.07111111111044,
+      "MaxVisualErrorMeters": 63.017777777776246
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 10.831111111107248,
+      "MaxVisualErrorMeters": 55.91555555555442
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 24.920000000000073,
+      "MaxVisualErrorMeters": 85.48888888888916
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 53.58666666666505,
+      "MaxVisualErrorMeters": 158.800000000002
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 96.8088888888899,
+      "MaxVisualErrorMeters": 240.50666666666626
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 1.6800000000000637,
+      "MaxVisualErrorMeters": 28.951111111105547
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 3.159999999997808,
+      "MaxVisualErrorMeters": 42.986666666665656
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 6.871111111112896,
+      "MaxVisualErrorMeters": 72.9600000000014
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 13.257777777777733,
+      "MaxVisualErrorMeters": 122.38666666666688
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 23.76000000000016,
+      "MaxVisualErrorMeters": 192.01333333333247
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 5,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 5,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 5,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 5,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 5,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 4.431111111110852,
+      "MaxVisualErrorMeters": 19.884444444444767
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 8.920000000000073,
+      "MaxVisualErrorMeters": 27.84888888888827
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 18.11555555555583,
+      "MaxVisualErrorMeters": 57.47111111110951
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 29.21333333333348,
+      "MaxVisualErrorMeters": 105.28444444444455
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 41.60888888888883,
+      "MaxVisualErrorMeters": 121.45777777777795
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 6.5244444444435885,
+      "MaxVisualErrorMeters": 101.37333333333163
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 12.42666666666696,
+      "MaxVisualErrorMeters": 95.65333333333137
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 26.582222222222242,
+      "MaxVisualErrorMeters": 99.65333333333228
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 49.73333333333312,
+      "MaxVisualErrorMeters": 141.89333333333036
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 87.27555555555472,
+      "MaxVisualErrorMeters": 238.67555555555657
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 9.684444444445035,
+      "MaxVisualErrorMeters": 94.4799999999982
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 16.63555555555621,
+      "MaxVisualErrorMeters": 112.07555555555678
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 36.32888888888624,
+      "MaxVisualErrorMeters": 133.66666666666424
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 74.09333333333234,
+      "MaxVisualErrorMeters": 205.52888888888947
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 147.73333333333198,
+      "MaxVisualErrorMeters": 280.373333333333
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 10.453333333333148,
+      "MaxVisualErrorMeters": 92.4977777777757
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 17.408888888890715,
+      "MaxVisualErrorMeters": 102.76000000000226
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 38.053333333333285,
+      "MaxVisualErrorMeters": 124.08444444444376
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 83.05333333333306,
+      "MaxVisualErrorMeters": 211.3600000000049
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 165.83999999999946,
+      "MaxVisualErrorMeters": 407.0266666666655
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 9.831111111109522,
+      "MaxVisualErrorMeters": 70.79999999999814
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 16.6488888888872,
+      "MaxVisualErrorMeters": 106.54666666666628
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 36.90666666666675,
+      "MaxVisualErrorMeters": 127.43999999999869
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 80.91555555555783,
+      "MaxVisualErrorMeters": 184.15555555555602
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 147.06222222222004,
+      "MaxVisualErrorMeters": 341.5377777777792
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 8.786666666668907,
+      "MaxVisualErrorMeters": 47.675555555549636
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 15.51555555555501,
+      "MaxVisualErrorMeters": 56.59555555555244
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 34.79555555555544,
+      "MaxVisualErrorMeters": 120.01777777778017
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 69.5155555555553,
+      "MaxVisualErrorMeters": 181.99555555555713
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 128.22222222222172,
+      "MaxVisualErrorMeters": 262.90666666666664
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 3.1644444444443707,
+      "MaxVisualErrorMeters": 23.186666666665815
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 5.61777777777786,
+      "MaxVisualErrorMeters": 32.7955555555543
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 10.986666666666963,
+      "MaxVisualErrorMeters": 72.2800000000002
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 21.195555555557746,
+      "MaxVisualErrorMeters": 115.95555555555507
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 40.03111111111093,
+      "MaxVisualErrorMeters": 169.46222222222167
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 7.279999999999291
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 10
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 10.613333333333173
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 10.377777777777709
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 0.04000000000000625,
+      "MaxVisualErrorMeters": 9.688888888888854
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 6,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 6,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 6,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 6,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 6,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 0
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 3.1155555555554884,
+      "MaxVisualErrorMeters": 34.182222222222435
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 5.875555555555664,
+      "MaxVisualErrorMeters": 47.29333333333342
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 11.346666666666408,
+      "MaxVisualErrorMeters": 48.77333333333327
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 21.44000000000034,
+      "MaxVisualErrorMeters": 56.248888888888956
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 35.751111111111186,
+      "MaxVisualErrorMeters": 111.82222222222217
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 3.680000000001769,
+      "MaxVisualErrorMeters": 20.102222222219666
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 6.862222222223011,
+      "MaxVisualErrorMeters": 27.835555555556027
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.115555555555716,
+      "MaxVisualErrorMeters": 47.8577777777777
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 27.568888888888665,
+      "MaxVisualErrorMeters": 87.88888888888829
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 42.097777777777424,
+      "MaxVisualErrorMeters": 106.86222222222244
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 4.942222222224245,
+      "MaxVisualErrorMeters": 22.52444444444336
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 9.41777777777753,
+      "MaxVisualErrorMeters": 46.96000000000117
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 20.284444444444944,
+      "MaxVisualErrorMeters": 88.1911111111142
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 39.93333333333385,
+      "MaxVisualErrorMeters": 138.95111111110776
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 69.69333333333338,
+      "MaxVisualErrorMeters": 245.70666666666625
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 7.946666666669216,
+      "MaxVisualErrorMeters": 102.41777777777634
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.56444444444395,
+      "MaxVisualErrorMeters": 83.73333333333471
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 32.199999999998454,
+      "MaxVisualErrorMeters": 102.87999999999874
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 66.39111111111117,
+      "MaxVisualErrorMeters": 162.4222222222221
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 123.85333333333318,
+      "MaxVisualErrorMeters": 267.6933333333335
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 9.040000000002692,
+      "MaxVisualErrorMeters": 58.137777777781594
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 15.799999999998704,
+      "MaxVisualErrorMeters": 71.7600000000001
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 35.195555555555984,
+      "MaxVisualErrorMeters": 125.44888888889358
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 75.2266666666664,
+      "MaxVisualErrorMeters": 258.8755555555553
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 145.55999999999838,
+      "MaxVisualErrorMeters": 342.31111111111045
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 8.182222222224937,
+      "MaxVisualErrorMeters": 38.64444444444098
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 14.89777777777897,
+      "MaxVisualErrorMeters": 51.82222222221924
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 33.18222222222266,
+      "MaxVisualErrorMeters": 86.86666666666554
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 68.56000000000051,
+      "MaxVisualErrorMeters": 182.35999999999905
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 123.75111111111141,
+      "MaxVisualErrorMeters": 265.53333333333387
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 7.622222222222263,
+      "MaxVisualErrorMeters": 46.226666666658275
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 13.78666666666777,
+      "MaxVisualErrorMeters": 59.93333333333135
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 31.34666666666709,
+      "MaxVisualErrorMeters": 90.44888888889
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 63.25333333333322,
+      "MaxVisualErrorMeters": 150.4488888888863
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 115.19555555555598,
+      "MaxVisualErrorMeters": 220.29333333333432
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 3.9466666666680794,
+      "MaxVisualErrorMeters": 34.28444444443994
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 7.333333333333485,
+      "MaxVisualErrorMeters": 46.15555555555443
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 16.466666666666697,
+      "MaxVisualErrorMeters": 80.74666666666724
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 31.83555555555529,
+      "MaxVisualErrorMeters": 125.30222222222142
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 178084,
+      "P95VisualErrorMeters": 51.96888888888816,
+      "MaxVisualErrorMeters": 169.32888888888863
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 7,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 115.08444444444558
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 7,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 112.74222222222181
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 7,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 145.3688888888865
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 7,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 0,
+      "MaxVisualErrorMeters": 167.65333333333342
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 7,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 4.044444444444082,
+      "MaxVisualErrorMeters": 266.08888888888856
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 2.146666666666931,
+      "MaxVisualErrorMeters": 89.15555555555568
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 3.7822222222222663,
+      "MaxVisualErrorMeters": 103.83555555555583
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 5.346666666666636,
+      "MaxVisualErrorMeters": 107.21777777777778
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 6.5822222222223274,
+      "MaxVisualErrorMeters": 113.40888888888892
+    },
+    {
+      "ChunkX": 0,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 7.897777777777726,
+      "MaxVisualErrorMeters": 111.78666666666669
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 2.5955555555556202,
+      "MaxVisualErrorMeters": 65.84000000000566
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 4.635555555555641,
+      "MaxVisualErrorMeters": 67.1066666666695
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 6.657777777777767,
+      "MaxVisualErrorMeters": 105.18666666666692
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 8.448888888888902,
+      "MaxVisualErrorMeters": 98.72444444444449
+    },
+    {
+      "ChunkX": 1,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 10.400000000000006,
+      "MaxVisualErrorMeters": 97.19111111111114
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 2.6800000000000637,
+      "MaxVisualErrorMeters": 39.14666666666824
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 4.964444444444553,
+      "MaxVisualErrorMeters": 55.45777777777812
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 7.9777777777777885,
+      "MaxVisualErrorMeters": 46.41333333333358
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 11.031111111111073,
+      "MaxVisualErrorMeters": 57.76000000000002
+    },
+    {
+      "ChunkX": 2,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 16.79555555555575,
+      "MaxVisualErrorMeters": 95.12444444444449
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 4.915555555555102,
+      "MaxVisualErrorMeters": 17.093333333335295
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 9.400000000000091,
+      "MaxVisualErrorMeters": 32.29333333333534
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 20.577777777776703,
+      "MaxVisualErrorMeters": 65.3733333333335
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 38.54222222222195,
+      "MaxVisualErrorMeters": 120.07111111111084
+    },
+    {
+      "ChunkX": 3,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 63.893333333333544,
+      "MaxVisualErrorMeters": 174.64000000000038
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 5.519999999998618,
+      "MaxVisualErrorMeters": 40.9555555555537
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 10.50666666666666,
+      "MaxVisualErrorMeters": 40.42666666666571
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 23.017777777777496,
+      "MaxVisualErrorMeters": 78.61777777777723
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 43.02222222222238,
+      "MaxVisualErrorMeters": 126.74666666666616
+    },
+    {
+      "ChunkX": 4,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 77.60000000000053,
+      "MaxVisualErrorMeters": 177.662222222222
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 7.52888888888765,
+      "MaxVisualErrorMeters": 30.706666666664432
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 14.173333333337268,
+      "MaxVisualErrorMeters": 44.90666666666698
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 31.657777777777255,
+      "MaxVisualErrorMeters": 95.63555555555399
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 65.7422222222225,
+      "MaxVisualErrorMeters": 149.87999999999926
+    },
+    {
+      "ChunkX": 5,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 113.37333333333356,
+      "MaxVisualErrorMeters": 226.73333333333244
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 7.871111111108576,
+      "MaxVisualErrorMeters": 41.635555555546944
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 14.728888888889514,
+      "MaxVisualErrorMeters": 73.14666666667142
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 32.426666666666165,
+      "MaxVisualErrorMeters": 93.85333333333159
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 65.99555555555503,
+      "MaxVisualErrorMeters": 148.46666666666647
+    },
+    {
+      "ChunkX": 6,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 115.75111111111153,
+      "MaxVisualErrorMeters": 216.3600000000004
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 7.071111111113623,
+      "MaxVisualErrorMeters": 44.56000000000222
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 12.759999999998854,
+      "MaxVisualErrorMeters": 52.88000000000113
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 28.2133333333324,
+      "MaxVisualErrorMeters": 79.1066666666668
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 57.720000000000596,
+      "MaxVisualErrorMeters": 133.88444444444278
+    },
+    {
+      "ChunkX": 7,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 95372,
+      "P95VisualErrorMeters": 111.57333333333247,
+      "MaxVisualErrorMeters": 246.4888888888885
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 8,
+      "Lod": 0,
+      "ValidCount": 51076,
+      "P95VisualErrorMeters": 4.057777777778483,
+      "MaxVisualErrorMeters": 35.008888888882666
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 8,
+      "Lod": 1,
+      "ValidCount": 51076,
+      "P95VisualErrorMeters": 6.453333333332921,
+      "MaxVisualErrorMeters": 42.50666666667098
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 8,
+      "Lod": 2,
+      "ValidCount": 51076,
+      "P95VisualErrorMeters": 14.586666666666588,
+      "MaxVisualErrorMeters": 88.20444444444331
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 8,
+      "Lod": 3,
+      "ValidCount": 51076,
+      "P95VisualErrorMeters": 31.61777777777729,
+      "MaxVisualErrorMeters": 141.09333333333495
+    },
+    {
+      "ChunkX": 8,
+      "ChunkY": 8,
+      "Lod": 4,
+      "ValidCount": 51076,
+      "P95VisualErrorMeters": 71.14666666666602,
+      "MaxVisualErrorMeters": 229.56444444444404
+    }
+  ]
+}

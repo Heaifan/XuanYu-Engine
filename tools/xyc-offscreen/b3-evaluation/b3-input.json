@@ -1,0 +1,716 @@
+{
+  "schemaVersion": "xyc-b3-evaluation/v1",
+  "dataset": {
+    "sourceSha256": "BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1",
+    "device": "NVIDIA GeForce RTX 3060",
+    "driverVersion": 2559967232,
+    "buildIdentity": "HEAD=1e2e54733cebcadad9ac29158ec0b3237b249d8c;VERSION=v0.3.0.21-fix;DIRTY=YES;B2=1",
+    "sourceSetFingerprintSha256": "68a78ef74732e9286e0bff858a09119f70abb8eaab82280bbf31bff721d5d8e8"
+  },
+  "b2Artifact": {
+    "root": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609",
+    "rootManifest": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609\\run-manifest.json",
+    "rootManifestSha256": "c7efcfcc8a355e9f15b48c8fce2cdee952a4ef4635138c2c27642cd9cb04e892"
+  },
+  "pairing": {
+    "baseline": "2049-auto",
+    "note": "pairing indices must be validated against run-order.csv; B2 and SSE families are not paired"
+  },
+  "configurations": [
+    {
+      "name": "1025-auto",
+      "family": "B2_REFERENCE",
+      "status": "REFERENCE_ONLY",
+      "evidenceClass": "MEASURED_IN_B2_NOT_B3",
+      "processRuns": [
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 6.504096,
+          "gpuFrameP95Ms": 7.17056,
+          "validFrames": 30,
+          "triangles": 572992,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 16139776,
+          "pngSha256": "9C97B32C9481E6A8D0567FB8BA544F26E5213FECA835CDC03A281A9870EC2656",
+          "manifestSha256": "b7028169a3b69745bb9eb9861d34d2f3fbd36eed523091721edd866c497bd6c7"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 6.517984,
+          "gpuFrameP95Ms": 7.207584,
+          "validFrames": 30,
+          "triangles": 572992,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 16139776,
+          "pngSha256": "9C97B32C9481E6A8D0567FB8BA544F26E5213FECA835CDC03A281A9870EC2656",
+          "manifestSha256": "2e9355af78911e6082723f2ac7c05feb2ea03911b259c6e42e884b5e312611f4"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 6.516672,
+          "gpuFrameP95Ms": 7.203136,
+          "validFrames": 30,
+          "triangles": 572992,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 16139776,
+          "pngSha256": "9C97B32C9481E6A8D0567FB8BA544F26E5213FECA835CDC03A281A9870EC2656",
+          "manifestSha256": "2fc11955cd5584c30465cc01f6163550080b53c1cb511e0ee9d531dd869eba29"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 6.496608,
+          "gpuFrameP95Ms": 7.087456,
+          "validFrames": 30,
+          "triangles": 572992,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 16139776,
+          "pngSha256": "9C97B32C9481E6A8D0567FB8BA544F26E5213FECA835CDC03A281A9870EC2656",
+          "manifestSha256": "fe0a98c79e094b9ac5c3444967c4314964a85289ce40e22adde945399a8896a4"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 6.513376,
+          "gpuFrameP95Ms": 7.461824,
+          "validFrames": 30,
+          "triangles": 572992,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 16139776,
+          "pngSha256": "9C97B32C9481E6A8D0567FB8BA544F26E5213FECA835CDC03A281A9870EC2656",
+          "manifestSha256": "528862b0004c0a4fef35d16d400bce1fb1107d1ddb54ddf388fc418f0d3aa1a3"
+        }
+      ],
+      "meshError": {
+        "sourceToHeightfieldP95M": 8.036977777777338,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null,
+        "sourceToHeightfieldMeaning": "B2 sampled HGT-to-heightfield reconstruction field; not final mesh error"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "NOT PROVIDED BY B2"
+      },
+      "pixels": {
+        "maskXorPct": 0.5181630452473959,
+        "rgbMae": 1.8514594980327366,
+        "edgeMae": 0.4327630305745107
+      },
+      "sourceArtifact": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609\\run-manifest.json"
+    },
+    {
+      "name": "2049-auto",
+      "family": "B2_REFERENCE",
+      "status": "REFERENCE_ONLY",
+      "evidenceClass": "MEASURED_IN_B2_NOT_B3",
+      "processRuns": [
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 22.04528,
+          "gpuFrameP95Ms": 22.831232,
+          "validFrames": 30,
+          "triangles": 1910496,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 53773472,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "925ffdc7e8e8dc501a23d1d2d9ef3213efd703252f735f2013af9ca1892b6d3d"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 21.81168,
+          "gpuFrameP95Ms": 23.054208,
+          "validFrames": 30,
+          "triangles": 1910496,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 53773472,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "0ce08dd3a458a2e192aa6622cb96b1bd2a59af54f7742c1d237fc4209f9dc988"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 21.83648,
+          "gpuFrameP95Ms": 22.553728,
+          "validFrames": 30,
+          "triangles": 1910496,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 53773472,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "67249180d8013885a6ad2bf515169faf21f7535adcf71550506def9ccd78f14a"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 22.25328,
+          "gpuFrameP95Ms": 23.280416,
+          "validFrames": 30,
+          "triangles": 1910496,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 53773472,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "5189e20914bba8a2a6173a08669100e4a83420d7071edf2086c297ca3466c3b6"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 21.983552,
+          "gpuFrameP95Ms": 25.406336,
+          "validFrames": 30,
+          "triangles": 1910496,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 53773472,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "88c63520ecfa2c09e0428e6c34bb8e6771d00636f25f767733eab5044e2ac935"
+        }
+      ],
+      "meshError": {
+        "sourceToHeightfieldP95M": 6.5517037037047885,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null,
+        "sourceToHeightfieldMeaning": "B2 sampled HGT-to-heightfield reconstruction field; not final mesh error"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "NOT PROVIDED BY B2"
+      },
+      "pixels": {
+        "maskXorPct": 0.0,
+        "rgbMae": 0.0,
+        "edgeMae": 0.0
+      },
+      "sourceArtifact": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609\\run-manifest.json"
+    },
+    {
+      "name": "2049-chunk240-lod0",
+      "family": "B2_REFERENCE",
+      "status": "REFERENCE_ONLY",
+      "evidenceClass": "MEASURED_IN_B2_NOT_B3",
+      "processRuns": [
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.98256,
+          "gpuFrameP95Ms": 25.184128,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "580f50ad9772078fbeea90119bd9531ee3b3ac3acaa682325753392a8d0e1b55"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 24.41376,
+          "gpuFrameP95Ms": 25.342208,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "6edd77a6ea7a7d09942b5f8427b80b2d5793178517bf5c5994ee7477608cd4d1"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.348096,
+          "gpuFrameP95Ms": 23.975456,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "6780da8add99f3f816c0cb9d72064ba3051fe8ed0a21c5adedcd9081601b6a08"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.899776,
+          "gpuFrameP95Ms": 25.144256,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "247bf0420e859c2993b21e250d76147254973f294ea5522dc693a51ae7c4f087"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.479744,
+          "gpuFrameP95Ms": 24.530592,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "2b601671f21da1e723aa052c473a855eae8f99f9401c4327b2b596046463e104"
+        }
+      ],
+      "meshError": {
+        "sourceToHeightfieldP95M": 6.5517037037047885,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null,
+        "sourceToHeightfieldMeaning": "B2 sampled HGT-to-heightfield reconstruction field; not final mesh error"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "NOT PROVIDED BY B2"
+      },
+      "pixels": {
+        "maskXorPct": 0.0,
+        "rgbMae": 0.0,
+        "edgeMae": 0.0
+      },
+      "sourceArtifact": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609\\run-manifest.json"
+    },
+    {
+      "name": "2049-chunk480-auto",
+      "family": "B2_REFERENCE",
+      "status": "REFERENCE_ONLY",
+      "evidenceClass": "MEASURED_IN_B2_NOT_B3",
+      "processRuns": [
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.746336,
+          "gpuFrameP95Ms": 24.601216,
+          "validFrames": 30,
+          "triangles": 2081536,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 58454272,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "a28b2eb8682f1423d9222abbfea69034e058f051619e86ba2d49c5a2d9aac257"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 24.47664,
+          "gpuFrameP95Ms": 25.130592,
+          "validFrames": 30,
+          "triangles": 2081536,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 58454272,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "7f6768f3124ae2d12d8677bc099dbe0c485fae0a275c1d846b815944c7e87fcd"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.814176,
+          "gpuFrameP95Ms": 25.94304,
+          "validFrames": 30,
+          "triangles": 2081536,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 58454272,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "465aedd5d0cf2faa36c27039094af0eade2b14d66804af8e1738933173d94add"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 24.359776,
+          "gpuFrameP95Ms": 26.282208,
+          "validFrames": 30,
+          "triangles": 2081536,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 58454272,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "620f55a0924921ac13a11e9629f01f638be86255198579e1d7c48848c075bf6e"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.891808,
+          "gpuFrameP95Ms": 27.989312,
+          "validFrames": 30,
+          "triangles": 2081536,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 58454272,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "fad1df9809be68858b7db14291ecc028e2e0bf0dc1bbd79e16acbb36f3ba1f4a"
+        }
+      ],
+      "meshError": {
+        "sourceToHeightfieldP95M": 6.5517037037047885,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null,
+        "sourceToHeightfieldMeaning": "B2 sampled HGT-to-heightfield reconstruction field; not final mesh error"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "NOT PROVIDED BY B2"
+      },
+      "pixels": {
+        "maskXorPct": 0.0,
+        "rgbMae": 0.0,
+        "edgeMae": 0.0
+      },
+      "sourceArtifact": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609\\run-manifest.json"
+    },
+    {
+      "name": "2049-chunk480-lod0",
+      "family": "B2_REFERENCE",
+      "status": "REFERENCE_ONLY",
+      "evidenceClass": "MEASURED_IN_B2_NOT_B3",
+      "processRuns": [
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 26.375136,
+          "gpuFrameP95Ms": 26.845888,
+          "validFrames": 30,
+          "triangles": 2268288,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 63702784,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "b8baff241389dba2d6183fc58bab8b51e065a007efab3f0b30a660b3e7186aa4"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 25.844064,
+          "gpuFrameP95Ms": 26.1048,
+          "validFrames": 30,
+          "triangles": 2268288,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 63702784,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "c905e38f44740687c2e1fe241c7d181285d66f4f2106f3e38368d0f5b481e85c"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 26.114752,
+          "gpuFrameP95Ms": 26.790016,
+          "validFrames": 30,
+          "triangles": 2268288,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 63702784,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "e5e52eac8fa5c5a3be18aabcb7f5d66e7ed3fc3738b00f569138f8ba3c1a4546"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 25.916416,
+          "gpuFrameP95Ms": 26.557536,
+          "validFrames": 30,
+          "triangles": 2268288,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 63702784,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "b57a39c6db45a39f24ba3db77d00614811172ebfa0db500353a04e0149818b37"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 26.45408,
+          "gpuFrameP95Ms": 27.943104,
+          "validFrames": 30,
+          "triangles": 2268288,
+          "visibleChunks": 8,
+          "drawCalls": 8,
+          "estimatedGpuBytes": 63702784,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "dc025f6b18793e290c9eda20fe2828c456668899dcde91f48e86583874da103b"
+        }
+      ],
+      "meshError": {
+        "sourceToHeightfieldP95M": 6.5517037037047885,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null,
+        "sourceToHeightfieldMeaning": "B2 sampled HGT-to-heightfield reconstruction field; not final mesh error"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "NOT PROVIDED BY B2"
+      },
+      "pixels": {
+        "maskXorPct": 0.0,
+        "rgbMae": 0.0,
+        "edgeMae": 0.0
+      },
+      "sourceArtifact": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609\\run-manifest.json"
+    },
+    {
+      "name": "2049-lod-bias-1",
+      "family": "B2_REFERENCE",
+      "status": "REFERENCE_ONLY",
+      "evidenceClass": "MEASURED_IN_B2_NOT_B3",
+      "processRuns": [
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 5.81968,
+          "gpuFrameP95Ms": 6.624928,
+          "validFrames": 30,
+          "triangles": 486256,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 13756640,
+          "pngSha256": "63DD0E5F640CEBEC341063CF3C155A970D8E786D4A618040CA1E50499431DEB3",
+          "manifestSha256": "9b6001a2e7216490beee88c4540542241cdc86bcab995ad4a585164d7fb81a1b"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 5.543648,
+          "gpuFrameP95Ms": 5.927776,
+          "validFrames": 30,
+          "triangles": 486256,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 13756640,
+          "pngSha256": "63DD0E5F640CEBEC341063CF3C155A970D8E786D4A618040CA1E50499431DEB3",
+          "manifestSha256": "d7fe7e506c7a7a941bb2c6e0c80bef423035c0cedb0b8a3a5f2cd0a398700019"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 5.819392,
+          "gpuFrameP95Ms": 6.903232,
+          "validFrames": 30,
+          "triangles": 486256,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 13756640,
+          "pngSha256": "63DD0E5F640CEBEC341063CF3C155A970D8E786D4A618040CA1E50499431DEB3",
+          "manifestSha256": "2dc66438b16378b0f1debdd462e25a79da22dc96ceca8701fe82e720a18f6d61"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 5.535104,
+          "gpuFrameP95Ms": 6.226464,
+          "validFrames": 30,
+          "triangles": 486256,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 13756640,
+          "pngSha256": "63DD0E5F640CEBEC341063CF3C155A970D8E786D4A618040CA1E50499431DEB3",
+          "manifestSha256": "609eccc00d1993896cdeda3ce591ed5460becb3eb0ef470d914a6fcc08380c3a"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 5.571648,
+          "gpuFrameP95Ms": 10.86016,
+          "validFrames": 30,
+          "triangles": 486256,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 13756640,
+          "pngSha256": "63DD0E5F640CEBEC341063CF3C155A970D8E786D4A618040CA1E50499431DEB3",
+          "manifestSha256": "c5ad4289a1916be8a632c994d2a431e5ad2c1793eb77e9751f3b26fc2800ef8f"
+        }
+      ],
+      "meshError": {
+        "sourceToHeightfieldP95M": 6.5517037037047885,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null,
+        "sourceToHeightfieldMeaning": "B2 sampled HGT-to-heightfield reconstruction field; not final mesh error"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "NOT PROVIDED BY B2"
+      },
+      "pixels": {
+        "maskXorPct": 0.5181630452473959,
+        "rgbMae": 1.4454456900223842,
+        "edgeMae": 0.5245602502273649
+      },
+      "sourceArtifact": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609\\run-manifest.json"
+    },
+    {
+      "name": "2049-lod0",
+      "family": "B2_REFERENCE",
+      "status": "REFERENCE_ONLY",
+      "evidenceClass": "MEASURED_IN_B2_NOT_B3",
+      "processRuns": [
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.317824,
+          "gpuFrameP95Ms": 26.924128,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "fe170db1670990958527e37fca474f2123f53e96545c225f9d06f3b70b5e90fe"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 23.508896,
+          "gpuFrameP95Ms": 25.3648,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "084541c7830b1d7c9937aaa25d3b9dd010abad9a0d46f69966928dba55ab815a"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 25.000288,
+          "gpuFrameP95Ms": 25.589056,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "c069dce76611199198571a69b33ce0a70d3d1c6e597cca0d8b91ec9da6e26235"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 24.352608,
+          "gpuFrameP95Ms": 25.59088,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "4911b83622c327512cd688e8bcc3c495eb5724e8e2a093ec51a04cc6cdeec7a6"
+        },
+        {
+          "replicate": 1,
+          "order": null,
+          "gpuFrameP50Ms": 24.433888,
+          "gpuFrameP95Ms": 25.395744,
+          "validFrames": 30,
+          "triangles": 2050944,
+          "visibleChunks": 21,
+          "drawCalls": 21,
+          "estimatedGpuBytes": 57723680,
+          "pngSha256": "601AB7B95540D2687D0443A69F224BBC9CCD197BFA89B7EBC63D68DF4712F791",
+          "manifestSha256": "c9d606b114a496e477fcaae4a7dc55765689d6c11dabb070c8555e42c925b850"
+        }
+      ],
+      "meshError": {
+        "sourceToHeightfieldP95M": 6.5517037037047885,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null,
+        "sourceToHeightfieldMeaning": "B2 sampled HGT-to-heightfield reconstruction field; not final mesh error"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "NOT PROVIDED BY B2"
+      },
+      "pixels": {
+        "maskXorPct": 0.0,
+        "rgbMae": 0.0,
+        "edgeMae": 0.0
+      },
+      "sourceArtifact": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\artifacts\\diagnostics\\xyc-b2\\20261015-192609\\run-manifest.json"
+    },
+    {
+      "name": "SSE-0.5px",
+      "family": "SSE",
+      "thresholdPx": 0.5,
+      "status": "NOT RUN",
+      "evidenceClass": "NOT RUN",
+      "processRuns": [],
+      "meshError": {
+        "sourceToHeightfieldP95M": null,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null
+      },
+      "screenError": {
+        "p95Px": null
+      },
+      "pixels": {},
+      "sourceArtifact": null
+    },
+    {
+      "name": "SSE-1px",
+      "family": "SSE",
+      "thresholdPx": 1,
+      "status": "NOT RUN",
+      "evidenceClass": "NOT RUN",
+      "processRuns": [],
+      "meshError": {
+        "sourceToHeightfieldP95M": null,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null
+      },
+      "screenError": {
+        "p95Px": null
+      },
+      "pixels": {},
+      "sourceArtifact": null
+    },
+    {
+      "name": "SSE-2px",
+      "family": "SSE",
+      "thresholdPx": 2,
+      "status": "NOT RUN",
+      "evidenceClass": "NOT RUN",
+      "processRuns": [],
+      "meshError": {
+        "sourceToHeightfieldP95M": null,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null
+      },
+      "screenError": {
+        "p95Px": null
+      },
+      "pixels": {},
+      "sourceArtifact": null
+    },
+    {
+      "name": "SSE-4px",
+      "family": "SSE",
+      "thresholdPx": 4,
+      "status": "NOT RUN",
+      "evidenceClass": "NOT RUN",
+      "processRuns": [],
+      "meshError": {
+        "sourceToHeightfieldP95M": null,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": null
+      },
+      "screenError": {
+        "p95Px": null
+      },
+      "pixels": {},
+      "sourceArtifact": null
+    }
+  ]
+}

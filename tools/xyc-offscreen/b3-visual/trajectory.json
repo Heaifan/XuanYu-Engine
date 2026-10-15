@@ -1,0 +1,28 @@
+{
+  "schema": "XYC-B3-TRAJECTORY/1",
+  "terrain": {
+    "id": "n24e121",
+    "sha256": "BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1"
+  },
+  "coordinatePolicy": "All camera positions and targets are fixed world coordinates copied from the known n24e121 B2/XYC evidence domain. Never derive or AutoFrame them from render sample count.",
+  "poses": {
+    "top-down": {"position":{"x":50648.444336988396,"y":55660,"z":12000},"forward":{"x":0,"y":0,"z":-1},"up":{"x":0,"y":1,"z":0},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"mode":"Perspective","orthographicScale":0,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1899.5}},
+    "near-oblique": {"position":{"x":49848.444336988396,"y":55060,"z":1778},"forward":{"x":0.7954116786684059,"y":0.5784812208497497,"z":-0.1807753815155468},"up":{"x":0.14619957418529833,"y":0.10632696304385332,"z":0.9835244081556433},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"mode":"Perspective","orthographicScale":0,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1528}},
+    "high-relief-sensitive": {"position":{"x":50148.444336988396,"y":54860,"z":2428},"forward":{"x":0.45267873021259264,"y":0.3621429841700741,"z":-0.8148217143826668},"up":{"x":0.636268862018322,"y":0.5090150896146576,"z":0.5797116298389154},"fovDegrees":38,"nearPlane":0.1,"farPlane":445280,"mode":"Perspective","orthographicScale":0,"observationCenter":{"x":50648.444336988396,"y":55260,"z":1528}},
+    "chunk-entry": {"position":{"x":50648.444336988396,"y":55660,"z":1528},"forward":{"x":0.7881104062391006,"y":0.3940552031195503,"z":-0.47286624374346037},"up":{"x":0.42294442611014477,"y":0.21147221305507238,"z":0.8811342210628017},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"mode":"Perspective","orthographicScale":0,"observationCenter":{"x":51148.444336988396,"y":55910,"z":1228}},
+    "near-plane-stress": {"position":{"x":50648.444336988396,"y":55660,"z":1530},"forward":{"x":0.9805806756909202,"y":0,"z":-0.19611613513818404},"up":{"x":0.19611613513818404,"y":0,"z":0.9805806756909202},"fovDegrees":45,"nearPlane":0.05,"farPlane":445280,"mode":"Perspective","orthographicScale":0,"observationCenter":{"x":50658.444336988396,"y":55660,"z":1528}},
+    "orbit-zoom-A": {"position":{"x":49848.444336988396,"y":55060,"z":1778},"forward":{"x":0.7954116786684059,"y":0.5784812208497497,"z":-0.1807753815155468},"up":{"x":0.14619957418529833,"y":0.10632696304385332,"z":0.9835244081556433},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"mode":"Perspective","orthographicScale":0,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1528}},
+    "orbit-zoom-B": {"position":{"x":50048.444336988396,"y":55210,"z":1978},"forward":{"x":0.8320502943378437,"y":0.5547001962252291,"z":-0.0},"up":{"x":0,"y":0,"z":1},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"mode":"Perspective","orthographicScale":0,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1528}}
+  },
+  "steps": [
+    {"id":"top-down","pose":"top-down","capture":"top-down"},
+    {"id":"near-oblique","pose":"near-oblique","capture":"near-oblique"},
+    {"id":"high-relief-sensitive","pose":"high-relief-sensitive","capture":"high-relief-sensitive"},
+    {"id":"chunk-entry","pose":"chunk-entry","capture":"chunk-entry"},
+    {"id":"near-plane-stress","pose":"near-plane-stress","capture":"near-plane-stress"},
+    {"id":"sequence-A-before","pose":"orbit-zoom-A","capture":"sequence-A-before"},
+    {"id":"sequence-B","pose":"orbit-zoom-B","capture":"sequence-B"},
+    {"id":"sequence-A-return","pose":"orbit-zoom-A","capture":"sequence-A-return"}
+  ],
+  "sequenceChecks": [{"name":"continuous-zoom-orbit-return-A-B-A","captures":["sequence-A-before","sequence-B","sequence-A-return"],"returnPose":"orbit-zoom-A"}]
+}

@@ -1,0 +1,27 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='900' height='560'>
+<rect width='100%' height='100%' fill='white'/>
+<text x='20' y='32' font-size='21'>Error layers (only supplied values)</text>
+<path d='M90 65.0h760' stroke='#ddd'/>
+<path d='M90 147.0h760' stroke='#ddd'/>
+<path d='M90 229.0h760' stroke='#ddd'/>
+<path d='M90 311.0h760' stroke='#ddd'/>
+<path d='M90 393.0h760' stroke='#ddd'/>
+<path d='M90 475.0h760' stroke='#ddd'/>
+<path d='M90 65v410h760' fill='none' stroke='#333'/>
+<text x='470.0' y='544' text-anchor='middle'>Evidence item index</text>
+<text x='18' y='270.0' transform='rotate(-90 18 270.0)' text-anchor='middle'>World error P95 (m)</text>
+<circle cx='198.57' cy='65.00' r='5' fill='#59A14F'><title>1025-auto source→heightfield: 1, 8.037</title></circle>
+<text x='205.57' y='58.00' font-size='11'>1025-auto source→heightfield</text>
+<circle cx='307.14' cy='140.77' r='5' fill='#59A14F'><title>2049-auto source→heightfield: 2, 6.552</title></circle>
+<text x='314.14' y='133.77' font-size='11'>2049-auto source→heightfield</text>
+<circle cx='415.71' cy='140.77' r='5' fill='#59A14F'><title>2049-chunk240-lod0 source→heightfield: 3, 6.552</title></circle>
+<text x='422.71' y='133.77' font-size='11'>2049-chunk240-lod0 source→heightfield</text>
+<circle cx='524.29' cy='140.77' r='5' fill='#59A14F'><title>2049-chunk480-auto source→heightfield: 4, 6.552</title></circle>
+<text x='531.29' y='133.77' font-size='11'>2049-chunk480-auto source→heightfield</text>
+<circle cx='632.86' cy='140.77' r='5' fill='#59A14F'><title>2049-chunk480-lod0 source→heightfield: 5, 6.552</title></circle>
+<text x='639.86' y='133.77' font-size='11'>2049-chunk480-lod0 source→heightfield</text>
+<circle cx='741.43' cy='140.77' r='5' fill='#59A14F'><title>2049-lod-bias-1 source→heightfield: 6, 6.552</title></circle>
+<text x='748.43' y='133.77' font-size='11'>2049-lod-bias-1 source→heightfield</text>
+<circle cx='850.00' cy='140.77' r='5' fill='#59A14F'><title>2049-lod0 source→heightfield: 7, 6.552</title></circle>
+<text x='857.00' y='133.77' font-size='11'>2049-lod0 source→heightfield</text>
+</svg>

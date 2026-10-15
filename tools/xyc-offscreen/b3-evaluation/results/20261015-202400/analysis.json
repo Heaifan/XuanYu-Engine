@@ -1,0 +1,1343 @@
+{
+  "input": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\b3-input-final4.json",
+  "configurations": [
+    {
+      "configuration": "2049-auto",
+      "family": "AUTO",
+      "status": "MEASURED",
+      "evidenceClass": "MEASURED_GPU_DERIVED_ERROR_SUMMARIES",
+      "processCount": 5,
+      "independentProcessP50Ms": {
+        "n": 5,
+        "p50": 22.564992,
+        "p95": 22.8197248,
+        "min": 21.860128,
+        "max": 22.845216,
+        "mean": 22.5104064
+      },
+      "independentProcessP95Ms": {
+        "n": 5,
+        "p50": 23.45936,
+        "p95": 23.9684928,
+        "min": 22.884992,
+        "max": 24.03168,
+        "mean": 23.4105152
+      },
+      "triangles": {
+        "n": 5,
+        "p50": 1910496.0,
+        "p95": 1910496.0,
+        "min": 1910496.0,
+        "max": 1910496.0,
+        "mean": 1910496.0
+      },
+      "visibleChunks": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "drawCalls": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "estimatedGpuBytes": {
+        "n": 5,
+        "p50": 53773472.0,
+        "p95": 53773472.0,
+        "min": 53773472.0,
+        "max": 53773472.0,
+        "mean": 53773472.0
+      },
+      "meshError": {
+        "sourceToHeightfieldP95M": 10.370311111110823,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": 8.080000000001974,
+        "finalMeshWorldMaxM": 134.80000000000473,
+        "visibleFootprintSamples": 3113501,
+        "visibleChunkP95MetersMax": 12.759999999998854,
+        "visibleChunkMaxErrorMeters": 134.80000000000473,
+        "visibleChunksWithError": 21,
+        "selectedChunkLods": [
+          {
+            "chunkX": 4,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 4,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 6,
+            "lod": 1
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 7,
+            "lod": 1
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 8,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 8,
+            "lod": 1
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 8,
+            "lod": 0
+          }
+        ],
+        "meaning": "pooled source-sample error over union of visible chunk footprints at measured selected LOD; excludes invisible terrain"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "projected per-chunk estimates are diagnostics, not guaranteed bound"
+      },
+      "pixels": {
+        "rgbMae": 0.0,
+        "changedPixelPct": 0.0,
+        "maskXorPct": 0.0,
+        "edgeMae": 0.0,
+        "representativeDiffPng": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\b3-input-final4-quality\\baseline-rep1-diff.png"
+      },
+      "sourceArtifact": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\baseline"
+    },
+    {
+      "configuration": "2049-lod-bias-1",
+      "family": "LOD_BIAS",
+      "status": "MEASURED",
+      "evidenceClass": "MEASURED_GPU_DERIVED_ERROR_SUMMARIES",
+      "processCount": 5,
+      "independentProcessP50Ms": {
+        "n": 5,
+        "p50": 5.568192,
+        "p95": 5.6205888,
+        "min": 5.505504,
+        "max": 5.625792,
+        "mean": 5.5698304
+      },
+      "independentProcessP95Ms": {
+        "n": 5,
+        "p50": 6.268512,
+        "p95": 6.4371392,
+        "min": 5.807616,
+        "max": 6.459872,
+        "mean": 6.2147584
+      },
+      "triangles": {
+        "n": 5,
+        "p50": 486256.0,
+        "p95": 486256.0,
+        "min": 486256.0,
+        "max": 486256.0,
+        "mean": 486256.0
+      },
+      "visibleChunks": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "drawCalls": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "estimatedGpuBytes": {
+        "n": 5,
+        "p50": 13756640.0,
+        "p95": 13756640.0,
+        "min": 13756640.0,
+        "max": 13756640.0,
+        "mean": 13756640.0
+      },
+      "meshError": {
+        "sourceToHeightfieldP95M": 10.370311111110823,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": 14.377777777779443,
+        "finalMeshWorldMaxM": 146.33333333333348,
+        "visibleFootprintSamples": 3113501,
+        "visibleChunkP95MetersMax": 28.2133333333324,
+        "visibleChunkMaxErrorMeters": 146.33333333333348,
+        "visibleChunksWithError": 21,
+        "selectedChunkLods": [
+          {
+            "chunkX": 4,
+            "chunkY": 4,
+            "lod": 1
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 4,
+            "lod": 1
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 4,
+            "lod": 1
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 4,
+            "lod": 1
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 4,
+            "lod": 1
+          },
+          {
+            "chunkX": 4,
+            "chunkY": 5,
+            "lod": 1
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 5,
+            "lod": 1
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 5,
+            "lod": 1
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 5,
+            "lod": 1
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 5,
+            "lod": 1
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 6,
+            "lod": 1
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 6,
+            "lod": 1
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 6,
+            "lod": 1
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 6,
+            "lod": 2
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 7,
+            "lod": 1
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 7,
+            "lod": 1
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 7,
+            "lod": 1
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 7,
+            "lod": 2
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 8,
+            "lod": 1
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 8,
+            "lod": 2
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 8,
+            "lod": 1
+          }
+        ],
+        "meaning": "pooled source-sample error over union of visible chunk footprints at measured selected LOD; excludes invisible terrain"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "projected per-chunk estimates are diagnostics, not guaranteed bound"
+      },
+      "pixels": {
+        "rgbMae": 1.2602013481987846,
+        "changedPixelPct": 1.7932891845703125,
+        "maskXorPct": 0.5181630452473959,
+        "edgeMae": 0.6266771952311198,
+        "representativeDiffPng": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\b3-input-final4-quality\\lod-bias-1-rep1-diff.png"
+      },
+      "sourceArtifact": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\lod-bias-1"
+    },
+    {
+      "configuration": "SSE-0.5px",
+      "family": "SSE",
+      "status": "MEASURED",
+      "evidenceClass": "MEASURED_GPU_DERIVED_ERROR_SUMMARIES",
+      "processCount": 5,
+      "independentProcessP50Ms": {
+        "n": 5,
+        "p50": 20.576352,
+        "p95": 21.2435072,
+        "min": 20.048512,
+        "max": 21.389568,
+        "mean": 20.6166592
+      },
+      "independentProcessP95Ms": {
+        "n": 5,
+        "p50": 21.538848,
+        "p95": 22.2945536,
+        "min": 21.243072,
+        "max": 22.36192,
+        "mean": 21.693376
+      },
+      "triangles": {
+        "n": 5,
+        "p50": 1746654.0,
+        "p95": 1746654.0,
+        "min": 1746654.0,
+        "max": 1746654.0,
+        "mean": 1746654.0
+      },
+      "visibleChunks": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "drawCalls": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "estimatedGpuBytes": {
+        "n": 5,
+        "p50": 49156040.0,
+        "p95": 49156040.0,
+        "min": 49156040.0,
+        "max": 49156040.0,
+        "mean": 49156040.0
+      },
+      "meshError": {
+        "sourceToHeightfieldP95M": 10.370311111110823,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": 7.8400000000019645,
+        "finalMeshWorldMaxM": 134.80000000000473,
+        "visibleFootprintSamples": 3113501,
+        "visibleChunkP95MetersMax": 12.311111111110904,
+        "visibleChunkMaxErrorMeters": 134.80000000000473,
+        "visibleChunksWithError": 21,
+        "selectedChunkLods": [
+          {
+            "chunkX": 4,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 4,
+            "lod": 4
+          },
+          {
+            "chunkX": 4,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 5,
+            "lod": 4
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 6,
+            "lod": 4
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 6,
+            "lod": 4
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 8,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 8,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 8,
+            "lod": 0
+          }
+        ],
+        "meaning": "pooled source-sample error over union of visible chunk footprints at measured selected LOD; excludes invisible terrain"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "projected per-chunk estimates are diagnostics, not guaranteed bound"
+      },
+      "pixels": {
+        "rgbMae": 0.0,
+        "changedPixelPct": 0.0,
+        "maskXorPct": 0.0,
+        "edgeMae": 0.0,
+        "representativeDiffPng": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\b3-input-final4-quality\\sse-0.5-rep1-diff.png"
+      },
+      "sourceArtifact": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\sse-0.5"
+    },
+    {
+      "configuration": "SSE-1px",
+      "family": "SSE",
+      "status": "MEASURED",
+      "evidenceClass": "MEASURED_GPU_DERIVED_ERROR_SUMMARIES",
+      "processCount": 5,
+      "independentProcessP50Ms": {
+        "n": 5,
+        "p50": 20.348672,
+        "p95": 20.6120896,
+        "min": 19.944,
+        "max": 20.61536,
+        "mean": 20.3582016
+      },
+      "independentProcessP95Ms": {
+        "n": 5,
+        "p50": 21.35328,
+        "p95": 21.703686400000002,
+        "min": 20.743872,
+        "max": 21.706016,
+        "mean": 21.326246400000002
+      },
+      "triangles": {
+        "n": 5,
+        "p50": 1746654.0,
+        "p95": 1746654.0,
+        "min": 1746654.0,
+        "max": 1746654.0,
+        "mean": 1746654.0
+      },
+      "visibleChunks": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "drawCalls": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "estimatedGpuBytes": {
+        "n": 5,
+        "p50": 49156040.0,
+        "p95": 49156040.0,
+        "min": 49156040.0,
+        "max": 49156040.0,
+        "mean": 49156040.0
+      },
+      "meshError": {
+        "sourceToHeightfieldP95M": 10.370311111110823,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": 7.8400000000019645,
+        "finalMeshWorldMaxM": 134.80000000000473,
+        "visibleFootprintSamples": 3113501,
+        "visibleChunkP95MetersMax": 12.311111111110904,
+        "visibleChunkMaxErrorMeters": 134.80000000000473,
+        "visibleChunksWithError": 21,
+        "selectedChunkLods": [
+          {
+            "chunkX": 4,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 4,
+            "lod": 4
+          },
+          {
+            "chunkX": 4,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 5,
+            "lod": 4
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 6,
+            "lod": 4
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 6,
+            "lod": 4
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 8,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 8,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 8,
+            "lod": 0
+          }
+        ],
+        "meaning": "pooled source-sample error over union of visible chunk footprints at measured selected LOD; excludes invisible terrain"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "projected per-chunk estimates are diagnostics, not guaranteed bound"
+      },
+      "pixels": {
+        "rgbMae": 0.0,
+        "changedPixelPct": 0.0,
+        "maskXorPct": 0.0,
+        "edgeMae": 0.0,
+        "representativeDiffPng": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\b3-input-final4-quality\\sse-1-rep1-diff.png"
+      },
+      "sourceArtifact": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\sse-1"
+    },
+    {
+      "configuration": "SSE-2px",
+      "family": "SSE",
+      "status": "MEASURED",
+      "evidenceClass": "MEASURED_GPU_DERIVED_ERROR_SUMMARIES",
+      "processCount": 5,
+      "independentProcessP50Ms": {
+        "n": 5,
+        "p50": 17.959968,
+        "p95": 18.0832192,
+        "min": 17.282496,
+        "max": 18.09472,
+        "mean": 17.8384384
+      },
+      "independentProcessP95Ms": {
+        "n": 5,
+        "p50": 18.950016,
+        "p95": 19.6297344,
+        "min": 18.616352,
+        "max": 19.764384,
+        "mean": 19.0732224
+      },
+      "triangles": {
+        "n": 5,
+        "p50": 1500030.0,
+        "p95": 1500030.0,
+        "min": 1500030.0,
+        "max": 1500030.0,
+        "mean": 1500030.0
+      },
+      "visibleChunks": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "drawCalls": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "estimatedGpuBytes": {
+        "n": 5,
+        "p50": 42225224.0,
+        "p95": 42225224.0,
+        "min": 42225224.0,
+        "max": 42225224.0,
+        "mean": 42225224.0
+      },
+      "meshError": {
+        "sourceToHeightfieldP95M": 10.370311111110823,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": 8.288888888888323,
+        "finalMeshWorldMaxM": 134.80000000000473,
+        "visibleFootprintSamples": 3113501,
+        "visibleChunkP95MetersMax": 12.759999999998854,
+        "visibleChunkMaxErrorMeters": 134.80000000000473,
+        "visibleChunksWithError": 21,
+        "selectedChunkLods": [
+          {
+            "chunkX": 4,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 4,
+            "lod": 4
+          },
+          {
+            "chunkX": 4,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 5,
+            "lod": 4
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 6,
+            "lod": 1
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 6,
+            "lod": 4
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 6,
+            "lod": 4
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 7,
+            "lod": 1
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 7,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 8,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 8,
+            "lod": 1
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 8,
+            "lod": 1
+          }
+        ],
+        "meaning": "pooled source-sample error over union of visible chunk footprints at measured selected LOD; excludes invisible terrain"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "projected per-chunk estimates are diagnostics, not guaranteed bound"
+      },
+      "pixels": {
+        "rgbMae": 0.0,
+        "changedPixelPct": 0.0,
+        "maskXorPct": 0.0,
+        "edgeMae": 0.0,
+        "representativeDiffPng": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\b3-input-final4-quality\\sse-2-rep1-diff.png"
+      },
+      "sourceArtifact": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\sse-2"
+    },
+    {
+      "configuration": "SSE-4px",
+      "family": "SSE",
+      "status": "MEASURED",
+      "evidenceClass": "MEASURED_GPU_DERIVED_ERROR_SUMMARIES",
+      "processCount": 5,
+      "independentProcessP50Ms": {
+        "n": 5,
+        "p50": 12.906656,
+        "p95": 13.0206208,
+        "min": 12.435424,
+        "max": 13.03936,
+        "mean": 12.795616
+      },
+      "independentProcessP95Ms": {
+        "n": 5,
+        "p50": 13.871552,
+        "p95": 14.2352384,
+        "min": 12.950752,
+        "max": 14.253952,
+        "mean": 13.726617599999999
+      },
+      "triangles": {
+        "n": 5,
+        "p50": 1092062.0,
+        "p95": 1092062.0,
+        "min": 1092062.0,
+        "max": 1092062.0,
+        "mean": 1092062.0
+      },
+      "visibleChunks": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "drawCalls": {
+        "n": 5,
+        "p50": 21.0,
+        "p95": 21.0,
+        "min": 21.0,
+        "max": 21.0,
+        "mean": 21.0
+      },
+      "estimatedGpuBytes": {
+        "n": 5,
+        "p50": 30755528.0,
+        "p95": 30755528.0,
+        "min": 30755528.0,
+        "max": 30755528.0,
+        "mean": 30755528.0
+      },
+      "meshError": {
+        "sourceToHeightfieldP95M": 10.370311111110823,
+        "heightfieldToFinalMeshP95M": null,
+        "finalMeshWorldP95M": 11.955555555554383,
+        "finalMeshWorldMaxM": 134.80000000000473,
+        "visibleFootprintSamples": 3113501,
+        "visibleChunkP95MetersMax": 32.426666666666165,
+        "visibleChunkMaxErrorMeters": 134.80000000000473,
+        "visibleChunksWithError": 21,
+        "selectedChunkLods": [
+          {
+            "chunkX": 4,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 4,
+            "lod": 0
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 4,
+            "lod": 4
+          },
+          {
+            "chunkX": 4,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 5,
+            "lod": 0
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 5,
+            "lod": 1
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 5,
+            "lod": 4
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 6,
+            "lod": 0
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 6,
+            "lod": 1
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 6,
+            "lod": 4
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 6,
+            "lod": 4
+          },
+          {
+            "chunkX": 5,
+            "chunkY": 7,
+            "lod": 1
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 7,
+            "lod": 1
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 7,
+            "lod": 2
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 7,
+            "lod": 1
+          },
+          {
+            "chunkX": 6,
+            "chunkY": 8,
+            "lod": 2
+          },
+          {
+            "chunkX": 7,
+            "chunkY": 8,
+            "lod": 2
+          },
+          {
+            "chunkX": 8,
+            "chunkY": 8,
+            "lod": 2
+          }
+        ],
+        "meaning": "pooled source-sample error over union of visible chunk footprints at measured selected LOD; excludes invisible terrain"
+      },
+      "screenError": {
+        "p95Px": null,
+        "validity": "projected per-chunk estimates are diagnostics, not guaranteed bound"
+      },
+      "pixels": {
+        "rgbMae": 0.0,
+        "changedPixelPct": 0.0,
+        "maskXorPct": 0.0,
+        "edgeMae": 0.0,
+        "representativeDiffPng": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\b3-input-final4-quality\\sse-4-rep1-diff.png"
+      },
+      "sourceArtifact": "artifacts\\diagnostics\\xyc-b3\\20261015-202400\\sse-4"
+    }
+  ],
+  "pairedRatios": [
+    {
+      "baseline": "2049-auto",
+      "configuration": "2049-lod-bias-1",
+      "replicate": 1,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.24511810262595024,
+      "baselineOrder": 1,
+      "candidateOrder": 2
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "2049-lod-bias-1",
+      "replicate": 2,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.24510303832772246,
+      "baselineOrder": 12,
+      "candidateOrder": 7
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "2049-lod-bias-1",
+      "replicate": 3,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.2459512505034347,
+      "baselineOrder": 17,
+      "candidateOrder": 18
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "2049-lod-bias-1",
+      "replicate": 4,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.2493267132117375,
+      "baselineOrder": 22,
+      "candidateOrder": 23
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "2049-lod-bias-1",
+      "replicate": 5,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.2518514072744679,
+      "baselineOrder": 27,
+      "candidateOrder": 28
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-0.5px",
+      "replicate": 1,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.8775803214117126,
+      "baselineOrder": 1,
+      "candidateOrder": 3
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-0.5px",
+      "replicate": 2,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.9415350809234714,
+      "baselineOrder": 12,
+      "candidateOrder": 8
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-0.5px",
+      "replicate": 3,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.9118705648111907,
+      "baselineOrder": 17,
+      "candidateOrder": 13
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-0.5px",
+      "replicate": 4,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.9155877768843166,
+      "baselineOrder": 22,
+      "candidateOrder": 24
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-0.5px",
+      "replicate": 5,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.9336450362962194,
+      "baselineOrder": 27,
+      "candidateOrder": 29
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-1px",
+      "replicate": 1,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.8878868993840987,
+      "baselineOrder": 1,
+      "candidateOrder": 4
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-1px",
+      "replicate": 2,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.907455664642993,
+      "baselineOrder": 12,
+      "candidateOrder": 9
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-1px",
+      "replicate": 3,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.9017805989029378,
+      "baselineOrder": 17,
+      "candidateOrder": 14
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-1px",
+      "replicate": 4,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.912917320807859,
+      "baselineOrder": 22,
+      "candidateOrder": 19
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-1px",
+      "replicate": 5,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.912345984433394,
+      "baselineOrder": 27,
+      "candidateOrder": 30
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-2px",
+      "replicate": 1,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.7565039437578528,
+      "baselineOrder": 1,
+      "candidateOrder": 5
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-2px",
+      "replicate": 2,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.7965010634851324,
+      "baselineOrder": 12,
+      "candidateOrder": 10
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-2px",
+      "replicate": 3,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.7896210200296105,
+      "baselineOrder": 17,
+      "candidateOrder": 15
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-2px",
+      "replicate": 4,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.7993825190782318,
+      "baselineOrder": 22,
+      "candidateOrder": 20
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-2px",
+      "replicate": 5,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.8215856741552474,
+      "baselineOrder": 27,
+      "candidateOrder": 25
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-4px",
+      "replicate": 1,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.5443338333942651,
+      "baselineOrder": 1,
+      "candidateOrder": 6
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-4px",
+      "replicate": 2,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.5681306607693717,
+      "baselineOrder": 12,
+      "candidateOrder": 11
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-4px",
+      "replicate": 3,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.5778579491630221,
+      "baselineOrder": 17,
+      "candidateOrder": 16
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-4px",
+      "replicate": 4,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.5737325260982835,
+      "baselineOrder": 22,
+      "candidateOrder": 21
+    },
+    {
+      "baseline": "2049-auto",
+      "configuration": "SSE-4px",
+      "replicate": 5,
+      "pairingBasis": "same replicate index; validate run order/environment",
+      "gpuP50Ratio": 0.5787237842340173,
+      "baselineOrder": 27,
+      "candidateOrder": 26
+    }
+  ],
+  "pareto": "only rows with measured cost and valid comparable error metrics are eligible"
+}
