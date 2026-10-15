@@ -1,0 +1,25 @@
+{
+  "schema": "XYC-B4-C-TRAJECTORY/1",
+  "source": { "id": "n24e121", "sha256": "BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1" },
+  "runtime": { "samples": 2049, "chunkCells": 240, "width": 1024, "height": 768, "interpolation": "linear-position-and-scalars; normalized-linear-forward-up; invariant-culture" },
+  "reference": "B3 tools/xyc-offscreen/b3-visual/trajectory.json and B3 n24e121 runtime evidence; World coordinates fixed and terrain hash guarded.",
+  "poses": {
+    "zoom20k": { "position": {"x":50648.444336988396,"y":55660,"z":21899.5}, "forward":{"x":0,"y":0,"z":-1}, "up":{"x":0,"y":1,"z":0}, "fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1899.5} },
+    "zoom2k": { "position": {"x":50648.444336988396,"y":55660,"z":3899.5}, "forward":{"x":0,"y":0,"z":-1}, "up":{"x":0,"y":1,"z":0}, "fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1899.5} },
+    "near": { "position":{"x":49848.444336988396,"y":55060,"z":1778},"forward":{"x":0.7954116786684059,"y":0.5784812208497497,"z":-0.1807753815155468},"up":{"x":0.14619957418529833,"y":0.10632696304385332,"z":0.9835244081556433},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1528} },
+    "orbitA": { "position":{"x":49848.444336988396,"y":55060,"z":1778},"forward":{"x":0.7954116786684059,"y":0.5784812208497497,"z":-0.1807753815155468},"up":{"x":0.14619957418529833,"y":0.10632696304385332,"z":0.9835244081556433},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1528} },
+    "orbitB": { "position":{"x":50048.444336988396,"y":55210,"z":1978},"forward":{"x":0.8320502943378437,"y":0.5547001962252291,"z":0},"up":{"x":0,"y":0,"z":1},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"observationCenter":{"x":50648.444336988396,"y":55660,"z":1528} },
+    "chunkOutside": { "position":{"x":46000,"y":55660,"z":1778},"forward":{"x":0.7881104062391006,"y":0.3940552031195503,"z":-0.47286624374346037},"up":{"x":0.42294442611014477,"y":0.21147221305507238,"z":0.8811342210628017},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"observationCenter":{"x":51148.444336988396,"y":55910,"z":1228} },
+    "chunkEntry": { "position":{"x":50648.444336988396,"y":55660,"z":1528},"forward":{"x":0.7881104062391006,"y":0.3940552031195503,"z":-0.47286624374346037},"up":{"x":0.42294442611014477,"y":0.21147221305507238,"z":0.8811342210628017},"fovDegrees":45,"nearPlane":0.1,"farPlane":445280,"observationCenter":{"x":51148.444336988396,"y":55910,"z":1228} },
+    "nearStart": { "position":{"x":50648.444336988396,"y":55660,"z":1580},"forward":{"x":0.9805806756909202,"y":0,"z":-0.19611613513818404},"up":{"x":0.19611613513818404,"y":0,"z":0.9805806756909202},"fovDegrees":45,"nearPlane":0.5,"farPlane":445280,"observationCenter":{"x":50658.444336988396,"y":55660,"z":1528} },
+    "nearEnd": { "position":{"x":50648.444336988396,"y":55660,"z":1530},"forward":{"x":0.9805806756909202,"y":0,"z":-0.19611613513818404},"up":{"x":0.19611613513818404,"y":0,"z":0.9805806756909202},"fovDegrees":45,"nearPlane":0.05,"farPlane":445280,"observationCenter":{"x":50658.444336988396,"y":55660,"z":1528} }
+  },
+  "tracks": [
+    {"id":"zoom-20km-2km-near","segments":[{"from":"zoom20k","to":"zoom2k","frames":18},{"from":"zoom2k","to":"near","frames":18}]},
+    {"id":"continuous-zoom-in-out","segments":[{"from":"zoom20k","to":"near","frames":24},{"from":"near","to":"zoom20k","frames":24}]},
+    {"id":"orbit","segments":[{"from":"orbitA","motion":"orbit","angleDegrees":70,"frames":49}]},
+    {"id":"chunk-entry","segments":[{"from":"chunkOutside","to":"chunkEntry","frames":24,"purpose":"cross x=47482.917m terrain chunk boundary into chunk 4,4"}]},
+    {"id":"near-plane-pressure","segments":[{"from":"nearStart","to":"nearEnd","frames":24}]},
+    {"id":"return-A-B-A","segments":[{"from":"orbitA","to":"orbitB","frames":24},{"from":"orbitB","to":"orbitA","frames":24}]}
+  ]
+}
