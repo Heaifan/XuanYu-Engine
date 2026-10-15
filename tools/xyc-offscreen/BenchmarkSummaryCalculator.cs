@@ -14,6 +14,10 @@ internal static class BenchmarkSummaryCalculator
         var wall = rows.SelectMany(x => x.SamplesData).Select(x => x.FenceReadbackWallMs).ToArray();
         var gpuStats = gpu.Length >= 30 ? VulkanBenchmarkPercentileCalculator.Calculate(gpu) : (VulkanBenchmarkPercentiles?)null;
         var wallStats = VulkanBenchmarkPercentileCalculator.Calculate(wall);
+        var importStats = VulkanBenchmarkPercentileCalculator.Calculate(runs.Select(x => x.ImportMs).ToArray());
+        var terrainSampleStats = VulkanBenchmarkPercentileCalculator.Calculate(rows.Select(x => x.TerrainSampleMs).ToArray());
+        var meshBuildStats = VulkanBenchmarkPercentileCalculator.Calculate(rows.Select(x => x.CpuMeshBuildMs).ToArray());
+        var uploadStats = VulkanBenchmarkPercentileCalculator.Calculate(rows.Select(x => x.CpuUploadMs).ToArray());
         double Avg(Func<BenchmarkConfiguration, double> select) => rows.Average(select);
         var allStatus = rows.All(x => x.Status == "PASS") && rows.Length == runs.Count && runs.Count == 3;
         var status = !allStatus ? rows.Any(x => x.Status == "BLOCKED_RESOURCES") ? "BLOCKED_RESOURCES" : "INCOMPLETE" :
@@ -23,9 +27,14 @@ internal static class BenchmarkSummaryCalculator
             Samples = rows[0].Samples, Pose = rows[0].Pose, Replicates = rows.Length,
             ValidGpuSamples = gpu.Length, GpuMsP50 = gpuStats?.P50, GpuMsP95 = gpuStats?.P95,
             WallMsP50 = wallStats.P50, WallMsP95 = wallStats.P95,
-            CpuImportMs = runs.Average(x => x.ImportMs), TerrainSampleMs = Avg(x => x.TerrainSampleMs),
+            CpuImportMs = runs.Average(x => x.ImportMs),
+            CpuImportMsP50 = importStats.P50, CpuImportMsP95 = importStats.P95,
+            TerrainSampleMsP50 = terrainSampleStats.P50, TerrainSampleMsP95 = terrainSampleStats.P95,
+            TerrainSampleMs = Avg(x => x.TerrainSampleMs),
             TotalWallMs = Avg(x => x.TotalWallMs),
             CpuMeshBuildMs = Avg(x => x.CpuMeshBuildMs), UploadMs = Avg(x => x.CpuUploadMs),
+            CpuMeshBuildMsP50 = meshBuildStats.P50, CpuMeshBuildMsP95 = meshBuildStats.P95,
+            UploadMsP50 = uploadStats.P50, UploadMsP95 = uploadStats.P95,
             ColdFrameMs = Avg(x => x.ColdFrameMs), EstimatedGpuBytes = Avg(x => x.EstimatedGpuBytes),
             MeasuredGpuBytes = "UNKNOWN", VisibleChunks = Avg(x => x.VisibleChunks),
             CulledChunks = Avg(x => x.CulledChunks), LodMeans = [Avg(x => x.Lod0), Avg(x => x.Lod1),

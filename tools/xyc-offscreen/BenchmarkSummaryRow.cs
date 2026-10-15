@@ -8,11 +8,19 @@ internal sealed record BenchmarkSummaryRow
     public required double? GpuMsP95 { get; init; }
     public required double WallMsP50 { get; init; }
     public required double WallMsP95 { get; init; }
+    public required double CpuImportMsP50 { get; init; }
+    public required double CpuImportMsP95 { get; init; }
+    public required double TerrainSampleMsP50 { get; init; }
+    public required double TerrainSampleMsP95 { get; init; }
     public required double CpuImportMs { get; init; }
     public required double TerrainSampleMs { get; init; }
     public required double TotalWallMs { get; init; }
     public required double CpuMeshBuildMs { get; init; }
+    public required double CpuMeshBuildMsP50 { get; init; }
+    public required double CpuMeshBuildMsP95 { get; init; }
     public required double UploadMs { get; init; }
+    public required double UploadMsP50 { get; init; }
+    public required double UploadMsP95 { get; init; }
     public required double ColdFrameMs { get; init; }
     public required double EstimatedGpuBytes { get; init; }
     public required string MeasuredGpuBytes { get; init; }

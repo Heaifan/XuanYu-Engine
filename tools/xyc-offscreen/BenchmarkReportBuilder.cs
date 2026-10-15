@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 
 internal static class BenchmarkReportBuilder
@@ -36,10 +37,23 @@ internal static class BenchmarkReportBuilder
         if (near.Length == 3 && near[0].HeightErrorWorldP95.HasValue && near[2].HeightErrorWorldP95.HasValue &&
             near[0].HeightErrorWorldP95 > near[2].HeightErrorWorldP95 * 1.5)
             return "近地斜视的 HGT 世界高程重建误差随采样加密明显下降；优先评估采样密度 / 网格细化成本，并以差异图和 P95 数据复核视觉收益。";
+        if (near.Length == 3 && near[1].GpuMsP50 is double midGpuMs && midGpuMs > 0 &&
+            near[2].GpuMsP50 is double highGpuMs && highGpuMs > 0 &&
+            near[1].HeightErrorWorldP95 is double midHeightError && midHeightError > 0 &&
+            near[2].HeightErrorWorldP95 is double highHeightError && highHeightError > 0)
+        {
+            var gpuRatio = highGpuMs / midGpuMs;
+            var triangleRatio = near[2].Triangles / Math.Max(near[1].Triangles, 1);
+            var heightErrorReduction = 1 - highHeightError / midHeightError;
+            if (gpuRatio >= 3 && triangleRatio >= 2 && heightErrorReduction <= 0.25)
+                return $"优先做 near-oblique 的 LOD / 网格成本 A/B：{near[2].Samples} 对 {near[1].Samples} 样本 GPU P50 为 {F(gpuRatio)}×、三角形为 {F(triangleRatio)}×，固定采样点 HGT 高程误差 P95 下降 {F(heightErrorReduction * 100)}%。这说明成本收益值得调查，不证明 LOD 是根因；下一轮单变量比较 LOD 选择与采样密度，不先改算法。";
+        }
         var zeroProjected = raw.SelectMany(x => x.ChunkProbes).Count(x => x.Cull == "VISIBLE" && x.ProjectedPixels <= 0);
         return zeroProjected > 0 ? $"发现 {zeroProjected} 个可见 Chunk 的 ProjectedPixels=0 记录，优先检查 LOD 投影尺寸/选择链；该计数本身不证明错误粗化。" :
             $"当前 12 配置没有足够证据区分 LOD、采样密度与裁剪；先依据 GPU 差异图、覆盖率、chunk probe 和高程误差选择下一组 A/B，不改现有算法。";
     }
+
+    static string F(double value) => value.ToString("0.0", CultureInfo.InvariantCulture);
 }
 
 internal sealed record BenchmarkFinalReport(BenchmarkRun[] Runs,
