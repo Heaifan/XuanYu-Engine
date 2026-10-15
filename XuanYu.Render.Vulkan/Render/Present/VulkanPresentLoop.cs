@@ -88,9 +88,11 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
             var gpuFrameId = TerrainReplayOptions.Enabled
                 ? ViewportProbe.NextPresentedFrameId() : 0;
             if (TerrainReplayOptions.Enabled)
-                ViewportProbe.FrameSubmitted(gpuFrameId, idx);
+                ViewportProbe.FrameSubmitted(gpuFrameId, idx,
+                    _clearFrame.RenderProjection.Camera.Revision);
             submitted = true;
-            if (!HandlePresent(khr, swapchain, idx, gpuFrameId)) break;
+            if (!HandlePresent(khr, swapchain, idx, gpuFrameId,
+                    _clearFrame.RenderProjection.Camera.Revision)) break;
         }
     }
 

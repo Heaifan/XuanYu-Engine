@@ -8,39 +8,53 @@ public static partial class ViewportProbe
     static readonly ManualResetEventSlim CaptureRelease = new(true);
     static readonly object FrameGate = new();
     static long _nextPresentedFrame;
-    static long _lastPresentedFrame;
-    public static long LastPresentedFrame => Interlocked.Read(ref _lastPresentedFrame);
+    static ViewportPresentedFrame? _lastPresented;
+    public static ViewportPresentedFrame? LastPresented => Volatile.Read(ref _lastPresented);
+    public static long LastPresentedFrame => LastPresented?.FrameId ?? 0;
+    public static long LastPresentedCameraRevision => LastPresented?.CameraRevision ?? -1;
 
     public static long NextPresentedFrameId() => Interlocked.Increment(ref _nextPresentedFrame);
 
-    public static void ArmFrameCapture()
+    public static bool ArmFrameCapture(long cameraRevision = 0)
     {
-        if (!TerrainReplayOptions.Enabled) return;
+        if (!TerrainReplayOptions.Enabled) return false;
         CaptureRelease.Reset();
-        lock (FrameGate) _captureAfterFrame = _lastPresentedFrame;
+        lock (FrameGate)
+        {
+            _captureAfterFrame = LastPresentedFrame;
+            _captureCameraRevision = cameraRevision;
+        }
         Interlocked.Exchange(ref _captureArmed, 1);
+        return true;
     }
 
     public static void ReleaseCapturedFrame() => CaptureRelease.Set();
 
     static int _captureArmed;
     static long _captureAfterFrame;
+    static long _captureCameraRevision;
 
-    public static void FrameSubmitted(long frameId, uint imageIndex) =>
+    public static void FrameSubmitted(long frameId, uint imageIndex, long cameraRevision) =>
         Log("present", $"[FRAME-SUBMITTED] GpuFrameId={frameId};" +
-            $"ImageIndex={imageIndex};QueueSubmit=SUCCESS");
+            $"ImageIndex={imageIndex};CameraRevision={cameraRevision};" +
+            $"RenderSnapshotCameraRevision={cameraRevision};QueueSubmit=SUCCESS");
 
-    public static void FramePresented(long frameId, uint imageIndex)
+    public static void FramePresented(long frameId, uint imageIndex, long cameraRevision)
     {
         bool holdForCapture;
         lock (FrameGate)
         {
-            Interlocked.Exchange(ref _lastPresentedFrame, frameId);
-            holdForCapture = Interlocked.Exchange(ref _captureArmed, 0) == 1 &&
-                frameId > _captureAfterFrame;
+            holdForCapture = Volatile.Read(ref _captureArmed) == 1 &&
+                frameId > _captureAfterFrame &&
+                (_captureCameraRevision == 0 || cameraRevision == _captureCameraRevision);
+            if (holdForCapture) Interlocked.Exchange(ref _captureArmed, 0);
+            Volatile.Write(ref _lastPresented,
+                new ViewportPresentedFrame(frameId, imageIndex, cameraRevision, holdForCapture));
         }
         Log("present", $"[FRAME-PRESENTED] GpuFrameId={frameId};" +
-            $"ImageIndex={imageIndex};QueuePresent=SUCCESS;CaptureHold={holdForCapture}");
+            $"ImageIndex={imageIndex};CameraRevision={cameraRevision};" +
+            $"RenderSnapshotCameraRevision={cameraRevision};" +
+            $"QueuePresent=SUCCESS;CaptureHold={holdForCapture}");
         PresentedSignal.Release();
         if (holdForCapture && !CaptureRelease.Wait(TimeSpan.FromSeconds(30)))
             Log("present", $"[FRAME-CAPTURE-TIMEOUT] GpuFrameId={frameId}");

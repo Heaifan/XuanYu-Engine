@@ -16,4 +16,15 @@ sealed class FakeRuntime : IXycRuntime
         _camera = pose with { Revision = _camera.Revision + 1 };
         return _camera;
     }
+    public XycCamera OrbitCamera(double deltaX, double deltaY)
+    {
+        _camera = _camera with
+        {
+            Position = _camera.Position with { X = _camera.Position.X + deltaX },
+            Revision = _camera.Revision + 1
+        };
+        return _camera;
+    }
+    public bool ArmPresentedCapture(long cameraRevision) => cameraRevision > 0;
+    public bool ReleasePresentedCapture() => true;
 }

@@ -11,13 +11,29 @@ public static class XycAppSession
         var sessionId = Value(args, "--xyc-session");
         if (sessionId is null || !args.Contains("--xyc-stdio")) return false;
         Console.SetOut(Console.Error);
+        var terrainLoad = StartTerrainLoad(args, vm);
         var output = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
-        var processor = new XycCommandProcessor(vm.CreateXycRuntime(sessionId),
+        var processor = new XycCommandProcessor(vm.CreateXycRuntime(sessionId, terrainLoad),
             args.Contains("--xyc-diagnostic-write"));
         var host = new XycStdioHost(processor);
-        _ = host.RunAsync(Console.In, output,
-            () => Dispatcher.UIThread.Post(() => lifetime.Shutdown()), CancellationToken.None);
+        _ = Task.Run(() => host.RunAsync(Console.In, output,
+            () => Dispatcher.UIThread.Post(() => lifetime.Shutdown()), CancellationToken.None));
         return true;
+    }
+
+    static Task<bool>? StartTerrainLoad(string[] args, UiVm vm)
+    {
+        var path = Value(args, "--xyc-test-dem");
+        if (path is null) return null;
+        path = XycTestDemPolicy.Resolve(AppContext.BaseDirectory, path);
+        var completion = new TaskCompletionSource<bool>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        Dispatcher.UIThread.Post(async () =>
+        {
+            try { completion.TrySetResult(await vm.ImportTerrainSourceAsync(path)); }
+            catch (Exception error) { completion.TrySetException(error); }
+        });
+        return completion.Task;
     }
 
     static string? Value(string[] args, string key)

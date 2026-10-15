@@ -16,6 +16,15 @@ public sealed class XycCommandProcessorTests
     }
 
     [Fact]
+    public void Read_only_session_allows_inspection_but_rejects_writes()
+    {
+        var processor = new XycCommandProcessor(new FakeRuntime(), false);
+        Assert.True(processor.Execute(Request("camera.inspect")).Success);
+        Assert.Equal("UNAUTHORIZED", processor.Execute(
+            Request("camera.set-test-pose", Pose())).ErrorCode);
+    }
+
+    [Fact]
     public void Camera_pose_returns_before_after_and_revision()
     {
         var processor = new XycCommandProcessor(new FakeRuntime(), true);

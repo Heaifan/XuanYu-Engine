@@ -26,6 +26,9 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
                 "scene.inspect" => Scene(),
                 "camera.inspect" => Camera(),
                 "camera.set-test-pose" => SetPose(),
+                "camera.orbit" => Orbit(),
+                "capture.arm" => ArmCapture(),
+                "capture.release" => ReleaseCapture(),
                 "session.close" => Result(true, null, new XycSessionClosed(true)),
                 _ => Result(false, "UNKNOWN_COMMAND")
             };
@@ -54,33 +57,43 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
             if (request.Args.ValueKind != JsonValueKind.Object) throw new JsonException();
             var pose = request.Args.Deserialize<XycCamera>(Json) ??
                 throw new JsonException("camera pose missing");
-            Validate(pose);
+            XycCameraValidator.Validate(pose);
             var before = runtime.InspectCamera();
             var after = runtime.SetTestPose(pose);
             return Result(true, null, new { before, after },
                 runtime.InspectScene().SceneRevision, after.Revision);
         }
+
+        XycResponse Orbit()
+        {
+            if (!diagnosticWrite) return Result(false, "UNAUTHORIZED");
+            var delta = request.Args.Deserialize<XycOrbitDelta>(Json) ??
+                throw new JsonException("orbit delta missing");
+            if (!double.IsFinite(delta.DeltaX) || !double.IsFinite(delta.DeltaY) ||
+                Math.Abs(delta.DeltaX) > 5000 || Math.Abs(delta.DeltaY) > 5000)
+                throw new JsonException("orbit delta outside the supported range");
+            var before = runtime.InspectCamera();
+            var after = runtime.OrbitCamera(delta.DeltaX, delta.DeltaY);
+            return Result(true, null, new { before, after },
+                runtime.InspectScene().SceneRevision, after.Revision);
+        }
+
+        XycResponse ArmCapture()
+        {
+            if (!diagnosticWrite) return Result(false, "UNAUTHORIZED");
+            var args = request.Args.Deserialize<XycCaptureRequest>(Json) ??
+                throw new JsonException("capture camera revision missing");
+            if (args.CameraRevision <= 0) throw new JsonException("invalid camera revision");
+            return Result(runtime.ArmPresentedCapture(args.CameraRevision), null,
+                new XycCaptureState(true));
+        }
+
+        XycResponse ReleaseCapture()
+        {
+            if (!diagnosticWrite) return Result(false, "UNAUTHORIZED");
+            return Result(runtime.ReleasePresentedCapture(), null,
+                new XycCaptureState(false));
+        }
     }
 
-    static void Validate(XycCamera pose)
-    {
-        var values = new[] { pose.Position.X, pose.Position.Y, pose.Position.Z,
-            pose.Forward.X, pose.Forward.Y, pose.Forward.Z, pose.Up.X,
-            pose.Up.Y, pose.Up.Z, pose.FovDegrees, pose.NearPlane, pose.FarPlane,
-            pose.OrthographicScale, pose.ObservationCenter.X,
-            pose.ObservationCenter.Y, pose.ObservationCenter.Z };
-        if (values.Any(value => !double.IsFinite(value))) throw new JsonException();
-        if (pose.Mode is not ("Perspective" or "Orthographic") || pose.NearPlane <= 0 ||
-            pose.FarPlane <= pose.NearPlane || pose.FovDegrees is <= 1 or >= 179 ||
-            pose.Mode == "Orthographic" && pose.OrthographicScale <= 0)
-            throw new JsonException();
-        var f = pose.Forward;
-        var u = pose.Up;
-        if (Length(f) < 1e-8 || Length(u) < 1e-8 ||
-            Math.Abs(Dot(f, u) / (Length(f) * Length(u))) > 1e-6)
-            throw new JsonException();
-    }
-
-    static double Dot(Vector3 a, Vector3 b) => a.X * b.X + a.Y * b.Y + a.Z * b.Z;
-    static double Length(Vector3 value) => Math.Sqrt(Dot(value, value));
 }

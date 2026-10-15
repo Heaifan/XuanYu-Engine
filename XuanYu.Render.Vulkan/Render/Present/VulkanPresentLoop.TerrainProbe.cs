@@ -8,7 +8,7 @@ namespace XuanYu.Render.Vulkan.Render;
 public sealed unsafe partial class VulkanPresentLoop
 {
     bool HandlePresent(KhrSwapchain khr, SwapchainKHR swapchain,
-        uint imageIndex, long gpuFrameId)
+        uint imageIndex, long gpuFrameId, long cameraRevision)
     {
         var result = PresentFrame(khr, swapchain, imageIndex);
         if (result == Result.ErrorOutOfDateKhr)
@@ -18,7 +18,7 @@ public sealed unsafe partial class VulkanPresentLoop
 
         if (!Check(result, "QueuePresent", allowSuboptimal: true)) return false;
         if (TerrainReplayOptions.Enabled)
-            ViewportProbe.FramePresented(gpuFrameId, imageIndex);
+            ViewportProbe.FramePresented(gpuFrameId, imageIndex, cameraRevision);
         if (!_firstPresentLogged) LogFirstPresent(imageIndex);
         return true;
     }

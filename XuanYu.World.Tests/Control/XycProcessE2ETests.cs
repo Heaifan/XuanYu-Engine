@@ -23,6 +23,7 @@ public sealed class XycProcessE2ETests
         };
         start.ArgumentList.Add("--app"); start.ArgumentList.Add(app);
         start.ArgumentList.Add("--session-id"); start.ArgumentList.Add("xyc-process-test");
+        start.ArgumentList.Add("--diagnostic-write");
         using var process = Process.Start(start)!;
         try
         {
@@ -50,7 +51,15 @@ public sealed class XycProcessE2ETests
         Assert.Equal(303, position.GetProperty("z").GetDouble());
         Assert.Equal(1, observed.GetProperty("observationCenter").GetProperty("x").GetDouble());
         Assert.Equal(-1, observed.GetProperty("forward").GetProperty("z").GetDouble());
-        var closed = await Send(process, "r8", "session.close", new { }, timeout.Token);
+        var orbit = await Send(process, "r8", "camera.orbit",
+            new { deltaX = 40d, deltaY = -20d }, timeout.Token);
+        Assert.True(orbit.GetProperty("success").GetBoolean(),
+            orbit.GetProperty("errorCode").GetString());
+        var orbitAfter = orbit.GetProperty("observedState").GetProperty("after");
+        Assert.True(orbitAfter.GetProperty("revision").GetInt64() >
+            observed.GetProperty("revision").GetInt64());
+        Assert.Equal(1, orbitAfter.GetProperty("observationCenter").GetProperty("x").GetDouble());
+        var closed = await Send(process, "r9", "session.close", new { }, timeout.Token);
         Assert.True(closed.GetProperty("success").GetBoolean());
         await process.WaitForExitAsync(timeout.Token);
         Assert.Equal(0, process.ExitCode);
