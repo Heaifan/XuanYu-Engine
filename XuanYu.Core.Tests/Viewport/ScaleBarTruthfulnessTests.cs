@@ -33,6 +33,24 @@ public sealed class ScaleBarTruthfulnessTests
         Assert.True(ScaleBarGroundProjection.TryCreate(Perspective(), Viewport(), 25, out var metric) &&
             metric.IsValid && metric.EndpointDistanceMeters > 0.0);
 
+    [Fact] public void TerrainGroundIntersectionUsesQueriedSurfaceHeightsTest()
+    {
+        double? SlopedTerrain(double x, double _) => 25.0 + x * 0.5;
+
+        Assert.True(ScaleBarGroundProjection.TryCreate(Perspective(), Viewport(), SlopedTerrain,
+            out var metric));
+        Assert.True(metric.IsValid);
+        Assert.True(ScaleBarGroundProjection.TryCreate(Perspective(), Viewport(), 25.0, out var flat));
+        Assert.True(metric.EndpointDistanceMeters > flat.EndpointDistanceMeters);
+    }
+
+    [Fact] public void TerrainGroundIntersectionFailsWhenEndpointHasNoDataTest()
+    {
+        double? MissingTerrain(double x, double _) => x < 0 ? null : 25.0;
+
+        Assert.False(ScaleBarGroundProjection.TryCreate(Perspective(), Viewport(), MissingTerrain, out _));
+    }
+
     [Fact] public void InvalidGroundIntersectionHidesScaleBarTest()
     {
         Assert.False(ScaleBarGroundProjection.TryCreate(Horizontal(), Viewport(), 0, out _));
@@ -41,6 +59,13 @@ public sealed class ScaleBarTruthfulnessTests
 
     [Fact] public void UnitSwitchMetersToKilometersTest() =>
         Assert.Equal("1 km", ScaleIndicatorMetric.FromMetersPerDip(1000.0 / 104).Label);
+
+    [Fact] public void SubmeterScaleBarIsNotRoundedToZeroTest()
+    {
+        var metric = ScaleIndicatorMetric.FromMetersPerDip(0.5 / 104.0);
+        Assert.Equal(0.5, metric.DistanceMeters, 6);
+        Assert.Equal("0.5 m", metric.Label);
+    }
 
     [Fact] public void ScaleBarPixelRangeTest()
     {

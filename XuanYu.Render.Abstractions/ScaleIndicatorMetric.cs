@@ -32,7 +32,9 @@ public readonly record struct ScaleIndicatorMetric(
 
     static string Format(double meters) => meters >= 1000.0
         ? $"{(meters / 1000.0).ToString("0", CultureInfo.InvariantCulture)} km"
-        : $"{meters.ToString("0", CultureInfo.InvariantCulture)} m";
+        : meters < 1.0
+            ? $"{meters.ToString("0.##", CultureInfo.InvariantCulture)} m"
+            : $"{meters.ToString("0", CultureInfo.InvariantCulture)} m";
 
     static double LargestBarSpacingAtMost(double value)
     {
