@@ -37,15 +37,18 @@ public sealed partial class UiVm
 
     void FrameTerrainAndEntities(string source)
     {
-        var terrain = _terrainTiles!.Tiles.SelectMany(tile =>
-            TerrainWorldBounds.Corners([TerrainWorldPlacement.ToRenderResource(tile, _terrainTiles.Bounds)],
-                new TerrainRenderTransform(VerticalExaggeration)));
-        var points = terrain.Concat(_sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position)).ToArray();
+        var resources = CachedTerrainRenderResources() ?? _terrainTiles!.Tiles.Select(tile =>
+            TerrainWorldPlacement.ToRenderResource(tile, _terrainTiles.Bounds)).ToArray();
+        var entities = _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position).ToArray();
+        var terrain = TerrainWorldBounds.Corners(resources,
+            new TerrainRenderTransform(VerticalExaggeration));
+        var points = terrain.Concat(entities).ToArray();
         if (points.Length == 0) return;
         var frame = _camera.Mode == ProjectionMode.Orthographic
             ? EditorCameraFraming.FrameOrthographicWithCenter(points, _camera.Forward, _camera.Up,
                 _viewportAspect, _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision)
             : EditorCameraFraming.FrameAllWithCenter(points, _viewportAspect, ++_cameraRevision);
+        if (entities.Length == 0) frame = GroundTerrainFrame(frame, resources);
         ApplyCameraFrame(frame, "FrameTerrain");
         PublishSceneRenderSnapshot();
         FooterMessage = $"{source}：地形与场景已进入视野。";

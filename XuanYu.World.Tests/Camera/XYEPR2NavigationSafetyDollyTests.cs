@@ -16,10 +16,10 @@ public sealed class XYEPR2NavigationSafetyDollyTests
         finally { File.Delete(path); }
 
         var center = vm.ObservationCenter;
-        var surface = new TerrainWorldGroundSurface(vm.TerrainWorld!);
         for (var step = 0; step < 100; step++) Assert.True(vm.DollyCamera(1));
 
         var camera = vm.RenderSnapshot.CameraState;
+        var surface = new TerrainRenderGroundSurface(vm.RenderProjection.Projection.TerrainResources);
         var query = surface.QuerySurface(new(camera.Position.X, camera.Position.Y));
         Assert.True(query.IsValid);
         Assert.True(camera.Position.Z > query.SurfaceZ * vm.VerticalExaggeration,

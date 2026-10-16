@@ -59,12 +59,20 @@ public sealed partial class TerrainAutoFrameD1Tests
     {
         var vm = NewVm();
         vm.UpdateViewportFrame(800, 600);
-        var revision = vm.RenderSnapshot.CameraState.Revision;
+        var path = Path.Combine(Path.GetTempPath(), $"n23e121-pivot-{Guid.NewGuid():N}.hgt");
+        byte[] hgt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0];
+        await File.WriteAllBytesAsync(path, hgt);
+        try
+        {
+            Assert.True(await vm.ImportTerrainSourceAsync(path));
+            var resource = Assert.Single(vm.RenderProjection.Projection.TerrainResources);
+            var centerIndex = (resource.Heightfield.Height / 2) * resource.Heightfield.Width +
+                resource.Heightfield.Width / 2;
+            var expectedSurface = resource.Heightfield.ElevationMeters[centerIndex];
 
-        await ImportIntoAsync(vm, [("n23e121.hgt", 10, 2)]);
-
-        Assert.Equal(TerrainWorldCenter(vm), vm.ObservationCenter);
-        Assert.True(vm.RenderSnapshot.CameraState.Revision > revision);
+            Assert.Equal(expectedSurface, vm.ObservationCenter.Z);
+        }
+        finally { File.Delete(path); }
     }
 
 }
