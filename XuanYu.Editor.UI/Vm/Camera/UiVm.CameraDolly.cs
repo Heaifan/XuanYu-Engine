@@ -8,11 +8,14 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     public bool DollyCamera(double wheelDelta)
-        => DollyCameraCore(wheelDelta, null, null, null, "DollyCamera");
+        => DollyCameraCore(wheelDelta, null, null, null, "DollyCamera", out _);
+    public bool DollyCamera(double wheelDelta, out bool constrained)
+        => DollyCameraCore(wheelDelta, null, null, null, "DollyCamera", out constrained);
     public bool DollyCameraAtCursor(double wheelDelta, double cursorX, double cursorY, ViewportState viewport)
-        => DollyCameraCore(wheelDelta, cursorX, cursorY, viewport, "DollyCameraAtCursor");
-    bool DollyCameraCore(double wheelDelta, double? cursorX, double? cursorY, ViewportState? viewport, string operation)
+        => DollyCameraCore(wheelDelta, cursorX, cursorY, viewport, "DollyCameraAtCursor", out _);
+    bool DollyCameraCore(double wheelDelta, double? cursorX, double? cursorY, ViewportState? viewport, string operation, out bool constrained)
     {
+        constrained = false;
         if (_cameraSession is not null || _editorState.InteractionSnapshot.HasCapture) return false;
         ViewportProbe.Operation(operation);
         var hit = cursorX is { } x && cursorY is { } y && viewport is { } v
@@ -32,7 +35,12 @@ public sealed partial class UiVm
             RefreshLogBindings();
             return false;
         }
-        if (cursorX is null) result = ConstrainDollyToTerrain(result, wheelDelta);
+        if (cursorX is null)
+        {
+            var unconstrainedPosition = result.Camera.Position;
+            result = ConstrainDollyToTerrain(result, wheelDelta);
+            constrained = result.Camera.Position != unconstrainedPosition;
+        }
         _cameraRevision = result.Camera.Revision;
         ApplyCameraResult(result);
         TraceFarDolly(new(_camera, _observationCenter));

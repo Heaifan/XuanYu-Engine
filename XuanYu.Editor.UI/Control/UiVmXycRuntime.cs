@@ -5,7 +5,7 @@ namespace XuanYu.Editor.UI;
 
 using XuanYu.Editor.UI.XycControl;
 
-sealed class UiVmXycRuntime(UiVm vm, string instanceId,
+sealed partial class UiVmXycRuntime(UiVm vm, string instanceId,
     Task<bool>? terrainLoad) : IXycRuntime
 {
     public string InstanceId { get; } = instanceId;

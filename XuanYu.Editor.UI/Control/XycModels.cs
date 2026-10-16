@@ -11,6 +11,11 @@ public sealed record XycCamera(Vector3 Position, Vector3 Forward, Vector3 Up,
 
 public sealed record XycOrbitDelta(double DeltaX, double DeltaY);
 
+public sealed record XycDollyDelta(double WheelDelta);
+
+public sealed record XycDollyResult(bool Handled, XycCamera Before, XycCamera After,
+    bool Constrained);
+
 public sealed record Vector3(double X, double Y, double Z);
 
 public sealed record XycResponse(string RequestId, bool Success, string? ErrorCode,

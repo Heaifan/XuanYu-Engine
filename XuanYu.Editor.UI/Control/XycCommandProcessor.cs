@@ -27,6 +27,7 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
                 "camera.inspect" => Camera(),
                 "camera.set-test-pose" => SetPose(),
                 "camera.orbit" => Orbit(),
+                "camera.dolly" => Dolly(),
                 "capture.arm" => ArmCapture(),
                 "capture.release" => ReleaseCapture(),
                 "session.close" => Result(true, null, new XycSessionClosed(true)),
@@ -77,7 +78,7 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
             return Result(true, null, new { before, after },
                 runtime.InspectScene().SceneRevision, after.Revision);
         }
-
+        XycResponse Dolly() => XycDollyCommand.Execute(request, runtime, diagnosticWrite, Result);
         XycResponse ArmCapture()
         {
             if (!diagnosticWrite) return Result(false, "UNAUTHORIZED");

@@ -8,6 +8,7 @@ public interface IXycRuntime
     XycCamera InspectCamera();
     XycCamera SetTestPose(XycCamera pose);
     XycCamera OrbitCamera(double deltaX, double deltaY);
+    XycDollyResult DollyCamera(double wheelDelta);
     bool ArmPresentedCapture(long cameraRevision);
     bool ReleasePresentedCapture();
 }
