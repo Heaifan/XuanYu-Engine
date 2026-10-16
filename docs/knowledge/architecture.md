@@ -157,7 +157,29 @@ Screen A
 
 至少覆盖俯视、45°、80°等角度；对 X/Y 分别断言；注入无法构造合法射线的情况，确认相机/缩放状态不被 NaN、0 或 Infinity 污染。
 
-**关联 Knowledge**：K-SPA-001
+### 2026-10-16 Terrain ScaleBar 必须投影到当前渲染地表（STRENGTHEN；E1 不升级）
+
+**来源任务**：XYC-WP2-P4-R7
+**版本 / Commit**：`v0.3.0.23-fix` / `cb5d2e92de1c5a59431c77e08debb24f5e90b382`
+
+#### 问题与根因
+
+地形场景曾把固定 `BaseHeightMeters` 作为 ScaleBar 的水平参考面。该值不代表当前视口下方的 DEM Render Heightfield 表面，因此斜视和近地状态下，标尺端点计算的距离可能与可见地形局部尺度不符。
+
+#### 工程规则
+
+- 地形上下文应分别将 ScaleBar 两端屏幕射线投到当前渲染 Heightfield 三角面，再按两交点的世界距离计算标尺；查询需复用 Render Surface 的坐标和高度定义，并应用当前 Vertical Exaggeration。
+- NoData、覆盖范围外或交点无法收敛时，隐藏未能确认的标尺；不得静默回退到 `BaseHeightMeters` 平面。非地形场景可继续使用明示的参考平面路径。
+- ScaleBar 地表投影距离、Camera-to-Pivot 距离、Camera-to-Terrain Clearance 是不同量，记录和验收时不得相互替代。
+- 亚米标签可以保留小数，但显示精度只表示计算出的屏幕地面投影距离，不表示 DEM 源分辨率、网格几何精度或相机离地高度。
+
+#### 验证与边界
+
+ScaleBarTruthfulness 及相关 Metric / Viewport 契约测试 25/25 PASS；Editor App 与 XYC CLI Release 构建均为 0 Warning / 0 Error。独立 Windows Vulkan Editor 加载 NASADEM `n24e121`（SHA-256 `BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1`），RTX 3060、776×650、DPI 96；真实 Swapchain Present Readback 关联到目标 CameraRevision。回放取得 500 m、200 m 与近地 Orbit 图像，后者比例尺显示 `0.02 m`。产物目录：`artifacts/diagnostics/wp2-p4-r7-ground-quality/20261016-023-final-6941ee0cc18c4d81a0812c09998c7259/`。BuildIdentity 为 `HEAD=1d9d367fd6cbb0a8956505cbdf37c2ce8e78fe46;DIRTY=YES`，运行代码及版本源随后由上述 Commit 固化。
+
+`0.02 m` 仅是当前局部地面投影的 ScaleBar 距离，不证明厘米级地形精度或相机净空。近地平面化、513/1025/2049 同姿态画质差异、历史异常截断与用户 P4 仍未解决或确认；生产采样密度保持 513，LOD 保持 Auto。近切线视角的交点数值稳定性仍需单独验证。
+
+**关联 Knowledge**：K-SPA-001、K-XYC-002、K-REN-005
 
 ---
 

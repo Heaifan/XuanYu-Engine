@@ -1,6 +1,6 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-10-08（UTOPIA M2）
+> 最后治理更新：2026-10-16（XYC-WP2-P4-R7：STRENGTHEN K-SPA-002）
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
 
 ## 任务域预检映射
@@ -45,7 +45,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-GOV-001 | Knowledge | Engineering | 历史唯一身份以 Commit Hash 为准 | P0 | E2 | SHR-2026-08-R2 · 涉及 3 组重复版本 | Active |
 | K-GOV-002 | Knowledge | Engineering | 治理成果必须建立自动防回潮门禁 | P1 | E3 | 8.8-0 · 2026-06-23 23:09:45 · 4c4d82c | Active |
 | K-SPA-001 | Knowledge | Architecture | 大地图 Screen↔World CPU 链使用双精度并做往返验证 | P0 | E2 | v0.2.25.12-rz · 2026-08-10 12:20:03 · 0594c4c | Active |
-| K-SPA-002 | Knowledge | Architecture | 斜视 Metric 具有方向性，失败保持上一合法状态 | P1 | E1 | v0.2.25.17-stab · 2026-08-10 · c307c66 | Active |
+| K-SPA-002 | Knowledge | Architecture | 斜视 Metric 具有方向性，失败保持上一合法状态 | P1 | E1 | v0.2.25.17-stab · 2026-08-10 · c307c66；R7 Terrain ScaleBar · v0.3.0.23-fix · 2026-10-16 · cb5d2e92 | Active |
 | K-SPA-003 | Knowledge | Architecture | Cursor-Anchored Zoom Capability 保持 Screen→Surface 权威，Pure Dolly 不修改 Pivot | P0 | E1 | DEM-ZOOM-ANCHOR-DRIFT-R1 · 2026-10-03 · capability scope clarified 2026-10-05 | Active |
 | K-SPA-004 | Knowledge | Architecture | Editor / Gameplay Zoom Authority 必须按产品上下文分离 | P0 | E1 | EDITOR-ZOOM-AUTHORITY-SCOPE-SUPERSEDE-R1 · 2026-10-05 · baseline 4277b242 | Active |
 | K-ARCH-001 | Knowledge | Architecture | Composition Root 初始化顺序属于依赖合同 | P0 | E1 | v0.1.7.1-fix · 2026-06-24 11:45 · 359e3ce | Active |
