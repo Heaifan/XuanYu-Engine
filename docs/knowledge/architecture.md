@@ -493,3 +493,15 @@ A1b 施工报告在真实 NASADEM `n24e121`、隔离 Editor 上完成 `20 km →
 **下一次复验点**：XYC-R0-A2 Issue #31；将实验模块通过现有 Renderer 写入范围安全集成后，在真实 `n24e121` RenderPass 输出 GPU-origin PNG，随后才在无窗口 Host 复用同一 Scene/Terrain 画面。A2a=`PARTIAL`，A2b=`OFFSCREEN_PARTIAL`；用户 P4=`PENDING`。
 
 **关联知识**：K-XYC-001、K-REN-005、K-VAL-001、K-VAL-002。
+
+### 2026-10-17 静默 Native Editor Host（STRENGTHEN，E1 不升级）
+
+XYC-NATIVE-SILENT-R2 报告在 Windows / NVIDIA RTX 3060、固定 776×650 视口中，以不可见 Win32 HWND 承载真实 Editor Vulkan Surface / Swapchain，取得 Present GPU Readback，并通过 XYC 执行生产 Dolly 与 Orbit。报告记录测试进程生命周期未出现可见顶层窗口或取得前台焦点、未使用系统输入注入、退出码 0 且无残留 Editor 子进程；Dolly / Orbit 相机修订与 GPU 帧关联。专项测试 14/14 PASS，Editor App 与 XYC CLI Debug / Release 构建均报告 0 warnings / 0 errors。产品版本与提交报告为 `v0.3.0.24-fix`、`4df10e80bdf9f1d86a11da2a1b42029e3d363a4d`。
+
+**证据等级与来源边界**：本段依据本机 R2 执行报告记录，证据限定于上述 Windows / RTX 3060 配置；运行 BuildIdentity 的 HEAD 与产品 Commit 一致，但 `DIRTY=YES`。报告指出工作区存在 XYUI 与诊断 Dirty；这些 Dirty 是否完全不影响本次运行二进制，未由本条独立复核，因此不宣称干净工作区构建或全部运行源码与提交逐字节一致。此环境证据不自动推广至其他显卡、驱动、DPI 或多显示器配置。
+
+**证据分类**：此路径属于 `HIDDEN-HWND-SWAPCHAIN-PRESENT`：不可见 HWND 仍创建真实 Vulkan Surface / Swapchain 并执行 Present 与 GPU Readback。它不同于复用 Editor 业务状态的 `EDITOR-OFFSCREEN-VULKAN`，也不同于独立地形离屏测试 `OFFSCREEN-TERRAIN`。隐藏 HWND 复用生产相机/场景/渲染业务链，但不包含普通 `UiWin` 的完整布局、可见 UI 输入、窗口尺寸变化和用户滚轮生命周期；Dolly / Orbit API PASS 不能代替这些 UI 验收。
+
+**可复用规则**：静默能力须在启动至退出全生命周期检查可见窗口、前台焦点、输入注入、非零视口、Vulkan Surface / Swapchain Present、GPU Readback 与进程清理；失败时不得回退到可见窗口。每帧应关联 CameraRevision、Presented Frame、BuildIdentity、视口与图像哈希。静默原生取证 PASS 只提升自动化证据能力，不等于 WP2-P4 画质或用户 P4 PASS。
+
+**当前适用结论**：R2 在报告所述环境为限定环境 PASS；跨环境兼容性、完整可见 Editor UI 行为及 WP2-P4 近地画质仍未验证。XYC-NATIVE-SILENT-R2 不升级本条 E1，也不将上述报告当作独立复现。
