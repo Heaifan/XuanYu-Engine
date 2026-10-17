@@ -11,7 +11,11 @@ static class TerrainWorldPlacement
     public static TerrainRenderResource ToRenderResource(
         TerrainElevationTile tile, TerrainGeoBounds aggregate, TerrainWorld? world = null)
     {
-        var resource = world?.ToRenderSnapshot(tile.TileId, 1) ?? tile.ToRenderSnapshot(tile.TileId, 1);
+        var replay = Environment.GetEnvironmentVariable("XYE_TERRAIN_REPLAY") == "1";
+        var samples = TerrainDiagnosticSamples.Resolve(replay,
+            Environment.GetEnvironmentVariable("XYE_TERRAIN_REPLAY_SAMPLES"));
+        var resource = world?.ToRenderSnapshot(tile.TileId, 1, samples) ??
+            tile.ToRenderSnapshot(tile.TileId, 1, samples);
         var origin = new GeographicPosition(
             aggregate.South, aggregate.West, 0);
         var mapping = new GeographicWorldMapping(origin);

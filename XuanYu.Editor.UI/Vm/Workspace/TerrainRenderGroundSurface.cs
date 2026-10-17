@@ -28,6 +28,16 @@ sealed class TerrainRenderGroundSurface(
         return result.IsValid;
     }
 
+    public TerrainVerticalClearance MeasureVerticalClearance(
+        double worldX, double worldY, double cameraZ, double exaggeration)
+    {
+        var result = QuerySurface(new MapPoint(worldX, worldY));
+        if (!result.IsValid)
+            return new(false, result.Status.ToString(), null, null);
+        var surfaceZ = result.SurfaceZ * exaggeration;
+        return new(true, result.Status.ToString(), surfaceZ, cameraZ - surfaceZ);
+    }
+
     static SurfaceQueryResult Query(TerrainRenderResource resource, MapPoint point)
     {
         var field = resource.Heightfield;
@@ -49,3 +59,7 @@ sealed class TerrainRenderGroundSurface(
         return SurfaceQueryResult.Valid(z);
     }
 }
+
+internal sealed record TerrainVerticalClearance(
+    bool IsValid, string QueryStatus, double? RenderSurfaceZ,
+    double? VerticalClearanceMeters);

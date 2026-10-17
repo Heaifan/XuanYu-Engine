@@ -33,7 +33,18 @@ public sealed record XycScene(string SceneId, long SceneRevision,
     long? ViewportFrameId = null, int? ViewportWidth = null,
     int? ViewportHeight = null, long? PresentedFrameId = null,
     long? PresentedCameraRevision = null, uint? PresentedImageIndex = null,
-    bool? PresentedCaptureHeld = null, SilentHostDiagnostics? SilentHost = null);
+    bool? PresentedCaptureHeld = null, SilentHostDiagnostics? SilentHost = null,
+    XycTerrainDiagnostics? TerrainDiagnostics = null);
+
+public sealed record XycTerrainDiagnostics(
+    int SampleWidth, int SampleHeight, int ChunkCount, long GridTriangleCount,
+    string LodPolicy,
+    Vector3 CameraPosition, double CameraToPivotMeters,
+    bool SurfaceQueryValid, string SurfaceQueryStatus,
+    double? RenderSurfaceZ, double? CameraVerticalClearanceMeters,
+    string ClearanceMetric, double VerticalExaggeration,
+    long CameraRevision, long FrameId, long? PresentedFrameId,
+    long? PresentedCameraRevision);
 
 public sealed record XycSessionClosed(bool Closed);
 
