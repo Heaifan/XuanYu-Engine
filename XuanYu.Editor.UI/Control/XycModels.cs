@@ -24,7 +24,8 @@ public sealed record XycResponse(string RequestId, bool Success, string? ErrorCo
 
 public sealed record XycRuntimeInfo(string ProtocolVersion, string InstanceId,
     string IsolationMode, string RenderCapability, string Build, string Branch,
-    string Dirty, int ProcessId = 0, long ViewportFrameId = 0);
+    string Dirty, int ProcessId = 0, long ViewportFrameId = 0,
+    SilentHostDiagnostics? SilentHost = null);
 
 public sealed record XycScene(string SceneId, long SceneRevision,
     string TerrainState, int EntityCount, string? TerrainId = null,
@@ -32,10 +33,10 @@ public sealed record XycScene(string SceneId, long SceneRevision,
     long? ViewportFrameId = null, int? ViewportWidth = null,
     int? ViewportHeight = null, long? PresentedFrameId = null,
     long? PresentedCameraRevision = null, uint? PresentedImageIndex = null,
-    bool? PresentedCaptureHeld = null);
+    bool? PresentedCaptureHeld = null, SilentHostDiagnostics? SilentHost = null);
 
 public sealed record XycSessionClosed(bool Closed);
 
-public sealed record XycCaptureState(bool Armed);
+public sealed record XycCaptureState(bool Armed, SilentHostDiagnostics? SilentHost = null);
 
 public sealed record XycCaptureRequest(long CameraRevision);

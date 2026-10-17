@@ -1,10 +1,10 @@
 <Project>
   <PropertyGroup>
-    <Version>0.3.0.23-fix</Version>
-    <VersionPrefix>0.3.0.23</VersionPrefix>
-    <AssemblyVersion>0.3.0.23</AssemblyVersion>
-    <FileVersion>0.3.0.23</FileVersion>
-    <InformationalVersion>v0.3.0.23-fix</InformationalVersion>
-    <ProductVersion>v0.3.0.23-fix</ProductVersion>
+    <Version>0.3.0.24-fix</Version>
+    <VersionPrefix>0.3.0.24</VersionPrefix>
+    <AssemblyVersion>0.3.0.24</AssemblyVersion>
+    <FileVersion>0.3.0.24</FileVersion>
+    <InformationalVersion>v0.3.0.24-fix</InformationalVersion>
+    <ProductVersion>v0.3.0.24-fix</ProductVersion>
   </PropertyGroup>
 </Project>

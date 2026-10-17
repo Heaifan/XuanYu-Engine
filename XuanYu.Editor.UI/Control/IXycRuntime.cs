@@ -11,4 +11,5 @@ public interface IXycRuntime
     XycDollyResult DollyCamera(double wheelDelta);
     bool ArmPresentedCapture(long cameraRevision);
     bool ReleasePresentedCapture();
+    SilentHostDiagnostics? InspectSilentHost() => null;
 }

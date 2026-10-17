@@ -46,6 +46,14 @@ public sealed class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            if (SilentVulkanHost.IsSilentRequested(desktop.Args ?? []))
+            {
+                XycSilentApplicationStartup.Start(desktop,
+                    _surfaceBridgeFactory, _stateFactory);
+                base.OnFrameworkInitializationCompleted();
+                return;
+            }
+
             desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
             var window = new UiWin();
             window.ShowActivated = desktop.Args?.Contains("--xyc-stdio") != true;

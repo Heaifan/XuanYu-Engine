@@ -10,7 +10,11 @@ public sealed partial class UiVm
 {
     public IXycRuntime CreateXycRuntime(string instanceId,
         Task<bool>? terrainLoad = null) =>
-        new UiVmXycRuntime(this, instanceId, terrainLoad);
+        new UiVmXycRuntime(this, instanceId, terrainLoad, null);
+
+    internal IXycRuntime CreateXycRuntime(string instanceId,
+        Task<bool>? terrainLoad, SilentVulkanHost? silentHost) =>
+        new UiVmXycRuntime(this, instanceId, terrainLoad, silentHost);
 
     internal XycCamera ReadXycCamera()
     {

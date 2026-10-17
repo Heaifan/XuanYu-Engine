@@ -6,31 +6,9 @@ namespace XuanYu.Editor.UI;
 using XuanYu.Editor.UI.XycControl;
 
 sealed partial class UiVmXycRuntime(UiVm vm, string instanceId,
-    Task<bool>? terrainLoad) : IXycRuntime
+    Task<bool>? terrainLoad, SilentVulkanHost? silentHost) : IXycRuntime
 {
     public string InstanceId { get; } = instanceId;
-    public XycRuntimeInfo InspectRuntime() => OnUi(() => new XycRuntimeInfo("XYC-API/1", InstanceId,
-        "isolated-test-instance", "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
-        ViewportProbeIdentity.Current(), Environment.GetEnvironmentVariable("XYC_BRANCH") ?? "UNKNOWN",
-        Environment.GetEnvironmentVariable("XYE_PROBE_SOURCE_DIRTY") ?? "UNKNOWN",
-        Environment.ProcessId, ViewportProbe.CurrentFrameId));
-    public XycScene InspectScene()
-    {
-        EnsureTerrainLoaded();
-        return OnUi(() =>
-        {
-            var terrain = vm.RenderProjection.Projection.TerrainResources.FirstOrDefault();
-            var viewport = vm.CurrentViewport;
-            var presented = ViewportProbe.LastPresented;
-            return new XycScene(vm.SceneId, vm.SceneRevision, vm.TerrainStatus,
-                vm.SceneEntityCount, terrain?.TerrainId, terrain?.Revision,
-                vm.ScaleIndicatorText, ViewportProbe.CurrentFrameId,
-                viewport.PhysicalWidth, viewport.PhysicalHeight,
-                presented?.FrameId, presented?.CameraRevision, presented?.ImageIndex,
-                presented?.CaptureHeld);
-        });
-    }
-
     public XycCamera InspectCamera()
     {
         EnsureTerrainLoaded();
@@ -72,6 +50,8 @@ sealed partial class UiVmXycRuntime(UiVm vm, string instanceId,
 
     public bool ArmPresentedCapture(long cameraRevision)
     {
+        if (silentHost is { IsAttached: false })
+            throw new InvalidOperationException("Silent Vulkan host did not attach; capture is unavailable.");
         if (!ViewportProbe.ArmFrameCapture(cameraRevision))
             throw new InvalidOperationException("Vulkan replay capture is not enabled.");
         return true;

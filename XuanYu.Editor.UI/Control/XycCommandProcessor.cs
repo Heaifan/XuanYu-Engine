@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json;
+using XuanYu.Editor.UI;
 
 namespace XuanYu.Editor.UI.XycControl;
 
@@ -28,8 +29,8 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
                 "camera.set-test-pose" => SetPose(),
                 "camera.orbit" => Orbit(),
                 "camera.dolly" => Dolly(),
-                "capture.arm" => ArmCapture(),
-                "capture.release" => ReleaseCapture(),
+                "capture.arm" => XycSilentCaptureCommands.Arm(request, runtime, diagnosticWrite, Result),
+                "capture.release" => XycSilentCaptureCommands.Release(request, runtime, diagnosticWrite, Result),
                 "session.close" => Result(true, null, new XycSessionClosed(true)),
                 _ => Result(false, "UNKNOWN_COMMAND")
             };
@@ -79,22 +80,6 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
                 runtime.InspectScene().SceneRevision, after.Revision);
         }
         XycResponse Dolly() => XycDollyCommand.Execute(request, runtime, diagnosticWrite, Result);
-        XycResponse ArmCapture()
-        {
-            if (!diagnosticWrite) return Result(false, "UNAUTHORIZED");
-            var args = request.Args.Deserialize<XycCaptureRequest>(Json) ??
-                throw new JsonException("capture camera revision missing");
-            if (args.CameraRevision <= 0) throw new JsonException("invalid camera revision");
-            return Result(runtime.ArmPresentedCapture(args.CameraRevision), null,
-                new XycCaptureState(true));
-        }
-
-        XycResponse ReleaseCapture()
-        {
-            if (!diagnosticWrite) return Result(false, "UNAUTHORIZED");
-            return Result(runtime.ReleasePresentedCapture(), null,
-                new XycCaptureState(false));
-        }
     }
 
 }

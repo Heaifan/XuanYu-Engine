@@ -6,18 +6,26 @@ namespace XuanYu.Editor.UI.XycControl;
 public static class XycAppSession
 {
     public static bool TryStart(string[] args, UiVm vm,
-        IClassicDesktopStyleApplicationLifetime lifetime)
+        IClassicDesktopStyleApplicationLifetime lifetime) => TryStart(args, vm, lifetime, null);
+
+    internal static bool TryStart(string[] args, UiVm vm,
+        IClassicDesktopStyleApplicationLifetime lifetime,
+        SilentVulkanHost? silentHost = null)
     {
         var sessionId = Value(args, "--xyc-session");
         if (sessionId is null || !args.Contains("--xyc-stdio")) return false;
         Console.SetOut(Console.Error);
         var terrainLoad = StartTerrainLoad(args, vm);
         var output = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
-        var processor = new XycCommandProcessor(vm.CreateXycRuntime(sessionId, terrainLoad),
+        var processor = new XycCommandProcessor(vm.CreateXycRuntime(sessionId, terrainLoad, silentHost),
             args.Contains("--xyc-diagnostic-write"));
         var host = new XycStdioHost(processor);
         _ = Task.Run(() => host.RunAsync(Console.In, output,
-            () => Dispatcher.UIThread.Post(() => lifetime.Shutdown()), CancellationToken.None));
+            () => Dispatcher.UIThread.Post(() =>
+            {
+                try { silentHost?.Dispose(); }
+                finally { lifetime.Shutdown(); }
+            }), CancellationToken.None));
         return true;
     }
 
