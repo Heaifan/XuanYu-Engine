@@ -1,0 +1,40 @@
+{
+  "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\P1A-14503789b44440fe9b0c1fbc1de809c4-after.png",
+  "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\P1A-14503789b44440fe9b0c1fbc1de809c4-after.json",
+  "sha256": "0169B9C44BD3636B50154A21B7B3D4CCD4F5F3F0EFD78A09F933EACE0E79BD6B",
+  "pixelWidth": 1330,
+  "pixelHeight": 98,
+  "region": {
+    "region": "TOP",
+    "x": 15,
+    "y": 8,
+    "widthDip": 1330,
+    "heightDip": 98,
+    "xpx": 23,
+    "ypx": 39,
+    "widthPx": 1330,
+    "heightPx": 98
+  },
+  "window": {
+    "processId": 33976,
+    "hwnd": "0x410DC0",
+    "visible": true,
+    "foreground": false,
+    "windowState": "Normal",
+    "widthDip": 1360,
+    "heightDip": 820,
+    "clientWidthPx": 1360,
+    "clientHeightPx": 820,
+    "dpi": 96,
+    "dpiScale": 1
+  },
+  "theme": {
+    "requested": "Dark",
+    "actual": "Dark"
+  },
+  "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+  "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+  "captureTimeUtc": "2026-10-18T14:08:27.3907328+00:00",
+  "foregroundUnchanged": null,
+  "zOrderUnchanged": null
+}

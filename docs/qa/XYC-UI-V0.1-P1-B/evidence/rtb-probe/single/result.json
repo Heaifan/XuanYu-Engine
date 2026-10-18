@@ -1,0 +1,123 @@
+{
+  "runtime": {
+    "protocolVersion": "XYC-API/1",
+    "instanceId": "ea71c28f97cd4c64be8044598c72e2f8",
+    "isolationMode": "windowed-editor-instance",
+    "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+    "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T21:45:29.8544438+08:00",
+    "branch": "UNKNOWN",
+    "dirty": "UNKNOWN",
+    "processId": 34512,
+    "viewportFrameId": 0,
+    "silentHost": null
+  },
+  "resize": {
+    "requestId": "9cf7d2624d5c43eb9bea1022f6bd4f03",
+    "success": true,
+    "errorCode": null,
+    "observedState": {
+      "processId": 34512,
+      "hwnd": "0x3E107A",
+      "visible": true,
+      "foreground": false,
+      "windowState": "Normal",
+      "widthDip": 1360,
+      "heightDip": 820,
+      "clientWidthPx": 1360,
+      "clientHeightPx": 820,
+      "dpi": 96,
+      "dpiScale": 1
+    },
+    "sceneRevision": null,
+    "cameraRevision": null,
+    "durationMs": 212.9131,
+    "evidencePath": null
+  },
+  "theme": {
+    "requestId": "f2efe063f5b64412ac1df3fc540826ee",
+    "success": true,
+    "errorCode": null,
+    "observedState": {
+      "requested": "Light",
+      "actual": "Light"
+    },
+    "sceneRevision": null,
+    "cameraRevision": null,
+    "durationMs": 534.3943,
+    "evidencePath": null
+  },
+  "window": {
+    "processId": 34512,
+    "hwnd": "0x3E107A",
+    "visible": true,
+    "foreground": false,
+    "windowState": "Normal",
+    "widthDip": 1360,
+    "heightDip": 820,
+    "clientWidthPx": 1360,
+    "clientHeightPx": 820,
+    "dpi": 96,
+    "dpiScale": 1
+  },
+  "capture": {
+    "requestId": "09c418dcee764271ab89c9c456ecd6aa",
+    "success": true,
+    "errorCode": null,
+    "observedState": {
+      "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\rtb-probe\\single\\Light-1360.png",
+      "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\rtb-probe\\single\\Light-1360.json",
+      "sha256": "DAC473C8003652C4B5AA3BCB1EA2028B590D08CD7BFE5EA495F7029A5A0359A3",
+      "pixelWidth": 1330,
+      "pixelHeight": 98,
+      "region": {
+        "region": "TOP",
+        "x": 15,
+        "y": 8,
+        "widthDip": 1330,
+        "heightDip": 98,
+        "xpx": 23,
+        "ypx": 39,
+        "widthPx": 1330,
+        "heightPx": 98
+      },
+      "window": {
+        "processId": 34512,
+        "hwnd": "0x3E107A",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1360,
+        "heightDip": 820,
+        "clientWidthPx": 1360,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "theme": {
+        "requested": "Light",
+        "actual": "Light"
+      },
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=76A600D722CB2DE2294F73E924F720CD632B3CEB1237AD65753650C88BDC569B",
+      "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-TOP-Visual;z-order-unchanged",
+      "captureTimeUtc": "2026-10-18T21:49:32.1486528+08:00"
+    },
+    "sceneRevision": null,
+    "cameraRevision": null,
+    "durationMs": 55.0489,
+    "evidencePath": null
+  },
+  "hash": "DAC473C8003652C4B5AA3BCB1EA2028B590D08CD7BFE5EA495F7029A5A0359A3",
+  "bytes": 22125,
+  "close": {
+    "requestId": "73be1d978a8944b19c1301f1641aad44",
+    "success": true,
+    "errorCode": null,
+    "observedState": {
+      "closed": true
+    },
+    "sceneRevision": null,
+    "cameraRevision": null,
+    "durationMs": 0.1607,
+    "evidencePath": null
+  }
+}

@@ -49,11 +49,11 @@ internal sealed partial class XycUiRuntime
         cancellationToken.ThrowIfCancellationRequested();
         _ = OnUi(() => ResolveInvokable(id, operation));
         var operationId = Guid.NewGuid().ToString("N");
-        var beforeCapture = CaptureTop($"P1A-{operationId}-before.png", temporaryTopmost: true);
+        var beforeCapture = CaptureTop($"P1A-{operationId}-before.png");
         var result = OnUi(() => InvokeControlCore(id, operation));
         await Dispatcher.UIThread.InvokeAsync(() => FindTop().UpdateLayout(),
             DispatcherPriority.Render, cancellationToken);
-        var afterCapture = CaptureTop($"P1A-{operationId}-after.png", temporaryTopmost: true);
+        var afterCapture = CaptureTop($"P1A-{operationId}-after.png");
         return result with { BeforeCapture = beforeCapture, AfterCapture = afterCapture };
     }
 

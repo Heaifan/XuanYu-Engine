@@ -1,0 +1,38 @@
+{
+  "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\rtb-probe\\window-Dark-1360\\Dark-1360.png",
+  "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\rtb-probe\\window-Dark-1360\\Dark-1360.json",
+  "sha256": "3ED950391FD1591C7451D5C720A11785A1CA2FF901D4D27DE578389D80551FC2",
+  "pixelWidth": 1360,
+  "pixelHeight": 820,
+  "region": {
+    "region": "TOP",
+    "x": 15,
+    "y": 8,
+    "widthDip": 1330,
+    "heightDip": 98,
+    "xpx": 23,
+    "ypx": 39,
+    "widthPx": 1330,
+    "heightPx": 98
+  },
+  "window": {
+    "processId": 13316,
+    "hwnd": "0x45107A",
+    "visible": true,
+    "foreground": false,
+    "windowState": "Normal",
+    "widthDip": 1360,
+    "heightDip": 820,
+    "clientWidthPx": 1360,
+    "clientHeightPx": 820,
+    "dpi": 96,
+    "dpiScale": 1
+  },
+  "theme": {
+    "requested": "Dark",
+    "actual": "Dark"
+  },
+  "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=11EEAFA232EA5F7672B52A3B73C431F0F8EA047F35EDC33A25AFD65B1ED4EF2F",
+  "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;z-order-unchanged;crop=external-probe",
+  "captureTimeUtc": "2026-10-18T13:52:00.671503+00:00"
+}

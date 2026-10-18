@@ -7,6 +7,9 @@ internal sealed class XycUiTestRuntime : IXycRuntime, IXycUiRuntime
 {
     public int Captures { get; private set; }
     public int Invocations { get; private set; }
+    public string? LastCaptureBackend { get; private set; }
+    public Action? OnCaptureStarting { get; set; }
+    public bool WaitForCaptureCancellation { get; set; }
     public bool DisappearsBeforeInvoke { get; set; }
     public string InstanceId => "test-instance";
     public XycRuntimeInfo InspectRuntime() => throw new NotImplementedException();
@@ -23,11 +26,18 @@ internal sealed class XycUiTestRuntime : IXycRuntime, IXycUiRuntime
     public XycUiThemeState InspectTheme() => new("Dark", "Dark");
     public XycUiThemeState SetTheme(string theme) => new(theme, theme);
     public XycUiRegionState InspectTop() => new("TOP", 0, 0, 1360, 69, 0, 0, 1360, 69);
-    public XycUiCaptureState CaptureTop(string name, bool temporaryTopmost = false)
+    public XycUiCaptureState CaptureTop(string name, string backend = "avaloniaWindow",
+        bool temporaryTopmost = false, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         Captures++;
+        OnCaptureStarting?.Invoke();
+        if (WaitForCaptureCancellation)
+            SpinWait.SpinUntil(() => cancellationToken.IsCancellationRequested, 1000);
+        cancellationToken.ThrowIfCancellationRequested();
+        LastCaptureBackend = backend;
         return new(name, Path.ChangeExtension(name, ".json"), "sha256", 1360, 69,
-            InspectTop(), InspectWindow(), InspectTheme(), "build", "test", DateTimeOffset.UtcNow);
+            InspectTop(), InspectWindow(), InspectTheme(), "build", backend, DateTimeOffset.UtcNow);
     }
     public IReadOnlyList<XycUiControlState> ListControls() => [];
     public XycUiControlState InspectControl(string id) => id switch

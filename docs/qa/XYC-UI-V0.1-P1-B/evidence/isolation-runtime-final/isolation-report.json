@@ -1,0 +1,32 @@
+{
+  "baseline": "d2d011ac98314f172e0e3d729583e67832099f1f",
+  "cases": {
+    "restore": {
+      "state": "Normal",
+      "visible": true,
+      "success": true
+    },
+    "minimized": {
+      "state": "Minimized",
+      "visible": true,
+      "error": null,
+      "success": true
+    },
+    "duplicate": {
+      "success": false,
+      "error": "EVIDENCE_ALREADY_EXISTS"
+    },
+    "occlusion": {
+      "foregroundUnchanged": true,
+      "zOrderStable": true,
+      "success": true,
+      "zOrderUnchanged": true,
+      "pixelSha": "640E2401B7BFAD5AB69B1AF206AFFFC4AD33BCF1E3FFBCDAE4321DDBB5985314",
+      "error": null,
+      "overlayPixel": "0x00FF00FF",
+      "overlayHwnd": "31111E",
+      "foregroundStable": true
+    }
+  },
+  "editorExit": 0
+}

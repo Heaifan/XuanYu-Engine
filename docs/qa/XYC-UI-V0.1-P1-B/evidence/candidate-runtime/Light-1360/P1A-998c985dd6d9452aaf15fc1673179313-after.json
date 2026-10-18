@@ -1,0 +1,38 @@
+{
+  "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime\\Light-1360\\P1A-998c985dd6d9452aaf15fc1673179313-after.png",
+  "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime\\Light-1360\\P1A-998c985dd6d9452aaf15fc1673179313-after.json",
+  "sha256": "63F3CB8EFBB1B39F0F8C349B4489C7F152B657AACFEBC109800358CE90FA6D75",
+  "pixelWidth": 1330,
+  "pixelHeight": 98,
+  "region": {
+    "region": "TOP",
+    "x": 15,
+    "y": 8,
+    "widthDip": 1330,
+    "heightDip": 98,
+    "xpx": 23,
+    "ypx": 39,
+    "widthPx": 1330,
+    "heightPx": 98
+  },
+  "window": {
+    "processId": 34728,
+    "hwnd": "0x211054",
+    "visible": true,
+    "foreground": false,
+    "windowState": "Normal",
+    "widthDip": 1360,
+    "heightDip": 820,
+    "clientWidthPx": 1360,
+    "clientHeightPx": 820,
+    "dpi": 96,
+    "dpiScale": 1
+  },
+  "theme": {
+    "requested": "Light",
+    "actual": "Light"
+  },
+  "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=12486CCA398ED5E910F289FC0D88B1EB7F4B59FC35482B1D8897EFE236523095",
+  "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+  "captureTimeUtc": "2026-10-18T14:05:26.3825348+00:00"
+}

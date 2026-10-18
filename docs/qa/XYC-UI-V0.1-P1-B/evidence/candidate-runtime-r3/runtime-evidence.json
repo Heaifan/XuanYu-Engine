@@ -1,0 +1,2541 @@
+{
+  "status": "RUNTIME_PASS",
+  "runId": "39f9bc5da0444d96ac0cbf4d3cb5829a",
+  "candidateIdentity": "BASE=d2d011ac98314f172e0e3d729583e67832099f1f;P1B-overlay=owned-source-hashes",
+  "appSha256": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C",
+  "uiSha256": "A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+  "runs": [
+    {
+      "widthDip": 1360,
+      "heightDip": 820,
+      "theme": "Light",
+      "processId": 33716,
+      "hwnd": "0x390780",
+      "window": {
+        "processId": 33716,
+        "hwnd": "0x390780",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1360,
+        "heightDip": 820,
+        "clientWidthPx": 1360,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "themeState": {
+        "requested": "Light",
+        "actual": "Light"
+      },
+      "controls": [
+        {
+          "controlId": "XYE.TOP.VIEW.ALL",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.VIEW.PAN",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.VIEW.ORBIT",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.EDIT.SELECT",
+          "type": "XYToggleButton",
+          "visible": false,
+          "enabled": false,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": true
+        },
+        {
+          "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+          "type": "XYToggleButton",
+          "visible": false,
+          "enabled": false,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": false
+        },
+        {
+          "controlId": "XYE.TOP.FILE.SAVE",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        }
+      ],
+      "controlListPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1360\\control-list.json",
+      "controlCount": 203,
+      "saveInspect": {
+        "controlId": "XYE.TOP.FILE.SAVE",
+        "type": "XYButton",
+        "visible": true,
+        "enabled": true,
+        "duplicateId": false,
+        "idSource": "XYDiagnostic.DebugId",
+        "region": "TOP",
+        "isChecked": null
+      },
+      "disabledInspect": {
+        "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+        "type": "XYToggleButton",
+        "visible": false,
+        "enabled": false,
+        "duplicateId": false,
+        "idSource": "XYDiagnostic.DebugId",
+        "region": "TOP",
+        "isChecked": false
+      },
+      "originalCamera": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.5656854249492381,
+          "y": 0.7071067811865476,
+          "z": -0.42426406871192857
+        },
+        "up": {
+          "x": -0.26503566257963174,
+          "y": 0.33129457822453967,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 2
+      },
+      "seededCamera": {
+        "position": {
+          "x": 504,
+          "y": 695,
+          "z": 253
+        },
+        "forward": {
+          "x": -0.565685424949238,
+          "y": 0.7071067811865475,
+          "z": -0.42426406871192845
+        },
+        "up": {
+          "x": -0.2650356625796317,
+          "y": 0.3312945782245396,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 3
+      },
+      "before": {
+        "activeTool": "选择",
+        "isSelectTool": true,
+        "isEditMode": false,
+        "isRegionEditMode": false,
+        "footerMessage": "启动看全：当前可见实体已进入视野。",
+        "footerState": "状态：就绪",
+        "cameraRevision": 2,
+        "cameraX": 4,
+        "cameraY": -5,
+        "cameraZ": 3
+      },
+      "invoke": {
+        "control": {
+          "controlId": "XYE.TOP.VIEW.ALL",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        "before": {
+          "activeTool": "选择",
+          "isSelectTool": true,
+          "isEditMode": false,
+          "isRegionEditMode": false,
+          "footerMessage": "启动看全：当前可见实体已进入视野。",
+          "footerState": "状态：就绪",
+          "cameraRevision": 3,
+          "cameraX": 504,
+          "cameraY": 695,
+          "cameraZ": 253
+        },
+        "after": {
+          "activeTool": "选择",
+          "isSelectTool": true,
+          "isEditMode": false,
+          "isRegionEditMode": false,
+          "footerMessage": "查看全部：当前可见实体已进入视野。",
+          "footerState": "状态：就绪",
+          "cameraRevision": 4,
+          "cameraX": 4,
+          "cameraY": -5,
+          "cameraZ": 3
+        },
+        "invoked": true,
+        "beforeCapture": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1360\\P1A-117f647b4c614386b1e96a445f01bc95-before.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1360\\P1A-117f647b4c614386b1e96a445f01bc95-before.json",
+          "sha256": "63F3CB8EFBB1B39F0F8C349B4489C7F152B657AACFEBC109800358CE90FA6D75",
+          "pixelWidth": 1330,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1330,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1330,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 33716,
+            "hwnd": "0x390780",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1360,
+            "heightDip": 820,
+            "clientWidthPx": 1360,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Light",
+            "actual": "Light"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+          "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+          "captureTimeUtc": "2026-10-18T22:08:21.835426+08:00",
+          "foregroundUnchanged": null,
+          "zOrderUnchanged": null
+        },
+        "afterCapture": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1360\\P1A-117f647b4c614386b1e96a445f01bc95-after.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1360\\P1A-117f647b4c614386b1e96a445f01bc95-after.json",
+          "sha256": "63F3CB8EFBB1B39F0F8C349B4489C7F152B657AACFEBC109800358CE90FA6D75",
+          "pixelWidth": 1330,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1330,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1330,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 33716,
+            "hwnd": "0x390780",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1360,
+            "heightDip": 820,
+            "clientWidthPx": 1360,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Light",
+            "actual": "Light"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+          "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+          "captureTimeUtc": "2026-10-18T22:08:21.888026+08:00",
+          "foregroundUnchanged": null,
+          "zOrderUnchanged": null
+        }
+      },
+      "restoredCamera": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.565685424949238,
+          "y": 0.7071067811865475,
+          "z": -0.42426406871192845
+        },
+        "up": {
+          "x": -0.2650356625796317,
+          "y": 0.3312945782245396,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 5
+      },
+      "themePixelSample": "255,255,255",
+      "wait": {
+        "activeTool": "选择",
+        "isSelectTool": true,
+        "isEditMode": false,
+        "isRegionEditMode": false,
+        "footerMessage": "查看全部：当前可见实体已进入视野。",
+        "footerState": "状态：就绪",
+        "cameraRevision": 4,
+        "cameraX": 4,
+        "cameraY": -5,
+        "cameraZ": 3
+      },
+      "capture": {
+        "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1360\\Light-1360.png",
+        "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1360\\Light-1360.json",
+        "sha256": "640E2401B7BFAD5AB69B1AF206AFFFC4AD33BCF1E3FFBCDAE4321DDBB5985314",
+        "pixelWidth": 1330,
+        "pixelHeight": 98,
+        "region": {
+          "region": "TOP",
+          "x": 15,
+          "y": 8,
+          "widthDip": 1330,
+          "heightDip": 98,
+          "xpx": 23,
+          "ypx": 39,
+          "widthPx": 1330,
+          "heightPx": 98
+        },
+        "window": {
+          "processId": 33716,
+          "hwnd": "0x390780",
+          "visible": true,
+          "foreground": false,
+          "windowState": "Normal",
+          "widthDip": 1360,
+          "heightDip": 820,
+          "clientWidthPx": 1360,
+          "clientHeightPx": 820,
+          "dpi": 96,
+          "dpiScale": 1
+        },
+        "theme": {
+          "requested": "Light",
+          "actual": "Light"
+        },
+        "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+        "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+        "captureTimeUtc": "2026-10-18T22:08:21.9908307+08:00",
+        "foregroundUnchanged": true,
+        "zOrderUnchanged": true
+      },
+      "negative": {
+        "missing": true,
+        "disabled": true,
+        "disallowedSave": true,
+        "wrongSession": true,
+        "timeout": true
+      },
+      "sessionClose": {
+        "closed": true
+      },
+      "cliExitCode": 0,
+      "requests": [
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "368ad32193c2417d88def6882b1af6ae",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "runtime.info",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "73a3359cdb13488ca3d0da8125d62eed",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.window.resize",
+          "args": {
+            "widthDip": 1360,
+            "heightDip": 820
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "93b80170146a4b8eaa95807626fa95c2",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.theme.set",
+          "args": {
+            "theme": "Light"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "9773eae70c8f4f8189ab8767790127e9",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.capture",
+          "args": {
+            "fileName": "Light-1360-probe.png",
+            "backend": "avaloniaWindow"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "4b2fa3b29e074c54898f48fed7b8d710",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.control.list",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "f913c650ec7d4a89b67609e23f839ebb",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.FILE.SAVE"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "23ec26ad721b4abaa5f309c2f67307c8",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.EDIT.BOX_SELECT"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "722f421276bf40e1b9ce05b4eb0fa245",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.state.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "3b170e4c854b4819836e8e89eec8596c",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "camera.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "23d062158cb9474f8a82c814f902b948",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "camera.set-test-pose",
+          "args": {
+            "position": {
+              "y": 695,
+              "z": 253,
+              "x": 504
+            },
+            "forward": {
+              "x": -0.5656854249492381,
+              "y": 0.7071067811865476,
+              "z": -0.42426406871192857
+            },
+            "up": {
+              "x": -0.26503566257963174,
+              "y": 0.33129457822453967,
+              "z": 0.9055385138137417
+            },
+            "fovDegrees": 60,
+            "nearPlane": 0.1,
+            "farPlane": 100,
+            "mode": "Perspective",
+            "orthographicScale": 0,
+            "observationCenter": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "revision": 2
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "0133a8b674dd4490baca26450499f8c7",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 5000,
+            "expected": 3,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "8da5bdc04b464a0b8efa8ec8b5430d39",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.MISSING"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "16ebe213529642c8a131a6e9a37c79b7",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "9f5b6556c82a4d02913717f75be36884",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.FILE.SAVE",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "a99aa11885b444bba4a4faed1a317ada",
+          "sessionId": "not-this-session",
+          "command": "ui.control.list",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "f738d89a4cf847ec952713ef84f401c9",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 50,
+            "expected": 1000001,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "7098359bc475485493b0a8e2c7f1fdfd",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.VIEW.ALL",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "c5becc12954b479595871b51398626fb",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 5000,
+            "expected": 4,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "eb36a46c5d9442908d158b24b95a5381",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "ui.capture",
+          "args": {
+            "fileName": "Light-1360.png",
+            "backend": "avaloniaWindow"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "118f2f7633a545269870199aa3c42920",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "camera.set-test-pose",
+          "args": {
+            "position": {
+              "x": 4,
+              "y": -5,
+              "z": 3
+            },
+            "forward": {
+              "x": -0.5656854249492381,
+              "y": 0.7071067811865476,
+              "z": -0.42426406871192857
+            },
+            "up": {
+              "x": -0.26503566257963174,
+              "y": 0.33129457822453967,
+              "z": 0.9055385138137417
+            },
+            "fovDegrees": 60,
+            "nearPlane": 0.1,
+            "farPlane": 100,
+            "mode": "Perspective",
+            "orthographicScale": 0,
+            "observationCenter": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "revision": 2
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "6910c1851a9e44d1915934600b65f46c",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "camera.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "760ad1fb816944ef96078c3ae214e99c",
+          "sessionId": "e208469c36954a0fb5c2d3e9a088ad04",
+          "command": "session.close",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "widthDip": 1360,
+      "heightDip": 820,
+      "theme": "Dark",
+      "processId": 33976,
+      "hwnd": "0x410DC0",
+      "window": {
+        "processId": 33976,
+        "hwnd": "0x410DC0",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1360,
+        "heightDip": 820,
+        "clientWidthPx": 1360,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "themeState": {
+        "requested": "Dark",
+        "actual": "Dark"
+      },
+      "controls": [
+        {
+          "controlId": "XYE.TOP.VIEW.ALL",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.VIEW.PAN",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.VIEW.ORBIT",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.EDIT.SELECT",
+          "type": "XYToggleButton",
+          "visible": false,
+          "enabled": false,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": true
+        },
+        {
+          "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+          "type": "XYToggleButton",
+          "visible": false,
+          "enabled": false,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": false
+        },
+        {
+          "controlId": "XYE.TOP.FILE.SAVE",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        }
+      ],
+      "controlListPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\control-list.json",
+      "controlCount": 203,
+      "saveInspect": {
+        "controlId": "XYE.TOP.FILE.SAVE",
+        "type": "XYButton",
+        "visible": true,
+        "enabled": true,
+        "duplicateId": false,
+        "idSource": "XYDiagnostic.DebugId",
+        "region": "TOP",
+        "isChecked": null
+      },
+      "disabledInspect": {
+        "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+        "type": "XYToggleButton",
+        "visible": false,
+        "enabled": false,
+        "duplicateId": false,
+        "idSource": "XYDiagnostic.DebugId",
+        "region": "TOP",
+        "isChecked": false
+      },
+      "originalCamera": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.5656854249492381,
+          "y": 0.7071067811865476,
+          "z": -0.42426406871192857
+        },
+        "up": {
+          "x": -0.26503566257963174,
+          "y": 0.33129457822453967,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 2
+      },
+      "seededCamera": {
+        "position": {
+          "x": 504,
+          "y": 695,
+          "z": 253
+        },
+        "forward": {
+          "x": -0.565685424949238,
+          "y": 0.7071067811865475,
+          "z": -0.42426406871192845
+        },
+        "up": {
+          "x": -0.2650356625796317,
+          "y": 0.3312945782245396,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 3
+      },
+      "before": {
+        "activeTool": "选择",
+        "isSelectTool": true,
+        "isEditMode": false,
+        "isRegionEditMode": false,
+        "footerMessage": "启动看全：当前可见实体已进入视野。",
+        "footerState": "状态：就绪",
+        "cameraRevision": 2,
+        "cameraX": 4,
+        "cameraY": -5,
+        "cameraZ": 3
+      },
+      "invoke": {
+        "control": {
+          "controlId": "XYE.TOP.VIEW.ALL",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        "before": {
+          "activeTool": "选择",
+          "isSelectTool": true,
+          "isEditMode": false,
+          "isRegionEditMode": false,
+          "footerMessage": "启动看全：当前可见实体已进入视野。",
+          "footerState": "状态：就绪",
+          "cameraRevision": 3,
+          "cameraX": 504,
+          "cameraY": 695,
+          "cameraZ": 253
+        },
+        "after": {
+          "activeTool": "选择",
+          "isSelectTool": true,
+          "isEditMode": false,
+          "isRegionEditMode": false,
+          "footerMessage": "查看全部：当前可见实体已进入视野。",
+          "footerState": "状态：就绪",
+          "cameraRevision": 4,
+          "cameraX": 4,
+          "cameraY": -5,
+          "cameraZ": 3
+        },
+        "invoked": true,
+        "beforeCapture": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\P1A-14503789b44440fe9b0c1fbc1de809c4-before.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\P1A-14503789b44440fe9b0c1fbc1de809c4-before.json",
+          "sha256": "0169B9C44BD3636B50154A21B7B3D4CCD4F5F3F0EFD78A09F933EACE0E79BD6B",
+          "pixelWidth": 1330,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1330,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1330,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 33976,
+            "hwnd": "0x410DC0",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1360,
+            "heightDip": 820,
+            "clientWidthPx": 1360,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Dark",
+            "actual": "Dark"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+          "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+          "captureTimeUtc": "2026-10-18T22:08:27.3376941+08:00",
+          "foregroundUnchanged": null,
+          "zOrderUnchanged": null
+        },
+        "afterCapture": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\P1A-14503789b44440fe9b0c1fbc1de809c4-after.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\P1A-14503789b44440fe9b0c1fbc1de809c4-after.json",
+          "sha256": "0169B9C44BD3636B50154A21B7B3D4CCD4F5F3F0EFD78A09F933EACE0E79BD6B",
+          "pixelWidth": 1330,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1330,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1330,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 33976,
+            "hwnd": "0x410DC0",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1360,
+            "heightDip": 820,
+            "clientWidthPx": 1360,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Dark",
+            "actual": "Dark"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+          "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+          "captureTimeUtc": "2026-10-18T22:08:27.3907328+08:00",
+          "foregroundUnchanged": null,
+          "zOrderUnchanged": null
+        }
+      },
+      "restoredCamera": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.565685424949238,
+          "y": 0.7071067811865475,
+          "z": -0.42426406871192845
+        },
+        "up": {
+          "x": -0.2650356625796317,
+          "y": 0.3312945782245396,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 5
+      },
+      "themePixelSample": "42,56,66",
+      "wait": {
+        "activeTool": "选择",
+        "isSelectTool": true,
+        "isEditMode": false,
+        "isRegionEditMode": false,
+        "footerMessage": "查看全部：当前可见实体已进入视野。",
+        "footerState": "状态：就绪",
+        "cameraRevision": 4,
+        "cameraX": 4,
+        "cameraY": -5,
+        "cameraZ": 3
+      },
+      "capture": {
+        "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\Dark-1360.png",
+        "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1360\\Dark-1360.json",
+        "sha256": "16C8A0386551BF471A14561F1C322036FC6CE73A7713282B2B6462F94466DF3F",
+        "pixelWidth": 1330,
+        "pixelHeight": 98,
+        "region": {
+          "region": "TOP",
+          "x": 15,
+          "y": 8,
+          "widthDip": 1330,
+          "heightDip": 98,
+          "xpx": 23,
+          "ypx": 39,
+          "widthPx": 1330,
+          "heightPx": 98
+        },
+        "window": {
+          "processId": 33976,
+          "hwnd": "0x410DC0",
+          "visible": true,
+          "foreground": false,
+          "windowState": "Normal",
+          "widthDip": 1360,
+          "heightDip": 820,
+          "clientWidthPx": 1360,
+          "clientHeightPx": 820,
+          "dpi": 96,
+          "dpiScale": 1
+        },
+        "theme": {
+          "requested": "Dark",
+          "actual": "Dark"
+        },
+        "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+        "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+        "captureTimeUtc": "2026-10-18T22:08:27.4835498+08:00",
+        "foregroundUnchanged": true,
+        "zOrderUnchanged": true
+      },
+      "negative": {
+        "missing": true,
+        "disabled": true,
+        "disallowedSave": true,
+        "wrongSession": true,
+        "timeout": true
+      },
+      "sessionClose": {
+        "closed": true
+      },
+      "cliExitCode": 0,
+      "requests": [
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "a8aef1aef94f46efa154ed43ebf66dd4",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "runtime.info",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "9a93e7b8fff94ac5b9339ad800ec1053",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.window.resize",
+          "args": {
+            "widthDip": 1360,
+            "heightDip": 820
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "2f6929b5d43249c6ac7a73f185d08ed4",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.theme.set",
+          "args": {
+            "theme": "Dark"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "c540ec40e89a4633a8ab03c1a57818d3",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.capture",
+          "args": {
+            "fileName": "Dark-1360-probe.png",
+            "backend": "avaloniaWindow"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "fd6754e4c5a347ca81dd44d9466d058d",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.control.list",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "6230496dd132475c85a39e84f0b8d219",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.FILE.SAVE"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "ed2f59e0fe9a4b3b8f090b4a11c4ac24",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.EDIT.BOX_SELECT"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "a4356ecc4fe24e3d823d8f054d7584e5",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.state.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "9ce4cee60a39400eacc841bec043573b",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "camera.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "b7f2d856f4ff4f23bae54e35ef857407",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "camera.set-test-pose",
+          "args": {
+            "position": {
+              "y": 695,
+              "z": 253,
+              "x": 504
+            },
+            "forward": {
+              "x": -0.5656854249492381,
+              "y": 0.7071067811865476,
+              "z": -0.42426406871192857
+            },
+            "up": {
+              "x": -0.26503566257963174,
+              "y": 0.33129457822453967,
+              "z": 0.9055385138137417
+            },
+            "fovDegrees": 60,
+            "nearPlane": 0.1,
+            "farPlane": 100,
+            "mode": "Perspective",
+            "orthographicScale": 0,
+            "observationCenter": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "revision": 2
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "fe019671a1ae4668ba32b73873f5056e",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 5000,
+            "expected": 3,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "8dadfad25e9e4162906b6876981f471b",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.MISSING"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "2010e178cb334ac9aea89f96d48edf43",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "741952f19af841e3a9f65936ff9c32e7",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.FILE.SAVE",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "b9e5fa668981439c912a130a0d54e71a",
+          "sessionId": "not-this-session",
+          "command": "ui.control.list",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "71d9d053e1614529ac0c1121fa76c66a",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 50,
+            "expected": 1000001,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "d519fc8ae7934e8aae6f3ecab7c97c48",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.VIEW.ALL",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "27144d10357c480d9595f788eefdd23e",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 5000,
+            "expected": 4,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "4cbc48908d0f4634aba237d785ab36fc",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "ui.capture",
+          "args": {
+            "fileName": "Dark-1360.png",
+            "backend": "avaloniaWindow"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "046c496665ec46dcb48c3ede9eb490bf",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "camera.set-test-pose",
+          "args": {
+            "position": {
+              "x": 4,
+              "y": -5,
+              "z": 3
+            },
+            "forward": {
+              "x": -0.5656854249492381,
+              "y": 0.7071067811865476,
+              "z": -0.42426406871192857
+            },
+            "up": {
+              "x": -0.26503566257963174,
+              "y": 0.33129457822453967,
+              "z": 0.9055385138137417
+            },
+            "fovDegrees": 60,
+            "nearPlane": 0.1,
+            "farPlane": 100,
+            "mode": "Perspective",
+            "orthographicScale": 0,
+            "observationCenter": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "revision": 2
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "590f0e7611e74b0e9f96c455585e0bf4",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "camera.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "8929b067befa472dae2f791d34f10f25",
+          "sessionId": "c8530874fc0e48199017e4d516832e66",
+          "command": "session.close",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "widthDip": 1920,
+      "heightDip": 820,
+      "theme": "Light",
+      "processId": 32996,
+      "hwnd": "0x6A107E",
+      "window": {
+        "processId": 32996,
+        "hwnd": "0x6A107E",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1920,
+        "heightDip": 820,
+        "clientWidthPx": 1920,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "themeState": {
+        "requested": "Light",
+        "actual": "Light"
+      },
+      "controls": [
+        {
+          "controlId": "XYE.TOP.VIEW.ALL",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.VIEW.PAN",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.VIEW.ORBIT",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.EDIT.SELECT",
+          "type": "XYToggleButton",
+          "visible": false,
+          "enabled": false,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": true
+        },
+        {
+          "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+          "type": "XYToggleButton",
+          "visible": false,
+          "enabled": false,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": false
+        },
+        {
+          "controlId": "XYE.TOP.FILE.SAVE",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        }
+      ],
+      "controlListPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1920\\control-list.json",
+      "controlCount": 203,
+      "saveInspect": {
+        "controlId": "XYE.TOP.FILE.SAVE",
+        "type": "XYButton",
+        "visible": true,
+        "enabled": true,
+        "duplicateId": false,
+        "idSource": "XYDiagnostic.DebugId",
+        "region": "TOP",
+        "isChecked": null
+      },
+      "disabledInspect": {
+        "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+        "type": "XYToggleButton",
+        "visible": false,
+        "enabled": false,
+        "duplicateId": false,
+        "idSource": "XYDiagnostic.DebugId",
+        "region": "TOP",
+        "isChecked": false
+      },
+      "originalCamera": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.5656854249492381,
+          "y": 0.7071067811865476,
+          "z": -0.42426406871192857
+        },
+        "up": {
+          "x": -0.26503566257963174,
+          "y": 0.33129457822453967,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 2
+      },
+      "seededCamera": {
+        "position": {
+          "x": 504,
+          "y": 695,
+          "z": 253
+        },
+        "forward": {
+          "x": -0.565685424949238,
+          "y": 0.7071067811865475,
+          "z": -0.42426406871192845
+        },
+        "up": {
+          "x": -0.2650356625796317,
+          "y": 0.3312945782245396,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 3
+      },
+      "before": {
+        "activeTool": "选择",
+        "isSelectTool": true,
+        "isEditMode": false,
+        "isRegionEditMode": false,
+        "footerMessage": "启动看全：当前可见实体已进入视野。",
+        "footerState": "状态：就绪",
+        "cameraRevision": 2,
+        "cameraX": 4,
+        "cameraY": -5,
+        "cameraZ": 3
+      },
+      "invoke": {
+        "control": {
+          "controlId": "XYE.TOP.VIEW.ALL",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        "before": {
+          "activeTool": "选择",
+          "isSelectTool": true,
+          "isEditMode": false,
+          "isRegionEditMode": false,
+          "footerMessage": "启动看全：当前可见实体已进入视野。",
+          "footerState": "状态：就绪",
+          "cameraRevision": 3,
+          "cameraX": 504,
+          "cameraY": 695,
+          "cameraZ": 253
+        },
+        "after": {
+          "activeTool": "选择",
+          "isSelectTool": true,
+          "isEditMode": false,
+          "isRegionEditMode": false,
+          "footerMessage": "查看全部：当前可见实体已进入视野。",
+          "footerState": "状态：就绪",
+          "cameraRevision": 4,
+          "cameraX": 4,
+          "cameraY": -5,
+          "cameraZ": 3
+        },
+        "invoked": true,
+        "beforeCapture": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1920\\P1A-364f2ac5155543efab49218a148e2554-before.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1920\\P1A-364f2ac5155543efab49218a148e2554-before.json",
+          "sha256": "3AA62D280800626BC3C8B4F985E6009A06764F161A0B348FBE386943A39993BD",
+          "pixelWidth": 1890,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1890,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1890,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 32996,
+            "hwnd": "0x6A107E",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1920,
+            "heightDip": 820,
+            "clientWidthPx": 1920,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Light",
+            "actual": "Light"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+          "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+          "captureTimeUtc": "2026-10-18T22:08:32.347197+08:00",
+          "foregroundUnchanged": null,
+          "zOrderUnchanged": null
+        },
+        "afterCapture": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1920\\P1A-364f2ac5155543efab49218a148e2554-after.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1920\\P1A-364f2ac5155543efab49218a148e2554-after.json",
+          "sha256": "3AA62D280800626BC3C8B4F985E6009A06764F161A0B348FBE386943A39993BD",
+          "pixelWidth": 1890,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1890,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1890,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 32996,
+            "hwnd": "0x6A107E",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1920,
+            "heightDip": 820,
+            "clientWidthPx": 1920,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Light",
+            "actual": "Light"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+          "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+          "captureTimeUtc": "2026-10-18T22:08:32.4141663+08:00",
+          "foregroundUnchanged": null,
+          "zOrderUnchanged": null
+        }
+      },
+      "restoredCamera": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.565685424949238,
+          "y": 0.7071067811865475,
+          "z": -0.42426406871192845
+        },
+        "up": {
+          "x": -0.2650356625796317,
+          "y": 0.3312945782245396,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 5
+      },
+      "themePixelSample": "255,255,255",
+      "wait": {
+        "activeTool": "选择",
+        "isSelectTool": true,
+        "isEditMode": false,
+        "isRegionEditMode": false,
+        "footerMessage": "查看全部：当前可见实体已进入视野。",
+        "footerState": "状态：就绪",
+        "cameraRevision": 4,
+        "cameraX": 4,
+        "cameraY": -5,
+        "cameraZ": 3
+      },
+      "capture": {
+        "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1920\\Light-1920.png",
+        "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Light-1920\\Light-1920.json",
+        "sha256": "66930B8D1CB17D2E54262C26CBF9157E30F0619B5247A3EC3D4D92C50EF01EA7",
+        "pixelWidth": 1890,
+        "pixelHeight": 98,
+        "region": {
+          "region": "TOP",
+          "x": 15,
+          "y": 8,
+          "widthDip": 1890,
+          "heightDip": 98,
+          "xpx": 23,
+          "ypx": 39,
+          "widthPx": 1890,
+          "heightPx": 98
+        },
+        "window": {
+          "processId": 32996,
+          "hwnd": "0x6A107E",
+          "visible": true,
+          "foreground": false,
+          "windowState": "Normal",
+          "widthDip": 1920,
+          "heightDip": 820,
+          "clientWidthPx": 1920,
+          "clientHeightPx": 820,
+          "dpi": 96,
+          "dpiScale": 1
+        },
+        "theme": {
+          "requested": "Light",
+          "actual": "Light"
+        },
+        "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+        "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+        "captureTimeUtc": "2026-10-18T22:08:32.5428664+08:00",
+        "foregroundUnchanged": true,
+        "zOrderUnchanged": true
+      },
+      "negative": {
+        "missing": true,
+        "disabled": true,
+        "disallowedSave": true,
+        "wrongSession": true,
+        "timeout": true
+      },
+      "sessionClose": {
+        "closed": true
+      },
+      "cliExitCode": 0,
+      "requests": [
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "b5f75ea68a8748a097897f91179d29b1",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "runtime.info",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "3fbef3aa6fa3415fa76fb0e777322eb5",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.window.resize",
+          "args": {
+            "widthDip": 1920,
+            "heightDip": 820
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "ff0c452e96824a37a137a040a5bff972",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.theme.set",
+          "args": {
+            "theme": "Light"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "752b304c1d394808ad3d8019dced0ec2",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.capture",
+          "args": {
+            "fileName": "Light-1920-probe.png",
+            "backend": "avaloniaWindow"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "5864d0e0b16b4e2fa4edd8d6729d243b",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.control.list",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "098523ef4a8f40a78071aea5a579a230",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.FILE.SAVE"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "266abf5adc114df4af9a930100050f9f",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.EDIT.BOX_SELECT"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "586dc4cacffd4ecfa5c10ef8e2edb094",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.state.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "69e47e5f927449669e2e07f2a144c340",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "camera.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "1120885444204122ae3f89d9f3e51980",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "camera.set-test-pose",
+          "args": {
+            "position": {
+              "y": 695,
+              "z": 253,
+              "x": 504
+            },
+            "forward": {
+              "x": -0.5656854249492381,
+              "y": 0.7071067811865476,
+              "z": -0.42426406871192857
+            },
+            "up": {
+              "x": -0.26503566257963174,
+              "y": 0.33129457822453967,
+              "z": 0.9055385138137417
+            },
+            "fovDegrees": 60,
+            "nearPlane": 0.1,
+            "farPlane": 100,
+            "mode": "Perspective",
+            "orthographicScale": 0,
+            "observationCenter": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "revision": 2
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "43ebd93a0c7e4f29b52179c175e8df73",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 5000,
+            "expected": 3,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "f6a2501050f74cd7ac20731a1db366e6",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.MISSING"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "71fc3d25d2e2499bb90cf081629ca325",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "78efd63c7d394db39685a35d0b29dc21",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.FILE.SAVE",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "345e3b27301443a1893749c37036de33",
+          "sessionId": "not-this-session",
+          "command": "ui.control.list",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "c16535048836461ca023702c57a38d3e",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 50,
+            "expected": 1000001,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "8da2542ac302402caac3996125d1b578",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.VIEW.ALL",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "e6bdd10b4c99461cbbbcb723f086d03e",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 5000,
+            "expected": 4,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "7912de73913649edb17295bcc04b5954",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "ui.capture",
+          "args": {
+            "fileName": "Light-1920.png",
+            "backend": "avaloniaWindow"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "74b2da239bdf4872b7071eda10d242ad",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "camera.set-test-pose",
+          "args": {
+            "position": {
+              "x": 4,
+              "y": -5,
+              "z": 3
+            },
+            "forward": {
+              "x": -0.5656854249492381,
+              "y": 0.7071067811865476,
+              "z": -0.42426406871192857
+            },
+            "up": {
+              "x": -0.26503566257963174,
+              "y": 0.33129457822453967,
+              "z": 0.9055385138137417
+            },
+            "fovDegrees": 60,
+            "nearPlane": 0.1,
+            "farPlane": 100,
+            "mode": "Perspective",
+            "orthographicScale": 0,
+            "observationCenter": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "revision": 2
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "d551b7460ffd4327bbb799e0ecf25625",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "camera.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "fe5337fe6bee486f9a25a9e5fc0972c9",
+          "sessionId": "e7ac7e09968d4defbe5e0dfec18281c0",
+          "command": "session.close",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "widthDip": 1920,
+      "heightDip": 820,
+      "theme": "Dark",
+      "processId": 12704,
+      "hwnd": "0xCA02BE",
+      "window": {
+        "processId": 12704,
+        "hwnd": "0xCA02BE",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1920,
+        "heightDip": 820,
+        "clientWidthPx": 1920,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "themeState": {
+        "requested": "Dark",
+        "actual": "Dark"
+      },
+      "controls": [
+        {
+          "controlId": "XYE.TOP.VIEW.ALL",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.VIEW.PAN",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.VIEW.ORBIT",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        {
+          "controlId": "XYE.TOP.EDIT.SELECT",
+          "type": "XYToggleButton",
+          "visible": false,
+          "enabled": false,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": true
+        },
+        {
+          "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+          "type": "XYToggleButton",
+          "visible": false,
+          "enabled": false,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": false
+        },
+        {
+          "controlId": "XYE.TOP.FILE.SAVE",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        }
+      ],
+      "controlListPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1920\\control-list.json",
+      "controlCount": 203,
+      "saveInspect": {
+        "controlId": "XYE.TOP.FILE.SAVE",
+        "type": "XYButton",
+        "visible": true,
+        "enabled": true,
+        "duplicateId": false,
+        "idSource": "XYDiagnostic.DebugId",
+        "region": "TOP",
+        "isChecked": null
+      },
+      "disabledInspect": {
+        "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+        "type": "XYToggleButton",
+        "visible": false,
+        "enabled": false,
+        "duplicateId": false,
+        "idSource": "XYDiagnostic.DebugId",
+        "region": "TOP",
+        "isChecked": false
+      },
+      "originalCamera": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.5656854249492381,
+          "y": 0.7071067811865476,
+          "z": -0.42426406871192857
+        },
+        "up": {
+          "x": -0.26503566257963174,
+          "y": 0.33129457822453967,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 2
+      },
+      "seededCamera": {
+        "position": {
+          "x": 504,
+          "y": 695,
+          "z": 253
+        },
+        "forward": {
+          "x": -0.565685424949238,
+          "y": 0.7071067811865475,
+          "z": -0.42426406871192845
+        },
+        "up": {
+          "x": -0.2650356625796317,
+          "y": 0.3312945782245396,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 3
+      },
+      "before": {
+        "activeTool": "选择",
+        "isSelectTool": true,
+        "isEditMode": false,
+        "isRegionEditMode": false,
+        "footerMessage": "启动看全：当前可见实体已进入视野。",
+        "footerState": "状态：就绪",
+        "cameraRevision": 2,
+        "cameraX": 4,
+        "cameraY": -5,
+        "cameraZ": 3
+      },
+      "invoke": {
+        "control": {
+          "controlId": "XYE.TOP.VIEW.ALL",
+          "type": "XYButton",
+          "visible": true,
+          "enabled": true,
+          "duplicateId": false,
+          "idSource": "XYDiagnostic.DebugId",
+          "region": "TOP",
+          "isChecked": null
+        },
+        "before": {
+          "activeTool": "选择",
+          "isSelectTool": true,
+          "isEditMode": false,
+          "isRegionEditMode": false,
+          "footerMessage": "启动看全：当前可见实体已进入视野。",
+          "footerState": "状态：就绪",
+          "cameraRevision": 3,
+          "cameraX": 504,
+          "cameraY": 695,
+          "cameraZ": 253
+        },
+        "after": {
+          "activeTool": "选择",
+          "isSelectTool": true,
+          "isEditMode": false,
+          "isRegionEditMode": false,
+          "footerMessage": "查看全部：当前可见实体已进入视野。",
+          "footerState": "状态：就绪",
+          "cameraRevision": 4,
+          "cameraX": 4,
+          "cameraY": -5,
+          "cameraZ": 3
+        },
+        "invoked": true,
+        "beforeCapture": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1920\\P1A-5ce9c34e5d2c436583f3ecd658315a40-before.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1920\\P1A-5ce9c34e5d2c436583f3ecd658315a40-before.json",
+          "sha256": "8E3943EEDA53D4E2D0EA3B9AF0502DE0ADE09254E94C2FE28D00FF228286EF54",
+          "pixelWidth": 1890,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1890,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1890,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 12704,
+            "hwnd": "0xCA02BE",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1920,
+            "heightDip": 820,
+            "clientWidthPx": 1920,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Dark",
+            "actual": "Dark"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+          "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+          "captureTimeUtc": "2026-10-18T22:08:38.5220151+08:00",
+          "foregroundUnchanged": null,
+          "zOrderUnchanged": null
+        },
+        "afterCapture": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1920\\P1A-5ce9c34e5d2c436583f3ecd658315a40-after.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1920\\P1A-5ce9c34e5d2c436583f3ecd658315a40-after.json",
+          "sha256": "8E3943EEDA53D4E2D0EA3B9AF0502DE0ADE09254E94C2FE28D00FF228286EF54",
+          "pixelWidth": 1890,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1890,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1890,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 12704,
+            "hwnd": "0xCA02BE",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1920,
+            "heightDip": 820,
+            "clientWidthPx": 1920,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Dark",
+            "actual": "Dark"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+          "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP",
+          "captureTimeUtc": "2026-10-18T22:08:38.6055036+08:00",
+          "foregroundUnchanged": null,
+          "zOrderUnchanged": null
+        }
+      },
+      "restoredCamera": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.565685424949238,
+          "y": 0.7071067811865475,
+          "z": -0.42426406871192845
+        },
+        "up": {
+          "x": -0.2650356625796317,
+          "y": 0.3312945782245396,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 5
+      },
+      "themePixelSample": "42,56,66",
+      "wait": {
+        "activeTool": "选择",
+        "isSelectTool": true,
+        "isEditMode": false,
+        "isRegionEditMode": false,
+        "footerMessage": "查看全部：当前可见实体已进入视野。",
+        "footerState": "状态：就绪",
+        "cameraRevision": 4,
+        "cameraX": 4,
+        "cameraY": -5,
+        "cameraZ": 3
+      },
+      "capture": {
+        "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1920\\Dark-1920.png",
+        "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-r3\\Dark-1920\\Dark-1920.json",
+        "sha256": "B89A9634A150B92D8D0D77F35066F4F620BD78DC88F8BC34B5FC7C1431E6EBEF",
+        "pixelWidth": 1890,
+        "pixelHeight": 98,
+        "region": {
+          "region": "TOP",
+          "x": 15,
+          "y": 8,
+          "widthDip": 1890,
+          "heightDip": 98,
+          "xpx": 23,
+          "ypx": 39,
+          "widthPx": 1890,
+          "heightPx": 98
+        },
+        "window": {
+          "processId": 12704,
+          "hwnd": "0xCA02BE",
+          "visible": true,
+          "foreground": false,
+          "windowState": "Normal",
+          "widthDip": 1920,
+          "heightDip": 820,
+          "clientWidthPx": 1920,
+          "clientHeightPx": 820,
+          "dpi": 96,
+          "dpiScale": 1
+        },
+        "theme": {
+          "requested": "Dark",
+          "actual": "Dark"
+        },
+        "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=A21957A043BFC5195816C810DF8CE70A73A37350F156B6E6F66F0D765AD2744E",
+        "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+        "captureTimeUtc": "2026-10-18T22:08:38.7612055+08:00",
+        "foregroundUnchanged": true,
+        "zOrderUnchanged": true
+      },
+      "negative": {
+        "missing": true,
+        "disabled": true,
+        "disallowedSave": true,
+        "wrongSession": true,
+        "timeout": true
+      },
+      "sessionClose": {
+        "closed": true
+      },
+      "cliExitCode": 0,
+      "requests": [
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "c785bf25ec9c4075aec35380b5c2030a",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "runtime.info",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "69b9c15ee4a34276843b5fc7d609844c",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.window.resize",
+          "args": {
+            "widthDip": 1920,
+            "heightDip": 820
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "c895d5f8d7154d4ab2c0299722ccd612",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.theme.set",
+          "args": {
+            "theme": "Dark"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "3b8675867b8b4b9a95274514b5dac5e5",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.capture",
+          "args": {
+            "fileName": "Dark-1920-probe.png",
+            "backend": "avaloniaWindow"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "b48d5c6ec7624cfd84eca96808d81c1b",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.control.list",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "2e4c2d8d5f764e16a90410a75806f12f",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.FILE.SAVE"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "a88691b9a936444a976cbad391f65b45",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.EDIT.BOX_SELECT"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "f41bc1582eed47feb7330ed79d5f931d",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.state.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "6ae1edb9095c4208b95dd1e42424bfb8",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "camera.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "c8783932fb144c7bb1f5724d2b71d89e",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "camera.set-test-pose",
+          "args": {
+            "position": {
+              "y": 695,
+              "z": 253,
+              "x": 504
+            },
+            "forward": {
+              "x": -0.5656854249492381,
+              "y": 0.7071067811865476,
+              "z": -0.42426406871192857
+            },
+            "up": {
+              "x": -0.26503566257963174,
+              "y": 0.33129457822453967,
+              "z": 0.9055385138137417
+            },
+            "fovDegrees": 60,
+            "nearPlane": 0.1,
+            "farPlane": 100,
+            "mode": "Perspective",
+            "orthographicScale": 0,
+            "observationCenter": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "revision": 2
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "3f4d7ea4ea8547709c11abf4c022f8b0",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 5000,
+            "expected": 3,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "99956c8de6b44a2b985ebd17aa31bd22",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.control.inspect",
+          "args": {
+            "controlId": "XYE.TOP.MISSING"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "7a4faab412924828acc1decbfdf26755",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.EDIT.BOX_SELECT",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "460cbe5f4a9e455b9d17f84f30465b2f",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.FILE.SAVE",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "7261e2e9be4c43769910ba4eada33a95",
+          "sessionId": "not-this-session",
+          "command": "ui.control.list",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "7648ac56dd26453fa6411345f25af67f",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 50,
+            "expected": 1000001,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "dd9a557b0c7d49bfb5e8147864bde50d",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.control.invoke",
+          "args": {
+            "controlId": "XYE.TOP.VIEW.ALL",
+            "operation": "invoke"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "8fe234e90fc644d7b592850375d0dec2",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.waitUntil",
+          "args": {
+            "timeoutMs": 5000,
+            "expected": 4,
+            "state": "cameraRevision"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "69f15b004a60439ebd43c90c28bab172",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "ui.capture",
+          "args": {
+            "fileName": "Dark-1920.png",
+            "backend": "avaloniaWindow"
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "05656f88527a44108c4bb4e06096e21a",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "camera.set-test-pose",
+          "args": {
+            "position": {
+              "x": 4,
+              "y": -5,
+              "z": 3
+            },
+            "forward": {
+              "x": -0.5656854249492381,
+              "y": 0.7071067811865476,
+              "z": -0.42426406871192857
+            },
+            "up": {
+              "x": -0.26503566257963174,
+              "y": 0.33129457822453967,
+              "z": 0.9055385138137417
+            },
+            "fovDegrees": 60,
+            "nearPlane": 0.1,
+            "farPlane": 100,
+            "mode": "Perspective",
+            "orthographicScale": 0,
+            "observationCenter": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "revision": 2
+          }
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "635461909c074a658d3724f52111fa00",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "camera.inspect",
+          "args": {}
+        },
+        {
+          "schemaVersion": "XYC-API/1",
+          "requestId": "4b526cdb236442159ccb25e98ac63d59",
+          "sessionId": "24a01461b83141fc8352c399087a9a92",
+          "command": "session.close",
+          "args": {}
+        }
+      ]
+    }
+  ]
+}

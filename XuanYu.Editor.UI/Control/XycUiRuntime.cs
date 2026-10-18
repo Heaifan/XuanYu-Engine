@@ -16,8 +16,15 @@ internal sealed partial class XycUiRuntime(Window window, string? evidenceDirect
     public XycUiThemeState InspectTheme() => OnUi(InspectThemeCore);
     public XycUiThemeState SetTheme(string theme) => OnUi(() => SetThemeCore(theme));
     public XycUiRegionState InspectTop() => OnUi(InspectTopCore);
-    public XycUiCaptureState CaptureTop(string fileName, bool temporaryTopmost = false) =>
-        OnUi(() => CaptureTopCore(fileName, temporaryTopmost));
+    public XycUiCaptureState CaptureTop(string fileName, string backend = "avaloniaWindow",
+        bool temporaryTopmost = false, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var result = OnUi(() => CaptureTopCore(fileName, backend, temporaryTopmost,
+            cancellationToken));
+        cancellationToken.ThrowIfCancellationRequested();
+        return result;
+    }
     public IReadOnlyList<XycUiControlState> ListControls() => OnUi(ListControlsCore);
     public XycUiControlState InspectControl(string id) => OnUi(() => InspectControlCore(id));
     public XycUiState InspectState() => OnUi(InspectStateCore);

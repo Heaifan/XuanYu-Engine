@@ -5,8 +5,6 @@ namespace XuanYu.Editor.UI.XycControl;
 internal static class XycUiCommandProcessor
 {
     static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
-    static readonly HashSet<string> CaptureNames = new(StringComparer.Ordinal)
-        { "Light-1360.png", "Dark-1360.png", "Light-1920.png", "Dark-1920.png" };
     static readonly HashSet<string> Commands = new(StringComparer.Ordinal)
         { "ui.window.inspect", "ui.window.resize", "ui.theme.inspect", "ui.theme.set",
             "ui.region.inspect", "ui.capture", "ui.control.list", "ui.control.inspect",
@@ -26,7 +24,8 @@ internal static class XycUiCommandProcessor
             "ui.theme.inspect" => result(true, null, runtime.InspectTheme(), null, null),
             "ui.theme.set" => Theme(),
             "ui.region.inspect" => result(true, null, runtime.InspectTop(), null, null),
-            "ui.capture" => Capture(),
+            "ui.capture" => XycUiCaptureCommand.Execute(request, runtime, result,
+                cancellationToken),
             "ui.control.list" => result(true, null, runtime.ListControls(), null, null),
             "ui.control.inspect" => InspectControl(),
             "ui.control.invoke" => await InvokeControl(),
@@ -51,15 +50,6 @@ internal static class XycUiCommandProcessor
                 ?? throw new JsonException();
             if (requestTheme.Theme is not ("Light" or "Dark")) throw new JsonException();
             return result(true, null, runtime.SetTheme(requestTheme.Theme), null, null);
-        }
-
-        XycResponse Capture()
-        {
-            var capture = request.Args.Deserialize<XycUiCaptureRequest>(Json)
-                ?? throw new JsonException();
-            if (!CaptureNames.Contains(capture.FileName)) throw new JsonException();
-            return result(true, null, runtime.CaptureTop(capture.FileName,
-                capture.TemporaryTopmost), null, null);
         }
 
         XycResponse InspectControl()
@@ -91,7 +81,6 @@ internal static class XycUiCommandProcessor
 
 internal sealed record XycUiResizeRequest(double WidthDip, double HeightDip);
 internal sealed record XycUiThemeRequest(string Theme);
-internal sealed record XycUiCaptureRequest(string FileName, bool TemporaryTopmost = false);
 internal sealed record XycUiControlRequest(string ControlId);
 internal sealed record XycUiInvokeRequest(string ControlId, string Operation);
 internal sealed record XycUiWaitRequest(string State, JsonElement Expected, int TimeoutMs);

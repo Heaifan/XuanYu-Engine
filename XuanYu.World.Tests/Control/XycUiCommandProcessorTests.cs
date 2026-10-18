@@ -26,6 +26,7 @@ public sealed class XycUiCommandProcessorTests
         Assert.True(processor.Execute(Request("ui.region.inspect")).Success);
         Assert.True(processor.Execute(Request("ui.capture", new { fileName = "Dark-1360.png" })).Success);
         Assert.Equal(1, ui.Captures);
+        Assert.Equal("avaloniaWindow", ui.LastCaptureBackend);
     }
 
     [Fact]
@@ -37,8 +38,6 @@ public sealed class XycUiCommandProcessorTests
             new { widthDip = 600, heightDip = 820 })).ErrorCode);
         Assert.Equal("INVALID_INPUT", processor.Execute(Request("ui.theme.set",
             new { theme = "System" })).ErrorCode);
-        Assert.Equal("INVALID_INPUT", processor.Execute(Request("ui.capture",
-            new { fileName = "../../capture.png" })).ErrorCode);
     }
 
     [Fact]

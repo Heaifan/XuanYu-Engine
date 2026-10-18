@@ -9,7 +9,8 @@ public interface IXycUiRuntime
     XycUiThemeState InspectTheme();
     XycUiThemeState SetTheme(string theme);
     XycUiRegionState InspectTop();
-    XycUiCaptureState CaptureTop(string fileName, bool temporaryTopmost = false);
+    XycUiCaptureState CaptureTop(string fileName, string backend = "avaloniaWindow",
+        bool temporaryTopmost = false, CancellationToken cancellationToken = default);
     IReadOnlyList<XycUiControlState> ListControls();
     XycUiControlState InspectControl(string controlId);
     XycUiState InspectState();
@@ -28,7 +29,11 @@ public sealed record XycUiRegionState(string Region, double X, double Y,
 public sealed record XycUiCaptureState(string ImagePath, string MetadataPath,
     string Sha256, int PixelWidth, int PixelHeight, XycUiRegionState Region,
     XycUiWindowState Window, XycUiThemeState Theme, string BuildIdentity,
-    string CaptureMethod, DateTimeOffset CaptureTimeUtc);
+    string CaptureMethod, DateTimeOffset CaptureTimeUtc,
+    bool? ForegroundUnchanged = null, bool? ZOrderUnchanged = null,
+    string CaptureBackend = "unknown", bool? ChangesZOrder = null,
+    bool? TakesForeground = null, bool? RequiresVisibleWindow = null,
+    bool? SupportsOcclusion = null, string FidelityValidation = "NOT_EVALUATED");
 public sealed record XycUiControlState(string? ControlId, string Type, bool Visible,
     bool Enabled, bool DuplicateId, string IdSource, string Region, bool? IsChecked);
 public sealed record XycUiState(string ActiveTool, bool IsSelectTool, bool IsEditMode,

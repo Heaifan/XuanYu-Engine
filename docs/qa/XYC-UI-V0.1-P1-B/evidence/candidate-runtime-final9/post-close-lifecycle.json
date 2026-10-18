@@ -1,0 +1,24 @@
+{
+  "candidateIdentity": "BASE=d2d011ac98314f172e0e3d729583e67832099f1f;P1B=RTB;5plus100-split",
+  "appSha256": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C",
+  "uiSha256": "7C685D237CC9C1E0EF385444B7E6028EC3286D22628E1A5BEDCFDEBCF1C8EE94",
+  "processes": [
+    {
+      "pid": 11548,
+      "exited": true
+    },
+    {
+      "pid": 24760,
+      "exited": true
+    },
+    {
+      "pid": 39044,
+      "exited": true
+    },
+    {
+      "pid": 40948,
+      "exited": true
+    }
+  ],
+  "status": "PASS"
+}

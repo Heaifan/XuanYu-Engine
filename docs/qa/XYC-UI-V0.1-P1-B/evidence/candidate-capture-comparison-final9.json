@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "candidateIdentity": "BASE=d2d011ac98314f172e0e3d729583e67832099f1f;SOURCE_TREE=4c70b5d3d79c2a1f94ace342868255528740458d;P1B=RTB",
+  "appSha256": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C",
+  "uiSha256": "7C685D237CC9C1E0EF385444B7E6028EC3286D22628E1A5BEDCFDEBCF1C8EE94",
+  "limits": {
+    "exactPctMin": 94.5,
+    "maeMax": 0.5,
+    "psnrDbMin": 35.0,
+    "over16PctMax": 0.9
+  },
+  "cases": {
+    "Light-1360": {
+      "dimensions": [
+        1330,
+        98
+      ],
+      "exactPct": 95.23477059996931,
+      "mae": 0.10399979540688456,
+      "psnrDb": 48.22775077344858,
+      "over16Pct": 0.05830903790087463,
+      "alphaOpaque": true,
+      "pass": true,
+      "sha256": "640e2401b7bfad5ab69b1af206afffc4ad33bcf1e3ffbcdae4321ddbb5985314",
+      "pid": 40948,
+      "hwnd": "0x6411CC",
+      "theme": "Light",
+      "dpiScale": 1,
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=7C685D237CC9C1E0EF385444B7E6028EC3286D22628E1A5BEDCFDEBCF1C8EE94",
+      "foregroundUnchanged": true,
+      "zOrderUnchanged": true,
+      "backend": "avaloniaWindow"
+    },
+    "Light-1920": {
+      "dimensions": [
+        1890,
+        98
+      ],
+      "exactPct": 96.64669042220062,
+      "mae": 0.07317964222726127,
+      "psnrDb": 49.75640857929711,
+      "over16Pct": 0.04103228593024511,
+      "alphaOpaque": true,
+      "pass": true,
+      "sha256": "66930b8d1cb17d2e54262c26cbf9157e30f0619b5247a3ec3d4d92c50ef01ea7",
+      "pid": 11548,
+      "hwnd": "0x4302FC",
+      "theme": "Light",
+      "dpiScale": 1,
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=7C685D237CC9C1E0EF385444B7E6028EC3286D22628E1A5BEDCFDEBCF1C8EE94",
+      "foregroundUnchanged": true,
+      "zOrderUnchanged": true,
+      "backend": "avaloniaWindow"
+    },
+    "Dark-1360": {
+      "dimensions": [
+        1330,
+        98
+      ],
+      "exactPct": 94.77827221114009,
+      "mae": 0.4196895299473173,
+      "psnrDb": 35.33772187958723,
+      "over16Pct": 0.8170937547951511,
+      "alphaOpaque": true,
+      "pass": true,
+      "sha256": "16c8a0386551bf471a14561f1c322036fc6ce73a7713282b2b6462f94466df3f",
+      "pid": 24760,
+      "hwnd": "0x550F12",
+      "theme": "Dark",
+      "dpiScale": 1,
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=7C685D237CC9C1E0EF385444B7E6028EC3286D22628E1A5BEDCFDEBCF1C8EE94",
+      "foregroundUnchanged": true,
+      "zOrderUnchanged": true,
+      "backend": "avaloniaWindow"
+    },
+    "Dark-1920": {
+      "dimensions": [
+        1890,
+        98
+      ],
+      "exactPct": 96.32545081524674,
+      "mae": 0.2953334773062664,
+      "psnrDb": 36.86389240266943,
+      "over16Pct": 0.5749919015225138,
+      "alphaOpaque": true,
+      "pass": true,
+      "sha256": "b89a9634a150b92d8d0d77f35066f4f620bd78dc88f8bc34b5fc7c1431e6ebef",
+      "pid": 39044,
+      "hwnd": "0xD6118A",
+      "theme": "Dark",
+      "dpiScale": 1,
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=7C685D237CC9C1E0EF385444B7E6028EC3286D22628E1A5BEDCFDEBCF1C8EE94",
+      "foregroundUnchanged": true,
+      "zOrderUnchanged": true,
+      "backend": "avaloniaWindow"
+    }
+  }
+}

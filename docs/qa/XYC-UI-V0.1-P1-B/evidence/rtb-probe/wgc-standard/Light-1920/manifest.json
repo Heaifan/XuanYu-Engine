@@ -1,0 +1,76 @@
+{
+  "profile": "Light-1920",
+  "runtime": {
+    "protocolVersion": "XYC-API/1",
+    "instanceId": "3c81b97e0a234b72b7e0cdaeb69295b6",
+    "isolationMode": "windowed-editor-instance",
+    "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+    "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T21:45:29.8544438+08:00",
+    "branch": "UNKNOWN",
+    "dirty": "UNKNOWN",
+    "processId": 40032,
+    "viewportFrameId": 0,
+    "silentHost": null
+  },
+  "window": {
+    "processId": 40032,
+    "hwnd": "0x781128",
+    "visible": true,
+    "foreground": false,
+    "windowState": "Normal",
+    "widthDip": 1920,
+    "heightDip": 820,
+    "clientWidthPx": 1920,
+    "clientHeightPx": 820,
+    "dpi": 96,
+    "dpiScale": 1
+  },
+  "region": {
+    "region": "TOP",
+    "x": 15,
+    "y": 8,
+    "widthDip": 1890,
+    "heightDip": 98,
+    "xpx": 23,
+    "ypx": 39,
+    "widthPx": 1890,
+    "heightPx": 98
+  },
+  "windowRect": {
+    "top": 0,
+    "bottom": 859,
+    "left": 0,
+    "right": 1936
+  },
+  "crop": {
+    "width": 1890,
+    "x": 23,
+    "y": 39,
+    "height": 98
+  },
+  "before": {
+    "foreground": "0x41132",
+    "previous": "0x64072C"
+  },
+  "after": {
+    "foreground": "0x41132",
+    "previous": "0x64072C"
+  },
+  "wgcStdout": "{\"supported\":true,\"frameWidth\":1922,\"frameHeight\":852,\"textureWidth\":1922,\"textureHeight\":852,\"format\":\"B8G8R8A8_UNorm\",\"time\":\"10:22:06.7708332\",\"hwnd\":\"781128\",\"output\":\"E:\\\\MyDoc\\\\project-VSCode\\\\XuanYuEngine\\\\docs\\\\qa\\\\XYC-UI-V0.1-P1-B\\\\evidence\\\\rtb-probe\\\\wgc-standard\\\\Light-1920\\\\Light-1920.full.png\"}\r\n",
+  "wgcStderr": "",
+  "wgcExitCode": 0,
+  "imageSha256": "51F7C6646A65DE6C770989183FA4E0B3C51BB9C0AC6D51EDD95BBB4A76DB9334",
+  "close": {
+    "requestId": "a73b2de5e89d483e9a4abb3efa676639",
+    "success": true,
+    "errorCode": null,
+    "observedState": {
+      "closed": true
+    },
+    "sceneRevision": null,
+    "cameraRevision": null,
+    "durationMs": 0.1221,
+    "evidencePath": null
+  },
+  "editorExitCode": 0
+}

@@ -1,0 +1,46 @@
+{
+  "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-final5\\Dark-1360\\Dark-1360-probe.png",
+  "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-B\\evidence\\candidate-runtime-final5\\Dark-1360\\Dark-1360-probe.json",
+  "sha256": "16C8A0386551BF471A14561F1C322036FC6CE73A7713282B2B6462F94466DF3F",
+  "pixelWidth": 1330,
+  "pixelHeight": 98,
+  "region": {
+    "region": "TOP",
+    "x": 15,
+    "y": 8,
+    "widthDip": 1330,
+    "heightDip": 98,
+    "xpx": 23,
+    "ypx": 39,
+    "widthPx": 1330,
+    "heightPx": 98
+  },
+  "window": {
+    "processId": 38780,
+    "hwnd": "0x420C0E",
+    "visible": true,
+    "foreground": false,
+    "windowState": "Normal",
+    "widthDip": 1360,
+    "heightDip": 820,
+    "clientWidthPx": 1360,
+    "clientHeightPx": 820,
+    "dpi": 96,
+    "dpiScale": 1
+  },
+  "theme": {
+    "requested": "Dark",
+    "actual": "Dark"
+  },
+  "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=642370F7DB15834BD797F825BA12E78036D44C3525CCF34AED3553B1AF3F801C",
+  "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+  "captureTimeUtc": "2026-10-18T14:23:11.8634462+00:00",
+  "foregroundUnchanged": true,
+  "zOrderUnchanged": true,
+  "captureBackend": "avaloniaWindow",
+  "changesZOrder": false,
+  "takesForeground": false,
+  "requiresVisibleWindow": true,
+  "supportsOcclusion": true,
+  "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+}

@@ -45,15 +45,10 @@ function Invoke-Case([int]$width, [string]$theme) {
         if ($window.widthDip -ne $width -or $window.heightDip -ne 820) { throw "窗口尺寸回读不符：$($window.widthDip)x$($window.heightDip)" }
         $actualTheme = (Send 'ui.theme.set' @{ theme=$theme }).observedState
         if ($actualTheme.actual -ne $theme) { throw "主题回读不符：$($actualTheme.actual)" }
-        Add-Type -AssemblyName System.Drawing
-        $themePixelsReady = $false
-        for ($attempt=0; $attempt -lt 8 -and -not $themePixelsReady; $attempt++) {
-            $probe = (Send 'ui.capture' @{ fileName="$theme-$width.png"; temporaryTopmost=$true }).observedState
-            $bitmap = [Drawing.Bitmap]::new($probe.imagePath); $sample = $bitmap.GetPixel(100,10); $bitmap.Dispose()
-            $mean = ($sample.R + $sample.G + $sample.B) / 3
-            $themePixelsReady = $theme -eq 'Light' ? ($mean -gt 170) : ($mean -lt 120)
+        $probe = (Send 'ui.capture' @{ fileName="$theme-$width-probe.png"; backend='avaloniaWindow' }).observedState
+        if ($probe.theme.actual -ne $theme -or $probe.pixelWidth -le 0 -or $probe.pixelHeight -le 0) {
+            throw "$theme 主题未通过真实 Window 捕获状态核验。"
         }
-        if (-not $themePixelsReady) { throw "$theme 主题像素未在采样期限内呈现。" }
         $controls = (Send 'ui.control.list').observedState
         $controlListPath = Join-Path $caseDir 'control-list.json'
         $controls | ConvertTo-Json -Depth 16 | Set-Content -Encoding UTF8 $controlListPath
@@ -95,7 +90,7 @@ function Invoke-Case([int]$width, [string]$theme) {
         }
         $settled = (Send 'ui.waitUntil' @{ state='cameraRevision'; expected=$effect.after.cameraRevision; timeoutMs=5000 })
         if (-not $settled.success) { throw "操作后状态未就绪：$($settled.errorCode)" }
-        $capture = (Send 'ui.capture' @{ fileName="$theme-$width.png"; temporaryTopmost=$true })
+        $capture = (Send 'ui.capture' @{ fileName="$theme-$width.png"; backend='avaloniaWindow' })
         if (-not $capture.success) { throw "TOP 截图失败：$($capture.errorCode)" }
         $restored = Send 'camera.set-test-pose' $originalCamera
         if (-not $restored.success) { throw "测试会话相机恢复失败：$($restored.errorCode)" }

@@ -9,8 +9,10 @@ namespace XuanYu.Editor.UI.XycControl;
 
 internal sealed partial class XycUiRuntime
 {
-    XycUiCaptureState CaptureTopCore(string fileName, bool temporaryTopmost = false)
+    XycUiCaptureState CaptureTopCore(string fileName, string backend,
+        bool temporaryTopmost, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (string.IsNullOrWhiteSpace(evidenceDirectory))
             throw new InvalidOperationException("XYC UI evidence directory is not configured.");
         var top = FindTop();
@@ -19,10 +21,17 @@ internal sealed partial class XycUiRuntime
             throw new InvalidOperationException("生产 TOP 未完成可见布局。");
         var region = InspectTopCore();
         var client = InspectWindowCore();
-        var width = region.WidthPx;
-        var height = region.HeightPx;
+        cancellationToken.ThrowIfCancellationRequested();
         var image = Path.Combine(evidenceDirectory, fileName);
         var metadata = Path.ChangeExtension(image, ".json");
+        if (File.Exists(image) || File.Exists(metadata))
+            throw new XycUiCommandException("EVIDENCE_ALREADY_EXISTS");
+        if (backend == "avaloniaWindow")
+            return CaptureAvaloniaWindowTop(fileName, top, region, client, cancellationToken);
+        if (backend != "gdiCompatibility")
+            throw new XycUiCommandException("UNSUPPORTED_BACKEND");
+        var width = region.WidthPx;
+        var height = region.HeightPx;
         var capturedAt = DateTimeOffset.UtcNow;
         var hwnd = GetHwnd();
         var previous = XycUiWindowNative.GetWindow(hwnd, XycUiWindowNative.PreviousWindow);
@@ -38,6 +47,7 @@ internal sealed partial class XycUiRuntime
             if (XycUiWindowNative.DwmFlush() < 0)
                 throw new InvalidOperationException("DWM 未完成窗口合成。");
             crop = XycUiNativeCapture.ReadScreen(region.Xpx, region.Ypx, width, height);
+            cancellationToken.ThrowIfCancellationRequested();
         }
         finally
         {
@@ -61,7 +71,10 @@ internal sealed partial class XycUiRuntime
         var state = new XycUiCaptureState(image, metadata,
             Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(image))), width, height,
             region, client, InspectThemeCore(), BuildIdentity(),
-            CaptureMethod(temporaryTopmost), capturedAt);
+            CaptureMethod(temporaryTopmost), capturedAt,
+            XycUiWindowNative.GetForegroundWindow() == foreground,
+            XycUiWindowNative.GetWindow(hwnd, XycUiWindowNative.PreviousWindow) == previous,
+            "gdiCompatibility", true, false, true, false, "REFERENCE_ONLY");
         File.WriteAllText(metadata, JsonSerializer.Serialize(state,
             new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true }));
         return state;
