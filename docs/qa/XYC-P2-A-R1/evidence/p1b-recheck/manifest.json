@@ -1,0 +1,103 @@
+{
+  "status": "PASS",
+  "thresholds": {
+    "exactPctMin": 94.5,
+    "maeMax": 0.5,
+    "psnrDbMin": 35,
+    "over16PctMax": 0.9
+  },
+  "cases": [
+    {
+      "case": "Light-1360",
+      "sessionId": "2183967e55d14998a0108ecae232ab63",
+      "exitCode": 0,
+      "theme": "Light",
+      "dimensions": [
+        1330,
+        98
+      ],
+      "sha256": "640E2401B7BFAD5AB69B1AF206AFFFC4AD33BCF1E3FFBCDAE4321DDBB5985314",
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+      "pid": 10236,
+      "hwnd": "0x7009B6",
+      "exactPct": 95.23477059996931,
+      "mae": 0.10399979540688456,
+      "psnrDb": 48.22775077344858,
+      "over16Pct": 0.05830903790087463,
+      "alphaOpaque": true,
+      "pass": true,
+      "reference": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-A\\evidence\\candidate-final\\Light-1360\\Light-1360.png",
+      "capture": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\p1b-recheck\\Light-1360\\Light-1360.png",
+      "sidecar": null
+    },
+    {
+      "case": "Dark-1360",
+      "sessionId": "cff74e988311428fad04940f8d900dbe",
+      "exitCode": 0,
+      "theme": "Dark",
+      "dimensions": [
+        1330,
+        98
+      ],
+      "sha256": "16C8A0386551BF471A14561F1C322036FC6CE73A7713282B2B6462F94466DF3F",
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+      "pid": 41848,
+      "hwnd": "0x8D0F12",
+      "exactPct": 94.77827221114009,
+      "mae": 0.4196895299473173,
+      "psnrDb": 35.33772187958723,
+      "over16Pct": 0.8170937547951511,
+      "alphaOpaque": true,
+      "pass": true,
+      "reference": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-A\\evidence\\candidate-final\\Dark-1360\\Dark-1360.png",
+      "capture": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\p1b-recheck\\Dark-1360\\Dark-1360.png",
+      "sidecar": null
+    },
+    {
+      "case": "Light-1920",
+      "sessionId": "82e3f0752c7f494c89abd7ce0594d915",
+      "exitCode": 0,
+      "theme": "Light",
+      "dimensions": [
+        1890,
+        98
+      ],
+      "sha256": "66930B8D1CB17D2E54262C26CBF9157E30F0619B5247A3EC3D4D92C50EF01EA7",
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+      "pid": 15928,
+      "hwnd": "0x15D0F8E",
+      "exactPct": 96.64669042220062,
+      "mae": 0.07317964222726127,
+      "psnrDb": 49.75640857929711,
+      "over16Pct": 0.04103228593024511,
+      "alphaOpaque": true,
+      "pass": true,
+      "reference": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-A\\evidence\\candidate-final\\Light-1920\\Light-1920.png",
+      "capture": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\p1b-recheck\\Light-1920\\Light-1920.png",
+      "sidecar": null
+    },
+    {
+      "case": "Dark-1920",
+      "sessionId": "5448ce0e5f644f6b8c998c7922d92905",
+      "exitCode": 0,
+      "theme": "Dark",
+      "dimensions": [
+        1890,
+        98
+      ],
+      "sha256": "B89A9634A150B92D8D0D77F35066F4F620BD78DC88F8BC34B5FC7C1431E6EBEF",
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+      "pid": 35872,
+      "hwnd": "0x18A02FC",
+      "exactPct": 96.32545081524674,
+      "mae": 0.2953334773062664,
+      "psnrDb": 36.86389240266943,
+      "over16Pct": 0.5749919015225138,
+      "alphaOpaque": true,
+      "pass": true,
+      "reference": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-UI-V0.1-P1-A\\evidence\\candidate-final\\Dark-1920\\Dark-1920.png",
+      "capture": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\p1b-recheck\\Dark-1920\\Dark-1920.png",
+      "sidecar": null
+    }
+  ]
+}

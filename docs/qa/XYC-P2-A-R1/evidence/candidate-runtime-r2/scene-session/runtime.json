@@ -1,0 +1,2146 @@
+{
+  "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+  "pid": 34052,
+  "sourceHead": "d0335c52b0c9938277f571cc58d11c4d038f3b43",
+  "sourceDirty": true,
+  "buildFiles": [
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.App.exe",
+      "sha256": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.App.dll",
+      "sha256": "BDB6FA69A3EBC87EAF55ED011B93184EB07E317FBE59AE45B679BB8CC73D822C"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.UI.dll",
+      "sha256": "CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.Control.Cli\\bin\\Release\\net10.0\\XuanYu.Editor.Control.Cli.dll",
+      "sha256": "FAA00D15F310BD601BC60CB960A47769C848AEEBB5DEBFEBEA65D1BD38F4C671"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "XuanYu.Editor.UI/Control/XycSceneContracts.cs",
+      "sha256": "E136BC6B9A952A84E5FF31C0AA30FFCC8EE56BB7A46CE66276F6E7E4087F0294"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Control/XycSceneCommandProcessor.cs",
+      "sha256": "8DA468C223EAE6C8123F09620783652A0DDAC8151F99CFD3E051F67C262DD60B"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Vm/Control/UiVm.XycScene.cs",
+      "sha256": "0124BEB9173A90418D83FD30021BBC54FF27F159171315F4012332CEE7ADCAFF"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Vm/Control/UiVm.XycScene.Guards.cs",
+      "sha256": "6BAA1621CA9DB011FA5EAF9701ADA3901382751C573534C8C5C0D87DE9CDA2A1"
+    },
+    {
+      "path": "XuanYu.World.Tests/Control/XycSceneCommandTests.cs",
+      "sha256": "694FECE82698C7BED70D6ACC3D5BA042EB7E1B2F4ADE476F623805B91EC7C8CC"
+    }
+  ],
+  "baseline": {
+    "sceneId": "179308d9de3849f1880c2950770cc0db",
+    "sceneRevision": 0,
+    "entityCount": 0,
+    "entityIds": [],
+    "hierarchyEntityIds": [],
+    "renderEntityIds": [],
+    "inspectorFields": [],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 0,
+    "redoCount": 0,
+    "testEntityId": null,
+    "stage": "0"
+  },
+  "created": {
+    "sceneId": "179308d9de3849f1880c2950770cc0db",
+    "sceneRevision": 1,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "renderEntityIds": [
+      "EntityId(1)"
+    ],
+    "inspectorFields": [
+      {
+        "label": "名称",
+        "value": "立方体"
+      },
+      {
+        "label": "类型",
+        "value": "Cube"
+      },
+      {
+        "label": "实体编号",
+        "value": "实体编号(1)"
+      },
+      {
+        "label": "路径",
+        "value": "主世界/区域 0,0,0/实体编号(1)"
+      },
+      {
+        "label": "区域",
+        "value": "区域 0,0,0"
+      },
+      {
+        "label": "活动状态",
+        "value": "活跃"
+      },
+      {
+        "label": "全局位置",
+        "value": "X 0    Y 0    Z 0"
+      },
+      {
+        "label": "变换",
+        "value": ""
+      },
+      {
+        "label": "位置",
+        "value": "X 0    Y 0    Z 0"
+      },
+      {
+        "label": "旋转",
+        "value": "X 0°    Y 0°    Z 0°"
+      },
+      {
+        "label": "缩放",
+        "value": "X 1    Y 1    Z 1"
+      }
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 1,
+    "redoCount": 0,
+    "testEntityId": "EntityId(1)",
+    "stage": "1"
+  },
+  "entityBefore": {
+    "entityId": "EntityId(1)",
+    "type": "Cube",
+    "name": "立方体",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  },
+  "moved": {
+    "sceneId": "179308d9de3849f1880c2950770cc0db",
+    "sceneRevision": 2,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "renderEntityIds": [
+      "EntityId(1)"
+    ],
+    "inspectorFields": [
+      {
+        "label": "名称",
+        "value": "立方体"
+      },
+      {
+        "label": "类型",
+        "value": "Cube"
+      },
+      {
+        "label": "实体编号",
+        "value": "实体编号(1)"
+      },
+      {
+        "label": "路径",
+        "value": "主世界/区域 0,-1,1/实体编号(1)"
+      },
+      {
+        "label": "区域",
+        "value": "区域 0,-1,1"
+      },
+      {
+        "label": "活动状态",
+        "value": "活跃"
+      },
+      {
+        "label": "全局位置",
+        "value": "X 3.5    Y -2.25    Z 7"
+      },
+      {
+        "label": "变换",
+        "value": ""
+      },
+      {
+        "label": "位置",
+        "value": "X 3.5    Y -2.25    Z 7"
+      },
+      {
+        "label": "旋转",
+        "value": "X 0°    Y 0°    Z 0°"
+      },
+      {
+        "label": "缩放",
+        "value": "X 1    Y 1    Z 1"
+      }
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 2,
+    "redoCount": 0,
+    "testEntityId": "EntityId(1)",
+    "stage": "2"
+  },
+  "entityMoved": {
+    "entityId": "EntityId(1)",
+    "type": "Cube",
+    "name": "立方体",
+    "transform": {
+      "position": {
+        "x": 3.5,
+        "y": -2.25,
+        "z": 7
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  },
+  "undoMove": {
+    "sceneId": "179308d9de3849f1880c2950770cc0db",
+    "sceneRevision": 3,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "renderEntityIds": [
+      "EntityId(1)"
+    ],
+    "inspectorFields": [
+      {
+        "label": "名称",
+        "value": "立方体"
+      },
+      {
+        "label": "类型",
+        "value": "Cube"
+      },
+      {
+        "label": "实体编号",
+        "value": "实体编号(1)"
+      },
+      {
+        "label": "路径",
+        "value": "主世界/区域 0,0,0/实体编号(1)"
+      },
+      {
+        "label": "区域",
+        "value": "区域 0,0,0"
+      },
+      {
+        "label": "活动状态",
+        "value": "活跃"
+      },
+      {
+        "label": "全局位置",
+        "value": "X 0    Y 0    Z 0"
+      },
+      {
+        "label": "变换",
+        "value": ""
+      },
+      {
+        "label": "位置",
+        "value": "X 0    Y 0    Z 0"
+      },
+      {
+        "label": "旋转",
+        "value": "X 0°    Y 0°    Z 0°"
+      },
+      {
+        "label": "缩放",
+        "value": "X 1    Y 1    Z 1"
+      }
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 1,
+    "redoCount": 1,
+    "testEntityId": "EntityId(1)",
+    "stage": "3"
+  },
+  "entityUndo": {
+    "entityId": "EntityId(1)",
+    "type": "Cube",
+    "name": "立方体",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  },
+  "redoMove": {
+    "sceneId": "179308d9de3849f1880c2950770cc0db",
+    "sceneRevision": 4,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "renderEntityIds": [
+      "EntityId(1)"
+    ],
+    "inspectorFields": [
+      {
+        "label": "名称",
+        "value": "立方体"
+      },
+      {
+        "label": "类型",
+        "value": "Cube"
+      },
+      {
+        "label": "实体编号",
+        "value": "实体编号(1)"
+      },
+      {
+        "label": "路径",
+        "value": "主世界/区域 0,-1,1/实体编号(1)"
+      },
+      {
+        "label": "区域",
+        "value": "区域 0,-1,1"
+      },
+      {
+        "label": "活动状态",
+        "value": "活跃"
+      },
+      {
+        "label": "全局位置",
+        "value": "X 3.5    Y -2.25    Z 7"
+      },
+      {
+        "label": "变换",
+        "value": ""
+      },
+      {
+        "label": "位置",
+        "value": "X 3.5    Y -2.25    Z 7"
+      },
+      {
+        "label": "旋转",
+        "value": "X 0°    Y 0°    Z 0°"
+      },
+      {
+        "label": "缩放",
+        "value": "X 1    Y 1    Z 1"
+      }
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 2,
+    "redoCount": 0,
+    "testEntityId": "EntityId(1)",
+    "stage": "4"
+  },
+  "entityRedo": {
+    "entityId": "EntityId(1)",
+    "type": "Cube",
+    "name": "立方体",
+    "transform": {
+      "position": {
+        "x": 3.5,
+        "y": -2.25,
+        "z": 7
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  },
+  "undoAgain": {
+    "sceneId": "179308d9de3849f1880c2950770cc0db",
+    "sceneRevision": 5,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "renderEntityIds": [
+      "EntityId(1)"
+    ],
+    "inspectorFields": [
+      {
+        "label": "名称",
+        "value": "立方体"
+      },
+      {
+        "label": "类型",
+        "value": "Cube"
+      },
+      {
+        "label": "实体编号",
+        "value": "实体编号(1)"
+      },
+      {
+        "label": "路径",
+        "value": "主世界/区域 0,0,0/实体编号(1)"
+      },
+      {
+        "label": "区域",
+        "value": "区域 0,0,0"
+      },
+      {
+        "label": "活动状态",
+        "value": "活跃"
+      },
+      {
+        "label": "全局位置",
+        "value": "X 0    Y 0    Z 0"
+      },
+      {
+        "label": "变换",
+        "value": ""
+      },
+      {
+        "label": "位置",
+        "value": "X 0    Y 0    Z 0"
+      },
+      {
+        "label": "旋转",
+        "value": "X 0°    Y 0°    Z 0°"
+      },
+      {
+        "label": "缩放",
+        "value": "X 1    Y 1    Z 1"
+      }
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 1,
+    "redoCount": 1,
+    "testEntityId": "EntityId(1)",
+    "stage": "5"
+  },
+  "undoCreate": {
+    "sceneId": "179308d9de3849f1880c2950770cc0db",
+    "sceneRevision": 6,
+    "entityCount": 0,
+    "entityIds": [],
+    "hierarchyEntityIds": [],
+    "renderEntityIds": [],
+    "inspectorFields": [],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 0,
+    "redoCount": 2,
+    "testEntityId": null,
+    "stage": "6"
+  },
+  "final": {
+    "sceneId": "179308d9de3849f1880c2950770cc0db",
+    "sceneRevision": 6,
+    "entityCount": 0,
+    "entityIds": [],
+    "hierarchyEntityIds": [],
+    "renderEntityIds": [],
+    "inspectorFields": [],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 0,
+    "redoCount": 2,
+    "testEntityId": null,
+    "stage": "6"
+  },
+  "captureBefore": {
+    "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-before.png",
+    "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-before.json",
+    "sha256": "640E2401B7BFAD5AB69B1AF206AFFFC4AD33BCF1E3FFBCDAE4321DDBB5985314",
+    "pixelWidth": 1330,
+    "pixelHeight": 98,
+    "region": {
+      "region": "TOP",
+      "x": 15,
+      "y": 8,
+      "widthDip": 1330,
+      "heightDip": 98,
+      "xpx": 23,
+      "ypx": 39,
+      "widthPx": 1330,
+      "heightPx": 98
+    },
+    "window": {
+      "processId": 10540,
+      "hwnd": "0x1490F8E",
+      "visible": true,
+      "foreground": false,
+      "windowState": "Normal",
+      "widthDip": 1360,
+      "heightDip": 820,
+      "clientWidthPx": 1360,
+      "clientHeightPx": 820,
+      "dpi": 96,
+      "dpiScale": 1
+    },
+    "theme": {
+      "requested": "Light",
+      "actual": "Light"
+    },
+    "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+    "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+    "captureTimeUtc": "2026-10-18T23:33:28.7939963+08:00",
+    "foregroundUnchanged": true,
+    "zOrderUnchanged": true,
+    "captureBackend": "avaloniaWindow",
+    "changesZOrder": false,
+    "takesForeground": false,
+    "requiresVisibleWindow": true,
+    "supportsOcclusion": true,
+    "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+  },
+  "captureCreated": {
+    "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-created.png",
+    "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-created.json",
+    "sha256": "B41AFF45447F510C2601D270F2C9A4C0D1B93F379805913B8123C9C2593AB593",
+    "pixelWidth": 1330,
+    "pixelHeight": 98,
+    "region": {
+      "region": "TOP",
+      "x": 15,
+      "y": 8,
+      "widthDip": 1330,
+      "heightDip": 98,
+      "xpx": 23,
+      "ypx": 39,
+      "widthPx": 1330,
+      "heightPx": 98
+    },
+    "window": {
+      "processId": 10540,
+      "hwnd": "0x1490F8E",
+      "visible": true,
+      "foreground": false,
+      "windowState": "Normal",
+      "widthDip": 1360,
+      "heightDip": 820,
+      "clientWidthPx": 1360,
+      "clientHeightPx": 820,
+      "dpi": 96,
+      "dpiScale": 1
+    },
+    "theme": {
+      "requested": "Light",
+      "actual": "Light"
+    },
+    "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+    "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+    "captureTimeUtc": "2026-10-18T23:33:29.2089145+08:00",
+    "foregroundUnchanged": true,
+    "zOrderUnchanged": true,
+    "captureBackend": "avaloniaWindow",
+    "changesZOrder": false,
+    "takesForeground": false,
+    "requiresVisibleWindow": true,
+    "supportsOcclusion": true,
+    "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+  },
+  "captureMoved": {
+    "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-moved.png",
+    "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-moved.json",
+    "sha256": "B41AFF45447F510C2601D270F2C9A4C0D1B93F379805913B8123C9C2593AB593",
+    "pixelWidth": 1330,
+    "pixelHeight": 98,
+    "region": {
+      "region": "TOP",
+      "x": 15,
+      "y": 8,
+      "widthDip": 1330,
+      "heightDip": 98,
+      "xpx": 23,
+      "ypx": 39,
+      "widthPx": 1330,
+      "heightPx": 98
+    },
+    "window": {
+      "processId": 10540,
+      "hwnd": "0x1490F8E",
+      "visible": true,
+      "foreground": false,
+      "windowState": "Normal",
+      "widthDip": 1360,
+      "heightDip": 820,
+      "clientWidthPx": 1360,
+      "clientHeightPx": 820,
+      "dpi": 96,
+      "dpiScale": 1
+    },
+    "theme": {
+      "requested": "Light",
+      "actual": "Light"
+    },
+    "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+    "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+    "captureTimeUtc": "2026-10-18T23:33:29.5428682+08:00",
+    "foregroundUnchanged": true,
+    "zOrderUnchanged": true,
+    "captureBackend": "avaloniaWindow",
+    "changesZOrder": false,
+    "takesForeground": false,
+    "requiresVisibleWindow": true,
+    "supportsOcclusion": true,
+    "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+  },
+  "captureRestored": {
+    "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-restored.png",
+    "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-restored.json",
+    "sha256": "640E2401B7BFAD5AB69B1AF206AFFFC4AD33BCF1E3FFBCDAE4321DDBB5985314",
+    "pixelWidth": 1330,
+    "pixelHeight": 98,
+    "region": {
+      "region": "TOP",
+      "x": 15,
+      "y": 8,
+      "widthDip": 1330,
+      "heightDip": 98,
+      "xpx": 23,
+      "ypx": 39,
+      "widthPx": 1330,
+      "heightPx": 98
+    },
+    "window": {
+      "processId": 10540,
+      "hwnd": "0x1490F8E",
+      "visible": true,
+      "foreground": false,
+      "windowState": "Normal",
+      "widthDip": 1360,
+      "heightDip": 820,
+      "clientWidthPx": 1360,
+      "clientHeightPx": 820,
+      "dpi": 96,
+      "dpiScale": 1
+    },
+    "theme": {
+      "requested": "Light",
+      "actual": "Light"
+    },
+    "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+    "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+    "captureTimeUtc": "2026-10-18T23:33:30.57269+08:00",
+    "foregroundUnchanged": true,
+    "zOrderUnchanged": true,
+    "captureBackend": "avaloniaWindow",
+    "changesZOrder": false,
+    "takesForeground": false,
+    "requiresVisibleWindow": true,
+    "supportsOcclusion": true,
+    "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+  },
+  "exitCode": 0,
+  "negative": [
+    {
+      "requestId": "d10e49df74a0436f807f2afd417fe173",
+      "success": false,
+      "errorCode": "UNAUTHORIZED",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 0.0109,
+      "evidencePath": null
+    },
+    {
+      "requestId": "0cec31249c604e809528fbe6b8757245",
+      "success": false,
+      "errorCode": "INVALID_ENTITY_ID",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 3.6188,
+      "evidencePath": null
+    },
+    {
+      "requestId": "a558f0b7a9d14cb387202d9b2e13a2f1",
+      "success": false,
+      "errorCode": "ENTITY_NOT_FOUND",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 0.8263,
+      "evidencePath": null
+    },
+    {
+      "requestId": "6a04dc4f05c943a0911f5898a60abb80",
+      "success": false,
+      "errorCode": "STALE_REVISION",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 2.3178,
+      "evidencePath": null
+    },
+    {
+      "requestId": "a0f2bbc58dd54d45826540d8233bbd99",
+      "success": false,
+      "errorCode": "INVALID_STAGE",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 0.9305,
+      "evidencePath": null
+    },
+    {
+      "requestId": "4f42b9e257d34e7bad8d3671a92a1b06",
+      "success": false,
+      "errorCode": "UNSAFE_SCENE",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 0.3557,
+      "evidencePath": null
+    },
+    {
+      "requestId": "5c2256de8765413c852abff7e814c66a",
+      "success": false,
+      "errorCode": "UNAUTHORIZED_ENTITY",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 2.9252,
+      "evidencePath": null
+    },
+    {
+      "requestId": "9805929a55c740f096d58879cb385794",
+      "success": false,
+      "errorCode": "INVALID_INPUT",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 0.4102,
+      "evidencePath": null
+    }
+  ],
+  "commands": [
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "runtime.info",
+        "args": {},
+        "schemaVersion": "XYC-API/1",
+        "requestId": "f1057a37212f4b34b1d3473b4fcd46cd"
+      },
+      "response": {
+        "requestId": "f1057a37212f4b34b1d3473b4fcd46cd",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "protocolVersion": "XYC-API/1",
+          "instanceId": "a109bda4fb444305a0bf2815e54aec2e",
+          "isolationMode": "windowed-editor-instance",
+          "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+          "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00",
+          "branch": "UNKNOWN",
+          "dirty": "UNKNOWN",
+          "processId": 10540,
+          "viewportFrameId": 0,
+          "silentHost": null
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 545.8663,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "ui.window.resize",
+        "args": {
+          "heightDip": 820,
+          "widthDip": 1360
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "c3d0fb5c43384597b341ab80f6536450"
+      },
+      "response": {
+        "requestId": "c3d0fb5c43384597b341ab80f6536450",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "processId": 10540,
+          "hwnd": "0x1490F8E",
+          "visible": true,
+          "foreground": false,
+          "windowState": "Normal",
+          "widthDip": 1360,
+          "heightDip": 820,
+          "clientWidthPx": 1360,
+          "clientHeightPx": 820,
+          "dpi": 96,
+          "dpiScale": 1
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 248.536,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "ui.theme.inspect",
+        "args": {},
+        "schemaVersion": "XYC-API/1",
+        "requestId": "1b6410e33b8748f5a2a28e8b9ae031ec"
+      },
+      "response": {
+        "requestId": "1b6410e33b8748f5a2a28e8b9ae031ec",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "requested": "Light",
+          "actual": "Light"
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 595.623,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "ui.theme.set",
+        "args": {
+          "theme": "Light"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "4e438cfce31544f880cfb0b6fbdbeadb"
+      },
+      "response": {
+        "requestId": "4e438cfce31544f880cfb0b6fbdbeadb",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "requested": "Light",
+          "actual": "Light"
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 4.1116,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "ui.capture",
+        "args": {
+          "fileName": "Light-1360-p2a-before.png",
+          "timeoutMs": 10000,
+          "backend": "avaloniaWindow"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "001201c789f7497daae0ba300e06c8b2"
+      },
+      "response": {
+        "requestId": "001201c789f7497daae0ba300e06c8b2",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-before.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-before.json",
+          "sha256": "640E2401B7BFAD5AB69B1AF206AFFFC4AD33BCF1E3FFBCDAE4321DDBB5985314",
+          "pixelWidth": 1330,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1330,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1330,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 10540,
+            "hwnd": "0x1490F8E",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1360,
+            "heightDip": 820,
+            "clientWidthPx": 1360,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Light",
+            "actual": "Light"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+          "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+          "captureTimeUtc": "2026-10-18T23:33:28.7939963+08:00",
+          "foregroundUnchanged": true,
+          "zOrderUnchanged": true,
+          "captureBackend": "avaloniaWindow",
+          "changesZOrder": false,
+          "takesForeground": false,
+          "requiresVisibleWindow": true,
+          "supportsOcclusion": true,
+          "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 146.0744,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.inspect",
+        "args": {},
+        "schemaVersion": "XYC-API/1",
+        "requestId": "5ba22b8a704d479f9205a236af14668f"
+      },
+      "response": {
+        "requestId": "5ba22b8a704d479f9205a236af14668f",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 0,
+          "terrainState": "未加载地形源。",
+          "entityCount": 0,
+          "terrainId": null,
+          "terrainRevision": null,
+          "scaleLabel": "0.5 m",
+          "viewportFrameId": 0,
+          "viewportWidth": 776,
+          "viewportHeight": 650,
+          "presentedFrameId": null,
+          "presentedCameraRevision": null,
+          "presentedImageIndex": null,
+          "presentedCaptureHeld": null,
+          "silentHost": null,
+          "terrainDiagnostics": null
+        },
+        "sceneRevision": 0,
+        "cameraRevision": null,
+        "durationMs": 3.1453,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.test.inspect",
+        "args": {},
+        "schemaVersion": "XYC-API/1",
+        "requestId": "a6742c03e3fb4ba9996f4cfcec288470"
+      },
+      "response": {
+        "requestId": "a6742c03e3fb4ba9996f4cfcec288470",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 0,
+          "entityCount": 0,
+          "entityIds": [],
+          "hierarchyEntityIds": [],
+          "renderEntityIds": [],
+          "inspectorFields": [],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 0,
+          "redoCount": 0,
+          "testEntityId": null,
+          "stage": "0"
+        },
+        "sceneRevision": 0,
+        "cameraRevision": null,
+        "durationMs": 4.0739,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "wrong-session",
+        "command": "runtime.info",
+        "args": {},
+        "schemaVersion": "XYC-API/1",
+        "requestId": "d10e49df74a0436f807f2afd417fe173"
+      },
+      "response": {
+        "requestId": "d10e49df74a0436f807f2afd417fe173",
+        "success": false,
+        "errorCode": "UNAUTHORIZED",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.0109,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.inspect",
+        "args": {
+          "entityId": "bad-id"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "0cec31249c604e809528fbe6b8757245"
+      },
+      "response": {
+        "requestId": "0cec31249c604e809528fbe6b8757245",
+        "success": false,
+        "errorCode": "INVALID_ENTITY_ID",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 3.6188,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.inspect",
+        "args": {
+          "entityId": "EntityId(999999)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "a558f0b7a9d14cb387202d9b2e13a2f1"
+      },
+      "response": {
+        "requestId": "a558f0b7a9d14cb387202d9b2e13a2f1",
+        "success": false,
+        "errorCode": "ENTITY_NOT_FOUND",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.8263,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.create-test-cube",
+        "args": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "expectedRevision": -1
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "6a04dc4f05c943a0911f5898a60abb80"
+      },
+      "response": {
+        "requestId": "6a04dc4f05c943a0911f5898a60abb80",
+        "success": false,
+        "errorCode": "STALE_REVISION",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 2.3178,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.history.undo",
+        "args": {
+          "expectedRevision": 0,
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "entityId": "EntityId(999999)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "a0f2bbc58dd54d45826540d8233bbd99"
+      },
+      "response": {
+        "requestId": "a0f2bbc58dd54d45826540d8233bbd99",
+        "success": false,
+        "errorCode": "INVALID_STAGE",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.9305,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "runtime.info",
+        "args": {},
+        "schemaVersion": "XYC-API/1",
+        "requestId": "b0739275c72545a3af136a65a6e393cf"
+      },
+      "response": {
+        "requestId": "b0739275c72545a3af136a65a6e393cf",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "protocolVersion": "XYC-API/1",
+          "instanceId": "a109bda4fb444305a0bf2815e54aec2e",
+          "isolationMode": "windowed-editor-instance",
+          "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+          "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00",
+          "branch": "UNKNOWN",
+          "dirty": "UNKNOWN",
+          "processId": 10540,
+          "viewportFrameId": 0,
+          "silentHost": null
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.3667,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.create-test-cube",
+        "args": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "expectedRevision": 0
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "4bcf1044277b4b64b3b0c2c8dcd0dd0c"
+      },
+      "response": {
+        "requestId": "4bcf1044277b4b64b3b0c2c8dcd0dd0c",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 1,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "renderEntityIds": [
+            "EntityId(1)"
+          ],
+          "inspectorFields": [
+            {
+              "label": "名称",
+              "value": "立方体"
+            },
+            {
+              "label": "类型",
+              "value": "Cube"
+            },
+            {
+              "label": "实体编号",
+              "value": "实体编号(1)"
+            },
+            {
+              "label": "路径",
+              "value": "主世界/区域 0,0,0/实体编号(1)"
+            },
+            {
+              "label": "区域",
+              "value": "区域 0,0,0"
+            },
+            {
+              "label": "活动状态",
+              "value": "活跃"
+            },
+            {
+              "label": "全局位置",
+              "value": "X 0    Y 0    Z 0"
+            },
+            {
+              "label": "变换",
+              "value": ""
+            },
+            {
+              "label": "位置",
+              "value": "X 0    Y 0    Z 0"
+            },
+            {
+              "label": "旋转",
+              "value": "X 0°    Y 0°    Z 0°"
+            },
+            {
+              "label": "缩放",
+              "value": "X 1    Y 1    Z 1"
+            }
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 1,
+          "redoCount": 0,
+          "testEntityId": "EntityId(1)",
+          "stage": "1"
+        },
+        "sceneRevision": 1,
+        "cameraRevision": null,
+        "durationMs": 160.9696,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "ui.capture",
+        "args": {
+          "fileName": "Light-1360-p2a-created.png",
+          "timeoutMs": 10000,
+          "backend": "avaloniaWindow"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "79f0f87f3f23411183d6c9e5969844b0"
+      },
+      "response": {
+        "requestId": "79f0f87f3f23411183d6c9e5969844b0",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-created.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-created.json",
+          "sha256": "B41AFF45447F510C2601D270F2C9A4C0D1B93F379805913B8123C9C2593AB593",
+          "pixelWidth": 1330,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1330,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1330,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 10540,
+            "hwnd": "0x1490F8E",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1360,
+            "heightDip": 820,
+            "clientWidthPx": 1360,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Light",
+            "actual": "Light"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+          "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+          "captureTimeUtc": "2026-10-18T23:33:29.2089145+08:00",
+          "foregroundUnchanged": true,
+          "zOrderUnchanged": true,
+          "captureBackend": "avaloniaWindow",
+          "changesZOrder": false,
+          "takesForeground": false,
+          "requiresVisibleWindow": true,
+          "supportsOcclusion": true,
+          "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 138.0228,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.create-test-cube",
+        "args": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "expectedRevision": 1
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "4f42b9e257d34e7bad8d3671a92a1b06"
+      },
+      "response": {
+        "requestId": "4f42b9e257d34e7bad8d3671a92a1b06",
+        "success": false,
+        "errorCode": "UNSAFE_SCENE",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.3557,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.set-test-position",
+        "args": {
+          "expectedRevision": 1,
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "entityId": "EntityId(999999)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "5c2256de8765413c852abff7e814c66a"
+      },
+      "response": {
+        "requestId": "5c2256de8765413c852abff7e814c66a",
+        "success": false,
+        "errorCode": "UNAUTHORIZED_ENTITY",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 2.9252,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.set-test-position",
+        "args": {
+          "expectedRevision": 1,
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "position": {
+            "x": 10001,
+            "y": 0,
+            "z": 0
+          },
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "9805929a55c740f096d58879cb385794"
+      },
+      "response": {
+        "requestId": "9805929a55c740f096d58879cb385794",
+        "success": false,
+        "errorCode": "INVALID_INPUT",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.4102,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.inspect",
+        "args": {
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "0e6fb0a561284b5b971d07b90c5de9b0"
+      },
+      "response": {
+        "requestId": "0e6fb0a561284b5b971d07b90c5de9b0",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "entityId": "EntityId(1)",
+          "type": "Cube",
+          "name": "立方体",
+          "transform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": {
+              "x": 1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        "sceneRevision": 1,
+        "cameraRevision": null,
+        "durationMs": 0.7617,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.set-test-position",
+        "args": {
+          "expectedRevision": 1,
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "position": {
+            "x": 3.5,
+            "y": -2.25,
+            "z": 7.0
+          },
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "73f240b7103a4ff6bf138175295280d2"
+      },
+      "response": {
+        "requestId": "73f240b7103a4ff6bf138175295280d2",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 2,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "renderEntityIds": [
+            "EntityId(1)"
+          ],
+          "inspectorFields": [
+            {
+              "label": "名称",
+              "value": "立方体"
+            },
+            {
+              "label": "类型",
+              "value": "Cube"
+            },
+            {
+              "label": "实体编号",
+              "value": "实体编号(1)"
+            },
+            {
+              "label": "路径",
+              "value": "主世界/区域 0,-1,1/实体编号(1)"
+            },
+            {
+              "label": "区域",
+              "value": "区域 0,-1,1"
+            },
+            {
+              "label": "活动状态",
+              "value": "活跃"
+            },
+            {
+              "label": "全局位置",
+              "value": "X 3.5    Y -2.25    Z 7"
+            },
+            {
+              "label": "变换",
+              "value": ""
+            },
+            {
+              "label": "位置",
+              "value": "X 3.5    Y -2.25    Z 7"
+            },
+            {
+              "label": "旋转",
+              "value": "X 0°    Y 0°    Z 0°"
+            },
+            {
+              "label": "缩放",
+              "value": "X 1    Y 1    Z 1"
+            }
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 2,
+          "redoCount": 0,
+          "testEntityId": "EntityId(1)",
+          "stage": "2"
+        },
+        "sceneRevision": 2,
+        "cameraRevision": null,
+        "durationMs": 192.5526,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "ui.capture",
+        "args": {
+          "fileName": "Light-1360-p2a-moved.png",
+          "timeoutMs": 10000,
+          "backend": "avaloniaWindow"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "b1dea52cf2bc49cd97d7685c39b69928"
+      },
+      "response": {
+        "requestId": "b1dea52cf2bc49cd97d7685c39b69928",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-moved.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-moved.json",
+          "sha256": "B41AFF45447F510C2601D270F2C9A4C0D1B93F379805913B8123C9C2593AB593",
+          "pixelWidth": 1330,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1330,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1330,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 10540,
+            "hwnd": "0x1490F8E",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1360,
+            "heightDip": 820,
+            "clientWidthPx": 1360,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Light",
+            "actual": "Light"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+          "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+          "captureTimeUtc": "2026-10-18T23:33:29.5428682+08:00",
+          "foregroundUnchanged": true,
+          "zOrderUnchanged": true,
+          "captureBackend": "avaloniaWindow",
+          "changesZOrder": false,
+          "takesForeground": false,
+          "requiresVisibleWindow": true,
+          "supportsOcclusion": true,
+          "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 112.0721,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.inspect",
+        "args": {
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "1516c827a59748b58638b665ae2efdd5"
+      },
+      "response": {
+        "requestId": "1516c827a59748b58638b665ae2efdd5",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "entityId": "EntityId(1)",
+          "type": "Cube",
+          "name": "立方体",
+          "transform": {
+            "position": {
+              "x": 3.5,
+              "y": -2.25,
+              "z": 7
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": {
+              "x": 1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        "sceneRevision": 2,
+        "cameraRevision": null,
+        "durationMs": 0.2697,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.history.undo",
+        "args": {
+          "expectedRevision": 2,
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "9f0b608f0e9c4fa4835954416dbffafd"
+      },
+      "response": {
+        "requestId": "9f0b608f0e9c4fa4835954416dbffafd",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 3,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "renderEntityIds": [
+            "EntityId(1)"
+          ],
+          "inspectorFields": [
+            {
+              "label": "名称",
+              "value": "立方体"
+            },
+            {
+              "label": "类型",
+              "value": "Cube"
+            },
+            {
+              "label": "实体编号",
+              "value": "实体编号(1)"
+            },
+            {
+              "label": "路径",
+              "value": "主世界/区域 0,0,0/实体编号(1)"
+            },
+            {
+              "label": "区域",
+              "value": "区域 0,0,0"
+            },
+            {
+              "label": "活动状态",
+              "value": "活跃"
+            },
+            {
+              "label": "全局位置",
+              "value": "X 0    Y 0    Z 0"
+            },
+            {
+              "label": "变换",
+              "value": ""
+            },
+            {
+              "label": "位置",
+              "value": "X 0    Y 0    Z 0"
+            },
+            {
+              "label": "旋转",
+              "value": "X 0°    Y 0°    Z 0°"
+            },
+            {
+              "label": "缩放",
+              "value": "X 1    Y 1    Z 1"
+            }
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 1,
+          "redoCount": 1,
+          "testEntityId": "EntityId(1)",
+          "stage": "3"
+        },
+        "sceneRevision": 3,
+        "cameraRevision": null,
+        "durationMs": 194.3022,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.inspect",
+        "args": {
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "31d5dd201a2c4590a10df9e1d5a6cf7f"
+      },
+      "response": {
+        "requestId": "31d5dd201a2c4590a10df9e1d5a6cf7f",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "entityId": "EntityId(1)",
+          "type": "Cube",
+          "name": "立方体",
+          "transform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": {
+              "x": 1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        "sceneRevision": 3,
+        "cameraRevision": null,
+        "durationMs": 64.1295,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.history.redo",
+        "args": {
+          "expectedRevision": 3,
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "450a8d5a27eb4b879588dfc48a808660"
+      },
+      "response": {
+        "requestId": "450a8d5a27eb4b879588dfc48a808660",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 4,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "renderEntityIds": [
+            "EntityId(1)"
+          ],
+          "inspectorFields": [
+            {
+              "label": "名称",
+              "value": "立方体"
+            },
+            {
+              "label": "类型",
+              "value": "Cube"
+            },
+            {
+              "label": "实体编号",
+              "value": "实体编号(1)"
+            },
+            {
+              "label": "路径",
+              "value": "主世界/区域 0,-1,1/实体编号(1)"
+            },
+            {
+              "label": "区域",
+              "value": "区域 0,-1,1"
+            },
+            {
+              "label": "活动状态",
+              "value": "活跃"
+            },
+            {
+              "label": "全局位置",
+              "value": "X 3.5    Y -2.25    Z 7"
+            },
+            {
+              "label": "变换",
+              "value": ""
+            },
+            {
+              "label": "位置",
+              "value": "X 3.5    Y -2.25    Z 7"
+            },
+            {
+              "label": "旋转",
+              "value": "X 0°    Y 0°    Z 0°"
+            },
+            {
+              "label": "缩放",
+              "value": "X 1    Y 1    Z 1"
+            }
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 2,
+          "redoCount": 0,
+          "testEntityId": "EntityId(1)",
+          "stage": "4"
+        },
+        "sceneRevision": 4,
+        "cameraRevision": null,
+        "durationMs": 300.7221,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.entity.inspect",
+        "args": {
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "04d3457734dc42fca416de130cef8ab6"
+      },
+      "response": {
+        "requestId": "04d3457734dc42fca416de130cef8ab6",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "entityId": "EntityId(1)",
+          "type": "Cube",
+          "name": "立方体",
+          "transform": {
+            "position": {
+              "x": 3.5,
+              "y": -2.25,
+              "z": 7
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": {
+              "x": 1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        "sceneRevision": 4,
+        "cameraRevision": null,
+        "durationMs": 42.9182,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.history.undo",
+        "args": {
+          "expectedRevision": 4,
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "4a226be0ba354ae1850636e90c1c105f"
+      },
+      "response": {
+        "requestId": "4a226be0ba354ae1850636e90c1c105f",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 5,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "renderEntityIds": [
+            "EntityId(1)"
+          ],
+          "inspectorFields": [
+            {
+              "label": "名称",
+              "value": "立方体"
+            },
+            {
+              "label": "类型",
+              "value": "Cube"
+            },
+            {
+              "label": "实体编号",
+              "value": "实体编号(1)"
+            },
+            {
+              "label": "路径",
+              "value": "主世界/区域 0,0,0/实体编号(1)"
+            },
+            {
+              "label": "区域",
+              "value": "区域 0,0,0"
+            },
+            {
+              "label": "活动状态",
+              "value": "活跃"
+            },
+            {
+              "label": "全局位置",
+              "value": "X 0    Y 0    Z 0"
+            },
+            {
+              "label": "变换",
+              "value": ""
+            },
+            {
+              "label": "位置",
+              "value": "X 0    Y 0    Z 0"
+            },
+            {
+              "label": "旋转",
+              "value": "X 0°    Y 0°    Z 0°"
+            },
+            {
+              "label": "缩放",
+              "value": "X 1    Y 1    Z 1"
+            }
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 1,
+          "redoCount": 1,
+          "testEntityId": "EntityId(1)",
+          "stage": "5"
+        },
+        "sceneRevision": 5,
+        "cameraRevision": null,
+        "durationMs": 204.2691,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.history.undo",
+        "args": {
+          "expectedRevision": 5,
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "entityId": "EntityId(1)"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "44c71e72cf634cb6a022de26a20e1820"
+      },
+      "response": {
+        "requestId": "44c71e72cf634cb6a022de26a20e1820",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 6,
+          "entityCount": 0,
+          "entityIds": [],
+          "hierarchyEntityIds": [],
+          "renderEntityIds": [],
+          "inspectorFields": [],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 0,
+          "redoCount": 2,
+          "testEntityId": null,
+          "stage": "6"
+        },
+        "sceneRevision": 6,
+        "cameraRevision": null,
+        "durationMs": 97.0468,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "scene.test.inspect",
+        "args": {},
+        "schemaVersion": "XYC-API/1",
+        "requestId": "28815f36bd0648c1a086100b7fb87a49"
+      },
+      "response": {
+        "requestId": "28815f36bd0648c1a086100b7fb87a49",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "179308d9de3849f1880c2950770cc0db",
+          "sceneRevision": 6,
+          "entityCount": 0,
+          "entityIds": [],
+          "hierarchyEntityIds": [],
+          "renderEntityIds": [],
+          "inspectorFields": [],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 0,
+          "redoCount": 2,
+          "testEntityId": null,
+          "stage": "6"
+        },
+        "sceneRevision": 6,
+        "cameraRevision": null,
+        "durationMs": 30.5891,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "ui.capture",
+        "args": {
+          "fileName": "Light-1360-p2a-restored.png",
+          "timeoutMs": 10000,
+          "backend": "avaloniaWindow"
+        },
+        "schemaVersion": "XYC-API/1",
+        "requestId": "b5704f089eae4129adef2365d1b78d38"
+      },
+      "response": {
+        "requestId": "b5704f089eae4129adef2365d1b78d38",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "imagePath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-restored.png",
+          "metadataPath": "E:\\MyDoc\\project-VSCode\\XuanYuEngine\\docs\\qa\\XYC-P2-A-R1\\evidence\\candidate-runtime-r2\\scene-session\\Light-1360-p2a-restored.json",
+          "sha256": "640E2401B7BFAD5AB69B1AF206AFFFC4AD33BCF1E3FFBCDAE4321DDBB5985314",
+          "pixelWidth": 1330,
+          "pixelHeight": 98,
+          "region": {
+            "region": "TOP",
+            "x": 15,
+            "y": 8,
+            "widthDip": 1330,
+            "heightDip": 98,
+            "xpx": 23,
+            "ypx": 39,
+            "widthPx": 1330,
+            "heightPx": 98
+          },
+          "window": {
+            "processId": 10540,
+            "hwnd": "0x1490F8E",
+            "visible": true,
+            "foreground": false,
+            "windowState": "Normal",
+            "widthDip": 1360,
+            "heightDip": 820,
+            "clientWidthPx": 1360,
+            "clientHeightPx": 820,
+            "dpi": 96,
+            "dpiScale": 1
+          },
+          "theme": {
+            "requested": "Light",
+            "actual": "Light"
+          },
+          "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=CC291CF8A4CEB6670ADC406B5BDE0388C411A422078066172E5006619339AF1A",
+          "captureMethod": "Avalonia.RenderTargetBitmap;software-render;source=production-Window;crop=TOP;z-order-unchanged",
+          "captureTimeUtc": "2026-10-18T23:33:30.57269+08:00",
+          "foregroundUnchanged": true,
+          "zOrderUnchanged": true,
+          "captureBackend": "avaloniaWindow",
+          "changesZOrder": false,
+          "takesForeground": false,
+          "requiresVisibleWindow": true,
+          "supportsOcclusion": true,
+          "fidelityValidation": "EXTERNAL_COMPARISON_REQUIRED"
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 72.9925,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "a109bda4fb444305a0bf2815e54aec2e",
+        "command": "session.close",
+        "args": {},
+        "schemaVersion": "XYC-API/1",
+        "requestId": "d028f6d48df043798d1658a0014bfa53"
+      },
+      "response": {
+        "requestId": "d028f6d48df043798d1658a0014bfa53",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "closed": true
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.0877,
+        "evidencePath": null
+      }
+    }
+  ]
+}

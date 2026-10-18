@@ -1,0 +1,19 @@
+{
+  "request": {
+    "sessionId": "d1cdb42e198f464897773fce5a065b79",
+    "args": {},
+    "command": "runtime.info",
+    "requestId": "",
+    "schemaVersion": "XYC-API/1"
+  },
+  "response": {
+    "requestId": "",
+    "success": false,
+    "errorCode": "INVALID_INPUT",
+    "observedState": null,
+    "sceneRevision": null,
+    "cameraRevision": null,
+    "durationMs": 0.135,
+    "evidencePath": null
+  }
+}

@@ -2,7 +2,7 @@ using XuanYu.Editor.UI.XycControl;
 
 namespace XuanYu.World.Tests.Xyc;
 
-sealed class FakeRuntime : IXycRuntime
+class FakeRuntime : IXycRuntime
 {
     XycCamera _camera = new(new(0, 0, 10), new(0, 0, -1), new(0, 1, 0),
         75, 0.05, 1000, "Perspective", 0, new(0, 0, 0), 1);

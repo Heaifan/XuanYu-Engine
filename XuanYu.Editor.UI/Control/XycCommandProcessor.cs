@@ -9,7 +9,6 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
 {
     static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     readonly HashSet<string> _requestIds = new(StringComparer.Ordinal);
-
     public XycResponse Execute(XycRequest request) =>
         ExecuteAsync(request, CancellationToken.None).GetAwaiter().GetResult();
 
@@ -29,6 +28,9 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
             if (request.Command.StartsWith("ui.", StringComparison.Ordinal))
                 return await XycUiCommandProcessor.ExecuteAsync(request, uiRuntime,
                     Result, cancellationToken);
+            if (XycSceneCommandProcessor.CanHandle(request.Command))
+                return XycSceneCommandProcessor.Execute(request, runtime,
+                    diagnosticWrite, Result);
             return request.Command switch
             {
                 "runtime.info" => Result(true, null, runtime.InspectRuntime()),
@@ -95,5 +97,4 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
         }
         XycResponse Dolly() => XycDollyCommand.Execute(request, runtime, diagnosticWrite, Result);
     }
-
 }

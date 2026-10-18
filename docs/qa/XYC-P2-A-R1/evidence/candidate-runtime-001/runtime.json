@@ -1,0 +1,1108 @@
+{
+  "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+  "pid": 36928,
+  "sourceHead": "d0335c52b0c9938277f571cc58d11c4d038f3b43",
+  "sourceDirty": true,
+  "buildFiles": [
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.App.exe",
+      "sha256": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.App.dll",
+      "sha256": "B2D5011424898D285F3C09EFB57CB7AB91DE43E8A96C442C3DF39AFE15F5F946"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.UI.dll",
+      "sha256": "A8ACD41EE618FFE4415A90AC7B92041A9584B67940FB46CC34C27D85386A59F0"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.Control.Cli\\bin\\Release\\net10.0\\XuanYu.Editor.Control.Cli.dll",
+      "sha256": "9ABA7A8B3D6F5D80F45775EF0D703F8A8C7A27936C6D7F5C76D2DA5CBE9707C5"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "XuanYu.Editor.UI/Control/XycSceneContracts.cs",
+      "sha256": "F9AB893CD10AB7030BDF0AF8248117B6C4154C757E2D287D71094B60A17C0197"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Control/XycSceneCommandProcessor.cs",
+      "sha256": "077321E8D41E7850AA54A91CA888C2C64E3E05E307321E7046E8070F8F2BE2C9"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Vm/Control/UiVm.XycScene.cs",
+      "sha256": "DDC7AB7A46B7B33E04DAC6B3B37BDEF3B86063EE8F9676D48EE03DE214CF7120"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Vm/Control/UiVm.XycScene.Guards.cs",
+      "sha256": "4A834D6A9B6F14D65056B43863FC6B2EB56A42E32318FB918B1CF04201CA972C"
+    },
+    {
+      "path": "XuanYu.World.Tests/Control/XycSceneCommandTests.cs",
+      "sha256": "3304BEC32860F9DA770C37E6626971D8AC297A6910232A95230FF821CBC2C8F8"
+    }
+  ],
+  "baseline": {
+    "sceneId": "1f78909c74354966a4b5254414e374ab",
+    "sceneRevision": 0,
+    "entityCount": 0,
+    "entityIds": [],
+    "hierarchyEntityIds": [],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 0,
+    "redoCount": 0,
+    "testEntityId": null,
+    "stage": "0"
+  },
+  "created": {
+    "sceneId": "1f78909c74354966a4b5254414e374ab",
+    "sceneRevision": 1,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 1,
+    "redoCount": 0,
+    "testEntityId": "EntityId(1)",
+    "stage": "1"
+  },
+  "entityBefore": {
+    "entityId": "EntityId(1)",
+    "type": "Cube",
+    "name": "立方体",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  },
+  "moved": {
+    "sceneId": "1f78909c74354966a4b5254414e374ab",
+    "sceneRevision": 2,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 2,
+    "redoCount": 0,
+    "testEntityId": "EntityId(1)",
+    "stage": "2"
+  },
+  "entityMoved": {
+    "entityId": "EntityId(1)",
+    "type": "Cube",
+    "name": "立方体",
+    "transform": {
+      "position": {
+        "x": 3.5,
+        "y": -2.25,
+        "z": 7
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  },
+  "undoMove": {
+    "sceneId": "1f78909c74354966a4b5254414e374ab",
+    "sceneRevision": 3,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 1,
+    "redoCount": 1,
+    "testEntityId": "EntityId(1)",
+    "stage": "3"
+  },
+  "entityUndo": {
+    "entityId": "EntityId(1)",
+    "type": "Cube",
+    "name": "立方体",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  },
+  "redoMove": {
+    "sceneId": "1f78909c74354966a4b5254414e374ab",
+    "sceneRevision": 4,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 2,
+    "redoCount": 0,
+    "testEntityId": "EntityId(1)",
+    "stage": "4"
+  },
+  "entityRedo": {
+    "entityId": "EntityId(1)",
+    "type": "Cube",
+    "name": "立方体",
+    "transform": {
+      "position": {
+        "x": 3.5,
+        "y": -2.25,
+        "z": 7
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    }
+  },
+  "undoAgain": {
+    "sceneId": "1f78909c74354966a4b5254414e374ab",
+    "sceneRevision": 5,
+    "entityCount": 1,
+    "entityIds": [
+      "EntityId(1)"
+    ],
+    "hierarchyEntityIds": [
+      "EntityId(1)"
+    ],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 1,
+    "redoCount": 1,
+    "testEntityId": "EntityId(1)",
+    "stage": "5"
+  },
+  "undoCreate": {
+    "sceneId": "1f78909c74354966a4b5254414e374ab",
+    "sceneRevision": 6,
+    "entityCount": 0,
+    "entityIds": [],
+    "hierarchyEntityIds": [],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 0,
+    "redoCount": 2,
+    "testEntityId": null,
+    "stage": "6"
+  },
+  "final": {
+    "sceneId": "1f78909c74354966a4b5254414e374ab",
+    "sceneRevision": 6,
+    "entityCount": 0,
+    "entityIds": [],
+    "hierarchyEntityIds": [],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 0,
+    "redoCount": 2,
+    "testEntityId": null,
+    "stage": "6"
+  },
+  "exitCode": 0,
+  "negative": [
+    {
+      "requestId": "2084e0af5e55453d9ff8781b6f5dcc1d",
+      "success": false,
+      "errorCode": "UNAUTHORIZED",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 0.0432,
+      "evidencePath": null
+    },
+    {
+      "requestId": "5f0529088d81417f85cca5ec5a6ddb7d",
+      "success": false,
+      "errorCode": "INVALID_ENTITY_ID",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 6.3386,
+      "evidencePath": null
+    },
+    {
+      "requestId": "2559ecf2d65f4d1b9455794980e80109",
+      "success": false,
+      "errorCode": "ENTITY_NOT_FOUND",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 1.4217,
+      "evidencePath": null
+    },
+    {
+      "requestId": "20ed2d3e6c924f1cbff89de394679447",
+      "success": false,
+      "errorCode": "STALE_REVISION",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 6.38,
+      "evidencePath": null
+    },
+    {
+      "requestId": "bca5c6147d7d4642a1798f11504682dc",
+      "success": false,
+      "errorCode": "INVALID_STAGE",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 1.7055,
+      "evidencePath": null
+    },
+    {
+      "requestId": "2e995e7c8e6246beb6360ba8aa4d85c1",
+      "success": false,
+      "errorCode": "UNSAFE_SCENE",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 97.0781,
+      "evidencePath": null
+    },
+    {
+      "requestId": "1d0ba999fe8c489a8655618dad19bba1",
+      "success": false,
+      "errorCode": "UNAUTHORIZED_ENTITY",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 1.9132,
+      "evidencePath": null
+    },
+    {
+      "requestId": "89faf34400984dae8517131fee1ca062",
+      "success": false,
+      "errorCode": "INVALID_INPUT",
+      "observedState": null,
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 0.4694,
+      "evidencePath": null
+    }
+  ],
+  "commands": [
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {},
+        "requestId": "8be1b4b07f2f41dab6b022ce12a427b5",
+        "command": "runtime.info",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "8be1b4b07f2f41dab6b022ce12a427b5",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "protocolVersion": "XYC-API/1",
+          "instanceId": "d614b6aff7a54289a8475b132fef6e1b",
+          "isolationMode": "windowed-editor-instance",
+          "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+          "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00",
+          "branch": "UNKNOWN",
+          "dirty": "UNKNOWN",
+          "processId": 39044,
+          "viewportFrameId": 0,
+          "silentHost": null
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 486.9603,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {},
+        "requestId": "d78bfeff03ef460594310f0b85f29445",
+        "command": "scene.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "d78bfeff03ef460594310f0b85f29445",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 0,
+          "terrainState": "未加载地形源。",
+          "entityCount": 0,
+          "terrainId": null,
+          "terrainRevision": null,
+          "scaleLabel": "0.5 m",
+          "viewportFrameId": 0,
+          "viewportWidth": 776,
+          "viewportHeight": 650,
+          "presentedFrameId": null,
+          "presentedCameraRevision": null,
+          "presentedImageIndex": null,
+          "presentedCaptureHeld": null,
+          "silentHost": null,
+          "terrainDiagnostics": null
+        },
+        "sceneRevision": 0,
+        "cameraRevision": null,
+        "durationMs": 252.0232,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {},
+        "requestId": "84e04400d7fb4d01803b804fe0ae1b19",
+        "command": "scene.test.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "84e04400d7fb4d01803b804fe0ae1b19",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 0,
+          "entityCount": 0,
+          "entityIds": [],
+          "hierarchyEntityIds": [],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 0,
+          "redoCount": 0,
+          "testEntityId": null,
+          "stage": "0"
+        },
+        "sceneRevision": 0,
+        "cameraRevision": null,
+        "durationMs": 532.4125,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "wrong-session",
+        "args": {},
+        "requestId": "2084e0af5e55453d9ff8781b6f5dcc1d",
+        "command": "runtime.info",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "2084e0af5e55453d9ff8781b6f5dcc1d",
+        "success": false,
+        "errorCode": "UNAUTHORIZED",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.0432,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "entityId": "bad-id"
+        },
+        "requestId": "5f0529088d81417f85cca5ec5a6ddb7d",
+        "command": "scene.entity.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "5f0529088d81417f85cca5ec5a6ddb7d",
+        "success": false,
+        "errorCode": "INVALID_ENTITY_ID",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 6.3386,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "entityId": "EntityId(999999)"
+        },
+        "requestId": "2559ecf2d65f4d1b9455794980e80109",
+        "command": "scene.entity.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "2559ecf2d65f4d1b9455794980e80109",
+        "success": false,
+        "errorCode": "ENTITY_NOT_FOUND",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 1.4217,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "expectedRevision": -1
+        },
+        "requestId": "20ed2d3e6c924f1cbff89de394679447",
+        "command": "scene.entity.create-test-cube",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "20ed2d3e6c924f1cbff89de394679447",
+        "success": false,
+        "errorCode": "STALE_REVISION",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 6.38,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "expectedRevision": 0,
+          "entityId": "EntityId(999999)",
+          "sceneId": "1f78909c74354966a4b5254414e374ab"
+        },
+        "requestId": "bca5c6147d7d4642a1798f11504682dc",
+        "command": "scene.history.undo",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "bca5c6147d7d4642a1798f11504682dc",
+        "success": false,
+        "errorCode": "INVALID_STAGE",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 1.7055,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {},
+        "requestId": "ee39871571984230b08f4127d24ce6d9",
+        "command": "runtime.info",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "ee39871571984230b08f4127d24ce6d9",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "protocolVersion": "XYC-API/1",
+          "instanceId": "d614b6aff7a54289a8475b132fef6e1b",
+          "isolationMode": "windowed-editor-instance",
+          "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+          "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00",
+          "branch": "UNKNOWN",
+          "dirty": "UNKNOWN",
+          "processId": 39044,
+          "viewportFrameId": 0,
+          "silentHost": null
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 1.0109,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "expectedRevision": 0
+        },
+        "requestId": "33955cb290c1443c88d897394693e91b",
+        "command": "scene.entity.create-test-cube",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "33955cb290c1443c88d897394693e91b",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 1,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 1,
+          "redoCount": 0,
+          "testEntityId": "EntityId(1)",
+          "stage": "1"
+        },
+        "sceneRevision": 1,
+        "cameraRevision": null,
+        "durationMs": 137.1465,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "expectedRevision": 1
+        },
+        "requestId": "2e995e7c8e6246beb6360ba8aa4d85c1",
+        "command": "scene.entity.create-test-cube",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "2e995e7c8e6246beb6360ba8aa4d85c1",
+        "success": false,
+        "errorCode": "UNSAFE_SCENE",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 97.0781,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "position": {
+            "x": 0,
+            "z": 0,
+            "y": 0
+          },
+          "expectedRevision": 1,
+          "entityId": "EntityId(999999)",
+          "sceneId": "1f78909c74354966a4b5254414e374ab"
+        },
+        "requestId": "1d0ba999fe8c489a8655618dad19bba1",
+        "command": "scene.entity.set-test-position",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "1d0ba999fe8c489a8655618dad19bba1",
+        "success": false,
+        "errorCode": "UNAUTHORIZED_ENTITY",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 1.9132,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "position": {
+            "x": 10001,
+            "z": 0,
+            "y": 0
+          },
+          "expectedRevision": 1,
+          "entityId": "EntityId(1)",
+          "sceneId": "1f78909c74354966a4b5254414e374ab"
+        },
+        "requestId": "89faf34400984dae8517131fee1ca062",
+        "command": "scene.entity.set-test-position",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "89faf34400984dae8517131fee1ca062",
+        "success": false,
+        "errorCode": "INVALID_INPUT",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.4694,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "entityId": "EntityId(1)"
+        },
+        "requestId": "922b272add9149959e6fa6b4d9662e24",
+        "command": "scene.entity.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "922b272add9149959e6fa6b4d9662e24",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "entityId": "EntityId(1)",
+          "type": "Cube",
+          "name": "立方体",
+          "transform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": {
+              "x": 1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        "sceneRevision": 1,
+        "cameraRevision": null,
+        "durationMs": 0.8939,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "position": {
+            "x": 3.5,
+            "z": 7.0,
+            "y": -2.25
+          },
+          "expectedRevision": 1,
+          "entityId": "EntityId(1)",
+          "sceneId": "1f78909c74354966a4b5254414e374ab"
+        },
+        "requestId": "09bbeedd832148fb8d37ce044b422811",
+        "command": "scene.entity.set-test-position",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "09bbeedd832148fb8d37ce044b422811",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 2,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 2,
+          "redoCount": 0,
+          "testEntityId": "EntityId(1)",
+          "stage": "2"
+        },
+        "sceneRevision": 2,
+        "cameraRevision": null,
+        "durationMs": 172.0033,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "entityId": "EntityId(1)"
+        },
+        "requestId": "58d5d03fc4ce4d5fad8451efcc9cff80",
+        "command": "scene.entity.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "58d5d03fc4ce4d5fad8451efcc9cff80",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "entityId": "EntityId(1)",
+          "type": "Cube",
+          "name": "立方体",
+          "transform": {
+            "position": {
+              "x": 3.5,
+              "y": -2.25,
+              "z": 7
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": {
+              "x": 1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        "sceneRevision": 2,
+        "cameraRevision": null,
+        "durationMs": 47.0753,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "expectedRevision": 2,
+          "entityId": "EntityId(1)",
+          "sceneId": "1f78909c74354966a4b5254414e374ab"
+        },
+        "requestId": "d6b51bdf860a4a60880acfee2b9ebc96",
+        "command": "scene.history.undo",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "d6b51bdf860a4a60880acfee2b9ebc96",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 3,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 1,
+          "redoCount": 1,
+          "testEntityId": "EntityId(1)",
+          "stage": "3"
+        },
+        "sceneRevision": 3,
+        "cameraRevision": null,
+        "durationMs": 145.5902,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "entityId": "EntityId(1)"
+        },
+        "requestId": "4fcf11f10e5043e680e21db26d7b9dcc",
+        "command": "scene.entity.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "4fcf11f10e5043e680e21db26d7b9dcc",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "entityId": "EntityId(1)",
+          "type": "Cube",
+          "name": "立方体",
+          "transform": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": {
+              "x": 1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        "sceneRevision": 3,
+        "cameraRevision": null,
+        "durationMs": 39.9427,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "expectedRevision": 3,
+          "entityId": "EntityId(1)",
+          "sceneId": "1f78909c74354966a4b5254414e374ab"
+        },
+        "requestId": "315b612a9c214162858f2388b80ac76b",
+        "command": "scene.history.redo",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "315b612a9c214162858f2388b80ac76b",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 4,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 2,
+          "redoCount": 0,
+          "testEntityId": "EntityId(1)",
+          "stage": "4"
+        },
+        "sceneRevision": 4,
+        "cameraRevision": null,
+        "durationMs": 128.4789,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "entityId": "EntityId(1)"
+        },
+        "requestId": "d00fea0fbef3482b81e0a4b1dc277f2e",
+        "command": "scene.entity.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "d00fea0fbef3482b81e0a4b1dc277f2e",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "entityId": "EntityId(1)",
+          "type": "Cube",
+          "name": "立方体",
+          "transform": {
+            "position": {
+              "x": 3.5,
+              "y": -2.25,
+              "z": 7
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "scale": {
+              "x": 1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        "sceneRevision": 4,
+        "cameraRevision": null,
+        "durationMs": 42.5325,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "expectedRevision": 4,
+          "entityId": "EntityId(1)",
+          "sceneId": "1f78909c74354966a4b5254414e374ab"
+        },
+        "requestId": "514b7543d9274a8593220587c72364a5",
+        "command": "scene.history.undo",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "514b7543d9274a8593220587c72364a5",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 5,
+          "entityCount": 1,
+          "entityIds": [
+            "EntityId(1)"
+          ],
+          "hierarchyEntityIds": [
+            "EntityId(1)"
+          ],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 1,
+          "redoCount": 1,
+          "testEntityId": "EntityId(1)",
+          "stage": "5"
+        },
+        "sceneRevision": 5,
+        "cameraRevision": null,
+        "durationMs": 142.6582,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {
+          "expectedRevision": 5,
+          "entityId": "EntityId(1)",
+          "sceneId": "1f78909c74354966a4b5254414e374ab"
+        },
+        "requestId": "e4eea5ad91e44fbf9e811bb2b4a3f104",
+        "command": "scene.history.undo",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "e4eea5ad91e44fbf9e811bb2b4a3f104",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 6,
+          "entityCount": 0,
+          "entityIds": [],
+          "hierarchyEntityIds": [],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 0,
+          "redoCount": 2,
+          "testEntityId": null,
+          "stage": "6"
+        },
+        "sceneRevision": 6,
+        "cameraRevision": null,
+        "durationMs": 58.8512,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {},
+        "requestId": "f35ed59afb0f4cbcbb59f5be8f927fed",
+        "command": "scene.test.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "f35ed59afb0f4cbcbb59f5be8f927fed",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "1f78909c74354966a4b5254414e374ab",
+          "sceneRevision": 6,
+          "entityCount": 0,
+          "entityIds": [],
+          "hierarchyEntityIds": [],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 0,
+          "redoCount": 2,
+          "testEntityId": null,
+          "stage": "6"
+        },
+        "sceneRevision": 6,
+        "cameraRevision": null,
+        "durationMs": 18.3118,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "sessionId": "d614b6aff7a54289a8475b132fef6e1b",
+        "args": {},
+        "requestId": "7693ecbdc2cb4d68a36f585408d7db40",
+        "command": "session.close",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "7693ecbdc2cb4d68a36f585408d7db40",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "closed": true
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.155,
+        "evidencePath": null
+      }
+    }
+  ]
+}

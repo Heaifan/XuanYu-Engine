@@ -1,0 +1,16 @@
+  正在确定要还原的项目…
+  所有项目均是最新的，无法还原。
+  XuanYu.Core -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.Core\bin\Release\net10.0\XuanYu.Core.dll
+  XYUI.Avalonia -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\xyui\avalonia\src\XYUI.Avalonia\bin\Release\net10.0\XYUI.Avalonia.dll
+  XuanYu.World -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.World\bin\Release\net10.0\XuanYu.World.dll
+  XuanYu.Render.Abstractions -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.Render.Abstractions\bin\Release\net10.0\XuanYu.Render.Abstractions.dll
+  XuanYu.Editor -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.Editor\bin\Release\net10.0\XuanYu.Editor.dll
+  XuanYu.Render.Vulkan -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.Render.Vulkan\bin\Release\net10.0\XuanYu.Render.Vulkan.dll
+  XuanYu.Editor.UI -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.Editor.UI\bin\Release\net10.0\XuanYu.Editor.UI.dll
+  XuanYu.Editor.Control.Cli -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.Editor.Control.Cli\bin\Release\net10.0\XuanYu.Editor.Control.Cli.dll
+  XuanYu.Editor.App -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.Editor.App\bin\Release\net10.0\XuanYu.Editor.App.dll
+  XuanYu.World.Tests -> C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.World.Tests\bin\Release\net10.0\XuanYu.World.Tests.dll
+C:\Users\Heai\AppData\Local\Temp\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\source\XuanYu.World.Tests\bin\Release\net10.0\XuanYu.World.Tests.dll (.NETCoreApp,Version=v10.0)的测试运行
+总共 1 个测试文件与指定模式相匹配。
+
+已通过! - 失败:     0，通过:    46，已跳过:     0，总计:    46，持续时间: 5 s - XuanYu.World.Tests.dll (net10.0)

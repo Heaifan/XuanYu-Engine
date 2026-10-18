@@ -1,0 +1,191 @@
+ M XuanYu.Core/Diagnostics/ViewportPresentedFrame.cs
+ M XuanYu.Core/Diagnostics/ViewportProbe.Present.cs
+ M XuanYu.Editor.UI/Control/Silent/SilentCaptureEvidence.cs
+ M XuanYu.Editor.UI/Diagnostic/TerrainCameraReplayRunner.cs
+ M XuanYu.Editor.UI/Root/UiRoot.axaml
+ M XuanYu.Editor.UI/Top/ContextToolBar.axaml
+ M XuanYu.Editor.UI/Top/Top.axaml
+ M XuanYu.Editor.UI/Top/Top.axaml.cs
+ M XuanYu.Editor.UI/Top/ViewModule.axaml
+ M XuanYu.Editor.UI/Ui.axaml
+ M XuanYu.Editor.UI/Vm/Map/UiVm.MapManifest.cs
+ M XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Input.cs
+ M XuanYu.Editor.UI/Vm/Scene/UiVm.RenderProjection.cs
+ M XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentMapRef.cs
+ M XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentSave.cs
+ M XuanYu.Editor.UI/Vm/Workspace/TerrainRenderContentFingerprint.cs
+ M XuanYu.Editor.UI/Vm/Workspace/TerrainRenderGroundSurface.cs
+ M XuanYu.Editor.UI/Vm/Workspace/TerrainRenderProjectionAdapter.cs
+ M XuanYu.Editor.UI/Vm/Workspace/TerrainWorldPlacement.cs
+ M XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainRenderCache.cs
+ M XuanYu.Editor.UI/Vm/Workspace/UiVm.Workspace.cs
+ M XuanYu.Editor.UI/Win/UiWin.axaml
+ M XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml
+ M XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml.cs
+ M XuanYu.Editor.UI/XuanYu.Editor.UI.csproj
+ M XuanYu.Editor/MapDocument/MapDatasetFeatureBinding.cs
+ M XuanYu.Editor/MapDocument/MapDatasetRegistry.FeatureQuery.cs
+ M XuanYu.Editor/MapDocument/MapManifest.cs
+ M XuanYu.Editor/MapDocument/MapManifestJson.cs
+ M XuanYu.Editor/MapDocument/MapManifestMapper.cs
+ M XuanYu.Editor/MapDocument/MapManifestSerializer.cs
+ M XuanYu.Editor/MapDocument/MapManifestValidator.cs
+ M XuanYu.Editor/SceneDocument/MapReference.cs
+ M XuanYu.Editor/SceneDocument/SceneDocumentJson.cs
+ M XuanYu.Editor/SceneDocument/SceneDocumentMapper.cs
+ M XuanYu.Editor/SceneDocument/SceneDocumentValidator.MapReference.cs
+ M XuanYu.Editor/SceneDocument/SceneDocumentValidator.cs
+ M XuanYu.Render.Abstractions/Terrain/Build/TerrainChunkMeshBuilder.cs
+ M XuanYu.Render.Abstractions/Terrain/Build/TerrainChunkPartitioner.cs
+ M XuanYu.Render.Abstractions/TerrainChunkDescriptor.cs
+ M XuanYu.Render.Abstractions/TerrainChunkGpuKey.cs
+ M XuanYu.Render.Abstractions/TerrainRenderResource.cs
+ M XuanYu.Render.Abstractions/TerrainRenderStats.cs
+ M XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.cs
+ M XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.TerrainFrag.cs
+ M XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Commands.cs
+ M XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.cs
+ M XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.TerrainProbe.cs
+ M XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.cs
+ M XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Draw.cs
+ M XuanYu.Render.Vulkan/Render/Terrain/VulkanClearFrameOwner.Terrain.cs
+ M XuanYu.Render.Vulkan/Render/Terrain/VulkanTerrainGpuCache.cs
+ M XuanYu.Render.Vulkan/Render/Terrain/VulkanTerrainGpuResource.cs
+ M XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs
+ M XuanYu.Render.Vulkan/Shaders/terrain.frag
+ M XuanYu.World.Tests/Assets/SaveTransactionTests.cs
+ M XuanYu.World.Tests/Map/Editing/UiMapDatasetF1Tests.cs
+ M XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionToolActivationTests.cs
+ M XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionToolInvalidTests.cs
+ M XuanYu.World.Tests/Map/MapManifestCreationTests.cs
+ M XuanYu.World.Tests/Map/Wp4SceneMapPersistenceContractTests.cs
+ M XuanYu.World.Tests/Mode/CAuditR1LifecycleTests.cs
+ M XuanYu.World.Tests/Mode/EditorModeUiTests.cs
+ M XuanYu.World.Tests/Render/TerrainPreviewLightingContractTests.cs
+ M XuanYu.World.Tests/UiRuntime/AreaCR1ContextToolbarCompositionTests.cs
+ M XuanYu.World.Tests/UiRuntime/WorkspaceSelectorR2ContractTests.cs
+ M XuanYu.World.Tests/UiTokens/AreaCR1ContextToolbarContractTests.cs
+ M XuanYu.World.Tests/UiTokens/UiR1LeftTopContractTests.cs
+ M XuanYu.World.Tests/Workspace/EditorWorkspaceUiTests.cs
+ M XuanYu.World/Terrain/TerrainHeightLayer.cs
+ M XuanYu.World/Terrain/TerrainWorld.cs
+ M changelog.md
+ M docs/governance/version-events.tsv
+ M docs/knowledge/architecture.md
+ M docs/knowledge/knowledge-index.md
+ M docs/qa/XYC-WP2-P4-R8/XYC-WP2-P4-R8-RUN1.md
+ M file-tree.md
+ M tools/terrain/Invoke-WP2-P4-VulkanReplay.ps1
+?? XuanYu.Core.Tests/Space/TerrainSelection/
+?? XuanYu.Core/Space/TerrainSelection/
+?? XuanYu.Editor.UI/Top/XYUIR1A/
+?? XuanYu.Editor.UI/Top/XYUIR1B/
+?? XuanYu.Editor.UI/Top/XYUIR1BF1/
+?? XuanYu.Editor.UI/Top/XYUIR1BF2/
+?? XuanYu.Editor.UI/Top/XYUIR1BF3/
+?? XuanYu.Editor.UI/Vm/Control/
+?? XuanYu.Editor.UI/Vm/Map/UiVm.MapManifestRecovery.cs
+?? XuanYu.Editor.UI/Vm/Scene/SceneMapReferencePathPolicy.cs
+?? XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentMapRef.Manifest.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainAdaptiveBudgetPolicy.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainDynamicNodeSelection.Cache.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainDynamicNodeSelection.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainGeometryResidualAnalyzer.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainGeometryResidualBucketBuilder.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainGeometryResidualCapture.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainGeometryResidualClassification.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainGeometryResidualPoint.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainGeometryResidualPointCapture.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainGeometryResidualReport.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainGeometryResidualSource.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainRawChunkBoundaryStitcher.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainRawChunkProjector.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainRawChunkRefinementProjection.cs
+?? XuanYu.Editor.UI/Vm/Workspace/TerrainRawChunkSelector.cs
+?? XuanYu.Editor/MapDocument/MapManifestIdentity.cs
+?? XuanYu.Editor/MapDocument/MapManifestLayer.cs
+?? XuanYu.Editor/MapDocument/MapManifestProjection.cs
+?? XuanYu.Editor/MapDocument/MapPackageStorageService.Generation.cs
+?? XuanYu.Editor/MapDocument/MapPackageStorageService.Recovery.cs
+?? XuanYu.Editor/MapDocument/MapPackageStorageService.cs
+?? XuanYu.Render.Abstractions/Terrain/Build/TerrainChunkSkirtBuilder.cs
+?? XuanYu.Render.Abstractions/Terrain/Build/TerrainSelectionChunkProjector.cs
+?? XuanYu.Render.Abstractions/Terrain/Diagnostics/
+?? XuanYu.Render.Abstractions/TerrainChunkRefinement.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/Streaming/
+?? XuanYu.Render.Vulkan/Render/Terrain/TerrainCacheStats.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/TerrainDynamicGpuBatch.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/TerrainFrameDrawRecord.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/TerrainSnapshotCameraIdentity.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/TerrainSnapshotJson.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/VulkanClearFrameOwner.Terrain.Pipeline.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/VulkanClearFrameOwner.Terrain.Snapshot.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/VulkanClearFrameOwner.Terrain.Stats.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/VulkanTerrainGpuCache.Chunks.cs
+?? XuanYu.Render.Vulkan/Render/Terrain/VulkanTerrainGpuCache.Lifecycle.cs
+?? XuanYu.World.Tests/Map/Editing/MapManifestMixedFeatureSwitchTests.cs
+?? XuanYu.World.Tests/Map/Editing/MapManifestSwitchSequenceTests.cs
+?? XuanYu.World.Tests/Map/MapManifestFullStateTests.cs
+?? XuanYu.World.Tests/Map/MapPackageGenerationTests.cs
+?? XuanYu.World.Tests/Map/SceneManifestReferenceContractTests.cs
+?? XuanYu.World.Tests/Render/TerrainStreaming/
+?? XuanYu.World.Tests/Render/VulkanTerrainDeviceIdleTests.cs
+?? XuanYu.World.Tests/Terrain/R8F2DrawMeshVersionTests.cs
+?? XuanYu.World.Tests/Terrain/R8F2RayTriangleTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainChunkRefinementTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainDynamicChunkPartitionTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainDynamicGroundSurfaceTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainDynamicNodeSelectionTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainGeometryResidualAnalyzerFixture.cs
+?? XuanYu.World.Tests/Terrain/TerrainGeometryResidualAnalyzerTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainGeometryResidualPointCaptureTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainGeometryResidualProjectionTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainRawChunkRefinementProjectionTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainRenderGroundSurfaceRefinementTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainSelectionChunkProjectorTests.cs
+?? XuanYu.World.Tests/Terrain/TerrainWorldSnapshotTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR1A2VisualContractTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR1A3CompactLayoutTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR1AComponentTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR1BF1NativeChromeTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR1BF2ProductionVisualContractTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR1BF3ProductionTreeTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR1BF4WorkspaceRestoreTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR1BProductionCompositionTests.cs
+?? XuanYu.World.Tests/UiRuntime/XYUITopR2VisualContractTests.cs
+?? XuanYu.World/Terrain/TerrainWorldSnapshot.cs
+?? docs/qa/XYC-UI-V0.1-P0/evidence/9dc755d7872c4906b41bcf8d7287c82a.zip
+?? docs/qa/XYC-UI-V0.1-P1-B/evidence/rtb-probe/wgc-pixels/editor-stderr.log
+?? docs/qa/XYC-UI-V0.1-P1-B/evidence/rtb-probe/wgc-standard/Dark-1360/editor-stderr.log
+?? docs/qa/XYC-UI-V0.1-P1-B/evidence/rtb-probe/wgc-standard/Dark-1920/editor-stderr.log
+?? docs/qa/XYC-UI-V0.1-P1-B/evidence/rtb-probe/wgc-standard/Light-1360/editor-stderr.log
+?? docs/qa/XYC-UI-V0.1-P1-B/evidence/rtb-probe/wgc-standard/Light-1920/editor-stderr.log
+?? docs/qa/XYC-UI-V0.1-P1-B/evidence/rtb-probe/wgc/editor-stderr.log
+?? docs/qa/XYC-UI-V0.1-P1-B/evidence/rtb-probe/window-render/stderr.log
+?? docs/qa/XYE-MAP-R0.5-PERSISTENCE-CONTRACT-R1/
+?? docs/qa/XYE-MAP-R1-PERSISTENCE-SCENE-REFERENCE-R1/
+?? docs/qa/XYE-MAP-R1.1-RECOVERY-INTEGRATION-CLOSE/
+?? docs/qa/XYE-WP2-P4-R2-A-P1-CLOSEOUT.md
+?? docs/qa/XYE-WP2-P4-R2-A-P1-RECOVERY-R1.md
+?? docs/qa/XYE-WP2-P4-R2-B-ADAPTIVE-BUDGET-R1.md
+?? docs/qa/XYE-WP2-P4-R2-B-DYNAMIC-LOD-R1.md
+?? docs/qa/XYE-WP2-P4-R2-B-GEOMETRY-ERROR-RECOVERY-R1.md
+?? docs/qa/XYE-WP2-P4-R2-B-PERF-SELECTOR-R1.md
+?? docs/qa/XYE-WP2-P4-R8-F2/
+?? docs/qa/XYE-WP2-P4-VISUAL-FIX-R1/
+?? docs/qa/XYUI-TOP-R1-A/
+?? docs/qa/XYUI-TOP-R1-A2/
+?? docs/qa/XYUI-TOP-R1-A3/
+?? docs/qa/XYUI-TOP-R1-B-F1/
+?? docs/qa/XYUI-TOP-R1-B-F2-P4/
+?? docs/qa/XYUI-TOP-R1-B-F2/
+?? docs/qa/XYUI-TOP-R1-B-F3/
+?? docs/qa/XYUI-TOP-R1-B-F4/
+?? docs/qa/XYUI-TOP-R1-B/
+?? docs/qa/XYUI-TOP-R2/
+?? docs/superpowers/plans/2026-10-18-xyc-ui-p1-b-background-capture.md
+?? docs/superpowers/plans/2026-10-18-xye-map-r1-persistence-scene-reference.md
+?? docs/superpowers/plans/2026-10-18-xye-wp2-p4-geometry-fix-r2-a.md
+?? docs/superpowers/plans/2026-10-18-xye-wp2-p4-geometry-r2-a-closeout.md
+?? docs/superpowers/plans/2026-10-18-xye-wp2-p4-r2-b-adaptive-budget-r1.md
+?? docs/superpowers/plans/2026-10-18-xye-wp2-p4-r2-b-geometry-error-recovery-r1.md

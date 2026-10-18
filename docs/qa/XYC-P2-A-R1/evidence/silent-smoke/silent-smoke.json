@@ -1,0 +1,271 @@
+{
+  "sessionId": "de7244e114374b798ae87601da97766e",
+  "runtime": {
+    "protocolVersion": "XYC-API/1",
+    "instanceId": "de7244e114374b798ae87601da97766e",
+    "isolationMode": "silent-hidden-hwnd",
+    "renderCapability": "HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS",
+    "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00",
+    "branch": "UNKNOWN",
+    "dirty": "UNKNOWN",
+    "processId": 41460,
+    "viewportFrameId": 1,
+    "silentHost": {
+      "mode": "HIDDEN-HWND-SWAPCHAIN-PRESENT",
+      "hwnd": 15597964,
+      "hwndExists": true,
+      "visible": false,
+      "wsVisibleStyle": false,
+      "clientWidth": 776,
+      "clientHeight": 650,
+      "requestedWidth": 776,
+      "requestedHeight": 650,
+      "attachFailure": null,
+      "surfaceAndSwapchainAttached": true,
+      "presentSucceeded": true,
+      "readbackCaptured": false,
+      "frameCounter": 1,
+      "presentedFrameId": 10,
+      "presentedCameraRevision": 2,
+      "presentedImageIndex": 1,
+      "captureHeld": false,
+      "probeEnabled": true,
+      "ownProcessForeground": false,
+      "readbackPath": null,
+      "readbackSha256": null,
+      "buildIdentity": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00"
+    }
+  },
+  "scene": {
+    "sceneId": "078943d21f5b4cd9a9e021348f25a6db",
+    "sceneRevision": 0,
+    "terrainState": "未加载地形源。",
+    "entityCount": 0,
+    "terrainId": null,
+    "terrainRevision": null,
+    "scaleLabel": "0.5 m",
+    "viewportFrameId": 1,
+    "viewportWidth": 776,
+    "viewportHeight": 650,
+    "presentedFrameId": 17,
+    "presentedCameraRevision": 2,
+    "presentedImageIndex": 1,
+    "presentedCaptureHeld": false,
+    "silentHost": {
+      "mode": "HIDDEN-HWND-SWAPCHAIN-PRESENT",
+      "hwnd": 15597964,
+      "hwndExists": true,
+      "visible": false,
+      "wsVisibleStyle": false,
+      "clientWidth": 776,
+      "clientHeight": 650,
+      "requestedWidth": 776,
+      "requestedHeight": 650,
+      "attachFailure": null,
+      "surfaceAndSwapchainAttached": true,
+      "presentSucceeded": true,
+      "readbackCaptured": false,
+      "frameCounter": 1,
+      "presentedFrameId": 17,
+      "presentedCameraRevision": 2,
+      "presentedImageIndex": 1,
+      "captureHeld": false,
+      "probeEnabled": true,
+      "ownProcessForeground": false,
+      "readbackPath": null,
+      "readbackSha256": null,
+      "buildIdentity": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00"
+    },
+    "terrainDiagnostics": null
+  },
+  "camera": {
+    "position": {
+      "x": 4,
+      "y": -5,
+      "z": 3
+    },
+    "forward": {
+      "x": -0.5656854249492381,
+      "y": 0.7071067811865476,
+      "z": -0.42426406871192857
+    },
+    "up": {
+      "x": -0.26503566257963174,
+      "y": 0.33129457822453967,
+      "z": 0.9055385138137417
+    },
+    "fovDegrees": 60,
+    "nearPlane": 0.1,
+    "farPlane": 100,
+    "mode": "Perspective",
+    "orthographicScale": 0,
+    "observationCenter": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "revision": 2
+  },
+  "exitCode": 0,
+  "buildHashes": [
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.App.exe",
+      "sha256": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.App.dll",
+      "sha256": "BDB6FA69A3EBC87EAF55ED011B93184EB07E317FBE59AE45B679BB8CC73D822C"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.UI.dll",
+      "sha256": "33C41F7F5A17C478F041D19C57A8A0DA54309CC9E2F6E7428584F8AB18348C29"
+    }
+  ],
+  "commands": [
+    {
+      "requestId": "489364c58a2f47bba4acd78c7473c4cb",
+      "success": true,
+      "errorCode": null,
+      "observedState": {
+        "protocolVersion": "XYC-API/1",
+        "instanceId": "de7244e114374b798ae87601da97766e",
+        "isolationMode": "silent-hidden-hwnd",
+        "renderCapability": "HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS",
+        "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00",
+        "branch": "UNKNOWN",
+        "dirty": "UNKNOWN",
+        "processId": 41460,
+        "viewportFrameId": 1,
+        "silentHost": {
+          "mode": "HIDDEN-HWND-SWAPCHAIN-PRESENT",
+          "hwnd": 15597964,
+          "hwndExists": true,
+          "visible": false,
+          "wsVisibleStyle": false,
+          "clientWidth": 776,
+          "clientHeight": 650,
+          "requestedWidth": 776,
+          "requestedHeight": 650,
+          "attachFailure": null,
+          "surfaceAndSwapchainAttached": true,
+          "presentSucceeded": true,
+          "readbackCaptured": false,
+          "frameCounter": 1,
+          "presentedFrameId": 10,
+          "presentedCameraRevision": 2,
+          "presentedImageIndex": 1,
+          "captureHeld": false,
+          "probeEnabled": true,
+          "ownProcessForeground": false,
+          "readbackPath": null,
+          "readbackSha256": null,
+          "buildIdentity": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00"
+        }
+      },
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 8.3081,
+      "evidencePath": null
+    },
+    {
+      "requestId": "7431953e23fc413d8bc62c0955861eef",
+      "success": true,
+      "errorCode": null,
+      "observedState": {
+        "sceneId": "078943d21f5b4cd9a9e021348f25a6db",
+        "sceneRevision": 0,
+        "terrainState": "未加载地形源。",
+        "entityCount": 0,
+        "terrainId": null,
+        "terrainRevision": null,
+        "scaleLabel": "0.5 m",
+        "viewportFrameId": 1,
+        "viewportWidth": 776,
+        "viewportHeight": 650,
+        "presentedFrameId": 17,
+        "presentedCameraRevision": 2,
+        "presentedImageIndex": 1,
+        "presentedCaptureHeld": false,
+        "silentHost": {
+          "mode": "HIDDEN-HWND-SWAPCHAIN-PRESENT",
+          "hwnd": 15597964,
+          "hwndExists": true,
+          "visible": false,
+          "wsVisibleStyle": false,
+          "clientWidth": 776,
+          "clientHeight": 650,
+          "requestedWidth": 776,
+          "requestedHeight": 650,
+          "attachFailure": null,
+          "surfaceAndSwapchainAttached": true,
+          "presentSucceeded": true,
+          "readbackCaptured": false,
+          "frameCounter": 1,
+          "presentedFrameId": 17,
+          "presentedCameraRevision": 2,
+          "presentedImageIndex": 1,
+          "captureHeld": false,
+          "probeEnabled": true,
+          "ownProcessForeground": false,
+          "readbackPath": null,
+          "readbackSha256": null,
+          "buildIdentity": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00"
+        },
+        "terrainDiagnostics": null
+      },
+      "sceneRevision": 0,
+      "cameraRevision": null,
+      "durationMs": 3.0603,
+      "evidencePath": null
+    },
+    {
+      "requestId": "08f72bc35d244fa28abffb1808f1816b",
+      "success": true,
+      "errorCode": null,
+      "observedState": {
+        "position": {
+          "x": 4,
+          "y": -5,
+          "z": 3
+        },
+        "forward": {
+          "x": -0.5656854249492381,
+          "y": 0.7071067811865476,
+          "z": -0.42426406871192857
+        },
+        "up": {
+          "x": -0.26503566257963174,
+          "y": 0.33129457822453967,
+          "z": 0.9055385138137417
+        },
+        "fovDegrees": 60,
+        "nearPlane": 0.1,
+        "farPlane": 100,
+        "mode": "Perspective",
+        "orthographicScale": 0,
+        "observationCenter": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "revision": 2
+      },
+      "sceneRevision": 0,
+      "cameraRevision": 2,
+      "durationMs": 0.948,
+      "evidencePath": null
+    },
+    {
+      "requestId": "a5b8ccc9ae964df09355f1be4f268b5e",
+      "success": true,
+      "errorCode": null,
+      "observedState": {
+        "closed": true
+      },
+      "sceneRevision": null,
+      "cameraRevision": null,
+      "durationMs": 0.2495,
+      "evidencePath": null
+    }
+  ]
+}

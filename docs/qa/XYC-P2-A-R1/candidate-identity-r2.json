@@ -1,0 +1,86 @@
+{
+  "baselineHead": "d0335c52b0c9938277f571cc58d11c4d038f3b43",
+  "baselineCandidateTree": "A66A2B0E55AD742B5203A971A3B0D4F9BAC327DBBC1EAD964725F317539C06D5",
+  "candidateSourceTreeIdentity": "32e5276330117b7112fedad4e2e15f038b63577c",
+  "candidateSourceFiles": [
+    {
+      "path": "XuanYu.Editor.UI/Control/XycCommandProcessor.cs",
+      "sha256": "89B17AF31DEA06CF32F672E96729C843A2F0C9119EE10DBA76269B5256519EA8"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Control/XycSceneContracts.cs",
+      "sha256": "E136BC6B9A952A84E5FF31C0AA30FFCC8EE56BB7A46CE66276F6E7E4087F0294"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Control/XycSceneCommandProcessor.cs",
+      "sha256": "8DA468C223EAE6C8123F09620783652A0DDAC8151F99CFD3E051F67C262DD60B"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Control/UiVmXycRuntime.Scene.cs",
+      "sha256": "DBB9670AB9057A4438452456C0C7F39D74426AE27A04BFDD11E99EA2F696C0A1"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Vm/Control/UiVm.XycScene.cs",
+      "sha256": "0124BEB9173A90418D83FD30021BBC54FF27F159171315F4012332CEE7ADCAFF"
+    },
+    {
+      "path": "XuanYu.Editor.UI/Vm/Control/UiVm.XycScene.Guards.cs",
+      "sha256": "6BAA1621CA9DB011FA5EAF9701ADA3901382751C573534C8C5C0D87DE9CDA2A1"
+    },
+    {
+      "path": "XuanYu.World.Tests/Control/FakeRuntime.cs",
+      "sha256": "468F00D7031A99846CB67A0B444A0DB72F05A777142D97009B686296A6B56D21"
+    },
+    {
+      "path": "XuanYu.World.Tests/Control/XycSceneCommandTests.cs",
+      "sha256": "694FECE82698C7BED70D6ACC3D5BA042EB7E1B2F4ADE476F623805B91EC7C8CC"
+    },
+    {
+      "path": "XuanYu.World.Tests/Control/XycSceneTransactionSafetyTests.cs",
+      "sha256": "24AB8A185723CA8D1EA5B8E96FA406900AC955ACE9209A0612FC7B2CA803B405"
+    }
+  ],
+  "externalDemFixture": {
+    "path": "artifacts/diagnostics/wp2-p4-r3/n24e121.hgt",
+    "sha256": "BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1",
+    "includedInCandidate": false
+  },
+  "releaseBinaries": [
+    {
+      "path": "XuanYu.Editor.App/bin/Release/net10.0/XuanYu.Editor.App.exe",
+      "sha256": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C"
+    },
+    {
+      "path": "XuanYu.Editor.App/bin/Release/net10.0/XuanYu.Editor.App.dll",
+      "sha256": "BDB6FA69A3EBC87EAF55ED011B93184EB07E317FBE59AE45B679BB8CC73D822C"
+    },
+    {
+      "path": "XuanYu.Editor.App/bin/Release/net10.0/XuanYu.Editor.UI.dll",
+      "sha256": "33C41F7F5A17C478F041D19C57A8A0DA54309CC9E2F6E7428584F8AB18348C29"
+    },
+    {
+      "path": "XuanYu.Editor.Control.Cli/bin/Release/net10.0/XuanYu.Editor.Control.Cli.dll",
+      "sha256": "FAA00D15F310BD601BC60CB960A47769C848AEEBB5DEBFEBEA65D1BD38F4C671"
+    },
+    {
+      "path": "XuanYu.World.Tests/bin/Release/net10.0/XuanYu.World.Tests.dll",
+      "sha256": "28CF349DAF410736307EE841353032999487EE35FEE72B727FF9BFD08E1C1BAF"
+    }
+  ],
+  "tests": {
+    "fullyQualifiedName": "FullyQualifiedName~Xyc",
+    "passed": 46,
+    "failed": 0,
+    "transactionSafetyPassed": 4,
+    "transactionSafetyFailed": 0
+  },
+  "runtime": {
+    "app": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C",
+    "ui": "33C41F7F5A17C478F041D19C57A8A0DA54309CC9E2F6E7428584F8AB18348C29",
+    "sceneSession": "1faab1c835df4394b7a42b1c3a0fe718",
+    "noWriteSession": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+    "silentHost": "PASS",
+    "p1bMatrix": "PASS",
+    "p1bManifest": "evidence/p1b-recheck-final/manifest.json"
+  }
+}

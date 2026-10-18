@@ -1,0 +1,212 @@
+{
+  "sessionId": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+  "pid": 29244,
+  "runtime": {
+    "protocolVersion": "XYC-API/1",
+    "instanceId": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+    "isolationMode": "windowed-editor-instance",
+    "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+    "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00",
+    "branch": "UNKNOWN",
+    "dirty": "UNKNOWN",
+    "processId": 41060,
+    "viewportFrameId": 0,
+    "silentHost": null
+  },
+  "before": {
+    "sceneId": "65f3197a381d49fc9a7eb858f20f6076",
+    "sceneRevision": 0,
+    "entityCount": 0,
+    "entityIds": [],
+    "hierarchyEntityIds": [],
+    "renderEntityIds": [],
+    "inspectorFields": [],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 0,
+    "redoCount": 0,
+    "testEntityId": null,
+    "stage": "0"
+  },
+  "denied": {
+    "requestId": "ad75c94e57b943c3a11c0af6a7db64e4",
+    "success": false,
+    "errorCode": "UNAUTHORIZED",
+    "observedState": null,
+    "sceneRevision": null,
+    "cameraRevision": null,
+    "durationMs": 0.0349,
+    "evidencePath": null
+  },
+  "after": {
+    "sceneId": "65f3197a381d49fc9a7eb858f20f6076",
+    "sceneRevision": 0,
+    "entityCount": 0,
+    "entityIds": [],
+    "hierarchyEntityIds": [],
+    "renderEntityIds": [],
+    "inspectorFields": [],
+    "scenePath": "",
+    "hasActiveInteraction": false,
+    "undoCount": 0,
+    "redoCount": 0,
+    "testEntityId": null,
+    "stage": "0"
+  },
+  "exitCode": 0,
+  "buildHashes": [
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.App.exe",
+      "sha256": "DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.App\\bin\\Release\\net10.0\\XuanYu.Editor.UI.dll",
+      "sha256": "33C41F7F5A17C478F041D19C57A8A0DA54309CC9E2F6E7428584F8AB18348C29"
+    },
+    {
+      "path": "C:\\Users\\Heai\\AppData\\Local\\Temp\\XYC-P2-A-R1-candidate-f45b51fd4a2749dab8d9fe29040a2347\\source\\XuanYu.Editor.Control.Cli\\bin\\Release\\net10.0\\XuanYu.Editor.Control.Cli.exe",
+      "sha256": "A0202B6600AD5DF7EBBD3EEF7E14743D5F731EFAE45D021EDFED9A34B10C55C6"
+    }
+  ],
+  "commands": [
+    {
+      "request": {
+        "requestId": "9fdeac628520439b941e857c9c8fb094",
+        "args": {},
+        "sessionId": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+        "command": "runtime.info",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "9fdeac628520439b941e857c9c8fb094",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "protocolVersion": "XYC-API/1",
+          "instanceId": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+          "isolationMode": "windowed-editor-instance",
+          "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+          "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T23:00:41.8566761+08:00",
+          "branch": "UNKNOWN",
+          "dirty": "UNKNOWN",
+          "processId": 41060,
+          "viewportFrameId": 0,
+          "silentHost": null
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 412.8816,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "requestId": "1e4279088ba24229a8151baf532432b4",
+        "args": {},
+        "sessionId": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+        "command": "scene.test.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "1e4279088ba24229a8151baf532432b4",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "65f3197a381d49fc9a7eb858f20f6076",
+          "sceneRevision": 0,
+          "entityCount": 0,
+          "entityIds": [],
+          "hierarchyEntityIds": [],
+          "renderEntityIds": [],
+          "inspectorFields": [],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 0,
+          "redoCount": 0,
+          "testEntityId": null,
+          "stage": "0"
+        },
+        "sceneRevision": 0,
+        "cameraRevision": null,
+        "durationMs": 244.8349,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "requestId": "ad75c94e57b943c3a11c0af6a7db64e4",
+        "args": {
+          "sceneId": "65f3197a381d49fc9a7eb858f20f6076",
+          "expectedRevision": 0
+        },
+        "sessionId": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+        "command": "scene.entity.create-test-cube",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "ad75c94e57b943c3a11c0af6a7db64e4",
+        "success": false,
+        "errorCode": "UNAUTHORIZED",
+        "observedState": null,
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.0349,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "requestId": "04547a3fe9e24b7d8ab3303da9d007a4",
+        "args": {},
+        "sessionId": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+        "command": "scene.test.inspect",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "04547a3fe9e24b7d8ab3303da9d007a4",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "sceneId": "65f3197a381d49fc9a7eb858f20f6076",
+          "sceneRevision": 0,
+          "entityCount": 0,
+          "entityIds": [],
+          "hierarchyEntityIds": [],
+          "renderEntityIds": [],
+          "inspectorFields": [],
+          "scenePath": "",
+          "hasActiveInteraction": false,
+          "undoCount": 0,
+          "redoCount": 0,
+          "testEntityId": null,
+          "stage": "0"
+        },
+        "sceneRevision": 0,
+        "cameraRevision": null,
+        "durationMs": 503.8792,
+        "evidencePath": null
+      }
+    },
+    {
+      "request": {
+        "requestId": "b5f3298a6e544e23b97d09e34a9b85c8",
+        "args": {},
+        "sessionId": "bce5dbf4c7dd4908bb04a8ced6b0693d",
+        "command": "session.close",
+        "schemaVersion": "XYC-API/1"
+      },
+      "response": {
+        "requestId": "b5f3298a6e544e23b97d09e34a9b85c8",
+        "success": true,
+        "errorCode": null,
+        "observedState": {
+          "closed": true
+        },
+        "sceneRevision": null,
+        "cameraRevision": null,
+        "durationMs": 0.2742,
+        "evidencePath": null
+      }
+    }
+  ]
+}
