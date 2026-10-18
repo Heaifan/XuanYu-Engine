@@ -10,7 +10,11 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
     static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     readonly HashSet<string> _requestIds = new(StringComparer.Ordinal);
 
-    public XycResponse Execute(XycRequest request)
+    public XycResponse Execute(XycRequest request) =>
+        ExecuteAsync(request, CancellationToken.None).GetAwaiter().GetResult();
+
+    public async Task<XycResponse> ExecuteAsync(XycRequest request,
+        CancellationToken cancellationToken)
     {
         var timer = Stopwatch.StartNew();
         XycResponse Result(bool ok, string? error, object? state = null,
@@ -23,7 +27,8 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
         try
         {
             if (request.Command.StartsWith("ui.", StringComparison.Ordinal))
-                return XycUiCommandProcessor.Execute(request, uiRuntime, Result);
+                return await XycUiCommandProcessor.ExecuteAsync(request, uiRuntime,
+                    Result, cancellationToken);
             return request.Command switch
             {
                 "runtime.info" => Result(true, null, runtime.InspectRuntime()),
@@ -40,6 +45,7 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
         }
         catch (UnauthorizedAccessException) { return Result(false, "UNAUTHORIZED"); }
         catch (JsonException) { return Result(false, "INVALID_INPUT"); }
+        catch (XycUiCommandException error) { return Result(false, error.Code); }
         catch (InvalidOperationException error)
         {
             if (request.Command.StartsWith("ui.", StringComparison.Ordinal))

@@ -45,4 +45,5 @@ internal static class XycUiWindowNative
     internal const uint NoSize = 0x0001, NoMove = 0x0002, NoZOrder = 0x0004,
         NoActivate = 0x0010, ShowWindow = 0x0040;
     internal const uint PreviousWindow = 3;
+    internal static readonly nint Topmost = new(-1);
 }

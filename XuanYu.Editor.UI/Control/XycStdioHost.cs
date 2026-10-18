@@ -20,7 +20,7 @@ public sealed class XycStdioHost(XycCommandProcessor processor)
                 {
                     var request = JsonSerializer.Deserialize<XycRequest>(line, Json) ??
                         throw new JsonException();
-                    response = processor.Execute(request);
+                    response = await processor.ExecuteAsync(request, cancellationToken);
                 }
                 catch (JsonException)
                 {

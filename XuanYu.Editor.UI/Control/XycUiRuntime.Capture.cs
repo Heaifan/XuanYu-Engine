@@ -9,7 +9,7 @@ namespace XuanYu.Editor.UI.XycControl;
 
 internal sealed partial class XycUiRuntime
 {
-    XycUiCaptureState CaptureTopCore(string fileName)
+    XycUiCaptureState CaptureTopCore(string fileName, bool temporaryTopmost = false)
     {
         if (string.IsNullOrWhiteSpace(evidenceDirectory))
             throw new InvalidOperationException("XYC UI evidence directory is not configured.");
@@ -29,7 +29,8 @@ internal sealed partial class XycUiRuntime
         var foreground = XycUiWindowNative.GetForegroundWindow();
         var flags = XycUiWindowNative.NoMove | XycUiWindowNative.NoSize |
             XycUiWindowNative.NoActivate | XycUiWindowNative.ShowWindow;
-        if (!XycUiWindowNative.SetWindowPos(hwnd, 0, 0, 0, 0, 0, flags))
+        var insertAfter = temporaryTopmost ? XycUiWindowNative.Topmost : 0;
+        if (!XycUiWindowNative.SetWindowPos(hwnd, insertAfter, 0, 0, 0, 0, flags))
             throw new InvalidOperationException("窗口无法在不激活的情况下进入桌面采集层。");
         byte[] crop;
         try
@@ -60,7 +61,7 @@ internal sealed partial class XycUiRuntime
         var state = new XycUiCaptureState(image, metadata,
             Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(image))), width, height,
             region, client, InspectThemeCore(), BuildIdentity(),
-            "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOP;SWP_NOACTIVATE;crop=TOP", capturedAt);
+            CaptureMethod(temporaryTopmost), capturedAt);
         File.WriteAllText(metadata, JsonSerializer.Serialize(state,
             new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true }));
         return state;
@@ -68,5 +69,9 @@ internal sealed partial class XycUiRuntime
 
     static string BuildIdentity() => Environment.GetEnvironmentVariable("XYC_BUILD_IDENTITY")
         ?? $"Editor.UI-MVID={typeof(App).Assembly.ManifestModule.ModuleVersionId:D}";
+
+    static string CaptureMethod(bool topmost) => topmost
+        ? "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOPMOST;SWP_NOACTIVATE;restore-z-order;crop=TOP"
+        : "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOP;SWP_NOACTIVATE;crop=TOP";
 
 }

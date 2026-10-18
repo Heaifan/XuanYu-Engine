@@ -16,8 +16,17 @@ internal sealed partial class XycUiRuntime(Window window, string? evidenceDirect
     public XycUiThemeState InspectTheme() => OnUi(InspectThemeCore);
     public XycUiThemeState SetTheme(string theme) => OnUi(() => SetThemeCore(theme));
     public XycUiRegionState InspectTop() => OnUi(InspectTopCore);
-    public XycUiCaptureState CaptureTop(string fileName) =>
-        OnUi(() => CaptureTopCore(fileName));
+    public XycUiCaptureState CaptureTop(string fileName, bool temporaryTopmost = false) =>
+        OnUi(() => CaptureTopCore(fileName, temporaryTopmost));
+    public IReadOnlyList<XycUiControlState> ListControls() => OnUi(ListControlsCore);
+    public XycUiControlState InspectControl(string id) => OnUi(() => InspectControlCore(id));
+    public XycUiState InspectState() => OnUi(InspectStateCore);
+    public Task<XycUiControlInvokeState> InvokeControlAsync(string id, string operation,
+        CancellationToken cancellationToken) =>
+        InvokeControlWithEvidenceAsync(id, operation, cancellationToken);
+    public Task<XycUiState> WaitUntilAsync(string state, System.Text.Json.JsonElement expected,
+        int timeoutMs, CancellationToken cancellationToken) =>
+        WaitUntilCoreAsync(state, expected, timeoutMs, cancellationToken);
 
     static T OnUi<T>(Func<T> action) => Dispatcher.UIThread.CheckAccess()
         ? action() : Dispatcher.UIThread.InvokeAsync(action).GetAwaiter().GetResult();

@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace XuanYu.Editor.UI.XycControl;
 
 public interface IXycUiRuntime
@@ -7,7 +9,14 @@ public interface IXycUiRuntime
     XycUiThemeState InspectTheme();
     XycUiThemeState SetTheme(string theme);
     XycUiRegionState InspectTop();
-    XycUiCaptureState CaptureTop(string fileName);
+    XycUiCaptureState CaptureTop(string fileName, bool temporaryTopmost = false);
+    IReadOnlyList<XycUiControlState> ListControls();
+    XycUiControlState InspectControl(string controlId);
+    XycUiState InspectState();
+    Task<XycUiControlInvokeState> InvokeControlAsync(string controlId,
+        string operation, CancellationToken cancellationToken);
+    Task<XycUiState> WaitUntilAsync(string state, JsonElement expected,
+        int timeoutMs, CancellationToken cancellationToken);
 }
 
 public sealed record XycUiWindowState(int ProcessId, string Hwnd, bool Visible,
@@ -20,3 +29,15 @@ public sealed record XycUiCaptureState(string ImagePath, string MetadataPath,
     string Sha256, int PixelWidth, int PixelHeight, XycUiRegionState Region,
     XycUiWindowState Window, XycUiThemeState Theme, string BuildIdentity,
     string CaptureMethod, DateTimeOffset CaptureTimeUtc);
+public sealed record XycUiControlState(string? ControlId, string Type, bool Visible,
+    bool Enabled, bool DuplicateId, string IdSource, string Region, bool? IsChecked);
+public sealed record XycUiState(string ActiveTool, bool IsSelectTool, bool IsEditMode,
+    bool IsRegionEditMode, string FooterMessage, string FooterState,
+    long CameraRevision, double CameraX, double CameraY, double CameraZ);
+public sealed record XycUiControlInvokeState(XycUiControlState Control,
+    XycUiState Before, XycUiState After, bool Invoked,
+    XycUiCaptureState? BeforeCapture, XycUiCaptureState? AfterCapture);
+internal sealed class XycUiCommandException(string code) : Exception(code)
+{
+    public string Code { get; } = code;
+}
