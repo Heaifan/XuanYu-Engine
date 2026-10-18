@@ -1,4 +1,5 @@
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls;
 using Avalonia.Threading;
 
 namespace XuanYu.Editor.UI.XycControl;
@@ -10,15 +11,18 @@ public static class XycAppSession
 
     internal static bool TryStart(string[] args, UiVm vm,
         IClassicDesktopStyleApplicationLifetime lifetime,
-        SilentVulkanHost? silentHost = null)
+        SilentVulkanHost? silentHost = null, Window? uiWindow = null)
     {
         var sessionId = Value(args, "--xyc-session");
         if (sessionId is null || !args.Contains("--xyc-stdio")) return false;
         Console.SetOut(Console.Error);
         var terrainLoad = StartTerrainLoad(args, vm);
         var output = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
+        IXycUiRuntime? uiRuntime = args.Contains("--xyc-ui") && uiWindow is not null
+            ? new XycUiRuntime(uiWindow, Environment.GetEnvironmentVariable("XYC_UI_EVIDENCE_DIR"))
+            : null;
         var processor = new XycCommandProcessor(vm.CreateXycRuntime(sessionId, terrainLoad, silentHost),
-            args.Contains("--xyc-diagnostic-write"));
+            args.Contains("--xyc-diagnostic-write"), uiRuntime);
         var host = new XycStdioHost(processor);
         _ = Task.Run(() => host.RunAsync(Console.In, output,
             () => Dispatcher.UIThread.Post(() =>

@@ -1,9 +1,10 @@
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 internal static class XycCliStartConfiguration
 {
     public static ProcessStartInfo Create(string appPath, string sessionId, string? demPath,
-        bool diagnosticWrite, bool silent)
+        bool diagnosticWrite, bool silent, bool uiHost = false, string? evidenceDirectory = null)
     {
         var start = new ProcessStartInfo(appPath)
         {
@@ -14,6 +15,7 @@ internal static class XycCliStartConfiguration
         };
         start.ArgumentList.Add("--xyc-stdio");
         if (silent) start.ArgumentList.Add("--xyc-silent");
+        if (uiHost) start.ArgumentList.Add("--xyc-ui");
         start.ArgumentList.Add("--xyc-session");
         start.ArgumentList.Add(sessionId);
         if (diagnosticWrite) start.ArgumentList.Add("--xyc-diagnostic-write");
@@ -22,10 +24,28 @@ internal static class XycCliStartConfiguration
             start.ArgumentList.Add("--xyc-test-dem");
             start.ArgumentList.Add(demPath);
         }
+        if (evidenceDirectory is not null)
+            start.Environment["XYC_UI_EVIDENCE_DIR"] = evidenceDirectory;
+        if (uiHost)
+        {
+            start.Environment["XYC_BUILD_IDENTITY"] = BuildIdentity(appPath);
+            start.Environment["XYC_HOST_MODE"] = "production-ui";
+        }
 
         if (silent) ConfigureProbe(start);
         return start;
     }
+
+    static string BuildIdentity(string appPath)
+    {
+        var appDirectory = Path.GetDirectoryName(appPath)!;
+        var appHash = Hash(appPath);
+        var uiPath = Path.Combine(appDirectory, "XuanYu.Editor.UI.dll");
+        return $"Editor.App.exe={appHash};XuanYu.Editor.UI.dll={Hash(uiPath)}";
+    }
+
+    static string Hash(string path) =>
+        Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(path)));
 
     private static void ConfigureProbe(ProcessStartInfo start)
     {

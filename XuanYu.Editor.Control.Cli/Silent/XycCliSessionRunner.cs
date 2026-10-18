@@ -3,10 +3,11 @@ using System.Diagnostics;
 internal static class XycCliSessionRunner
 {
     public static async Task<int> RunAsync(string appPath, string sessionId, int timeout,
-        string? demPath, bool diagnosticWrite, bool silent)
+        string? demPath, bool diagnosticWrite, bool silent, bool uiHost = false,
+        string? evidenceDirectory = null)
     {
         var start = XycCliStartConfiguration.Create(appPath, sessionId, demPath,
-            diagnosticWrite, silent);
+            diagnosticWrite, silent, uiHost, evidenceDirectory);
         SilentProcessMonitor? monitor = null;
         if (silent)
         {

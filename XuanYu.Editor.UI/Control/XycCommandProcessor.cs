@@ -4,7 +4,8 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.Editor.UI.XycControl;
 
-public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrite)
+public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrite,
+    IXycUiRuntime? uiRuntime = null)
 {
     static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     readonly HashSet<string> _requestIds = new(StringComparer.Ordinal);
@@ -21,6 +22,8 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
         if (request.SessionId != runtime.InstanceId) return Result(false, "UNAUTHORIZED");
         try
         {
+            if (request.Command.StartsWith("ui.", StringComparison.Ordinal))
+                return XycUiCommandProcessor.Execute(request, uiRuntime, Result);
             return request.Command switch
             {
                 "runtime.info" => Result(true, null, runtime.InspectRuntime()),
@@ -37,7 +40,12 @@ public sealed class XycCommandProcessor(IXycRuntime runtime, bool diagnosticWrit
         }
         catch (UnauthorizedAccessException) { return Result(false, "UNAUTHORIZED"); }
         catch (JsonException) { return Result(false, "INVALID_INPUT"); }
-        catch (InvalidOperationException) { return Result(false, "NOT_READY"); }
+        catch (InvalidOperationException error)
+        {
+            if (request.Command.StartsWith("ui.", StringComparison.Ordinal))
+                Console.Error.WriteLine($"XYC UI NOT_READY: {error.Message}");
+            return Result(false, "NOT_READY");
+        }
         catch (OperationCanceledException) { return Result(false, "CANCELLED"); }
         catch (TimeoutException) { return Result(false, "TIMEOUT"); }
         catch { return Result(false, "EXECUTION_FAILED"); }

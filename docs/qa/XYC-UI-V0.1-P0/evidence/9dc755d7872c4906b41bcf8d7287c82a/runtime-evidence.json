@@ -1,0 +1,415 @@
+{
+  "status": "RUNTIME_CAPTURED",
+  "runId": "9dc755d7872c4906b41bcf8d7287c82a",
+  "runtime": {
+    "protocolVersion": "XYC-API/1",
+    "instanceId": "9dc755d7872c4906b41bcf8d7287c82a",
+    "isolationMode": "windowed-editor-instance",
+    "renderCapability": "windowed-editor-instance; offscreen=NOT-IMPLEMENTED",
+    "build": "HEAD=UNKNOWN;DIRTY=NO;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-18T18:34:53.4247129+08:00",
+    "branch": "UNKNOWN",
+    "dirty": "UNKNOWN",
+    "processId": 2288,
+    "viewportFrameId": 0,
+    "silentHost": null
+  },
+  "initialWindow": {
+    "processId": 2288,
+    "hwnd": "0x1B0F72",
+    "visible": true,
+    "foreground": false,
+    "windowState": "Normal",
+    "widthDip": 1360,
+    "heightDip": 820,
+    "clientWidthPx": 1360,
+    "clientHeightPx": 820,
+    "dpi": 96,
+    "dpiScale": 1
+  },
+  "captures": [
+    {
+      "imagePath": "C:\\Users\\Heai\\AppData\\Local\\Temp\\xye-xyc-p0-candidate-r2\\artifacts\\diagnostics\\xyc-ui-v0.1-p0\\9dc755d7872c4906b41bcf8d7287c82a\\Light-1360.png",
+      "metadataPath": "C:\\Users\\Heai\\AppData\\Local\\Temp\\xye-xyc-p0-candidate-r2\\artifacts\\diagnostics\\xyc-ui-v0.1-p0\\9dc755d7872c4906b41bcf8d7287c82a\\Light-1360.json",
+      "sha256": "63F3CB8EFBB1B39F0F8C349B4489C7F152B657AACFEBC109800358CE90FA6D75",
+      "pixelWidth": 1330,
+      "pixelHeight": 98,
+      "region": {
+        "region": "TOP",
+        "x": 15,
+        "y": 8,
+        "widthDip": 1330,
+        "heightDip": 98,
+        "xpx": 23,
+        "ypx": 39,
+        "widthPx": 1330,
+        "heightPx": 98
+      },
+      "window": {
+        "processId": 2288,
+        "hwnd": "0x1B0F72",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1360,
+        "heightDip": 820,
+        "clientWidthPx": 1360,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "theme": {
+        "requested": "Light",
+        "actual": "Light"
+      },
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=E22502C8898EC1E60B4AC31BC15047B08D313C9F828BCB3D5F4E3ABE549DCF01",
+      "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOP;SWP_NOACTIVATE;crop=TOP",
+      "captureTimeUtc": "2026-10-18T18:41:46.8919792+08:00",
+      "BackgroundSampleRgb": "255,255,255"
+    },
+    {
+      "imagePath": "C:\\Users\\Heai\\AppData\\Local\\Temp\\xye-xyc-p0-candidate-r2\\artifacts\\diagnostics\\xyc-ui-v0.1-p0\\9dc755d7872c4906b41bcf8d7287c82a\\Dark-1360.png",
+      "metadataPath": "C:\\Users\\Heai\\AppData\\Local\\Temp\\xye-xyc-p0-candidate-r2\\artifacts\\diagnostics\\xyc-ui-v0.1-p0\\9dc755d7872c4906b41bcf8d7287c82a\\Dark-1360.json",
+      "sha256": "0169B9C44BD3636B50154A21B7B3D4CCD4F5F3F0EFD78A09F933EACE0E79BD6B",
+      "pixelWidth": 1330,
+      "pixelHeight": 98,
+      "region": {
+        "region": "TOP",
+        "x": 15,
+        "y": 8,
+        "widthDip": 1330,
+        "heightDip": 98,
+        "xpx": 23,
+        "ypx": 39,
+        "widthPx": 1330,
+        "heightPx": 98
+      },
+      "window": {
+        "processId": 2288,
+        "hwnd": "0x1B0F72",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1360,
+        "heightDip": 820,
+        "clientWidthPx": 1360,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "theme": {
+        "requested": "Dark",
+        "actual": "Dark"
+      },
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=E22502C8898EC1E60B4AC31BC15047B08D313C9F828BCB3D5F4E3ABE549DCF01",
+      "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOP;SWP_NOACTIVATE;crop=TOP",
+      "captureTimeUtc": "2026-10-18T18:41:47.3498759+08:00",
+      "BackgroundSampleRgb": "42,56,66"
+    },
+    {
+      "imagePath": "C:\\Users\\Heai\\AppData\\Local\\Temp\\xye-xyc-p0-candidate-r2\\artifacts\\diagnostics\\xyc-ui-v0.1-p0\\9dc755d7872c4906b41bcf8d7287c82a\\Light-1920.png",
+      "metadataPath": "C:\\Users\\Heai\\AppData\\Local\\Temp\\xye-xyc-p0-candidate-r2\\artifacts\\diagnostics\\xyc-ui-v0.1-p0\\9dc755d7872c4906b41bcf8d7287c82a\\Light-1920.json",
+      "sha256": "3AA62D280800626BC3C8B4F985E6009A06764F161A0B348FBE386943A39993BD",
+      "pixelWidth": 1890,
+      "pixelHeight": 98,
+      "region": {
+        "region": "TOP",
+        "x": 15,
+        "y": 8,
+        "widthDip": 1890,
+        "heightDip": 98,
+        "xpx": 23,
+        "ypx": 39,
+        "widthPx": 1890,
+        "heightPx": 98
+      },
+      "window": {
+        "processId": 2288,
+        "hwnd": "0x1B0F72",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1920,
+        "heightDip": 820,
+        "clientWidthPx": 1920,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "theme": {
+        "requested": "Light",
+        "actual": "Light"
+      },
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=E22502C8898EC1E60B4AC31BC15047B08D313C9F828BCB3D5F4E3ABE549DCF01",
+      "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOP;SWP_NOACTIVATE;crop=TOP",
+      "captureTimeUtc": "2026-10-18T18:41:47.5376093+08:00",
+      "BackgroundSampleRgb": "255,255,255"
+    },
+    {
+      "imagePath": "C:\\Users\\Heai\\AppData\\Local\\Temp\\xye-xyc-p0-candidate-r2\\artifacts\\diagnostics\\xyc-ui-v0.1-p0\\9dc755d7872c4906b41bcf8d7287c82a\\Dark-1920.png",
+      "metadataPath": "C:\\Users\\Heai\\AppData\\Local\\Temp\\xye-xyc-p0-candidate-r2\\artifacts\\diagnostics\\xyc-ui-v0.1-p0\\9dc755d7872c4906b41bcf8d7287c82a\\Dark-1920.json",
+      "sha256": "8E3943EEDA53D4E2D0EA3B9AF0502DE0ADE09254E94C2FE28D00FF228286EF54",
+      "pixelWidth": 1890,
+      "pixelHeight": 98,
+      "region": {
+        "region": "TOP",
+        "x": 15,
+        "y": 8,
+        "widthDip": 1890,
+        "heightDip": 98,
+        "xpx": 23,
+        "ypx": 39,
+        "widthPx": 1890,
+        "heightPx": 98
+      },
+      "window": {
+        "processId": 2288,
+        "hwnd": "0x1B0F72",
+        "visible": true,
+        "foreground": false,
+        "windowState": "Normal",
+        "widthDip": 1920,
+        "heightDip": 820,
+        "clientWidthPx": 1920,
+        "clientHeightPx": 820,
+        "dpi": 96,
+        "dpiScale": 1
+      },
+      "theme": {
+        "requested": "Dark",
+        "actual": "Dark"
+      },
+      "buildIdentity": "Editor.App.exe=DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C;XuanYu.Editor.UI.dll=E22502C8898EC1E60B4AC31BC15047B08D313C9F828BCB3D5F4E3ABE549DCF01",
+      "captureMethod": "GDI.BitBlt;source=DWM-desktop-composition;temporary-HWND_TOP;SWP_NOACTIVATE;crop=TOP",
+      "captureTimeUtc": "2026-10-18T18:41:47.7084337+08:00",
+      "BackgroundSampleRgb": "42,56,66"
+    }
+  ],
+  "requests": [
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "e6cabe8e1c8c45f7a8673ea134d24a23",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "runtime.info",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "89a534b782f54bac9bf5dc4f181c288e",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.window.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "8659209e5f424576b6419411d23b4508",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.window.resize",
+      "args": {
+        "widthDip": 1360,
+        "heightDip": 820
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "84a02688638047a7bb1815ae386ae273",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.theme.set",
+      "args": {
+        "theme": "Light"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "80872da29d464e36a073de5af2edb285",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.theme.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "d1b87b8707f24a4c80aa1c68ded68166",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.region.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "c659e645a5f14e53a4de52558deb6fc0",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Light-1360.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "298a0dd990dc4e45a195c13f5588d24b",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.theme.set",
+      "args": {
+        "theme": "Dark"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "8f284d1d81824490b14013bd2d3c31d8",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.theme.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "ef8c2521fdb04770be0e4abdaf6b88f9",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.region.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "d083ab8c59d5436eb8f02042f5f97c50",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Dark-1360.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "6a1d1197a73e43f185981ae777e90133",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Dark-1360.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "250b4344823e40e1bb4c160c26447fbd",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Dark-1360.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "28fc9c6c2abc4d829241d4c0648cfb8a",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Dark-1360.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "e5226780ece543e3ae154cd8d50a4dc3",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Dark-1360.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "aa78ce2d3840477db9230d50a8cd4f75",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.window.resize",
+      "args": {
+        "widthDip": 1920,
+        "heightDip": 820
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "3e1bce7377294298b0659216b07721fc",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.theme.set",
+      "args": {
+        "theme": "Light"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "93a5fd76171c4588a967b94ab0550a34",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.theme.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "8aa9ae306a5c4004ace6442c48ad2c4f",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.region.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "f95785142bf3429a81ec2d4e10d6cca3",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Light-1920.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "c4ee3cb816254a60a093ebf306f9e209",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.theme.set",
+      "args": {
+        "theme": "Dark"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "a0ad331371cd41a4b9fd466cd4e1a035",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.theme.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "cb5931cbf3924560ac1f597efbf001b4",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.region.inspect",
+      "args": {}
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "9721b0f95bda4a0cad4428d614d4b008",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Dark-1920.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "1d54c39eb11b4ec894ef3dd201e2e364",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "ui.capture",
+      "args": {
+        "fileName": "Dark-1920.png"
+      }
+    },
+    {
+      "schemaVersion": "XYC-API/1",
+      "requestId": "f9ff49f6ed274c3a89c29546c1c57776",
+      "sessionId": "9dc755d7872c4906b41bcf8d7287c82a",
+      "command": "session.close",
+      "args": {}
+    }
+  ],
+  "sessionClose": {
+    "closed": true
+  },
+  "cliExited": true,
+  "cliExitCode": 0,
+  "windowForegroundObserved": [
+    false,
+    false,
+    false,
+    false
+  ],
+  "logs": []
+}

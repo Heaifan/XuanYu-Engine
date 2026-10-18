@@ -3,7 +3,7 @@ using XuanYu.Editor.UI.XycControl;
 
 if (args.Length < 2 || args[0] != "--app")
 {
-    Console.Error.WriteLine("用法：XuanYu.Editor.Control.Cli --app <XuanYu.Editor.App.exe> [--session-id <id>] [--xyc-silent] [--diagnostic-write] [--test-dem <n24e121.hgt>] [--timeout-seconds <seconds>]");
+    Console.Error.WriteLine("用法：XuanYu.Editor.Control.Cli --app <XuanYu.Editor.App.exe> [--session-id <id>] [--xyc-silent | --xyc-ui] [--evidence-dir <path>] [--diagnostic-write] [--test-dem <n24e121.hgt>] [--timeout-seconds <seconds>]");
     return 2;
 }
 
@@ -19,6 +19,13 @@ if (Path.GetFileName(appPath) != "XuanYu.Editor.App.exe" || !File.Exists(appAsse
 var sessionId = Value(args, "--session-id") ?? Guid.NewGuid().ToString("N");
 var timeout = int.TryParse(Value(args, "--timeout-seconds"), out var seconds) ? seconds : 120;
 if (timeout is < 1 or > 3600) return 2;
+var uiHost = args.Contains("--xyc-ui");
+if (uiHost && args.Contains("--xyc-silent")) return 2;
+var evidenceDirectory = uiHost
+    ? Path.GetFullPath(Value(args, "--evidence-dir") ?? Path.Combine(
+        Environment.CurrentDirectory, "artifacts", "diagnostics", "xyc-ui-v0.1-p0", sessionId))
+    : null;
+if (evidenceDirectory is not null) Directory.CreateDirectory(evidenceDirectory);
 var demPath = Value(args, "--test-dem");
 if (demPath is not null && !args.Contains("--diagnostic-write"))
 {
@@ -38,7 +45,8 @@ catch (Exception error) when (error is UnauthorizedAccessException or IOExceptio
 }
 
 return await XycCliSessionRunner.RunAsync(appPath, sessionId, timeout, demPath,
-    diagnosticWrite: args.Contains("--diagnostic-write"), silent: args.Contains("--xyc-silent"));
+    diagnosticWrite: args.Contains("--diagnostic-write"), silent: args.Contains("--xyc-silent"),
+    uiHost: uiHost, evidenceDirectory: evidenceDirectory);
 
 static string? Value(string[] values, string key)
 {

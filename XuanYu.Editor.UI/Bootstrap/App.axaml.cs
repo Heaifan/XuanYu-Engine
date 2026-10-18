@@ -56,8 +56,9 @@ public sealed class App : Application
 
             desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
             var window = new UiWin();
-            window.ShowActivated = desktop.Args?.Contains("--xyc-stdio") != true;
-            window.ShowInTaskbar = desktop.Args?.Contains("--xyc-stdio") != true;
+            var xycStdio = desktop.Args?.Contains("--xyc-stdio") == true;
+            window.ShowActivated = !xycStdio;
+            window.ShowInTaskbar = !xycStdio || desktop.Args?.Contains("--xyc-ui") == true;
             var isWriteThread = () => Dispatcher.UIThread.CheckAccess();
             var state = _stateFactory?.Invoke(isWriteThread, false);
             var vm = state is { } dependencies
@@ -66,7 +67,8 @@ public sealed class App : Application
                 : new UiVm(_surfaceBridgeFactory, isWriteThread,
                     seedInitialScene: false, dialogService: window);
             window.DataContext = vm;
-            var xyc = XycAppSession.TryStart(desktop.Args ?? [], vm, desktop);
+            var xyc = XycAppSession.TryStart(desktop.Args ?? [], vm, desktop,
+                uiWindow: window);
             desktop.MainWindow = window;
             if (!xyc) TerrainCameraReplayRunner.Attach(window, vm, desktop);
         }
