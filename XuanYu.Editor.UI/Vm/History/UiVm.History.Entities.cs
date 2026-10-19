@@ -13,7 +13,7 @@ public sealed partial class UiVm
         {
             TransformHistoryEntry transform => new TransformCommand(
                 0, transform.EntityKey, undo ? transform.Before : transform.After,
-                _worldMutation.WorldRevision).TryApply(_worldMutation, out _),
+                _worldMutation.GetEntityMutationRevision(transform.EntityKey)).TryApply(_worldMutation, out _),
             AddEntityHistoryEntry add => ApplyEntityPresence(add.Snapshot, !undo, add.Binding),
             DeleteEntityHistoryEntry delete => ApplyEntityPresence(delete.Snapshot, undo, delete.Binding),
             RenameEntityHistoryEntry rename => _sceneState.RenameEntity(

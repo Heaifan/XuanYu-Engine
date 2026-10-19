@@ -3,6 +3,7 @@ using System.Text.Json;
 
 namespace XuanYu.World.Tests.Xyc;
 
+[Collection("XYC Windows process runtime")]
 public sealed class XycProcessE2ETests
 {
     static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
@@ -11,8 +12,9 @@ public sealed class XycProcessE2ETests
     public async Task Cli_controls_real_editor_camera_and_releases_instance()
     {
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../"));
-        var cli = Path.Combine(root, "XuanYu.Editor.Control.Cli/bin/Debug/net10.0/XuanYu.Editor.Control.Cli.exe");
-        var app = Path.Combine(root, "XuanYu.Editor.App/bin/Debug/net10.0/XuanYu.Editor.App.exe");
+        var configuration = Directory.GetParent(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar))!.Name;
+        var cli = Path.Combine(root, $"XuanYu.Editor.Control.Cli/bin/{configuration}/net10.0/XuanYu.Editor.Control.Cli.exe");
+        var app = Path.Combine(root, $"XuanYu.Editor.App/bin/{configuration}/net10.0/XuanYu.Editor.App.exe");
         Assert.True(File.Exists(cli), $"Missing CLI: {cli}");
         Assert.True(File.Exists(app), $"Missing Editor App: {app}");
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
@@ -23,6 +25,7 @@ public sealed class XycProcessE2ETests
         };
         start.ArgumentList.Add("--app"); start.ArgumentList.Add(app);
         start.ArgumentList.Add("--session-id"); start.ArgumentList.Add("xyc-process-test");
+        start.ArgumentList.Add("--xyc-silent");
         start.ArgumentList.Add("--diagnostic-write");
         using var process = Process.Start(start)!;
         try

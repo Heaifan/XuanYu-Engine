@@ -1,6 +1,6 @@
 namespace XuanYu.Core.History;
 
-public sealed class EditorHistoryOwner
+public sealed partial class EditorHistoryOwner
 {
     readonly Stack<HistoryItem> _undo = new();
     readonly Stack<HistoryItem> _redo = new();
@@ -90,5 +90,5 @@ public sealed class EditorHistoryOwner
         return true;
     }
 
-    readonly record struct HistoryItem(object Entry, long BeforeRevision, long AfterRevision);
+    sealed record HistoryItem(object Entry, long BeforeRevision, long AfterRevision);
 }

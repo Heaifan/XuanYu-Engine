@@ -3,6 +3,7 @@ using System.Text.Json;
 
 namespace XuanYu.World.Tests.Xyc;
 
+[Collection("XYC Windows process runtime")]
 public sealed class XycCliGuardE2ETests
 {
     [Fact]

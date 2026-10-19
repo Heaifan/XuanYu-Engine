@@ -22,13 +22,13 @@ public sealed partial class UiVm
             return;
         }
 
-        if (!_historyOwner.TryUndoAny(out var entry))
+        if (!_historyOwner.TryPeekUndoAny(out var top))
         {
             FooterMessage = "没有可撤销的编辑历史。";
             return;
         }
 
-        if (!ApplyHistory(entry, undo: true)) return;
+        if (!TryApplyHistoryAndComplete(top, undo: true)) return;
         FooterMessage = "撤销完成。";
         OnPropertyChanged(nameof(DebugObjectItems));
         OnPropertyChanged(nameof(InspectorFields)); RefreshInspectorEntityProjection();
@@ -52,13 +52,13 @@ public sealed partial class UiVm
             return;
         }
 
-        if (!_historyOwner.TryRedoAny(out var entry))
+        if (!_historyOwner.TryPeekRedoAny(out var top))
         {
             FooterMessage = "没有可重做的编辑历史。";
             return;
         }
 
-        if (!ApplyHistory(entry, undo: false)) return;
+        if (!TryApplyHistoryAndComplete(top, undo: false)) return;
         FooterMessage = "重做完成。";
         OnPropertyChanged(nameof(DebugObjectItems));
         OnPropertyChanged(nameof(InspectorFields)); RefreshInspectorEntityProjection();

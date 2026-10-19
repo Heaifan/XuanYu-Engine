@@ -6,10 +6,17 @@ public sealed record XycEntity(string EntityId, string Type, string Name,
     XycTransform Transform);
 public sealed record XycTransform(Vector3 Position, Vector3 Rotation, Vector3 Scale);
 public sealed record XycInspectorField(string Label, string Value);
+public sealed record XycHistorySnapshot(string OperationType, string? EntityId,
+    long BeforeRevision, long AfterRevision, long CurrentRevision);
+public sealed record XycSceneTransactionFailure(string Status, string RecoveryReason,
+    XycSceneState? ObservedState);
 public sealed record XycSceneState(string SceneId, long SceneRevision, int EntityCount,
     string[] EntityIds, string[] HierarchyEntityIds, string[] RenderEntityIds,
     XycInspectorField[] InspectorFields, string ScenePath, bool HasActiveInteraction, int UndoCount,
-    int RedoCount, string? TestEntityId, string Stage);
+    int RedoCount, string? TestEntityId, string Stage,
+    string[]? SessionEntityIds = null, string? InspectorEntityId = null,
+    XycHistorySnapshot? UndoTop = null, XycHistorySnapshot? RedoTop = null,
+    string CommitStatus = "NOT_APPLIED", string? RecoveryReason = null);
 public sealed record XycSceneRequest(string SceneId, long ExpectedRevision,
     string? EntityId = null, Vector3? Position = null);
 

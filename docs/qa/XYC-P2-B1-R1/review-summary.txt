@@ -1,0 +1,29 @@
+XYC P2-B1 Candidate Evidence (refreshed 2026-10-19)
+Base commit: fa666cb17d47fa96eeb13867ffc06572c803dac9
+Base Git Tree: a9175bec52582e90806c77a7c0c41b397a263e22
+Candidate archive SHA256: 488B32847C466FDCA49618D63FACCD4A0F8F96EF83D98D7C077F4534A4889ED4
+Base manifest SHA256: 2B832156A142914CDB34DB62FFA61F3D37984B06A57FE0873BE972D1E0B2E95A
+Tracked baseline files: 4087
+Candidate source files checked: 4104
+Added or modified source files: 27
+Deleted baseline files: 0
+Changed source line limit: maximum 100 lines per file
+Candidate change manifest SHA256: 34B1164AF00075B418BF904E1D438FC3C67EE6E5CED63623046C405854D675CE
+Candidate source changes: candidate-source-changes.sha256
+External fixture n24e121.hgt excluded from source delta.
+
+Verification (latest snapshot):
+- Full XYC Release filter: 64/64 PASS, 0 skipped, no-build, serial xUnit collections.
+- Windows process E2E Release filter: 4/4 PASS, no-build: process control 1, multi-entity process 1, CLI guard 2.
+- History snapshot tests: 3/3 PASS. (Distinct focused suite; not counted in 64.)
+- Release Editor App build: 0 warnings, 0 errors.
+- Release Control CLI build: 0 warnings, 0 errors.
+- Dual-Cube hidden Windows Editor Vulkan frame captured in silent mode with non-foreground window; screenshot SHA256: 87CED73F8BE3CF7A255349922338EBD938F5A3B537063039A25F7D255DA45816. This is runtime evidence, not user P4 acceptance.
+
+Build output hashes:
+- Editor App exe: DE13C9CF9C40C876B9F62C49D864F0FD665E77FE73EA5CCC1EE8896E0538B74C
+- Control CLI exe: A0202B6600AD5DF7EBBD3EEF7E14743D5F731EFAE45D021EDFED9A34B10C55C6
+- Editor UI dll: B6DE836EE7DA3AD330508C53600888F71C56BCC7FB70580A7BC0186EAFDDD912
+- Core dll: 1C7BB93AB833E8D941A882A5E265C0E5B17212CACF269FE94690FD6F78128F10
+
+Tested behaviors include multi-Cube creation and movement, exact History top ownership and revisions, interleaved Undo/Redo, wrong-target rejection without stack movement, branch invalidation, scene/session invalidation, Inspector identity, World/Hierarchy/Render projections, precommit failure, World-committed/History-failed IN_DOUBT, no duplicate retry, and restricted CLI controls.

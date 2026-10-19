@@ -5,10 +5,12 @@ public sealed class SceneDocumentSession
     string _sceneId = Guid.NewGuid().ToString("N");
     string _sceneName = "未命名场景";
     long _savedRevision;
+    long _lifecycleRevision;
 
     public string? CurrentPath { get; private set; }
     public bool IsUntitled => string.IsNullOrWhiteSpace(CurrentPath);
     public string SceneId => _sceneId;
+    public long LifecycleRevision => _lifecycleRevision;
     public string SceneName => _sceneName;
     public string LastError { get; private set; } = "";
 
@@ -16,6 +18,7 @@ public sealed class SceneDocumentSession
 
     public void MarkSaved(string path, SceneDocumentSnapshot snapshot, long revision)
     {
+        _lifecycleRevision++;
         CurrentPath = path;
         _sceneId = snapshot.SceneId;
         _sceneName = snapshot.SceneName;
@@ -25,6 +28,7 @@ public sealed class SceneDocumentSession
 
     public void MarkLoaded(string path, SceneDocumentSnapshot snapshot)
     {
+        _lifecycleRevision++;
         CurrentPath = path;
         _sceneId = snapshot.SceneId;
         _sceneName = snapshot.SceneName;
@@ -34,6 +38,7 @@ public sealed class SceneDocumentSession
 
     public void MarkNew()
     {
+        _lifecycleRevision++;
         CurrentPath = null;
         _sceneId = Guid.NewGuid().ToString("N");
         _sceneName = "未命名场景";
