@@ -26,6 +26,7 @@ public sealed unsafe partial class VulkanPresentLoop
     public void Dispose()
     {
         if (!Stop()) return;
+        _eventSession?.DisposeAsync().AsTask().GetAwaiter().GetResult();
         DestroySync();
     }
 

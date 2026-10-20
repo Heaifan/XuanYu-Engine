@@ -45,7 +45,6 @@ public sealed partial class VulkanRenderSession : IDisposable
         _log = log;
         _surfaceHandle = surfaceHandle;
     }
-
     public static VulkanRenderSession? Create(Vk vk, VulkanDeviceOwner? deviceOwner,
         VulkanSwapchainOwner? swapchainOwner, VulkanPhysicalDeviceSelection? selection,
         Action<string>? log, NativeHostSurfaceHandle? surfaceHandle = null, RenderProjectionResult? projection = null)
@@ -79,6 +78,7 @@ public sealed partial class VulkanRenderSession : IDisposable
                 reason => session!.MarkFailed(reason),
                 log);
             session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, skyPipeline, gridPipelines, log, surfaceHandle);
+            loop.AttachSwapchainEvents();
             session.AttachVectorOverlayPipeline(vk);
             session.AttachMapLabelPipeline(vk);
             session.AttachTerrainPipeline(vk);

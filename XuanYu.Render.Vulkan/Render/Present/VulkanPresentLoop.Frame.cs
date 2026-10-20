@@ -1,10 +1,17 @@
+using System.Threading;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
+using XuanYu.Render.Abstractions.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanPresentLoop
 {
+    readonly RendererEventSession? _eventSession = RendererEventSessionFactory.TryCreate();
+    long _nextGpuFrameId;
+
+    long NextGpuFrameId() => Interlocked.Increment(ref _nextGpuFrameId);
+
     bool HandleAcquireResult(Result res)
     {
         if (res == Result.ErrorOutOfDateKhr)
@@ -26,7 +33,8 @@ public sealed unsafe partial class VulkanPresentLoop
         return Check(_vk.ResetFences(device, 1, &fence), "ResetFences");
     }
 
-    bool SubmitFrame(Silk.NET.Vulkan.Device device, uint idx, PipelineStageFlags stage)
+    bool SubmitFrame(Silk.NET.Vulkan.Device device, uint idx, PipelineStageFlags stage,
+        long frameId, long cameraRevision)
     {
         var cmds = _clearFrame.CommandBuffers;
         var submit = new SubmitInfo { SType = StructureType.SubmitInfo };
@@ -42,7 +50,11 @@ public sealed unsafe partial class VulkanPresentLoop
             submit.PCommandBuffers = &pCmd[idx];
             submit.SignalSemaphoreCount = 1;
             submit.PSignalSemaphores = &renderFinished;
-            return Check(_vk.QueueSubmit(_deviceOwner.GraphicsQueue, 1, &submit, fence), "QueueSubmit");
+            var success = Check(_vk.QueueSubmit(_deviceOwner.GraphicsQueue, 1, &submit, fence), "QueueSubmit");
+            _eventSession?.PublishFrameEvent(success ? RendererEventCodes.FrameSubmitted :
+                RendererEventCodes.QueueSubmitFailed, success ? RendererEventLevel.Info :
+                RendererEventLevel.Error, frameId, idx, cameraRevision);
+            return success;
         }
     }
 
