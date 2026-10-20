@@ -169,8 +169,11 @@ function Get-XyeManifestPreview([string]$Root) {
             try { Get-Process -Id ([int]$item.OwnerProcessId) -ErrorAction Stop | Out-Null }
             catch { $observed = 'INTERRUPTED (owner process absent; preview only)' }
         }
-        $bytes = [long]$item.DirectoryBytes.SourceSnapshot + [long]$item.DirectoryBytes.Build +
-            [long]$item.DirectoryBytes.Diagnostics + [long]$item.DirectoryBytes.Temp
+        $bytes = [long]0
+        foreach ($name in @('SourceSnapshot','Build','Diagnostics','Temp')) {
+            $entry = $item.DirectoryBytes.PSObject.Properties[$name]
+            if ($null -ne $entry -and $null -ne $entry.Value) { $bytes += [long]$entry.Value }
+        }
         [pscustomobject]@{
             RunId=$item.RunId; TaskType=$item.TaskType; Status=$item.Status; ObservedStatus=$observed
             UpdatedUtc=$item.UpdatedUtc; WorkspaceBytes=$bytes

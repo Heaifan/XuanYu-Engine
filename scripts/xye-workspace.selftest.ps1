@@ -65,12 +65,15 @@ try {
     [pscustomobject]@{
         RunId='stale-run'; TaskType='WorkspaceInterruptSelfTest'; Status='ACTIVE'
         OwnerProcessId=2147483647; UpdatedUtc=[DateTimeOffset]::UtcNow.ToString('O')
-        DirectoryBytes=@{SourceSnapshot=0;Build=0;Diagnostics=0;Temp=0}
+        DirectoryBytes=@{}
         SourceDirectory=$testRoot; BuildDirectory=$testRoot; DiagnosticsDirectory=$testRoot
     } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $testRoot 'Manifests\stale-run.json') -Encoding utf8
     $preview = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Preview -AsJson
-    if ($LASTEXITCODE -ne 0 -or ($preview | Out-String) -notmatch 'INTERRUPTED') {
-        throw 'Read-only preview did not identify an abandoned ACTIVE task.'
+    $previewItems = @($preview | ConvertFrom-Json)
+    $stalePreview = $previewItems | Where-Object RunId -eq 'stale-run' | Select-Object -First 1
+    if ($LASTEXITCODE -ne 0 -or $null -eq $stalePreview -or
+        $stalePreview.ObservedStatus -notmatch 'INTERRUPTED' -or [long]$stalePreview.WorkspaceBytes -ne 0) {
+        throw 'Read-only preview did not safely classify an abandoned ACTIVE task with incomplete size data.'
     }
     $global:LASTEXITCODE = 0
     Write-Output 'XYE workspace lifecycle self-test passed.'
