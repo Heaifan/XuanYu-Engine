@@ -7,23 +7,25 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+if ([string]::IsNullOrWhiteSpace($env:XYE_TASK_RUN_ID) -or [string]::IsNullOrWhiteSpace($env:XYE_DIAGNOSTICS_DIRECTORY)) { throw 'Run XYC B3 through scripts\xye-workspace.ps1.' }
 if ([string]::IsNullOrWhiteSpace($Source)) { $Source = Join-Path $root 'artifacts\diagnostics\wp2-p4-r3\n24e121.hgt' }
 if ([string]::IsNullOrWhiteSpace($ErrorTable)) { $ErrorTable = Join-Path $root 'artifacts\diagnostics\xyc-b3\dev-error-table.json' }
 $Source = (Resolve-Path -LiteralPath $Source).Path; $ErrorTable = (Resolve-Path -LiteralPath $ErrorTable).Path
 if ((Get-FileHash $Source -Algorithm SHA256).Hash -ne 'BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1') { throw 'HGT SHA-256 不匹配' }
 if ($Replicates -lt 5 -or $Frames -lt 30) { throw '每配置至少 5 个独立进程、每进程至少 30 帧' }
-$allowed = [IO.Path]::GetFullPath((Join-Path $root 'artifacts\diagnostics\xyc-b3'))
-if ([string]::IsNullOrWhiteSpace($OutputDirectory)) { $OutputDirectory = Join-Path $allowed (Get-Date -Format 'yyyyMMdd-HHmmss') }
+$allowed = Join-Path $env:XYE_DIAGNOSTICS_DIRECTORY 'xyc-b3'
+if ([string]::IsNullOrWhiteSpace($OutputDirectory)) { $OutputDirectory = $allowed }
 $OutputDirectory = [IO.Path]::GetFullPath($OutputDirectory)
-if (-not $OutputDirectory.StartsWith($allowed + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw '输出目录必须位于 artifacts\diagnostics\xyc-b3' }
+if (-not $OutputDirectory.Equals($allowed,[StringComparison]::OrdinalIgnoreCase) -and -not $OutputDirectory.StartsWith($allowed + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw '输出目录必须位于当前任务 Diagnostics' }
 if (Test-Path $OutputDirectory) { throw '拒绝覆盖已有实验目录' }
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 $bootstrap = & (Join-Path $root 'scripts\xye-bootstrap.ps1'); if ($LASTEXITCODE -ne 0) { throw 'Bootstrap 未通过' }
 $dotnet = & (Join-Path $root 'scripts\resolve-dotnet.ps1'); if ($LASTEXITCODE -ne 0) { throw 'SDK resolver 失败' }
 & (Join-Path $root 'scripts\xye-dotnet.ps1') build (Join-Path $PSScriptRoot 'XuanYu.OffscreenTerrain.csproj') --no-restore -m 1 -nr false -p BuildInParallel=false -p UseSharedCompilation=false
 if ($LASTEXITCODE -ne 0) { throw 'Offscreen build failed' }
-$dll = Join-Path $PSScriptRoot 'bin\Debug\net10.0\XuanYu.OffscreenTerrain.dll'
-$head = (& git -C $root rev-parse HEAD).Trim(); $env:XYC_BUILD_ID = "HEAD=$head;B3=1;DIRTY=YES"
+$dll = Join-Path $env:XYE_BUILD_DIRECTORY 'bin\XuanYu.OffscreenTerrain\debug\XuanYu.OffscreenTerrain.dll'
+$head = if ($env:XYE_SOURCE_HEAD) { $env:XYE_SOURCE_HEAD } else { (& git -C $root rev-parse HEAD).Trim() }
+$env:XYC_BUILD_ID = "HEAD=$head;B3=1;DIRTY=$env:XYE_SOURCE_DIRTY"
 $env:XYE_PROBE_VIEWPORT = '1'; $env:XYE_TERRAIN_REPLAY = '1'; $env:XYE_TERRAIN_SSE_ERROR_TABLE = $ErrorTable
 $env:XYE_B3_FIXED_TERRAIN = '1'
 $configs = @(@('baseline','baseline'), @('lod-bias-1','lod-bias-1'), @('sse-0.5','sse-0.5'), @('sse-1','sse-1'), @('sse-2','sse-2'), @('sse-4','sse-4'))

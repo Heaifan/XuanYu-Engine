@@ -13,6 +13,7 @@
 
 - Repository Bootstrap / Resolver First：写入前执行 `scripts/xye-bootstrap.ps1`，确认实际仓库、branch、HEAD、upstream、Ahead/Behind 和 Dirty 状态。
 - .NET SDK 由 `scripts/resolve-dotnet.ps1` Resolver Chain 解析；正式命令使用 `scripts/xye-dotnet.ps1`。PATH 中没有 `dotnet` 不代表 SDK 不存在。
+- XYE 临时工作必须使用 `XYE_WORKSPACE_ROOT` 与 `scripts/xye-workspace.ps1`；构建、测试、快照和诊断路径不得自行改用 `$env:TEMP`。
 - Dirty 文件必须原样保全。不得自动 reset、clean、stash、checkout 或覆盖；未知修改只阻断与其重叠或依赖的操作。
 - 跨设备同步先 fetch 并只读核对。只有 index/worktree clean、Ahead=0 且 Behind>0 时允许 `git pull --ff-only`；否则暂停同步并报告。
 - 写入前明确 Owner、WriteScope 和依赖；同一路径同一时段只能有一个写入者。不可确认来源或范围冲突时先停止受影响的操作。

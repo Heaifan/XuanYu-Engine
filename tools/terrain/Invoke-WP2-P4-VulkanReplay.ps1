@@ -28,18 +28,27 @@ function Get-TreeFingerprint([string]$base, [string[]]$paths) {
 
 $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-$root = Join-Path $repo 'artifacts\diagnostics\wp2-p4-r7'
+if ([string]::IsNullOrWhiteSpace($env:XYE_TASK_RUN_ID) -or
+    [string]::IsNullOrWhiteSpace($env:XYE_DIAGNOSTICS_DIRECTORY) -or
+    [string]::IsNullOrWhiteSpace($env:XYE_BUILD_DIRECTORY)) {
+    throw 'Run WP2 replay through scripts\xye-workspace.ps1.'
+}
+$root = [IO.Path]::GetFullPath($env:XYE_DIAGNOSTICS_DIRECTORY)
+$buildRoot = [IO.Path]::GetFullPath($env:XYE_BUILD_DIRECTORY)
 New-Item -ItemType Directory -Force -Path $root | Out-Null
 if ([string]::IsNullOrWhiteSpace($TerrainPath)) {
-    $TerrainPath = Join-Path $root 'n23e121.hgt'
-    if (-not (Test-Path -LiteralPath $TerrainPath)) { & (Join-Path $PSScriptRoot 'New-WP2-P4-ReplayHgt.ps1') }
+    $TerrainPath = Join-Path $root 'fixture\n23e121.hgt'
+    if (-not (Test-Path -LiteralPath $TerrainPath)) {
+        & (Join-Path $PSScriptRoot 'New-WP2-P4-ReplayHgt.ps1') -OutputDirectory (Split-Path -Parent $TerrainPath)
+        if ($LASTEXITCODE -ne 0) { throw 'Replay HGT generation failed.' }
+    }
 }
 $TerrainPath = (Resolve-Path -LiteralPath $TerrainPath).Path
 $terrainHash = (Get-FileHash -LiteralPath $TerrainPath -Algorithm SHA256).Hash
-$head = (& git -C $repo rev-parse HEAD).Trim()
-$dirty = if ((git -C $repo status --porcelain=v1).Count -gt 0) { 'YES' } else { 'NO' }
+$head = if ($env:XYE_SOURCE_HEAD) { $env:XYE_SOURCE_HEAD } else { (& git -C $repo rev-parse HEAD).Trim() }
+$dirty = if ($env:XYE_SOURCE_DIRTY) { $env:XYE_SOURCE_DIRTY } elseif ((git -C $repo status --porcelain=v1).Count -gt 0) { 'YES' } else { 'NO' }
 $stamp = [DateTimeOffset]::UtcNow.ToString('O')
-$publish = Join-Path $root 'publish-v1'
+$publish = Join-Path $buildRoot 'publish-v1'
 New-Item -ItemType Directory -Force -Path $publish | Out-Null
 $buildLog = Join-Path $root 'publish.log'
 & (Join-Path $repo 'scripts\xye-dotnet.ps1') publish `
@@ -49,8 +58,8 @@ $buildLog = Join-Path $root 'publish.log'
 if ($LASTEXITCODE -ne 0) { throw "Windows Vulkan replay publish failed; see $buildLog" }
 $exe = Join-Path $publish 'XuanYu.Editor.App.exe'
 if (-not (Test-Path -LiteralPath $exe)) { throw "Publish did not create $exe" }
-$sourcePaths = @(& git -C $repo ls-files --cached --others --exclude-standard)
-$sourceFingerprint = Get-TreeFingerprint $repo $sourcePaths
+$sourcePaths = @(& git -C $repo ls-files --cached --others --exclude-standard 2>$null)
+$sourceFingerprint = if ($env:XYE_SOURCE_FINGERPRINT) { $env:XYE_SOURCE_FINGERPRINT } else { Get-TreeFingerprint $repo $sourcePaths }
 $publishedPaths = @(Get-ChildItem -LiteralPath $publish -Recurse -File |
     ForEach-Object { $_.FullName.Substring($publish.Length + 1) })
 $publishFingerprint = Get-TreeFingerprint $publish $publishedPaths
