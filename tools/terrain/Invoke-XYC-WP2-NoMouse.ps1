@@ -1,24 +1,32 @@
 param(
-    [string]$CliPath = (Join-Path $PSScriptRoot '..\..\XuanYu.Editor.Control.Cli\bin\Debug\net10.0\XuanYu.Editor.Control.Cli.exe'),
-    [string]$AppPath = (Join-Path $PSScriptRoot '..\..\XuanYu.Editor.App\bin\Debug\net10.0\XuanYu.Editor.App.exe'),
-    [string]$OutputRoot = (Join-Path $PSScriptRoot '..\..\artifacts\diagnostics\xyc-r0-a1')
+    [string]$CliPath = $(if ($env:XYE_BUILD_DIRECTORY) { Join-Path $env:XYE_BUILD_DIRECTORY 'bin\XuanYu.Editor.Control.Cli\debug\XuanYu.Editor.Control.Cli.exe' } else { Join-Path $PSScriptRoot '..\..\XuanYu.Editor.Control.Cli\bin\Debug\net10.0\XuanYu.Editor.Control.Cli.exe' }),
+    [string]$AppPath = $(if ($env:XYE_BUILD_DIRECTORY) { Join-Path $env:XYE_BUILD_DIRECTORY 'bin\XuanYu.Editor.App\debug\XuanYu.Editor.App.exe' } else { Join-Path $PSScriptRoot '..\..\XuanYu.Editor.App\bin\Debug\net10.0\XuanYu.Editor.App.exe' }),
+    [string]$OutputRoot = $(if ($env:XYE_DIAGNOSTICS_DIRECTORY) { $env:XYE_DIAGNOSTICS_DIRECTORY } else { Join-Path $PSScriptRoot '..\..\artifacts\diagnostics\xyc-r0-a1' })
 )
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
+$workspaceOutput = [IO.Path]::GetFullPath($OutputRoot)
+if ([string]::IsNullOrWhiteSpace($env:XYE_TASK_RUN_ID) -or
+    [string]::IsNullOrWhiteSpace($env:XYE_DIAGNOSTICS_DIRECTORY) -or
+    [string]::IsNullOrWhiteSpace($env:XYE_BUILD_DIRECTORY)) {
+    throw 'Run XYC WP2 through scripts\xye-workspace.ps1.'
+}
 $cli = [IO.Path]::GetFullPath($CliPath)
 $app = [IO.Path]::GetFullPath($AppPath)
 $outputBase = [IO.Path]::GetFullPath($OutputRoot)
 $dem = Join-Path $root 'artifacts\diagnostics\wp2-p4-r3\n24e121.hgt'
 $expectedHash = 'BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1'
-if (-not (Test-Path -LiteralPath $cli) -or -not (Test-Path -LiteralPath $app)) { throw 'Build the CLI and Editor App first.' }
+& (Join-Path $root 'scripts\xye-dotnet.ps1') build (Join-Path $root 'XuanYu.Editor.Control.Cli\XuanYu.Editor.Control.Cli.csproj') --no-restore -m 1 -nr false -p BuildInParallel=false -p UseSharedCompilation=false
+if ($LASTEXITCODE -ne 0) { throw 'XYC CLI/App build failed.' }
+if (-not (Test-Path -LiteralPath $cli) -or -not (Test-Path -LiteralPath $app)) { throw 'Workspace CLI or Editor App output is missing.' }
 if ((Get-FileHash -LiteralPath $dem -Algorithm SHA256).Hash -ne $expectedHash) { throw 'Registered NASADEM HGT hash mismatch.' }
-$allowed = [IO.Path]::GetFullPath((Join-Path $root 'artifacts\diagnostics\xyc-r0-a1'))
-if ($outputBase -ne $allowed) { throw "OutputRoot must equal the isolated XYC diagnostics directory: $allowed" }
+$allowed = [IO.Path]::GetFullPath($env:XYE_DIAGNOSTICS_DIRECTORY)
+if (-not $outputBase.Equals($allowed, [StringComparison]::OrdinalIgnoreCase)) { throw "OutputRoot must equal the isolated XYC diagnostics directory: $allowed" }
 $runId = [Guid]::NewGuid().ToString('N')
 $runDir = Join-Path $outputBase $runId
 New-Item -ItemType Directory -Force -Path $runDir | Out-Null
-$branch = (& git -C $root branch --show-current).Trim()
-$head = (& git -C $root rev-parse HEAD).Trim()
+$branch = if ($env:XYE_SOURCE_BRANCH) { $env:XYE_SOURCE_BRANCH } else { (& git -C $root branch --show-current).Trim() }
+$head = if ($env:XYE_SOURCE_HEAD) { $env:XYE_SOURCE_HEAD } else { (& git -C $root rev-parse HEAD).Trim() }
 Add-Type -AssemblyName System.Drawing
 Add-Type -TypeDefinition @'
 using System;

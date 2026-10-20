@@ -6,7 +6,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-$safeRoot = Join-Path $repo 'artifacts\diagnostics\wp2-p4-r3'
+if ([string]::IsNullOrWhiteSpace($env:XYE_TASK_RUN_ID) -or
+    [string]::IsNullOrWhiteSpace($env:XYE_DIAGNOSTICS_DIRECTORY)) {
+    throw 'Run replay-fixture generation through scripts\xye-workspace.ps1.'
+}
+$safeRoot = [IO.Path]::GetFullPath($env:XYE_DIAGNOSTICS_DIRECTORY)
 if ([string]::IsNullOrWhiteSpace($OutputDirectory)) { $OutputDirectory = $safeRoot }
 $target = [IO.Path]::GetFullPath($OutputDirectory)
 $safeRootFull = [IO.Path]::GetFullPath($safeRoot).TrimEnd([IO.Path]::DirectorySeparatorChar)

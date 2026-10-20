@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
+using XuanYu.Core.Diagnostics;
 
 internal static class XycCliStartConfiguration
 {
@@ -49,12 +50,17 @@ internal static class XycCliStartConfiguration
 
     private static void ConfigureProbe(ProcessStartInfo start)
     {
-        var directory = Path.Combine(Path.GetTempPath(), "XuanYuEngine", "XycSilentProbe",
-            Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(directory);
+        var directory = XyeWorkspacePaths.ResolveProbeDirectory();
         start.Environment["XYE_PROBE_VIEWPORT"] = "1";
         start.Environment["XYE_TERRAIN_REPLAY"] = "1";
         start.Environment["XYE_PROBE_DIRECTORY"] = directory;
+        start.Environment["XYE_PROBE_SOURCE_HEAD"] =
+            Environment.GetEnvironmentVariable("XYE_SOURCE_HEAD") ?? "UNKNOWN";
+        start.Environment["XYE_PROBE_SOURCE_DIRTY"] =
+            Environment.GetEnvironmentVariable("XYE_SOURCE_DIRTY") ?? "YES";
+        start.Environment["XYE_PROBE_SOURCE_FINGERPRINT"] =
+            Environment.GetEnvironmentVariable("XYE_SOURCE_FINGERPRINT") ?? "UNKNOWN";
+        start.Environment["XYE_PROBE_BUILD_TIMESTAMP"] = DateTimeOffset.UtcNow.ToString("O");
         Console.Error.WriteLine($"XYC silent monitor phase=probe-configured; directory={directory}");
     }
 }

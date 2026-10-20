@@ -29,8 +29,7 @@ public static partial class ViewportProbe
         lock (Sync)
         {
             if (_initialized) return;
-            _directory = Environment.GetEnvironmentVariable("XYE_PROBE_DIRECTORY") ??
-                Path.Combine(Path.GetTempPath(), "xye-viewport-probe");
+            _directory = XyeWorkspacePaths.ResolveProbeDirectory();
             Directory.CreateDirectory(_directory);
             _initialized = true;
             Log("runtime", $"[RUNTIME-PROBE] ProbeId={ViewportProbeIdentity.Current()};ProcessId={Environment.ProcessId}");
