@@ -69,30 +69,26 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
         while (Volatile.Read(ref _stopRequested) == 0)
         {
             if (submitted && !WaitFence(device)) break;
-            if (!_clearFrame.TryApplyPendingRenderProjection())
+            if (!_clearFrame.TryApplyPendingRenderProjection()) { Fatal("Render Projection CommandBuffer 重录失败。"); break; }
+            if (!_clearFrame.HasRenderProjection) { Thread.Sleep(16); continue; }
+            var acquireDecision = AcquireImage(device, out var swapchain, out var idx);
+            switch (acquireDecision)
             {
-                Fatal("Render Projection CommandBuffer 重录失败。");
-                break;
+                case AcquireDecision.Acquired:
+                    break;
+                case AcquireDecision.TimeoutRetry:
+                case AcquireDecision.RetryAfterRecreate:
+                    continue;
+                default:
+                    return;
             }
-            if (!_clearFrame.HasRenderProjection)
-            {
-                Thread.Sleep(16);
-                continue;
-            }
-            var swapchain = _swapchainOwner.Swapchain;
-            uint idx;
-            var res = khr.AcquireNextImage(device, swapchain, AcquireTimeoutNs, _imageAvailable, default, &idx);
-            if (res == Result.Timeout) continue;
-            if (!HandleAcquireResult(res)) break;
             if (!ResetFence(device)) break;
             var gpuFrameId = NextGpuFrameId();
             var cameraRevision = _clearFrame.RenderProjection.Camera.Revision;
             if (!SubmitFrame(device, idx, stage, gpuFrameId, cameraRevision)) break;
-            if (TerrainReplayOptions.Enabled)
-                ViewportProbe.FrameSubmitted(gpuFrameId, idx, cameraRevision);
+            if (TerrainReplayOptions.Enabled) ViewportProbe.FrameSubmitted(gpuFrameId, idx, cameraRevision);
             submitted = true;
-            if (!HandlePresent(khr, swapchain, idx, gpuFrameId,
-                    cameraRevision)) break;
+            if (!HandlePresent(khr, swapchain, idx, gpuFrameId, cameraRevision)) break;
         }
     }
 

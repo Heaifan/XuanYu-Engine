@@ -28,7 +28,7 @@ public sealed partial class VulkanRenderSession : IDisposable
     int _failed;
     bool _resizeStopping;
     string? _failureReason;
-    const int MaxRecoverTries = 5;
+    const int MaxRecoverTries = VulkanAcquireResultPolicy.MaxRecoveryRetries;
     VulkanRenderSession(VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner,
         VulkanClearFrameOwner clearFrame, VulkanPresentLoop presentLoop,
         VulkanGraphicsPipelineOwner? pipeline, VulkanGraphicsPipelineOwner? skyPipeline,

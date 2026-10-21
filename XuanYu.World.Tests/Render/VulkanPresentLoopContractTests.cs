@@ -6,6 +6,29 @@ namespace XuanYu.World.Tests.Render;
 // 无投影受控等待 / 无逐帧日志 / 投影语义不变 / 模式日志只在创建重建 / 无新依赖。
 public sealed class VulkanPresentLoopContractTests
 {
+    [Fact]
+    public void Present_loop_gates_fence_reset_and_submit_on_acquired_decision()
+    {
+        var loop = RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.cs"));
+        var acquire = loop.IndexOf("AcquireImage(device", StringComparison.Ordinal);
+        var decision = loop.IndexOf("switch (acquireDecision)", StringComparison.Ordinal);
+        Assert.True(decision >= 0, "Acquire outcomes must be dispatched before the frame submission path.");
+        var acquired = loop.IndexOf("case AcquireDecision.Acquired:", decision, StringComparison.Ordinal);
+        var reset = loop.IndexOf("ResetFence(device)", acquired, StringComparison.Ordinal);
+        var submit = loop.IndexOf("SubmitFrame(device, idx", reset, StringComparison.Ordinal);
+        var acquirePath = RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.Acquire.cs"));
+        var acquireGuard = acquirePath.IndexOf("decision != AcquireDecision.Acquired", StringComparison.Ordinal);
+        var validate = acquirePath.IndexOf("HasValidImageIndex(index", acquireGuard, StringComparison.Ordinal);
+
+        Assert.True(acquire >= 0 && acquired > decision && reset > acquired && submit > reset &&
+                    acquireGuard >= 0 && validate > acquireGuard,
+            "Fence reset and QueueSubmit must follow Acquired and current-image validation.");
+        Assert.Contains("case AcquireDecision.RetryAfterRecreate:", loop);
+        Assert.Contains("case AcquireDecision.TimeoutRetry:", loop);
+        Assert.Contains("CanRetryRecovery(_outOfDateRetries)", acquirePath);
+        Assert.Contains("if (decision == AcquireDecision.Acquired) _outOfDateRetries = 0;", acquirePath);
+    }
+
     static string RepositoryRoot
     {
         get

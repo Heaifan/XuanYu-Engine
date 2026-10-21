@@ -33,7 +33,7 @@ public sealed partial class VulkanRenderSession
         var next = _swapchainOwner.Extent;
         var dpi = _surfaceHandle?.DpiScale ?? 1.0;
         _log?.Invoke(VulkanClearFrameLogFormatter.OutOfDateProbe(source, old, next, _generation, dpi));
-        if (_recoverTries >= MaxRecoverTries)
+        if (!VulkanAcquireResultPolicy.CanRetryRecovery(_recoverTries))
         {
             _log?.Invoke(VulkanClearFrameLogFormatter.OutOfDateRecoverFailed($"连续 {MaxRecoverTries} 次重建失败"));
             MarkFailed("Swapchain 自愈连续失败");

@@ -12,21 +12,25 @@ public sealed unsafe partial class VulkanPresentLoop
 
     long NextGpuFrameId() => Interlocked.Increment(ref _nextGpuFrameId);
 
-    bool HandleAcquireResult(Result res)
+    AcquireDecision HandleAcquireResult(Result res)
     {
         if (res == Result.ErrorOutOfDateKhr)
         {
             PublishRendererEvent(RendererEventCodes.AcquireOutOfDate, RendererEventLevel.Warning,
                 res.ToString());
-            return _onOutOfDate?.Invoke("AcquireNextImage") ?? true;
         }
         if (res == Result.SuboptimalKhr)
             PublishRendererEvent(RendererEventCodes.AcquireSuboptimal, RendererEventLevel.Warning,
                 res.ToString());
-        if (res != Result.Success && res != Result.SuboptimalKhr)
+        if (res != Result.Success && res != Result.SuboptimalKhr &&
+            res != Result.Timeout && res != Result.ErrorOutOfDateKhr)
             PublishRendererEvent(RendererEventCodes.AcquireFailed, RendererEventLevel.Error,
                 res.ToString(), "AcquireNextImage");
-        return Check(res, "AcquireNextImage", allowSuboptimal: true);
+        var decision = VulkanAcquireResultPolicy.Decide(res,
+            res == Result.ErrorOutOfDateKhr ? () => _onOutOfDate?.Invoke("AcquireNextImage") ?? true : null);
+        if (decision == AcquireDecision.StopOrFatal && res != Result.ErrorOutOfDateKhr)
+            Check(res, "AcquireNextImage");
+        return decision;
     }
 
     // R4-R3-R2：WaitFence 与 ResetFence 拆分，Wait 必须在 CommandBuffer 重录前
