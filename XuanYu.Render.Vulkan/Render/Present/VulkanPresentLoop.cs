@@ -47,6 +47,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
         Volatile.Write(ref _stopRequested, 0);
         _thread = new Thread(Run) { IsBackground = true, Name = "VulkanPresent" };
         _thread.Start();
+        PublishLoopStarted();
         Log(VulkanClearFrameLogFormatter.LoopStarted());
         return true;
     }

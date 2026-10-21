@@ -5,6 +5,23 @@ namespace XuanYu.World.Tests.Diagnostics;
 public sealed class RendererEventSessionIdentityTests
 {
     [Fact]
+    public void Build_identity_marks_blank_source_values_unknown()
+    {
+        var names = new[] { "XYE_SOURCE_HEAD", "XYE_SOURCE_DIRTY", "XYE_SOURCE_FINGERPRINT" };
+        var old = names.Select(Environment.GetEnvironmentVariable).ToArray();
+        try
+        {
+            foreach (var name in names) Environment.SetEnvironmentVariable(name, " ");
+            var identity = RendererBuildIdentity.Current();
+            Assert.Contains("HEAD=UNKNOWN;DIRTY=UNKNOWN;TREE=UNKNOWN;", identity);
+        }
+        finally
+        {
+            for (var i = 0; i < names.Length; i++) Environment.SetEnvironmentVariable(names[i], old[i]);
+        }
+    }
+
+    [Fact]
     public async Task Successful_frame_events_are_probe_only_and_keep_their_identity()
     {
         using var directory = new EventTestDirectory();

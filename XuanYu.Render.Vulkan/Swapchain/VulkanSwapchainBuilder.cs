@@ -5,6 +5,7 @@ using VulkanDevice = Silk.NET.Vulkan.Device;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Core.Diagnostics;
 using XuanYu.Render.Abstractions.Diagnostics;
+using XuanYu.Render.Vulkan.Swapchain.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Swapchain;
 

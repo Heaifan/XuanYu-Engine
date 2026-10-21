@@ -8,6 +8,7 @@ namespace XuanYu.Render.Vulkan.Swapchain;
 public sealed unsafe partial class VulkanSwapchainOwner
 {
     RendererEventSession? _events;
+    internal RendererEventSession? EventSession => _events;
 
     internal void AttachEventSession(RendererEventSession? events)
     {

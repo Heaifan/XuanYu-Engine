@@ -7,7 +7,6 @@ using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Pipeline;
 using XuanYu.Render.Vulkan.Render;
 using XuanYu.Render.Vulkan.Swapchain;
-
 namespace XuanYu.Render.Vulkan.Session;
 
 // VK-LIFE-1：组合根负责失败回滚，不把半初始化资源留给 Bridge。
@@ -19,7 +18,7 @@ public sealed partial class VulkanRenderSession : IDisposable
     readonly VulkanPresentLoop _presentLoop;
     readonly VulkanGraphicsPipelineOwner? _pipeline;
     readonly VulkanGraphicsPipelineOwner? _skyPipeline;
-    readonly GridPipelineSet? _gridPipelines; // F2-R2：网格/世界轴/原点全屏 Pass 组合
+    readonly XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? _gridPipelines; // F2-R2：网格/世界轴/原点全屏 Pass 组合
     readonly Action<string>? _log;
     readonly NativeHostSurfaceHandle? _surfaceHandle;
     readonly object _rebuildLock = new();
@@ -32,7 +31,8 @@ public sealed partial class VulkanRenderSession : IDisposable
     const int MaxRecoverTries = 5;
     VulkanRenderSession(VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner,
         VulkanClearFrameOwner clearFrame, VulkanPresentLoop presentLoop,
-        VulkanGraphicsPipelineOwner? pipeline, VulkanGraphicsPipelineOwner? skyPipeline, GridPipelineSet? gridPipelines,
+        VulkanGraphicsPipelineOwner? pipeline, VulkanGraphicsPipelineOwner? skyPipeline,
+        XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? gridPipelines,
         Action<string>? log, NativeHostSurfaceHandle? surfaceHandle)
     {
         _deviceOwner = deviceOwner;
@@ -57,7 +57,7 @@ public sealed partial class VulkanRenderSession : IDisposable
         VulkanClearFrameOwner? clear = null;
         VulkanGraphicsPipelineOwner? pipeline = null;
         VulkanGraphicsPipelineOwner? skyPipeline = null;
-        GridPipelineSet? gridPipelines = null;
+        XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? gridPipelines = null;
         VulkanPresentLoop? loop = null;
         try
         {
@@ -72,7 +72,7 @@ public sealed partial class VulkanRenderSession : IDisposable
             skyPipeline = VulkanGraphicsPipelineOwner.CreateSky(vk, deviceOwner, clear, swapchainOwner, log);
             if (skyPipeline is not null) clear.SetSkyPipeline(skyPipeline.Pipeline, skyPipeline.Layout);
             // F2-R2：网格/世界轴/世界原点三个全屏 Pass（设备不支持则禁用对应 Pass）。
-            gridPipelines = GridPipelineSet.Create(vk, deviceOwner, clear, swapchainOwner, selection.Handle, log);
+            gridPipelines = XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet.Create(vk, deviceOwner, clear, swapchainOwner, selection.Handle, log);
             loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,
                 source => session!.RecoverFromOutOfDate(source),
                 reason => session!.MarkFailed(reason),

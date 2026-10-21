@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using Silk.NET.Vulkan;
+using XuanYu.Render.Abstractions.Diagnostics;
 using Semaphore = Silk.NET.Vulkan.Semaphore;
 
 namespace XuanYu.Render.Vulkan.Render;
@@ -15,10 +16,14 @@ public sealed unsafe partial class VulkanPresentLoop
         Volatile.Write(ref _stopRequested, 1);
         if (!t.Join(2000))
         {
+            PublishRendererEvent(RendererEventCodes.PresentLoopStopTimeout, RendererEventLevel.Error,
+                reason: "停止等待超过 2000 ms");
             Log(VulkanClearFrameLogFormatter.LoopStopTimedOut());
             return false;
         }
         _thread = null;
+        _eventSession?.PublishLifecycleEvent(RendererEventCodes.PresentLoopStopped,
+            RendererEventLevel.Info);
         Log(VulkanClearFrameLogFormatter.LoopStopped());
         return true;
     }
@@ -26,7 +31,6 @@ public sealed unsafe partial class VulkanPresentLoop
     public void Dispose()
     {
         if (!Stop()) return;
-        _eventSession?.DisposeAsync().AsTask().GetAwaiter().GetResult();
         DestroySync();
     }
 
@@ -68,12 +72,15 @@ public sealed unsafe partial class VulkanPresentLoop
     {
         if (res == Result.Success) return true;
         if (allowSuboptimal && res == Result.SuboptimalKhr) return true;
+        PublishRendererEvent(RendererEventCodes.VulkanOperationFailed, RendererEventLevel.Error,
+            res.ToString(), op);
         Fatal($"{op} 失败：{res}");
         return false;
     }
 
     void Fatal(string reason)
     {
+        PublishRendererEvent(RendererEventCodes.PresentFatal, RendererEventLevel.Error, reason: reason);
         Log(VulkanClearFrameLogFormatter.PresentError(reason));
         _onFatal?.Invoke(reason);
     }

@@ -16,12 +16,17 @@ public static class RendererEventCodes
     public const string ResizeFailed = "ResizeFailed";
     public const string PresentLoopStarted = "PresentLoopStarted";
     public const string PresentLoopStopped = "PresentLoopStopped";
+    public const string PresentLoopStopTimeout = "PresentLoopStopTimeout";
     public const string AcquireOutOfDate = "AcquireOutOfDate";
     public const string AcquireSuboptimal = "AcquireSuboptimal";
+    public const string AcquireFailed = "AcquireFailed";
     public const string PresentSuboptimal = "PresentSuboptimal";
     public const string PresentRecoveryRequested = "PresentRecoveryRequested";
     public const string VulkanOperationFailed = "VulkanOperationFailed";
     public const string PresentFatal = "PresentFatal";
+    public const string TerrainChunkObserved = "TerrainChunkObserved";
+    public const string TerrainResourcePresented = "TerrainResourcePresented";
+    public const string TerrainProbeUnavailable = "TerrainProbeUnavailable";
     public const string SwapchainCreating = "SwapchainCreating";
     public const string SwapchainCreated = "SwapchainCreated";
     public const string SwapchainRecreated = "SwapchainRecreated";

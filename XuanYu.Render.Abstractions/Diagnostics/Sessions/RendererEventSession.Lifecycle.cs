@@ -9,4 +9,14 @@ public sealed partial class RendererEventSession
             generation: generation, requestedWidth: requestedWidth, requestedHeight: requestedHeight,
             actualWidth: actualWidth, actualHeight: actualHeight, imageViewCount: imageViewCount,
             vulkanResult: vulkanResult, reason: reason));
+
+    public void PublishTerrainFrame(string code, long frameId, uint imageIndex,
+        long cameraRevision, string? terrainId = null, int? revision = null, string? reason = null)
+    {
+        if (_probe is null) return;
+        var item = NewEvent(code, RendererEventChannel.Probe, RendererEventLevel.Info,
+            frameId, imageIndex, cameraRevision) with
+        { TerrainId = terrainId, TerrainRevision = revision, Reason = reason };
+        _probe.TryWrite(item);
+    }
 }

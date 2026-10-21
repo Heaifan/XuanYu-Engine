@@ -14,10 +14,16 @@ public sealed unsafe partial class VulkanPresentLoop
         var result = PresentFrame(khr, swapchain, imageIndex);
         if (result == Result.ErrorOutOfDateKhr)
         {
+            PublishRendererEvent(RendererEventCodes.PresentRecoveryRequested,
+                RendererEventLevel.Warning, result.ToString(), "QueuePresent");
             _eventSession?.PublishFrameEvent(RendererEventCodes.QueuePresentOutOfDate,
                 RendererEventLevel.Warning, gpuFrameId, imageIndex, cameraRevision);
             return _onOutOfDate?.Invoke("QueuePresent") ?? true;
         }
+
+        if (result == Result.SuboptimalKhr)
+            PublishRendererEvent(RendererEventCodes.PresentSuboptimal,
+                RendererEventLevel.Warning, result.ToString());
 
         if (!Check(result, "QueuePresent", allowSuboptimal: true))
         {

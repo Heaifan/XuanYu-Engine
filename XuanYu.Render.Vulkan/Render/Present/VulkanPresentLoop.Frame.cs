@@ -1,21 +1,31 @@
-using System.Threading;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
+using System.Threading;
 using XuanYu.Render.Abstractions.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanPresentLoop
 {
-    readonly RendererEventSession? _eventSession = RendererEventSessionFactory.TryCreate();
     long _nextGpuFrameId;
+    RendererEventSession? _eventSession;
 
     long NextGpuFrameId() => Interlocked.Increment(ref _nextGpuFrameId);
 
     bool HandleAcquireResult(Result res)
     {
         if (res == Result.ErrorOutOfDateKhr)
+        {
+            PublishRendererEvent(RendererEventCodes.AcquireOutOfDate, RendererEventLevel.Warning,
+                res.ToString());
             return _onOutOfDate?.Invoke("AcquireNextImage") ?? true;
+        }
+        if (res == Result.SuboptimalKhr)
+            PublishRendererEvent(RendererEventCodes.AcquireSuboptimal, RendererEventLevel.Warning,
+                res.ToString());
+        if (res != Result.Success && res != Result.SuboptimalKhr)
+            PublishRendererEvent(RendererEventCodes.AcquireFailed, RendererEventLevel.Error,
+                res.ToString(), "AcquireNextImage");
         return Check(res, "AcquireNextImage", allowSuboptimal: true);
     }
 

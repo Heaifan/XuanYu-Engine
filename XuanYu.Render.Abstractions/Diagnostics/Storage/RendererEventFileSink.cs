@@ -30,7 +30,6 @@ internal sealed class RendererEventFileSink : IAsyncDisposable
         if (_writer is not null && _bytes + length > _maxBytes) await RotateAsync().ConfigureAwait(false);
         _writer ??= Open();
         await _writer.WriteLineAsync(json).ConfigureAwait(false);
-        await _writer.FlushAsync().ConfigureAwait(false);
         _bytes += length;
     }
 

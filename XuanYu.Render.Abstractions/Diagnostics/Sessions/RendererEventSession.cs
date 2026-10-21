@@ -33,6 +33,9 @@ public sealed partial class RendererEventSession : IAsyncDisposable
     public string? ProbeFilePath { get; }
     public long RuntimeDroppedCount => _runtime.DroppedCount;
     public long ProbeDroppedCount => _probe?.DroppedCount ?? 0;
+    public long RuntimeWriteFailureCount => _runtime.WriteFailureCount;
+    public long ProbeWriteFailureCount => _probe?.WriteFailureCount ?? 0;
+    public bool ProbeEnabled => _probe is not null;
 
     public static RendererEventSession Create(RendererEventSessionOptions options)
     {
@@ -76,7 +79,8 @@ public sealed partial class RendererEventSession : IAsyncDisposable
 
     RendererEventWriter CreateWriter(RendererEventFileSink sink, int capacity, RendererEventChannel channel) =>
         new(capacity, sink.WriteAsync, count => NewEvent(RendererEventCodes.DroppedEventsSummary,
-            channel, RendererEventLevel.Warning, dropped: count), sink);
+            channel, RendererEventLevel.Warning, dropped: count), sink,
+            channel == RendererEventChannel.Runtime ? Math.Min(16, capacity / 8) : 0);
 
     void PublishBoth(string code, RendererEventLevel level)
     {

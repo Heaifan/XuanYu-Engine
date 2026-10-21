@@ -19,4 +19,10 @@ public sealed record RendererEvent(
     uint? ActualHeight = null,
     int? ImageViewCount = null,
     string? VulkanResult = null,
-    string? Reason = null);
+    string? Reason = null,
+    string? TerrainId = null,
+    int? TerrainRevision = null,
+    int? ChunkX = null,
+    int? ChunkY = null,
+    int? Lod = null,
+    string? Result = null);

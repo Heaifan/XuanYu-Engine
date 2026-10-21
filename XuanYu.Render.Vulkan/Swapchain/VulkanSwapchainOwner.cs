@@ -3,8 +3,9 @@ using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
-namespace XuanYu.Render.Vulkan.Swapchain;
+using XuanYu.Render.Vulkan.Swapchain.Diagnostics;
 
+namespace XuanYu.Render.Vulkan.Swapchain;
 public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
 {
     readonly Vk _vk;
@@ -23,7 +24,6 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
     bool _readbackEnabled;
     bool _disposed;
     public const string DeviceExtensionName = "VK_KHR_swapchain"; // VK4-C：LogicalDevice 创建时必须启用的设备扩展
-
     VulkanSwapchainOwner(Vk vk, Instance instance, VulkanDeviceOwner deviceOwner, SurfaceKHR surface,
         PhysicalDevice physicalDevice, KhrSwapchain khr, SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool readbackEnabled, Action<string>? log)
     {
