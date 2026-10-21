@@ -40,5 +40,5 @@ public static class VulkanPresentFenceQueuePolicy
 
     public static bool CanRelease(bool graphicsComplete, bool presentComplete,
         PresentQueueDisposition disposition) => graphicsComplete &&
-        (!RequiresFenceWait(disposition) || presentComplete || disposition == PresentQueueDisposition.DeviceLost);
+        (!RequiresFenceWait(disposition) || presentComplete) && disposition != PresentQueueDisposition.DeviceLost;
 }

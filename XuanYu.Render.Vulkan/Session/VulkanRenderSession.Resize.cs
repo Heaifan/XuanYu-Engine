@@ -35,7 +35,7 @@ public sealed partial class VulkanRenderSession
             if (IsSameSize(width, height)) return RestartAfterResizeSkip(width, height);
             var old = _swapchainOwner.Extent;
             var oldResourceGen = _swapchainOwner.ResourceGeneration;
-            if (!_swapchainOwner.TryRecreateToCurrent(out _, out var currentRebuilt, _generation)) return FailResize("Swapchain 重建失败", width, height);
+            if (!_swapchainOwner.TryRecreateToCurrent(out _, out var currentRebuilt, _generation, _presentLoop.RetireGenerationForSwapchainReplacement)) return FailResize("Swapchain 重建失败", width, height);
             var rebuilt = oldResourceGen != _swapchainOwner.ResourceGeneration;
             var next = _swapchainOwner.Extent;
             if (!currentRebuilt && !rebuilt)

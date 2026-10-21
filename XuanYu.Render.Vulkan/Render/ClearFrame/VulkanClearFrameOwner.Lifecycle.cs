@@ -13,6 +13,14 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _depthAttachment = null;
     }
 
+    internal void ReleaseSwapchainGeneration()
+    {
+        if (_commandBuffers.Length > 0)
+            _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)_commandBuffers.Length, _commandBuffers);
+        _commandBuffers = [];
+        DestroyFramebuffers();
+        _views = [];
+    }
     public void Dispose()
     {
         if (_disposed) return;

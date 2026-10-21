@@ -19,7 +19,6 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
     readonly Action<string>? _onFatal;
     readonly Action<string>? _log;
     Semaphore _imageAvailable;
-    Semaphore _renderFinished;
     Fence _fence;
     Thread? _thread;
     int _stopRequested;
@@ -69,6 +68,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
         while (Volatile.Read(ref _stopRequested) == 0)
         {
             if (submitted && !WaitFence(device)) break;
+            if (!EnsurePresentGeneration()) { Fatal("Swapchain generation synchronization could not be safely replaced."); break; }
             if (!_clearFrame.TryApplyPendingRenderProjection()) { Fatal("Render Projection CommandBuffer 重录失败。"); break; }
             if (!_clearFrame.HasRenderProjection) { Thread.Sleep(16); continue; }
             var acquireDecision = AcquireImage(device, out var swapchain, out var idx);

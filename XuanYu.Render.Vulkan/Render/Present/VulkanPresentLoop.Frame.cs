@@ -56,7 +56,8 @@ public sealed unsafe partial class VulkanPresentLoop
         var cmds = _clearFrame.CommandBuffers;
         var submit = new SubmitInfo { SType = StructureType.SubmitInfo };
         var imageAvailable = _imageAvailable;
-        var renderFinished = _renderFinished;
+        if (_syncGeneration is null || !_syncGeneration.TryGetImageSemaphore(idx, _swapchainOwner.Swapchain, out var renderFinished))
+        { Fatal("Acquire image does not belong to the active synchronization generation."); return false; }
         var fence = _fence;
         fixed (CommandBuffer* pCmd = cmds)
         {

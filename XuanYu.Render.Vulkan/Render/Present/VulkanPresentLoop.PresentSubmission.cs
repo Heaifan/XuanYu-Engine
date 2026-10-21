@@ -1,5 +1,6 @@
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
+using XuanYu.Render.Vulkan.Render.Generation;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -8,13 +9,14 @@ public sealed unsafe partial class VulkanPresentLoop
     bool PresentFrame(KhrSwapchain khr, SwapchainKHR swapchain, uint idx, out Result result)
     {
         result = Result.ErrorInitializationFailed;
-        if (!ResetPresentFence()) return false;
+        var generation = _syncGeneration;
+        if (generation is null || !generation.TryGetImageSemaphore(idx, swapchain, out var renderFinished) ||
+            !ResetPresentFence()) return false;
         var present = new PresentInfoKHR { SType = StructureType.PresentInfoKhr };
-        var fence = _presentFence;
+        var fence = generation.PresentFence;
         var fenceInfo = new SwapchainPresentFenceInfoEXT
         { SType = StructureType.SwapchainPresentFenceInfoExt, SwapchainCount = 1, PFences = &fence };
         present.PNext = &fenceInfo;
-        var renderFinished = _renderFinished;
         present.WaitSemaphoreCount = 1; present.PWaitSemaphores = &renderFinished;
         present.SwapchainCount = 1; present.PSwapchains = &swapchain;
         present.PImageIndices = &idx;

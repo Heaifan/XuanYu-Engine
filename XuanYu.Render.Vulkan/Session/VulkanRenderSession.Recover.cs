@@ -16,7 +16,11 @@ public sealed partial class VulkanRenderSession
             var old = _swapchainOwner.Extent;
             var oldResourceGen = _swapchainOwner.ResourceGeneration;
             _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", "查询中..."));
-            if (!_swapchainOwner.TryRecreateToCurrent(out _, out var rebuilt, _generation)) return RetryOrStop(source, old);
+            if (!_swapchainOwner.TryRecreateToCurrent(out _, out var rebuilt, _generation, _presentLoop.RetireGenerationForSwapchainReplacement))
+            {
+                if (_clearFrame.CommandBuffers.Length == 0 && !_clearFrame.RebuildFramebuffers(_generation, true)) return false;
+                return RetryOrStop(source, old);
+            }
             if (!rebuilt) return true;
             _generation++;
             if (!_clearFrame.RebuildFramebuffers(_generation, true)) return false;

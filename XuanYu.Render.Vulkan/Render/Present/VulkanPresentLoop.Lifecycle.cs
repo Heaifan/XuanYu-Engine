@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions.Diagnostics;
+using XuanYu.Render.Vulkan.Render.Generation;
 using Semaphore = Silk.NET.Vulkan.Semaphore;
 
 namespace XuanYu.Render.Vulkan.Render;
@@ -29,6 +30,22 @@ public sealed unsafe partial class VulkanPresentLoop
         return true;
     }
 
+    internal bool RetireGenerationForSwapchainReplacement()
+    {
+        if (_deviceLost || _presentUnknown) return false;
+        if (_graphicsPending && !WaitFence(_deviceOwner.LogicalDevice)) return false;
+        if (_presentPending && !WaitPresentFence()) return false;
+        if (_syncGeneration is null || !VulkanPresentGenerationPolicy.CanRetire(
+                !_graphicsPending, !_presentPending, _presentUnknown, _deviceLost)) return false;
+        var retiredGeneration = _syncGeneration.Generation;
+        var retiredImageCount = _syncGeneration.ImageCount;
+        var retiredSwapchain = _syncGeneration.Swapchain.Handle;
+        _syncGeneration.Dispose();
+        Log($"PresentSync generation retired: generation={retiredGeneration}; imageCount={retiredImageCount}; swapchain={retiredSwapchain}; graphics=complete; present=complete");
+        _syncGeneration = null;
+        _clearFrame.ReleaseSwapchainGeneration();
+        return true;
+    }
     public void Dispose()
     {
         if (!Stop()) return;

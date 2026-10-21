@@ -28,7 +28,7 @@ public sealed class VulkanPresentFenceQueuePolicyTests
     [InlineData(true, true, PresentQueueDisposition.Enqueued, true)]
     [InlineData(false, true, PresentQueueDisposition.Enqueued, false)]
     [InlineData(true, false, PresentQueueDisposition.NotEnqueued, true)]
-    [InlineData(true, false, PresentQueueDisposition.DeviceLost, true)]
+    [InlineData(true, false, PresentQueueDisposition.DeviceLost, false)]
     public void Resource_release_requires_graphics_and_present_completion(
         bool graphicsComplete, bool presentComplete, PresentQueueDisposition disposition, bool expected) =>
         Assert.Equal(expected, VulkanPresentFenceQueuePolicy.CanRelease(

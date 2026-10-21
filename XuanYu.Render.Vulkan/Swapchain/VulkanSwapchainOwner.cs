@@ -31,7 +31,7 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
         _vk = vk; _instance = instance; _deviceOwner = deviceOwner; _surface = surface;
         _physicalDevice = physicalDevice; _khr = khr; _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent; _readbackEnabled = readbackEnabled; _log = log;
     }
-    public bool Recreate(int width, int height, uint generation = 0)
+    public bool Recreate(int width, int height, uint generation = 0, Func<bool>? retireCurrentGeneration = null)
     {
         if (_khr is null) return false;
         if (width <= 0 || height <= 0)
@@ -43,6 +43,8 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
             XuanYu.Render.Abstractions.Diagnostics.RendererEventLevel.Info, width, height);
         try
         {
+            if (retireCurrentGeneration is not null && !retireCurrentGeneration())
+            { PublishFailure(width, height, "旧 generation 未满足安全退休条件"); return false; }
             var (swapchain, images, views, format, extent, ok, readbackEnabled) = VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice, _surface, _khr, _deviceOwner.LogicalDevice, width, height, _log, _swapchain, _events);
             if (!ok) { PublishFailure(width, height, "构建器未能创建 Swapchain"); return false; }
             DestroyImagesAndViews();
@@ -55,7 +57,7 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
         }
         catch (Exception ex) { PublishFailure(width, height, ex.Message); Log(_log, VulkanSwapchainLogFormatter.Failed($"重建异常：{ex.Message}")); return false; }
     }
-    public bool TryRecreateToCurrent(out Extent2D newExtent, out bool rebuilt, uint generation = 0)
+    public bool TryRecreateToCurrent(out Extent2D newExtent, out bool rebuilt, uint generation = 0, Func<bool>? retireCurrentGeneration = null)
     {
         newExtent = _extent;
         rebuilt = false;
@@ -64,7 +66,7 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
         var caps = VulkanSwapchainCapabilities.Query(_vk, _instance, _physicalDevice, _surface, (int)_extent.Width, (int)_extent.Height, _log);
         if (!caps.Success || caps.Caps is null || caps.Caps.Value.Extent.Width == 0 || caps.Caps.Value.Extent.Height == 0 || caps.Caps.Value.Extent.Width == uint.MaxValue) return false;
         if (caps.Caps.Value.Extent.Width == _extent.Width && caps.Caps.Value.Extent.Height == _extent.Height) { newExtent = _extent; Log(_log, VulkanSwapchainLogFormatter.Skipped($"同尺寸跳过自愈重建（{_extent.Width}x{_extent.Height}）")); return true; }
-        if (!Recreate((int)caps.Caps.Value.Extent.Width, (int)caps.Caps.Value.Extent.Height, generation)) return false;
+        if (!Recreate((int)caps.Caps.Value.Extent.Width, (int)caps.Caps.Value.Extent.Height, generation, retireCurrentGeneration)) return false;
         newExtent = _extent;
         rebuilt = true;
         return true;

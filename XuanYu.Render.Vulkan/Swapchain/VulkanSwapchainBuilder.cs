@@ -6,6 +6,7 @@ using XuanYu.Render.Vulkan.Device;
 using XuanYu.Core.Diagnostics;
 using XuanYu.Render.Abstractions.Diagnostics;
 using XuanYu.Render.Vulkan.Swapchain.Diagnostics;
+using XuanYu.Render.Vulkan.Swapchain.Creation;
 
 namespace XuanYu.Render.Vulkan.Swapchain;
 
@@ -32,8 +33,7 @@ public static unsafe class VulkanSwapchainBuilder
         var swapchain = CreateSwapchain(khr, device, surface, chosen, oldSwapchain, log, events);
         if (swapchain.Handle == 0) return default;
         var (images, views) = CreateImagesAndViews(vk, khr, device, swapchain, chosen.Format.Format, log);
-        if (views.Length != images.Length)
-        { VulkanSwapchainEvents.PublishFailure(events, width, height, null, "ImageViewCreationIncomplete"); return default; }
+        if (!VulkanSwapchainCandidateCleanup.Validate(vk, khr, device, swapchain, views, events, width, height, log)) return default;
         var readback = (usage & ImageUsageFlags.TransferSrcBit) != 0;
         Log(log, $"【VulkanReadback】Swapchain TransferSrc={(readback ? "SUPPORTED" : "UNAVAILABLE")}");
         return (swapchain, images, views, chosen.Format.Format, chosen.Extent, true, readback);
