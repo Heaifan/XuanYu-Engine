@@ -6,7 +6,7 @@ using XuanYu.Render.Vulkan.Pipeline;
 using XuanYu.Render.Vulkan.Render;
 using XuanYu.Render.Vulkan.Render.Readback;
 
-namespace XuanYu.Render.Vulkan.Session;
+namespace XuanYu.Render.Vulkan.Render.Terrain.Offscreen;
 
 public sealed unsafe class VulkanOffscreenTerrainRenderer : IDisposable
 {

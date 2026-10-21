@@ -1,4 +1,5 @@
 using XuanYu.Core.Diagnostics;
+using XuanYu.Render.Abstractions.Diagnostics;
 
 namespace XuanYu.World.Tests.Diagnostics;
 
@@ -6,7 +7,7 @@ namespace XuanYu.World.Tests.Diagnostics;
 public sealed class XyeWorkspacePathsTests
 {
     [Fact]
-    public void Probe_directory_requires_configured_run_context_and_stays_inside_root()
+    public void Probe_directory_generates_run_identity_and_stays_inside_workspace()
     {
         var workspace = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT")
             ?? throw new InvalidOperationException("Test runner must set XYE_WORKSPACE_ROOT.");
@@ -17,21 +18,36 @@ public sealed class XyeWorkspacePathsTests
         {
             Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", null);
             Environment.SetEnvironmentVariable("XYE_WORKSPACE_ROOT", null);
-            Assert.Throws<InvalidOperationException>(() => XyeWorkspacePaths.ResolveProbeDirectory());
+            var defaultPath = XyeWorkspacePaths.ResolveProbeDirectory();
+            Assert.True(defaultPath.Contains(Path.Combine(".xye-workspace", "Diagnostics"),
+                StringComparison.OrdinalIgnoreCase));
 
             Environment.SetEnvironmentVariable("XYE_WORKSPACE_ROOT", testRoot);
             Environment.SetEnvironmentVariable("XYE_TASK_RUN_ID", null);
-            Assert.Throws<InvalidOperationException>(() => XyeWorkspacePaths.ResolveProbeDirectory());
-
-            Environment.SetEnvironmentVariable("XYE_TASK_RUN_ID", "run-1");
             var path = XyeWorkspacePaths.ResolveProbeDirectory();
-            Assert.Equal(Path.Combine(testRoot, "Diagnostics", "run-1"), path);
+            Assert.StartsWith(Path.Combine(testRoot, "Diagnostics"), path, StringComparison.OrdinalIgnoreCase);
             Assert.True(Directory.Exists(path));
 
             Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", Path.Combine(testRoot, "..", "outside"));
             Assert.Throws<InvalidOperationException>(() => XyeWorkspacePaths.ResolveProbeDirectory());
         }
         finally { if (Directory.Exists(testRoot)) Directory.Delete(testRoot, recursive: true); }
+    }
+
+    [Fact]
+    public async Task Renderer_session_uses_project_scoped_defaults_without_task_environment()
+    {
+        using var env = new WorkspaceEnvironment();
+        Environment.SetEnvironmentVariable("XYE_WORKSPACE_ROOT", null);
+        Environment.SetEnvironmentVariable("XYE_TASK_RUN_ID", null);
+        Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", null);
+        var session = RendererEventSessionFactory.TryCreate();
+        Assert.NotNull(session);
+        var sessionDirectory = Directory.GetParent(Path.GetDirectoryName(session!.RuntimeFilePath)!)!.FullName;
+        Assert.True(sessionDirectory.Contains(Path.Combine(".xye-workspace", "Diagnostics"),
+            StringComparison.OrdinalIgnoreCase));
+        await session.DisposeAsync();
+        if (Directory.Exists(sessionDirectory)) Directory.Delete(sessionDirectory, true);
     }
 
     sealed class WorkspaceEnvironment : IDisposable

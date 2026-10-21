@@ -1,12 +1,16 @@
 using XuanYu.Render.Vulkan.Render;
 using System.Threading;
+using XuanYu.Render.Abstractions.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Session;
 
 public sealed partial class VulkanRenderSession
 {
-    bool FailResize(string reason)
+    bool FailResize(string reason, int width, int height)
     {
+        _presentLoop.PublishLifecycle(RendererEventCodes.ResizeFailed, RendererEventLevel.Error,
+            _swapchainOwner.ResourceGeneration, width, height,
+            _swapchainOwner.Extent.Width, _swapchainOwner.Extent.Height, reason);
         _log?.Invoke(VulkanClearFrameLogFormatter.PresentError($"Resize 失败，RenderSession 将释放：{reason}"));
         _resizeStopping = false;
         MarkFailed($"Resize 失败：{reason}");
@@ -18,7 +22,7 @@ public sealed partial class VulkanRenderSession
     {
         _resizeStopping = false;
         _log?.Invoke(VulkanClearFrameLogFormatter.ResizeFastSkipped(_generation, width, height));
-        return _presentLoop.Start() || FailResize("Present 泵重启失败");
+        return _presentLoop.Start() || FailResize("Present 泵重启失败", width, height);
     }
 
     void MarkFailed(string reason)

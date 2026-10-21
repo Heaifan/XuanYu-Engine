@@ -2,6 +2,7 @@ using Silk.NET.Vulkan;
 using XuanYu.Core.Diagnostics;
 using Silk.NET.Vulkan.Extensions.KHR;
 using XuanYu.Render.Vulkan.Swapchain;
+using XuanYu.Render.Abstractions.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -13,10 +14,23 @@ public sealed unsafe partial class VulkanPresentLoop
         var result = PresentFrame(khr, swapchain, imageIndex);
         if (result == Result.ErrorOutOfDateKhr)
         {
+            PublishRendererEvent(RendererEventCodes.PresentRecoveryRequested,
+                RendererEventLevel.Warning, result.ToString(), "QueuePresent");
+            _eventSession?.PublishFrameEvent(RendererEventCodes.QueuePresentOutOfDate,
+                RendererEventLevel.Warning, gpuFrameId, imageIndex, cameraRevision);
             return _onOutOfDate?.Invoke("QueuePresent") ?? true;
         }
 
-        if (!Check(result, "QueuePresent", allowSuboptimal: true)) return false;
+        if (result == Result.SuboptimalKhr)
+            PublishRendererEvent(RendererEventCodes.PresentSuboptimal,
+                RendererEventLevel.Warning, result.ToString());
+
+        if (!Check(result, "QueuePresent", allowSuboptimal: true))
+        {
+            _eventSession?.PublishFrameEvent(RendererEventCodes.QueuePresentFailed,
+                RendererEventLevel.Error, gpuFrameId, imageIndex, cameraRevision);
+            return false;
+        }
         if (TerrainReplayOptions.Enabled && ViewportProbe.IsCaptureTargetFrame(gpuFrameId, cameraRevision))
         {
             try
@@ -39,6 +53,9 @@ public sealed unsafe partial class VulkanPresentLoop
         }
         if (TerrainReplayOptions.Enabled)
             ViewportProbe.FramePresented(gpuFrameId, imageIndex, cameraRevision);
+        PublishTerrainResources(gpuFrameId, imageIndex, cameraRevision);
+        _eventSession?.PublishFrameEvent(RendererEventCodes.FramePresented,
+            RendererEventLevel.Info, gpuFrameId, imageIndex, cameraRevision);
         if (!_firstPresentLogged) LogFirstPresent(imageIndex);
         return true;
     }

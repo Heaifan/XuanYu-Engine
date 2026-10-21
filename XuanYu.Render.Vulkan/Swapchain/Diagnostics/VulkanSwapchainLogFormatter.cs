@@ -1,6 +1,6 @@
 using Silk.NET.Vulkan;
 
-namespace XuanYu.Render.Vulkan.Swapchain;
+namespace XuanYu.Render.Vulkan.Swapchain.Diagnostics;
 
 // VK4-C：Swapchain 中文生命周期日志格式器。纯文本，无副作用。
 public static class VulkanSwapchainLogFormatter

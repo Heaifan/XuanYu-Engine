@@ -5,7 +5,7 @@ using XuanYu.Render.Vulkan.Pipeline;
 using XuanYu.Render.Vulkan.Render;
 using XuanYu.Render.Vulkan.Swapchain;
 
-namespace XuanYu.Render.Vulkan.Session;
+namespace XuanYu.Render.Vulkan.Render.Passes;
 
 // MAP-A-R1-D5-R1-F2-R2/F3-F1：全屏 Pass 管线组合（参考网格 / 世界轴 / 世界原点 / 导航 Gizmo）。
 // 设备不支持时对应 Pass 禁用（返回 null），不阻止编辑器启动。

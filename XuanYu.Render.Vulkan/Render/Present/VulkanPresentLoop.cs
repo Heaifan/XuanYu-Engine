@@ -47,6 +47,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
         Volatile.Write(ref _stopRequested, 0);
         _thread = new Thread(Run) { IsBackground = true, Name = "VulkanPresent" };
         _thread.Start();
+        PublishLoopStarted();
         Log(VulkanClearFrameLogFormatter.LoopStarted());
         return true;
     }
@@ -84,15 +85,14 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
             if (res == Result.Timeout) continue;
             if (!HandleAcquireResult(res)) break;
             if (!ResetFence(device)) break;
-            if (!SubmitFrame(device, idx, stage)) break;
-            var gpuFrameId = TerrainReplayOptions.Enabled
-                ? ViewportProbe.NextPresentedFrameId() : 0;
+            var gpuFrameId = NextGpuFrameId();
+            var cameraRevision = _clearFrame.RenderProjection.Camera.Revision;
+            if (!SubmitFrame(device, idx, stage, gpuFrameId, cameraRevision)) break;
             if (TerrainReplayOptions.Enabled)
-                ViewportProbe.FrameSubmitted(gpuFrameId, idx,
-                    _clearFrame.RenderProjection.Camera.Revision);
+                ViewportProbe.FrameSubmitted(gpuFrameId, idx, cameraRevision);
             submitted = true;
             if (!HandlePresent(khr, swapchain, idx, gpuFrameId,
-                    _clearFrame.RenderProjection.Camera.Revision)) break;
+                    cameraRevision)) break;
         }
     }
 

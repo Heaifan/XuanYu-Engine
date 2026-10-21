@@ -6,10 +6,20 @@ namespace XuanYu.World.Tests.Render;
 // 无投影受控等待 / 无逐帧日志 / 投影语义不变 / 模式日志只在创建重建 / 无新依赖。
 public sealed class VulkanPresentLoopContractTests
 {
+    static string RepositoryRoot
+    {
+        get
+        {
+            var source = Environment.GetEnvironmentVariable("XYE_WORKSPACE_SOURCE_DIRECTORY");
+            return string.IsNullOrWhiteSpace(source)
+                ? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."))
+                : Path.GetFullPath(source);
+        }
+    }
+
     static string RenderVulkanFile(string path)
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
-        var full = Path.Combine(root, "XuanYu.Render.Vulkan", path);
+        var full = Path.Combine(RepositoryRoot, "XuanYu.Render.Vulkan", path);
         Assert.True(File.Exists(full), $"文件缺失：{full}");
         return File.ReadAllText(full);
     }
@@ -35,7 +45,7 @@ public sealed class VulkanPresentLoopContractTests
     {
         var loop = RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.cs"));
         var owner = string.Join("\n", Directory.GetFiles(Path.Combine(
-            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..")),
+            RepositoryRoot,
             "XuanYu.Render.Vulkan", "Render", "ClearFrame"), "VulkanClearFrameOwner*.cs").Select(File.ReadAllText));
         Assert.DoesNotContain("ClearRenderProjection", loop); // Present 循环不清理投影
         Assert.Contains("_frameState.Apply(projection)", owner); // FrameState 接管投影状态

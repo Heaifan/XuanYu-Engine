@@ -1,14 +1,31 @@
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
+using System.Threading;
+using XuanYu.Render.Abstractions.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanPresentLoop
 {
+    long _nextGpuFrameId;
+    RendererEventSession? _eventSession;
+
+    long NextGpuFrameId() => Interlocked.Increment(ref _nextGpuFrameId);
+
     bool HandleAcquireResult(Result res)
     {
         if (res == Result.ErrorOutOfDateKhr)
+        {
+            PublishRendererEvent(RendererEventCodes.AcquireOutOfDate, RendererEventLevel.Warning,
+                res.ToString());
             return _onOutOfDate?.Invoke("AcquireNextImage") ?? true;
+        }
+        if (res == Result.SuboptimalKhr)
+            PublishRendererEvent(RendererEventCodes.AcquireSuboptimal, RendererEventLevel.Warning,
+                res.ToString());
+        if (res != Result.Success && res != Result.SuboptimalKhr)
+            PublishRendererEvent(RendererEventCodes.AcquireFailed, RendererEventLevel.Error,
+                res.ToString(), "AcquireNextImage");
         return Check(res, "AcquireNextImage", allowSuboptimal: true);
     }
 
@@ -26,7 +43,8 @@ public sealed unsafe partial class VulkanPresentLoop
         return Check(_vk.ResetFences(device, 1, &fence), "ResetFences");
     }
 
-    bool SubmitFrame(Silk.NET.Vulkan.Device device, uint idx, PipelineStageFlags stage)
+    bool SubmitFrame(Silk.NET.Vulkan.Device device, uint idx, PipelineStageFlags stage,
+        long frameId, long cameraRevision)
     {
         var cmds = _clearFrame.CommandBuffers;
         var submit = new SubmitInfo { SType = StructureType.SubmitInfo };
@@ -42,7 +60,11 @@ public sealed unsafe partial class VulkanPresentLoop
             submit.PCommandBuffers = &pCmd[idx];
             submit.SignalSemaphoreCount = 1;
             submit.PSignalSemaphores = &renderFinished;
-            return Check(_vk.QueueSubmit(_deviceOwner.GraphicsQueue, 1, &submit, fence), "QueueSubmit");
+            var success = Check(_vk.QueueSubmit(_deviceOwner.GraphicsQueue, 1, &submit, fence), "QueueSubmit");
+            _eventSession?.PublishFrameEvent(success ? RendererEventCodes.FrameSubmitted :
+                RendererEventCodes.QueueSubmitFailed, success ? RendererEventLevel.Info :
+                RendererEventLevel.Error, frameId, idx, cameraRevision);
+            return success;
         }
     }
 

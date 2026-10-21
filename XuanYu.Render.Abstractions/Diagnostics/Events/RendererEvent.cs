@@ -1,0 +1,28 @@
+namespace XuanYu.Render.Abstractions.Diagnostics;
+
+public sealed record RendererEvent(
+    string EventCode,
+    RendererEventChannel Channel,
+    RendererEventLevel Level,
+    string RunId,
+    string SessionId,
+    DateTimeOffset TimestampUtc,
+    string BuildIdentity,
+    long? FrameId = null,
+    uint? ImageIndex = null,
+    long? CameraRevision = null,
+    long? DroppedCount = null,
+    uint? Generation = null,
+    int? RequestedWidth = null,
+    int? RequestedHeight = null,
+    uint? ActualWidth = null,
+    uint? ActualHeight = null,
+    int? ImageViewCount = null,
+    string? VulkanResult = null,
+    string? Reason = null,
+    string? TerrainId = null,
+    int? TerrainRevision = null,
+    int? ChunkX = null,
+    int? ChunkY = null,
+    int? Lod = null,
+    string? Result = null);

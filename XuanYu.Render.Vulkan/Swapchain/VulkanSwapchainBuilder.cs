@@ -4,6 +4,8 @@ using Silk.NET.Vulkan.Extensions.KHR;
 using VulkanDevice = Silk.NET.Vulkan.Device;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Core.Diagnostics;
+using XuanYu.Render.Abstractions.Diagnostics;
+using XuanYu.Render.Vulkan.Swapchain.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Swapchain;
 
@@ -12,28 +14,33 @@ public static unsafe class VulkanSwapchainBuilder
 {
     public static (SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool ok, bool readbackEnabled) Build(
         Vk vk, Instance instance, PhysicalDevice physicalDevice, SurfaceKHR surface,
-        KhrSwapchain khr, VulkanDevice device, int width, int height, Action<string>? log, SwapchainKHR oldSwapchain = default)
+        KhrSwapchain khr, VulkanDevice device, int width, int height, Action<string>? log,
+        SwapchainKHR oldSwapchain = default, RendererEventSession? events = null)
     {
         var caps = VulkanSwapchainCapabilities.Query(vk, instance, physicalDevice, surface, width, height, log);
-        if (!caps.Success || caps.Caps is null) return default;
+        if (!caps.Success || caps.Caps is null)
+        { VulkanSwapchainEvents.PublishFailure(events, width, height, null, caps.Error); return default; }
         var chosen = caps.Caps.Value;
         var usage = VulkanSwapchainUsagePolicy.Select(chosen.SupportedUsage,
             TerrainReplayOptions.Enabled);
         if ((usage & ImageUsageFlags.ColorAttachmentBit) == 0)
         {
             Log(log, "Swapchain 缺少 ColorAttachment usage 支持");
+            VulkanSwapchainEvents.PublishFailure(events, width, height, null, "ColorAttachmentUnsupported");
             return default;
         }
-        var swapchain = CreateSwapchain(khr, device, surface, chosen, oldSwapchain, log);
+        var swapchain = CreateSwapchain(khr, device, surface, chosen, oldSwapchain, log, events);
         if (swapchain.Handle == 0) return default;
         var (images, views) = CreateImagesAndViews(vk, khr, device, swapchain, chosen.Format.Format, log);
-        if (views.Length != images.Length) return default;
+        if (views.Length != images.Length)
+        { VulkanSwapchainEvents.PublishFailure(events, width, height, null, "ImageViewCreationIncomplete"); return default; }
         var readback = (usage & ImageUsageFlags.TransferSrcBit) != 0;
         Log(log, $"【VulkanReadback】Swapchain TransferSrc={(readback ? "SUPPORTED" : "UNAVAILABLE")}");
         return (swapchain, images, views, chosen.Format.Format, chosen.Extent, true, readback);
     }
 
-    static SwapchainKHR CreateSwapchain(KhrSwapchain khr, VulkanDevice device, SurfaceKHR surface, SwapchainCaps caps, SwapchainKHR oldSwapchain, Action<string>? log)
+    static SwapchainKHR CreateSwapchain(KhrSwapchain khr, VulkanDevice device, SurfaceKHR surface,
+        SwapchainCaps caps, SwapchainKHR oldSwapchain, Action<string>? log, RendererEventSession? events)
     {
         var info = new SwapchainCreateInfoKHR
         {
@@ -54,7 +61,13 @@ public static unsafe class VulkanSwapchainBuilder
             OldSwapchain = oldSwapchain
         };
         var result = khr.CreateSwapchain(device, &info, null, out var swapchain);
-        if (result != Result.Success) { Log(log, VulkanSwapchainLogFormatter.Failed($"CreateSwapchain 失败：{result}")); return default; }
+        if (result != Result.Success)
+        {
+            VulkanSwapchainEvents.PublishFailure(events, (int)caps.Extent.Width,
+                (int)caps.Extent.Height, result.ToString(), "CreateSwapchain");
+            Log(log, VulkanSwapchainLogFormatter.Failed($"CreateSwapchain 失败：{result}"));
+            return default;
+        }
         return swapchain;
     }
 

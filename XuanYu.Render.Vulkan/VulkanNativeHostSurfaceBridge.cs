@@ -1,6 +1,7 @@
 using System;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
+using XuanYu.Render.Abstractions.Diagnostics;
 using XuanYu.Render.Vulkan.Bridge;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Session;
@@ -19,6 +20,7 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
     VulkanDeviceOwner? _deviceOwner;
     VulkanSwapchainOwner? _swapchainOwner;
     VulkanRenderSession? _renderSession;
+    RendererEventSession? _rendererEvents;
     bool _disposed;
     bool _failed;
 
@@ -37,6 +39,7 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
         if (_instanceOwner is not null && _surfaceOwner is not null && !_failed) return true;
         var ownedVk = _vk is null;
         var vk = _vk ?? Vk.GetApi();
+        var events = _rendererEvents ?? RendererEventSessionFactory.TryCreate();
         VulkanInstanceOwner? instance = null;
         VulkanSurfaceOwner? surface = null;
         VulkanDeviceOwner? device = null;
@@ -49,17 +52,22 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
             var selection = VulkanBridgePhysicalDeviceAttachStep.Run(vk, instance.Instance, surface.Surface, Emit);
             device = VulkanBridgeDeviceAttachStep.Run(vk, selection, Emit, VulkanSwapchainOwner.DeviceExtensionName)
                 ?? throw new InvalidOperationException("LogicalDevice 创建失败");
-            swapchain = VulkanBridgeSwapchainAttachStep.Run(vk, instance.Instance, device, surface.Surface, selection, handle.Width, handle.Height, Emit)
+            swapchain = VulkanBridgeSwapchainAttachStep.Run(vk, instance.Instance, device,
+                surface.Surface, selection, handle.Width, handle.Height, Emit, events)
                 ?? throw new InvalidOperationException("Swapchain 创建失败");
-            session = VulkanBridgeRenderSessionAttachStep.Run(vk, device, swapchain, selection, Emit, handle, _projectionSource?.RenderProjection)
+            swapchain.AttachEventSession(events);
+            session = VulkanBridgeRenderSessionAttachStep.Run(vk, device, swapchain, selection, Emit,
+                handle, _projectionSource?.RenderProjection)
                 ?? throw new InvalidOperationException("RenderSession 创建失败");
-            CommitAttach(ownedVk, vk, instance, surface, device, swapchain, session);
+            CommitAttach(ownedVk, vk, instance, surface, device, swapchain, session, events);
             Emit(VulkanBridgeLogFormatter.Attached(handle.Hwnd));
             return true;
         }
         catch (Exception ex)
         {
-            RollbackAttach(ownedVk, vk, session, swapchain, device, surface, instance);
+            var released = RollbackAttach(ownedVk, vk, session, swapchain, device, surface, instance);
+            if (released) { CloseDiagnostics(events); _rendererEvents = null; }
+            else RetainFailedAttach(ownedVk, vk, instance!, surface!, device!, swapchain!, session, events);
             Emit(VulkanBridgeLogFormatter.AttachFailed(ex.Message));
             return false;
         }
@@ -67,7 +75,8 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
 
     public void Detach()
     {
-        if (_instanceOwner is null && _surfaceOwner is null) { Emit(VulkanBridgeLogFormatter.DetachedSkipped()); return; }
+        if (_instanceOwner is null && _surfaceOwner is null && _rendererEvents is null)
+        { Emit(VulkanBridgeLogFormatter.DetachedSkipped()); return; }
         if (_renderSession is not null && !_renderSession.TryDispose())
         {
             _failed = true;
@@ -81,6 +90,8 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
         Emit(VulkanBridgeLogFormatter.SurfaceDisposed());
         _instanceOwner?.Dispose(); _instanceOwner = null;
         Emit(VulkanBridgeLogFormatter.InstanceDisposed());
+        CloseDiagnostics(_rendererEvents);
+        _rendererEvents = null;
         _failed = false;
         Emit(VulkanBridgeLogFormatter.Detached());
     }
