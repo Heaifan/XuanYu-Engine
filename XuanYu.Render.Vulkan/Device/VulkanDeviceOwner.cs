@@ -17,10 +17,12 @@ public sealed unsafe partial class VulkanDeviceOwner : IDisposable
     Queue _presentQueue;
     PhysicalDevice _physicalDevice;
     bool _disposed;
+    public bool PresentFenceEnabled { get; }
 
-    VulkanDeviceOwner(Vk vk, VulkanDevice device, PhysicalDevice physicalDevice, Queue g, Queue p, Action<string>? log)
+    VulkanDeviceOwner(Vk vk, VulkanDevice device, PhysicalDevice physicalDevice, Queue g, Queue p, Action<string>? log, bool presentFenceEnabled)
     {
         _vk = vk; _device = device; _physicalDevice = physicalDevice; _graphicsQueue = g; _presentQueue = p; _log = log;
+        PresentFenceEnabled = presentFenceEnabled;
     }
 
     public VulkanDevice LogicalDevice => _device;

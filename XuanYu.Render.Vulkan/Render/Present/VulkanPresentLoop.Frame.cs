@@ -38,7 +38,10 @@ public sealed unsafe partial class VulkanPresentLoop
     bool WaitFence(Silk.NET.Vulkan.Device device)
     {
         var fence = _fence;
-        return Check(_vk.WaitForFences(device, 1, &fence, true, FenceTimeoutNs), "WaitForFences");
+        var result = _vk.WaitForFences(device, 1, &fence, true, FenceTimeoutNs);
+        if (result == Result.Success) _graphicsPending = false;
+        if (result == Result.ErrorDeviceLost) _deviceLost = true;
+        return Check(result, "WaitForFences");
     }
 
     bool ResetFence(Silk.NET.Vulkan.Device device)
@@ -65,23 +68,12 @@ public sealed unsafe partial class VulkanPresentLoop
             submit.SignalSemaphoreCount = 1;
             submit.PSignalSemaphores = &renderFinished;
             var success = Check(_vk.QueueSubmit(_deviceOwner.GraphicsQueue, 1, &submit, fence), "QueueSubmit");
+            if (success) _graphicsPending = true;
             _eventSession?.PublishFrameEvent(success ? RendererEventCodes.FrameSubmitted :
                 RendererEventCodes.QueueSubmitFailed, success ? RendererEventLevel.Info :
                 RendererEventLevel.Error, frameId, idx, cameraRevision);
             return success;
         }
-    }
-
-    Result PresentFrame(KhrSwapchain khr, SwapchainKHR swapchain, uint idx)
-    {
-        var present = new PresentInfoKHR { SType = StructureType.PresentInfoKhr };
-        var renderFinished = _renderFinished;
-        present.WaitSemaphoreCount = 1;
-        present.PWaitSemaphores = &renderFinished;
-        present.SwapchainCount = 1;
-        present.PSwapchains = &swapchain;
-        present.PImageIndices = &idx;
-        return khr.QueuePresent(_deviceOwner.PresentQueue, &present);
     }
 
     void LogFirstPresent(uint idx)

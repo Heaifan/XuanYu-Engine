@@ -11,11 +11,20 @@ public static unsafe class VulkanInstanceCreateInfoBuilder
     // 在 fixed 作用域内构造 InstanceCreateInfo 并交给 create 回调，
     // 确保扩展名指针在创建调用期间保持有效。
     public static void BuildAndUse(Action<InstanceCreateInfo> create)
+        => BuildAndUse(create, false, false, false);
+
+    public static void BuildAndUse(Action<InstanceCreateInfo> create,
+        bool enableProperties2, bool enableSurfaceCapabilities2, bool enableSurfaceMaintenance1)
     {
         var appName = Encoding.UTF8.GetBytes("XuanYu Engine\0");
         var surfaceExt = Encoding.UTF8.GetBytes(VulkanInstanceExtensions.Surface);
         var win32Ext = Encoding.UTF8.GetBytes(VulkanInstanceExtensions.Win32Surface);
-        fixed (byte* pApp = appName, pSurface = surfaceExt, pWin32 = win32Ext)
+        var properties2Ext = Encoding.ASCII.GetBytes(VulkanInstanceExtensions.Properties2 + "\0");
+        var surfaceMaintenanceExt = Encoding.ASCII.GetBytes(VulkanInstanceExtensions.SurfaceMaintenance1 + "\0");
+        var surfaceCapabilities2Ext = Encoding.ASCII.GetBytes(VulkanInstanceExtensions.SurfaceCapabilities2 + "\0");
+        fixed (byte* pApp = appName, pSurface = surfaceExt, pWin32 = win32Ext,
+            pProperties2 = properties2Ext, pSurfaceMaintenance = surfaceMaintenanceExt,
+            pSurfaceCapabilities2 = surfaceCapabilities2Ext)
         {
             var appInfo = new ApplicationInfo
             {
@@ -24,14 +33,18 @@ public static unsafe class VulkanInstanceCreateInfoBuilder
                 PEngineName = pApp,
                 ApiVersion = ApiVersion
             };
-            byte** extPtrs = stackalloc byte*[2];
+            byte** extPtrs = stackalloc byte*[5];
             extPtrs[0] = pSurface;
             extPtrs[1] = pWin32;
+            var count = 2u;
+            if (enableSurfaceCapabilities2) extPtrs[count++] = pSurfaceCapabilities2;
+            if (enableSurfaceMaintenance1) extPtrs[count++] = pSurfaceMaintenance;
+            if (enableProperties2) extPtrs[count++] = pProperties2;
             var createInfo = new InstanceCreateInfo
             {
                 SType = StructureType.InstanceCreateInfo,
                 PApplicationInfo = &appInfo,
-                EnabledExtensionCount = 2,
+                EnabledExtensionCount = count,
                 PpEnabledExtensionNames = extPtrs
             };
             create(createInfo);

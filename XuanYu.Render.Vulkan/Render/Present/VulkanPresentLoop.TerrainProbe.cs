@@ -11,7 +11,14 @@ public sealed unsafe partial class VulkanPresentLoop
     bool HandlePresent(KhrSwapchain khr, SwapchainKHR swapchain,
         uint imageIndex, long gpuFrameId, long cameraRevision)
     {
-        var result = PresentFrame(khr, swapchain, imageIndex);
+        if (!PresentFrame(khr, swapchain, imageIndex, out var result))
+        { Fatal("Present Fence 重置失败；未提交 QueuePresent。"); return false; }
+        if (!FinishPresent(result, swapchain, imageIndex))
+        {
+            PublishRendererEvent(RendererEventCodes.VulkanOperationFailed, RendererEventLevel.Error,
+                result.ToString(), "PresentFenceCompletion");
+            return false;
+        }
         if (result == Result.ErrorOutOfDateKhr)
         {
             PublishRendererEvent(RendererEventCodes.PresentRecoveryRequested,

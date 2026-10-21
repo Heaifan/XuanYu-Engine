@@ -5,15 +5,15 @@ namespace XuanYu.Render.Vulkan.Device;
 public sealed unsafe partial class VulkanDeviceOwner
 {
     public static VulkanDeviceOwner? Create(Vk vk, VulkanPhysicalDeviceSelection selection,
-        string requiredDeviceExtension, Action<string>? log = null) =>
-        CreateCore(vk, selection, requiredDeviceExtension, log, offscreen: false);
+        string requiredDeviceExtension, Action<string>? log = null, bool enableMaintenance1 = false) =>
+        CreateCore(vk, selection, requiredDeviceExtension, log, offscreen: false, enableMaintenance1);
 
     public static VulkanDeviceOwner? CreateOffscreen(
         Vk vk, VulkanPhysicalDeviceSelection selection, Action<string>? log = null) =>
-        CreateCore(vk, selection, null, log, offscreen: true);
+        CreateCore(vk, selection, null, log, offscreen: true, enableMaintenance1: false);
 
     static VulkanDeviceOwner? CreateCore(Vk vk, VulkanPhysicalDeviceSelection selection,
-        string? extension, Action<string>? log, bool offscreen)
+        string? extension, Action<string>? log, bool offscreen, bool enableMaintenance1)
     {
         if (!selection.Success || selection.Handle.Handle == 0 || selection.Queue is null)
         {
@@ -39,16 +39,28 @@ public sealed unsafe partial class VulkanDeviceOwner
         }
         var create = new DeviceCreateInfo { SType = StructureType.DeviceCreateInfo,
             QueueCreateInfoCount = (uint)queueCount, PQueueCreateInfos = queueInfos };
-        byte* extensionPointer = null;
-        byte* extensionName = null;
+        byte** extensionPointers = stackalloc byte*[2];
+        byte* firstName = stackalloc byte[128];
+        byte* secondName = stackalloc byte[128];
+        var extensionCount = 0u;
+        PhysicalDeviceSwapchainMaintenance1FeaturesEXT feature = default;
         if (!string.IsNullOrWhiteSpace(extension))
         {
             var bytes = System.Text.Encoding.ASCII.GetBytes(extension);
-            byte* name = stackalloc byte[bytes.Length + 1];
-            bytes.CopyTo(new Span<byte>(name, bytes.Length)); name[bytes.Length] = 0;
-            extensionPointer = name;
-            create.EnabledExtensionCount = 1; create.PpEnabledExtensionNames = &extensionPointer;
+            bytes.CopyTo(new Span<byte>(firstName, bytes.Length)); firstName[bytes.Length] = 0;
+            extensionPointers[extensionCount++] = firstName;
         }
+        if (enableMaintenance1)
+        {
+            var bytes = System.Text.Encoding.ASCII.GetBytes(VulkanPresentFenceCapability.DeviceExtension);
+            bytes.CopyTo(new Span<byte>(secondName, bytes.Length)); secondName[bytes.Length] = 0;
+            extensionPointers[extensionCount++] = secondName;
+            feature = new PhysicalDeviceSwapchainMaintenance1FeaturesEXT
+            { SType = StructureType.PhysicalDeviceSwapchainMaintenance1FeaturesExt, SwapchainMaintenance1 = true };
+            create.PNext = &feature;
+        }
+        create.PpEnabledExtensionNames = extensionPointers;
+        create.EnabledExtensionCount = extensionCount;
         var result = vk.CreateDevice(selection.Handle, &create, null, out var device);
         if (result != Result.Success)
         { Log(log, $"【VulkanDevice】LogicalDevice 创建失败：{result}"); return null; }
@@ -58,7 +70,9 @@ public sealed unsafe partial class VulkanDeviceOwner
             vk.GetDeviceQueue(device, (uint)queues.PresentFamily, 0, out presentQueue);
         Log(log, offscreen ? "【VulkanDevice】Graphics Queue 获取成功（无 Present Queue）"
             : "【VulkanDevice】Queue 获取成功（Graphics + Present）");
-        return new VulkanDeviceOwner(vk, device, selection.Handle, graphicsQueue, presentQueue, log);
+        if (enableMaintenance1)
+            Log(log, "【VulkanDevice】VK_EXT_swapchain_maintenance1 enabled; swapchainMaintenance1 feature=true");
+        return new VulkanDeviceOwner(vk, device, selection.Handle, graphicsQueue, presentQueue, log, enableMaintenance1);
     }
 
 }

@@ -6,4 +6,7 @@ public static class VulkanInstanceExtensions
 {
     public const string Surface = "VK_KHR_surface\0";
     public const string Win32Surface = "VK_KHR_win32_surface\0";
+    public const string Properties2 = "VK_KHR_get_physical_device_properties2";
+    public const string SurfaceMaintenance1 = "VK_EXT_surface_maintenance1";
+    public const string SurfaceCapabilities2 = "VK_KHR_get_surface_capabilities2";
 }
