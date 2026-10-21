@@ -9,7 +9,10 @@ public static class RendererEventReader
     {
         if (!File.Exists(path)) return [];
         var result = new List<RendererEvent>();
-        foreach (var line in File.ReadLines(path))
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read,
+            FileShare.ReadWrite | FileShare.Delete);
+        using var reader = new StreamReader(stream);
+        while (reader.ReadLine() is { } line)
         {
             var item = TryRead(line);
             if (item is not null && Matches(item, eventCode, runId, sessionId)) result.Add(item);

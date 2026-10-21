@@ -31,6 +31,7 @@ internal sealed class RendererEventFileSink : IAsyncDisposable
         _writer ??= Open();
         await _writer.WriteLineAsync(json).ConfigureAwait(false);
         _bytes += length;
+        if (item.Level >= RendererEventLevel.Error) await _writer.FlushAsync().ConfigureAwait(false);
     }
 
     public async ValueTask DisposeAsync()
@@ -43,7 +44,7 @@ internal sealed class RendererEventFileSink : IAsyncDisposable
 
     StreamWriter Open()
     {
-        var stream = new FileStream(InitialPath, FileMode.Append, FileAccess.Write, FileShare.Read, 8192, true);
+        var stream = new FileStream(InitialPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite, 8192, true);
         _bytes = stream.Length;
         return new StreamWriter(stream, new UTF8Encoding(false)) { NewLine = "\n" };
     }

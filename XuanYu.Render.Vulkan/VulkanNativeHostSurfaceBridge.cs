@@ -52,7 +52,8 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
             var selection = VulkanBridgePhysicalDeviceAttachStep.Run(vk, instance.Instance, surface.Surface, Emit);
             device = VulkanBridgeDeviceAttachStep.Run(vk, selection, Emit, VulkanSwapchainOwner.DeviceExtensionName)
                 ?? throw new InvalidOperationException("LogicalDevice 创建失败");
-            swapchain = VulkanBridgeSwapchainAttachStep.Run(vk, instance.Instance, device, surface.Surface, selection, handle.Width, handle.Height, Emit)
+            swapchain = VulkanBridgeSwapchainAttachStep.Run(vk, instance.Instance, device,
+                surface.Surface, selection, handle.Width, handle.Height, Emit, events)
                 ?? throw new InvalidOperationException("Swapchain 创建失败");
             swapchain.AttachEventSession(events);
             session = VulkanBridgeRenderSessionAttachStep.Run(vk, device, swapchain, selection, Emit,

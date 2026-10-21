@@ -49,11 +49,16 @@ internal static class XycCliStartConfiguration
 
     private static void ConfigureProbe(ProcessStartInfo start)
     {
-        var directory = Path.Combine(Path.GetTempPath(), "XuanYuEngine", "XycSilentProbe",
-            Guid.NewGuid().ToString("N"));
+        var projectRoot = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(start.FileName)!, "../../../../"));
+        var workspace = Path.Combine(projectRoot, ".xye-workspace");
+        var runId = $"silent-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}";
+        var directory = Path.Combine(workspace, "Diagnostics", runId);
         Directory.CreateDirectory(directory);
         start.Environment["XYE_PROBE_VIEWPORT"] = "1";
         start.Environment["XYE_TERRAIN_REPLAY"] = "1";
+        start.Environment["XYE_WORKSPACE_ROOT"] = workspace;
+        start.Environment["XYE_TASK_RUN_ID"] = runId;
+        start.Environment["XYE_DIAGNOSTICS_DIRECTORY"] = directory;
         start.Environment["XYE_PROBE_DIRECTORY"] = directory;
         Console.Error.WriteLine($"XYC silent monitor phase=probe-configured; directory={directory}");
     }

@@ -53,6 +53,7 @@ public sealed unsafe partial class VulkanPresentLoop
         }
         if (TerrainReplayOptions.Enabled)
             ViewportProbe.FramePresented(gpuFrameId, imageIndex, cameraRevision);
+        PublishTerrainResources(gpuFrameId, imageIndex, cameraRevision);
         _eventSession?.PublishFrameEvent(RendererEventCodes.FramePresented,
             RendererEventLevel.Info, gpuFrameId, imageIndex, cameraRevision);
         if (!_firstPresentLogged) LogFirstPresent(imageIndex);

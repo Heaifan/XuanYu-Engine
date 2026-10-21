@@ -2,13 +2,14 @@ namespace XuanYu.Core.Diagnostics;
 
 public static class XyeWorkspacePaths
 {
-    public static string ResolveProbeDirectory()
+    public static string ResolveProbeDirectory(string? requestedRunId = null)
     {
         var root = GetRootDirectory();
-        if (!Directory.Exists(root))
-            throw new InvalidOperationException($"XYE workspace root is unavailable: {root}");
+        Directory.CreateDirectory(root);
 
-        var runId = Environment.GetEnvironmentVariable("XYE_TASK_RUN_ID");
+        var runId = requestedRunId ?? Environment.GetEnvironmentVariable("XYE_TASK_RUN_ID");
+        if (string.IsNullOrWhiteSpace(runId))
+            runId = $"local-{DateTime.UtcNow:yyyyMMddHHmmss}-{Environment.ProcessId}-{Guid.NewGuid():N}";
         if (string.IsNullOrWhiteSpace(runId) || runId.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 ||
             runId.Contains("..", StringComparison.Ordinal))
             throw new InvalidOperationException("XYE_TASK_RUN_ID is required for XYE diagnostics.");
@@ -38,10 +39,31 @@ public static class XyeWorkspacePaths
 
     static string GetRootDirectory()
     {
+        var projectRoot = FindProjectRoot(AppContext.BaseDirectory)
+            ?? throw new InvalidOperationException("XYE project root could not be located for diagnostics.");
         var rootValue = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT");
-        if (string.IsNullOrWhiteSpace(rootValue))
-            throw new InvalidOperationException("XYE_WORKSPACE_ROOT is required for XYE diagnostics.");
-        return Path.GetFullPath(rootValue.Trim()).TrimEnd(Path.DirectorySeparatorChar) +
+        var root = string.IsNullOrWhiteSpace(rootValue)
+            ? Path.Combine(projectRoot, ".xye-workspace")
+            : Path.GetFullPath(rootValue.Trim());
+        if (!IsWithin(projectRoot, root))
+            throw new InvalidOperationException("XYE_WORKSPACE_ROOT must stay inside the project.");
+        return root.TrimEnd(Path.DirectorySeparatorChar) +
             Path.DirectorySeparatorChar;
+    }
+
+    static string? FindProjectRoot(string start)
+    {
+        for (var current = new DirectoryInfo(Path.GetFullPath(start)); current is not null; current = current.Parent)
+            if (File.Exists(Path.Combine(current.FullName, ".git")) || Directory.Exists(Path.Combine(current.FullName, ".git")))
+                return current.FullName;
+        return null;
+    }
+
+    static bool IsWithin(string root, string path)
+    {
+        var prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var full = Path.GetFullPath(path);
+        return full.Equals(prefix.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase) ||
+            full.StartsWith(prefix, StringComparison.OrdinalIgnoreCase);
     }
 }

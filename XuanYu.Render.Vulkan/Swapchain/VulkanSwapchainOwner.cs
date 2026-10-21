@@ -4,6 +4,7 @@ using Silk.NET.Vulkan.Extensions.KHR;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Swapchain.Diagnostics;
+using XuanYu.Render.Abstractions.Diagnostics;
 
 namespace XuanYu.Render.Vulkan.Swapchain;
 public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
@@ -24,26 +25,11 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
     bool _readbackEnabled;
     bool _disposed;
     public const string DeviceExtensionName = "VK_KHR_swapchain"; // VK4-C：LogicalDevice 创建时必须启用的设备扩展
-    VulkanSwapchainOwner(Vk vk, Instance instance, VulkanDeviceOwner deviceOwner, SurfaceKHR surface,
+    internal VulkanSwapchainOwner(Vk vk, Instance instance, VulkanDeviceOwner deviceOwner, SurfaceKHR surface,
         PhysicalDevice physicalDevice, KhrSwapchain khr, SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool readbackEnabled, Action<string>? log)
     {
         _vk = vk; _instance = instance; _deviceOwner = deviceOwner; _surface = surface;
         _physicalDevice = physicalDevice; _khr = khr; _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent; _readbackEnabled = readbackEnabled; _log = log;
-    }
-    public static VulkanSwapchainOwner? Create(Vk vk, Instance instance, VulkanDeviceOwner? deviceOwner,
-        SurfaceKHR surface, PhysicalDevice physicalDevice, int width, int height, Action<string>? log)
-    {
-        if (deviceOwner is null) { Log(log, VulkanSwapchainLogFormatter.Skipped("LogicalDevice 不可用")); return null; }
-        if (!vk.TryGetDeviceExtension(instance, deviceOwner.LogicalDevice, out KhrSwapchain? khr) || khr is null)
-        { Log(log, VulkanSwapchainLogFormatter.Failed("缺 VK_KHR_swapchain 设备扩展")); return null; }
-        try
-        {
-        var (swapchain, images, views, format, extent, ok, readbackEnabled) = VulkanSwapchainBuilder.Build(vk, instance, physicalDevice, surface, khr, deviceOwner.LogicalDevice, width, height, log);
-        if (!ok) return null;
-        Log(log, VulkanSwapchainLogFormatter.Created(extent, views.Length));
-        return new VulkanSwapchainOwner(vk, instance, deviceOwner, surface, physicalDevice, khr, swapchain, images, views, format, extent, readbackEnabled, log);
-        }
-        catch (Exception ex) { Log(log, VulkanSwapchainLogFormatter.Failed($"创建异常：{ex.Message}")); return null; }
     }
     public bool Recreate(int width, int height, uint generation = 0)
     {
