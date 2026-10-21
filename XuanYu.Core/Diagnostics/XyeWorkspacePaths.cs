@@ -39,8 +39,8 @@ public static class XyeWorkspacePaths
 
     static string GetRootDirectory()
     {
-        var projectRoot = FindProjectRoot(AppContext.BaseDirectory)
-            ?? throw new InvalidOperationException("XYE project root could not be located for diagnostics.");
+        var projectRoot = FindProjectRoot(AppContext.BaseDirectory) ??
+            Path.GetFullPath(AppContext.BaseDirectory);
         var rootValue = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT");
         var root = string.IsNullOrWhiteSpace(rootValue)
             ? Path.Combine(projectRoot, ".xye-workspace")
