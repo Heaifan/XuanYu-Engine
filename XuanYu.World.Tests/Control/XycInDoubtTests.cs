@@ -2,13 +2,19 @@ using System.Reflection;
 using System.Text.Json;
 using XuanYu.Editor.UI;
 using XuanYu.Editor.UI.XycControl;
+using XuanYu.World.Tests.UiRuntime;
 
 namespace XuanYu.World.Tests.Xyc;
 
+[Collection("UiRuntime")]
 public sealed class XycInDoubtTests
 {
+    readonly UiHeadlessFixture _fixture;
+
+    public XycInDoubtTests(UiHeadlessFixture fixture) => _fixture = fixture;
+
     [Fact]
-    public void World_commit_before_history_failure_blocks_a_new_request_id()
+    public void World_commit_before_history_failure_blocks_a_new_request_id() => _fixture.Run(() =>
     {
         var vm = NewVm();
         var runtime = vm.CreateXycRuntime("xyc-test");
@@ -25,10 +31,10 @@ public sealed class XycInDoubtTests
             new { sceneId = vm.SceneId, expectedRevision = state.SceneRevision, entityId = id, position = new Vector3(41, 0, 0) });
         Assert.Equal("IN_DOUBT", retry.ErrorCode);
         Assert.Equal(new Vector3(41, 0, 0), vm.InspectXycSceneEntity(id).Transform.Position);
-    }
+    });
 
     [Fact]
-    public void Failure_after_world_apply_before_history_completion_is_reported_in_doubt()
+    public void Failure_after_world_apply_before_history_completion_is_reported_in_doubt() => _fixture.Run(() =>
     {
         var vm = NewVm();
         var state = vm.CreateXycTestCube(vm.SceneId, vm.SceneRevision);
@@ -39,7 +45,7 @@ public sealed class XycInDoubtTests
         var after = vm.InspectXycTestScene();
         Assert.Equal("IN_DOUBT", after.CommitStatus);
         Assert.False(string.IsNullOrWhiteSpace(after.RecoveryReason));
-    }
+    });
 
     static void SetFault(UiVm vm, string name)
     {
