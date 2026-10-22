@@ -161,9 +161,23 @@ try {
     $stdoutPath = Join-Path $diagnosticsDirectory 'stdout.log'
     $stderrPath = Join-Path $diagnosticsDirectory 'stderr.log'
     $arguments = @($ExecutableArguments | ForEach-Object { Quote-XyeArgument ([string]$_) }) -join ' '
-    $process = Start-Process -FilePath $ExecutablePath -ArgumentList $arguments -WorkingDirectory $WorkingDirectory `
-        -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru -Wait
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $process.StartInfo.FileName = $ExecutablePath
+    $process.StartInfo.Arguments = $arguments
+    $process.StartInfo.WorkingDirectory = $WorkingDirectory
+    $process.StartInfo.UseShellExecute = $false
+    $process.StartInfo.CreateNoWindow = $true
+    $process.StartInfo.RedirectStandardOutput = $true
+    $process.StartInfo.RedirectStandardError = $true
+    if (-not $process.Start()) { throw "Could not start child process: $ExecutablePath" }
+    $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+    $stderrTask = $process.StandardError.ReadToEndAsync()
+    $process.WaitForExit()
     $exitCode = $process.ExitCode
+    $utf8 = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::WriteAllText($stdoutPath, $stdoutTask.GetAwaiter().GetResult(), $utf8)
+    [IO.File]::WriteAllText($stderrPath, $stderrTask.GetAwaiter().GetResult(), $utf8)
     $manifest.ExitCode = $exitCode
     $manifest.Status = if ($exitCode -eq 0) { 'COMPLETED' } else { 'FAILED' }
     $manifest.Commands = @([pscustomobject]@{
