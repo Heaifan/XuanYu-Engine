@@ -1,0 +1,353 @@
+XYC silent monitor phase=probe-configured; directory=E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\.xye-workspace\Diagnostics\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103
+XYC silent monitor phase=armed-before-start
+XYC sessionId=m2a1-r4-final-61988245-20261022; childPid=2736; silent=True; phase=started
+XYC silent monitor phase=reconciled; childPid=2736
+12:20:40 【调试】【选择系统】选择投影诊断；阶段=PublishSceneRenderSnapshot摘要；深度=1；线程编号=2；次数=1；实体数=0
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers
+[Vulkan Loader] INFO | LAYER:   windows_get_device_registry_files: opening device ROOT\DISPLAY\0000
+[Vulkan Loader] INFO | LAYER:   windows_get_device_registry_files: unable to open child-device error:13
+[Vulkan Loader] INFO | LAYER:   windows_get_device_registry_files: opening device PCI\VEN_10DE&DEV_2503&SUBSYS_250310DE&REV_A1\4&842db2a&0&0008
+[Vulkan Loader] INFO | LAYER:   windows_get_device_registry_files: Opening child device 4 - DISPLAY\AOC2702\5&6E5D3D5&0&UID4352
+[Vulkan Loader] DEBUG | LAYER:  windows_get_device_registry_files: GUID for 4 is not SoftwareComponent skipping
+[Vulkan Loader] INFO | LAYER:   windows_get_device_registry_files: Opening child device 5 - DISPLAY\AOCB429\5&6E5D3D5&0&UID4355
+[Vulkan Loader] DEBUG | LAYER:  windows_get_device_registry_files: GUID for 5 is not SoftwareComponent skipping
+[Vulkan Loader] LAYER:          windows_get_device_registry_files: found no registry files
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_api_dump.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_gfxreconstruct.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_synchronization2.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_validation.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_monitor.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_screenshot.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_profiles.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_shader_object.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "E:\MyApp\sdk-vulkan\Bin\VkLayer_crash_diagnostic.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ExplicitLayers"
+[Vulkan Loader] WARNING | LAYER: env var 'VK_INSTANCE_LAYERS' defined and adding layers "VK_LAYER_KHRONOS_validation"
+[Vulkan Loader] WARNING | LAYER: env var 'VK_INSTANCE_LAYERS' defined and adding layers "VK_LAYER_KHRONOS_validation"
+[Vulkan Loader] DEBUG | LAYER:  Loading layer library E:\MyApp\sdk-vulkan\Bin\.\VkLayer_khronos_validation.dll
+[Vulkan Loader] INFO | LAYER:   Insert instance layer "VK_LAYER_KHRONOS_validation" (E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_validation.dll)
+[Vulkan Loader] DEBUG | LAYER:  Loading layer library G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\.\bdcamvk64.dll
+[Vulkan Loader] INFO | LAYER:   Insert instance layer "VK_LAYER_bandicam_helper" (G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.dll)
+[Vulkan Loader] DEBUG | LAYER:  Loading layer library C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\.\nvoglv64.dll
+[Vulkan Loader] INFO | LAYER:   Insert instance layer "VK_LAYER_NV_present" (C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll)
+[Vulkan Loader] DEBUG | LAYER:  Loading layer library C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\.\nvoglv64.dll
+[Vulkan Loader] INFO | LAYER:   Insert instance layer "VK_LAYER_NV_optimus" (C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll)
+[Vulkan Loader] LAYER:          vkCreateInstance layer callstack setup to:
+[Vulkan Loader] LAYER:             <Application>
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             <Loader>
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             VK_LAYER_NV_optimus
+[Vulkan Loader] LAYER:                     Type: Implicit
+[Vulkan Loader] LAYER:                     Enabled By: Implicit Layer
+[Vulkan Loader] LAYER:                         Disable Env Var:  DISABLE_LAYER_NV_OPTIMUS_1
+[Vulkan Loader] LAYER:                     Manifest: C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nv-vk64.json
+[Vulkan Loader] LAYER:                     Library:  C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             VK_LAYER_NV_present
+[Vulkan Loader] LAYER:                     Type: Implicit
+[Vulkan Loader] LAYER:                     Enabled By: Implicit Layer
+[Vulkan Loader] LAYER:                         Disable Env Var:  DISABLE_LAYER_NV_PRESENT_1
+[Vulkan Loader] LAYER:                     Manifest: C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nv-vk64.json
+[Vulkan Loader] LAYER:                     Library:  C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             VK_LAYER_bandicam_helper
+[Vulkan Loader] LAYER:                     Type: Implicit
+[Vulkan Loader] LAYER:                     Enabled By: Implicit Layer
+[Vulkan Loader] LAYER:                         Disable Env Var:  VK_LAYER_bandicam_helper_DEBUG_1
+[Vulkan Loader] LAYER:                     Manifest: G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json
+[Vulkan Loader] LAYER:                     Library:  G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.dll
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             VK_LAYER_KHRONOS_validation
+[Vulkan Loader] LAYER:                     Type: Explicit
+[Vulkan Loader] LAYER:                     Enabled By: Environment Variable VK_INSTANCE_LAYERS
+[Vulkan Loader] LAYER:                     Manifest: E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_validation.json
+[Vulkan Loader] LAYER:                     Library:  E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_validation.dll
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             <Drivers>
+【VulkanInstance】创建 Vulkan 实例成功；API 版本：1.0.0；启用扩展：VK_KHR_surface、VK_KHR_win32_surface
+【VulkanInstance】VK_KHR_get_physical_device_properties2 enabled=true
+【VulkanInstance】VK_EXT_surface_maintenance1 enabled=true
+【VulkanInstance】VK_KHR_get_surface_capabilities2 enabled=true
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] LAYER:          Checking for Layer Manifest files in Registry at HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers
+[Vulkan Loader] INFO | LAYER:   Located json file "C:\Program Files (x86)\Epic Games\Epic Online Services\managedArtifacts\98bc04bc842e4906993fd6d6644ffb8d\EOSOverlayVkLayer-Win64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamOverlayVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+[Vulkan Loader] INFO | LAYER:   Located json file "G:\MySteam\SteamFossilizeVulkanLayer64.json" from registry "HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers"
+【VulkanSurface】创建 Vulkan Surface 成功；窗口句柄：0xC80D1A
+[XYC-SILENT-VULKAN] 开始枚举物理设备；候选数量：1
+12:20:40 开始枚举物理设备；候选数量：1
+[XYC-SILENT-VULKAN] 候选设备[0]：NVIDIA GeForce RTX 3060；类型：独立显卡；API：1.4.341；图形 族：0；呈现 族：0；Surface 呈现：是；可用性：可用
+12:20:40 候选设备[0]：NVIDIA GeForce RTX 3060；类型：独立显卡；API：1.4.341；图形 族：0；呈现 族：0；Surface 呈现：是；可用性：可用
+[XYC-SILENT-VULKAN] 已选择物理设备：NVIDIA GeForce RTX 3060；原因：优先独立显卡；图形 族：0；呈现 族：0；队列族合并：是
+12:20:40 已选择物理设备：NVIDIA GeForce RTX 3060；原因：优先独立显卡；图形 族：0；呈现 族：0；队列族合并：是
+[XYC-SILENT-VULKAN] 呈现 Fence hardware feature swapchainMaintenance1=True
+12:20:40 呈现 Fence hardware feature swapchainMaintenance1=True
+[XYC-SILENT-VULKAN] 开始创建 逻辑设备；物理设备：NVIDIA GeForce RTX 3060
+12:20:40 开始创建 逻辑设备；物理设备：NVIDIA GeForce RTX 3060
+[XYC-SILENT-VULKAN] 使用的 图形 队列族：0；呈现 队列族：0
+12:20:40 使用的 图形 队列族：0；呈现 队列族：0
+[Vulkan Loader] INFO | LAYER:   Inserted device layer "VK_LAYER_KHRONOS_validation" (E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_validation.dll)
+[Vulkan Loader] INFO | LAYER:   Inserted device layer "VK_LAYER_bandicam_helper" (G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.dll)
+[Vulkan Loader] INFO | LAYER:   Inserted device layer "VK_LAYER_NV_present" (C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll)
+[Vulkan Loader] INFO | LAYER:   Inserted device layer "VK_LAYER_NV_optimus" (C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll)
+[Vulkan Loader] DRIVER:         vkCreateDevice layer callstack setup to:
+[Vulkan Loader] DRIVER:            <Application>
+[Vulkan Loader] DRIVER:              ||
+[Vulkan Loader] DRIVER:            <Loader>
+[Vulkan Loader] DRIVER:              ||
+[Vulkan Loader] LAYER:             VK_LAYER_NV_optimus
+[Vulkan Loader] LAYER:                     Type: Implicit
+[Vulkan Loader] LAYER:                     Enabled By: Implicit Layer
+[Vulkan Loader] LAYER:                         Disable Env Var:  DISABLE_LAYER_NV_OPTIMUS_1
+[Vulkan Loader] LAYER:                     Manifest: C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nv-vk64.json
+[Vulkan Loader] LAYER:                     Library:  C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             VK_LAYER_NV_present
+[Vulkan Loader] LAYER:                     Type: Implicit
+[Vulkan Loader] LAYER:                     Enabled By: Implicit Layer
+[Vulkan Loader] LAYER:                         Disable Env Var:  DISABLE_LAYER_NV_PRESENT_1
+[Vulkan Loader] LAYER:                     Manifest: C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nv-vk64.json
+[Vulkan Loader] LAYER:                     Library:  C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             VK_LAYER_bandicam_helper
+[Vulkan Loader] LAYER:                     Type: Implicit
+[Vulkan Loader] LAYER:                     Enabled By: Implicit Layer
+[Vulkan Loader] LAYER:                         Disable Env Var:  VK_LAYER_bandicam_helper_DEBUG_1
+[Vulkan Loader] LAYER:                     Manifest: G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.json
+[Vulkan Loader] LAYER:                     Library:  G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.dll
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             VK_LAYER_KHRONOS_validation
+[Vulkan Loader] LAYER:                     Type: Explicit
+[Vulkan Loader] LAYER:                     Enabled By: Environment Variable VK_INSTANCE_LAYERS
+[Vulkan Loader] LAYER:                     Manifest: E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_validation.json
+[Vulkan Loader] LAYER:                     Library:  E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_validation.dll
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] DRIVER:            <Device>
+[Vulkan Loader] DRIVER:                Using "NVIDIA GeForce RTX 3060" with driver: "C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll"
+[XYC-SILENT-VULKAN] 队列 获取成功（图形 + 呈现）
+12:20:40 队列 获取成功（图形 + 呈现）
+[XYC-SILENT-VULKAN] VK_EXT_swapchain_maintenance1 enabled; swapchainMaintenance1 feature=true
+12:20:40 VK_EXT_swapchain_maintenance1 enabled; swapchainMaintenance1 feature=true
+[XYC-SILENT-VULKAN] 能力查询成功；请求逻辑尺寸=776x650；Surface 当前尺寸=776x650；选择物理尺寸=776x650；格式=B8G8R8A8Unorm；呈现模式=呈现ModeFifoKhr；最小图像数=3；SupportedUsage=TransferSrcBit, ImageUsageTransferDstBit, ImageUsageSampledBit, StorageBit, ColorAttachmentBit, InputAttachmentBit
+12:20:40 能力查询成功；请求逻辑尺寸=776x650；Surface 当前尺寸=776x650；选择物理尺寸=776x650；格式=B8G8R8A8Unorm；呈现模式=呈现ModeFifoKhr；最小图像数=3；SupportedUsage=TransferSrcBit, ImageUsageTransferDstBit, ImageUsageSampledBit, StorageBit, ColorAttachmentBit, InputAttachmentBit
+[XYC-SILENT-VULKAN] 【VulkanReadback】Swapchain TransferSrc=SUPPORTED
+12:20:41 【VulkanReadback】Swapchain TransferSrc=SUPPORTED
+[XYC-SILENT-VULKAN] Swapchain 创建成功；选择物理尺寸=776x650；ImageView 创建成功 3 张
+12:20:41 Swapchain 创建成功；选择物理尺寸=776x650；ImageView 创建成功 3 张
+[XYC-SILENT-VULKAN] [T+0ms 代际=0] 帧缓冲重建开始：开始
+12:20:41 [T+0ms 代际=0] 帧缓冲重建开始：开始
+[XYC-SILENT-VULKAN] 【VulkanReadback】真实 Terrain RenderPass 读回缓冲已创建；图像数=3；尺寸=776x650
+12:20:41 【VulkanReadback】真实 Terrain RenderPass 读回缓冲已创建；图像数=3；尺寸=776x650
+[XYC-SILENT-VULKAN] [T+0ms 代际=0] 帧缓冲重建完成：物理尺寸=776x650；帧缓冲=3 张；命令缓冲已重录
+12:20:41 [T+0ms 代际=0] 帧缓冲重建完成：物理尺寸=776x650；帧缓冲=3 张；命令缓冲已重录
+[XYC-SILENT-VULKAN] RenderPass + Framebuffer 创建成功
+12:20:41 RenderPass + Framebuffer 创建成功
+[XYC-SILENT-VULKAN] ShaderModule 创建成功（vert+frag）
+12:20:41 ShaderModule 创建成功（vert+frag）
+[XYC-SILENT-VULKAN] PipelineLayout 创建成功
+12:20:41 PipelineLayout 创建成功
+[XYC-SILENT-VULKAN] 图形Pipeline 创建成功
+12:20:41 图形Pipeline 创建成功
+[XYC-SILENT-VULKAN] 天空 图形Pipeline 创建成功（深度不写）
+12:20:41 天空 图形Pipeline 创建成功（深度不写）
+[XYC-SILENT-VULKAN] 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+12:20:41 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+[XYC-SILENT-VULKAN] 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+12:20:41 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+[XYC-SILENT-VULKAN] 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+12:20:41 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+12:20:41 【调试】【命令缓冲】命令缓冲录制摘要；次数=7；线程编号=2；实体数=0；视图数=3
+12:20:41 【取证】【WorldGrid】GridPipelineReady=True; GridInDrawPlan=False; GridCommandRecorded=False; GridVkDrawIssued=True; AxisPipelineReady=True; AxisCommandRecorded=False; OriginPipelineReady=True; OriginCommandRecorded=False; CommandBufferGeneration=7; FramebufferGeneration=1; SwapchainGeneration=0; Offscreen=False
+12:20:41 【取证】【WorldGridMath】Viewport=776x650; CameraPosition=Vector3d(4, -5, 3); ViewProjectionFinite=True; InverseViewProjectionFinite=True; GridPlaneIntersection=VALID; FineScale=100; CoarseScale=200; FineAlpha=1; CoarseAlpha=0; FinalAlpha=GPU_FRAGMENT_DERIVATIVE_DEPENDENT
+[XYC-SILENT-VULKAN] 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+12:20:41 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+[XYC-SILENT-VULKAN] 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+12:20:41 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+[XYC-SILENT-VULKAN] 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+12:20:41 参考网格 图形Pipeline 创建成功（深度写关/混合开）
+[XYC-SILENT-VULKAN] ShaderModule 创建成功（vert+frag）
+12:20:41 ShaderModule 创建成功（vert+frag）
+[XYC-SILENT-VULKAN] PipelineLayout 创建成功
+12:20:41 PipelineLayout 创建成功
+[XYC-SILENT-VULKAN] 图形Pipeline 创建成功
+12:20:41 图形Pipeline 创建成功
+[XYC-SILENT-VULKAN] ShaderModule 创建成功（vert+frag）
+12:20:41 ShaderModule 创建成功（vert+frag）
+[XYC-SILENT-VULKAN] PipelineLayout 创建成功
+12:20:41 PipelineLayout 创建成功
+[XYC-SILENT-VULKAN] 图形Pipeline 创建成功
+12:20:41 图形Pipeline 创建成功
+[XYC-SILENT-VULKAN] 呈现Sync generation created: generation=0; imageCount=3; swapchain=13194139533324
+12:20:41 呈现Sync generation created: generation=0; imageCount=3; swapchain=13194139533324
+[XYC-SILENT-VULKAN] 呈现 泵已启动（独立线程）
+12:20:41 呈现 泵已启动（独立线程）
+[XYC-SILENT-VULKAN] 附加成功：实例 + Surface 已创建；窗口句柄：0xC80D1A
+12:20:41 附加成功：实例 + Surface 已创建；窗口句柄：0xC80D1A
+[XYC-SILENT-HOST] HWND=0xC80D1A;Visible=False;Client=776x650;Attached=True;Mode=HIDDEN-HWND-SWAPCHAIN-PRESENT
+[XYC-SILENT-VULKAN] 呈现 Fence complete: count=1; generation=0; image=0; swapchain=13194139533324
+12:20:41 呈现 Fence complete: count=1; generation=0; image=0; swapchain=13194139533324
+[XYC-SILENT-VULKAN] 首帧 呈现 成功；imageIndex=0
+12:20:41 首帧 呈现 成功；imageIndex=0
+XYC silent runtime evidence={"sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+[XYC-SILENT-VULKAN] 呈现 Fence complete: count=120; generation=0; image=0; swapchain=13194139533324
+12:20:42 呈现 Fence complete: count=120; generation=0; image=0; swapchain=13194139533324
+[XYC-SILENT-VULKAN] 呈现 Fence complete: count=240; generation=0; image=0; swapchain=13194139533324
+12:20:42 呈现 Fence complete: count=240; generation=0; image=0; swapchain=13194139533324
+[XYC-SILENT-VULKAN] 呈现 Fence complete: count=360; generation=0; image=0; swapchain=13194139533324
+12:20:43 呈现 Fence complete: count=360; generation=0; image=0; swapchain=13194139533324
+[XYC-SILENT-VULKAN] 呈现 Fence complete: count=480; generation=0; image=0; swapchain=13194139533324
+12:20:44 呈现 Fence complete: count=480; generation=0; image=0; swapchain=13194139533324
+[XYC-SILENT-VULKAN] 呈现 Fence complete: count=600; generation=0; image=0; swapchain=13194139533324
+12:20:45 呈现 Fence complete: count=600; generation=0; image=0; swapchain=13194139533324
+[XYC-SILENT-VULKAN] 呈现 Fence complete: count=720; generation=0; image=0; swapchain=13194139533324
+12:20:46 呈现 Fence complete: count=720; generation=0; image=0; swapchain=13194139533324
+[XYC-SILENT-VULKAN] 地图资源更新决策：处理=重新创建；序号=0；资源键已变化=是；尺寸=0×0；基础高度=0
+12:20:46 地图资源更新决策：处理=重新创建；序号=0；资源键已变化=是；尺寸=0×0；基础高度=0
+XYC silent runtime evidence={"sceneRevision":0,"terrainRevision":1,"viewportFrameId":2,"viewportWidth":776,"viewportHeight":650,"presentedFrameId":736,"presentedCameraRevision":2,"presentedImageIndex":0,"presentedCaptureHeld":false,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":false,"frameCounter":2,"readbackPath":null,"readbackSha256":null,"buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sampleWidth":513,"sampleHeight":513,"surfaceQueryValid":false,"surfaceQueryStatus":"OutOfBounds","renderSurfaceZ":null,"cameraRevision":null,"frameId":2,"evidencePath":null}
+XYC silent runtime evidence={"revision":4,"sceneRevision":0,"cameraRevision":4,"evidencePath":null}
+XYC silent runtime evidence={"revision":4,"sceneRevision":0,"cameraRevision":4,"evidencePath":null}
+XYC silent runtime evidence={"isolationMode":"silent-hidden-hwnd","renderCapability":"HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS","build":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","processId":2736,"viewportFrameId":2,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":false,"frameCounter":2,"presentedFrameId":736,"presentedCameraRevision":2,"presentedImageIndex":0,"readbackPath":null,"readbackSha256":null,"buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":false,"frameCounter":2,"presentedFrameId":736,"presentedCameraRevision":2,"presentedImageIndex":0,"readbackPath":null,"readbackSha256":null,"buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":4,"evidencePath":null}
+XYC silent runtime evidence={"isolationMode":"silent-hidden-hwnd","renderCapability":"HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS","build":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","processId":2736,"viewportFrameId":2,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":false,"frameCounter":2,"presentedFrameId":736,"presentedCameraRevision":2,"presentedImageIndex":0,"readbackPath":null,"readbackSha256":null,"buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"isolationMode":"silent-hidden-hwnd","renderCapability":"HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS","build":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","processId":2736,"viewportFrameId":3,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":false,"frameCounter":3,"presentedFrameId":737,"presentedCameraRevision":3,"presentedImageIndex":0,"readbackPath":null,"readbackSha256":null,"buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"isolationMode":"silent-hidden-hwnd","renderCapability":"HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS","build":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","processId":2736,"viewportFrameId":3,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":3,"presentedFrameId":738,"presentedCameraRevision":4,"presentedImageIndex":0,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000738-camera-00000004.png","readbackSha256":"76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"sceneRevision":0,"terrainRevision":1,"viewportFrameId":3,"viewportWidth":776,"viewportHeight":650,"presentedFrameId":738,"presentedCameraRevision":4,"presentedImageIndex":0,"presentedCaptureHeld":true,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":3,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000738-camera-00000004.png","readbackSha256":"76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sampleWidth":513,"sampleHeight":513,"surfaceQueryValid":true,"surfaceQueryStatus":"Valid","renderSurfaceZ":1596.1930431216092,"cameraRevision":null,"frameId":3,"evidencePath":null}
+XYC silent runtime evidence={"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":3,"presentedFrameId":738,"presentedCameraRevision":4,"presentedImageIndex":0,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000738-camera-00000004.png","readbackSha256":"76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"revision":5,"sceneRevision":0,"cameraRevision":5,"evidencePath":null}
+XYC silent runtime evidence={"revision":5,"sceneRevision":0,"cameraRevision":5,"evidencePath":null}
+XYC silent runtime evidence={"isolationMode":"silent-hidden-hwnd","renderCapability":"HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS","build":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","processId":2736,"viewportFrameId":3,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":3,"presentedFrameId":738,"presentedCameraRevision":4,"presentedImageIndex":0,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000738-camera-00000004.png","readbackSha256":"76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":4,"presentedFrameId":739,"presentedCameraRevision":4,"presentedImageIndex":0,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000738-camera-00000004.png","readbackSha256":"76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":5,"evidencePath":null}
+XYC silent runtime evidence={"isolationMode":"silent-hidden-hwnd","renderCapability":"HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS","build":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","processId":2736,"viewportFrameId":4,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":4,"presentedFrameId":739,"presentedCameraRevision":4,"presentedImageIndex":0,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000738-camera-00000004.png","readbackSha256":"76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"isolationMode":"silent-hidden-hwnd","renderCapability":"HIDDEN-HWND-SWAPCHAIN-PRESENT; attach=SUCCESS","build":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","processId":2736,"viewportFrameId":4,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":4,"presentedFrameId":740,"presentedCameraRevision":5,"presentedImageIndex":0,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000740-camera-00000005.png","readbackSha256":"6E8AE2E99E5283A159CD8AC74EC212AD1817DD58C767B295B63EA5D1075DF47F","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"sceneRevision":0,"terrainRevision":1,"viewportFrameId":4,"viewportWidth":776,"viewportHeight":650,"presentedFrameId":740,"presentedCameraRevision":5,"presentedImageIndex":0,"presentedCaptureHeld":true,"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":4,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000740-camera-00000005.png","readbackSha256":"6E8AE2E99E5283A159CD8AC74EC212AD1817DD58C767B295B63EA5D1075DF47F","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sampleWidth":513,"sampleHeight":513,"surfaceQueryValid":true,"surfaceQueryStatus":"Valid","renderSurfaceZ":1668.288437957669,"cameraRevision":null,"frameId":4,"evidencePath":null}
+XYC silent runtime evidence={"hwnd":13110554,"hwndExists":true,"visible":false,"wsVisibleStyle":false,"clientWidth":776,"clientHeight":650,"requestedWidth":776,"requestedHeight":650,"attachFailure":null,"surfaceAndSwapchainAttached":true,"presentSucceeded":true,"readbackCaptured":true,"frameCounter":4,"presentedFrameId":740,"presentedCameraRevision":5,"presentedImageIndex":0,"readbackPath":"E:\\MyDoc\\project-VSCode\\XuanYuEngine\\.xye-workspace\\Tasks\\M2-A1-R4-clean\\.xye-workspace\\Builds\\.xye-workspace\\Diagnostics\\silent-20261022042039-6afee5ec3bfa4b61a82be3851b539103\\gpu-frame-00000740-camera-00000005.png","readbackSha256":"6E8AE2E99E5283A159CD8AC74EC212AD1817DD58C767B295B63EA5D1075DF47F","buildIdentity":"HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:39.7215307\u002B00:00","sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+XYC silent runtime evidence={"sceneRevision":null,"cameraRevision":null,"evidencePath":null}
+[XYC-SILENT-VULKAN] 呈现 泵已停止
+12:20:47 呈现 泵已停止
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] 图形Pipeline 资源释放完成
+12:20:47 图形Pipeline 资源释放完成
+[XYC-SILENT-VULKAN] RenderPass + Framebuffer 释放成功
+12:20:47 RenderPass + Framebuffer 释放成功
+[XYC-SILENT-VULKAN] 释放完成
+12:20:47 释放完成
+[XYC-SILENT-VULKAN] Swapchain 释放成功
+12:20:47 Swapchain 释放成功
+[XYC-SILENT-VULKAN] 逻辑设备 释放成功
+12:20:47 逻辑设备 释放成功
+【VulkanSurface】释放 Vulkan Surface 成功；Surface 句柄：0x10000000001
+[XYC-SILENT-VULKAN] Surface 已释放
+12:20:47 Surface 已释放
+[Vulkan Loader] DEBUG | LAYER:  Unloading layer library C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll
+[Vulkan Loader] DEBUG | LAYER:  Unloading layer library C:\Windows\System32\DriverStore\FileRepository\nv_dispig.inf_amd64_cc526ccc3287f5cd\nvoglv64.dll
+[Vulkan Loader] DEBUG | LAYER:  Unloading layer library G:\三维扫描软件视频\BandicamPortable\BandicamPortable\App\Bandicam\bdcamvk64.dll
+[Vulkan Loader] DEBUG | LAYER:  Unloading layer library E:\MyApp\sdk-vulkan\Bin\VkLayer_khronos_validation.dll
+【VulkanInstance】释放 Vulkan 实例成功；实例句柄：0x1726EB91110
+[XYC-SILENT-VULKAN] 实例 已销毁
+12:20:47 实例 已销毁
+[XYC-SILENT-VULKAN] 分离完成：Surface + 实例 已释放
+12:20:47 分离完成：Surface + 实例 已释放
+[XYC-SILENT-HOST-CLOSED] HWND=0xC80D1A;Exists=False
+XYC silent monitor phase=exited; childPid=2736; exitCode=0
+XYC silent monitor phase=stopped; childPid=2736

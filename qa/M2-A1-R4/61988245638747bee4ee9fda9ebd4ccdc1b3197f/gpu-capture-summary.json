@@ -1,0 +1,20 @@
+﻿{
+    "RunId":  "m2a1-r4-final-61988245-20261022",
+    "SourceHead":  "61988245638747bee4ee9fda9ebd4ccdc1b3197f",
+    "SourceTree":  "3a649a0e60f8238981754f88746ff5b358a49e2b",
+    "SourceDirty":  "YES",
+    "Gpu":  "NVIDIA GeForce RTX 3060",
+    "ExitCode":  0,
+    "Vuid07987Count":  0,
+    "ValidationMessageCount":  0,
+    "PngFiles":  [
+                     {
+                         "Name":  "oblique-frame-740-camera-5.png",
+                         "Sha256":  "6E8AE2E99E5283A159CD8AC74EC212AD1817DD58C767B295B63EA5D1075DF47F"
+                     },
+                     {
+                         "Name":  "overhead-frame-738-camera-4.png",
+                         "Sha256":  "76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9"
+                     }
+                 ]
+}

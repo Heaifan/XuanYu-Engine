@@ -1,0 +1,11 @@
+  XuanYu.Core -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Core\release\XuanYu.Core.dll
+  XYUI.Avalonia -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XYUI.Avalonia\release\XYUI.Avalonia.dll
+  XuanYu.World -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.World\release\XuanYu.World.dll
+  XuanYu.Render.Abstractions -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Render.Abstractions\release\XuanYu.Render.Abstractions.dll
+  XuanYu.Editor -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Editor\release\XuanYu.Editor.dll
+  XuanYu.Render.Vulkan -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Render.Vulkan\release\XuanYu.Render.Vulkan.dll
+  XuanYu.Editor.UI -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Editor.UI\release\XuanYu.Editor.UI.dll
+  XuanYu.Editor.App -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Editor.App\release\XuanYu.Editor.App.dll
+  XuanYu.Editor.Control.Cli -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Editor.Control.Cli\release\XuanYu.Editor.Control.Cli.dll
+E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\XuanYu.World.Tests\Render\VulkanOffscreenDeviceTests.cs(54,34): error CS0246: 未能找到类型或命名空间名“VulkanOffscreenTerrainRenderer”(是否缺少 using 指令或程序集引用?) [E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\XuanYu.World.Tests\XuanYu.World.Tests.csproj]
+E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\XuanYu.World.Tests\Render\VulkanOffscreenDeviceTests.cs(57,9): error CS0619: “Assert.Throws<T>(Func<Task>)”已过时:“You must call Assert.ThrowsAsync<T> (and await the result) when testing async code.” [E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\XuanYu.World.Tests\XuanYu.World.Tests.csproj]

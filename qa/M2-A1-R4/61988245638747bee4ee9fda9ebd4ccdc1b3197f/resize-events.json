@@ -1,0 +1,35 @@
+﻿[
+    {
+        "Phase":  "initial",
+        "Hwnd":  13176090,
+        "Width":  776,
+        "Height":  650,
+        "Visible":  false,
+        "Foreground":  false,
+        "Frame":  27
+    },
+    {
+        "Phase":  "resize",
+        "RequestedWidth":  1024,
+        "RequestedHeight":  768,
+        "ActualWidth":  1024,
+        "ActualHeight":  768,
+        "Visible":  false,
+        "Foreground":  false,
+        "Frame":  736,
+        "ImageIndex":  1,
+        "Build":  "HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:56.4753488+00:00"
+    },
+    {
+        "Phase":  "resize",
+        "RequestedWidth":  1180,
+        "RequestedHeight":  820,
+        "ActualWidth":  1180,
+        "ActualHeight":  820,
+        "Visible":  false,
+        "Foreground":  false,
+        "Frame":  787,
+        "ImageIndex":  1,
+        "Build":  "HEAD=61988245638747bee4ee9fda9ebd4ccdc1b3197f;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T04:20:56.4753488+00:00"
+    }
+]

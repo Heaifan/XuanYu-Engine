@@ -1,0 +1,24 @@
+﻿{
+    "RunId":  "m2a1-r4-restart-61988245-20261022",
+    "SourceHead":  "61988245638747bee4ee9fda9ebd4ccdc1b3197f",
+    "SourceTree":  "3a649a0e60f8238981754f88746ff5b358a49e2b",
+    "SourceDirty":  "YES",
+    "Gpu":  "NVIDIA GeForce RTX 3060",
+    "ExitCode":  0,
+    "FirstFrame":  21,
+    "LastFrame":  899,
+    "CloseReply":  {
+                       "requestId":  "af0b899f55ed4bcaa16bdca7f2616c70",
+                       "success":  true,
+                       "errorCode":  null,
+                       "observedState":  {
+                                             "closed":  true
+                                         },
+                       "sceneRevision":  null,
+                       "cameraRevision":  null,
+                       "durationMs":  0.0914,
+                       "evidencePath":  null
+                   },
+    "ValidationMessages":  0,
+    "Vuid07987":  0
+}

@@ -1,0 +1,8 @@
+Complete-GuardRun : Render.Abstractions project reference forbidden: XuanYu.Render.Vulkan (XuanYu.Render.Abstractions/X
+uanYu.Render.Abstractions.csproj)
+At E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\scripts\arch-a-guard.ps1:120 char:1
++ Complete-GuardRun "ARCH-A guard completed."
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Complete-GuardRun
+ 

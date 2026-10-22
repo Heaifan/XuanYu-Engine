@@ -1,0 +1,14 @@
+  XuanYu.Core -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Core\release\XuanYu.Core.dll
+  XuanYu.World -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.World\release\XuanYu.World.dll
+  XuanYu.Render.Abstractions -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Render.Abstractions\release\XuanYu.Render.Abstractions.dll
+  XYUI.Avalonia -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XYUI.Avalonia\release\XYUI.Avalonia.dll
+  XuanYu.Editor -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Editor\release\XuanYu.Editor.dll
+  XuanYu.Render.Vulkan -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Render.Vulkan\release\XuanYu.Render.Vulkan.dll
+  XuanYu.Editor.UI -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Editor.UI\release\XuanYu.Editor.UI.dll
+  XuanYu.Editor.Control.Cli -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Editor.Control.Cli\release\XuanYu.Editor.Control.Cli.dll
+  XuanYu.Editor.App -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.Editor.App\release\XuanYu.Editor.App.dll
+  XuanYu.World.Tests -> E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.World.Tests\release\XuanYu.World.Tests.dll
+E:\MyDoc\project-VSCode\XuanYuEngine\.xye-workspace\Tasks\M2-A1-R4-clean\.xye-workspace\Builds\Artifacts\bin\XuanYu.World.Tests\release\XuanYu.World.Tests.dll (.NETCoreApp,Version=v10.0)的测试运行
+总共 1 个测试文件与指定模式相匹配。
+
+已通过! - 失败:     0，通过:    55，已跳过:     0，总计:    55，持续时间: 89 ms - XuanYu.World.Tests.dll (net10.0)
