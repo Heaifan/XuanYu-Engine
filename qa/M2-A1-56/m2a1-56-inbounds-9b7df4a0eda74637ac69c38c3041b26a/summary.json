@@ -1,0 +1,28 @@
+{
+  "runId": "m2a1-56-inbounds-9b7df4a0eda74637ac69c38c3041b26a",
+  "candidateHead": "cccd49ce4caabb0101f0f57cf91a81e2b7802dc6",
+  "candidateDirty": "YES",
+  "device": "NVIDIA GeForce RTX 3060",
+  "extent": "776x650",
+  "terrainId": "n24e121",
+  "terrainRevision": 1,
+  "overhead": {
+    "frameId": 1019,
+    "cameraRevision": 4,
+    "imageIndex": 0,
+    "surfaceQuery": "Valid",
+    "renderSurfaceZ": 1596.1930431216092,
+    "pngSha256": "76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9"
+  },
+  "oblique": {
+    "frameId": 1021,
+    "cameraRevision": 5,
+    "imageIndex": 0,
+    "surfaceQuery": "Valid",
+    "renderSurfaceZ": 1668.288437957669,
+    "pngSha256": "E37D77D456B3CDDD2163E18A7C4A829CF08F043DC293624A1D6D3003B526B964"
+  },
+  "initialCaptureScriptFailureRunId": "m2a1-56-inbounds-60cffd8f47804da1aac2a0f91f369346",
+  "initialFailureRetained": "YES",
+  "stdoutRawFile": "NOT GENERATED; stdin requests preserved in requests.jsonl; stdout protocol replies preserved in replies.jsonl"
+}

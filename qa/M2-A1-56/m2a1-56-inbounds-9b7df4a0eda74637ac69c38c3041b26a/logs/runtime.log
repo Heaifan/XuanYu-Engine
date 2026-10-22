@@ -1,0 +1,10 @@
+2026-10-22T10:54:15.8257665+08:00;Frame=0;Wheel=0;NativeInput=0;[RUNTIME-PROBE] ProbeId=HEAD=cccd49ce4caabb0101f0f57cf91a81e2b7802dc6;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T02:54:15.7011714+00:00;ProcessId=31456
+2026-10-22T10:54:15.8380967+08:00;Frame=0;Wheel=0;NativeInput=0;ExecutablePath=<candidate-root>\Tasks\bin\XuanYu.Editor.App\release\XuanYu.Editor.App.exe;CoreAssembly=<candidate-root>\Tasks\bin\XuanYu.Editor.App\release\XuanYu.Core.dll
+2026-10-22T10:54:15.8420218+08:00;Frame=0;Wheel=0;NativeInput=0;XuanYu.EditorAssembly=NOT_LOADED
+2026-10-22T10:54:15.8423125+08:00;Frame=0;Wheel=0;NativeInput=0;XuanYu.Editor.UIAssembly=NOT_LOADED
+2026-10-22T10:54:15.8426884+08:00;Frame=0;Wheel=0;NativeInput=0;XuanYu.WorldAssembly=NOT_LOADED
+2026-10-22T10:54:15.8429315+08:00;Frame=0;Wheel=0;NativeInput=0;XuanYu.Render.VulkanAssembly=NOT_LOADED
+2026-10-22T10:54:16.7317447+08:00;Frame=0;Wheel=0;NativeInput=0;XuanYu.EditorAssembly=<candidate-root>\Tasks\bin\XuanYu.Editor.App\release\XuanYu.Editor.dll
+2026-10-22T10:54:16.7321927+08:00;Frame=0;Wheel=0;NativeInput=0;XuanYu.Editor.UIAssembly=<candidate-root>\Tasks\bin\XuanYu.Editor.App\release\XuanYu.Editor.UI.dll
+2026-10-22T10:54:16.7324507+08:00;Frame=0;Wheel=0;NativeInput=0;XuanYu.WorldAssembly=<candidate-root>\Tasks\bin\XuanYu.Editor.App\release\XuanYu.World.dll
+2026-10-22T10:54:16.7326481+08:00;Frame=0;Wheel=0;NativeInput=0;XuanYu.Render.VulkanAssembly=<candidate-root>\Tasks\bin\XuanYu.Editor.App\release\XuanYu.Render.Vulkan.dll

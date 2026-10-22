@@ -1,0 +1,12 @@
+{
+  "Source": "VulkanSwapchainImage-GPU-Readback",
+  "Device": "NVIDIA GeForce RTX 3060",
+  "Build": "HEAD=cccd49ce4caabb0101f0f57cf91a81e2b7802dc6;DIRTY=YES;PROBE=INSTRUMENT-VIEWPORT-ZOOM-GROUND-DEM-R1;BUILD=2026-10-22T02:54:15.7011714\u002B00:00",
+  "FrameId": 1019,
+  "CameraRevision": 4,
+  "ImageIndex": 0,
+  "Width": 776,
+  "Height": 650,
+  "Format": "B8G8R8A8Unorm",
+  "Sha256": "76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9"
+}

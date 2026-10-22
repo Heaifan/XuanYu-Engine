@@ -1,0 +1,82 @@
+[
+  {
+    "path": "gpu-frame-00001019-camera-00000004.json",
+    "bytes": 464,
+    "sha256": "027661C103FE6D2495D687F27AECEC8B6D806DD4BC9D56DB355225D463E49901"
+  },
+  {
+    "path": "gpu-frame-00001019-camera-00000004.png",
+    "bytes": 859318,
+    "sha256": "76903809C7C2C107481831636714071F55D8C8F5812FA2C3921AB85A9180C0B9"
+  },
+  {
+    "path": "gpu-frame-00001021-camera-00000005.json",
+    "bytes": 464,
+    "sha256": "7A7C452AB8862DE7253229E17F634585AC63899ECEF5048ABA0E594E2B3043F6"
+  },
+  {
+    "path": "gpu-frame-00001021-camera-00000005.png",
+    "bytes": 519891,
+    "sha256": "E37D77D456B3CDDD2163E18A7C4A829CF08F043DC293624A1D6D3003B526B964"
+  },
+  {
+    "path": "M2-A1-56-inbounds-camera-gpu-readback-2026-10-22.md",
+    "bytes": 3410,
+    "sha256": "E0FBEC0E1C2D43909EA2E787900EF3372B5BBCD0CABB98A481F2BCBE8DA85F6F"
+  },
+  {
+    "path": "summary.json",
+    "bytes": 1039,
+    "sha256": "C17032C8CF26CBF85B39E755FC9C7382AB242C0C18EFBA00AD05BCA5857F6F10"
+  },
+  {
+    "path": "logs/ground-chain.log",
+    "bytes": 28639,
+    "sha256": "D14D981B2CF5F1AD08DC5AEC048881B863F65A767897DE3D35ED4881615CE389"
+  },
+  {
+    "path": "logs/input-camera.log",
+    "bytes": 23097,
+    "sha256": "B0E6F17C0BC48C88A833F9D371B3BB411A89ADB3125C9A35103EA0E9FFF5A16C"
+  },
+  {
+    "path": "logs/present.log",
+    "bytes": 386547,
+    "sha256": "2EB62917CAAC163BF0FEE290A8DFB0458EDE857415C132F27109B271B334A57B"
+  },
+  {
+    "path": "logs/replies.jsonl",
+    "bytes": 22657,
+    "sha256": "235EF0C64962E43414666546B6A3B01C930F28CA68CA7FF4B03A4D5735427E0D"
+  },
+  {
+    "path": "logs/requests.jsonl",
+    "bytes": 3498,
+    "sha256": "6CB936BB301DF94A3C718D93A528230C10773343E76FA92F4B1989F04D4B1F21"
+  },
+  {
+    "path": "logs/runtime.log",
+    "bytes": 1534,
+    "sha256": "692968A0E7BB643153838B2801AECBDE45A167CC7D35ADC7E9F859DC3574AE0E"
+  },
+  {
+    "path": "logs/scale-indicator.log",
+    "bytes": 1262,
+    "sha256": "3941E205B9722B49DB0C340705D6A179D009C2D28E169233A02C4144D33DA9E5"
+  },
+  {
+    "path": "logs/stderr.log",
+    "bytes": 11254,
+    "sha256": "89525A7D5EF8D9D55B5A94EEAC5FD8D5906CE2914747DE0FC04B98AE9CF65EFB"
+  },
+  {
+    "path": "logs/terrain.log",
+    "bytes": 89241,
+    "sha256": "8C2D34AD3649CC711F3F2CE63846F30C4D62A2908920846A982BFDEFC889CBBC"
+  },
+  {
+    "path": "logs/viewport.log",
+    "bytes": 9120,
+    "sha256": "58FAAFA36CF3A0260D98650F07AF4AEB60558CD1320DDACC24E111FA0289CC5F"
+  }
+]
