@@ -88,10 +88,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
         log?.Invoke(VulkanPipelineLogFormatter.GraphicsPipelineCreated());
         return new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
     }
-    internal static ShaderStageFlags PushConstantStages(bool analyticStroke) =>
-        analyticStroke
-            ? ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit
-            : ShaderStageFlags.VertexBit;
+    internal static ShaderStageFlags PushConstantStages(bool analyticStroke) => analyticStroke ? ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit : ShaderStageFlags.VertexBit;
     public void Dispose()
     {
         if (_pipeline.Handle == 0 && _layout.Handle == 0) return;
