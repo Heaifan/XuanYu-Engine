@@ -14,6 +14,14 @@ public class VulkanPresentGenerationPolicyTests
         bool current, bool expected)
         => Assert.Equal(expected, VulkanPresentGenerationPolicy.CanSelectImage(index, count, current));
 
+    [Fact]
+    public void Reused_image_index_is_rejected_for_retired_generation()
+    {
+        const uint imageIndex = 2;
+        Assert.True(VulkanPresentGenerationPolicy.CanSelectImage(imageIndex, 3, true));
+        Assert.False(VulkanPresentGenerationPolicy.CanSelectImage(imageIndex, 3, false));
+    }
+
     [Theory]
     [InlineData(true, true, false, false, true)]
     [InlineData(true, false, false, false, false)]

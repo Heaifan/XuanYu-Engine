@@ -60,7 +60,12 @@ foreach ($file in Get-SourceFiles "XuanYu.Editor.UI") {
     Assert-NotContains $file.FullName @("using XuanYu.Render.Vulkan", "using Silk.NET.Vulkan") "Editor.UI source reference"
 }
 
-Assert-NotContains $absCsproj @("XuanYu.Render.Vulkan", "Silk.NET.Vulkan", "Avalonia") "Render.Abstractions project reference"
+Assert-NotContains $absCsproj @("Silk.NET.Vulkan", "Avalonia") "Render.Abstractions project/package reference"
+foreach ($reference in Get-ProjectReferences $absCsproj) {
+    if ($reference -match 'XuanYu\.Render\.Vulkan') {
+        Add-Failure "Render.Abstractions ProjectReference forbidden: $reference"
+    }
+}
 foreach ($file in Get-SourceFiles "XuanYu.Render.Abstractions") {
     Assert-NotContains $file.FullName @("using XuanYu.Render.Vulkan", "using Silk.NET.Vulkan", "using Avalonia") "Render.Abstractions source reference"
 }

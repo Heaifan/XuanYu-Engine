@@ -4,10 +4,23 @@ namespace XuanYu.World.Tests.Render;
 
 public sealed class VulkanSwapchainChurnTests
 {
+    static string FindSourceRoot()
+    {
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory);
+             directory is not null;
+             directory = directory.Parent)
+        {
+            var solution = Path.Combine(directory.FullName, "XuanYu.Engine.slnx");
+            var vulkan = Path.Combine(directory.FullName, "XuanYu.Render.Vulkan");
+            if (File.Exists(solution) && Directory.Exists(vulkan)) return directory.FullName;
+        }
+        throw new DirectoryNotFoundException(
+            $"Could not locate XuanYu.Engine.slnx above test output: {AppContext.BaseDirectory}");
+    }
+
     static string Source(string path)
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
-        return File.ReadAllText(Path.Combine(root, "XuanYu.Render.Vulkan", path));
+        return File.ReadAllText(Path.Combine(FindSourceRoot(), "XuanYu.Render.Vulkan", path));
     }
 
     [Fact]
