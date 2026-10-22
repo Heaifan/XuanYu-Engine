@@ -31,7 +31,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
             return null;
         }
         log?.Invoke(VulkanPipelineLogFormatter.ShaderModuleCreated());
-        var range = new PushConstantRange { StageFlags = ShaderStageFlags.VertexBit, Offset = 0, Size = VulkanScenePushConstants.SizeInBytes };
+        var range = new PushConstantRange { StageFlags = PushConstantStages(analyticStroke), Offset = 0, Size = VulkanScenePushConstants.SizeInBytes };
         var layoutInfo = new PipelineLayoutCreateInfo { SType = StructureType.PipelineLayoutCreateInfo, SetLayoutCount = 0, PushConstantRangeCount = 1, PPushConstantRanges = &range };
         var layoutResult = vk.CreatePipelineLayout(deviceOwner.LogicalDevice, &layoutInfo, null, out var layout);
         if (layoutResult != Result.Success)
@@ -88,6 +88,10 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
         log?.Invoke(VulkanPipelineLogFormatter.GraphicsPipelineCreated());
         return new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
     }
+    internal static ShaderStageFlags PushConstantStages(bool analyticStroke) =>
+        analyticStroke
+            ? ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit
+            : ShaderStageFlags.VertexBit;
     public void Dispose()
     {
         if (_pipeline.Handle == 0 && _layout.Handle == 0) return;

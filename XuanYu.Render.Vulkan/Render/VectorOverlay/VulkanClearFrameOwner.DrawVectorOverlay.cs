@@ -1,5 +1,6 @@
 using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
+using XuanYu.Render.Vulkan.Pipeline;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -16,7 +17,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk.CmdBindIndexBuffer(cb, gpu.IndexBuffer.Buffer, 0, IndexType.Uint32);
         foreach (var primitive in gpu.Primitives)
         {
-            var pipeline = primitive.Kind == RenderVectorOverlayPrimitiveKind.Stroke
+            var isStroke = primitive.Kind == RenderVectorOverlayPrimitiveKind.Stroke;
+            var pipeline = isStroke
                 ? _vectorStrokePipeline : _vectorOverlayPipeline;
             if (pipeline.Handle == 0) continue;
             _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, pipeline);
@@ -31,7 +33,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
             scene[24] = (float)primitive.Color.R;
             scene[25] = (float)primitive.Color.G;
             scene[26] = (float)primitive.Color.B;
-            PushSceneConstants(cb, scene);
+            var layout = isStroke ? _vectorStrokePipelineLayout : _vectorOverlayPipelineLayout;
+            var stages = isStroke
+                ? ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit
+                : ShaderStageFlags.VertexBit;
+            _vk.CmdPushConstants(cb, layout, stages, 0,
+                VulkanScenePushConstants.SizeInBytes, scene);
             _vk.CmdDrawIndexed(cb, (uint)primitive.IndexCount, 1,
                 (uint)primitive.FirstIndex, primitive.BaseVertex, 0);
         }
