@@ -40,7 +40,14 @@ if ($operation -in $workspaceOperations) {
     $buildRoot = [IO.Path]::GetFullPath($env:XYE_BUILD_DIRECTORY)
     $buildPrefix = $buildRoot.TrimEnd('\') + '\'
     Import-Module (Join-Path $PSScriptRoot 'XyeWorkspace.psm1') -Force -DisableNameChecking
-    [void]$forwarded.Remove('--no-restore')
+    $cacheRoot = Join-Path $env:XYE_WORKSPACE_ROOT 'Cache'
+    $nugetRoot = Join-Path $cacheRoot 'NuGet'
+    $dotnetHome = Join-Path $cacheRoot 'Dotnet'
+    $env:NUGET_PACKAGES = Join-Path $nugetRoot 'Packages'
+    $env:NUGET_HTTP_CACHE_PATH = Join-Path $nugetRoot 'Http'
+    $env:NUGET_PLUGINS_CACHE_PATH = Join-Path $nugetRoot 'Plugins'
+    $env:NUGET_SCRATCH = Join-Path $nugetRoot 'Scratch'
+    $env:DOTNET_CLI_HOME = $dotnetHome
     $hasArtifactsPath = $false
     for ($index = 0; $index -lt $forwarded.Count; $index++) {
         if ($forwarded[$index] -in @('--artifacts-path','--output','-o')) {
@@ -61,8 +68,14 @@ if ($operation -in $workspaceOperations) {
                 throw "Artifacts path must be inside XYE_BUILD_DIRECTORY: $fullPath"
             }
             $hasArtifactsPath = $true
-        } elseif ($forwarded[$index] -match '^(?:-p:|/(?:p|property):)(BaseOutputPath|BaseIntermediateOutputPath|MSBuildProjectExtensionsPath|IntermediateOutputPath|OutDir)=') {
-            $forwarded[$index] = ''
+        } elseif ($forwarded[$index] -match '(?i)^(?:-p:|/(?:p|property):)(BaseOutputPath|BaseIntermediateOutputPath|MSBuildProjectExtensionsPath|IntermediateOutputPath|OutDir)=(.*)$') {
+            $path = $Matches[2]
+            if ([string]::IsNullOrWhiteSpace($path)) { throw "MSBuild output/intermediate path cannot be empty: $($forwarded[$index])" }
+            $fullPath = if ([IO.Path]::IsPathRooted($path)) { [IO.Path]::GetFullPath($path) }
+                else { [IO.Path]::GetFullPath((Join-Path (Get-Location).Path $path)) }
+            if (-not $fullPath.StartsWith($buildPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+                throw "MSBuild output/intermediate path must be inside XYE_BUILD_DIRECTORY: $fullPath"
+            }
         }
     }
     if (-not $hasArtifactsPath) {

@@ -16,13 +16,17 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'XyeWorkspace.psm1') -Force -DisableNameChecking
-$workspace = Initialize-XyeWorkspace
+$workspace = Get-XyeWorkspaceRoot
 
 if ($Action -eq 'Initialize') {
+    Assert-XyeWorkspaceBoundary $workspace $RepositoryRoot
+    $workspace = Initialize-XyeWorkspace
     Write-Output "XYE workspace ready: $workspace"
     exit 0
 }
 if ($Action -eq 'Preview') {
+    Assert-XyeWorkspaceBoundary $workspace $RepositoryRoot
+    $workspace = Initialize-XyeWorkspace
     $preview = @(Get-XyeManifestPreview $workspace)
     if ($AsJson) { $preview | ConvertTo-Json -Depth 8 }
     else { $preview | Format-Table -AutoSize }
@@ -44,16 +48,25 @@ if ([string]::IsNullOrWhiteSpace($ExecutablePath)) { throw '-ExecutablePath is r
 
 $RepositoryRoot = [IO.Path]::GetFullPath($RepositoryRoot)
 $SourceRoot = [IO.Path]::GetFullPath($SourceRoot)
+Assert-XyeWorkspaceBoundary $workspace $RepositoryRoot
+foreach ($candidatePath in @($SourceRoot, $RepositoryRoot, $WorkingDirectory)) {
+    if (-not [string]::IsNullOrWhiteSpace($candidatePath)) {
+        Assert-XyeChildPath $RepositoryRoot $candidatePath
+    }
+}
+$workspace = Initialize-XyeWorkspace
 $runId = [Guid]::NewGuid().ToString('N')
 $sourceSnapshot = Join-Path (Join-Path $workspace 'Sources') $runId
-$buildDirectory = Join-Path (Join-Path $workspace 'Builds') $runId
+$buildDirectory = if ($TaskType -like 'dotnet-*') {
+    Join-Path (Join-Path $workspace 'Builds') 'Artifacts'
+} else { Join-Path (Join-Path $workspace 'Builds') $runId }
 $diagnosticsDirectory = Join-Path (Join-Path $workspace 'Diagnostics') $runId
 $tempDirectory = Join-Path (Join-Path $workspace 'Temp') $runId
 $manifestPath = Join-Path (Join-Path $workspace 'Manifests') "$runId.json"
 $commandLogPath = Join-Path $diagnosticsDirectory 'commands.jsonl'
 foreach ($path in @($sourceSnapshot, $buildDirectory, $diagnosticsDirectory, $tempDirectory)) {
-    New-Item -ItemType Directory -Force -Path $path | Out-Null
     Assert-XyeChildPath $workspace $path
+    New-Item -ItemType Directory -Force -Path $path | Out-Null
 }
 
 $currentHead = Get-XyeGitValue $RepositoryRoot @('rev-parse','HEAD')
@@ -80,7 +93,8 @@ $oldEnvironment = @{}
 $environmentNames = @('XYE_WORKSPACE_ROOT','XYE_TASK_RUN_ID','XYE_WORKSPACE_SOURCE_DIRECTORY',
     'XYE_BUILD_DIRECTORY','XYE_DIAGNOSTICS_DIRECTORY','XYE_TEMP_DIRECTORY','XYE_PROBE_DIRECTORY',
     'XYE_TASK_MANIFEST','XYE_TASK_COMMAND_LOG','XYE_SOURCE_HEAD','XYE_SOURCE_TREE',
-    'XYE_SOURCE_BRANCH','XYE_SOURCE_DIRTY','XYE_SOURCE_FINGERPRINT','TEMP','TMP')
+    'XYE_SOURCE_BRANCH','XYE_SOURCE_DIRTY','XYE_SOURCE_FINGERPRINT','TEMP','TMP',
+    'DOTNET_CLI_HOME','NUGET_PACKAGES','NUGET_HTTP_CACHE_PATH','NUGET_PLUGINS_CACHE_PATH','NUGET_SCRATCH')
 foreach ($name in $environmentNames) { $oldEnvironment[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
 
 try {
@@ -134,6 +148,15 @@ try {
     $env:XYE_PROBE_DIRECTORY = $diagnosticsDirectory
     $env:TEMP = $tempDirectory
     $env:TMP = $tempDirectory
+    $env:DOTNET_CLI_HOME = Join-Path (Join-Path $workspace 'Cache') 'Dotnet'
+    $env:NUGET_PACKAGES = Join-Path (Join-Path (Join-Path $workspace 'Cache') 'NuGet') 'Packages'
+    $env:NUGET_HTTP_CACHE_PATH = Join-Path (Join-Path (Join-Path $workspace 'Cache') 'NuGet') 'Http'
+    $env:NUGET_PLUGINS_CACHE_PATH = Join-Path (Join-Path (Join-Path $workspace 'Cache') 'NuGet') 'Plugins'
+    $env:NUGET_SCRATCH = Join-Path (Join-Path (Join-Path $workspace 'Cache') 'NuGet') 'Scratch'
+    foreach ($cachePath in @($env:DOTNET_CLI_HOME,$env:NUGET_PACKAGES,$env:NUGET_HTTP_CACHE_PATH,$env:NUGET_PLUGINS_CACHE_PATH,$env:NUGET_SCRATCH)) {
+        Assert-XyeChildPath $workspace $cachePath
+        New-Item -ItemType Directory -Force -Path $cachePath | Out-Null
+    }
 
     $stdoutPath = Join-Path $diagnosticsDirectory 'stdout.log'
     $stderrPath = Join-Path $diagnosticsDirectory 'stderr.log'

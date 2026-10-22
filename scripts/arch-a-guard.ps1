@@ -1,6 +1,12 @@
 ﻿$ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
+Import-Module (Join-Path $PSScriptRoot "XyeWorkspace.psm1") -Force -DisableNameChecking
+$workspace = Get-XyeWorkspaceRoot
+Assert-XyeWorkspaceBoundary $workspace $root
+$guardTemp = Join-Path $workspace 'Temp\ArchA'
+Assert-XyeChildPath $workspace $guardTemp
+New-Item -ItemType Directory -Force -Path $guardTemp | Out-Null
 . (Join-Path $PSScriptRoot "architecture/guard-bootstrap.ps1")
 Initialize-GuardBootstrap -Root $root -NewRun | Out-Null
 
@@ -24,7 +30,7 @@ function Get-PhysicalLineCount([string]$path) {
 }
 
 function Assert-LineCounter([string]$label, [string]$content, [int]$expected) {
-    $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ("arch-guard-linecheck-" + [guid]::NewGuid().ToString("N") + ".txt")
+    $tmp = Join-Path $guardTemp ("arch-guard-linecheck-" + [guid]::NewGuid().ToString("N") + ".txt")
     try {
         [System.IO.File]::WriteAllBytes($tmp, [System.Text.Encoding]::UTF8.GetBytes($content))
         $actual = Get-PhysicalLineCount $tmp

@@ -2,22 +2,55 @@ Set-StrictMode -Version Latest
 
 function Get-XyeWorkspaceRoot {
     $value = [Environment]::GetEnvironmentVariable('XYE_WORKSPACE_ROOT')
-    if ([string]::IsNullOrWhiteSpace($value)) {
-        $value = [Environment]::GetEnvironmentVariable('XYE_WORKSPACE_ROOT', 'User')
-        if (-not [string]::IsNullOrWhiteSpace($value)) {
-            [Environment]::SetEnvironmentVariable('XYE_WORKSPACE_ROOT', $value, 'Process')
-        }
+    $userValue = [Environment]::GetEnvironmentVariable('XYE_WORKSPACE_ROOT', 'User')
+    if (-not [string]::IsNullOrWhiteSpace($value) -and
+        -not [string]::IsNullOrWhiteSpace($userValue) -and
+        [string]::Equals($value.Trim(), $userValue.Trim(), [StringComparison]::OrdinalIgnoreCase)) {
+        $value = $null
     }
     if ([string]::IsNullOrWhiteSpace($value)) {
-        throw 'XYE_WORKSPACE_ROOT is required; configure a machine-local workspace path.'
+        $repositoryRoot = (& git -C (Get-Location).Path rev-parse --show-toplevel 2>$null)
+        if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) {
+            throw 'Cannot resolve the canonical repository root for the default workspace.'
+        }
+        $value = Join-Path $repositoryRoot.Trim() '.xye-workspace'
     }
     return [IO.Path]::GetFullPath($value.Trim())
 }
 
+function Assert-XyeWorkspaceBoundary([string]$Root, [string]$RepositoryRoot = (Get-Location).Path) {
+    $root = [IO.Path]::GetFullPath($Root).TrimEnd('\') + '\'
+    $common = (& git -C $RepositoryRoot rev-parse --path-format=absolute --git-common-dir 2>$null)
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot verify canonical Git common directory.' }
+    $common = $common.Trim().Replace('/', '\')
+    if (-not [IO.Path]::IsPathRooted($common)) { $common = Join-Path $RepositoryRoot $common }
+    $common = [IO.Path]::GetFullPath($common)
+    $canonicalRoot = [IO.Path]::GetDirectoryName($common).TrimEnd('\') + '\'
+    $repo = [IO.Path]::GetFullPath($RepositoryRoot).TrimEnd('\') + '\'
+    if (-not $repo.StartsWith($canonicalRoot, [StringComparison]::OrdinalIgnoreCase) -or
+        -not $root.StartsWith($canonicalRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "Repository or workspace escapes canonical Git root before write: $RepositoryRoot / $Root"
+    }
+    $cursor = [IO.Path]::GetPathRoot($root)
+    foreach ($part in $root.Substring($cursor.Length).TrimEnd('\').Split('\')) {
+        if ([string]::IsNullOrWhiteSpace($part)) { continue }
+        $cursor = Join-Path $cursor $part
+        if (Test-Path -LiteralPath $cursor) {
+            $item = Get-Item -LiteralPath $cursor -Force
+            if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                throw "Workspace path contains a reparse point before write: $cursor"
+            }
+        }
+    }
+}
+
 function Initialize-XyeWorkspace {
     $root = Get-XyeWorkspaceRoot
+    Assert-XyeWorkspaceBoundary $root
     foreach ($name in @('Sources', 'Builds', 'Diagnostics', 'Temp', 'Manifests')) {
-        New-Item -ItemType Directory -Force -Path (Join-Path $root $name) | Out-Null
+        $directory = Join-Path $root $name
+        Assert-XyeChildPath $root $directory
+        New-Item -ItemType Directory -Force -Path $directory | Out-Null
     }
     $probe = Join-Path $root ('.write-check-' + [Guid]::NewGuid().ToString('N'))
     try { [IO.File]::WriteAllText($probe, 'ok') }
@@ -33,8 +66,28 @@ function Initialize-XyeWorkspace {
 function Assert-XyeChildPath([string]$Root, [string]$Path) {
     $fullRoot = [IO.Path]::GetFullPath($Root).TrimEnd('\') + '\'
     $fullPath = [IO.Path]::GetFullPath($Path)
-    if (-not $fullPath.StartsWith($fullRoot, [StringComparison]::OrdinalIgnoreCase)) {
+    $rootWithoutSlash = $fullRoot.TrimEnd('\')
+    if ($fullPath -ne $rootWithoutSlash -and -not $fullPath.StartsWith($fullRoot, [StringComparison]::OrdinalIgnoreCase)) {
         throw "Path escapes XYE_WORKSPACE_ROOT: $fullPath"
+    }
+    $cursor = $rootWithoutSlash
+    if (Test-Path -LiteralPath $cursor) {
+        $rootItem = Get-Item -LiteralPath $cursor -Force
+        if (($rootItem.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+            throw "Workspace child path has a reparse-point root: $cursor"
+        }
+    }
+    if ($fullPath -ne $rootWithoutSlash) {
+        foreach ($part in $fullPath.Substring($fullRoot.Length).Split('\')) {
+            if ([string]::IsNullOrWhiteSpace($part)) { continue }
+            $cursor = Join-Path $cursor $part
+            if (Test-Path -LiteralPath $cursor) {
+                $item = Get-Item -LiteralPath $cursor -Force
+                if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                    throw "Workspace child path contains a reparse point: $cursor"
+                }
+            }
+        }
     }
 }
 
@@ -196,7 +249,7 @@ function Protect-XyeArguments([string[]]$Arguments) {
     return @($result)
 }
 
-Export-ModuleMember -Function Get-XyeWorkspaceRoot, Initialize-XyeWorkspace, Assert-XyeChildPath,
+Export-ModuleMember -Function Get-XyeWorkspaceRoot, Initialize-XyeWorkspace, Assert-XyeChildPath, Assert-XyeWorkspaceBoundary,
     Get-XyeFileHash, Get-XyeTreeFingerprint, Get-XyeDirectoryBytes, Get-XyeOutputHashes,
     Save-XyeManifest, Get-XyeGitValue, Get-XyeGitState, Copy-XyeOverlay, Quote-XyeArgument,
     Get-XyeManifestPreview, Protect-XyeArguments

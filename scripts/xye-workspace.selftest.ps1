@@ -2,10 +2,29 @@ $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'xye-workspace.ps1'
 $originalRoot = $env:XYE_WORKSPACE_ROOT
 Import-Module (Join-Path $PSScriptRoot 'XyeWorkspace.psm1') -Force
+$userRoot = [Environment]::GetEnvironmentVariable('XYE_WORKSPACE_ROOT', 'User')
 $configuredRoot = Get-XyeWorkspaceRoot
+$repositoryRoot = (& git rev-parse --show-toplevel).Trim().Replace('/', '\')
 $testRoot = Join-Path $configuredRoot (Join-Path 'Temp' ('selftest-' + [Guid]::NewGuid().ToString('N')))
 
 try {
+    if (-not [string]::IsNullOrWhiteSpace($userRoot) -and
+        [string]::Equals($originalRoot, $userRoot, [StringComparison]::OrdinalIgnoreCase) -and
+        -not $configuredRoot.StartsWith($repositoryRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Inherited user-level workspace value escaped the repository default.'
+    }
+    $externalRoot = Join-Path ([IO.Path]::GetPathRoot((Get-Location).Path)) ('XYE-boundary-selftest-' + [Guid]::NewGuid().ToString('N'))
+    if (Test-Path -LiteralPath $externalRoot) { throw "External boundary fixture already exists: $externalRoot" }
+    Remove-Item Env:XYE_WORKSPACE_ROOT -ErrorAction SilentlyContinue
+    if (-not (Get-XyeWorkspaceRoot).StartsWith($repositoryRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Workspace default did not remain inside the repository.'
+    }
+    $env:XYE_WORKSPACE_ROOT = $externalRoot
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Initialize 2>&1 | Out-String | Out-Null
+    if ($LASTEXITCODE -eq 0 -or (Test-Path -LiteralPath $externalRoot)) {
+        throw 'External workspace was accepted or created before rejection.'
+    }
+
     $env:XYE_WORKSPACE_ROOT = $testRoot
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Initialize
     if ($LASTEXITCODE -ne 0) { throw 'Workspace initialization failed.' }
@@ -24,9 +43,19 @@ try {
     $requestPath = Join-Path $testRoot 'Temp\invoke.json'
     [pscustomobject]@{
         TaskType='WorkspaceSelfTest'; ExecutablePath='cmd.exe'
-        ExecutableArguments=@('/c','echo %XYE_WORKSPACE_ROOT% & echo %TEMP%')
+        ExecutableArguments=@('/c','echo %XYE_WORKSPACE_ROOT% & echo %TEMP% & echo %NUGET_PACKAGES% & echo %NUGET_HTTP_CACHE_PATH% & echo %NUGET_PLUGINS_CACHE_PATH% & echo %NUGET_SCRATCH% & echo %DOTNET_CLI_HOME%')
         RepositoryRoot=(Get-Location).Path; SourceRoot=(Get-Location).Path
     } | ConvertTo-Json | Set-Content -LiteralPath $requestPath -Encoding utf8
+    $beforeManifests = @(Get-ChildItem (Join-Path $testRoot 'Manifests') -Filter '*.json').Count
+    $request = Get-Content -LiteralPath $requestPath -Raw | ConvertFrom-Json
+    $request | Add-Member -NotePropertyName WorkingDirectory -NotePropertyValue $externalRoot
+    $request | ConvertTo-Json | Set-Content -LiteralPath $requestPath -Encoding utf8
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Invoke -RequestFile $requestPath 2>&1 | Out-String | Out-Null
+    if ($LASTEXITCODE -eq 0 -or @(Get-ChildItem (Join-Path $testRoot 'Manifests') -Filter '*.json').Count -ne $beforeManifests) {
+        throw 'Out-of-repository working directory was not rejected before task output creation.'
+    }
+    $request.WorkingDirectory = $null
+    $request | ConvertTo-Json | Set-Content -LiteralPath $requestPath -Encoding utf8
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Invoke -RequestFile $requestPath
     if ($LASTEXITCODE -ne 0) { throw 'Controlled child invocation failed.' }
 
@@ -45,6 +74,12 @@ try {
     $stdout = Get-Content (Join-Path $record.DiagnosticsDirectory 'stdout.log') -Raw
     if ($stdout -notmatch [regex]::Escape($testRoot) -or $stdout -notmatch '\\Temp\\') {
         throw 'Controlled child did not inherit its scoped workspace and TEMP paths.'
+    }
+    foreach ($expected in @('Cache\NuGet\Packages','Cache\NuGet\Http','Cache\NuGet\Plugins',
+            'Cache\NuGet\Scratch','Cache\Dotnet')) {
+        if ($stdout -notmatch [regex]::Escape((Join-Path $testRoot $expected))) {
+            throw "Controlled child cache escaped or was not set: $expected"
+        }
     }
 
     [pscustomobject]@{
