@@ -1,7 +1,12 @@
 $ErrorActionPreference = "Stop"
 $repo = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path
 $guard = Join-Path $repo "scripts/arch-a-guard-viewport.ps1"
-$fixtureRoot = Join-Path ([IO.Path]::GetTempPath()) ("viewport-guard-" + [guid]::NewGuid())
+Import-Module (Join-Path $repo "scripts/XyeWorkspace.psm1") -Force -DisableNameChecking
+$workspace = Get-XyeWorkspaceRoot
+Assert-XyeWorkspaceBoundary $workspace $repo
+$fixtureRoot = Join-Path $workspace ("Temp/viewport-guard-" + [guid]::NewGuid())
+Assert-XyeChildPath $workspace $fixtureRoot
+$silentHostSource = Get-Content -LiteralPath (Join-Path $repo "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs") -Raw -Encoding utf8
 
 function Write-Fixture([string]$relative, [string]$content) {
     $path = Join-Path $script:fixtureRoot ($relative -replace '/', '\')
@@ -34,6 +39,9 @@ function Invoke-Fixture([string]$name, [string]$relative, [string]$content, [boo
 
 try {
     Invoke-Fixture "positive baseline" "" "" $false
+    Invoke-Fixture "positive silent top-level HWND" "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs" $silentHostSource $false
+    Invoke-Fixture "silent host accidentally visible" "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs" ($silentHostSource.Replace('WsPopup,', 'WsPopup | WsVisible,')) $true
+    Invoke-Fixture "unexpected second native host" "XuanYu.Editor.UI/Control/Silent/OtherWindow.cs" "CreateWindowEx();" $true
     Invoke-Fixture "positive spike isolation" "XuanYu.Viewport.CompositionSpike/Spike.cs" "CompositionDrawingSurface ImportImage" $false
     Invoke-Fixture "positive test Spike reference" "XuanYu.World.Tests/XuanYu.World.Tests.csproj" "XuanYu.Viewport.CompositionSpike" $false
     Invoke-Fixture "second NativeControlHost" "XuanYu.Editor.UI/Viewport/ExtraHost.cs" "class ExtraHost : NativeControlHost {}" $true

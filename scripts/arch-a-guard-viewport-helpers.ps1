@@ -57,7 +57,18 @@ function Invoke-ViewportBoundaryGuard([string]$root) {
         if ($text -match ":\s*NativeControlHost\b" -and
             $file -ne $allowlist[0]) { Add-Failure "Second NativeControlHost implementation: $file" }
     }
-    Assert-GuardFiles $root "XuanYu.Editor.UI" @($allowlist[1]) @(
+    # XYC silent Vulkan creates a hidden WS_POPUP top-level host, not a viewport child HWND.
+    $silentHost = "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs"
+    if (Test-Path (Get-GuardPath $root $silentHost)) {
+        $hostSource = Read-GuardText $root $silentHost
+        if ($hostSource -notmatch 'CreateWindowExW\(0,\s*name,\s*"XYC Silent Vulkan Host",\s*WsPopup\s*,' -or
+            $hostSource -notmatch 'height,\s*0,\s*0,\s*instance,\s*0\)' -or
+            $hostSource -notmatch 'if\s*\(result.Visible\s*\|\|\s*result.HasVisibleStyle\)' -or
+            $hostSource -match '\bWS_CHILD\b') {
+            Add-Failure "Silent Vulkan HWND must remain hidden and top-level: $silentHost"
+        }
+    }
+    Assert-GuardFiles $root "XuanYu.Editor.UI" @($allowlist[1], $silentHost) @(
         "CreateWindowEx", "RegisterClass", "WS_CHILD", "DestroyWindow") "Viewport child HWND ownership"
     Assert-GuardFiles $root "XuanYu.Editor.UI/Viewport" @() @(
         "RenderTargetBitmap", "ReadPixels", "Readback") "Viewport CPU readback"
