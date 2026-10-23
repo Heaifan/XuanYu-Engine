@@ -5,8 +5,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D2-F1：Token 资源引用图检查——目标存在、无直接/间接循环、聚合只含批准文件、应用只合并一次。
 public sealed class UiTokenManifestGraphTests
 {
-    private static readonly string RepoRoot = Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..");
+    private static readonly string RepoRoot = TestSourceRoot.Root;
     private static readonly string DesignDir = Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Design");
 
     [Fact]

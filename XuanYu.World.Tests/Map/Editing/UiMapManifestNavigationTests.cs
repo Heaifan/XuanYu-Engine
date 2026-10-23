@@ -5,10 +5,8 @@ namespace XuanYu.World.Tests.Map.Editing;
 // MAP-DOC-A-R1：Map Content Navigator 与 Manifest 最小 UI 接线合同。
 public sealed class UiMapManifestNavigationTests
 {
-    static readonly string MapEditor = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
-    static readonly string DatasetPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "DatasetPanel.axaml"));
+    static readonly string MapEditor = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
+    static readonly string DatasetPanel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "DatasetPanel.axaml"));
 
     [Fact]
     public void Navigator_has_base_environment_and_dataset_entries()

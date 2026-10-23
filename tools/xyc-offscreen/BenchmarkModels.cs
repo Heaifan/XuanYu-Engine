@@ -1,4 +1,4 @@
-internal sealed record BenchmarkFrame(int Index, double? GpuRenderMs,
+internal sealed record BenchmarkFrame(int Index, long FrameId, double? GpuRenderMs,
     double FenceReadbackWallMs, double EncodeMs, string ImageSha256);
 
 internal sealed record BenchmarkChunkProbe(string Chunk, string Lod, string Cull,
@@ -46,8 +46,10 @@ internal sealed record BenchmarkConfiguration
     public required int ValidGpuSamples { get; init; }
     public required double? GpuMsP50 { get; init; }
     public required double? GpuMsP95 { get; init; }
-    public required double WallMsP50 { get; init; }
-    public required double WallMsP95 { get; init; }
+    public required double? GpuMsP99 { get; init; }
+    public required double? WallMsP50 { get; init; }
+    public required double? WallMsP95 { get; init; }
+    public required double? WallMsP99 { get; init; }
     public required List<BenchmarkFrame> SamplesData { get; init; }
     public required List<BenchmarkChunkProbe> ChunkProbes { get; init; }
 }
@@ -57,4 +59,8 @@ internal sealed record BenchmarkExecution(BenchmarkConfiguration Configuration, 
 internal sealed record BenchmarkRun(string BuildIdentity, string Device, uint DriverVersion,
     string OperatingSystem, string Runtime, string CpuIdentifier, string Source,
     string SourceSha256, double ImportMs, uint Width, uint Height, int Replicate,
-    double TimestampPeriodNs, uint TimestampValidBits, List<BenchmarkConfiguration> Configurations);
+    double TimestampPeriodNs, uint TimestampValidBits, List<BenchmarkConfiguration> Configurations)
+{
+    public string SessionId { get; init; } = "UNKNOWN";
+    public string SourceFingerprint { get; init; } = "UNKNOWN";
+}

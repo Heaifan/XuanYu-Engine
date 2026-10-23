@@ -84,5 +84,5 @@ public sealed class TerrainMultiTileRenderContractTests
         Enumerable.Range(0, 4).SelectMany(_ => new[] { (byte)(value >> 8), (byte)value }).ToArray();
 
     static string Find(params string[] parts) =>
-        Path.GetFullPath(Path.Combine([AppContext.BaseDirectory, "..", "..", "..", "..", .. parts]));
+        Path.GetFullPath(Path.Combine([TestSourceRoot.Root,  .. parts]));
 }

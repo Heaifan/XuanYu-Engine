@@ -10,10 +10,8 @@ public sealed class LogListAutoScrollControllerContractTests
 {
     static readonly string[] Sources =
     [
-        File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-            "..", "..", "..", "..", "XuanYu.Editor.UI", "Foot", "LogListAutoScrollController.cs")),
-        File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-            "..", "..", "..", "..", "XuanYu.Editor.UI", "Foot", "LogListAutoScrollController.Follow.cs")),
+        File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Foot", "LogListAutoScrollController.cs")),
+        File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Foot", "LogListAutoScrollController.Follow.cs")),
     ];
 
     static string All => string.Join('\n', Sources);

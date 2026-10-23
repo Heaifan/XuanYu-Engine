@@ -4,7 +4,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class UiLayerDeleteDialogContractTests
 {
-    static readonly string Repo = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string Repo = TestSourceRoot.Root;
 
     static string Read(string file) => File.ReadAllText(Path.Combine(Repo, "XuanYu.Editor.UI", "Win", file));
 

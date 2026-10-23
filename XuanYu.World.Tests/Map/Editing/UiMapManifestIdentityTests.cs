@@ -50,7 +50,7 @@ public sealed class UiMapManifestIdentityTests : IDisposable
     [Fact]
     public void Id_row_uses_selectable_text_builtin_copy_only()
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+        var path = Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Right", "MapPagePanel.axaml");
         var text = File.ReadAllText(path);
 

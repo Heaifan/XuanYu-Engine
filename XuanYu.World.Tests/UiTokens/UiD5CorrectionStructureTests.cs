@@ -7,7 +7,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D5（纠偏）：审查要求的结构合同测试（焦点环 / 焦点陷阱 / 日志零原始色 / Inter 零残留 / 无压缩行）。
 public sealed class UiD5CorrectionStructureTests
 {
-    static readonly string Repo = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string Repo = TestSourceRoot.Root;
 
     static string Read(string rel) => File.ReadAllText(Path.Combine(Repo, "XuanYu.Editor.UI", rel));
 

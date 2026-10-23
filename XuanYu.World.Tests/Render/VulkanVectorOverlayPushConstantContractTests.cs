@@ -26,5 +26,5 @@ public sealed class VulkanVectorOverlayPushConstantContractTests
     }
 
     static string RepositoryRoot => Environment.GetEnvironmentVariable("XYE_WORKSPACE_SOURCE_DIRECTORY")
-        ?? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        ?? Path.GetFullPath(TestSourceRoot.Root);
 }

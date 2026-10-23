@@ -13,7 +13,7 @@ public sealed class MapVectorOverlayDepthPolicyTests
     public void Pipeline_and_shader_contract_disable_depth_and_clip_bias()
     {
         var depth = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Depth.cs"));
-        var overlay = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Session", "VulkanRenderSession.VectorOverlay.cs"));
+        var overlay = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Session", "VulkanRenderSession.PipelineAttachments.cs"));
         var shader = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Shaders", "scene.vert"));
         Assert.Contains("DepthTestEnable = depthTest", depth);
         Assert.Contains("DepthWriteEnable = depthWrite", depth);
@@ -73,13 +73,7 @@ public sealed class MapVectorOverlayDepthPolicyTests
 
     static string FindRepoFile(params string[] parts)
     {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null)
-        {
-            var path = Path.Combine([dir.FullName, .. parts]);
-            if (File.Exists(path)) return path;
-            dir = dir.Parent;
-        }
-        throw new FileNotFoundException(string.Join("/", parts));
+        var path = Path.Combine([TestSourceRoot.Root, .. parts]);
+        return File.Exists(path) ? path : throw new FileNotFoundException(string.Join("/", parts));
     }
 }

@@ -27,12 +27,23 @@ function New-BaseFixture {
     Write-Fixture "XuanYu.World.Tests/XuanYu.World.Tests.csproj" "<Project />"
 }
 
+function Invoke-FixtureGuard {
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        & pwsh -NoProfile -File $guard -Root $script:fixtureRoot *> $null
+        return $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+}
+
 function Invoke-Fixture([string]$name, [string]$relative, [string]$content, [bool]$mustFail) {
     Remove-Item $script:fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
     New-BaseFixture
     if ($relative) { Write-Fixture $relative $content }
-    & pwsh -NoProfile -File $guard -Root $script:fixtureRoot *> $null
-    $failed = $LASTEXITCODE -ne 0
+    $exitCode = Invoke-FixtureGuard
+    $failed = $exitCode -ne 0
     if ($failed -ne $mustFail) { throw "$name fixture expected fail=$mustFail, got fail=$failed" }
     Write-Host "${name}: $($(if($failed){'FAIL'}else{'PASS'})) as expected"
 }

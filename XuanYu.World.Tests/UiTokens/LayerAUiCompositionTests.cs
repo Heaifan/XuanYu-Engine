@@ -5,8 +5,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class LayerAUiCompositionTests
 {
-    static string Read(string path) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", path));
+    static string Read(string path) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", path));
 
     [Fact]
     public void Right_dock_is_edit_only_and_map_context_has_no_layer_page()

@@ -35,7 +35,7 @@ public sealed class HeadlessPointerInputCutoverTests
     [Fact]
     public void Avalonia_host_sources_only_forward_to_the_production_adapters()
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = Path.GetFullPath(TestSourceRoot.Root);
         var pointer = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.AvaloniaPointer.cs"));
         var key = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.AvaloniaKeyboard.cs"));
 
@@ -52,7 +52,7 @@ public sealed class HeadlessPointerInputCutoverTests
     [Fact]
     public void Avalonia_focus_lost_enters_the_production_lifecycle()
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = Path.GetFullPath(TestSourceRoot.Root);
         var lifecycle = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.AvaloniaLifecycle.cs"));
 
         Assert.Contains("ForwardLifecycle", lifecycle);

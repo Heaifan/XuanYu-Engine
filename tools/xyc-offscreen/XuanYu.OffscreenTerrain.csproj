@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="b4-evaluation/**/*.cs" />
     <ProjectReference Include="..\..\XuanYu.World\XuanYu.World.csproj" />
     <ProjectReference Include="..\..\XuanYu.Editor.UI\XuanYu.Editor.UI.csproj" />
     <ProjectReference Include="..\..\XuanYu.Render.Vulkan\XuanYu.Render.Vulkan.csproj" />

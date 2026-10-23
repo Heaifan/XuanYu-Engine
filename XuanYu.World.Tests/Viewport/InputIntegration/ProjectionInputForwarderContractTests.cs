@@ -36,7 +36,7 @@ public sealed class ProjectionInputForwarderContractTests
     [Fact]
     public void Native_host_source_has_no_legacy_route_policy_branch()
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = Path.GetFullPath(TestSourceRoot.Root);
         var source = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.Pointer.cs"));
         Assert.Contains("NativeViewportInputForwarder.Forward", source);
         Assert.Contains("NotifyOwnerPointerDown", source);

@@ -72,7 +72,7 @@ public sealed class RegionSpatialIndexTests
     [Fact]
     public void Query_has_no_global_entity_or_full_map_scan_fallback()
     {
-        var root = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor", "MapEditing");
+        var root = Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor", "MapEditing");
         var index = string.Join('\n', Directory.GetFiles(root, "RegionSpatial*.cs").Select(File.ReadAllText));
         var session = File.ReadAllText(Path.Combine(root, "MapEditSession.RegionSpatialIndex.cs"));
         Assert.DoesNotContain("EntityId", index + session, StringComparison.Ordinal);

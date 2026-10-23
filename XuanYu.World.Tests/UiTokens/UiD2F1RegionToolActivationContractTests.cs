@@ -2,12 +2,9 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class UiD2F1RegionToolActivationContractTests
 {
-    static string ReadTop() => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Top", "Top.axaml"));
-    static string ReadLeft() => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Left", "Left.axaml"));
-    static string ReadToolbar() => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Top", "ContextToolBar.axaml"));
+    static string ReadTop() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Top", "Top.axaml"));
+    static string ReadLeft() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Left", "Left.axaml"));
+    static string ReadToolbar() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Top", "ContextToolBar.axaml"));
 
     [Fact]
     public void Top_exposes_region_drawing_only_in_region_edit_mode()
@@ -15,8 +12,7 @@ public sealed class UiD2F1RegionToolActivationContractTests
         var top = ReadTop(); var left = ReadLeft(); var toolbar = ReadToolbar();
         Assert.Contains("ContextToolBar", top);
         Assert.DoesNotContain("RegionWorkspace", left);
-        var inspector = File.ReadAllText(Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+        var inspector = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
         Assert.DoesNotContain("RegionalAuthoringPanel", inspector);
         Assert.Contains("IsVisible=\"{Binding IsDrawingTransactionActive}\"", toolbar);
         Assert.Contains("CanUndoDrawingVertex", toolbar);

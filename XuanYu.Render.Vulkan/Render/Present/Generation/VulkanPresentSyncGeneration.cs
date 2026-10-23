@@ -9,18 +9,18 @@ public sealed unsafe class VulkanPresentSyncGeneration : IDisposable
     readonly Vk _vk;
     readonly LogicalDevice _device;
     readonly Semaphore[] _renderFinished;
-    Fence _presentFence;
+    readonly Fence[] _presentFences;
     bool _disposed;
 
     VulkanPresentSyncGeneration(Vk vk, LogicalDevice device, uint generation,
-        SwapchainKHR swapchain, Semaphore[] semaphores, Fence fence)
+        SwapchainKHR swapchain, Semaphore[] semaphores, Fence[] fences)
     { _vk = vk; _device = device; Generation = generation; Swapchain = swapchain;
-      _renderFinished = semaphores; _presentFence = fence; }
+      _renderFinished = semaphores; _presentFences = fences; }
 
     public uint Generation { get; }
     public SwapchainKHR Swapchain { get; }
     public uint ImageCount => (uint)_renderFinished.Length;
-    public Fence PresentFence => _presentFence;
+    public Fence GetPresentFence(uint imageIndex) => _presentFences[imageIndex];
 
     public static bool TryCreate(Vk vk, LogicalDevice device, uint generation, SwapchainKHR swapchain,
         uint imageCount, out VulkanPresentSyncGeneration? result)
@@ -31,10 +31,12 @@ public sealed unsafe class VulkanPresentSyncGeneration : IDisposable
         for (var i = 0; i < semaphores.Length; i++)
             if (vk.CreateSemaphore(device, &info, null, out semaphores[i]) != Result.Success)
             { DestroySemaphores(vk, device, semaphores); return false; }
+        var fences = new Fence[imageCount];
         var fenceInfo = new FenceCreateInfo { SType = StructureType.FenceCreateInfo };
-        if (vk.CreateFence(device, &fenceInfo, null, out var fence) != Result.Success)
-        { DestroySemaphores(vk, device, semaphores); return false; }
-        result = new VulkanPresentSyncGeneration(vk, device, generation, swapchain, semaphores, fence);
+        for (var i = 0; i < fences.Length; i++)
+            if (vk.CreateFence(device, &fenceInfo, null, out fences[i]) != Result.Success)
+            { DestroyFences(vk, device, fences); DestroySemaphores(vk, device, semaphores); return false; }
+        result = new VulkanPresentSyncGeneration(vk, device, generation, swapchain, semaphores, fences);
         return true;
     }
 
@@ -46,18 +48,21 @@ public sealed unsafe class VulkanPresentSyncGeneration : IDisposable
         return true;
     }
 
-    public Result ResetPresentFence() { var fence = _presentFence; return _vk.ResetFences(_device, 1, &fence); }
-    public Result WaitPresentFence(ulong timeout) { var fence = _presentFence; return _vk.WaitForFences(_device, 1, &fence, true, timeout); }
+    public Result ResetPresentFence(uint imageIndex)
+    { var fence = _presentFences[imageIndex]; return _vk.ResetFences(_device, 1, &fence); }
+    public Result WaitPresentFence(uint imageIndex, ulong timeout)
+    { var fence = _presentFences[imageIndex]; return _vk.WaitForFences(_device, 1, &fence, true, timeout); }
 
     public void Dispose()
     {
         if (_disposed) return;
         _disposed = true;
         DestroySemaphores(_vk, _device, _renderFinished);
-        if (_presentFence.Handle != 0) _vk.DestroyFence(_device, _presentFence, null);
-        _presentFence = default;
+        DestroyFences(_vk, _device, _presentFences);
     }
 
     static void DestroySemaphores(Vk vk, LogicalDevice device, Semaphore[] semaphores)
     { foreach (var semaphore in semaphores) if (semaphore.Handle != 0) vk.DestroySemaphore(device, semaphore, null); }
+    static void DestroyFences(Vk vk, LogicalDevice device, Fence[] fences)
+    { foreach (var fence in fences) if (fence.Handle != 0) vk.DestroyFence(device, fence, null); }
 }

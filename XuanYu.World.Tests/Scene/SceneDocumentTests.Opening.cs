@@ -7,8 +7,7 @@ public sealed partial class SceneDocumentTests
     [Fact]
     public async Task Repository_sample_opens_through_production_ui_chain()
     {
-        var path = Path.GetFullPath(Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", "..",
+        var path = Path.GetFullPath(Path.Combine(TestSourceRoot.Root,
             "samples", "world-c-r1-ten-triangles.xyscene"));
         Assert.True(File.Exists(path));
         var vm = new UiVm(null, () => true, seedInitialScene: false);

@@ -42,9 +42,8 @@ public sealed class XycCliGuardE2ETests
 
     static Process Start(params string[] options)
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../"));
-        var cli = Path.Combine(root, "XuanYu.Editor.Control.Cli/bin/Debug/net10.0/XuanYu.Editor.Control.Cli.exe");
-        var app = Path.Combine(root, "XuanYu.Editor.App/bin/Debug/net10.0/XuanYu.Editor.App.exe");
+        var cli = TestSourceRoot.ProjectOutput("XuanYu.Editor.Control.Cli", "XuanYu.Editor.Control.Cli.exe");
+        var app = TestSourceRoot.ProjectOutput("XuanYu.Editor.App", "XuanYu.Editor.App.exe");
         var start = new ProcessStartInfo(cli) { UseShellExecute = false,
             RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true };
         start.ArgumentList.Add("--app"); start.ArgumentList.Add(app);

@@ -20,7 +20,7 @@ public sealed partial class SceneAssetHostingTransaction
         {
             if (!Directory.Exists(_plan.AssetRootPath))
             {
-                Directory.Move(_plan.StagingRootPath, _plan.AssetRootPath);
+                _moveDirectory(_plan.StagingRootPath, _plan.AssetRootPath);
             }
             else
             {
@@ -30,16 +30,16 @@ public sealed partial class SceneAssetHostingTransaction
                     State = SceneAssetHostingState.Failed;
                     return Fail(SceneAssetHostingError.ActivateFailed, LastError);
                 }
-                Directory.Move(_plan.AssetRootPath, _plan.BackupRootPath);
+                _moveDirectory(_plan.AssetRootPath, _plan.BackupRootPath);
                 try
                 {
-                    Directory.Move(_plan.StagingRootPath, _plan.AssetRootPath);
+                    _moveDirectory(_plan.StagingRootPath, _plan.AssetRootPath);
                 }
-                catch
+                catch (Exception ex)
                 {
                     TryMoveBack(_plan.BackupRootPath, _plan.AssetRootPath);
                     CleanupStaging();
-                    LastError = "激活失败，已尝试恢复旧目录。";
+                    LastError = $"激活失败（{ex.GetType().Name}: {ex.Message}），已尝试恢复旧目录。";
                     State = SceneAssetHostingState.Failed;
                     return Fail(SceneAssetHostingError.ActivateFailed, LastError);
                 }
@@ -47,9 +47,10 @@ public sealed partial class SceneAssetHostingTransaction
             State = SceneAssetHostingState.Activated;
             return SceneDocumentResult<bool>.Ok(true);
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        catch (Exception ex)
         {
-            LastError = $"激活失败：{ex.Message}";
+            CleanupStaging();
+            LastError = $"激活失败（{ex.GetType().Name}: {ex.Message}）。";
             State = SceneAssetHostingState.Failed;
             return Fail(SceneAssetHostingError.ActivateFailed, LastError);
         }

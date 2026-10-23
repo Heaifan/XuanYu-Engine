@@ -11,9 +11,9 @@ public sealed unsafe partial class VulkanPresentLoop
         result = Result.ErrorInitializationFailed;
         var generation = _syncGeneration;
         if (generation is null || !generation.TryGetImageSemaphore(idx, swapchain, out var renderFinished) ||
-            !ResetPresentFence()) return false;
+            !ResetPresentFence(idx)) return false;
         var present = new PresentInfoKHR { SType = StructureType.PresentInfoKhr };
-        var fence = generation.PresentFence;
+        var fence = generation.GetPresentFence(idx);
         var fenceInfo = new SwapchainPresentFenceInfoEXT
         { SType = StructureType.SwapchainPresentFenceInfoExt, SwapchainCount = 1, PFences = &fence };
         present.PNext = &fenceInfo;

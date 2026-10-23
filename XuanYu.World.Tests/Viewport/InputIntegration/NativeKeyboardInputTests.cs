@@ -61,7 +61,7 @@ public sealed class NativeKeyboardInputTests
     [Fact]
     public void Native_host_registers_keyboard_source_without_consumer_bypass()
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = Path.GetFullPath(TestSourceRoot.Root);
         var source = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.Keyboard.cs"));
         var host = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "Win32ViewportHost.Keyboard.cs"));
 

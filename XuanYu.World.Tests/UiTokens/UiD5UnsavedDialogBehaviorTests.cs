@@ -7,8 +7,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D5-FINAL：未保存地图弹窗行为合同（无修改直接新建/仅 discard 放行/不调用任何保存）。
 public sealed class UiD5UnsavedDialogBehaviorTests
 {
-    static string SceneCommands() => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..",
+    static string SceneCommands() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,
         "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
 
     static string ConfirmNewMapMethod(string scene)

@@ -9,8 +9,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
         foreach (var f in _framebuffers)
             if (f.Handle != 0) _vk.DestroyFramebuffer(_deviceOwner.LogicalDevice, f, null);
         _framebuffers = [];
-        _depthAttachment?.Dispose();
-        _depthAttachment = null;
+        foreach (var depth in _depthAttachments) depth?.Dispose();
+        _depthAttachments = [];
     }
 
     internal void ReleaseSwapchainGeneration()
@@ -25,6 +25,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         if (_disposed) return;
         _disposed = true;
+        _resourceRetirement.Complete(0);
+        _resourceRetirement.Complete(1);
         _proceduralVertexBuffer?.Dispose();
         _proceduralVertexBuffer = null;
         ClearMapSurface();

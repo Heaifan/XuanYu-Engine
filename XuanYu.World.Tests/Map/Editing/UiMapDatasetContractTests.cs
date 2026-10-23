@@ -4,14 +4,10 @@ namespace XuanYu.World.Tests.Map.Editing;
 
 public sealed class UiMapDatasetContractTests : IDisposable
 {
-    static readonly string DatasetPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "DatasetPanel.axaml"));
-    static readonly string LayerDock = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "EditorLayerDock.axaml"));
-    static readonly string DatasetLayerPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "DatasetLayerPanel.axaml"));
-    static readonly string EditorPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
+    static readonly string DatasetPanel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "DatasetPanel.axaml"));
+    static readonly string LayerDock = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "EditorLayerDock.axaml"));
+    static readonly string DatasetLayerPanel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "DatasetLayerPanel.axaml"));
+    static readonly string EditorPanel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
     readonly string _directory = Path.Combine(Path.GetTempPath(), $"xuanyu-ui-dataset-{Guid.NewGuid():N}");
 
     [Fact]

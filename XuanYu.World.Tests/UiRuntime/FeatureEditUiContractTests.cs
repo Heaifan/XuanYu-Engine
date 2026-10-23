@@ -5,8 +5,7 @@ namespace XuanYu.World.Tests.UiRuntime;
 
 public sealed class FeatureEditUiContractTests
 {
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        System.AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Context_toolbar_shows_draw_categories_without_breadcrumb_duplication()

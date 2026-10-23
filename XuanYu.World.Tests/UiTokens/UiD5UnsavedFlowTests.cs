@@ -64,13 +64,11 @@ public sealed class UiD5UnsavedFlowTests
     {
         // 停止上报：地图持久化（真实保存到资产文件）尚未接入（D6）——
         // 弹窗不得提供「保存并新建」（禁止用「应用属性」冒充保存）
-        var unsaved = System.IO.File.ReadAllText(System.IO.Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", "..",
+        var unsaved = System.IO.File.ReadAllText(System.IO.Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Win", "UiWin.UnsavedDialog.cs"));
         Assert.Contains("不保存并新建", unsaved);
         Assert.DoesNotContain("[(\"保存并新建\"", unsaved);
-        var scene = System.IO.File.ReadAllText(System.IO.Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", "..",
+        var scene = System.IO.File.ReadAllText(System.IO.Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
         Assert.Contains("D5-DEFER-01", scene);
         Assert.Contains("不归入 D6", scene);
@@ -80,8 +78,7 @@ public sealed class UiD5UnsavedFlowTests
     public void Discard_and_new_is_the_explicit_danger_action()
     {
         // 不保存并新建 = 明确丢弃后新建（危险按钮、具体动作、默认焦点=取消）
-        var unsaved = System.IO.File.ReadAllText(System.IO.Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", "..",
+        var unsaved = System.IO.File.ReadAllText(System.IO.Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Win", "UiWin.UnsavedDialog.cs"));
         Assert.Contains("[(\"取消\", false, \"cancel\"), (\"不保存并新建\", true, \"discard\")], \"cancel\")", unsaved);
     }
@@ -89,8 +86,7 @@ public sealed class UiD5UnsavedFlowTests
     public void Cancel_keeps_map_and_all_changes()
     {
         // 取消 → 不新建（原地图和全部修改保持不变）——确认流程仅 discard 放行
-        var scene = System.IO.File.ReadAllText(System.IO.Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", "..",
+        var scene = System.IO.File.ReadAllText(System.IO.Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
         Assert.Contains("return choice == \"discard\";", scene);
     }

@@ -12,8 +12,7 @@ public readonly record struct UiViolation(string Path, string Locator, UiRuleKin
 
 public static partial class UiSourceContractAnalyzer
 {
-    private static readonly string ManifestPath = Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Design", "UiTokenManifest.json");
+    private static readonly string ManifestPath = Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Design", "UiTokenManifest.json");
 
     public static IReadOnlyList<string> AllowedFontSizes { get; } = LoadAllowed("Font");
     public static IReadOnlyList<string> AllowedRadii { get; } = ["0", "3", "6", "10"];

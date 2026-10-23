@@ -6,19 +6,15 @@ namespace XuanYu.World.Tests.Map.Editing;
 // ARCH-UI-SPEC-R1-D4：色值断言升级为 Token 引用（Layer.*/Color.* 正式 Token，不依赖具体 hex）。
 public sealed class UiLayerVisualContractTests
 {
-    static readonly string LayerPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "LayerPanel.axaml")) +
-        File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+    static readonly string LayerPanel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "LayerPanel.axaml")) +
+        File.ReadAllText(Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Right", "LayerPanel.States.axaml"));
 
-    static readonly string Ui = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Ui.axaml"));
+    static readonly string Ui = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Ui.axaml"));
 
-    static readonly string MapEditor = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
+    static readonly string MapEditor = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
 
-    static readonly string Inspector = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "LayerInspectorPanel.axaml"));
+    static readonly string Inspector = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "LayerInspectorPanel.axaml"));
 
     [Fact]
     public void V01_region_and_system_use_distinct_style_classes()

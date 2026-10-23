@@ -6,17 +6,13 @@ namespace XuanYu.World.Tests.UiTokens;
 // uiTextButton 必须被真实页面引用（地图 7 + 调试 4），且布局符合网格合同。
 public sealed class UiD4F1ButtonContractTests
 {
-    static readonly string Ui = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Design", "UiStyles.D4F1.axaml"));
+    static readonly string Ui = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Design", "UiStyles.D4F1.axaml"));
 
-    static readonly string MapPage = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapPagePanel.axaml"));
+    static readonly string MapPage = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapPagePanel.axaml"));
 
-    static readonly string MapForm = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapFormPanel.axaml"));
+    static readonly string MapForm = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapFormPanel.axaml"));
 
-    static readonly string Right = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
+    static readonly string Right = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
 
     [Fact]
     public void Unified_button_style_provides_text_contract()

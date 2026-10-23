@@ -93,8 +93,7 @@ public sealed class WorkspaceSelectorR2ContractTests
         Assert.DoesNotContain("<Style Selector=\"MenuItem\"", top);
     }
 
-    static string Read(params string[] path) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(path)));
+    static string Read(params string[] path) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  Path.Combine(path)));
 
     static int Count(string text, string value) => text.Split(value).Length - 1;
 }

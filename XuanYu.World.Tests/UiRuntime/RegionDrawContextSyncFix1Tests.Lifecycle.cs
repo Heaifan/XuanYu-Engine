@@ -75,7 +75,7 @@ public sealed partial class RegionDrawContextSyncFix1Tests
     [Fact]
     public void Context_toolbar_binds_selector_lock_to_transaction_state()
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+        var path = Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Top", "ContextToolBar.axaml");
         Assert.Contains("IsEnabled=\"{Binding CanOpenContextSelector}\"", File.ReadAllText(path));
     }

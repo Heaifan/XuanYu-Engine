@@ -7,7 +7,7 @@ public sealed class ReverseZDepthPipelineContractTests
     [Fact]
     public void DepthClearIsZero()
     {
-        var source = Read("XuanYu.Render.Vulkan", "Render", "ClearFrame", "VulkanClearFrameOwner.Commands.cs");
+        var source = Read("XuanYu.Render.Vulkan", "Render", "ClearFrame", "VulkanClearFrameOwner.FrameCommands.cs");
         Assert.Contains("Depth = 0.0f", source);
     }
 
@@ -58,28 +58,13 @@ public sealed class ReverseZDepthPipelineContractTests
     }
 
     static string Read(params string[] parts)
-    {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null)
-        {
-            var path = Path.Combine([dir.FullName, .. parts]);
-            if (File.Exists(path)) return File.ReadAllText(path);
-            dir = dir.Parent;
-        }
-        throw new FileNotFoundException(string.Join("/", parts));
-    }
+        => File.ReadAllText(Path.Combine([TestSourceRoot.Root, .. parts]));
 
     static string ReadType(string prefix)
     {
-        var root = ReadRoot();
+        var root = TestSourceRoot.Root;
         return string.Join("\n", Directory.GetFiles(Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline"), $"{prefix}*.cs")
             .OrderBy(path => path).Select(File.ReadAllText));
     }
 
-    static string ReadRoot()
-    {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !Directory.Exists(Path.Combine(dir.FullName, "XuanYu.Render.Vulkan"))) dir = dir.Parent;
-        return dir?.FullName ?? throw new DirectoryNotFoundException("Repository root");
-    }
 }

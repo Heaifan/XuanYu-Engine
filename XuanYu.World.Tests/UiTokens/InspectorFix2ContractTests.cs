@@ -4,12 +4,9 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class InspectorFix2ContractTests
 {
-    static readonly string Panel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
-    static readonly string PanelCode = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml.cs"));
-    static readonly string Icons = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "xyui", "avalonia", "src", "XYUI.Avalonia", "Vector", "XyuiVectorIcons.cs"));
+    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+    static readonly string PanelCode = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml.cs"));
+    static readonly string Icons = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "xyui", "avalonia", "src", "XYUI.Avalonia", "Vector", "XyuiVectorIcons.cs"));
 
     [Fact]
     public void Inspector_uses_fixed_width_xyui_navigation_rail()

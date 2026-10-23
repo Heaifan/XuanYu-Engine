@@ -12,12 +12,15 @@ public sealed class XyeWorkspacePathsTests
         var workspace = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT")
             ?? throw new InvalidOperationException("Test runner must set XYE_WORKSPACE_ROOT.");
         var testRoot = Path.Combine(workspace, "Temp", "xye-workspace-path-test", Guid.NewGuid().ToString("N"));
+        var defaultWorkspace = Path.Combine(TestSourceRoot.Root, ".xye-workspace");
+        var defaultWorkspaceExisted = Directory.Exists(defaultWorkspace);
         Directory.CreateDirectory(testRoot);
         using var env = new WorkspaceEnvironment();
         try
         {
             Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", null);
             Environment.SetEnvironmentVariable("XYE_WORKSPACE_ROOT", null);
+            Environment.SetEnvironmentVariable("XYE_DIAGNOSTICS_DIRECTORY", null);
             var defaultPath = XyeWorkspacePaths.ResolveProbeDirectory();
             Assert.True(defaultPath.Contains(Path.Combine(".xye-workspace", "Diagnostics"),
                 StringComparison.OrdinalIgnoreCase));
@@ -31,7 +34,11 @@ public sealed class XyeWorkspacePathsTests
             Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", Path.Combine(testRoot, "..", "outside"));
             Assert.Throws<InvalidOperationException>(() => XyeWorkspacePaths.ResolveProbeDirectory());
         }
-        finally { if (Directory.Exists(testRoot)) Directory.Delete(testRoot, recursive: true); }
+        finally
+        {
+            if (Directory.Exists(testRoot)) Directory.Delete(testRoot, recursive: true);
+            RemoveEmptyDefaultWorkspace(defaultWorkspace, defaultWorkspaceExisted);
+        }
     }
 
     [Fact]
@@ -41,13 +48,30 @@ public sealed class XyeWorkspacePathsTests
         Environment.SetEnvironmentVariable("XYE_WORKSPACE_ROOT", null);
         Environment.SetEnvironmentVariable("XYE_TASK_RUN_ID", null);
         Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", null);
+        Environment.SetEnvironmentVariable("XYE_DIAGNOSTICS_DIRECTORY", null);
+        var defaultWorkspace = Path.Combine(TestSourceRoot.Root, ".xye-workspace");
+        var defaultWorkspaceExisted = Directory.Exists(defaultWorkspace);
         var session = RendererEventSessionFactory.TryCreate();
-        Assert.NotNull(session);
-        var sessionDirectory = Directory.GetParent(Path.GetDirectoryName(session!.RuntimeFilePath)!)!.FullName;
-        Assert.True(sessionDirectory.Contains(Path.Combine(".xye-workspace", "Diagnostics"),
-            StringComparison.OrdinalIgnoreCase));
-        await session.DisposeAsync();
-        if (Directory.Exists(sessionDirectory)) Directory.Delete(sessionDirectory, true);
+        try
+        {
+            Assert.NotNull(session);
+            var sessionDirectory = Directory.GetParent(Path.GetDirectoryName(session!.RuntimeFilePath)!)!.FullName;
+            Assert.True(sessionDirectory.Contains(Path.Combine(".xye-workspace", "Diagnostics"),
+                StringComparison.OrdinalIgnoreCase));
+            await session.DisposeAsync();
+            if (Directory.Exists(sessionDirectory)) Directory.Delete(sessionDirectory, true);
+        }
+        finally { RemoveEmptyDefaultWorkspace(defaultWorkspace, defaultWorkspaceExisted); }
+    }
+
+    static void RemoveEmptyDefaultWorkspace(string path, bool existedBefore)
+    {
+        if (existedBefore) return;
+        var diagnostics = Path.Combine(path, "Diagnostics");
+        if (Directory.Exists(diagnostics) && !Directory.EnumerateFileSystemEntries(diagnostics).Any())
+            Directory.Delete(diagnostics);
+        if (Directory.Exists(path) && !Directory.EnumerateFileSystemEntries(path).Any())
+            Directory.Delete(path);
     }
 
     sealed class WorkspaceEnvironment : IDisposable
@@ -55,12 +79,14 @@ public sealed class XyeWorkspacePathsTests
         readonly string? _root = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT");
         readonly string? _runId = Environment.GetEnvironmentVariable("XYE_TASK_RUN_ID");
         readonly string? _probe = Environment.GetEnvironmentVariable("XYE_PROBE_DIRECTORY");
+        readonly string? _diagnostics = Environment.GetEnvironmentVariable("XYE_DIAGNOSTICS_DIRECTORY");
 
         public void Dispose()
         {
             Environment.SetEnvironmentVariable("XYE_WORKSPACE_ROOT", _root);
             Environment.SetEnvironmentVariable("XYE_TASK_RUN_ID", _runId);
             Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", _probe);
+            Environment.SetEnvironmentVariable("XYE_DIAGNOSTICS_DIRECTORY", _diagnostics);
         }
     }
 }

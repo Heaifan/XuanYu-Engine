@@ -8,8 +8,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // 值断言直接对照 UI Spec 1.0 §7.1 与 §10.1；基线清除断言保证「只减不增」。
 public sealed class UiTopTabStripContractTests
 {
-    static readonly string RepoRoot = Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string RepoRoot = TestSourceRoot.Root;
     static string UiFile(string rel) => Path.Combine(RepoRoot, rel);
 
     static string Read(string rel) => File.ReadAllText(UiFile(rel));

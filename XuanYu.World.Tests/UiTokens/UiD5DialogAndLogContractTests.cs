@@ -14,8 +14,7 @@ public sealed class UiD5DialogAndLogContractTests
     static readonly string Unsaved = Read("Win/UiWin.UnsavedDialog.cs");
     static readonly string Foot = Read("Foot/Foot.axaml");
 
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Dialog_host_lives_in_main_window_overlay()

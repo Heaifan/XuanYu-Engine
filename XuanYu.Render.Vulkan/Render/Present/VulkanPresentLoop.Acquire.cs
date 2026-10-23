@@ -1,4 +1,5 @@
 using Silk.NET.Vulkan;
+using XuanYu.Render.Vulkan.Render.Frame;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -6,12 +7,13 @@ public sealed unsafe partial class VulkanPresentLoop
 {
     int _outOfDateRetries;
 
-    AcquireDecision AcquireImage(Silk.NET.Vulkan.Device device, out SwapchainKHR swapchain, out uint index)
+    AcquireDecision AcquireImage(Silk.NET.Vulkan.Device device, VulkanFrameContext frame,
+        out SwapchainKHR swapchain, out uint index)
     {
         swapchain = _swapchainOwner.Swapchain;
         uint acquiredIndex;
         var result = _swapchainOwner.Khr.AcquireNextImage(device, swapchain, AcquireTimeoutNs,
-            _imageAvailable, default, &acquiredIndex);
+            frame.ImageAvailable, default, &acquiredIndex);
         var decision = HandleAcquireResult(result);
         index = decision == AcquireDecision.Acquired ? acquiredIndex : 0;
         if (decision == AcquireDecision.Acquired) _outOfDateRetries = 0;

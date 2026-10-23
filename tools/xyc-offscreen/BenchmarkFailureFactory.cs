@@ -25,6 +25,7 @@ internal static class BenchmarkFailureFactory
         HeightErrorWorldP95Meters = null, HeightErrorVisualP95Meters = null,
         ComparisonToPreviousResolution = null, Png = path, PngSha256 = "UNKNOWN",
         ValidGpuSamples = 0, GpuMsP50 = null, GpuMsP95 = null,
-        WallMsP50 = 0, WallMsP95 = 0, SamplesData = [], ChunkProbes = []
+        WallMsP50 = null, WallMsP95 = null, WallMsP99 = null, GpuMsP99 = null,
+        SamplesData = [], ChunkProbes = []
     }, null);
 }

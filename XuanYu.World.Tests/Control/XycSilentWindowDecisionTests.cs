@@ -37,9 +37,7 @@ public sealed class XycSilentWindowDecisionTests
     static object Evaluate(int targetPid, int eventPid, bool isShow, bool isTopLevel,
         bool isVisible, bool isForegroundOwner)
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../"));
-        var cliAssembly = Path.Combine(root,
-            "XuanYu.Editor.Control.Cli/bin/Debug/net10.0/XuanYu.Editor.Control.Cli.dll");
+        var cliAssembly = TestSourceRoot.ProjectOutput("XuanYu.Editor.Control.Cli", "XuanYu.Editor.Control.Cli.dll");
         Assert.True(File.Exists(cliAssembly), $"Missing CLI assembly: {cliAssembly}");
         var assembly = Assembly.LoadFrom(cliAssembly);
         var type = assembly.GetType("SilentProcessDecision", throwOnError: true)!;

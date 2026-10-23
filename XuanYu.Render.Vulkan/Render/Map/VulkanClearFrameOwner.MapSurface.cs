@@ -7,7 +7,8 @@ using XuanYu.Core.Diagnostics;
 namespace XuanYu.Render.Vulkan.Render;
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    VulkanStaticModelBuffer? _mapSurfaceVertexBuffer, _mapSurfaceIndexBuffer, _mapBoundsVertexBuffer;
+    VulkanStaticModelBuffer?[] _mapSurfaceFrameVertexBuffers = [];
+    VulkanStaticModelBuffer? _mapSurfaceIndexBuffer, _mapBoundsVertexBuffer;
     uint _mapSurfaceIndexCount, _mapBoundsVertexCount;
     MapRenderSnapshot _mapSurfaceMap;
     long _lastConsumedMapGeneration = long.MinValue, _lastConsumedMapSequence = long.MinValue;
@@ -41,9 +42,15 @@ public sealed unsafe partial class VulkanClearFrameOwner
     }
     bool CreateMapBuffers(MapSurfaceGeometry geometry, MapTerrainVertex[] bounds, MapRenderSnapshot map)
     {
-        _mapSurfaceVertexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
-            geometry.Vertices, BufferUsageFlags.VertexBufferBit, out var vbErr);
-        if (_mapSurfaceVertexBuffer is null) return CreateFailed("地图地面顶点缓冲创建失败", vbErr);
+        _mapSurfaceFrameVertexBuffers = new VulkanStaticModelBuffer?[_frameSlotCount];
+        for (var slot = 0; slot < _mapSurfaceFrameVertexBuffers.Length; slot++)
+        {
+            _mapSurfaceFrameVertexBuffers[slot] = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
+                geometry.Vertices, BufferUsageFlags.VertexBufferBit, out var vbErr);
+            if (_mapSurfaceFrameVertexBuffers[slot] is not null) continue;
+            ClearMapSurface();
+            return CreateFailed("地图地面顶点缓冲创建失败", vbErr);
+        }
         _mapSurfaceIndexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
             geometry.Indices, BufferUsageFlags.IndexBufferBit, out var ibErr);
         if (_mapSurfaceIndexBuffer is null) return CreateFailed("地图地面索引缓冲创建失败", ibErr);
@@ -55,46 +62,26 @@ public sealed unsafe partial class VulkanClearFrameOwner
         Log($"地图渲染资源重建完成：地面顶点={geometry.Vertices.Length}；索引={_mapSurfaceIndexCount}；边界顶点={_mapBoundsVertexCount}；尺寸={map.WidthMeters:0.####}×{map.DepthMeters:0.####}；基础高度={map.BaseHeightMeters}；序号={map.SourceChangeSequence}");
         return true;
     }
-    bool CreateFailed(string what, string error)
+
+    internal bool ReconfigureMapSurfaceFrames(int frameCount)
     {
-        Log($"{what}失败：{error}");
-        return false;
-    }
-    public void ClearMapSurface()
-    {
-        _mapSurfaceVertexBuffer?.Dispose(); _mapSurfaceVertexBuffer = null;
-        _mapSurfaceIndexBuffer?.Dispose(); _mapSurfaceIndexBuffer = null;
-        _mapBoundsVertexBuffer?.Dispose(); _mapBoundsVertexBuffer = null;
-        _mapSurfaceIndexCount = 0;
-        _mapBoundsVertexCount = 0;
+        if (_mapSurfaceIndexBuffer is null) return true;
+        foreach (var buffer in _mapSurfaceFrameVertexBuffers)
+            if (buffer is not null) RetireGpuResource(buffer);
+        _mapSurfaceFrameVertexBuffers = [];
+        var geometry = MapSurfaceGeometryBuilder.Build(_mapSurfaceMap);
+        var next = new VulkanStaticModelBuffer?[frameCount];
+        for (var slot = 0; slot < next.Length; slot++)
+        {
+            next[slot] = VulkanStaticModelBuffer.Create(_vk, _deviceOwner, geometry.Vertices,
+                BufferUsageFlags.VertexBufferBit, out var error);
+            if (next[slot] is not null) continue;
+            foreach (var buffer in next) if (buffer is not null) RetireGpuResource(buffer);
+            _mapSurfaceFrameVertexBuffers = [];
+            return CreateFailed("地图地面帧槽缓冲重建失败", error);
+        }
+        _mapSurfaceFrameVertexBuffers = next;
         _mapSurfacePatchReady = false;
-        _hasMapSurfaceResourceKey = false;
-    }
-    void DrawMapSurface(CommandBuffer cb, float* scene)
-    {
-        if (_mapSurfaceVertexBuffer is null || _mapSurfaceIndexBuffer is null || !_mapSurfacePatchReady) { GroundProbeChain.DrawCommand(ViewportProbe.CurrentFrameId, false, true, _mapSurfaceVertexBuffer is not null, _mapSurfaceIndexBuffer is not null, 0, 0, "NONE", "NONE", "BUFFER_NOT_READY"); return; }
-        var vb = _mapSurfaceVertexBuffer.Buffer;
-        var ib = _mapSurfaceIndexBuffer.Buffer;
-        ulong offset = 0;
-        _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset);
-        _vk.CmdBindIndexBuffer(cb, ib, 0, IndexType.Uint32);
-        FillScenePushConstants(scene, _renderProjection, Vector3d.Zero,
-            Vector3d.Zero, new Vector3d(1, 1, 1), 0.0f, gizmoModeOverride: -14.0f);
-        PushSceneConstants(cb, scene);
-        _vk.CmdDrawIndexed(cb, _mapSurfaceIndexCount, 1, 0, 0, 0);
-        GroundProbeChain.DrawCommand(ViewportProbe.CurrentFrameId, true, true, true, true, 4, (int)_mapSurfaceIndexCount, $"0x{vb.Handle:X}", $"0x{ib.Handle:X}", "NONE");
-        BindProceduralVertexBuffer(cb);
-    }
-    void DrawMapBounds(CommandBuffer cb, float* scene)
-    {
-        if (_mapBoundsVertexBuffer is null) return;
-        var vb = _mapBoundsVertexBuffer.Buffer;
-        ulong offset = 0;
-        _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset);
-        FillScenePushConstants(scene, _renderProjection, Vector3d.Zero,
-            Vector3d.Zero, new Vector3d(1, 1, 1), 0.0f, gizmoModeOverride: -15.0f);
-        PushSceneConstants(cb, scene);
-        _vk.CmdDraw(cb, _mapBoundsVertexCount, 1, 0, 0);
-        BindProceduralVertexBuffer(cb);
+        return true;
     }
 }

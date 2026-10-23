@@ -9,7 +9,7 @@ public sealed class PointerSemanticClosureTests
     [Fact]
     public void Native_host_owns_pointer_when_native_handle_exists()
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = Path.GetFullPath(TestSourceRoot.Root);
         var pointer = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.AvaloniaPointer.cs"));
         var keyboard = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.AvaloniaKeyboard.cs"));
 

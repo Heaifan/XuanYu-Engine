@@ -7,7 +7,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // 公共样式全部引用正式 Token；Manifest 保持 112 Frozen / 0 Pending。
 public sealed class UiD4F1TypographyContractTests
 {
-    static readonly string RepoRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string RepoRoot = TestSourceRoot.Root;
 
     static readonly string[] Scope =
     [

@@ -6,8 +6,10 @@ internal sealed record BenchmarkSummaryRow
     public required int ValidGpuSamples { get; init; }
     public required double? GpuMsP50 { get; init; }
     public required double? GpuMsP95 { get; init; }
-    public required double WallMsP50 { get; init; }
-    public required double WallMsP95 { get; init; }
+    public required double? GpuMsP99 { get; init; }
+    public required double? WallMsP50 { get; init; }
+    public required double? WallMsP95 { get; init; }
+    public required double? WallMsP99 { get; init; }
     public required double CpuImportMsP50 { get; init; }
     public required double CpuImportMsP95 { get; init; }
     public required double TerrainSampleMsP50 { get; init; }

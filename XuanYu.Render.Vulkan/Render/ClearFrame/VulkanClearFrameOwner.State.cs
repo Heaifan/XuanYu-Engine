@@ -25,7 +25,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         if (_hasRenderProjection && _renderProjection == projection) return false;
         _frameState.Apply(projection);
-        if (_views.Length > 0 && !RecordCommandBuffers(_views))
+        if (_offscreenTarget is not null && _views.Length > 0 && !RecordCommandBuffers(_views))
             throw new InvalidOperationException("Render projection 注入后 CommandBuffer 重录失败");
         return true;
     }

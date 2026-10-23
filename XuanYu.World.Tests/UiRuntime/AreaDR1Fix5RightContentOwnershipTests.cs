@@ -69,11 +69,11 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
     [Fact]
     public void Inspector_owns_map_content_and_right_owns_no_map_sibling()
     {
-        var source = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+        var source = File.ReadAllText(Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Right", "Right.axaml"));
         Assert.DoesNotContain("<local:MapEditorPanel", source);
         Assert.DoesNotContain("<local:EntityInspectorPanel", source);
-        var inspector = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+        var inspector = File.ReadAllText(Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
         Assert.Contains("InspectorPropertyRow", inspector);
         Assert.Equal(1, inspector.Split("<local:MapEditorPanel", StringSplitOptions.None).Length - 1);

@@ -18,7 +18,7 @@ public sealed class SaveAsTests : IDisposable
 
         var second = await _env.SaveAsync(scenePath);
 
-        Assert.True(second.Succeeded);
+        Assert.True(second.Succeeded, $"{second.ErrorCode} at {second.Stage}: {second.Message} {second.Detail}");
         var dirs = Directory.GetDirectories(_env.Dir, "*.staging-*").Concat(
             Directory.GetDirectories(_env.Dir, "*.backup-*"));
         Assert.Empty(dirs);
@@ -35,8 +35,8 @@ public sealed class SaveAsTests : IDisposable
         var r1 = await _env.SaveAsync(first);
         var r2 = await _env.SaveAsync(second);
 
-        Assert.True(r1.Succeeded);
-        Assert.True(r2.Succeeded);
+        Assert.True(r1.Succeeded, $"{r1.ErrorCode} at {r1.Stage}: {r1.Message} {r1.Detail}");
+        Assert.True(r2.Succeeded, $"{r2.ErrorCode} at {r2.Stage}: {r2.Message} {r2.Detail}");
         Assert.True(Directory.Exists(Path.Combine(_env.Dir, "Battle01.xyassets")));
         Assert.True(Directory.Exists(Path.Combine(_env.Dir, "Battle02.xyassets")));
         Assert.DoesNotContain("Battle01", r2.Value!.HostedSourcePaths.Values.Single());

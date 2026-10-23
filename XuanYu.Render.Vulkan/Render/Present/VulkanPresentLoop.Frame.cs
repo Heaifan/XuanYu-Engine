@@ -1,7 +1,9 @@
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
+using System.Diagnostics;
 using System.Threading;
 using XuanYu.Render.Abstractions.Diagnostics;
+using XuanYu.Render.Vulkan.Render.Frame;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -37,44 +39,50 @@ public sealed unsafe partial class VulkanPresentLoop
     // 以确保旧 CommandBuffer 不再被 GPU 使用；Reset 必须在 QueueSubmit 前。
     bool WaitFence(Silk.NET.Vulkan.Device device)
     {
-        var fence = _fence;
+        foreach (var frame in _frames)
+            if (frame.GraphicsPending && !WaitFence(device, frame)) return false;
+        return true;
+    }
+
+    bool WaitFence(Silk.NET.Vulkan.Device device, VulkanFrameContext frame,
+        VulkanFenceWaitTarget target = VulkanFenceWaitTarget.FrameSlotGraphicsFence,
+        VulkanFrameContext? sampleFrame = null)
+    {
+        if (!frame.GraphicsPending) return true;
+        var fence = frame.GraphicsFence;
+        var start = _onFenceWait is null ? 0 : Stopwatch.GetTimestamp();
+        var startThread = _onFenceWait is null ? 0 : Environment.CurrentManagedThreadId;
         var result = _vk.WaitForFences(device, 1, &fence, true, FenceTimeoutNs);
-        if (result == Result.Success) _graphicsPending = false;
+        if (_onFenceWait is not null)
+            PublishFenceWait(sampleFrame ?? frame, target, start, startThread, result);
+        if (result == Result.Success)
+        {
+            frame.GraphicsPending = false;
+            _clearFrame.CompleteFrameResources(frame);
+            _graphicsPending = _frames.Any(x => x.GraphicsPending);
+        }
         if (result == Result.ErrorDeviceLost) _deviceLost = true;
         return Check(result, "WaitForFences");
     }
 
-    bool ResetFence(Silk.NET.Vulkan.Device device)
+    void PublishFenceWait(VulkanFrameContext frame, VulkanFenceWaitTarget target,
+        long startTimestamp, int startThreadId, Result result)
     {
-        var fence = _fence;
-        return Check(_vk.ResetFences(device, 1, &fence), "ResetFences");
+        var observation = new VulkanFenceWaitObservation(
+            new VulkanFrameIdentity(_eventSession?.SessionId, frame.FrameId,
+                frame.CameraRevision, frame.FrameIndex,
+                frame.FrameId == 0 ? null : frame.LastImageIndex,
+                frame.FrameId == 0 ? null : frame.SwapchainGeneration, _framesInFlight),
+            target, startTimestamp, Stopwatch.GetTimestamp(), Stopwatch.Frequency,
+            startThreadId, Environment.CurrentManagedThreadId, result);
+        try { _onFenceWait?.Invoke(observation); }
+        catch (Exception error) { Log($"Frame fence probe callback failed: {error.Message}"); }
     }
 
-    bool SubmitFrame(Silk.NET.Vulkan.Device device, uint idx, PipelineStageFlags stage,
-        long frameId, long cameraRevision)
+    bool ResetFence(Silk.NET.Vulkan.Device device, VulkanFrameContext frame)
     {
-        var cmds = _clearFrame.CommandBuffers;
-        var submit = new SubmitInfo { SType = StructureType.SubmitInfo };
-        var imageAvailable = _imageAvailable;
-        if (_syncGeneration is null || !_syncGeneration.TryGetImageSemaphore(idx, _swapchainOwner.Swapchain, out var renderFinished))
-        { Fatal("Acquire image does not belong to the active synchronization generation."); return false; }
-        var fence = _fence;
-        fixed (CommandBuffer* pCmd = cmds)
-        {
-            submit.WaitSemaphoreCount = 1;
-            submit.PWaitSemaphores = &imageAvailable;
-            submit.PWaitDstStageMask = &stage;
-            submit.CommandBufferCount = 1;
-            submit.PCommandBuffers = &pCmd[idx];
-            submit.SignalSemaphoreCount = 1;
-            submit.PSignalSemaphores = &renderFinished;
-            var success = Check(_vk.QueueSubmit(_deviceOwner.GraphicsQueue, 1, &submit, fence), "QueueSubmit");
-            if (success) _graphicsPending = true;
-            _eventSession?.PublishFrameEvent(success ? RendererEventCodes.FrameSubmitted :
-                RendererEventCodes.QueueSubmitFailed, success ? RendererEventLevel.Info :
-                RendererEventLevel.Error, frameId, idx, cameraRevision);
-            return success;
-        }
+        var fence = frame.GraphicsFence;
+        return Check(_vk.ResetFences(device, 1, &fence), "ResetFences");
     }
 
     void LogFirstPresent(uint idx)

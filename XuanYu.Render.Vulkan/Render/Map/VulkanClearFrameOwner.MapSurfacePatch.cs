@@ -13,12 +13,14 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         _mapSurfacePatchReady = false;
         var state = CurrentViewProjectionState();
-        if (_mapSurfaceVertexBuffer is null || !_mapSurfaceMap.HasMap)
+        var frameSlot = _activeFrameContext?.FrameIndex ?? 0;
+        var vertexBuffer = _mapSurfaceFrameVertexBuffers.ElementAtOrDefault(frameSlot);
+        if (vertexBuffer is null || !_mapSurfaceMap.HasMap)
         {
             GroundProbeChain.Patch(ViewportProbe.CurrentFrameId, state,
                 _mapSurfaceMap, default, true, true,
-                _mapSurfaceVertexBuffer is null ? "NO_VERTEX_BUFFER" : "NO_MAP", false,
-                _mapSurfaceVertexBuffer is not null);
+                vertexBuffer is null ? "NO_VERTEX_BUFFER" : "NO_MAP", false,
+                vertexBuffer is not null);
             return;
         }
         var patch = ReferencePlanePatchPlacement.From(
@@ -26,7 +28,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var valid = ReferencePlaneFootprint.TryCreate(state, _mapSurfaceMap.BaseHeightMeters, out _);
         var geometry = MapSurfaceGeometryBuilder.BuildPatch(
             _mapSurfaceMap, patch, state.RenderOrigin);
-        var rebuilt = _mapSurfaceVertexBuffer.TryUpdate(geometry.Vertices);
+        var rebuilt = vertexBuffer.TryUpdate(geometry.Vertices);
         _mapSurfacePatchReady = rebuilt;
         GroundProbeChain.Patch(ViewportProbe.CurrentFrameId, state, _mapSurfaceMap, patch,
             true, false, "NONE", valid && rebuilt, true);

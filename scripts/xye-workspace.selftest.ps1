@@ -7,6 +7,17 @@ $configuredRoot = Get-XyeWorkspaceRoot
 $repositoryRoot = (& git rev-parse --show-toplevel).Trim().Replace('/', '\')
 $testRoot = Join-Path $configuredRoot (Join-Path 'Temp' ('selftest-' + [Guid]::NewGuid().ToString('N')))
 
+function Invoke-XyeExpectedRefusal([string[]]$Arguments) {
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        & powershell.exe @Arguments 2>&1 | Out-String | Out-Null
+        return $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+}
+
 try {
     if (-not [string]::IsNullOrWhiteSpace($userRoot) -and
         [string]::Equals($originalRoot, $userRoot, [StringComparison]::OrdinalIgnoreCase) -and
@@ -20,8 +31,8 @@ try {
         throw 'Workspace default did not remain inside the repository.'
     }
     $env:XYE_WORKSPACE_ROOT = $externalRoot
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Initialize 2>&1 | Out-String | Out-Null
-    if ($LASTEXITCODE -eq 0 -or (Test-Path -LiteralPath $externalRoot)) {
+    $externalInitializeExitCode = Invoke-XyeExpectedRefusal @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $scriptPath, '-Action', 'Initialize')
+    if ($externalInitializeExitCode -eq 0 -or (Test-Path -LiteralPath $externalRoot)) {
         throw 'External workspace was accepted or created before rejection.'
     }
 
@@ -35,8 +46,8 @@ try {
     $blockedRoot = Join-Path $testRoot 'Temp\blocked-root-file'
     Set-Content -LiteralPath $blockedRoot -Value 'file blocks directory creation'
     $env:XYE_WORKSPACE_ROOT = $blockedRoot
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Initialize 2>&1 | Out-String | Out-Null
-    if ($LASTEXITCODE -eq 0) { throw 'Unwritable workspace root unexpectedly passed.' }
+    $blockedInitializeExitCode = Invoke-XyeExpectedRefusal @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $scriptPath, '-Action', 'Initialize')
+    if ($blockedInitializeExitCode -eq 0) { throw 'Unwritable workspace root unexpectedly passed.' }
     $env:XYE_WORKSPACE_ROOT = $testRoot
     Remove-Item -LiteralPath $blockedRoot -Force
 
@@ -50,8 +61,8 @@ try {
     $request = Get-Content -LiteralPath $requestPath -Raw | ConvertFrom-Json
     $request | Add-Member -NotePropertyName WorkingDirectory -NotePropertyValue $externalRoot
     $request | ConvertTo-Json | Set-Content -LiteralPath $requestPath -Encoding utf8
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Invoke -RequestFile $requestPath 2>&1 | Out-String | Out-Null
-    if ($LASTEXITCODE -eq 0 -or @(Get-ChildItem (Join-Path $testRoot 'Manifests') -Filter '*.json').Count -ne $beforeManifests) {
+    $externalInvokeExitCode = Invoke-XyeExpectedRefusal @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $scriptPath, '-Action', 'Invoke', '-RequestFile', $requestPath)
+    if ($externalInvokeExitCode -eq 0 -or @(Get-ChildItem (Join-Path $testRoot 'Manifests') -Filter '*.json').Count -ne $beforeManifests) {
         throw 'Out-of-repository working directory was not rejected before task output creation.'
     }
     $request.WorkingDirectory = $null
@@ -104,7 +115,7 @@ try {
         SourceDirectory=$testRoot; BuildDirectory=$testRoot; DiagnosticsDirectory=$testRoot
     } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $testRoot 'Manifests\stale-run.json') -Encoding utf8
     $preview = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Action Preview -AsJson
-    $previewItems = @($preview | ConvertFrom-Json)
+    $previewItems = @(($preview | Out-String) | ConvertFrom-Json | ForEach-Object { $_ })
     $stalePreview = $previewItems | Where-Object RunId -eq 'stale-run' | Select-Object -First 1
     if ($LASTEXITCODE -ne 0 -or $null -eq $stalePreview -or
         $stalePreview.ObservedStatus -notmatch 'INTERRUPTED' -or [long]$stalePreview.WorkspaceBytes -ne 0) {

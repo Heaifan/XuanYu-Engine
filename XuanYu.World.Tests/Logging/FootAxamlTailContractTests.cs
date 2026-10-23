@@ -9,8 +9,7 @@ namespace XuanYu.World.Tests.Logging;
 // 几何级验证由真机验收（A4）承担；本测试锁定源码结构合同。
 public sealed class FootAxamlTailContractTests
 {
-    static readonly string Axaml = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Foot", "Foot.axaml"));
+    static readonly string Axaml = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Foot", "Foot.axaml"));
 
     [Fact]
     public void LogList_keeps_virtualizing_items_panel()

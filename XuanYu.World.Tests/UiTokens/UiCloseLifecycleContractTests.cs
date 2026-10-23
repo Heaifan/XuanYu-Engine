@@ -5,11 +5,9 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class UiCloseLifecycleContractTests
 {
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
-    static string ReadApp(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string ReadApp(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Close_confirmation_is_deferred_until_window_close_event_returns()

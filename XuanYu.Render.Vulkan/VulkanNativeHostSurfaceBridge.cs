@@ -6,6 +6,7 @@ using XuanYu.Render.Vulkan.Bridge;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Session;
 using XuanYu.Render.Vulkan.Swapchain;
+using XuanYu.Render.Abstractions.Diagnostics.Performance;
 
 namespace XuanYu.Render.Vulkan;
 
@@ -26,6 +27,11 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
 
     public Instance? Instance => _instanceOwner?.Instance;
     public SurfaceKHR? Surface => _surfaceOwner?.Surface;
+    public bool TrySetFramesInFlight(int frameCount) =>
+        _renderSession?.TrySetFramesInFlight(frameCount) ?? false;
+    public IReadOnlyList<PerformanceFrameSample> DrainPerformanceSamples() =>
+        _renderSession?.DrainPerformanceSamples() ?? Array.Empty<PerformanceFrameSample>();
+    public long PerformanceSampleDroppedCount => _renderSession?.PerformanceSampleDroppedCount ?? 0;
     public VulkanNativeHostSurfaceBridge(Action<string>? log = null, IRenderProjectionSource? projectionSource = null)
     {
         _log = log;
