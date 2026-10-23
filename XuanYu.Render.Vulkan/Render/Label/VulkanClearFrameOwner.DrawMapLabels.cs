@@ -16,6 +16,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             if (bitmap is null) continue;
             var texture = _mapLabelTextures.GetOrCreate(bitmap);
             if (texture is null) continue;
+            TrackFrameResource(texture);
             var descriptor = texture.DescriptorSet;
             _vk.CmdBindDescriptorSets(cb, PipelineBindPoint.Graphics, _mapLabelPipelineLayout,
                 0, 1, &descriptor, 0, null);

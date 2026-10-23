@@ -56,16 +56,7 @@ public sealed class WorldReferenceGridDepthContractTests
     }
 
     static string Read(params string[] parts)
-    {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null)
-        {
-            var path = Path.Combine([dir.FullName, .. parts]);
-            if (File.Exists(path)) return File.ReadAllText(path);
-            dir = dir.Parent;
-        }
-        throw new FileNotFoundException(string.Join("/", parts));
-    }
+        => File.ReadAllText(Path.Combine([TestSourceRoot.Root, .. parts]));
 
     static string Method(string source, string name)
     {
@@ -77,10 +68,7 @@ public sealed class WorldReferenceGridDepthContractTests
 
     static string ReadType(string prefix)
     {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !Directory.Exists(Path.Combine(dir.FullName, "XuanYu.Render.Vulkan"))) dir = dir.Parent;
-        Assert.NotNull(dir);
-        return string.Join("\n", Directory.GetFiles(Path.Combine(dir!.FullName, "XuanYu.Render.Vulkan", "Pipeline"), $"{prefix}*.cs")
+        return string.Join("\n", Directory.GetFiles(Path.Combine(TestSourceRoot.Root, "XuanYu.Render.Vulkan", "Pipeline"), $"{prefix}*.cs")
             .OrderBy(path => path).Select(File.ReadAllText));
     }
 }

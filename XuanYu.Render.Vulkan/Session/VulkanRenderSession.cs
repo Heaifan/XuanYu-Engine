@@ -7,6 +7,9 @@ using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Pipeline;
 using XuanYu.Render.Vulkan.Render;
 using XuanYu.Render.Vulkan.Swapchain;
+using XuanYu.Render.Vulkan.Render.Frame;
+using XuanYu.Render.Vulkan.Diagnostics.Performance;
+using XuanYu.Render.Abstractions.Diagnostics.Performance;
 namespace XuanYu.Render.Vulkan.Session;
 
 // VK-LIFE-1：组合根负责失败回滚，不把半初始化资源留给 Bridge。
@@ -20,6 +23,7 @@ public sealed partial class VulkanRenderSession : IDisposable
     readonly VulkanGraphicsPipelineOwner? _skyPipeline;
     readonly XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? _gridPipelines; // F2-R2：网格/世界轴/原点全屏 Pass 组合
     readonly Action<string>? _log;
+    readonly VulkanFenceWaitSampleSink? _performanceSamples;
     readonly NativeHostSurfaceHandle? _surfaceHandle;
     readonly object _rebuildLock = new();
     uint _generation;
@@ -33,7 +37,8 @@ public sealed partial class VulkanRenderSession : IDisposable
         VulkanClearFrameOwner clearFrame, VulkanPresentLoop presentLoop,
         VulkanGraphicsPipelineOwner? pipeline, VulkanGraphicsPipelineOwner? skyPipeline,
         XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? gridPipelines,
-        Action<string>? log, NativeHostSurfaceHandle? surfaceHandle)
+        Action<string>? log, NativeHostSurfaceHandle? surfaceHandle,
+        VulkanFenceWaitSampleSink? performanceSamples)
     {
         _deviceOwner = deviceOwner;
         _swapchainOwner = swapchainOwner;
@@ -44,57 +49,32 @@ public sealed partial class VulkanRenderSession : IDisposable
         _gridPipelines = gridPipelines;
         _log = log;
         _surfaceHandle = surfaceHandle;
+        _performanceSamples = performanceSamples;
     }
-    public static VulkanRenderSession? Create(Vk vk, VulkanDeviceOwner? deviceOwner,
-        VulkanSwapchainOwner? swapchainOwner, VulkanPhysicalDeviceSelection? selection,
-        Action<string>? log, NativeHostSurfaceHandle? surfaceHandle = null, RenderProjectionResult? projection = null)
+
+    public bool IsFailed => Volatile.Read(ref _failed) != 0;
+    public string? FailureReason => Volatile.Read(ref _failureReason);
+    public long PerformanceSampleDroppedCount => _performanceSamples?.DroppedCount ?? 0;
+    public IReadOnlyList<PerformanceFrameSample> DrainPerformanceSamples() =>
+        _performanceSamples?.Drain() ?? Array.Empty<PerformanceFrameSample>();
+
+    public bool TrySetFramesInFlight(int frameCount)
     {
-        if (deviceOwner is null || swapchainOwner is null || selection?.Queue is null || !selection.Success)
+        if (frameCount is < 1 or > 2) return false;
+        lock (_rebuildLock)
         {
-            log?.Invoke(VulkanClearFrameLogFormatter.Skipped("设备/Swapchain/选择不可用"));
-            return null;
+            if (_disposed || IsFailed) return false;
+            if (_resizeStopping) return false;
+            _resizeStopping = true;
         }
-        VulkanClearFrameOwner? clear = null;
-        VulkanGraphicsPipelineOwner? pipeline = null;
-        VulkanGraphicsPipelineOwner? skyPipeline = null;
-        XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? gridPipelines = null;
-        VulkanPresentLoop? loop = null;
-        try
-        {
-            VulkanRenderSession? session = null;
-            clear = new VulkanClearFrameOwner(vk, deviceOwner, swapchainOwner, selection.Queue.GraphicsFamily, log);
-            if (projection is { Success: true } ok) clear.SetRenderProjection(ok.Projection);
-            else if (projection is { Success: false } fail)
-                log?.Invoke(VulkanClearFrameLogFormatter.RenderProjectionSkipped(
-                    fail.FailureReason ?? "未知原因"));
-            pipeline = VulkanGraphicsPipelineOwner.Create(vk, deviceOwner, clear, swapchainOwner, log);
-            if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline, pipeline.Layout);
-            skyPipeline = VulkanGraphicsPipelineOwner.CreateSky(vk, deviceOwner, clear, swapchainOwner, log);
-            if (skyPipeline is not null) clear.SetSkyPipeline(skyPipeline.Pipeline, skyPipeline.Layout);
-            // F2-R2：网格/世界轴/世界原点三个全屏 Pass（设备不支持则禁用对应 Pass）。
-            gridPipelines = XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet.Create(vk, deviceOwner, clear, swapchainOwner, selection.Handle, log);
-            loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,
-                source => session!.RecoverFromOutOfDate(source),
-                reason => session!.MarkFailed(reason),
-                log);
-            session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, skyPipeline, gridPipelines, log, surfaceHandle);
-            loop.AttachSwapchainEvents();
-            session.AttachVectorOverlayPipeline(vk);
-            session.AttachMapLabelPipeline(vk);
-            session.AttachTerrainPipeline(vk);
-            if (!loop.Start()) throw new InvalidOperationException("Present 泵启动失败");
-            return session;
-        }
+        var changed = false;
+        try { changed = _presentLoop.TrySetFramesInFlight(frameCount); }
         catch (Exception ex)
         {
-            loop?.Dispose();
-            gridPipelines?.Dispose();
-            skyPipeline?.Dispose();
-            pipeline?.Dispose();
-            clear?.Dispose();
-            log?.Invoke(VulkanClearFrameLogFormatter.PresentError($"创建异常：{ex.Message}"));
-            return null;
+            _log?.Invoke($"FramesInFlight 切换异常：{ex.Message}");
         }
+        finally { lock (_rebuildLock) _resizeStopping = false; }
+        if (!changed) MarkFailed($"FramesInFlight 切换失败：count={frameCount}");
+        return changed;
     }
-    public bool IsFailed => Volatile.Read(ref _failed) != 0;
-    public string? FailureReason => Volatile.Read(ref _failureReason); }
+}

@@ -7,17 +7,13 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D5-FINAL：未保存地图弹窗——正式文案（无内部编号）+ 行为合同（仅 discard 放行）。
 public sealed class UiD5UnsavedDialogTests
 {
-    static string UnsavedDialog() => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..",
+    static string UnsavedDialog() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,
         "XuanYu.Editor.UI", "Win", "UiWin.UnsavedDialog.cs"));
-    static string SceneCommands() => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..",
+    static string SceneCommands() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,
         "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
-    static string DialogHostInput() => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..",
+    static string DialogHostInput() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,
         "XuanYu.Editor.UI", "Win", "UiWin.DialogHost.Input.cs"));
-    static string SceneCloseDialog() => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..",
+    static string SceneCloseDialog() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,
         "XuanYu.Editor.UI", "Win", "UnsavedChangesConfirmationWindow.axaml"));
 
     static string ConfirmNewMapMethod(string scene)

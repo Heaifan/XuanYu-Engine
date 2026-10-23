@@ -85,8 +85,7 @@ public sealed class R2BPropertyEditorVisualContractTests
         Assert.DoesNotContain("MaxWidth=\"420\"", shell);
     }
 
-    static string Read(params string[] path) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(path)));
+    static string Read(params string[] path) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  Path.Combine(path)));
 
     static int Count(string text, string value) => text.Split(value).Length - 1;
 }

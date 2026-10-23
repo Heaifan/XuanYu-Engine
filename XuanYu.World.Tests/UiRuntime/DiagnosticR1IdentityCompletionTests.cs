@@ -47,6 +47,5 @@ public sealed class DiagnosticR1IdentityCompletionTests
         Assert.Contains("local:XYDiagnostic.DebugId=\"XYE.TOP.EDIT.SELECT\"", edit);
     }
 
-    static string ReadModule(string name) => File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Top", name));
+    static string ReadModule(string name) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Top", name));
 }

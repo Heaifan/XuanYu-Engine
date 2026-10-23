@@ -25,4 +25,7 @@ public sealed record RendererEvent(
     int? ChunkX = null,
     int? ChunkY = null,
     int? Lod = null,
-    string? Result = null);
+    string? Result = null,
+    int? FrameSlot = null,
+    int? FramesInFlight = null,
+    uint? SwapchainGeneration = null);

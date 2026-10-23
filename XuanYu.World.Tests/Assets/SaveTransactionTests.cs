@@ -18,7 +18,7 @@ public sealed class SaveTransactionTests : IDisposable
 
         var result = await _env.SaveAsync(scenePath);
 
-        Assert.True(result.Succeeded);
+        Assert.True(result.Succeeded, $"{result.ErrorCode} at {result.Stage}: {result.Message} {result.Detail}");
         var text = await File.ReadAllTextAsync(scenePath);
         Assert.Contains("\"schemaVersion\": 4", text);
         Assert.Contains($"\"assetId\": \"{assetId}\"", text);

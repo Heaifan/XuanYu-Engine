@@ -8,8 +8,7 @@ public sealed class UiD5FormContractTests
     static readonly string D5 = Read("Design/UiStyles.D5.axaml");
     static readonly string Form = Read("Right/MapFormPanel.axaml");
 
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Text_box_has_full_state_set()

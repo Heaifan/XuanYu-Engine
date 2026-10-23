@@ -14,11 +14,11 @@ internal static class BenchmarkMarkdownWriter
             "- measuredGpuBytes：UNKNOWN；estimatedGpuBytes 是 Terrain GPU vertex/index buffer capacity 合计，不是驱动报告的物理占用。", "",
             "## 统计图", "", "- [RenderPass 时间](chart-render-time.svg)", "- [三角形数量](chart-triangles.svg)",
             "- [GPU 缓冲估算](chart-gpu-memory.svg)", "- [GPU Terrain 覆盖率](chart-coverage.svg)", "- [LOD 分布](chart-lod.svg)", "",
-            "## 12 配置汇总", "", "| Samples | Pose | GPU P50/P95 ms | Fence+Readback P50/P95 ms | HGT import P50/P95 ms | CPU sample P50/P95 ms | CPU mesh P50/P95 ms | Upload P50/P95 ms | Total wall avg ms | Triangles | LOD0..4 | Coverage | HGT error P95 m | Hash repeat | Status |",
+            "## 12 配置汇总", "", "| Samples | Pose | GPU P50/P95/P99 ms | Fence+Readback P50/P95/P99 ms | HGT import P50/P95 ms | CPU sample P50/P95 ms | CPU mesh P50/P95 ms | Upload P50/P95 ms | Total wall avg ms | Triangles | LOD0..4 | Coverage | HGT error P95 m | Hash repeat | Status |",
             "|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---|---|"
         };
         foreach (var x in report.Summary)
-            lines.Add($"| {x.Samples} | {x.Pose} | {N(x.GpuMsP50)}/{N(x.GpuMsP95)} | {N(x.WallMsP50)}/{N(x.WallMsP95)} | {N(x.CpuImportMsP50)}/{N(x.CpuImportMsP95)} | {N(x.TerrainSampleMsP50)}/{N(x.TerrainSampleMsP95)} | {N(x.CpuMeshBuildMsP50)}/{N(x.CpuMeshBuildMsP95)} | {N(x.UploadMsP50)}/{N(x.UploadMsP95)} | {N(x.TotalWallMs)} | {N(x.Triangles)} | {string.Join('/', x.LodMeans.Select(v => N(v)))} | {N(x.TerrainCoverage)}% | {N(x.HeightErrorWorldP95)} | {x.RepeatPngHashStable} | {x.Status} |");
+            lines.Add($"| {x.Samples} | {x.Pose} | {N(x.GpuMsP50)}/{N(x.GpuMsP95)}/{N(x.GpuMsP99)} | {N(x.WallMsP50)}/{N(x.WallMsP95)}/{N(x.WallMsP99)} | {N(x.CpuImportMsP50)}/{N(x.CpuImportMsP95)} | {N(x.TerrainSampleMsP50)}/{N(x.TerrainSampleMsP95)} | {N(x.CpuMeshBuildMsP50)}/{N(x.CpuMeshBuildMsP95)} | {N(x.UploadMsP50)}/{N(x.UploadMsP95)} | {N(x.TotalWallMs)} | {N(x.Triangles)} | {string.Join('/', x.LodMeans.Select(v => N(v)))} | {N(x.TerrainCoverage)}% | {N(x.HeightErrorWorldP95)} | {x.RepeatPngHashStable} | {x.Status} |");
         lines.AddRange(["", "## 结论与视角证据", "", report.Recommendation, "",
             "| Samples | Pose | GPU PNG | Chunk/LOD probe | Camera in Chunk AABB | Height error visual P95 m |", "|---:|---|---|---|---|---:|"]);
         foreach (var x in report.Runs[0].Configurations)

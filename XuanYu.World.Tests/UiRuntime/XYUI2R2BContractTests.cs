@@ -89,8 +89,7 @@ public sealed class XYUI2R2BContractTests
         Assert.Contains("EditorLayerDock", right);
     }
 
-    static string Read(params string[] path) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(path)));
+    static string Read(params string[] path) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  Path.Combine(path)));
 
     static int Count(string text, string value) => text.Split(value).Length - 1;
 }

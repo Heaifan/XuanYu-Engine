@@ -9,13 +9,13 @@ public sealed class VulkanPresentLoopContractTests
     [Fact]
     public void Present_loop_gates_fence_reset_and_submit_on_acquired_decision()
     {
-        var loop = RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.cs"));
+        var loop = ReadPresentFrameSources();
         var acquire = loop.IndexOf("AcquireImage(device", StringComparison.Ordinal);
-        var decision = loop.IndexOf("switch (acquireDecision)", StringComparison.Ordinal);
+        var decision = loop.IndexOf("switch (decision)", StringComparison.Ordinal);
         Assert.True(decision >= 0, "Acquire outcomes must be dispatched before the frame submission path.");
         var acquired = loop.IndexOf("case AcquireDecision.Acquired:", decision, StringComparison.Ordinal);
-        var reset = loop.IndexOf("ResetFence(device)", acquired, StringComparison.Ordinal);
-        var submit = loop.IndexOf("SubmitFrame(device, idx", reset, StringComparison.Ordinal);
+        var reset = loop.IndexOf("ResetFence(device, frame)", acquired, StringComparison.Ordinal);
+        var submit = loop.IndexOf("SubmitFrame(device, frame, imageIndex", reset, StringComparison.Ordinal);
         var acquirePath = RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.Acquire.cs"));
         var acquireGuard = acquirePath.IndexOf("decision != AcquireDecision.Acquired", StringComparison.Ordinal);
         var validate = acquirePath.IndexOf("HasValidImageIndex(index", acquireGuard, StringComparison.Ordinal);
@@ -35,7 +35,7 @@ public sealed class VulkanPresentLoopContractTests
         {
             var source = Environment.GetEnvironmentVariable("XYE_WORKSPACE_SOURCE_DIRECTORY");
             return string.IsNullOrWhiteSpace(source)
-                ? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."))
+                ? Path.GetFullPath(TestSourceRoot.Root)
                 : Path.GetFullPath(source);
         }
     }
@@ -47,10 +47,16 @@ public sealed class VulkanPresentLoopContractTests
         return File.ReadAllText(full);
     }
 
+    static string ReadPresentFrameSources() => string.Join("\n", new[]
+    {
+        RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.RunFrames.cs")),
+        RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.Submission.cs"))
+    });
+
     [Fact]
     public void No_busy_loop_without_projection()
     {
-        var loop = RenderVulkanFile(Path.Combine("Render", "Present", "VulkanPresentLoop.cs"));
+        var loop = ReadPresentFrameSources();
         Assert.Contains("Thread.Sleep(16)", loop); // 无投影分支保持低频受控等待，禁止忙循环
     }
 

@@ -12,7 +12,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
     internal DescriptorSetLayout MapLabelDescriptorSetLayout => _mapLabelTextures?.DescriptorSetLayout ?? default;
 
     internal void InitializeMapLabelTextures() =>
-        _mapLabelTextures ??= new VulkanMapLabelTextureCache(_vk, _deviceOwner, _commandPool, _log);
+        _mapLabelTextures ??= new VulkanMapLabelTextureCache(
+            _vk, _deviceOwner, _commandPool, _log, RetireGpuResource);
 
     public void SetMapLabelPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
     {

@@ -33,6 +33,7 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($dotnet)) { throw '正�
 if ($LASTEXITCODE -ne 0) { throw 'XYC Offscreen benchmark Build 失败。' }
 
 $head = if ($env:XYE_SOURCE_HEAD) { $env:XYE_SOURCE_HEAD } else { (& git -C $repoRoot rev-parse HEAD).Trim() }
+$env:XYE_SOURCE_FINGERPRINT = (& (Join-Path $repoRoot 'scripts\xye-source-fingerprint.ps1') $repoRoot).Trim()
 $version = (Select-String -Path (Join-Path $repoRoot 'Directory.Build.props') -Pattern '<InformationalVersion>([^<]+)</InformationalVersion>').Matches.Groups[1].Value
 $env:XYC_BUILD_ID = "HEAD=$head;VERSION=$version;DIRTY=$env:XYE_SOURCE_DIRTY"
 $dll = Join-Path $env:XYE_BUILD_DIRECTORY 'bin\XuanYu.OffscreenTerrain\debug\XuanYu.OffscreenTerrain.dll'

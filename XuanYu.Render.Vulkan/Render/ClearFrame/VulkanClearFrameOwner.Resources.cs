@@ -54,6 +54,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var poolInfo = new CommandPoolCreateInfo
         {
             SType = StructureType.CommandPoolCreateInfo,
+            Flags = CommandPoolCreateFlags.ResetCommandBufferBit,
             QueueFamilyIndex = (uint)graphicsFamily
         };
         var result = _vk.CreateCommandPool(_deviceOwner.LogicalDevice, &poolInfo, null, out _commandPool);

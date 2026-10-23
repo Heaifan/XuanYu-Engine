@@ -4,7 +4,7 @@ namespace XuanYu.World.Tests.Map.Editing;
 
 public sealed class UiMapDatasetF3ContractTests
 {
-    static readonly string Root = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string Root = TestSourceRoot.Root;
     static string Read(params string[] path) => File.ReadAllText(Path.Combine([Root, .. path]));
 
     [Fact]

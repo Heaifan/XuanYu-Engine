@@ -1,9 +1,11 @@
 using System;
 using System.Threading;
+using System.Diagnostics;
 using XuanYu.Core.Diagnostics;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Swapchain;
+using XuanYu.Render.Vulkan.Render.Frame;
 using Semaphore = Silk.NET.Vulkan.Semaphore;
 
 namespace XuanYu.Render.Vulkan.Render;
@@ -18,8 +20,12 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
     readonly Func<string, bool>? _onOutOfDate;
     readonly Action<string>? _onFatal;
     readonly Action<string>? _log;
-    Semaphore _imageAvailable;
-    Fence _fence;
+    readonly Action<VulkanFenceWaitObservation>? _onFenceWait;
+    int _framesInFlight;
+    VulkanFrameContext[] _frames = [];
+    int[] _imageOwnerSlots = [];
+    uint[] _imageOwnerGenerations = [];
+    int _nextFrameSlot;
     Thread? _thread;
     int _stopRequested;
     bool _syncCreated;
@@ -28,8 +34,12 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
     const ulong FenceTimeoutNs = 1_000_000_000;
 
     public VulkanPresentLoop(Vk vk, VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner,
-        VulkanClearFrameOwner clearFrame, Func<string, bool>? onOutOfDate, Action<string>? onFatal, Action<string>? log)
+        VulkanClearFrameOwner clearFrame, Func<string, bool>? onOutOfDate, Action<string>? onFatal,
+        Action<string>? log, int framesInFlight = 1,
+        Action<VulkanFenceWaitObservation>? onFenceWait = null)
     {
+        if (framesInFlight is < 1 or > 2) throw new ArgumentOutOfRangeException(nameof(framesInFlight));
+        _framesInFlight = framesInFlight;
         _vk = vk;
         _deviceOwner = deviceOwner;
         _swapchainOwner = swapchainOwner;
@@ -37,6 +47,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
         _onOutOfDate = onOutOfDate;
         _onFatal = onFatal;
         _log = log;
+        _onFenceWait = onFenceWait;
     }
 
     public bool Start()
@@ -55,41 +66,6 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
     {
         try { RunFrames(); }
         catch (Exception ex) { Fatal($"Present 线程异常：{ex.Message}"); }
-    }
-
-    // R4-R3-R2：修正同步顺序。先等待上一帧 Fence（确保 GPU 已完成旧 CommandBuffer），
-    // 再应用 Pending RenderProjection（重录/释放 CommandBuffer），最后 ResetFence 紧贴 QueueSubmit。
-    void RunFrames()
-    {
-        var device = _deviceOwner.LogicalDevice;
-        var khr = _swapchainOwner.Khr;
-        var stage = PipelineStageFlags.ColorAttachmentOutputBit;
-        var submitted = false;
-        while (Volatile.Read(ref _stopRequested) == 0)
-        {
-            if (submitted && !WaitFence(device)) break;
-            if (!EnsurePresentGeneration()) { Fatal("Swapchain generation synchronization could not be safely replaced."); break; }
-            if (!_clearFrame.TryApplyPendingRenderProjection()) { Fatal("Render Projection CommandBuffer 重录失败。"); break; }
-            if (!_clearFrame.HasRenderProjection) { Thread.Sleep(16); continue; }
-            var acquireDecision = AcquireImage(device, out var swapchain, out var idx);
-            switch (acquireDecision)
-            {
-                case AcquireDecision.Acquired:
-                    break;
-                case AcquireDecision.TimeoutRetry:
-                case AcquireDecision.RetryAfterRecreate:
-                    continue;
-                default:
-                    return;
-            }
-            if (!ResetFence(device)) break;
-            var gpuFrameId = NextGpuFrameId();
-            var cameraRevision = _clearFrame.RenderProjection.Camera.Revision;
-            if (!SubmitFrame(device, idx, stage, gpuFrameId, cameraRevision)) break;
-            if (TerrainReplayOptions.Enabled) ViewportProbe.FrameSubmitted(gpuFrameId, idx, cameraRevision);
-            submitted = true;
-            if (!HandlePresent(khr, swapchain, idx, gpuFrameId, cameraRevision)) break;
-        }
     }
 
 }

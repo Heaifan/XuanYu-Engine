@@ -5,7 +5,8 @@ public sealed class TerrainPreviewLightingContractTests
     [Fact]
     public void Terrain_fragment_shader_uses_fixed_editor_lambert_lighting()
     {
-        var shader = File.ReadAllText(FindShader("terrain.frag"));
+        var shader = File.ReadAllText(Path.Combine(
+            TestSourceRoot.Root, "XuanYu.Render.Vulkan", "Shaders", "terrain.frag"));
 
         Assert.Contains("normalize(inNormal)", shader);
         Assert.Contains("max(dot(normalize(inNormal), normalize(vec3(0.35, 0.55, 0.75))), 0.0)", shader);
@@ -15,15 +16,4 @@ public sealed class TerrainPreviewLightingContractTests
         Assert.DoesNotContain("viewProjection", shader, StringComparison.Ordinal);
     }
 
-    static string FindShader(string name)
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            var path = Path.Combine(directory.FullName, "XuanYu.Render.Vulkan", "Shaders", name);
-            if (File.Exists(path)) return path;
-            directory = directory.Parent;
-        }
-        throw new FileNotFoundException(name);
-    }
 }

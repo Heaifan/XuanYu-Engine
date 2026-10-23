@@ -13,6 +13,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     internal VulkanClearFrameOwner(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanOffscreenColorTarget target, int graphicsFamily, Action<string>? log)
     {
+        _frameSlotCount = 1;
         _vk = vk; _deviceOwner = deviceOwner; _offscreenTarget = target; _log = log;
         _staticModels = new VulkanStaticModelCache(vk, deviceOwner, log);
         _vectorOverlays = new VulkanVectorOverlayCache(vk, deviceOwner, log);

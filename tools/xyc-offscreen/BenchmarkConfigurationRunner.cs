@@ -5,6 +5,7 @@ using XuanYu.Editor.UI;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Benchmark;
 using XuanYu.Render.Vulkan.Session;
+using XuanYu.Render.Vulkan.Render.Terrain.Offscreen;
 using XuanYu.World.Terrain.Source;
 
 internal static class BenchmarkConfigurationRunner
@@ -44,7 +45,8 @@ internal static class BenchmarkConfigurationRunner
                 var gpuMs = renderer.LastGpuRenderMilliseconds;
                 var encodeTimer = Stopwatch.StartNew(); var bytes = XuanYu.Core.Diagnostics.VulkanPngEncoder.EncodeRgba(1024, 768, rgba); encodeTimer.Stop();
                 if (gpuMs.HasValue) gpu.Add(gpuMs.Value); wall.Add(timer.Elapsed.TotalMilliseconds);
-                warm.Add(new(i + 1, gpuMs, timer.Elapsed.TotalMilliseconds,
+                warm.Add(new(i + 1, TerrainBenchmarkRunner.NextFrameId(), gpuMs,
+                    timer.Elapsed.TotalMilliseconds,
                     encodeTimer.Elapsed.TotalMilliseconds, Hash(bytes)));
                 finalRgba = rgba;
             }
@@ -82,6 +84,7 @@ internal static class BenchmarkConfigurationRunner
                 ComparisonToPreviousResolution = null, Png = pngPath, PngSha256 = Hash(File.ReadAllBytes(pngPath)),
                 ValidGpuSamples = gpu.Count, GpuMsP50 = gpuPercentiles?.P50, GpuMsP95 = gpuPercentiles?.P95,
                 WallMsP50 = wallPercentiles.P50, WallMsP95 = wallPercentiles.P95,
+                GpuMsP99 = gpuPercentiles?.P99, WallMsP99 = wallPercentiles.P99,
                 SamplesData = warm, ChunkProbes = probes
             }, finalRgba);
         }

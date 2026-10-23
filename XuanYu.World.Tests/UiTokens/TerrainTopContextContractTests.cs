@@ -4,8 +4,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class TerrainTopContextContractTests
 {
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Terrain_context_has_real_import_and_context_switch_contract()

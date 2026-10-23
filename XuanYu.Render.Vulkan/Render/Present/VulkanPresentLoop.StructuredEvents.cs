@@ -1,4 +1,5 @@
 using XuanYu.Render.Abstractions.Diagnostics;
+using XuanYu.Render.Vulkan.Render.Frame;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -23,18 +24,22 @@ public sealed unsafe partial class VulkanPresentLoop
         generation: _swapchainOwner.ResourceGeneration, actualWidth: _swapchainOwner.Extent.Width,
         actualHeight: _swapchainOwner.Extent.Height);
 
-    void PublishTerrainResources(long frameId, uint imageIndex, long cameraRevision)
+    void PublishTerrainResources(VulkanFrameContext frame, uint imageIndex)
     {
         if (_eventSession?.ProbeEnabled != true) return;
         var resources = _clearFrame.RenderProjection.TerrainResources;
         if (resources.Count == 0)
         {
             _eventSession.PublishTerrainFrame(RendererEventCodes.TerrainProbeUnavailable,
-                frameId, imageIndex, cameraRevision, reason: "NoTerrain");
+                frame.FrameId, imageIndex, frame.CameraRevision, reason: "NoTerrain",
+                frameSlot: frame.FrameIndex, framesInFlight: _framesInFlight,
+                swapchainGeneration: frame.SwapchainGeneration);
             return;
         }
         foreach (var terrain in resources)
             _eventSession.PublishTerrainFrame(RendererEventCodes.TerrainResourcePresented,
-                frameId, imageIndex, cameraRevision, terrain.TerrainId, terrain.Revision);
+                frame.FrameId, imageIndex, frame.CameraRevision, terrain.TerrainId, terrain.Revision,
+                frameSlot: frame.FrameIndex, framesInFlight: _framesInFlight,
+                swapchainGeneration: frame.SwapchainGeneration);
     }
 }

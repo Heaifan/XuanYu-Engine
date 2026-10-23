@@ -6,8 +6,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D4：D4 债务清零与行数门禁（基线只减不增；组件例外保留登记）。
 public sealed class UiD4DebtClearedTests
 {
-    static readonly string RepoRoot = Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string RepoRoot = TestSourceRoot.Root;
 
     [Fact]
     public void D4_files_have_no_debt_entries_except_registered_exceptions()

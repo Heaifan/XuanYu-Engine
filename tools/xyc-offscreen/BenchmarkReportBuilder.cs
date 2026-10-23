@@ -13,6 +13,7 @@ internal static class BenchmarkReportBuilder
         var report = new BenchmarkFinalReport(runs, summary, Recommend(summary, runs));
         File.WriteAllText(Path.Combine(root, "benchmark-report.json"), JsonSerializer.Serialize(report,
             new JsonSerializerOptions { WriteIndented = true }));
+        BenchmarkFrameSampleWriter.Write(Path.Combine(root, "benchmark-samples.jsonl"), runs);
         BenchmarkCsvWriter.Write(Path.Combine(root, "benchmark-summary.csv"), summary);
         BenchmarkSvgCharts.WriteAll(root, summary);
         BenchmarkMarkdownWriter.Write(Path.Combine(root, "report.md"), root, report);

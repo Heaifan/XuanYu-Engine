@@ -4,6 +4,7 @@ using XuanYu.Core.Math;
 using XuanYu.Editor.UI;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Session;
+using XuanYu.Render.Vulkan.Render.Terrain.Offscreen;
 using XuanYu.World.Terrain.Import;
 
 internal static class B3TrajectoryCaptureRunner

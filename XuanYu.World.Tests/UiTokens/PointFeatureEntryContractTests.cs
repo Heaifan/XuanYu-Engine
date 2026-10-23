@@ -4,8 +4,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class PointFeatureEntryContractTests
 {
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Workspace_selector_exposes_a_point_feature_entry()

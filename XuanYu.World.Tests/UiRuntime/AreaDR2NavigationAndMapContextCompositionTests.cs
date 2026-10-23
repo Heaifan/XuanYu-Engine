@@ -91,6 +91,6 @@ public sealed class AreaDR2NavigationAndMapContextCompositionTests
         UiRuntimeTestHost.Descendants<MapPagePanel>(right).Count(),
         UiRuntimeTestHost.Descendants<EditorLayerDock>(right).Count());
 
-    static string Read(params string[] path) => File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", Path.Combine(path)));
+    static string Read(params string[] path) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", Path.Combine(path)));
     readonly record struct SnapshotData(int MapForms, int MapPages, int Layers);
 }

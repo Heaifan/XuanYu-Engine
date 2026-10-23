@@ -8,7 +8,7 @@ namespace XuanYu.World.Tests.Camera;
 public sealed class CAuditR1SurfaceAabbTests
 {
     [Fact]
-    public async Task Initial_frame_uses_aabb_z_midpoint_not_center_dem_sample()
+    public async Task Initial_frame_uses_surface_height_at_the_framed_center()
     {
         var vm = new UiVm(null, () => true, seedInitialScene: false);
         vm.UpdateViewportFrame(800, 600);
@@ -21,8 +21,8 @@ public sealed class CAuditR1SurfaceAabbTests
         var query = surface.QuerySurface(new(center.X, center.Y));
 
         Assert.True(query.IsValid);
-        Assert.Equal(50, center.Z);
         Assert.Equal(100, query.SurfaceZ);
+        Assert.Equal(query.SurfaceZ, center.Z);
     }
 
     [Fact]

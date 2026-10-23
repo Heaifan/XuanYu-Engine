@@ -6,8 +6,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D3：D3 债务清零与行数门禁（基线只减不增；5+100 防回归）。
 public sealed class UiD3DebtClearedTests
 {
-    static readonly string RepoRoot = Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string RepoRoot = TestSourceRoot.Root;
 
     [Fact]
     public void D3_remediated_debt_entries_are_removed_from_baseline()

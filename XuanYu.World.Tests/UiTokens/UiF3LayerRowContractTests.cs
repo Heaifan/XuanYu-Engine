@@ -5,8 +5,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // MAP-A-R2-D5-F3：图层行视觉层级与拖拽入口合同。
 public sealed class UiF3LayerRowContractTests
 {
-    static readonly string Panel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "LayerPanel.axaml"));
+    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "LayerPanel.axaml"));
 
     [Fact]
     public void Layer_name_is_expanding_body_between_handle_and_states()

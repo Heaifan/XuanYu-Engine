@@ -5,7 +5,7 @@ namespace XuanYu.World.Tests.UiRuntime;
 
 public sealed class TopLeftInteractionR1Tests
 {
-    static readonly string Root = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string Root = TestSourceRoot.Root;
 
     [Fact]
     public void Create_cube_commits_scene_hierarchy_selection_and_inspector()

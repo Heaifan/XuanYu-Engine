@@ -13,8 +13,7 @@ public sealed class UiD4F1TextOverflowContractTests
     static readonly string LayerPanel = Read("Right/LayerPanel.axaml");
     static readonly string LayerInspector = Read("Right/LayerInspectorPanel.axaml");
 
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Ui_value_style_implements_display_default()

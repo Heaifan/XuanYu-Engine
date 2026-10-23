@@ -5,8 +5,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class UiCanonicalVersionContractTests
 {
-    static string RootPath(params string[] segments) => Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(segments));
+    static string RootPath(params string[] segments) => Path.Combine(TestSourceRoot.Root,  Path.Combine(segments));
 
     static string VersionSource() => File.ReadAllText(RootPath("Directory.Build.props"));
 

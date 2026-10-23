@@ -4,8 +4,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class CanonicalToolchainResolverTests
 {
-    static string RootPath(params string[] segments) => Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(segments));
+    static string RootPath(params string[] segments) => Path.Combine(TestSourceRoot.Root,  Path.Combine(segments));
 
     static string Read(params string[] segments) => File.ReadAllText(RootPath(segments));
 

@@ -13,6 +13,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (model is null) return;
         var gpu = _staticModels.Get(model);
         if (gpu is null) return;
+        TrackFrameResource(gpu);
         BindStaticModelBuffers(cb, gpu);
         foreach (var p in gpu.Primitives)
         {

@@ -18,7 +18,7 @@ public sealed class RegionDrawingF1CompositionRedTests
     [Fact]
     public void Region_drawing_is_not_rendered_as_a_map_editor_tool()
     {
-        var map = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapPagePanel.axaml"));
+        var map = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapPagePanel.axaml"));
         Assert.DoesNotContain("mapTool", map);
         Assert.DoesNotContain("区域绘制", map);
     }
@@ -26,7 +26,7 @@ public sealed class RegionDrawingF1CompositionRedTests
     [Fact]
     public void Region_edit_has_no_drawing_tool_or_draft_surface()
     {
-        var editor = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
+        var editor = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
         Assert.DoesNotContain("RegionDrawing", editor);
         Assert.DoesNotContain("Draft", editor);
     }

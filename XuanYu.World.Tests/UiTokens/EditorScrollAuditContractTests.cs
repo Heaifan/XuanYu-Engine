@@ -4,7 +4,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class EditorScrollAuditContractTests
 {
-    static string Root => Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI");
+    static string Root => Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI");
 
     [Fact]
     public void Inspector_has_one_right_content_scroll_host_and_fixed_shell()

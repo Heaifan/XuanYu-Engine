@@ -7,16 +7,26 @@ namespace XuanYu.Editor.Assets;
 public sealed partial class SceneAssetHostingTransaction
 {
     readonly SceneAssetHostingPlan _plan;
+    readonly Action<string, string> _moveDirectory;
 
-    SceneAssetHostingTransaction(SceneAssetHostingPlan plan) => _plan = plan;
+    SceneAssetHostingTransaction(SceneAssetHostingPlan plan, Action<string, string> moveDirectory)
+    {
+        _plan = plan;
+        _moveDirectory = moveDirectory;
+    }
 
     public SceneAssetHostingState State { get; private set; } = SceneAssetHostingState.Prepared;
     public string LastError { get; private set; } = "";
     public SceneAssetHostingPlan Plan => _plan;
 
-    public static SceneAssetHostingTransaction Prepare(SceneAssetHostingPlan plan)
+    public static SceneAssetHostingTransaction Prepare(SceneAssetHostingPlan plan) =>
+        Prepare(plan, Directory.Move);
+
+    internal static SceneAssetHostingTransaction Prepare(
+        SceneAssetHostingPlan plan,
+        Action<string, string> moveDirectory)
     {
-        var transaction = new SceneAssetHostingTransaction(plan);
+        var transaction = new SceneAssetHostingTransaction(plan, moveDirectory);
         var result = transaction.PrepareInternal();
         if (!result.Succeeded)
         {

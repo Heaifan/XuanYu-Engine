@@ -39,7 +39,7 @@ public sealed class TerrainCut1UiContractTests
 static class TestSource
 {
     public static string RootPath(string relative) =>
-        Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../", relative));
+        Path.GetFullPath(Path.Combine(TestSourceRoot.Root,  relative));
 
     public static string Read(string relative) => File.ReadAllText(RootPath(relative));
 }

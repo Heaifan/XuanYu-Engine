@@ -17,7 +17,7 @@ public sealed class RegionDrawingInputModifierTests
     [Fact]
     public void Avalonia_and_native_hosts_forward_modifier_to_region_preview()
     {
-        var root = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI");
+        var root = Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI");
         var pointer = File.ReadAllText(Path.Combine(root, "Viewport", "Vulkan", "VulkanNativeHost.AvaloniaPointer.cs"));
         var native = File.ReadAllText(Path.Combine(root, "Viewport", "Vulkan", "VulkanNativeHost.Pointer.cs"));
         Assert.Contains("AvaloniaViewportInputForwarder", pointer);

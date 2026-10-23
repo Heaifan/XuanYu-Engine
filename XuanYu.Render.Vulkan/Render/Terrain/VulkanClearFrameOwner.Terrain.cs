@@ -32,7 +32,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
     void DrawTerrain(CommandBuffer cb, float* scene, int terrainIndex)
     {
         if (_terrainPipeline.Handle == 0 || _terrainPipelineLayout.Handle == 0 || !_renderProjection.HasTerrain) return;
-        var cache = _terrainCache ??= new Terrain.VulkanTerrainGpuCache(_vk, _deviceOwner, _log);
+        var cache = _terrainCache ??= new Terrain.VulkanTerrainGpuCache(
+            _vk, _deviceOwner, _log, _terrainGpuCacheBudgetBytes, RetireTerrainGpuResource);
         var resource = _renderProjection.TerrainResources[terrainIndex];
         var state = CurrentViewProjectionState();
         TerrainProbeLogger.Center(state, resource);
@@ -68,6 +69,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
                     lodSelection, previousLod);
                 continue;
             }
+            TrackFrameResource(gpu);
             var vb = gpu.Vertices.Buffer; var ib = gpu.Indices.Buffer; ulong offset = 0;
             _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset); _vk.CmdBindIndexBuffer(cb, ib, 0, IndexType.Uint32);
             FillScenePushConstants(scene, _renderProjection, origin, default, new(1, 1, 1), 0, -16);
@@ -89,12 +91,4 @@ public sealed unsafe partial class VulkanClearFrameOwner
         BindProceduralVertexBuffer(cb);
     }
 
-    static TerrainRenderStats Merge(TerrainRenderStats a, TerrainRenderStats b) => new(
-        a.VisibleChunks + b.VisibleChunks, a.CulledChunks + b.CulledChunks,
-        a.LOD0Chunks + b.LOD0Chunks, a.LOD1Chunks + b.LOD1Chunks,
-        a.LOD2Chunks + b.LOD2Chunks, a.LOD3Chunks + b.LOD3Chunks,
-        a.LOD4Chunks + b.LOD4Chunks, a.TerrainDrawCalls + b.TerrainDrawCalls,
-        a.TerrainTriangles + b.TerrainTriangles, a.TerrainIndices + b.TerrainIndices,
-        b.TerrainResidentGpuBytes, b.MeshBuildCount, b.VertexUploadCount,
-        b.IndexUploadCount, b.BufferCreateCount);
 }

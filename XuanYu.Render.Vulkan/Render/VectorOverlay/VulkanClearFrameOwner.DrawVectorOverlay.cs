@@ -12,6 +12,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (model is null) return;
         var gpu = _vectorOverlays.Get(model, CurrentViewProjectionState().RenderOrigin);
         if (gpu is null) return;
+        TrackFrameResource(gpu);
         var vertex = gpu.VertexBuffer.Buffer; ulong offset = 0;
         _vk.CmdBindVertexBuffers(cb, 0, 1, &vertex, &offset);
         _vk.CmdBindIndexBuffer(cb, gpu.IndexBuffer.Buffer, 0, IndexType.Uint32);

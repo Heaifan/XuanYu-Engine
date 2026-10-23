@@ -8,8 +8,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // 10 项绕过反例：换位置/换选择器/换 x:Name/换属性/注释漂移/基线增长。
 public sealed class UiDebtBaselineTests
 {
-    private static readonly string RepoRoot = Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..");
+    private static readonly string RepoRoot = TestSourceRoot.Root;
     private static readonly string UiDir = Path.Combine(RepoRoot, "XuanYu.Editor.UI");
 
     private static int ScanCount(string relPath, string text) =>

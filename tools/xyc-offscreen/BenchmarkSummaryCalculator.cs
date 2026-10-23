@@ -13,7 +13,8 @@ internal static class BenchmarkSummaryCalculator
             .Select(x => x.GpuRenderMs!.Value).ToArray();
         var wall = rows.SelectMany(x => x.SamplesData).Select(x => x.FenceReadbackWallMs).ToArray();
         var gpuStats = gpu.Length >= 30 ? VulkanBenchmarkPercentileCalculator.Calculate(gpu) : (VulkanBenchmarkPercentiles?)null;
-        var wallStats = VulkanBenchmarkPercentileCalculator.Calculate(wall);
+        var wallStats = wall.Length == 0 ? (VulkanBenchmarkPercentiles?)null :
+            VulkanBenchmarkPercentileCalculator.Calculate(wall);
         var importStats = VulkanBenchmarkPercentileCalculator.Calculate(runs.Select(x => x.ImportMs).ToArray());
         var terrainSampleStats = VulkanBenchmarkPercentileCalculator.Calculate(rows.Select(x => x.TerrainSampleMs).ToArray());
         var meshBuildStats = VulkanBenchmarkPercentileCalculator.Calculate(rows.Select(x => x.CpuMeshBuildMs).ToArray());
@@ -26,7 +27,8 @@ internal static class BenchmarkSummaryCalculator
         {
             Samples = rows[0].Samples, Pose = rows[0].Pose, Replicates = rows.Length,
             ValidGpuSamples = gpu.Length, GpuMsP50 = gpuStats?.P50, GpuMsP95 = gpuStats?.P95,
-            WallMsP50 = wallStats.P50, WallMsP95 = wallStats.P95,
+            GpuMsP99 = gpuStats?.P99, WallMsP50 = wallStats?.P50, WallMsP95 = wallStats?.P95,
+            WallMsP99 = wallStats?.P99,
             CpuImportMs = runs.Average(x => x.ImportMs),
             CpuImportMsP50 = importStats.P50, CpuImportMsP95 = importStats.P95,
             TerrainSampleMsP50 = terrainSampleStats.P50, TerrainSampleMsP95 = terrainSampleStats.P95,

@@ -42,8 +42,19 @@ public static partial class UiSourceContractAnalyzer
             foreach (Match m in BrushRx.Matches(line))
                 result.Add(new(relPath, loc, UiRuleKind.CsHexColor, "Brush", m.Value));
             foreach (Match m in UintRx.Matches(line))
-                result.Add(new(relPath, loc, UiRuleKind.CsHexColor, "Uint", m.Value));
+            {
+                if (!IsWin32Flag(relPath, loc, m.Value))
+                    result.Add(new(relPath, loc, UiRuleKind.CsHexColor, "Uint", m.Value));
+            }
         }
         return result;
     }
+
+    private static bool IsWin32Flag(string path, string locator, string value) =>
+        (path == "XuanYu.Editor.UI/Control/XycUiNativeCapture.cs"
+            && locator == "XycUiNativeCapture.if" && value == "0x00CC0020")
+        || (path == "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs"
+            && locator == "SilentNativeWindow.WsPopup" && value == "0x80000000")
+        || (path == "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs"
+            && locator == "SilentNativeWindow.WsVisible" && value == "0x10000000");
 }

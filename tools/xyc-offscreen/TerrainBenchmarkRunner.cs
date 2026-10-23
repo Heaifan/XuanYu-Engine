@@ -7,6 +7,9 @@ using XuanYu.World.Terrain.Import;
 internal static class TerrainBenchmarkRunner
 {
     const string ExpectedSourceSha = "BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E1";
+    static long _nextFrameId;
+
+    public static long NextFrameId() => Interlocked.Increment(ref _nextFrameId);
     static readonly string[] PoseNames = ["far-topdown", "mid-2km", "near-oblique", "chunk-aabb-entry"];
 
     public static int Run(BenchmarkOptions options)
@@ -50,7 +53,11 @@ internal static class TerrainBenchmarkRunner
             Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER") ?? "UNKNOWN", options.Source,
             sourceHash, import.Elapsed.TotalMilliseconds, 1024, 768, options.Replicate,
             results.FirstOrDefault(x => x.TimestampPeriodNs > 0)?.TimestampPeriodNs ?? 0,
-            results.FirstOrDefault(x => x.TimestampValidBits > 0)?.TimestampValidBits ?? 0, results);
+            results.FirstOrDefault(x => x.TimestampValidBits > 0)?.TimestampValidBits ?? 0, results)
+        {
+            SessionId = $"{DateTimeOffset.UtcNow:yyyyMMddTHHmmssfffZ}-run-{options.Replicate}",
+            SourceFingerprint = Environment.GetEnvironmentVariable("XYE_SOURCE_FINGERPRINT") ?? "UNKNOWN"
+        };
         var jsonPath = Path.Combine(runDirectory, "run-manifest.json");
         File.WriteAllText(jsonPath, JsonSerializer.Serialize(run, new JsonSerializerOptions { WriteIndented = true }));
         Console.WriteLine($"B1 RUN MANIFEST={jsonPath}");

@@ -9,8 +9,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class UiD6AccessibilityContractTests
 {
-    static readonly string RepoRoot = Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string RepoRoot = TestSourceRoot.Root;
     static readonly string UiDir = Path.Combine(RepoRoot, "XuanYu.Editor.UI");
 
     [Fact]

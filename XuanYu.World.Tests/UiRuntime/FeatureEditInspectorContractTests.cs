@@ -5,8 +5,7 @@ namespace XuanYu.World.Tests.UiRuntime;
 
 public sealed class FeatureEditInspectorContractTests
 {
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        System.AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Inspector_edit_geometry_binding_contract()

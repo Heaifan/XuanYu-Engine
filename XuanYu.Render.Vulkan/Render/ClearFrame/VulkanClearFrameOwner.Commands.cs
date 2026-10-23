@@ -1,4 +1,5 @@
 using Silk.NET.Vulkan;
+using XuanYu.Render.Vulkan.Render.Frame;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -6,11 +7,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     bool CreateFramebuffers()
     {
-        _depthAttachment = VulkanDepthAttachment.Create(_vk, _deviceOwner, _extent);
-        if (_depthAttachment is null) return false;
+        _depthAttachments = new VulkanDepthAttachment?[_views.Length];
         for (var i = 0; i < _views.Length; i++)
         {
-            var attachments = new[] { _views[i], _depthAttachment.View };
+            _depthAttachments[i] = VulkanDepthAttachment.Create(_vk, _deviceOwner, _extent);
+            if (_depthAttachments[i] is not { } depth) return false;
+            var attachments = new[] { _views[i], depth.View };
             fixed (ImageView* pAttachments = attachments)
             {
                 var fbInfo = new FramebufferCreateInfo
@@ -29,65 +31,46 @@ public sealed unsafe partial class VulkanClearFrameOwner
     bool RecordCommandBuffers(ImageView[] views)
     {
         _recordCommandDepth++;
+        var terrainRecordingStarted = false;
+        var terrainRecordingCompleted = false;
         try
         {
+            terrainRecordingStarted = BeginTerrainCommandBufferRecording();
             if (!_gridTraceLogged) ResetGridTrace();
             var old = _commandBuffers;
-            var next = new CommandBuffer[views.Length];
+            var next = new CommandBuffer[views.Length * _frameSlotCount];
             var alloc = new CommandBufferAllocateInfo
             {
                 SType = StructureType.CommandBufferAllocateInfo,
                 CommandPool = _commandPool,
                 Level = CommandBufferLevel.Primary,
-                CommandBufferCount = (uint)views.Length
+                CommandBufferCount = (uint)next.Length
             };
             fixed (CommandBuffer* p = next)
             {
                 var result = _vk.AllocateCommandBuffers(_deviceOwner.LogicalDevice, &alloc, p);
                 if (!Ok(result, "AllocateCommandBuffers")) return false;
-                for (var i = 0; i < next.Length; i++)
+                for (var slot = 0; slot < _frameSlotCount; slot++)
+                for (var i = 0; i < views.Length; i++)
                 {
-                    if (RecordOne(next[i], _framebuffers[i], i)) continue;
+                    var commandIndex = CommandBufferIndex(slot, i);
+                    if (RecordOne(next[commandIndex], _framebuffers[i], i)) continue;
                     _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)next.Length, next);
                     return false;
                 }
             }
             if (old.Length > 0) _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)old.Length, old);
             _commandBuffers = next;
+            if (terrainRecordingStarted) { CompleteTerrainCommandBufferRecording(); terrainRecordingCompleted = true; }
             _commandBufferGeneration++;
-            TraceRecordCommands(views.Length);
+            TraceRecordCommands(next.Length);
             return true;
         }
         finally
         {
+            if (terrainRecordingStarted && !terrainRecordingCompleted) CancelTerrainCommandBufferRecording();
             _recordCommandDepth--;
         }
-    }
-
-    bool RecordOne(CommandBuffer cb, Framebuffer fb, int imageIndex)
-    {
-        var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo };
-        if (!Ok(_vk.BeginCommandBuffer(cb, &begin), "BeginCommandBuffer")) return false;
-        ClearValue* clears = stackalloc ClearValue[2];
-        // F5：ClearColor 仅作天空失败回退，改为浅蓝色，不再用灰色掩盖天空管线失败。
-        clears[0] = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.35f, Float32_1 = 0.55f, Float32_2 = 0.80f, Float32_3 = 1.0f } };
-        clears[1] = new ClearValue { DepthStencil = new ClearDepthStencilValue { Depth = 0.0f, Stencil = 0 } };
-        var rp = new RenderPassBeginInfo
-        {
-            SType = StructureType.RenderPassBeginInfo,
-            RenderPass = _renderPass,
-            Framebuffer = fb,
-            RenderArea = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent },
-            ClearValueCount = 2,
-            PClearValues = clears
-        };
-        _timestampQuery?.RecordStart(cb);
-        _vk.CmdBeginRenderPass(cb, &rp, SubpassContents.Inline);
-        RecordDraw(cb);
-        _vk.CmdEndRenderPass(cb);
-        _timestampQuery?.RecordEnd(cb);
-        RecordReadback(cb, imageIndex);
-        return Ok(_vk.EndCommandBuffer(cb), "EndCommandBuffer");
     }
 
 }

@@ -9,8 +9,10 @@ sealed class VulkanStaticModelCache : IDisposable
     readonly Vk _vk; readonly VulkanDeviceOwner _device; readonly Action<string>? _log;
     readonly Dictionary<RenderStaticModelKey, VulkanStaticModelResource> _items = [];
     readonly VulkanStaticModelFailureTracker _failures = new();
-    public VulkanStaticModelCache(Vk vk, VulkanDeviceOwner device, Action<string>? log) =>
-        (_vk, _device, _log) = (vk, device, log);
+    readonly Action<IDisposable>? _retire;
+    public VulkanStaticModelCache(Vk vk, VulkanDeviceOwner device, Action<string>? log,
+        Action<IDisposable>? retire = null) =>
+        (_vk, _device, _log, _retire) = (vk, device, log, retire);
 
     public VulkanStaticModelResource? Get(RenderStaticModelResource model)
     {
@@ -23,7 +25,7 @@ sealed class VulkanStaticModelCache : IDisposable
             return old;
         }
         _items[model.Key] = next!;
-        old?.Dispose();
+        if (old is not null) Retire(old);
         _log?.Invoke(VulkanStaticModelLog.Created(model));
         return next;
     }
@@ -33,7 +35,7 @@ sealed class VulkanStaticModelCache : IDisposable
         var keep = keys.Where(k => k.IsValid).ToHashSet();
         foreach (var key in _items.Keys.Where(k => !keep.Contains(k)).ToArray())
         {
-            _items[key].Dispose();
+            Retire(_items[key]);
             _items.Remove(key);
             _log?.Invoke(VulkanStaticModelLog.Disposed(key));
         }
@@ -59,7 +61,10 @@ sealed class VulkanStaticModelCache : IDisposable
 
     public void Dispose()
     {
-        foreach (var item in _items.Values) item.Dispose();
+        foreach (var item in _items.Values) Retire(item);
         _items.Clear();
     }
+
+    void Retire(IDisposable resource)
+    { if (_retire is null) resource.Dispose(); else _retire(resource); }
 }

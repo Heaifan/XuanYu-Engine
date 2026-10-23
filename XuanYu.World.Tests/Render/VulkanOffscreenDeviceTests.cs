@@ -2,6 +2,7 @@ using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Render.Readback;
+using XuanYu.Render.Vulkan.Render.Terrain.Offscreen;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Session;
 using XuanYu.Editor.UI;
@@ -54,7 +55,10 @@ public sealed class VulkanOffscreenDeviceTests
         using var renderer = new VulkanOffscreenTerrainRenderer(projection, 128, 128);
         using var cancelled = new CancellationTokenSource();
         cancelled.Cancel();
-        Assert.Throws<OperationCanceledException>(() => renderer.RenderRgba(cancelled.Token));
+        Assert.Throws<OperationCanceledException>(() =>
+        {
+            renderer.RenderRgba(cancelled.Token);
+        });
         var pixels = renderer.RenderRgba();
         if (renderer.GpuTimestampSupported)
             Assert.True(renderer.LastGpuRenderMilliseconds is >= 0);

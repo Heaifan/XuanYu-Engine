@@ -7,8 +7,8 @@ public sealed class ReverseZDepthContractPrototypeTests
     [Fact]
     public void ReverseDepthContractIsExplicit()
     {
-        var root = Root();
-        var clear = Read(root, "XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Commands.cs");
+        var root = TestSourceRoot.Root;
+        var clear = Read(root, "XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.FrameCommands.cs");
         Assert.Contains("Depth = 0.0f", clear);
         foreach (var source in PipelineSources(root)) Assert.Contains("CompareOp.GreaterOrEqual", source);
     }
@@ -24,7 +24,7 @@ public sealed class ReverseZDepthContractPrototypeTests
     [Fact]
     public void GlFragDepthAuditFindsAllCurrentWriters()
     {
-        var root = Root();
+        var root = TestSourceRoot.Root;
         var shaders = Directory.GetFiles(Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders"), "*.frag");
         var writers = shaders.Where(x => Read(x).Contains("gl_FragDepth")).Select(Path.GetFileName).ToArray();
         Assert.DoesNotContain("editor_world_reference_grid.frag", writers);
@@ -35,7 +35,7 @@ public sealed class ReverseZDepthContractPrototypeTests
     [Fact]
     public void ReverseMigrationSurfaceIncludesPickingAndUnprojectionInputs()
     {
-        var root = Root();
+        var root = TestSourceRoot.Root;
         var sources = Directory.GetFiles(root, "*.cs", SearchOption.AllDirectories).Select(Read).ToArray();
         Assert.Contains(sources, x => x.Contains("ToViewProjection"));
         Assert.Contains(sources, x => x.Contains("InverseViewProjection"));

@@ -4,8 +4,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class UiR1LeftTopContractTests
 {
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Left_tree_titles_use_canonical_truncation()

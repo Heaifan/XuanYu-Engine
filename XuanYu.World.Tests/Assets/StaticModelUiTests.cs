@@ -74,7 +74,7 @@ public sealed class StaticModelUiTests
     public void Production_projection_no_longer_uses_d2_demo()
     {
         // 从测试输出目录 (bin/Debug/net10.0) 向上导航到仓库根。
-        var repoRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var repoRoot = Path.GetFullPath(TestSourceRoot.Root);
         var source = File.ReadAllText(Path.Combine(
             repoRoot, "XuanYu.Editor.UI", "Vm", "Scene", "UiVm.RenderProjection.cs"));
         Assert.DoesNotContain("D2StaticModelDemo", source);

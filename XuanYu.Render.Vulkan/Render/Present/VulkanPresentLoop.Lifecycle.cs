@@ -5,6 +5,7 @@ using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions.Diagnostics;
 using XuanYu.Render.Vulkan.Render.Generation;
 using Semaphore = Silk.NET.Vulkan.Semaphore;
+using XuanYu.Render.Vulkan.Render.Frame;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -30,22 +31,25 @@ public sealed unsafe partial class VulkanPresentLoop
         return true;
     }
 
-    internal bool RetireGenerationForSwapchainReplacement()
+    public bool TrySetFramesInFlight(int frameCount)
     {
-        if (_deviceLost || _presentUnknown) return false;
-        if (_graphicsPending && !WaitFence(_deviceOwner.LogicalDevice)) return false;
-        if (_presentPending && !WaitPresentFence()) return false;
-        if (_syncGeneration is null || !VulkanPresentGenerationPolicy.CanRetire(
-                !_graphicsPending, !_presentPending, _presentUnknown, _deviceLost)) return false;
-        var retiredGeneration = _syncGeneration.Generation;
-        var retiredImageCount = _syncGeneration.ImageCount;
-        var retiredSwapchain = _syncGeneration.Swapchain.Handle;
-        _syncGeneration.Dispose();
-        Log($"PresentSync generation retired: generation={retiredGeneration}; imageCount={retiredImageCount}; swapchain={retiredSwapchain}; graphics=complete; present=complete");
-        _syncGeneration = null;
-        _clearFrame.ReleaseSwapchainGeneration();
-        return true;
+        if (frameCount is < 1 or > 2) return false;
+        if (frameCount == _framesInFlight) return true;
+        var restart = _thread is not null;
+        if (restart && !Stop()) return false;
+        if (!CompleteForStop() || _deviceLost || _presentUnknown) return false;
+        if (!VulkanFrameInFlightPolicy.CanChangeFrameCount(frameCount,
+                _frames.Count(x => x.GraphicsPending || x.PresentPending))) return false;
+        if (!_clearFrame.ReconfigureFrameSlots(frameCount, allFramesDrained: true)) return false;
+        DestroySync();
+        if (_syncCreated) return false;
+        _framesInFlight = frameCount;
+        _nextFrameSlot = 0;
+        if (!CreateSync()) return false;
+        Log($"FramesInFlight changed at drained boundary: count={frameCount}; swapchainGeneration={_swapchainOwner.ResourceGeneration}");
+        return !restart || Start();
     }
+
     public void Dispose()
     {
         if (!Stop()) return;

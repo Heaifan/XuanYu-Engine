@@ -10,8 +10,7 @@ public sealed class UiD4MapEditorContractTests
     static readonly string Form = Read("Right/MapFormPanel.axaml");
     static readonly string Editor = Read("Right/MapEditorPanel.axaml");
 
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Readonly_summary_uses_compact_72_column()

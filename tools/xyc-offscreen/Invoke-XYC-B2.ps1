@@ -26,6 +26,7 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($dotnet)) { throw 'SDK 
 & (Join-Path $root 'scripts\xye-dotnet.ps1') build (Join-Path $PSScriptRoot 'XuanYu.OffscreenTerrain.csproj') --no-restore -m 1 -nr false -p BuildInParallel=false -p UseSharedCompilation=false
 if ($LASTEXITCODE -ne 0) { throw 'Offscreen benchmark 构建失败。' }
 $head = if ($env:XYE_SOURCE_HEAD) { $env:XYE_SOURCE_HEAD } else { (& git -C $root rev-parse HEAD).Trim() }
+$env:XYE_SOURCE_FINGERPRINT = (& (Join-Path $root 'scripts\xye-source-fingerprint.ps1') $root).Trim()
 $version = (Select-String -Path (Join-Path $root 'Directory.Build.props') -Pattern '<InformationalVersion>([^<]+)</InformationalVersion>').Matches.Groups[1].Value
 $env:XYC_BUILD_ID = "HEAD=$head;VERSION=$version;DIRTY=$env:XYE_SOURCE_DIRTY;B2=1"
 $env:XYE_PROBE_VIEWPORT = '1'; $env:XYE_TERRAIN_REPLAY = '1'

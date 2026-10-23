@@ -39,8 +39,7 @@ public sealed class UiD4F1LayoutModelTests
 
     static string? _panel;
     static string ReadPanel() =>
-        _panel ??= System.IO.File.ReadAllText(System.IO.Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", "..",
+        _panel ??= System.IO.File.ReadAllText(System.IO.Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
 
     [Theory]

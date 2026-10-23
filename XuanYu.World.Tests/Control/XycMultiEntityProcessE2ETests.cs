@@ -5,9 +5,7 @@ namespace XuanYu.World.Tests.Xyc; [Collection("XYC Windows process runtime")] pu
     static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     [Fact]
     public async Task Silent_windows_editor_controls_two_entities_through_cli_process() {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../"));
-        var configuration = Directory.GetParent(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar))!.Name;
-        var cli = Path.Combine(root, $"XuanYu.Editor.Control.Cli/bin/{configuration}/net10.0/XuanYu.Editor.Control.Cli.exe"); var app = Path.Combine(root, $"XuanYu.Editor.App/bin/{configuration}/net10.0/XuanYu.Editor.App.exe");
+        var cli = TestSourceRoot.ProjectOutput("XuanYu.Editor.Control.Cli", "XuanYu.Editor.Control.Cli.exe"); var app = TestSourceRoot.ProjectOutput("XuanYu.Editor.App", "XuanYu.Editor.App.exe");
         Assert.True(File.Exists(cli), $"Missing CLI: {cli}"); Assert.True(File.Exists(app), $"Missing App: {app}");
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(120)); await ReadOnlySession(cli, app, timeout.Token);
         var sid = "xyc-p2b1-" + Guid.NewGuid().ToString("N"); var (p, stderr) = Start(cli, app, sid, true);

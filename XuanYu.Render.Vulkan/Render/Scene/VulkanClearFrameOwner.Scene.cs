@@ -32,16 +32,10 @@ public sealed unsafe partial class VulkanClearFrameOwner
             default, renderState);
         _gpuResourceState.Apply(VulkanRenderChangeConsumer.Compare(previous, projection.Projection));
         SetMapSurface(projection.Projection.Map);
-        UpdateMapSurfacePatch();
         // F2-R2：每帧全局网格尺度（视口中心射线求交，2 倍嵌套层级），求交失败沿用上一帧。
         UpdateReferenceGridScale(projection.Projection);
-        var recorded = _views.Length == 0 || RecordCommandBuffers(_views);
-        if (recorded)
-        {
-            _gpuResourceState.MarkUploadsConsumed();
-            _gpuResourceState.MarkFrameRecorded();
-            _frameState.MarkRecorded();
-        }
-        return recorded;
+        // Presentation records only the selected (FrameIndex, ImageIndex) buffer after
+        // that frame slot and acquired image have both passed their completion proofs.
+        return true;
     }
 }

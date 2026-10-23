@@ -2,8 +2,7 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class UiD2F1RegionToolContractTests
 {
-    static string Read(string path) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", path));
+    static string Read(string path) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", path));
 
     [Fact]
     public void Region_drawing_is_not_exposed_by_map_editor()

@@ -1,0 +1,8 @@
+Phase=AfterFirstReadback
+Device=NVIDIA GeForce RTX 3060
+DriverVersion=2559967232
+TerrainStats=TerrainRenderStats { VisibleChunks = 4, CulledChunks = 0, LOD0Chunks = 0, LOD1Chunks = 0, LOD2Chunks = 0, LOD3Chunks = 4, LOD4Chunks = 0, TerrainDrawCalls = 4, TerrainTriangles = 2418, TerrainIndices = 7254, TerrainResidentGpuBytes = 72312, MeshBuildCount = 4, VertexUploadCount = 4, IndexUploadCount = 4, BufferCreateCount = 8 }
+CacheBudgetBytes=1
+Retired=3
+Disposed=0
+cache[entries=1;recordedReferences=4;recordingReferences=0;cacheRetired=3;disposed=0;residentBytes=72312];frameLeases=[0,0];pendingRetirement=0

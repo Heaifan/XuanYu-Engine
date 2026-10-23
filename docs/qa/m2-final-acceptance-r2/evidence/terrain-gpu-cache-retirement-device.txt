@@ -1,0 +1,11 @@
+UTC=2026-10-23T14:36:04.6578657Z
+OS=Microsoft Windows NT 10.0.26300.0
+VulkanDevice=NVIDIA GeForce RTX 3060
+DriverVersion=2559967232
+CacheBudgetBytes=1
+RetiredBeforeSubmit=3
+DisposedBeforeSubmit=0
+DisposedAfterQueueSubmitFenceAndReadback=0
+DisposedAfterCommandBufferReplacement=4
+RetiredAfterReplacement=3
+ReadbackBytes=65536

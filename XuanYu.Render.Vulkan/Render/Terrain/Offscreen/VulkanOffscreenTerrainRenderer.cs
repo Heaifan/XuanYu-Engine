@@ -8,7 +8,7 @@ using XuanYu.Render.Vulkan.Render.Readback;
 
 namespace XuanYu.Render.Vulkan.Render.Terrain.Offscreen;
 
-public sealed unsafe class VulkanOffscreenTerrainRenderer : IDisposable
+public sealed unsafe partial class VulkanOffscreenTerrainRenderer : IDisposable
 {
     readonly Vk _vk;
     VulkanInstanceOwner? _instance;
@@ -18,16 +18,26 @@ public sealed unsafe class VulkanOffscreenTerrainRenderer : IDisposable
     VulkanGraphicsPipelineOwner? _terrainPipeline;
     bool _disposed;
 
-    public TerrainRenderStats TerrainStats => _frame?.TerrainStats ?? default;
     public double? LastGpuRenderMilliseconds => _frame?.LastGpuRenderMilliseconds;
     public bool GpuTimestampSupported => _frame?.GpuTimestampSupported ?? false;
     public uint GpuTimestampValidBits => _frame?.GpuTimestampValidBits ?? 0;
     public double GpuTimestampPeriodNanoseconds => _frame?.GpuTimestampPeriodNanoseconds ?? 0;
-    public double TerrainMeshBuildMilliseconds => _frame?.TerrainMeshBuildMilliseconds ?? 0;
     public double TerrainUploadMilliseconds => _frame?.TerrainUploadMilliseconds ?? 0;
 
     public VulkanOffscreenTerrainRenderer(RenderProjection projection, uint width, uint height,
         Action<string>? log = null)
+        : this(projection, width, height, log, 256UL * 1024 * 1024)
+    {
+    }
+
+    public VulkanOffscreenTerrainRenderer(RenderProjection projection, uint width, uint height,
+        ulong terrainGpuCacheBudgetBytes)
+        : this(projection, width, height, null, terrainGpuCacheBudgetBytes)
+    {
+    }
+
+    public VulkanOffscreenTerrainRenderer(RenderProjection projection, uint width, uint height,
+        Action<string>? log, ulong terrainGpuCacheBudgetBytes)
     {
         if (!projection.HasTerrain) throw new ArgumentException("RenderProjection 必须包含 Terrain", nameof(projection));
         _vk = Vk.GetApi();
@@ -41,9 +51,11 @@ public sealed unsafe class VulkanOffscreenTerrainRenderer : IDisposable
             _target = VulkanOffscreenColorTarget.Create(_vk, _device, width, height);
             _frame = new VulkanClearFrameOwner(_vk, _device, _target,
                 selection.Queue!.GraphicsFamily, log);
+            _frame.SetTerrainGpuCacheBudgetForProbe(terrainGpuCacheBudgetBytes);
             _frame.SetRenderProjection(projection);
             _terrainPipeline = VulkanGraphicsPipelineOwner.CreateTerrain(_vk, _device, _frame, log)
                 ?? throw new InvalidOperationException("Terrain GraphicsPipeline 创建失败");
+            _frame.SetPipeline(_terrainPipeline.Pipeline, _terrainPipeline.Layout);
             _frame.SetTerrainPipeline(_terrainPipeline.Pipeline, _terrainPipeline.Layout);
             log?.Invoke($"【VulkanOffscreen】Terrain RenderTarget 就绪；尺寸={width}x{height}；Format={_target.Format}；No Surface/Swapchain/Present");
         }
@@ -84,17 +96,4 @@ public sealed unsafe class VulkanOffscreenTerrainRenderer : IDisposable
         }
     }
 
-    public void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-        if (_device is not null) _vk.DeviceWaitIdle(_device.LogicalDevice);
-        _terrainPipeline?.Dispose(); _terrainPipeline = null;
-        _frame?.DisposeTerrain();
-        _frame?.Dispose(); _frame = null;
-        _target?.Dispose(); _target = null;
-        _device?.Dispose(); _device = null;
-        _instance?.Dispose(); _instance = null;
-        _vk.Dispose();
-    }
 }

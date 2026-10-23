@@ -55,6 +55,5 @@ public sealed class TerrainFix1NotificationContractTests
 
 static class TerrainFix1Source
 {
-    public static string Read(string relative) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "../../../../", relative));
+    public static string Read(string relative) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  relative));
 }

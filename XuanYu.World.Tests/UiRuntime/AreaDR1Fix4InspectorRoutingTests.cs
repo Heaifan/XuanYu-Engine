@@ -68,8 +68,7 @@ public sealed class AreaDR1Fix4InspectorRoutingTests
             Assert.Contains(property, source);
     }
 
-    static string Read(params string[] path) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", Path.Combine(path)));
+    static string Read(params string[] path) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  Path.Combine(path)));
 
     static int Count(string source, string value) => source.Split(value).Length - 1;
 }

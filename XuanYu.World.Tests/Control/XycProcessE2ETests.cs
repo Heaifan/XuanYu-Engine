@@ -11,10 +11,8 @@ public sealed class XycProcessE2ETests
     [Fact]
     public async Task Cli_controls_real_editor_camera_and_releases_instance()
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../"));
-        var configuration = Directory.GetParent(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar))!.Name;
-        var cli = Path.Combine(root, $"XuanYu.Editor.Control.Cli/bin/{configuration}/net10.0/XuanYu.Editor.Control.Cli.exe");
-        var app = Path.Combine(root, $"XuanYu.Editor.App/bin/{configuration}/net10.0/XuanYu.Editor.App.exe");
+        var cli = TestSourceRoot.ProjectOutput("XuanYu.Editor.Control.Cli", "XuanYu.Editor.Control.Cli.exe");
+        var app = TestSourceRoot.ProjectOutput("XuanYu.Editor.App", "XuanYu.Editor.App.exe");
         Assert.True(File.Exists(cli), $"Missing CLI: {cli}");
         Assert.True(File.Exists(app), $"Missing Editor App: {app}");
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));

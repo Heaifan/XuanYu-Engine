@@ -9,8 +9,7 @@ public sealed class UiD5ButtonContractTests
     static readonly string D5 = Read("Design/UiStyles.D5.axaml");
     static readonly string Ui = Read("Ui.axaml");
 
-    static string Read(string rel) => File.ReadAllText(Path.Combine(
-        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", rel));
+    static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
     [Fact]
     public void Button_content_is_centered_horizontally_and_vertically()

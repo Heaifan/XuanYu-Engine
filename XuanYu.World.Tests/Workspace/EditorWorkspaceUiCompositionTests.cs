@@ -5,7 +5,7 @@ namespace XuanYu.World.Tests.Workspace;
 // EDITOR-A-R2：源码组合合同，禁止 Workspace Host 接管或复制 Main / VulkanViewport。
 public sealed class EditorWorkspaceUiCompositionTests
 {
-    static readonly string Root = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..");
+    static readonly string Root = TestSourceRoot.Root;
     static string Read(params string[] path) => File.ReadAllText(Path.Combine([Root, .. path]));
 
     [Fact]
