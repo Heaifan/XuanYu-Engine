@@ -1,0 +1,76 @@
+name: M2 云端 CPU 验证
+
+on:
+  push:
+    branches:
+      - codex/m2-cloud-gates-r1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m2-cloud-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cpu-gates:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - name: 检出完整提交历史
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 安装固定 SDK
+        id: sdk
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.400
+
+      - name: 核实仓库与 SDK 身份
+        shell: pwsh
+        run: |
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-bootstrap.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $version = & dotnet --version
+          if ($version.Trim() -ne '10.0.400') { throw "SDK 版本不匹配：$version" }
+
+      - name: 架构与 5+100 行数门禁
+        shell: pwsh
+        run: |
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\arch-a-guard.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Release 全解决方案编译
+        shell: pwsh
+        run: |
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-dotnet.ps1 build XuanYu.Engine.slnx -c Release -warnaserror --nologo
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Render 抽象合同测试
+        if: ${{ always() && steps.sdk.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-dotnet.ps1 test XuanYu.Render.Abstractions.Tests/XuanYu.Render.Abstractions.Tests.csproj -c Release --nologo
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: M2 FenceWait 与 Present 定向测试
+        if: ${{ always() && steps.sdk.outcome == 'success' }}
+        shell: pwsh
+        run: |
+          $filter = 'FullyQualifiedName~VulkanFenceWaitSampleSinkTests|FullyQualifiedName~VulkanPresentLoopContractTests'
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-dotnet.ps1 test XuanYu.World.Tests/XuanYu.World.Tests.csproj -c Release --nologo --filter $filter
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: 归档本轮诊断与工作区身份
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m2-cloud-cpu-evidence
+          path: |
+            .xye-workspace/Diagnostics/
+            .xye-workspace/Manifests/
+          if-no-files-found: warn
+          retention-days: 7
