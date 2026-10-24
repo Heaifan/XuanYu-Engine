@@ -9,7 +9,7 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     readonly TransformSession _transformSession = new();
-    MoveGizmoDragConstraint? _moveDragConstraint;
+    MoveDragConstraint? _moveDragConstraint;
 
     public bool TryBeginMoveGizmoCapture(
         long pointerId,
@@ -74,18 +74,18 @@ public sealed partial class UiVm
         return true;
     }
 
-    static MoveGizmoDragConstraint CreateMoveDragConstraint(
+    static MoveDragConstraint CreateMoveDragConstraint(
         MoveGizmoLayout layout,
         MoveGizmoAxis axis,
         double x,
         double y)
     {
         if (axis is MoveGizmoAxis.X or MoveGizmoAxis.Y or MoveGizmoAxis.Z)
-            return new MoveGizmoDragConstraint(
+            return new MoveDragConstraint(
                 layout.Segments.Single(s => s.Axis == axis), x, y, layout.WorldAxisLength);
         var a = axis is MoveGizmoAxis.YZ ? MoveGizmoAxis.Y : MoveGizmoAxis.X;
         var b = axis is MoveGizmoAxis.XY ? MoveGizmoAxis.Y : MoveGizmoAxis.Z;
-        return MoveGizmoDragConstraint.Plane(
+        return MoveDragConstraint.Plane(
             axis,
             layout.Segments.Single(s => s.Axis == a),
             layout.Segments.Single(s => s.Axis == b),

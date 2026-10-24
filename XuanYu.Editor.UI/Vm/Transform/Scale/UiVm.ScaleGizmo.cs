@@ -33,7 +33,7 @@ public sealed partial class UiVm
         var worldAxisLength = ComputeScaleGizmoWorldAxisLength(entity.Transform.Position);
         var layout = ScaleGizmoLayout.Project(
             state, entity.Transform.Position, worldAxisLength, default);
-        var handle = ScaleGizmoHitTester.HitTest(layout, x, y);
+        var handle = ScaleHitTester.HitTest(layout, x, y);
         if (handle is null) return false;
 
         var pointer = new EditorInteractionPointerSnapshot(pointerId, x, y, x, y, 0);

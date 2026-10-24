@@ -4,7 +4,7 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Gizmo;
 
-public sealed class MoveGizmoScreenSizeTests
+public sealed class MoveScreenSizeTests
 {
     [Fact]
     public void Dolly_keeps_axis_and_plane_square_screen_size_stable()
@@ -42,7 +42,7 @@ public sealed class MoveGizmoScreenSizeTests
         var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
         var state = ViewProjectionState.Create(camera, viewport);
         var origin = new Vector3d(2, 1, 0);
-        var length = MoveGizmoScreenSize.ComputeWorldAxisLength(camera, viewport, origin);
+        var length = MoveScreenSize.ComputeWorldAxisLength(camera, viewport, origin);
         var baseline = MoveGizmoLayout.Project(state, origin, length);
 
         foreach (var scale in new[] { 0.1, 1.0, 100.0 })
@@ -56,7 +56,7 @@ public sealed class MoveGizmoScreenSizeTests
     static MoveGizmoLayout Layout(CameraState camera, ViewportState viewport)
     {
         var state = ViewProjectionState.Create(camera, viewport);
-        var length = MoveGizmoScreenSize.ComputeWorldAxisLength(camera, viewport, Vector3d.Zero);
+        var length = MoveScreenSize.ComputeWorldAxisLength(camera, viewport, Vector3d.Zero);
         return MoveGizmoLayout.Project(state, Vector3d.Zero, length);
     }
 

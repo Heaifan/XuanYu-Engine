@@ -89,6 +89,6 @@ public sealed partial class UiVm
     double ComputeRotateGizmoWorldRadius(Vector3d origin)
     {
         if (_lastViewport is not { } vp) return RotateGizmoLayout.RingRadius;
-        return RotateGizmoScreenRadius.ComputeWorldRadius(_camera, vp, origin);
+        return RotateScreenRadius.ComputeWorldRadius(_camera, vp, origin);
     }
 }

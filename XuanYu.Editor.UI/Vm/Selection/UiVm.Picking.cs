@@ -21,7 +21,7 @@ public sealed partial class UiVm
             y,
             SpatialQueryCategory.SceneEntity,
             _sceneState.SpatialRevision);
-        var result = ViewportPickingService.Pick(
+        var result = PickingService.Pick(
             request,
             _sceneState.RaycastSpatial,
             () => viewportRevision,

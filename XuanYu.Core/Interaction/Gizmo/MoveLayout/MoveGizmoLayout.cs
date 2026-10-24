@@ -16,9 +16,9 @@ public sealed partial class MoveGizmoLayout
 
     // 命中半径 = 可见半径 + 交互容差 ⇒ 看得到 ≈ 点得到。
     public const double HitWidth = (GizmoVisualLineWidth / 2.0) + HitMargin;
-    [Obsolete("Use MoveGizmoScreenSize for plane DIP dimensions.")]
+    [Obsolete("Use MoveScreenSize for plane DIP dimensions.")]
     public const double PlaneInset = 0.22;
-    [Obsolete("Use MoveGizmoScreenSize for plane DIP dimensions.")]
+    [Obsolete("Use MoveScreenSize for plane DIP dimensions.")]
     public const double PlaneSize = 0.38;
     public double WorldAxisLength { get; }
 

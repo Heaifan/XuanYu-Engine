@@ -2,7 +2,7 @@ using XuanYu.Core.Math;
 
 namespace XuanYu.Core.Gizmo;
 
-public readonly partial record struct MoveGizmoDragConstraint
+public readonly partial record struct MoveDragConstraint
 {
     Vector3d AxisVector() => Axis switch
     {

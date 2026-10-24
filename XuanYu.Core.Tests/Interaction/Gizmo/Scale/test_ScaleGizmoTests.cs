@@ -50,30 +50,30 @@ public sealed partial class ScaleGizmoTests
         Assert.True(System.Math.Abs(dot) < 0.95, $"轴0/轴1 方向过近（dot={dot}）");
     }
 
-    // ---------- ScaleGizmoHitTester（5）----------
+    // ---------- ScaleHitTester（5）----------
 
     [Fact]
     public void Hit_center_returns_Uniform()
     {
         var layout = Layout(Vector3d.Zero);
         Assert.Equal(ScaleGizmoHandle.Uniform,
-            ScaleGizmoHitTester.HitTest(layout, layout.Center.X, layout.Center.Y));
+            ScaleHitTester.HitTest(layout, layout.Center.X, layout.Center.Y));
     }
 
     [Fact]
     public void Hit_axis_end_returns_corresponding_handle()
     {
         var layout = Layout(Vector3d.Zero);
-        Assert.Equal(ScaleGizmoHandle.X, ScaleGizmoHitTester.HitTest(layout, layout.AxisEnd[0].X, layout.AxisEnd[0].Y));
-        Assert.Equal(ScaleGizmoHandle.Y, ScaleGizmoHitTester.HitTest(layout, layout.AxisEnd[1].X, layout.AxisEnd[1].Y));
-        Assert.Equal(ScaleGizmoHandle.Z, ScaleGizmoHitTester.HitTest(layout, layout.AxisEnd[2].X, layout.AxisEnd[2].Y));
+        Assert.Equal(ScaleGizmoHandle.X, ScaleHitTester.HitTest(layout, layout.AxisEnd[0].X, layout.AxisEnd[0].Y));
+        Assert.Equal(ScaleGizmoHandle.Y, ScaleHitTester.HitTest(layout, layout.AxisEnd[1].X, layout.AxisEnd[1].Y));
+        Assert.Equal(ScaleGizmoHandle.Z, ScaleHitTester.HitTest(layout, layout.AxisEnd[2].X, layout.AxisEnd[2].Y));
     }
 
     [Fact]
     public void Hit_far_away_returns_null()
     {
         var layout = Layout(Vector3d.Zero);
-        Assert.Null(ScaleGizmoHitTester.HitTest(layout, layout.Center.X - 5000, layout.Center.Y - 5000));
+        Assert.Null(ScaleHitTester.HitTest(layout, layout.Center.X - 5000, layout.Center.Y - 5000));
     }
 
     static ScaleGizmoLayout Layout(Vector3d rotation)

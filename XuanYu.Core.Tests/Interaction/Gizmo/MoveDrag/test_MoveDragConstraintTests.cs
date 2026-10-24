@@ -3,7 +3,7 @@ using XuanYu.Core.Math;
 
 namespace XuanYu.Core.Tests.Gizmo;
 
-public sealed class MoveGizmoDragConstraintTests
+public sealed class MoveDragConstraintTests
 {
     [Theory]
     [InlineData(MoveGizmoAxis.X, 1.2, 0, 0)]
@@ -13,7 +13,7 @@ public sealed class MoveGizmoDragConstraintTests
         MoveGizmoAxis axis, double x, double y, double z)
     {
         var segment = new MoveGizmoSegment(axis, new ScreenPoint(10, 20), new ScreenPoint(40, 60));
-        var constraint = new MoveGizmoDragConstraint(segment, 10, 20);
+        var constraint = new MoveDragConstraint(segment, 10, 20);
 
         var result = constraint.Solve(Vector3d.Zero, 40, 60);
 
@@ -27,7 +27,7 @@ public sealed class MoveGizmoDragConstraintTests
             MoveGizmoAxis.X,
             new ScreenPoint(0, 0),
             new ScreenPoint(40, 0));
-        var constraint = new MoveGizmoDragConstraint(segment, 0, 0);
+        var constraint = new MoveDragConstraint(segment, 0, 0);
 
         Assert.Equal(Vector3d.Zero, constraint.Solve(Vector3d.Zero, 0, 30));
     }
@@ -46,7 +46,7 @@ public sealed class MoveGizmoDragConstraintTests
             MoveGizmoAxis.Y,
             new ScreenPoint(0, 0),
             new ScreenPoint(0, 40));
-        var constraint = MoveGizmoDragConstraint.Plane(axis, a, b, 0, 0);
+        var constraint = MoveDragConstraint.Plane(axis, a, b, 0, 0);
 
         var result = constraint.Solve(Vector3d.Zero, 40, 40);
 

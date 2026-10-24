@@ -7,7 +7,7 @@ using XuanYu.Core.Spatial;
 using XuanYu.World.Scene;
 namespace XuanYu.Core.Tests.Picking;
 
-public sealed class ViewportPickingServiceTests
+public sealed class PickingServiceTests
 {
     [Fact]
     public void Center_click_hits_test_entity()
@@ -57,7 +57,7 @@ public sealed class ViewportPickingServiceTests
         var scene = new SceneStateOwner();
         var currentViewport = 1L;
 
-        Assert.Throws<InvalidOperationException>(() => ViewportPickingService.Pick(
+        Assert.Throws<InvalidOperationException>(() => PickingService.Pick(
             Request(1, 400, 300, 1, scene.SpatialRevision),
             (ray, mask) => { currentViewport = 2; return scene.RaycastSpatial(ray, mask); },
             () => currentViewport,
@@ -69,7 +69,7 @@ public sealed class ViewportPickingServiceTests
     {
         var scene = new SceneStateOwner();
 
-        Assert.Throws<InvalidOperationException>(() => ViewportPickingService.Pick(
+        Assert.Throws<InvalidOperationException>(() => PickingService.Pick(
             Request(1, 400, 300, 1, scene.SpatialRevision),
             (ray, mask) => { scene.CommitPosition(Vector3d.UnitX); return scene.RaycastSpatial(ray, mask); },
             () => 1,
@@ -79,7 +79,7 @@ public sealed class ViewportPickingServiceTests
     static ViewportPickingResult Pick(SceneStateOwner scene, double x, double y, double dpi = 1)
     {
         var request = Request(1, x, y, dpi, scene.SpatialRevision);
-        return ViewportPickingService.Pick(request, scene.RaycastSpatial, () => 1, () => scene.SpatialRevision);
+        return PickingService.Pick(request, scene.RaycastSpatial, () => 1, () => scene.SpatialRevision);
     }
 
     static ViewportPickingRequest Request(long sequence, double x, double y, double dpi, long spatialRevision) =>

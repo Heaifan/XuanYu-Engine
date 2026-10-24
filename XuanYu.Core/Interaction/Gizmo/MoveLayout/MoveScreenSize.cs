@@ -4,7 +4,7 @@ using XuanYu.Core.Space;
 namespace XuanYu.Core.Gizmo;
 
 // Move Gizmo 的屏幕恒定尺寸真源。CPU 布局与 Vulkan 绘制共用同一世界轴长。
-public static class MoveGizmoScreenSize
+public static class MoveScreenSize
 {
     public const double TargetScreenAxisDip = 90.0;
     public const double PlaneOffsetDip = 12.0;

@@ -2,7 +2,7 @@ using XuanYu.Core.Math;
 
 namespace XuanYu.Core.Gizmo;
 
-public static class ScaleGizmoHitTester
+public static class ScaleHitTester
 {
     public const double HitMargin = 5.0;
 

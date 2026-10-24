@@ -6,7 +6,7 @@ namespace XuanYu.Core.Gizmo;
 // 旋转环屏幕空间恒定尺寸换算：将目标 DIP 半径按相机深度与视口逻辑高度换算为世界半径。
 // CPU 命中（RotateGizmoLayout）与 Shader 绘制（RenderProjection.RotateGizmoWorldRadius）共用同一值，
 // 保证“所见即所命中”。纯函数，便于单元测试与生产路径共用同一公式。
-public static class RotateGizmoScreenRadius
+public static class RotateScreenRadius
 {
     public const double TargetScreenRadiusDip = 90.0;
 

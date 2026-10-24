@@ -11,7 +11,7 @@ public sealed partial class ScaleGizmoTests
     {
         var layout = Layout(Vector3d.Zero);
         Assert.Equal(ScaleGizmoHandle.Uniform,
-            ScaleGizmoHitTester.HitTest(layout, layout.Center.X + 6, layout.Center.Y));
+            ScaleHitTester.HitTest(layout, layout.Center.X + 6, layout.Center.Y));
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public sealed partial class ScaleGizmoTests
             var p = PointOnAxis(layout, i, 0.76);
             var expected = i == 0 ? ScaleGizmoHandle.X :
                 (i == 1 ? ScaleGizmoHandle.Y : ScaleGizmoHandle.Z);
-            Assert.Equal(expected, ScaleGizmoHitTester.HitTest(layout, p.X, p.Y));
+            Assert.Equal(expected, ScaleHitTester.HitTest(layout, p.X, p.Y));
         }
     }
 

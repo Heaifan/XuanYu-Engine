@@ -8,6 +8,6 @@ public sealed partial class UiVm
     double ComputeMoveGizmoWorldAxisLength(Vector3d origin)
     {
         if (_lastViewport is not { } viewport) return MoveGizmoLayout.AxisLength;
-        return MoveGizmoScreenSize.ComputeWorldAxisLength(_camera, viewport, origin);
+        return MoveScreenSize.ComputeWorldAxisLength(_camera, viewport, origin);
     }
 }

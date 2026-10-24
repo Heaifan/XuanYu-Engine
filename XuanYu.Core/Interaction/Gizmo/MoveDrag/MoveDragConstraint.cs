@@ -2,14 +2,14 @@ using XuanYu.Core.Math;
 
 namespace XuanYu.Core.Gizmo;
 
-public readonly partial record struct MoveGizmoDragConstraint
+public readonly partial record struct MoveDragConstraint
 {
-    public MoveGizmoDragConstraint(MoveGizmoSegment segment, double pointerX, double pointerY)
+    public MoveDragConstraint(MoveGizmoSegment segment, double pointerX, double pointerY)
         : this(segment, pointerX, pointerY, MoveGizmoLayout.AxisLength)
     {
     }
 
-    public MoveGizmoDragConstraint(
+    public MoveDragConstraint(
         MoveGizmoSegment segment, double pointerX, double pointerY, double worldAxisLength)
     {
         if (!double.IsFinite(pointerX) || !double.IsFinite(pointerY))
@@ -38,7 +38,7 @@ public readonly partial record struct MoveGizmoDragConstraint
     public double PlaneScreenX { get; }
     public double PlaneScreenY { get; }
 
-    MoveGizmoDragConstraint(
+    MoveDragConstraint(
         MoveGizmoAxis axis,
         MoveGizmoSegment a,
         MoveGizmoSegment b,
@@ -51,7 +51,7 @@ public readonly partial record struct MoveGizmoDragConstraint
         PlaneScreenY = b.End.Y - b.Start.Y;
     }
 
-    public static MoveGizmoDragConstraint Plane(
+    public static MoveDragConstraint Plane(
         MoveGizmoAxis axis,
         MoveGizmoSegment a,
         MoveGizmoSegment b,
@@ -63,7 +63,7 @@ public readonly partial record struct MoveGizmoDragConstraint
             throw new ArgumentOutOfRangeException(nameof(axis));
         if (a.Length < 1.0 || b.Length < 1.0)
             throw new ArgumentOutOfRangeException(nameof(a));
-        return new MoveGizmoDragConstraint(axis, a, b, pointerX, pointerY, worldAxisLength);
+        return new MoveDragConstraint(axis, a, b, pointerX, pointerY, worldAxisLength);
     }
 
     public Vector3d Solve(Vector3d start, double pointerX, double pointerY)

@@ -9,10 +9,10 @@ public sealed partial class MoveGizmoLayout
         ViewProjectionState state, Vector3d origin, MoveGizmoAxis axis,
         Vector3d a, Vector3d b, double worldAxisLength)
     {
-        var dipToWorld = worldAxisLength / MoveGizmoScreenSize.TargetScreenAxisDip;
-        var offset = MoveGizmoScreenSize.PlaneOffsetDip * dipToWorld;
-        var size = MoveGizmoScreenSize.PlaneArmLengthDip * dipToWorld;
-        var padding = MoveGizmoScreenSize.PlaneHitPaddingDip * dipToWorld;
+        var dipToWorld = worldAxisLength / MoveScreenSize.TargetScreenAxisDip;
+        var offset = MoveScreenSize.PlaneOffsetDip * dipToWorld;
+        var size = MoveScreenSize.PlaneArmLengthDip * dipToWorld;
+        var padding = MoveScreenSize.PlaneHitPaddingDip * dipToWorld;
         var hitOffset = System.Math.Max(0, offset - padding);
         var hitSize = size + (2 * padding);
         return new MoveGizmoPlane(axis,

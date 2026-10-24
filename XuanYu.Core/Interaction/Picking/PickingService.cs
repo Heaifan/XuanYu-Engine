@@ -3,7 +3,7 @@ using XuanYu.Core.Spatial;
 
 namespace XuanYu.Core.Picking;
 
-public static class ViewportPickingService
+public static class PickingService
 {
     public static ViewportPickingResult Pick(
         ViewportPickingRequest request,
