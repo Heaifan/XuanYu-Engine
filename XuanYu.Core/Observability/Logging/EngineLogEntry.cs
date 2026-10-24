@@ -39,7 +39,10 @@ public readonly record struct EngineLogEntry
     {
         if (!double.IsFinite(simulationSeconds) || simulationSeconds < 0.0)
         {
-            throw new ArgumentOutOfRangeException(nameof(simulationSeconds), simulationSeconds, "模拟时间必须是有限数，并且不能为负数。");
+            throw new ArgumentOutOfRangeException(
+                nameof(simulationSeconds),
+                simulationSeconds,
+                "模拟时间必须是有限数，并且不能为负数。");
         }
 
         if (string.IsNullOrWhiteSpace(category))
