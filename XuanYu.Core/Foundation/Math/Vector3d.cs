@@ -44,13 +44,16 @@ public readonly record struct Vector3d
         (Z * other.X) - (X * other.Z),
         (X * other.Y) - (Y * other.X));
 
-    public static Vector3d operator +(Vector3d left, Vector3d right) => new(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+    public static Vector3d operator +(Vector3d left, Vector3d right) =>
+        new(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
 
-    public static Vector3d operator -(Vector3d left, Vector3d right) => new(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+    public static Vector3d operator -(Vector3d left, Vector3d right) =>
+        new(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
 
     public static Vector3d operator -(Vector3d value) => new(-value.X, -value.Y, -value.Z);
 
-    public static Vector3d operator *(Vector3d vector, double scalar) => new(vector.X * scalar, vector.Y * scalar, vector.Z * scalar);
+    public static Vector3d operator *(Vector3d vector, double scalar) =>
+        new(vector.X * scalar, vector.Y * scalar, vector.Z * scalar);
 
     public static Vector3d operator *(double scalar, Vector3d vector) => vector * scalar;
 

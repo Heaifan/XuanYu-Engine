@@ -15,9 +15,15 @@ public readonly record struct YawRotation
 
     public double Radians => Degrees * global::System.Math.PI / 180.0;
 
-    public Vector3d RotatedUnitXOnXYPlane => new(global::System.Math.Cos(Radians), global::System.Math.Sin(Radians), 0.0);
+    public Vector3d RotatedUnitXOnXYPlane => new(
+        global::System.Math.Cos(Radians),
+        global::System.Math.Sin(Radians),
+        0.0);
 
-    public Vector3d RotatedUnitYOnXYPlane => new(-global::System.Math.Sin(Radians), global::System.Math.Cos(Radians), 0.0);
+    public Vector3d RotatedUnitYOnXYPlane => new(
+        -global::System.Math.Sin(Radians),
+        global::System.Math.Cos(Radians),
+        0.0);
 
     public static YawRotation FromDegrees(double degrees)
     {
