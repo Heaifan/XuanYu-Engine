@@ -5,7 +5,7 @@ namespace XuanYu.Core.Tests.Results;
 public sealed class EngineResultTests
 {
     [Fact]
-    public void Success_is_valid_and_has_no_error()
+    public void SuccessHasNoError()
     {
         var result = EngineResult.Success();
 
@@ -17,7 +17,7 @@ public sealed class EngineResultTests
     }
 
     [Fact]
-    public void Fail_carries_error_and_rejects_invalid_error()
+    public void FailKeepsError()
     {
         var error = EngineError.Create("EXAMPLE", "示例错误。");
         var result = EngineResult.Fail(error);
@@ -27,11 +27,16 @@ public sealed class EngineResultTests
         Assert.True(result.IsFailure);
         Assert.Equal(error, result.Error);
         Assert.Equal("EngineResult(失败：EXAMPLE：示例错误。)", result.ToString());
+    }
+
+    [Fact]
+    public void RejectsInvalidError()
+    {
         Assert.Throws<ArgumentException>(() => EngineResult.Fail(default));
     }
 
     [Fact]
-    public void Default_result_is_invalid_not_a_failure()
+    public void DefaultIsInvalid()
     {
         var result = default(EngineResult);
 

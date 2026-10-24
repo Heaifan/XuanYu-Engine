@@ -5,7 +5,7 @@ namespace XuanYu.Core.Tests.Results;
 public sealed class EngineErrorTests
 {
     [Fact]
-    public void Create_keeps_code_and_message()
+    public void CreateKeepsData()
     {
         var error = EngineError.Create("EXAMPLE", "示例错误。");
 
@@ -16,14 +16,14 @@ public sealed class EngineErrorTests
     }
 
     [Fact]
-    public void Create_rejects_blank_code_or_message()
+    public void RejectsBlank()
     {
         Assert.Throws<ArgumentException>(() => EngineError.Create("", "错误。"));
         Assert.Throws<ArgumentException>(() => EngineError.Create("EXAMPLE", " "));
     }
 
     [Fact]
-    public void Default_error_is_invalid_and_displays_invalid()
+    public void DefaultIsInvalid()
     {
         var error = default(EngineError);
 
