@@ -31,6 +31,11 @@ public readonly record struct EngineError
 
     public override string ToString()
     {
+        if (!IsValid)
+        {
+            return "EngineError(无效)";
+        }
+
         return $"{Code}：{Message}";
     }
 }

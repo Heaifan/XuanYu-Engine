@@ -33,6 +33,11 @@ public readonly record struct EngineResult
 
     public override string ToString()
     {
+        if (!IsValid)
+        {
+            return "EngineResult(无效)";
+        }
+
         return IsSuccess
             ? "EngineResult(成功)"
             : $"EngineResult(失败：{Error})";
