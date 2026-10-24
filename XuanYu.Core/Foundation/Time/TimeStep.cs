@@ -32,7 +32,14 @@ public readonly record struct TimeStep
             throw new ArgumentOutOfRangeException(nameof(milliseconds), milliseconds, "时间步长必须是有限数，并且必须大于 0。");
         }
 
-        return new TimeStep(milliseconds / 1000.0);
+        var seconds = milliseconds / 1000.0;
+        if (seconds == 0.0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(milliseconds), milliseconds, "时间步长换算后不能为零。");
+        }
+
+        return new TimeStep(seconds);
     }
 
     public override string ToString()
