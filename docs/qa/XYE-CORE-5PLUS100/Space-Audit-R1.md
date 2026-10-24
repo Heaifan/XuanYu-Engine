@@ -5,7 +5,7 @@
 ## 结论与施工边界
 
 - 生产源码 **30 文件**；Space 下四大组：Camera（相机）、Queries（空间查询）、Surface（地表）、Terrain（地形）；按现有二级/三级目录无每夹超过 5 项的问题。
-- 测试原目录 `XuanYu.Core.Tests/Space` 有 12 文件平铺，违反每夹 ≤5 的既定上限。改为 Camera/Projection（4）、Camera/State（4）、Camera/Rays（2）、Terrain/Visibility（1）、Support（1）。Space 的直接子目录为 3 个（Camera、Terrain、Support），低于一级警戒线 10。
+- 测试原目录 `XuanYu.Core.Tests/Space` 有 12 文件平铺，违反每夹 ≤5 的既定上限。改为 Projection（4）、State（4）、Rays（2）、Visibility（1）、Support（1）。Space 的直接子目录为 5 个，低于一级警戒线 10；测试目录维持二级，不额外增加 Camera/Terrain 中间层。
 - 11 份 xUnit 测试类源码统一迁移并使用 `test_` 前缀，优化 9 个测试类名与 45 个测试方法名；1 份 SpaceAssert 公用测试辅助只移动文件，不改声明。
 - 代码变化只包含测试文件路径、测试类名和测试函数名，**测试断言、数据、辅助方法、命名空间、生产源码与公开 API 全部保留**。所有 12 份文件物理行数 ≤100，`test_ViewProjection.cs` 正好 100 行，后续增加内容前应拆分职责。
 - 此轮执行能力仅为静态编辑/核查。Build / xUnit / 真正的 Windows/Vulkan 回放均 NOT RUN，不得称 Integration PASS。
@@ -55,17 +55,17 @@
 
 | 旧文件名 | 新相对路径 | 新测试类 | 新方法（英文标识符） |
 | --- | --- | --- | --- |
-| `CameraOrthographicTests.cs` | `Camera/Projection/test_OrthographicCamera.cs` | `OrthographicCameraTests` | RequiresScaleAndDefaultsPerspective, CenterRayUsesNearPlane, CornerRaysKeepAxes, ProjectionRespectsScale, NdcMatchesWorldExtents, DepthMapsNearAndFar, IgnoresFov |
-| `ReverseZOrthographicProjectionTests.cs` | `Camera/Projection/test_ReverseZOrtho.cs` | `ReverseZOrthoTests` | NearMapsToOne, FarMapsToZero, DepthIsLinear, KeepsScaleAndAspect, NdcMatchesExtents |
-| `ReverseZPerspectiveProjectionTests.cs` | `Camera/Projection/test_ReverseZPerspective.cs` | `ReverseZPerspectiveTests` | NearMapsToOne, FarMapsToZero, DepthDecreases, KeepsFovAndAspect, KeepsCenterRay, NdcMatchesDistances, ExtremeRangeIsFinite |
-| `ReverseZPrecisionRegressionTests.cs` | `Camera/Projection/test_ReverseZPrecision.cs` | `ReverseZPrecisionTests` | ImprovesLongRangeFloatDepth |
-| `CameraStateTests.cs` | `Camera/State/test_CameraState.cs` | `CameraStateTests` | NormalizesAxes, OrthonormalizesUp, RejectsDegenerateAxes, RejectsInvalidParameters |
-| `DefaultEditorCameraTests.cs` | `Camera/State/test_DefaultCamera.cs` | `DefaultCameraTests` | ForwardPointsAtTarget, ResizeKeepsCenterRay |
-| `ViewProjectionStateTests.cs` | `Camera/State/test_ViewProjection.cs` | `ViewProjectionTests` | CreatesKnownView, CreatesInvertibleProjection, UpProjectsToTop, MatchesScreenAndDepth, ProjectsFrontPoint, RejectsBehindPoint, KeepsLargeWorldPrecision |
-| `ViewportStateTests.cs` | `Camera/State/test_Viewport.cs` | `ViewportTests` | AcceptsDimensionsAndDpi, RevisionChangesIdentity, RejectsInvalidDimensions |
-| `WorldRayFactoryTests.cs` | `Camera/Rays/test_RayFactory.cs` | `RayFactoryTests` | CenterRayMatchesForward, CornersFollowAxisConvention, RoundTripKeepsDirection, OffsetViewportUsesLocalCenter, ResizePreservesCenter, StableAndRejectsInvalid |
-| `WorldRayTests.cs` | `Camera/Rays/test_WorldRay.cs` | `WorldRayTests` | RejectsInvalidDirection |
-| `TerrainFrustumCullReasonTests.cs` | `Terrain/Visibility/test_FrustumCull.cs` | `FrustumCullTests` | RejectsOutsideRightPlane, FarPlaneChangesClipDepth |
+| `CameraOrthographicTests.cs` | `Projection/test_OrthographicCamera.cs` | `OrthographicCameraTests` | RequiresScaleAndDefaultsPerspective, CenterRayUsesNearPlane, CornerRaysKeepAxes, ProjectionRespectsScale, NdcMatchesWorldExtents, DepthMapsNearAndFar, IgnoresFov |
+| `ReverseZOrthographicProjectionTests.cs` | `Projection/test_ReverseZOrtho.cs` | `ReverseZOrthoTests` | NearMapsToOne, FarMapsToZero, DepthIsLinear, KeepsScaleAndAspect, NdcMatchesExtents |
+| `ReverseZPerspectiveProjectionTests.cs` | `Projection/test_ReverseZPerspective.cs` | `ReverseZPerspectiveTests` | NearMapsToOne, FarMapsToZero, DepthDecreases, KeepsFovAndAspect, KeepsCenterRay, NdcMatchesDistances, ExtremeRangeIsFinite |
+| `ReverseZPrecisionRegressionTests.cs` | `Projection/test_ReverseZPrecision.cs` | `ReverseZPrecisionTests` | ImprovesLongRangeFloatDepth |
+| `CameraStateTests.cs` | `State/test_CameraState.cs` | `CameraStateTests` | NormalizesAxes, OrthonormalizesUp, RejectsDegenerateAxes, RejectsInvalidParameters |
+| `DefaultEditorCameraTests.cs` | `State/test_DefaultCamera.cs` | `DefaultCameraTests` | ForwardPointsAtTarget, ResizeKeepsCenterRay |
+| `ViewProjectionStateTests.cs` | `State/test_ViewProjection.cs` | `ViewProjectionTests` | CreatesKnownView, CreatesInvertibleProjection, UpProjectsToTop, MatchesScreenAndDepth, ProjectsFrontPoint, RejectsBehindPoint, KeepsLargeWorldPrecision |
+| `ViewportStateTests.cs` | `State/test_Viewport.cs` | `ViewportTests` | AcceptsDimensionsAndDpi, RevisionChangesIdentity, RejectsInvalidDimensions |
+| `WorldRayFactoryTests.cs` | `Rays/test_RayFactory.cs` | `RayFactoryTests` | CenterRayMatchesForward, CornersFollowAxisConvention, RoundTripKeepsDirection, OffsetViewportUsesLocalCenter, ResizePreservesCenter, StableAndRejectsInvalid |
+| `WorldRayTests.cs` | `Rays/test_WorldRay.cs` | `WorldRayTests` | RejectsInvalidDirection |
+| `TerrainFrustumCullReasonTests.cs` | `Visibility/test_FrustumCull.cs` | `FrustumCullTests` | RejectsOutsideRightPlane, FarPlaneChangesClipDepth |
 | `SpaceAssert.cs` | `Support/test_SpaceAssert.cs` | `SpaceAssert（辅助类保持原名）` | Near(double, double)（标量误差断言）、Near(Vector3d, Vector3d)（向量断言） |
 
 11 类共有 45 个测试方法，外加辅助 `Near` 重载 2 项（名称未变）。新方法语义仍以所属类和断言共同限定，不为压缩名称删除区分所需的动词与关键名词。
