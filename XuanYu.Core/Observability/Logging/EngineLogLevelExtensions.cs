@@ -17,7 +17,7 @@ public static class EngineLogLevelExtensions
             EngineLogLevel.Warning => WarningChineseLabel,
             EngineLogLevel.Error => ErrorChineseLabel,
             EngineLogLevel.Critical => CriticalChineseLabel,
-            _ => InfoChineseLabel
+            _ => throw new ArgumentOutOfRangeException(nameof(level), level, "日志等级无效。")
         };
     }
 }
