@@ -81,7 +81,7 @@ public sealed partial class RotateGizmoDrag
         var denom = dir.Dot(normal);
         if (global::System.Math.Abs(denom) < 1e-6) return null;
         var t = (_origin - _eye).Dot(normal) / denom;
-        if (!double.IsFinite(t)) return null;
+        if (!double.IsFinite(t) || t <= 0.0) return null;
         return _eye + (dir * t);
     }
 

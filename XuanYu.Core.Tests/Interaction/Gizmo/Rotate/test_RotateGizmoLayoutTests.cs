@@ -39,6 +39,22 @@ public sealed class RotateGizmoLayoutTests
         Assert.Null(layout.HitTest(5, 5));
     }
 
+    [Fact]
+    public void Rotate_drag_rejects_plane_behind_camera()
+    {
+        var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
+        var camera = new CameraState(new Vector3d(0, 0, -5),
+            Vector3d.UnitZ, Vector3d.UnitY, 60, 0.1, 100, 0);
+        var state = ViewProjectionState.Create(camera, viewport);
+        var behind = new RotateGizmoDrag(state, new Vector3d(0, 0, -10),
+            RotateGizmoAxis.Z, Vector3d.Zero, 400, 300);
+        Assert.False(behind.TryInitialize(400, 300));
+        Assert.Null(behind.Solve(400, 300));
+        var front = new RotateGizmoDrag(state, Vector3d.Zero,
+            RotateGizmoAxis.Z, Vector3d.Zero, 400, 300);
+        Assert.True(front.TryInitialize(400, 300));
+    }
+
     static RotateGizmoLayout Layout()
     {
         var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
