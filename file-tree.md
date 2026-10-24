@@ -3256,3 +3256,4 @@
 - XuanYu.Core.Tests/Diagnostics/Core/Math/test_YawRotationBoundsTests.cs — 极大弧度和非有限偏航角回归。
 - XuanYu.Core.Tests/Diagnostics/Core/Time/test_SimulationTimeBoundsTests.cs — 模拟时间溢出及毫秒步长下溢回归。
 - XuanYu.Core.Tests/Diagnostics/Core/Logging/test_EngineLogContractTests.cs — 日志等级与正文前缀合同回归。
+- XuanYu.Core.Tests/Scene/Snapshots/test_SceneRenderSnapshotPreviewTests.cs — 场景空实体与活动实体预览保护回归。

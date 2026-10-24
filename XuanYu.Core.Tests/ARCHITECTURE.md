@@ -16,7 +16,7 @@ Rules:
 | Folder | Responsibility |
 | --- | --- |
 | `Diagnostics` | Core smoke checks, terrain replay, viewport probe |
-| `Scene` | History, undo/redo, editor transform capture |
+| `Scene` | History, undo/redo, editor transform capture and scene snapshot preview guards |
 | `Interaction` | Move/rotate/scale Gizmo behavior, viewport picking |
 | `Space` | Camera navigation, projection, geometric spatial queries, terrain SSE, scale truthfulness |
 | `Render` | Rendering geometry, draw plans, terrain surfaces, overlays, Vulkan and runtime contracts |
@@ -24,7 +24,7 @@ Rules:
 ## Third-level finder
 
 - `Diagnostics/Terrain/Replay`, `Viewport/Probe`, `System`: replay, viewport probe and smoke tests.
-- `Scene/History`, `Transform`: history and transform behavior.
+- `Scene/History`, `Transform`, `Snapshots`: history, transform and render snapshot preview guards.
 - `Interaction/Gizmo/MoveDrag`, `MoveLayout`, `Rotate`, `Scale`; `Picking`: manipulators and picking.
 - `Space/Camera/Basis`, `Navigation`, `Ui`, `Orbit`: camera state and navigation.
 - `Space/Projection/ReverseZ`, `ViewState`: depth and projection.
