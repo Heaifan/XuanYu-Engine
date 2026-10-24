@@ -4,16 +4,16 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Space;
 
-public sealed class ReverseZOrthographicProjectionTests
+public sealed class ReverseZOrthoTests
 {
     const double Near = 0.05;
     const double Far = 800_000;
 
-    [Fact] public void OrthographicNearMapsToOneTest() => Assert.Equal(1, Depth(Near), 5);
-    [Fact] public void OrthographicFarMapsToZeroTest() => Assert.Equal(0, Depth(Far), 5);
+    [Fact] public void NearMapsToOne() => Assert.Equal(1, Depth(Near), 5);
+    [Fact] public void FarMapsToZero() => Assert.Equal(0, Depth(Far), 5);
 
     [Fact]
-    public void OrthographicDepthLinearTest()
+    public void DepthIsLinear()
     {
         var a = Depth(100_000);
         var b = Depth(200_000);
@@ -21,7 +21,7 @@ public sealed class ReverseZOrthographicProjectionTests
     }
 
     [Fact]
-    public void OrthographicScaleAndAspectArePreservedTest()
+    public void KeepsScaleAndAspect()
     {
         var state = State(800, 400);
         Assert.Equal(2.0 / 4.0, state.Projection.M11, 5);
@@ -30,7 +30,7 @@ public sealed class ReverseZOrthographicProjectionTests
     }
 
     [Fact]
-    public void OrthographicNdcCoordinatesUseKnownWorldExtentsTest()
+    public void NdcMatchesExtents()
     {
         var state = KnownExtentsState();
         var nearTopRight = state.TransformPointToWorld(1, 1, 1);

@@ -5,23 +5,23 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Space;
 
-public sealed class ReverseZPerspectiveProjectionTests
+public sealed class ReverseZPerspectiveTests
 {
     const double Near = 0.05;
     const double Far = 800_000;
 
-    [Fact] public void PerspectiveNearMapsToOneTest() => Assert.Equal(1, Depth(Near), 5);
-    [Fact] public void PerspectiveFarMapsToZeroTest() => Assert.Equal(0, Depth(Far), 5);
+    [Fact] public void NearMapsToOne() => Assert.Equal(1, Depth(Near), 5);
+    [Fact] public void FarMapsToZero() => Assert.Equal(0, Depth(Far), 5);
 
     [Fact]
-    public void PerspectiveDepthMonotonicallyDecreasesTest()
+    public void DepthDecreases()
     {
         var values = new[] { 1.0, 1_000.0, 20_000.0, 100_000.0, Far };
         for (var i = 1; i < values.Length; i++) Assert.True(Depth(values[i]) < Depth(values[i - 1]));
     }
 
     [Fact]
-    public void PerspectiveFovAndAspectArePreservedTest()
+    public void KeepsFovAndAspect()
     {
         var matrix = State(800, 400).Projection;
         var expectedY = 1.0 / global::System.Math.Tan(60.0 * global::System.Math.PI / 360.0);
@@ -30,7 +30,7 @@ public sealed class ReverseZPerspectiveProjectionTests
     }
 
     [Fact]
-    public void PerspectiveCenterRayPreservedTest()
+    public void KeepsCenterRay()
     {
         var state = State(800, 600);
         var near = state.TransformPointToWorld(0, 0, 1);
@@ -39,7 +39,7 @@ public sealed class ReverseZPerspectiveProjectionTests
     }
 
     [Fact]
-    public void PerspectiveNdcDepthUsesKnownWorldDistancesTest()
+    public void NdcMatchesDistances()
     {
         var state = State(800, 600);
         Assert.True(state.TransformPointToWorld(0, 0, 1).DistanceTo(new Vector3d(0, 0, Near)) < 0.0001);
@@ -51,7 +51,7 @@ public sealed class ReverseZPerspectiveProjectionTests
     }
 
     [Fact]
-    public void PerspectiveExtremeRatioFiniteTest()
+    public void ExtremeRangeIsFinite()
     {
         foreach (var far in new[] { 80_000.0, 800_000.0, 2_000_000.0 })
         {

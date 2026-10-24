@@ -5,10 +5,10 @@ using XuanYu.Core.Space;
 namespace XuanYu.Core.Tests.Space;
 
 // F3-F4：正交投影契约（模式校验/射线/尺度投影/往返/深度/Fov 无关）。
-public sealed class CameraOrthographicTests
+public sealed class OrthographicCameraTests
 {
     [Fact]
-    public void Orthographic_camera_requires_positive_scale_and_defaults_perspective()
+    public void RequiresScaleAndDefaultsPerspective()
     {
         var perspective = new CameraState(TestPosition, Vector3d.UnitZ, Vector3d.UnitY, 60, 0.1, 100, 0);
         Assert.Equal(ProjectionMode.Perspective, perspective.Mode);
@@ -24,7 +24,7 @@ public sealed class CameraOrthographicTests
     }
 
     [Fact]
-    public void Orthographic_center_ray_matches_forward_and_origin_at_near()
+    public void CenterRayUsesNearPlane()
     {
         var state = ViewProjectionState.Create(OrthographicCamera(), TestViewport(800, 600));
         var ray = WorldRayFactory.FromViewportPoint(state, 400, 300);
@@ -34,7 +34,7 @@ public sealed class CameraOrthographicTests
     }
 
     [Fact]
-    public void Orthographic_corner_rays_are_parallel_and_freeze_screen_axis_convention()
+    public void CornerRaysKeepAxes()
     {
         var state = ViewProjectionState.Create(OrthographicCamera(), TestViewport(800, 600));
         var rightTop = WorldRayFactory.FromViewportPoint(state, 800, 0);
@@ -46,7 +46,7 @@ public sealed class CameraOrthographicTests
     }
 
     [Fact]
-    public void Orthographic_projects_world_to_screen_by_scale()
+    public void ProjectionRespectsScale()
     {
         var state = ViewProjectionState.Create(OrthographicCamera(), TestViewport(600, 600));
         var point = state.ProjectWorldPoint(new Vector3d(0.5, 0.5, 0));
@@ -56,7 +56,7 @@ public sealed class CameraOrthographicTests
     }
 
     [Fact]
-    public void Orthographic_ndc_coordinates_match_known_world_extents()
+    public void NdcMatchesWorldExtents()
     {
         var state = ViewProjectionState.Create(OrthographicCamera(), TestViewport(800, 600));
         Assert.True(state.TransformPointToWorld(-1, -1, 1)
@@ -66,7 +66,7 @@ public sealed class CameraOrthographicTests
     }
 
     [Fact]
-    public void Orthographic_depth_range_matches_perspective_family()
+    public void DepthMapsNearAndFar()
     {
         var state = ViewProjectionState.Create(OrthographicCamera(), TestViewport(800, 600));
 
@@ -75,7 +75,7 @@ public sealed class CameraOrthographicTests
     }
 
     [Fact]
-    public void Orthographic_projection_ignores_fov()
+    public void IgnoresFov()
     {
         var wide = new CameraState(TestPosition, Vector3d.UnitZ, Vector3d.UnitY, 90, 0.1, 100, 0,
             ProjectionMode.Orthographic, 2.0);

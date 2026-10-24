@@ -6,7 +6,7 @@ namespace XuanYu.Core.Tests.Space;
 public sealed class CameraStateTests
 {
     [Fact]
-    public void Accepts_valid_camera_and_normalizes_axes()
+    public void NormalizesAxes()
     {
         var camera = new CameraState(Vector3d.Zero, new Vector3d(0, 0, 5), Vector3d.UnitY, 60, 0.1, 100, 3);
 
@@ -17,7 +17,7 @@ public sealed class CameraStateTests
     }
 
     [Fact]
-    public void Orthonormalizes_up_against_forward()
+    public void OrthonormalizesUp()
     {
         var camera = new CameraState(Vector3d.Zero, Vector3d.UnitZ, new Vector3d(0, 2, 1), 60, 0.1, 100, 0);
 
@@ -27,14 +27,14 @@ public sealed class CameraStateTests
     }
 
     [Fact]
-    public void Rejects_degenerate_direction_and_collinear_up()
+    public void RejectsDegenerateAxes()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new CameraState(Vector3d.Zero, Vector3d.Zero, Vector3d.UnitY, 60, 0.1, 100, 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => new CameraState(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitZ, 60, 0.1, 100, 0));
     }
 
     [Fact]
-    public void Rejects_invalid_fov_clip_planes_and_non_finite_values()
+    public void RejectsInvalidParameters()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new CameraState(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY, 0, 0.1, 100, 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => new CameraState(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY, 60, 0, 100, 0));

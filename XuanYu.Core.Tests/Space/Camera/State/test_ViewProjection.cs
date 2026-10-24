@@ -5,10 +5,10 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Space;
 
-public sealed class ViewProjectionStateTests
+public sealed class ViewProjectionTests
 {
     [Fact]
-    public void Creates_known_view_matrix_for_camera_looking_forward()
+    public void CreatesKnownView()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
 
@@ -18,7 +18,7 @@ public sealed class ViewProjectionStateTests
     }
 
     [Fact]
-    public void Projection_is_canonical_right_handed_and_is_invertible()
+    public void CreatesInvertibleProjection()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 400));
 
@@ -28,7 +28,7 @@ public sealed class ViewProjectionStateTests
     }
 
     [Fact]
-    public void Camera_up_projects_toward_screen_top()
+    public void UpProjectsToTop()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
         var origin = state.ProjectWorldPoint(Vector3d.Zero);
@@ -38,7 +38,7 @@ public sealed class ViewProjectionStateTests
     }
 
     [Fact]
-    public void World_point_projection_matches_known_perspective_screen_and_depth()
+    public void MatchesScreenAndDepth()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
         var expected = new Vector3d(0.0, 0.0, 5.0);
@@ -51,7 +51,7 @@ public sealed class ViewProjectionStateTests
     }
 
     [Fact]
-    public void Try_project_returns_true_for_front_point()
+    public void ProjectsFrontPoint()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
 
@@ -60,7 +60,7 @@ public sealed class ViewProjectionStateTests
     }
 
     [Fact]
-    public void Try_project_returns_false_for_behind_point_and_strict_api_throws()
+    public void RejectsBehindPoint()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
 
@@ -69,7 +69,7 @@ public sealed class ViewProjectionStateTests
     }
 
     [Fact]
-    public void Large_world_projection_preserves_known_camera_relative_coordinates()
+    public void KeepsLargeWorldPrecision()
     {
         var camera = new CameraState(new(1_000_000_000.25, -1_000_000_000.5, 300_000_000.75), Vector3d.UnitY,
             Vector3d.UnitZ, 60, 1, 500000, 0);

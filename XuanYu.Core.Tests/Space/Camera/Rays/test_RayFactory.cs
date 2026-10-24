@@ -3,10 +3,10 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Space;
 
-public sealed class WorldRayFactoryTests
+public sealed class RayFactoryTests
 {
     [Fact]
-    public void Center_viewport_point_matches_camera_forward()
+    public void CenterRayMatchesForward()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
         var ray = WorldRayFactory.FromViewportPoint(state, 400, 300);
@@ -16,7 +16,7 @@ public sealed class WorldRayFactoryTests
     }
 
     [Fact]
-    public void Four_corners_freeze_screen_to_world_axis_convention()
+    public void CornersFollowAxisConvention()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
         var leftTop = WorldRayFactory.FromViewportPoint(state, 0, 0);
@@ -33,7 +33,7 @@ public sealed class WorldRayFactoryTests
     }
 
     [Fact]
-    public void Project_then_unproject_keeps_screen_and_world_direction_consistent()
+    public void RoundTripKeepsDirection()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
         var worldPoint = new Vector3d(0.75, 1.0, 0.0);
@@ -46,7 +46,7 @@ public sealed class WorldRayFactoryTests
     }
 
     [Fact]
-    public void Non_zero_viewport_origin_uses_local_center()
+    public void OffsetViewportUsesLocalCenter()
     {
         var state = ViewProjectionState.Create(
             TestCamera(),
@@ -58,7 +58,7 @@ public sealed class WorldRayFactoryTests
     }
 
     [Fact]
-    public void Resize_keeps_center_ray_and_changes_edge_aspect()
+    public void ResizePreservesCenter()
     {
         var camera = TestCamera();
         var normal = ViewProjectionState.Create(camera, TestViewport(800, 600));
@@ -74,7 +74,7 @@ public sealed class WorldRayFactoryTests
     }
 
     [Fact]
-    public void Same_input_returns_stable_ray_and_rejects_invalid_point()
+    public void StableAndRejectsInvalid()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
 

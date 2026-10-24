@@ -3,10 +3,10 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Space;
 
-public sealed class DefaultEditorCameraTests
+public sealed class DefaultCameraTests
 {
     [Fact]
-    public void Forward_is_derived_from_position_to_target()
+    public void ForwardPointsAtTarget()
     {
         var camera = DefaultEditorCamera.Create(7);
         var expected = (DefaultEditorCamera.Target - DefaultEditorCamera.Position).Normalize();
@@ -18,7 +18,7 @@ public sealed class DefaultEditorCameraTests
     }
 
     [Fact]
-    public void Center_ray_points_at_target_after_resize()
+    public void ResizeKeepsCenterRay()
     {
         var camera = DefaultEditorCamera.Create(1);
         var normal = State(camera, 800, 600);

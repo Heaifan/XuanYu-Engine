@@ -4,10 +4,10 @@ using XuanYu.Core.Spatial;
 
 namespace XuanYu.Core.Tests.Space;
 
-public sealed class TerrainFrustumCullReasonTests
+public sealed class FrustumCullTests
 {
     [Fact]
-    public void Reports_right_plane_when_all_chunk_corners_are_outside_it()
+    public void RejectsOutsideRightPlane()
     {
         var camera = new CameraState(Vector3d.Zero, -Vector3d.UnitZ,
             Vector3d.UnitY, 60, 1, 100, 0);
@@ -22,7 +22,7 @@ public sealed class TerrainFrustumCullReasonTests
     }
 
     [Fact]
-    public void Far_plane_threshold_changes_clip_depth_without_moving_chunk()
+    public void FarPlaneChangesClipDepth()
     {
         var camera = new CameraState(Vector3d.Zero, -Vector3d.UnitZ,
             Vector3d.UnitY, 60, 1, 1000, 0);
