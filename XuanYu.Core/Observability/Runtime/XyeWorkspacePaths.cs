@@ -32,10 +32,21 @@ public static class XyeWorkspacePaths
     {
         var root = GetRootDirectory();
         var fullPath = Path.GetFullPath(path);
-        if (!fullPath.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+        if (!IsChildOf(root, fullPath))
             throw new InvalidOperationException($"XYE workspace path must stay under XYE_WORKSPACE_ROOT: {fullPath}");
         return fullPath;
     }
+
+    // Reject paths outside root, including similarly named siblings.
+    internal static bool IsChildOf(string root, string path)
+    {
+        var prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) +
+            Path.DirectorySeparatorChar;
+        return Path.GetFullPath(path).StartsWith(prefix, PathComparison);
+    }
+
+    static StringComparison PathComparison => OperatingSystem.IsWindows()
+        ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     static string GetRootDirectory()
     {
@@ -54,7 +65,8 @@ public static class XyeWorkspacePaths
     static string? FindProjectRoot(string start)
     {
         for (var current = new DirectoryInfo(Path.GetFullPath(start)); current is not null; current = current.Parent)
-            if (File.Exists(Path.Combine(current.FullName, ".git")) || Directory.Exists(Path.Combine(current.FullName, ".git")))
+            if (File.Exists(Path.Combine(current.FullName, ".git")) ||
+                Directory.Exists(Path.Combine(current.FullName, ".git")))
                 return current.FullName;
         return null;
     }
@@ -63,7 +75,7 @@ public static class XyeWorkspacePaths
     {
         var prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         var full = Path.GetFullPath(path);
-        return full.Equals(prefix.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase) ||
-            full.StartsWith(prefix, StringComparison.OrdinalIgnoreCase);
+        return full.Equals(prefix.TrimEnd(Path.DirectorySeparatorChar), PathComparison) ||
+            full.StartsWith(prefix, PathComparison);
     }
 }

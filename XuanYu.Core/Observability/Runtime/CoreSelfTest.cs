@@ -67,5 +67,5 @@ public sealed record CoreSelfTestItem(string Name, bool Passed, string Detail);
 
 public sealed record CoreSelfTestReport(IReadOnlyList<CoreSelfTestItem> Items)
 {
-    public bool IsPassed => Items.All(item => item.Passed);
+    public bool IsPassed => Items.Count > 0 && Items.All(item => item.Passed);
 }
