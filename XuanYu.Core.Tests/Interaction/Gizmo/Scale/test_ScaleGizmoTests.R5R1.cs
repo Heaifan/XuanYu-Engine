@@ -60,6 +60,19 @@ public sealed partial class ScaleGizmoTests
         Assert.True(r2 / r1 < 3.0);
     }
 
+    [Fact]
+    public void Failed_projection_never_hits_screen_origin()
+    {
+        var vp = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
+        var camera = DefaultEditorCamera.Create(1);
+        var state = ViewProjectionState.Create(camera, vp);
+        var behind = camera.Position - camera.Forward * 10.0;
+        var layout = ScaleGizmoLayout.Project(state, behind, 1.0, default);
+
+        Assert.False(layout.IsValid);
+        Assert.Null(ScaleHitTester.HitTest(layout, 0.0, 0.0));
+    }
+
     static ScreenPoint PointOnAxis(ScaleGizmoLayout layout, int axis, double t)
     {
         var a = layout.Center;

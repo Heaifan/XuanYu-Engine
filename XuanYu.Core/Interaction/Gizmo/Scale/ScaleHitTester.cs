@@ -10,7 +10,7 @@ public static class ScaleHitTester
     public static ScaleGizmoHandle? HitTest(
         ScaleGizmoLayout layout, double x, double y, double margin = HitMargin)
     {
-        if (!double.IsFinite(x) || !double.IsFinite(y)) return null;
+        if (!layout.IsValid || !double.IsFinite(x) || !double.IsFinite(y)) return null;
         var centerRadius = System.Math.Max(
             ScaleGizmoScreenSize.CenterHitRadiusDip,
             layout.CenterSizeDip / 2.0 + margin);

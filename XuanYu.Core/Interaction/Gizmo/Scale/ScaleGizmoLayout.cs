@@ -7,13 +7,15 @@ namespace XuanYu.Core.Gizmo;
 // 当前没有可见 Global/Local 切换入口，默认锁定世界 X/Y/Z 轴。
 public sealed class ScaleGizmoLayout
 {
+    public bool IsValid { get; }
     public ScreenPoint Center { get; }
     public ScreenPoint[] AxisEnd { get; }   // [X, Y, Z]
     public double HandleSizeDip { get; }
     public double CenterSizeDip { get; }
 
-    ScaleGizmoLayout(ScreenPoint center, ScreenPoint[] axisEnd)
+    ScaleGizmoLayout(ScreenPoint center, ScreenPoint[] axisEnd, bool isValid = true)
     {
+        IsValid = isValid;
         Center = center;
         AxisEnd = axisEnd;
         HandleSizeDip = ScaleGizmoScreenSize.HandleScreenSizeDip;
@@ -30,7 +32,7 @@ public sealed class ScaleGizmoLayout
         }
         catch (InvalidOperationException)
         {
-            return new ScaleGizmoLayout(default, [default, default, default]);
+            return new ScaleGizmoLayout(default, [default, default, default], false);
         }
         _ = entityRotation;
         var ends = new ScreenPoint[3];
