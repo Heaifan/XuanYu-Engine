@@ -42,7 +42,14 @@ public readonly record struct YawRotation
             throw new ArgumentOutOfRangeException(nameof(radians), radians, "Yaw 弧度必须是有限数。");
         }
 
-        return new YawRotation(radians * 180.0 / global::System.Math.PI);
+        var degrees = radians * 180.0 / global::System.Math.PI;
+        if (!double.IsFinite(degrees))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(radians), radians, "Yaw 弧度换算结果超出有限范围。");
+        }
+
+        return new YawRotation(degrees);
     }
 
     public override string ToString()

@@ -31,6 +31,13 @@ public sealed class YawRotationTests
     }
 
     [Fact]
+    public void RejectsOverflow()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => YawRotation.FromRadians(double.MaxValue));
+    }
+
+    [Fact]
     public void RejectsNonFinite()
     {
         Assert.Throws<ArgumentOutOfRangeException>(
