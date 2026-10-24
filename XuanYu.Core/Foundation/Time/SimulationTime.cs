@@ -44,7 +44,13 @@ public readonly record struct SimulationTime
             throw new ArgumentOutOfRangeException(nameof(step), step, "时间步长必须大于 0。");
         }
 
-        return new SimulationTime(Seconds + step.Seconds);
+        var seconds = Seconds + step.Seconds;
+        if (!double.IsFinite(seconds))
+        {
+            throw new OverflowException("模拟时间推进超出可表示范围。");
+        }
+
+        return new SimulationTime(seconds);
     }
 
     public override string ToString()

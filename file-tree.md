@@ -3252,3 +3252,7 @@
 - XuanYu.World.Tests/Render/VulkanTerrainGpuCacheRetirementDeviceTests.cs — 真实 Vulkan GPU cache 退役测试。
 - XuanYu.World.Tests/TestSourceRoot.cs — World.Tests 源码根路径解析。
 - XuanYu.World.Tests/UiTokens/UiDebtBaselineWin32Tests.cs — Windows UI debt baseline 测试。
+- XuanYu.Core.Tests/Diagnostics/Core/Math/test_Vector3dBoundsTests.cs — 三维向量极端数值与单位化回归。
+- XuanYu.Core.Tests/Diagnostics/Core/Math/test_YawRotationBoundsTests.cs — 极大弧度和非有限偏航角回归。
+- XuanYu.Core.Tests/Diagnostics/Core/Time/test_SimulationTimeBoundsTests.cs — 模拟时间溢出及毫秒步长下溢回归。
+- XuanYu.Core.Tests/Diagnostics/Core/Logging/test_EngineLogContractTests.cs — 日志等级与正文前缀合同回归。

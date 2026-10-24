@@ -17,7 +17,19 @@ public readonly record struct Vector3d
 
     public double Z { get; }
 
-    public double Length => global::System.Math.Sqrt(LengthSquared);
+    public double Length
+    {
+        get
+        {
+            var scale = MaxAbsComponent;
+            if (scale == 0.0 || !double.IsFinite(scale))
+                return scale;
+            var x = X / scale;
+            var y = Y / scale;
+            var z = Z / scale;
+            return scale * global::System.Math.Sqrt(x * x + y * y + z * z);
+        }
+    }
 
     public double LengthSquared => (X * X) + (Y * Y) + (Z * Z);
 
@@ -35,7 +47,20 @@ public readonly record struct Vector3d
 
     public double DistanceSquaredTo(Vector3d other) => (this - other).LengthSquared;
 
-    public Vector3d Normalize() => IsZero ? Zero : this / Length;
+    public Vector3d Normalize()
+    {
+        var scale = MaxAbsComponent;
+        if (scale == 0.0)
+            return Zero;
+        if (!double.IsFinite(scale))
+            throw new InvalidOperationException("非有限向量不能单位化。");
+        var scaled = new Vector3d(X / scale, Y / scale, Z / scale);
+        return scaled / global::System.Math.Sqrt(scaled.LengthSquared);
+    }
+
+    private double MaxAbsComponent =>
+        global::System.Math.Max(global::System.Math.Abs(X),
+            global::System.Math.Max(global::System.Math.Abs(Y), global::System.Math.Abs(Z)));
 
     public double Dot(Vector3d other) => (X * other.X) + (Y * other.Y) + (Z * other.Z);
 

@@ -42,6 +42,11 @@ public readonly record struct EngineLogEntry
             throw new ArgumentOutOfRangeException(nameof(simulationSeconds), simulationSeconds, "模拟时间必须是有限数，并且不能为负数。");
         }
 
+        if (!Enum.IsDefined(level))
+        {
+            throw new ArgumentOutOfRangeException(nameof(level), level, "日志等级不合法。");
+        }
+
         if (string.IsNullOrWhiteSpace(category))
         {
             throw new ArgumentException("日志分类不能为空。", nameof(category));
@@ -74,7 +79,7 @@ public readonly record struct EngineLogEntry
     {
         foreach (var prefix in LogLevelPrefixes)
         {
-            if (message.Contains(prefix, StringComparison.Ordinal))
+            if (message.StartsWith(prefix, StringComparison.Ordinal))
             {
                 return true;
             }

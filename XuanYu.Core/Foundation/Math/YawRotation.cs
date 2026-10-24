@@ -36,7 +36,8 @@ public readonly record struct YawRotation
             throw new ArgumentOutOfRangeException(nameof(radians), radians, "Yaw 弧度必须是有限数。");
         }
 
-        return new YawRotation(radians * 180.0 / global::System.Math.PI);
+        var turn = 2.0 * global::System.Math.PI;
+        return new YawRotation((radians % turn) * (180.0 / global::System.Math.PI));
     }
 
     public override string ToString()
