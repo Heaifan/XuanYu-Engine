@@ -31,6 +31,20 @@ public sealed class YawRotationTests
     }
 
     [Fact]
+    public void ConvertsLargeFiniteRadians()
+    {
+        var degrees = YawRotation.FromRadians(1e306).Degrees;
+
+        Assert.InRange(degrees, 0.0, 359.99999999999994);
+    }
+
+    [Fact]
+    public void TinyNegativeWraps()
+    {
+        Assert.Equal(0, YawRotation.FromDegrees(-double.Epsilon).Degrees);
+    }
+
+    [Fact]
     public void RejectsOverflow()
     {
         Assert.Throws<ArgumentOutOfRangeException>(

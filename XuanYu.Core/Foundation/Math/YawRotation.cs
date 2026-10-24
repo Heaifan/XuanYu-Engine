@@ -42,7 +42,7 @@ public readonly record struct YawRotation
             throw new ArgumentOutOfRangeException(nameof(radians), radians, "Yaw 弧度必须是有限数。");
         }
 
-        var degrees = radians * 180.0 / global::System.Math.PI;
+        var degrees = radians * (180.0 / global::System.Math.PI);
         if (!double.IsFinite(degrees))
         {
             throw new ArgumentOutOfRangeException(
@@ -61,6 +61,11 @@ public readonly record struct YawRotation
     {
         var normalized = degrees % FullTurnDegrees;
 
-        return normalized < 0.0 ? normalized + FullTurnDegrees : normalized;
+        if (normalized < 0.0)
+        {
+            normalized += FullTurnDegrees;
+        }
+
+        return normalized >= FullTurnDegrees ? 0.0 : normalized;
     }
 }

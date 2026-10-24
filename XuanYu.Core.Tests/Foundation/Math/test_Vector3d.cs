@@ -29,6 +29,33 @@ public sealed class Vector3dTests
     }
 
     [Fact]
+    public void MeasuresLarge()
+    {
+        var vector = new Vector3d(1e200, 1e200, 0);
+
+        Assert.True(double.IsFinite(vector.Length));
+        Assert.Equal(1.0, vector.Normalize().Length, 12);
+    }
+
+    [Fact]
+    public void MeasuresTiny()
+    {
+        var vector = new Vector3d(double.Epsilon, 0, 0);
+
+        Assert.Equal(double.Epsilon, vector.Length);
+        Assert.Equal(Vector3d.UnitX, vector.Normalize());
+    }
+
+    [Fact]
+    public void NormalizeRejectsNonFinite()
+    {
+        Assert.Throws<InvalidOperationException>(
+            () => new Vector3d(double.PositiveInfinity, 0, 0).Normalize());
+        Assert.Throws<InvalidOperationException>(
+            () => new Vector3d(double.NaN, 0, 0).Normalize());
+    }
+
+    [Fact]
     public void DivisionRejectsZero()
     {
         Assert.Throws<DivideByZeroException>(() => Vector3d.UnitX / 0.0);
