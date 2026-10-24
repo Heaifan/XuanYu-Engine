@@ -14,10 +14,25 @@ internal sealed class TerrainErrorStatisticsBuilder(TerrainErrorOptions options)
     {
         var p50=Q(.5);var p95=Q(.95);var p99=Q(.99);var max=errors.Count==0?0:errors.Max();
         double? scale=options.EstimatedPixelsPerMeter??options.EstimatedPixelsPerWorldUnit;
-        return new(errors.Count,nodata,edge,p50,p95,p99,max,p50*options.VerticalExaggeration,p95*options.VerticalExaggeration,
+        return new(errors.Count,nodata,edge,p50,p95,p99,max,
+            p50*options.VerticalExaggeration,p95*options.VerticalExaggeration,
             p99*options.VerticalExaggeration,max*options.VerticalExaggeration,
             scale.HasValue?p95*options.VerticalExaggeration*scale:null,scale.HasValue?max*options.VerticalExaggeration*scale:null);
     }
-    double Q(double q){if(errors.Count==0)return 0;var ordered=errors.Order().ToArray();return ordered[(int)global::System.Math.Ceiling(q*ordered.Length)-1];}
-    public static void Validate(TerrainErrorGrid g){if(g.Width<2||g.Height<2||g.Values.Count!=g.Width*g.Height||g.NoData.Count!=g.Width*g.Height)throw new ArgumentException("Invalid terrain error grid.");}
+    double Q(double q)
+    {
+        if (errors.Count == 0) return 0;
+        var ordered = errors.Order().ToArray();
+        return ordered[(int)global::System.Math.Ceiling(q * ordered.Length) - 1];
+    }
+    public static void Validate(TerrainErrorGrid g)
+    {
+        ArgumentNullException.ThrowIfNull(g);
+        ArgumentNullException.ThrowIfNull(g.Values);
+        ArgumentNullException.ThrowIfNull(g.NoData);
+        var cells = (long)g.Width * g.Height;
+        if (g.Width < 2 || g.Height < 2 ||
+            g.Values.Count != cells || g.NoData.Count != cells)
+            throw new ArgumentException("Invalid terrain error grid.", nameof(g));
+    }
 }

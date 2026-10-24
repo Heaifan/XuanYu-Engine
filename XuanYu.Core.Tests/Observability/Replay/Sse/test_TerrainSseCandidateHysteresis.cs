@@ -1,6 +1,6 @@
 using XuanYu.Core.Space.Diagnostics;
 
-namespace XuanYu.Core.Tests.Space.Diagnostics;
+namespace XuanYu.Core.Tests.Observability.Replay.Sse;
 
 public sealed class TerrainSseCandidateHysteresisTests
 {

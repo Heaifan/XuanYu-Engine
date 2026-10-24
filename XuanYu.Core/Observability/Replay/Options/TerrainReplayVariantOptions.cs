@@ -17,7 +17,7 @@ public static partial class TerrainReplayOptions
     public static int SelectLod(int selectedLod, TerrainReplayVariant variant) => variant switch
     {
         TerrainReplayVariant.FixedLod0 => 0,
-        TerrainReplayVariant.LodBiasOne => global::System.Math.Min(4, selectedLod + 1),
+        TerrainReplayVariant.LodBiasOne => selectedLod >= 4 ? 4 : selectedLod + 1,
         _ => selectedLod
     };
 }

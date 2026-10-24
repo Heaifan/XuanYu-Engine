@@ -2,7 +2,7 @@ using XuanYu.Core.Diagnostics;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 
-namespace XuanYu.Core.Tests.Diagnostics.TerrainReplay;
+namespace XuanYu.Core.Tests.Observability.Replay.Options;
 
 public sealed class TerrainReplayCameraOptionsTests
 {

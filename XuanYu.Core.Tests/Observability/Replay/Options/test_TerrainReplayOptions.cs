@@ -1,6 +1,6 @@
 using XuanYu.Core.Diagnostics;
 
-namespace XuanYu.Core.Tests.Diagnostics.TerrainReplay;
+namespace XuanYu.Core.Tests.Observability.Replay.Options;
 
 public sealed class TerrainReplayOptionsTests
 {

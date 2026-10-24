@@ -38,8 +38,10 @@ public static class TerrainSseProjectionEstimator
             if (!state.TryProjectWorldPoint(new(x, y, z - verticalErrorMeters), out var a) ||
                 !state.TryProjectWorldPoint(new(x, y, z + verticalErrorMeters), out var b)) return false;
             var dx = (a.X - b.X) * scaleX; var dy = (a.Y - b.Y) * scaleY;
-            pixels = global::System.Math.Max(pixels, global::System.Math.Sqrt(dx * dx + dy * dy));
+            pixels = global::System.Math.Max(pixels, double.Hypot(dx, dy));
         }
-        return double.IsFinite(pixels);
+        if (double.IsFinite(pixels)) return true;
+        pixels = 0;
+        return false;
     }
 }

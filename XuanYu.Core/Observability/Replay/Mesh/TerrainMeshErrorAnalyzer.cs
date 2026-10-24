@@ -3,7 +3,8 @@ namespace XuanYu.Core.Space.Diagnostics;
 public static class TerrainMeshErrorAnalyzer
 {
     public static TerrainMeshErrorReport Analyze(TerrainErrorGrid source, TerrainErrorGrid render,
-        IReadOnlyList<TerrainErrorChunk> chunks, TerrainErrorOptions? options = null, int skirtVerticesExcluded = 0)
+        IReadOnlyList<TerrainErrorChunk> chunks, TerrainErrorOptions? options = null,
+        int skirtVerticesExcluded = 0)
     {
         ArgumentNullException.ThrowIfNull(source); ArgumentNullException.ThrowIfNull(render);
         ArgumentNullException.ThrowIfNull(chunks); options ??= new();

@@ -1,6 +1,6 @@
 using XuanYu.Core.Diagnostics;
 
-namespace XuanYu.Core.Tests.Diagnostics.TerrainReplay;
+namespace XuanYu.Core.Tests.Observability.Replay.Options;
 
 public sealed class TerrainReplayVariantOptionsTests
 {
@@ -19,6 +19,13 @@ public sealed class TerrainReplayVariantOptionsTests
             TerrainReplayVariant.LodBiasOne));
         Assert.Equal(1, TerrainReplayOptions.SelectLod(0,
             TerrainReplayVariant.LodBiasOne));
+    }
+
+    [Fact]
+    public void Lod_bias_does_not_wrap_large_integer()
+    {
+        Assert.Equal(4, TerrainReplayOptions.SelectLod(
+            int.MaxValue, TerrainReplayVariant.LodBiasOne));
     }
 
     [Theory]
