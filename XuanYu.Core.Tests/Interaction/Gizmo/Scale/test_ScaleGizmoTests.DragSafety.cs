@@ -34,6 +34,28 @@ public sealed partial class ScaleGizmoTests
     }
 
     [Fact]
+    public void Drag_extreme_positive_axis_pull_saturates_without_reset()
+    {
+        var (drag, _) = XDrag(ScaleGizmoHandle.X, new Vector3d(2, 3, 4));
+        var pulled = Pull(drag.handlePoint, drag.axisDir, 100000);
+        var s = drag.drag.Solve(pulled.X, pulled.Y);
+        Assert.Equal(double.MaxValue, s.X);
+        Assert.Equal(3.0, s.Y);
+        Assert.Equal(4.0, s.Z);
+    }
+
+    [Fact]
+    public void Drag_extreme_positive_uniform_pull_stays_finite()
+    {
+        var drag = new ScaleGizmoDrag(
+            ScaleGizmoHandle.Uniform, new Vector3d(1, 2, 3), 0, 0, default);
+        var s = drag.Solve(0, -100000);
+        Assert.Equal(double.MaxValue, s.X);
+        Assert.Equal(double.MaxValue, s.Y);
+        Assert.Equal(double.MaxValue, s.Z);
+    }
+
+    [Fact]
     public void Drag_farther_pull_yields_larger_factor()
     {
         var (drag, _) = XDrag(ScaleGizmoHandle.Uniform, new Vector3d(1, 1, 1));

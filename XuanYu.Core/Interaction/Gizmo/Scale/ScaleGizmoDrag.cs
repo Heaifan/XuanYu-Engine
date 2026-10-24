@@ -32,6 +32,7 @@ public sealed class ScaleGizmoDrag
 
     public Vector3d Solve(double x, double y)
     {
+        if (!double.IsFinite(x) || !double.IsFinite(y)) return Clamp(_startScale);
         double factor;
         if (_handle == ScaleGizmoHandle.Uniform)
         {
@@ -45,7 +46,8 @@ public sealed class ScaleGizmoDrag
             var projected = dx * _axisDir.X + dy * _axisDir.Y;
             factor = System.Math.Exp(projected / SensitivityDip);
         }
-        factor = double.IsFinite(factor) ? factor : 1.0;
+        factor = double.IsPositiveInfinity(factor) ? double.MaxValue
+            : double.IsFinite(factor) ? factor : 1.0;
         return Clamp(ApplyFactor(_startScale, _handle, factor));
     }
 
@@ -53,12 +55,16 @@ public sealed class ScaleGizmoDrag
     {
         return handle switch
         {
-            ScaleGizmoHandle.X => new Vector3d(s.X * factor, s.Y, s.Z),
-            ScaleGizmoHandle.Y => new Vector3d(s.X, s.Y * factor, s.Z),
-            ScaleGizmoHandle.Z => new Vector3d(s.X, s.Y, s.Z * factor),
-            _ => new Vector3d(s.X * factor, s.Y * factor, s.Z * factor),
+            ScaleGizmoHandle.X => new Vector3d(ScaleValue(s.X, factor), s.Y, s.Z),
+            ScaleGizmoHandle.Y => new Vector3d(s.X, ScaleValue(s.Y, factor), s.Z),
+            ScaleGizmoHandle.Z => new Vector3d(s.X, s.Y, ScaleValue(s.Z, factor)),
+            _ => new Vector3d(ScaleValue(s.X, factor), ScaleValue(s.Y, factor), ScaleValue(s.Z, factor)),
         };
     }
+
+    static double ScaleValue(double value, double factor) =>
+        value > 1.0 && factor > double.MaxValue / value
+            ? double.MaxValue : value * factor;
 
     static Vector3d Clamp(Vector3d s) => new(
         System.Math.Max(MinimumScale, s.X),
