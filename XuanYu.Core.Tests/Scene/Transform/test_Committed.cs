@@ -3,10 +3,10 @@ using XuanYu.Core.Scene;
 
 namespace XuanYu.Core.Tests.Scene.Transform;
 
-public sealed class CommittedTransformTests
+public sealed class CommittedTests
 {
     [Fact]
-    public void IdentityHasZeroPositionRotationAndUnitScale()
+    public void IdentityDefaults()
     {
         var t = CommittedTransform.Identity;
 
@@ -17,7 +17,7 @@ public sealed class CommittedTransformTests
     }
 
     [Fact]
-    public void PositionConstructorUsesIdentityRotationAndScale()
+    public void PositionDefaults()
     {
         var t = new CommittedTransform(Vector3d.UnitX);
 
@@ -27,7 +27,7 @@ public sealed class CommittedTransformTests
     }
 
     [Fact]
-    public void WithMethodsModifyOnlyTheirRequestedComponent()
+    public void WithMethodsAreIsolated()
     {
         var original = CommittedTransform.Identity;
         var moved = original.WithPosition(Vector3d.UnitX);
@@ -50,7 +50,7 @@ public sealed class CommittedTransformTests
     [InlineData(double.NaN)]
     [InlineData(double.PositiveInfinity)]
     [InlineData(double.NegativeInfinity)]
-    public void RejectsNonFiniteTransformComponents(double invalid)
+    public void RejectsNonFinite(double invalid)
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             new CommittedTransform(new Vector3d(invalid, 0, 0)));
@@ -64,14 +64,14 @@ public sealed class CommittedTransformTests
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(0.000099)]
-    public void RejectsScaleBelowMinimum(double scale)
+    public void RejectsSmallScale(double scale)
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             CommittedTransform.Identity.WithScale(new Vector3d(scale, 1, 1)));
     }
 
     [Fact]
-    public void AcceptsMinimumScale()
+    public void AcceptsMinScale()
     {
         var scale = new Vector3d(CommittedTransform.MinimumScale, 1, 1);
 

@@ -5,10 +5,10 @@ using XuanYu.Core.Transform;
 
 namespace XuanYu.Core.Tests.Scene.Transform;
 
-public sealed class PreviewTransformTests
+public sealed class PreviewTests
 {
     [Fact]
-    public void PositionConstructorPreservesCommittedTransformRules()
+    public void PositionUsesDefaults()
     {
         var preview = new PreviewTransform(new Vector3d(2, 3, 4));
 
@@ -18,7 +18,7 @@ public sealed class PreviewTransformTests
     }
 
     [Fact]
-    public void TransformConstructorKeepsAllComponents()
+    public void KeepsTransform()
     {
         var committed = new CommittedTransform(Vector3d.UnitX,
             Vector3d.UnitY, new Vector3d(2, 3, 4));
@@ -29,7 +29,7 @@ public sealed class PreviewTransformTests
     }
 
     [Fact]
-    public void StartSnapshotExposesEntityAndStartingTransform()
+    public void RetainsStartState()
     {
         var id = EntityId.FromInt(9);
         var transform = CommittedTransform.Identity.WithPosition(Vector3d.UnitY);

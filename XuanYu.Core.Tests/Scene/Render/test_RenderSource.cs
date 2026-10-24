@@ -2,7 +2,7 @@ using XuanYu.Core.Scene;
 
 namespace XuanYu.Core.Tests.Scene.Render;
 
-public sealed class SceneRenderSnapshotSourceTests
+public sealed class RenderSourceTests
 {
     sealed class Source : ISceneRenderSnapshotSource
     {
@@ -19,7 +19,7 @@ public sealed class SceneRenderSnapshotSourceTests
     }
 
     [Fact]
-    public void PropertyAndEventPublishTheSameSnapshot()
+    public void PublishesSnapshot()
     {
         var source = new Source();
         SceneRenderSnapshot? observed = null;

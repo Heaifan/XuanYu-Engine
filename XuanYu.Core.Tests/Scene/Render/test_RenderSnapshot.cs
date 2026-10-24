@@ -6,13 +6,13 @@ using XuanYu.Core.Transform;
 
 namespace XuanYu.Core.Tests.Scene.Render;
 
-public sealed class SceneRenderSnapshotTests
+public sealed class RenderSnapshotTests
 {
     static SceneEntitySnapshot Entity(int id, Vector3d position) =>
         new(EntityId.FromInt(id), $"E{id}", "Test", new CommittedTransform(position));
 
     [Fact]
-    public void EmptyHasNoEntitiesAndIdentityTransform()
+    public void EmptyIsNeutral()
     {
         var snapshot = SceneRenderSnapshot.Empty;
 
@@ -26,7 +26,7 @@ public sealed class SceneRenderSnapshotTests
     }
 
     [Fact]
-    public void TestEntityAtOriginHasOneEntity()
+    public void OriginHasEntity()
     {
         var snapshot = SceneRenderSnapshot.TestEntityAtOrigin;
 
@@ -36,7 +36,7 @@ public sealed class SceneRenderSnapshotTests
     }
 
     [Fact]
-    public void RenderEntitiesOverridePrimaryFallback()
+    public void ExplicitEntitiesWin()
     {
         var primary = Entity(1, Vector3d.Zero);
         var list = new[] { Entity(2, Vector3d.UnitX) };
@@ -48,7 +48,7 @@ public sealed class SceneRenderSnapshotTests
     }
 
     [Fact]
-    public void PreviewAppliesOnlyToPrimaryId()
+    public void PreviewTargetsPrimary()
     {
         var primary = Entity(1, Vector3d.Zero);
         var other = Entity(2, Vector3d.UnitY);
@@ -64,7 +64,7 @@ public sealed class SceneRenderSnapshotTests
     }
 
     [Fact]
-    public void InvalidPrimaryIdNeverReceivesPreview()
+    public void InvalidIdIgnoresPreview()
     {
         var invalid = new SceneEntitySnapshot(EntityId.None, "", "",
             CommittedTransform.Identity);
@@ -79,7 +79,7 @@ public sealed class SceneRenderSnapshotTests
     }
 
     [Fact]
-    public void ExplicitCameraOverridesDefault()
+    public void ExplicitCameraWins()
     {
         var camera = DefaultEditorCamera.Create(12);
         var snapshot = new SceneRenderSnapshot(Entity(1, Vector3d.Zero),

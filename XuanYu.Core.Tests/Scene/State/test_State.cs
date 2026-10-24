@@ -4,10 +4,10 @@ using XuanYu.Core.Scene;
 
 namespace XuanYu.Core.Tests.Scene.State;
 
-public sealed class SceneStateContractsTests
+public sealed class StateTests
 {
     [Fact]
-    public void EntityValidityUsesIdOnly()
+    public void ValidatesEntityId()
     {
         var invalid = new SceneEntitySnapshot(EntityId.None,
             "Unassigned", "Test", CommittedTransform.Identity);
@@ -21,7 +21,7 @@ public sealed class SceneStateContractsTests
     }
 
     [Fact]
-    public void TransformCommitRecordsBeforeAfterAndChangedFlag()
+    public void RetainsCommitData()
     {
         var original = CommittedTransform.Identity;
         var next = original.WithPosition(Vector3d.UnitX);
@@ -35,7 +35,7 @@ public sealed class SceneStateContractsTests
     }
 
     [Fact]
-    public void CommitResultDoesNotCalculateChanged()
+    public void ChangedIsDeclared()
     {
         var result = new SceneTransformCommitResult(EntityId.FromInt(4),
             CommittedTransform.Identity, CommittedTransform.Identity, true);
