@@ -32,8 +32,12 @@ public static partial class ViewportProbe
             _directory = XyeWorkspacePaths.ResolveProbeDirectory();
             Directory.CreateDirectory(_directory);
             _initialized = true;
-            Log("runtime", $"[RUNTIME-PROBE] ProbeId={ViewportProbeIdentity.Current()};ProcessId={Environment.ProcessId}");
-            Log("runtime", $"ExecutablePath={Environment.ProcessPath};CoreAssembly={Assembly.GetExecutingAssembly().Location}");
+            Log("runtime",
+                $"[RUNTIME-PROBE] ProbeId={ViewportProbeIdentity.Current()};" +
+                $"ProcessId={Environment.ProcessId}");
+            Log("runtime",
+                $"ExecutablePath={Environment.ProcessPath};" +
+                $"CoreAssembly={Assembly.GetExecutingAssembly().Location}");
             foreach (var name in new[] { "XuanYu.Editor", "XuanYu.Editor.UI", "XuanYu.World", "XuanYu.Render.Vulkan" })
                 Log("runtime", $"{name}Assembly={AssemblyPath(name)}");
         }

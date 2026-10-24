@@ -9,7 +9,9 @@ public static class ViewportProbeIdentity
     public static string Current()
     {
         var head = Environment.GetEnvironmentVariable("XYE_PROBE_SOURCE_HEAD") ?? "UNKNOWN";
-        var dirty = string.Equals(Environment.GetEnvironmentVariable("XYE_PROBE_SOURCE_DIRTY"), "YES", StringComparison.OrdinalIgnoreCase);
+        var dirty = string.Equals(
+            Environment.GetEnvironmentVariable("XYE_PROBE_SOURCE_DIRTY"),
+            "YES", StringComparison.OrdinalIgnoreCase);
         var build = Environment.GetEnvironmentVariable("XYE_PROBE_BUILD_TIMESTAMP") ??
             File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location).ToString("O");
         return Format(head, dirty, ProbeName, build);
