@@ -24,7 +24,7 @@ public sealed partial class SceneStateOwner : IWorldTransformMutationContract
         EntityId entityKey,
         long expectedEntityRevision,
         CommittedTransform transform,
-        out SceneTransformCommitResult result)
+        out TransformCommit result)
     {
         if (expectedEntityRevision > 0
             && expectedEntityRevision != GetEntityMutationRevision(entityKey))

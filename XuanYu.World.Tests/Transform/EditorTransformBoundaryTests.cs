@@ -12,7 +12,7 @@ public sealed class EditorTransformBoundaryTests
     [Fact]
     public void Session_creates_command_without_world_concrete_dependency()
     {
-        var entity = new SceneEntitySnapshot(
+        var entity = new EntitySnapshot(
             EntityId.FromInt(7), "Entity", "Type", CommittedTransform.Identity);
         var session = new TransformSession();
 
@@ -48,7 +48,7 @@ public sealed class EditorTransformBoundaryTests
             EntityId entityKey,
             long expectedWorldRevision,
             CommittedTransform transform,
-            out SceneTransformCommitResult result)
+            out TransformCommit result)
         {
             EntityKey = entityKey;
             Transform = transform;

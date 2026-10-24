@@ -62,7 +62,7 @@ public sealed partial class SceneRenderProjectionAdapterTests
         Assert.Equal(new Vector3d(5, 0, 0), projection.Entities[1].Position);
     }
 
-    static SceneEntitySnapshot EntityAt(int id, Vector3d position) =>
+    static EntitySnapshot EntityAt(int id, Vector3d position) =>
         new(EntityId.FromInt(id), $"E{id}", "Minimal",
             new CommittedTransform(position));
 

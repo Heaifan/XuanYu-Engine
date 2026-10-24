@@ -6,7 +6,7 @@ using XuanYu.World;
 
 namespace XuanYu.World.Scene;
 
-public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
+public sealed partial class SceneStateOwner : IRenderSnapshotSource
 {
     readonly GlobalWorld _world;
     readonly Dictionary<EntityId, long> _entityMutationRevisions = new();
@@ -61,7 +61,7 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
         return true;
     }
 
-    SceneTransformCommitResult ApplyTransform(
+    TransformCommit ApplyTransform(
         WorldEntitySnapshot current,
         CommittedTransform transform)
     {
@@ -69,7 +69,7 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
         TouchEntityMutation(current.EntityKey);
         RefreshSnapshot();
         RenderSnapshotChanged?.Invoke(_snapshot);
-        return new SceneTransformCommitResult(
+        return new TransformCommit(
             current.EntityKey,
             current.Transform,
             transform,

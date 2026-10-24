@@ -5,7 +5,7 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    bool TryApplyHistoryAndComplete(EditorHistoryEntrySnapshot top, bool undo)
+    bool TryApplyHistoryAndComplete(HistorySnapshot top, bool undo)
     {
         try
         {

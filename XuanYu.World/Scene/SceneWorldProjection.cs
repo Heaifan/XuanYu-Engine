@@ -5,7 +5,7 @@ namespace XuanYu.World.Scene;
 
 public static class SceneWorldProjection
 {
-    public static SceneEntitySnapshot ToSceneEntity(WorldEntitySnapshot entity) =>
+    public static EntitySnapshot ToSceneEntity(WorldEntitySnapshot entity) =>
         new(entity.EntityKey, entity.Name, entity.Type, entity.Transform);
 
     public static SceneRenderSnapshot ToRenderSnapshot(

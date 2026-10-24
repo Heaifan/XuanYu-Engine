@@ -3,7 +3,7 @@ namespace XuanYu.Core.Map;
 // MAP-A-R1-D3：唯一地表采样源。
 // World 高度查询与 D4 Render 网格生成必须共用本采样器，禁止第二套起伏公式。
 // 同一 (kind, 参数, x, y) 永远返回相同高度：纯算术，无随机。
-public static class MapSurfaceSampler
+public static class SurfaceSampler
 {
     public static double SampleHeight(
         MapSurfaceKind kind,

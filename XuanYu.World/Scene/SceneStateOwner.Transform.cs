@@ -9,13 +9,13 @@ public sealed partial class SceneStateOwner
     public bool CommitPosition(Vector3d position) =>
         CommitPositionWithResult(position).Changed;
 
-    public SceneTransformCommitResult CommitPositionWithResult(Vector3d position) =>
+    public TransformCommit CommitPositionWithResult(Vector3d position) =>
         CommitPositionWithResult(_activeEntityKey, position);
 
-    public SceneTransformCommitResult CommitTransformWithResult(CommittedTransform transform) =>
+    public TransformCommit CommitTransformWithResult(CommittedTransform transform) =>
         CommitTransformWithResult(_activeEntityKey, transform);
 
-    public SceneTransformCommitResult CommitPositionWithResult(
+    public TransformCommit CommitPositionWithResult(
         EntityId entityKey,
         Vector3d position)
     {
@@ -24,14 +24,14 @@ public sealed partial class SceneStateOwner
         return CommitTransformWithResult(entityKey, current.Transform.WithPosition(position));
     }
 
-    public SceneTransformCommitResult CommitTransformWithResult(
+    public TransformCommit CommitTransformWithResult(
         EntityId entityKey,
         CommittedTransform transform)
     {
         if (!_world.TryGet(entityKey, out var current))
             return UnchangedMissingTransform(entityKey);
         if (EquivalentTransform(current.Transform, transform))
-            return new SceneTransformCommitResult(
+            return new TransformCommit(
                 entityKey,
                 current.Transform,
                 transform,
@@ -52,7 +52,7 @@ public sealed partial class SceneStateOwner
         && System.Math.Abs(a.Y - b.Y) <= e
         && System.Math.Abs(a.Z - b.Z) <= e;
 
-    static SceneTransformCommitResult UnchangedMissingTransform(EntityId entityKey) =>
+    static TransformCommit UnchangedMissingTransform(EntityId entityKey) =>
         new(
             entityKey,
             CommittedTransform.Identity,

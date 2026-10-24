@@ -8,7 +8,7 @@ public sealed partial class UiVm
 {
     readonly Dictionary<EntityId, XycSessionEntity> _xycSessionEntities = [];
     readonly List<EntityId> _xycSessionEntityOrder = [];
-    readonly List<EditorHistoryEntrySnapshot> _xycHistoryItems = [];
+    readonly List<HistorySnapshot> _xycHistoryItems = [];
     string? _xycSessionSceneId;
     long? _xycSessionLifecycleRevision;
     string? _xycTestEntityId;

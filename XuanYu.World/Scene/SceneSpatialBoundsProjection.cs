@@ -7,7 +7,7 @@ namespace XuanYu.World.Scene;
 
 public static class SceneSpatialBoundsProjection
 {
-    public static SpatialBounds ToSpatialBounds(SceneEntitySnapshot entity)
+    public static SpatialBounds ToSpatialBounds(EntitySnapshot entity)
     {
         var p = entity.Transform.Position;
         var min = new Vector3d(p.X - 0.5, p.Y - 0.5, p.Z - 0.5);

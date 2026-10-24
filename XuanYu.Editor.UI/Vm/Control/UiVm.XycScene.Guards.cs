@@ -14,7 +14,7 @@ public sealed partial class UiVm
         if (!_sceneState.TryGetEntity(id, out var entity) || !IdleXycInteraction()) return false;
         var next = entity.Transform.WithPosition(new(position.X, position.Y, position.Z));
         var command = new TransformCommand(0, id, next, _worldMutation.GetEntityMutationRevision(id));
-        SceneTransformCommitResult commit;
+        TransformCommit commit;
         try
         {
             if (!command.TryApply(_worldMutation, out commit) || !commit.Changed) return false;
@@ -22,7 +22,7 @@ public sealed partial class UiVm
         catch
         {
             if (!_sceneState.TryGetEntity(id, out var current) || current.Transform != next) throw;
-            commit = new SceneTransformCommitResult(id, entity.Transform, current.Transform, true);
+            commit = new TransformCommit(id, entity.Transform, current.Transform, true);
         }
         try { XycWorldCommittedBeforeHistoryAppendForTest?.Invoke(); }
         catch (Exception ex) { MarkXycInDoubt("WORLD_COMMITTED_HISTORY_NOT_APPENDED:" + ex.GetType().Name); throw; }

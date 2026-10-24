@@ -16,7 +16,7 @@ public sealed partial class SceneRenderProjectionAdapterTests
         var rotation = new Vector3d(10, 20, 30);
         var scale = new Vector3d(2, 3, 4);
         var transform = new CommittedTransform(new Vector3d(1, 2, 3), rotation, scale);
-        var entity = new SceneEntitySnapshot(EntityId.FromInt(1), "E1", "Minimal", transform);
+        var entity = new EntitySnapshot(EntityId.FromInt(1), "E1", "Minimal", transform);
         var snapshot = new SceneRenderSnapshot(entity, RenderEntities: [entity], Camera: TestCamera());
 
         RenderProjection projection = SceneRenderProjectionAdapter.TryCreate(snapshot).Projection;

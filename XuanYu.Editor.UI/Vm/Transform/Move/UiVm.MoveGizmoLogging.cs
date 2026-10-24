@@ -20,7 +20,7 @@ public sealed partial class UiVm
         RefreshLogBindings();
     }
 
-    void LogTransformCaptureCommit(EditorInteractionSnapshot snap, SceneTransformCommitResult commit)
+    void LogTransformCaptureCommit(EditorInteractionSnapshot snap, TransformCommit commit)
     {
         if (!commit.Changed) return;
         var key = EditorDisplayText.Entity(commit.EntityKey);

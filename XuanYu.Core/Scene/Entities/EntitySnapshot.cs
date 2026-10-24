@@ -2,7 +2,7 @@ using XuanYu.Core.Identity;
 
 namespace XuanYu.Core.Scene;
 
-public readonly record struct SceneEntitySnapshot(
+public readonly record struct EntitySnapshot(
     EntityId EntityKey,
     string Name,
     string Type,

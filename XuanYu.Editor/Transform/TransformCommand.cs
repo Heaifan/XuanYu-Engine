@@ -12,6 +12,6 @@ public readonly record struct TransformCommand(
 {
     public bool TryApply(
         IWorldTransformMutationContract world,
-        out SceneTransformCommitResult result) =>
+        out TransformCommit result) =>
         world.TryCommitTransform(EntityKey, EntityRevision, Transform, out result);
 }

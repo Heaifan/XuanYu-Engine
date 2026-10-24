@@ -57,7 +57,7 @@ public sealed class SceneContractTests
         Assert.NotEqual(doomed.EntityKey, scene.RenderSnapshot.Entity.EntityKey);
     }
 
-    static SceneTransformCommitResult CommitMove(SceneStateOwner scene, Vector3d position)
+    static TransformCommit CommitMove(SceneStateOwner scene, Vector3d position)
     {
         var session = new TransformSession();
         Assert.True(session.Begin(17, scene.RenderSnapshot.Entity, MoveGizmoAxis.X));

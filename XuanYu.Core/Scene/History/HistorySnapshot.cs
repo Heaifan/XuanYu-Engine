@@ -1,8 +1,8 @@
 namespace XuanYu.Core.History;
 
-public sealed class EditorHistoryEntrySnapshot
+public sealed class HistorySnapshot
 {
-    internal EditorHistoryEntrySnapshot(object entry, long beforeRevision,
+    internal HistorySnapshot(object entry, long beforeRevision,
         long afterRevision, long currentRevision, object historyItemIdentity)
     {
         Entry = entry;
@@ -18,7 +18,7 @@ public sealed class EditorHistoryEntrySnapshot
     public long CurrentRevision { get; }
     internal object HistoryItemIdentity { get; }
 
-    public bool IdentifiesSameHistoryItem(EditorHistoryEntrySnapshot other) =>
+    public bool IdentifiesSameHistoryItem(HistorySnapshot other) =>
         other is not null && ReferenceEquals(HistoryItemIdentity, other.HistoryItemIdentity) &&
         BeforeRevision == other.BeforeRevision && AfterRevision == other.AfterRevision;
 }

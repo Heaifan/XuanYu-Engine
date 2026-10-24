@@ -67,7 +67,7 @@ public sealed class TransformHistoryIntegrationTests
         return session;
     }
 
-    static void Push(EditorHistoryOwner history, SceneTransformCommitResult commit)
+    static void Push(EditorHistoryOwner history, TransformCommit commit)
     {
         if (commit.Changed)
         {

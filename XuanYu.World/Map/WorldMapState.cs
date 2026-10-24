@@ -29,7 +29,7 @@ public sealed record WorldMapState(
 
     // 地图外不钳制、不返回虚假零高度：由调用方先判 Contains。
     public double SampleHeight(double worldX, double worldY) =>
-        MapSurfaceSampler.SampleHeight(
+        SurfaceSampler.SampleHeight(
             SurfaceKind, BaseHeightMeters, AmplitudeMeters, WavelengthMeters,
             Seed, worldX, worldY);
 

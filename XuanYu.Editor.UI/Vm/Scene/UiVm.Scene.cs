@@ -9,7 +9,7 @@ public sealed partial class UiVm
 {
     ViewportState? _lastViewport;
     public ViewportState CurrentViewport => _lastViewport ?? new(0, 0, 1, 1, 1, 1, 1, 1);
-    public ISceneRenderSnapshotSource SceneSnapshotSource => this;
+    public IRenderSnapshotSource SceneSnapshotSource => this;
     public SceneRenderSnapshot RenderSnapshot
     {
         get

@@ -12,7 +12,7 @@ public sealed partial class TransformSession
     public TransformStartSnapshot StartSnapshot { get; private set; }
     public PreviewTransform? Preview { get; private set; }
     long EntityRevision { get; set; }
-    public bool Begin(long sessionId, SceneEntitySnapshot entity, MoveGizmoAxis axis,
+    public bool Begin(long sessionId, EntitySnapshot entity, MoveGizmoAxis axis,
         long entityRevision = 0)
     {
         if (sessionId <= 0) throw new ArgumentOutOfRangeException(nameof(sessionId));
@@ -54,7 +54,7 @@ public sealed partial class TransformSession
     public bool TryCommit(
         long sessionId,
         IWorldTransformMutationContract world,
-        out SceneTransformCommitResult commit)
+        out TransformCommit commit)
     {
         commit = default;
         if (!TryCreateCommand(sessionId, out var command)) return false;

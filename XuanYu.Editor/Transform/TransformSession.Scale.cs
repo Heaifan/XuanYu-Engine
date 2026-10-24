@@ -10,7 +10,7 @@ public sealed partial class TransformSession
 
     // 缩放起始：与 Begin（移动）/ BeginRotate（旋转）互斥，复用同一会话生命周期与提交/取消路径。
     // 预览走既有 TryPreviewScale；提交/取消走既有 TryCommit/TryCancel（与轴类型无关）。
-    public bool BeginScale(long sessionId, SceneEntitySnapshot entity, ScaleGizmoHandle handle,
+    public bool BeginScale(long sessionId, EntitySnapshot entity, ScaleGizmoHandle handle,
         long entityRevision = 0)
     {
         if (sessionId <= 0) throw new ArgumentOutOfRangeException(nameof(sessionId));

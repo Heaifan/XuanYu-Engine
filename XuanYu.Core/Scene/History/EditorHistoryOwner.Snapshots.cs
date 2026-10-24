@@ -2,23 +2,23 @@ namespace XuanYu.Core.History;
 
 public sealed partial class EditorHistoryOwner
 {
-    public bool TryPeekUndoAny(out EditorHistoryEntrySnapshot snapshot) =>
+    public bool TryPeekUndoAny(out HistorySnapshot snapshot) =>
         TryPeek(_undo, out snapshot);
 
-    public bool TryPeekRedoAny(out EditorHistoryEntrySnapshot snapshot) =>
+    public bool TryPeekRedoAny(out HistorySnapshot snapshot) =>
         TryPeek(_redo, out snapshot);
 
-    public bool TryCompleteUndo(EditorHistoryEntrySnapshot expected) =>
+    public bool TryCompleteUndo(HistorySnapshot expected) =>
         TryComplete(_undo, _redo, expected, false);
 
-    public bool TryCompleteRedo(EditorHistoryEntrySnapshot expected) =>
+    public bool TryCompleteRedo(HistorySnapshot expected) =>
         TryComplete(_redo, _undo, expected, true);
 
-    bool TryPeek(Stack<HistoryItem> source, out EditorHistoryEntrySnapshot snapshot)
+    bool TryPeek(Stack<HistoryItem> source, out HistorySnapshot snapshot)
     {
         if (source.TryPeek(out var item))
         {
-            snapshot = new EditorHistoryEntrySnapshot(item.Entry, item.BeforeRevision,
+            snapshot = new HistorySnapshot(item.Entry, item.BeforeRevision,
                 item.AfterRevision, CurrentRevision, item);
             return true;
         }
@@ -27,7 +27,7 @@ public sealed partial class EditorHistoryOwner
     }
 
     bool TryComplete(Stack<HistoryItem> source, Stack<HistoryItem> target,
-        EditorHistoryEntrySnapshot expected, bool redo)
+        HistorySnapshot expected, bool redo)
     {
         ArgumentNullException.ThrowIfNull(expected);
         if (!source.TryPeek(out var item) ||

@@ -1,6 +1,6 @@
 namespace XuanYu.Core.Scene;
 
-public interface ISceneRenderSnapshotSource
+public interface IRenderSnapshotSource
 {
     SceneRenderSnapshot RenderSnapshot { get; }
 

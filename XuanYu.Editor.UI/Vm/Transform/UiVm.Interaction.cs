@@ -43,7 +43,7 @@ public sealed partial class UiVm
         var result = _editorState.Commit(new CommitInteractionCommand(
             snap.SessionId, snap.OwnerTool, snap.Pointer.PointerId));
         if (result is null) return;
-        var commit = default(SceneTransformCommitResult);
+        var commit = default(TransformCommit);
         var transformCommitted = _transformSession.TryCreateCommand(snap.SessionId, out var command)
             && command.TryApply(_worldMutation, out commit);
         _moveDragConstraint = null;

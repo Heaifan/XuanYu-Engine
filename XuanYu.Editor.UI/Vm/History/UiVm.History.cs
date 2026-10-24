@@ -68,7 +68,7 @@ public sealed partial class UiVm
         PublishSceneRenderSnapshot();
     }
 
-    void RecordTransformHistory(SceneTransformCommitResult commit)
+    void RecordTransformHistory(TransformCommit commit)
     {
         if (!commit.Changed) return;
         var entry = new TransformHistoryEntry(commit.EntityKey, commit.Before, commit.After);

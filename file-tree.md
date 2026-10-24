@@ -588,7 +588,7 @@
 - XuanYu.Core/Logging/EngineLogEntry.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Logging/EngineLogLevel.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Map/MapSurfaceKind.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core/Map/MapSurfaceSampler.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core/Map/SurfaceSampler.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Map/MapTerrainVertex.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Math/Vector3d.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Math/YawRotation.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -599,10 +599,10 @@
 - XuanYu.Core/Results/EngineError.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Results/EngineResult.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Scene/CommittedTransform.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core/Scene/SceneEntitySnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core/Scene/IRenderSnapshotSource.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core/Scene/EntitySnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Scene/SceneRenderSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core/Scene/SceneTransformCommitResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core/Scene/TransformCommit.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Space/CameraState.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Space/DefaultEditorCamera.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Space/ProjectionMode.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -1753,7 +1753,7 @@
 - XuanYu.World.Tests/Map/MapSizeValidationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/MapStorageFailureTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/MapStorageTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Map/MapSurfaceSamplerTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Map/SurfaceSamplerTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/MapSurfaceValidationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/MapWorkingStorageTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/SceneMapReferenceTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -3257,3 +3257,8 @@
 - XuanYu.Core.Tests/Diagnostics/Core/Time/test_SimulationTimeBoundsTests.cs — 模拟时间溢出及毫秒步长下溢回归。
 - XuanYu.Core.Tests/Diagnostics/Core/Logging/test_EngineLogContractTests.cs — 日志等级与正文前缀合同回归。
 - XuanYu.Core.Tests/Scene/Snapshots/test_SceneRenderSnapshotPreviewTests.cs — 场景空实体与活动实体预览保护回归。
+- XuanYu.Core/Scene/Entities/EntitySnapshot.cs — 场景实体快照（原 SceneEntitySnapshot.cs）。
+- XuanYu.Core/Scene/Entities/TransformCommit.cs — 场景变换提交结果（原 SceneTransformCommitResult.cs）。
+- XuanYu.Core/Scene/Snapshots/IRenderSnapshotSource.cs — 场景渲染快照来源接口。
+- XuanYu.Core/Scene/Map/SurfaceSampler.cs — 地图地表高度采样。
+- XuanYu.Core/Scene/History/HistorySnapshot.cs — 编辑历史条目与修订快照。

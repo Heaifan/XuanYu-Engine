@@ -15,5 +15,5 @@ public interface IWorldTransformMutationContract
         EntityId entityKey,
         long expectedEntityRevision,
         CommittedTransform transform,
-        out SceneTransformCommitResult result);
+        out TransformCommit result);
 }

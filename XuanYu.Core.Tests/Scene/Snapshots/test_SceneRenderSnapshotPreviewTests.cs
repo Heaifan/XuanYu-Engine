@@ -10,7 +10,7 @@ public sealed class SceneRenderSnapshotPreviewTests
     [Fact]
     public void Empty_scene_cannot_apply_preview_to_missing_entity()
     {
-        var missing = new SceneEntitySnapshot(
+        var missing = new EntitySnapshot(
             EntityId.None, "", "", CommittedTransform.Identity);
         var snapshot = SceneRenderSnapshot.Empty with
         {
@@ -27,9 +27,9 @@ public sealed class SceneRenderSnapshotPreviewTests
     [Fact]
     public void Preview_affects_only_active_valid_entity()
     {
-        var active = new SceneEntitySnapshot(
+        var active = new EntitySnapshot(
             EntityId.FromInt(1), "当前实体", "Test", CommittedTransform.Identity);
-        var other = new SceneEntitySnapshot(
+        var other = new EntitySnapshot(
             EntityId.FromInt(2), "其他实体", "Test", CommittedTransform.Identity);
         var snapshot = new SceneRenderSnapshot(active, PreviewTransform:
             new PreviewTransform(new Vector3d(10, 0, 0)));
