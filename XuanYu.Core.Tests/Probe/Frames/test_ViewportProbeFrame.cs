@@ -1,7 +1,7 @@
 using XuanYu.Core.Diagnostics;
 using XuanYu.Core.Math;
 
-namespace XuanYu.Core.Tests.Observability.Probe.Frames;
+namespace XuanYu.Core.Tests.Probe.Frames;
 
 public sealed class ViewportProbeFrameTests
 {

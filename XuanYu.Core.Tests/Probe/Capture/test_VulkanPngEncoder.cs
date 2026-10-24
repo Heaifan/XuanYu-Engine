@@ -1,6 +1,6 @@
 using XuanYu.Core.Diagnostics;
 
-namespace XuanYu.Core.Tests.Observability.Probe.Capture;
+namespace XuanYu.Core.Tests.Probe.Capture;
 
 public sealed class VulkanPngEncoderTests
 {

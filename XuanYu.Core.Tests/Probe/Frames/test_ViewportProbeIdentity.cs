@@ -1,6 +1,6 @@
 using XuanYu.Core.Diagnostics;
 
-namespace XuanYu.Core.Tests.Observability.Probe.Frames;
+namespace XuanYu.Core.Tests.Probe.Frames;
 
 public sealed class ViewportProbeIdentityTests
 {

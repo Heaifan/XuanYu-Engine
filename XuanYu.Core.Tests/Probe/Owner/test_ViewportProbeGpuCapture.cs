@@ -1,6 +1,6 @@
 using XuanYu.Core.Diagnostics;
 
-namespace XuanYu.Core.Tests.Observability.Probe.Owner;
+namespace XuanYu.Core.Tests.Probe.Owner;
 
 public sealed class ViewportProbeGpuCaptureTests
 {

@@ -1,6 +1,6 @@
 using XuanYu.Core.Space.Diagnostics;
 
-namespace XuanYu.Core.Tests.Observability.Replay.Mesh;
+namespace XuanYu.Core.Tests.Replay.Mesh;
 
 public sealed class TerrainMeshBoundariesTests
 {

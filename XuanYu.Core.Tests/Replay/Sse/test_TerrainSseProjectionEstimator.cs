@@ -3,7 +3,7 @@ using XuanYu.Core.Space;
 using XuanYu.Core.Space.Diagnostics;
 using XuanYu.Core.Spatial;
 
-namespace XuanYu.Core.Tests.Observability.Replay.Sse;
+namespace XuanYu.Core.Tests.Replay.Sse;
 
 public sealed class TerrainSseProjectionEstimatorTests
 {
