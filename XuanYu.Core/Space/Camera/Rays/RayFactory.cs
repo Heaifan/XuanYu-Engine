@@ -2,7 +2,7 @@ using XuanYu.Core.Math;
 
 namespace XuanYu.Core.Space;
 
-public static class WorldRayFactory
+public static class RayFactory
 {
     public static WorldRay FromViewportPoint(
         ViewProjectionState state,
@@ -42,6 +42,9 @@ public static class WorldRayFactory
         return new WorldRay(origin, direction);
     }
 
+    public static WorldRay FromScreen(ViewProjectionState state, double x, double y) =>
+        FromViewportPoint(state, x, y);
+
     static double ToNdcX(ViewportState viewport, double logicalX)
     {
         return ((logicalX - viewport.LogicalX) / viewport.LogicalWidth * 2.0) - 1.0;
@@ -56,4 +59,10 @@ public static class WorldRayFactory
         global::System.Math.Max(
             global::System.Math.Max(global::System.Math.Abs(state.Camera.Position.X), global::System.Math.Abs(state.Camera.Position.Y)),
             global::System.Math.Max(global::System.Math.Abs(state.Camera.Position.Z), state.Camera.FarPlane)) >= 10_000.0;
+}
+
+public static class WorldRayFactory
+{
+    public static WorldRay FromViewportPoint(ViewProjectionState state, double x, double y) =>
+        RayFactory.FromScreen(state, x, y);
 }

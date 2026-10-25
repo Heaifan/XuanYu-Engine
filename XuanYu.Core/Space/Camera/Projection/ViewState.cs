@@ -69,7 +69,7 @@ public sealed partial class ViewProjectionState
         out ViewProjectionState? state)
     {
         try { state = Create(camera, viewport); return true; }
-        catch (InvalidOperationException) { state = null; return false; }
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentException) { state = null; return false; }
     }
 
     public Vector3d TransformPointToWorld(double ndcX, double ndcY, double ndcZ)

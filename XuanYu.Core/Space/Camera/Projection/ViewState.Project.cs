@@ -75,8 +75,11 @@ public sealed partial class ViewProjectionState
         Viewport.LogicalX + ((ndcX + 1.0) * 0.5 * Viewport.LogicalWidth),
         Viewport.LogicalY + ((1.0 - ndcY) * 0.5 * Viewport.LogicalHeight));
 
+    public ScreenPoint Project(Vector3d p) => ProjectWorldPoint(p);
+    public bool TryProject(Vector3d p, out ScreenPoint s) => TryProjectWorldPoint(p, out s);
+
     bool RequiresDoublePrecision(Vector3d point) =>
-        global::System.Math.Max(
+        RenderOrigin != Vector3d.Zero || global::System.Math.Max(
             global::System.Math.Max(global::System.Math.Abs(point.X), global::System.Math.Abs(point.Y)),
             global::System.Math.Max(global::System.Math.Abs(point.Z), Camera.FarPlane)) >= 10_000.0;
 }

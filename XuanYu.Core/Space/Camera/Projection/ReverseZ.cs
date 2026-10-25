@@ -2,9 +2,9 @@ using System.Numerics;
 
 namespace XuanYu.Core.Space;
 
-public static class ReverseZProjection
+public static class ReverseZ
 {
-    public static Matrix4x4 CreatePerspective(double verticalFovDegrees, double aspect, double near, double far)
+    public static Matrix4x4 Perspective(double verticalFovDegrees, double aspect, double near, double far)
     {
         ValidatePerspective(verticalFovDegrees, aspect, near, far);
         var y = 1.0 / global::System.Math.Tan(verticalFovDegrees * global::System.Math.PI / 360.0);
@@ -17,7 +17,7 @@ public static class ReverseZProjection
             0, 0, (float)(near * far / range), 0);
     }
 
-    public static Matrix4x4 CreateOrthographic(double width, double height, double near, double far)
+    public static Matrix4x4 Orthographic(double width, double height, double near, double far)
     {
         ValidatePositive(width, nameof(width));
         ValidatePositive(height, nameof(height));
@@ -47,4 +47,12 @@ public static class ReverseZProjection
     {
         if (!double.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(name);
     }
+}
+
+public static class ReverseZProjection
+{
+    public static Matrix4x4 CreatePerspective(double fov, double aspect, double near, double far) =>
+        ReverseZ.Perspective(fov, aspect, near, far);
+    public static Matrix4x4 CreateOrthographic(double width, double height, double near, double far) =>
+        ReverseZ.Orthographic(width, height, near, far);
 }
