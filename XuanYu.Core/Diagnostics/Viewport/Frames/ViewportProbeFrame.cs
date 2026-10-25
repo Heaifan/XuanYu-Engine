@@ -31,7 +31,11 @@ public static partial class ViewportProbe
     static string MatrixHash(Matrix4x4 matrix)
     {
         var hash = 17L;
-        foreach (var value in new[] { matrix.M11, matrix.M22, matrix.M33, matrix.M44, matrix.M41, matrix.M42, matrix.M43 })
+        foreach (var value in new[] {
+            matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+            matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+            matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+            matrix.M41, matrix.M42, matrix.M43, matrix.M44 })
             hash = (hash * 31) ^ BitConverter.SingleToInt32Bits(value);
         return hash.ToString("X");
     }

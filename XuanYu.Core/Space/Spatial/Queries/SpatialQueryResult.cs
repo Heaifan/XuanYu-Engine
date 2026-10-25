@@ -4,6 +4,7 @@ public sealed class SpatialQueryResult
 {
     public SpatialQueryResult(IReadOnlyList<SpatialBounds> candidates, SpatialQueryStats stats)
     {
+        ArgumentNullException.ThrowIfNull(candidates);
         Candidates = candidates;
         Stats = stats;
     }

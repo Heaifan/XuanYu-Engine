@@ -11,6 +11,8 @@ public readonly record struct RayAabbHit
             throw new ArgumentOutOfRangeException(nameof(distance));
         }
 
+        if (!double.IsFinite(point.X) || !double.IsFinite(point.Y) || !double.IsFinite(point.Z))
+            throw new ArgumentOutOfRangeException(nameof(point));
         Distance = distance;
         Point = point;
     }

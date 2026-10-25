@@ -37,7 +37,10 @@ public readonly record struct TerrainClipBoundsMetrics(int FrontFacingCornerCoun
             minX = global::System.Math.Min(minX, x); minY = global::System.Math.Min(minY, y);
             maxX = global::System.Math.Max(maxX, x); maxY = global::System.Math.Max(maxY, y);
         }
-        var depthMin = front == 0 ? double.NaN : minDepth;
+        if (front == 0)
+            return new(front, far, near, double.NaN, double.NaN,
+                new(double.NaN, double.NaN, double.NaN, double.NaN));
+        var depthMin = minDepth;
         var depthMax = front == 0 ? double.NaN : maxDepth;
         return new(front, far, near, depthMin, depthMax,
             new(minX, minY, maxX, maxY));
