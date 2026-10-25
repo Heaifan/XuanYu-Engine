@@ -6,7 +6,7 @@ public readonly record struct TerrainChunkBounds
 {
     public TerrainChunkBounds(int chunkId, SpatialAabb bounds, int cellCount = 240)
     {
-        if (cellCount != 240) throw new ArgumentOutOfRangeException(nameof(cellCount));
+        if (chunkId < 0 || cellCount <= 0) throw new ArgumentOutOfRangeException(nameof(cellCount));
         ChunkId = chunkId;
         Bounds = bounds;
         CellCount = cellCount;

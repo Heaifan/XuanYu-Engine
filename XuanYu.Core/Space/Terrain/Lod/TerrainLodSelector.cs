@@ -15,7 +15,13 @@ public static class TerrainLodSelector
     public static TerrainLodSelection Select(ViewProjectionState state, SpatialAabb bounds,
         int cellCountX, int cellCountY, int previousLod = -1)
     {
+        ArgumentNullException.ThrowIfNull(state);
+        if (cellCountX <= 0 || cellCountY <= 0)
+            throw new ArgumentOutOfRangeException(nameof(cellCountX));
         var projectedPixels = ProjectedPixels(state, bounds);
+        if (CrossesNearPlane(state, bounds))
+            return new TerrainLodSelection(MinLod, projectedPixels,
+                projectedPixels / Math.Max(cellCountX, cellCountY));
         var baseCellPixels = projectedPixels /
             global::System.Math.Max(cellCountX, cellCountY);
         var candidate = Candidate(baseCellPixels);
@@ -40,6 +46,19 @@ public static class TerrainLodSelector
         if (candidate > previous && basePixels * (1 << candidate) > limit * (1 - HysteresisRatio)) return previous;
         if (candidate < previous && basePixels * (1 << previous) <= limit * (1 + HysteresisRatio)) return previous;
         return candidate;
+    }
+
+    // Near-plane clipping generates vertices absent from the original eight AABB corners.
+    static bool CrossesNearPlane(ViewProjectionState state, SpatialAabb bounds)
+    {
+        var min = double.PositiveInfinity; var max = double.NegativeInfinity;
+        for (var corner = 0; corner < 8; corner++)
+        {
+            var depth = (TerrainFrustumCuller.Corner(bounds, corner) -
+                state.Camera.Position).Dot(state.Camera.Forward);
+            min = Math.Min(min, depth); max = Math.Max(max, depth);
+        }
+        return min <= state.Camera.NearPlane && max >= state.Camera.NearPlane;
     }
 
     static double ProjectedPixels(ViewProjectionState state, SpatialAabb bounds)

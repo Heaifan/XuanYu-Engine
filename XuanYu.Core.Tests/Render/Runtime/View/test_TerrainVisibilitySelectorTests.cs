@@ -73,6 +73,13 @@ public sealed class TerrainVisibilitySelectorTests
 
     [Fact] public void ReverseZFrustumRegression() => Assert.False(Cull(Box(0, 0, 99)));
 
+    [Fact]
+    public void Near_plane_crossing_forces_finest_lod()
+    {
+        Assert.Equal(0, TerrainLodSelector.Select(State(),
+            new SpatialAabb(new(-100, -100, .5), new(100, 100, 10))).Lod);
+    }
+
     static void AssertInsideFrustum(SpatialAabb box) => Assert.False(Cull(box));
     static bool Cull(SpatialAabb box, ProjectionMode mode = ProjectionMode.Perspective) =>
         !TerrainFrustumCuller.Intersects(State(mode), box);

@@ -33,6 +33,8 @@ public static class TerrainChunkVisibility
 
             var selection = TerrainLodSelector.Select(state, chunk.Bounds, -1);
             entries.Add(new(chunk.ChunkId, false, selection));
+            if (selection.Lod is < TerrainLodSelector.MinLod or > TerrainLodSelector.MaxLod)
+                throw new InvalidOperationException("地形 LOD 越界。");
             lods[selection.Lod]++;
         }
 
