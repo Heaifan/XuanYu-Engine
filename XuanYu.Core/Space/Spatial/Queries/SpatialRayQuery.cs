@@ -11,6 +11,7 @@ public readonly record struct SpatialRayQuery
             throw new ArgumentOutOfRangeException(nameof(maxDistance));
         }
 
+        if (ray.Direction.IsZero) throw new ArgumentOutOfRangeException(nameof(ray));
         Ray = ray;
         MaxDistance = maxDistance;
     }

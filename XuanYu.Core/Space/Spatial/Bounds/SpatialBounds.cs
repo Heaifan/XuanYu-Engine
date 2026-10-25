@@ -7,7 +7,9 @@ public readonly record struct SpatialBounds
     public SpatialBounds(EntityId entityKey, SpatialAabb worldBounds, SpatialQueryCategory category)
     {
         if (!entityKey.IsValid) throw new ArgumentOutOfRangeException(nameof(entityKey));
-        if (category == SpatialQueryCategory.None) throw new ArgumentOutOfRangeException(nameof(category));
+        if (category == SpatialQueryCategory.None ||
+            (category & ~SpatialQueryCategory.All) != 0)
+            throw new ArgumentOutOfRangeException(nameof(category));
 
         EntityKey = entityKey;
         WorldBounds = worldBounds;

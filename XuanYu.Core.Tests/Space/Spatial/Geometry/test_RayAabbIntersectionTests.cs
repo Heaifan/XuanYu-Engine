@@ -38,6 +38,15 @@ public sealed class RayAabbIntersectionTests
         Assert.False(RayAabbIntersection.TryHit(Ray(new Vector3d(1, 0, 0), Vector3d.UnitY, 10), box, out _));
     }
 
+    [Fact]
+    public void Tiny_nonzero_axis_still_intersects_at_long_distance()
+    {
+        var box = new SpatialAabb(new(1e9, .09, -1), new(1e9 + 10, .11, 1));
+        var ray = Ray(Vector3d.Zero, new(1, 1e-10, 0), 2e9);
+        Assert.True(RayAabbIntersection.TryHit(ray, box, out _));
+        Assert.True(SpatialRayAabb.Intersects(ray, box));
+    }
+
     static SpatialRayQuery Ray(Vector3d origin, Vector3d direction, double maxDistance)
     {
         return new SpatialRayQuery(new WorldRay(origin, direction), maxDistance);

@@ -10,7 +10,7 @@ public sealed class SpatialRaycastResult
 
     public SpatialRaycastHit? Hit { get; }
 
-    public bool HasHit => Hit.HasValue;
+    public bool HasHit => Hit is { IsHit: true };
 
     public SpatialRaycastStats Stats { get; }
 }
