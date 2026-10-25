@@ -8,6 +8,104 @@
 - XuanYu.Editor.UI/Control/UiVmXycCamera.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Control/XycCameraValidator.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Control/XycTestDemPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceFenceWaitAdapterTests.cs — 独立测试源码（test_ 前缀）。
+- XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceSampleBufferTests.cs — 独立测试源码（test_ 前缀）。
+- XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceSampleContractTests.cs — 独立测试源码（test_ 前缀）。
+- XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceStatisticsTests.cs — 独立测试源码（test_ 前缀）。
+- XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceTerrainSamplesTests.cs — 独立测试源码（test_ 前缀）。
+- XuanYu.Render.Abstractions.Tests/XuanYu.Render.Abstractions.Tests.csproj — Render.Abstractions 独立测试项目。
+- XuanYu.Render.Abstractions/Contracts/Host/Bridge/INativeHostSurfaceBridge.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Host/Bridge/INativeHostSurfaceBridgeFactory.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Host/Lifecycle/NativeHostHandleSnapshot.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Host/Lifecycle/NativeHostLifecycleState.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Host/Lifecycle/NativeHostSurfaceHandle.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Projection/IRenderProjectionSource.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Projection/RenderCameraProjection.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Projection/RenderProjection.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Projection/RenderProjectionResult.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/Draw/RenderDrawPlan.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/Draw/RenderDrawPlan.Typed.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/Draw/RenderEntityProjection.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/Draw/RenderEntityType.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/Labels/RenderLabelBitmap.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/StaticModel/RenderStaticModelKey.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/StaticModel/RenderStaticModelPrimitive.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/StaticModel/RenderStaticModelResource.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/StaticModel/RenderStaticModelTransform.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/StaticModel/RenderStaticModelVertex.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/VectorOverlay/RenderVectorOverlayKey.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/VectorOverlay/RenderVectorOverlayLabel.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/VectorOverlay/RenderVectorOverlayPrimitive.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/VectorOverlay/RenderVectorOverlayResource.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Scene/VectorOverlay/RenderVectorOverlayVertex.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Grid/EditorViewPlaneGridKind.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Grid/ReferenceGridFrameState.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Map/MapRenderSnapshot.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Map/MapSurfaceResourceKey.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/ReferencePlane/ReferencePlaneRenderSnapshot.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Scale/ScaleBarGroundProjection.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Scale/ScaleIndicatorGlyphLite.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Scale/ScaleIndicatorMetric.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Scale/ScaleIndicatorOverlayProjection.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Viewport/EditorViewportAssistState.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Surface/Viewport/ViewportOverlayAnchor.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Chunk/TerrainChunkDescriptor.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Chunk/TerrainChunkDraw.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Chunk/TerrainChunkGpuKey.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Chunk/TerrainLodLevel.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Render/TerrainRenderMetadata.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Render/TerrainRenderResource.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Render/TerrainRenderStats.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Render/TerrainRenderTransform.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Surface/TerrainChunkMesh.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Surface/TerrainHeightfield.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Contracts/Terrain/Surface/TerrainMesh.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Identity/RendererBuildIdentity.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Queries/RendererEventReader.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/RendererEvent.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/RendererEventChannel.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/RendererEventCodes.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/RendererEventJson.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/RendererEventLevel.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Sessions/RendererEventSession.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Sessions/RendererEventSession.FrameEvents.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Sessions/RendererEventSession.Lifecycle.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Sessions/RendererEventSessionFactory.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Sessions/RendererEventSessionOptions.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Storage/RendererEventFileSink.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Events/Storage/RendererEventWriter.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Ground/GroundProbeChain.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Ground/ReferencePlaneDiagnosticProbe.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Ground/ReferencePlaneProbeLogger.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Host/NativeHostLifecycleLogFormatter.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Host/NativeHostLifecycleProbe.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Performance/Samples/PerformanceFrameSample.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Performance/Samples/PerformanceTerrainCounters.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Performance/Samples/PerformanceTiming.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Performance/Statistics/PerformanceFenceWaitAdapter.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Performance/Statistics/PerformanceMetric.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Performance/Statistics/PerformanceSampleBuffer.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Performance/Statistics/PerformanceStatistics.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Terrain/TerrainProbeLogger.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Diagnostics/Terrain/TerrainSnapshotFingerprint.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Map/MapBoundsGeometry.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Map/MapSurfaceGeometry.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/ReferencePlane/ReferenceGridScale.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/ReferencePlane/ReferencePlaneFootprint.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/ReferencePlane/ReferencePlaneHorizonCoverage.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/ReferencePlane/ReferencePlanePatchPlacement.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Terrain/Build/TerrainChunkMeshBuilder.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Terrain/Build/TerrainChunkMeshBuilder.Skirts.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Terrain/Build/TerrainChunkPartitioner.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Terrain/Build/TerrainMeshBuilder.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Terrain/Build/TerrainNormalBuilder.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Viewport/ViewportMetricScale.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Geometry/Viewport/ViewportOverlayLayoutResolver.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Runtime/FrameExecutionPolicy.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Runtime/LatestRenderProjectionQueue.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Runtime/MapSurface/MapSurfaceResourceUpdatePolicy.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/Runtime/MapSurface/MapSurfaceResourceUpdateText.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
+- XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj — Render.Abstractions 项目定义（仅依赖 Core）。
 - XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.OffscreenInitialize.cs — 离屏 framebuffer owner 初始化。
 - XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Offscreen.cs — Vulkan 离屏提交、Fence 等待与 GPU Readback。
 - XuanYu.Render.Vulkan/Render/Readback/VulkanOffscreenColorTarget.cs — 无窗口 Vulkan ColorAttachment / TransferSrc 图像所有权。
@@ -1362,76 +1460,6 @@
 - XuanYu.Editor/Workspace/RegionAuthoringMode.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/XuanYu.Editor.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Engine.slnx — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Abstractions/Diagnostics/Ground/GroundProbeChain.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/Diagnostics/Ground/ReferencePlaneDiagnosticProbe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/Diagnostics/ReferencePlaneProbeLogger.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/Diagnostics/TerrainProbeLogger.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/Diagnostics/TerrainSnapshotFingerprint.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/EditorViewPlaneGridKind.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/EditorViewportAssistState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/FrameExecutionPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/INativeHostSurfaceBridge.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/INativeHostSurfaceBridgeFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/IRenderProjectionSource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/LatestRenderProjectionQueue.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/MapBoundsGeometry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/MapRenderSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/MapSurfaceGeometry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/MapSurfaceResourceKey.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/MapSurfaceResourceUpdatePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/MapSurfaceResourceUpdateText.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/NativeHostHandleSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/NativeHostLifecycleLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/NativeHostLifecycleProbe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/NativeHostLifecycleState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ReferenceGridFrameState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ReferenceGridScale.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ReferencePlaneFootprint.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ReferencePlaneHorizonCoverage.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ReferencePlanePatchPlacement.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ReferencePlaneRenderSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderCameraProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderDrawPlan.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderDrawPlan.Typed.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderEntityProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderEntityType.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderLabelBitmap.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderProjectionResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderStaticModelKey.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderStaticModelPrimitive.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderStaticModelResource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderStaticModelTransform.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderStaticModelVertex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderVectorOverlayKey.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderVectorOverlayLabel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderVectorOverlayPrimitive.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderVectorOverlayResource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/RenderVectorOverlayVertex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ScaleBarGroundProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ScaleIndicatorGlyphLite.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ScaleIndicatorMetric.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ScaleIndicatorOverlayProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/Terrain/Build/TerrainChunkMeshBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/Terrain/Build/TerrainChunkPartitioner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/Terrain/Build/TerrainMeshBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/Terrain/Build/TerrainNormalBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainChunkDescriptor.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainChunkDraw.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainChunkGpuKey.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainChunkMesh.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainHeightfield.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainLodLevel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainMesh.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainRenderMetadata.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainRenderResource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainRenderStats.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/TerrainRenderTransform.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ViewportMetricScale.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ViewportOverlayAnchor.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/ViewportOverlayLayoutResolver.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Render.Vulkan/Bridge/VulkanBridgeDeviceAttachStep.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Render.Vulkan/Bridge/VulkanBridgeRenderSessionAttachStep.cs — C# 源码文件，承载仓库实现或测试职责。
