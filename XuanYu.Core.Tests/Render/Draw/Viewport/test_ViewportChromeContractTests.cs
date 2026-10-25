@@ -10,7 +10,7 @@ public sealed class ViewportChromeContractTests
 {
     static string UiFile(string path)
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = TestSourceRoot.Root;
         var full = Path.Combine(root, "XuanYu.Editor.UI", path);
         Assert.True(File.Exists(full), $"UI 文件缺失：{full}");
         return File.ReadAllText(full);
@@ -41,7 +41,7 @@ public sealed class ViewportChromeContractTests
         // F3-F1：Avalonia 覆盖层已删除（airspace 遮挡），导航 Gizmo 移入 Vulkan Overlay Pass。
         var uiRoot = UiFile(Path.Combine("Root", "UiRoot.axaml"));
         Assert.DoesNotContain("ViewGizmo", uiRoot);
-        var dir = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Viewport");
+        var dir = Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Viewport");
         Assert.False(File.Exists(Path.Combine(dir, "ViewGizmo.axaml")), "ViewGizmo.axaml 应已删除");
         Assert.False(File.Exists(Path.Combine(dir, "ViewNavigationGizmo.cs")), "Avalonia Gizmo 控件应已删除");
         Assert.True(File.Exists(Path.Combine(dir, "ViewNavigationGizmo.Layout.cs")), "投影纯数学应保留（命中复用）");

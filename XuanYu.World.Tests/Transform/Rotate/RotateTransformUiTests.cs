@@ -59,7 +59,7 @@ public sealed partial class RotateTransformUiTests
         var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
         var camera = vm.RenderSnapshot.CameraState;
         var origin = vm.RenderSnapshot.Entity.Transform.Position;
-        var worldRadius = RotateGizmoScreenRadius.ComputeWorldRadius(camera, viewport, origin);
+        var worldRadius = RotateScreenRadius.ComputeWorldRadius(camera, viewport, origin);
         var state = ViewProjectionState.Create(camera, viewport);
         var layout = RotateGizmoLayout.Project(state, origin, worldRadius);
         var ring = layout.Rings.Single(r => r.Axis == axis);

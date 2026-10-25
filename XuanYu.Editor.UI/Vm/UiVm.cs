@@ -11,7 +11,7 @@ using XuanYu.Render.Abstractions;
 using XuanYu.World;
 using XuanYu.World.Scene;
 namespace XuanYu.Editor.UI;
-public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISceneRenderSnapshotSource,
+public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRenderSnapshotSource,
     XuanYu.Render.Abstractions.IRenderProjectionSource
 {
     readonly EditorStateOwner _editorState;

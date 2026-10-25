@@ -4,7 +4,7 @@ namespace XuanYu.Core.Tests.Render;
 
 public sealed class ReferenceGridShaderSourceContractTests
 {
-    static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+    static string Root => TestSourceRoot.Root;
     static string ShaderSource(string name) => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", name));
     static string PipelineSource() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
 

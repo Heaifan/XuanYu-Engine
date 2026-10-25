@@ -19,6 +19,9 @@ public sealed class GroundSnapshotLifecycleContractTests
             typeof(VulkanClearFrameOwner));
         var field = typeof(VulkanClearFrameOwner).GetField("_mapSurfaceMap",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var buffers = typeof(VulkanClearFrameOwner).GetField("_mapSurfaceFrameVertexBuffers",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        buffers.SetValue(owner, Array.CreateInstance(buffers.FieldType.GetElementType()!, 0));
         field.SetValue(owner, Snap(7));
 
         owner.ClearMapSurface();

@@ -55,7 +55,7 @@ public sealed class MapDocumentAggregateBridgeTests
     {
         var doc = Doc();
         var state = WorldMapState.From(MapDocumentAggregateBridge.ToAggregate(doc));
-        var expected = MapSurfaceSampler.SampleHeight(
+        var expected = SurfaceSampler.SampleHeight(
             MapSurfaceKind.GentleHillsV1,
             doc.Surface.BaseHeightMeters,
             doc.Surface.AmplitudeMeters,

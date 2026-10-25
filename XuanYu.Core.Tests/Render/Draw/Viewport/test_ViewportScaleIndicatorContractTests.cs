@@ -8,7 +8,7 @@ public sealed class ViewportScaleIndicatorContractTests
     [Fact]
     public void Scale_indicator_is_a_vulkan_viewport_overlay()
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = TestSourceRoot.Root;
         var xaml = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanViewport.axaml"));
         var host = XDocument.Parse(xaml).Descendants()
             .SingleOrDefault(x => x.Name.LocalName == "VulkanNativeHost");

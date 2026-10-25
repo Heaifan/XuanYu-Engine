@@ -4,7 +4,7 @@ namespace XuanYu.Core.Tests.Render.Diagnostics;
 
 public sealed class RenderLogNoiseContractTests
 {
-    static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+    static string Root => TestSourceRoot.Root;
     static string Read(string path) => File.ReadAllText(Path.Combine(Root, path));
 
     [Fact]

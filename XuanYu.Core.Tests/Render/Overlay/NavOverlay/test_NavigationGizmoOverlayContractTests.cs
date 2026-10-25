@@ -14,7 +14,7 @@ public sealed partial class NavigationGizmoOverlayContractTests
 {
     static string ShaderFile(string name)
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = TestSourceRoot.Root;
         var full = Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders", name);
         Assert.True(File.Exists(full), $"Shader 缺失：{full}");
         return File.ReadAllText(full);
@@ -48,7 +48,7 @@ public sealed partial class NavigationGizmoOverlayContractTests
     [Fact]
     public void Router_updates_the_active_consumer_during_drag()
     {
-        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var root = TestSourceRoot.Root;
         var source = File.ReadAllText(Path.Combine(root, "XuanYu.Editor", "Input", "ViewportInputRouter.cs"));
         var navigation = File.ReadAllText(Path.Combine(root, "XuanYu.Editor", "Input", "Consumers", "NavigationViewportInputConsumer.cs"));
         Assert.Contains("_handler.Update(new ViewportGestureContext", navigation);

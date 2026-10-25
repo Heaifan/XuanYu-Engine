@@ -4,7 +4,7 @@ namespace XuanYu.Core.Tests.Render.Background;
 
 public sealed class FarViewBackgroundShaderSourceContractTests
 {
-    private static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+    private static string Root => TestSourceRoot.Root;
     private static string Shader() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "scene.frag"));
     private static string Bytecode() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "ShaderBytecode.Frag.cs"));
 

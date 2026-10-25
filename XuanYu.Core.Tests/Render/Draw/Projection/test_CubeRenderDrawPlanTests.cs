@@ -67,7 +67,7 @@ public sealed class CubeRenderDrawPlanTests
     [Fact]
     public void Cube_world_type_reaches_the_final_frame_plan()
     {
-        var entity = new SceneEntitySnapshot(EntityId.FromInt(3), "Cube",
+        var entity = new EntitySnapshot(EntityId.FromInt(3), "Cube",
             WorldEntityTypes.Cube, CommittedTransform.Identity);
         var snapshot = new SceneRenderSnapshot(entity, IsSelected: true,
             RenderEntities: [entity], Camera: DefaultEditorCamera.Create(1));

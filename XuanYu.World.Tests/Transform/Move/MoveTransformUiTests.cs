@@ -48,7 +48,7 @@ public sealed partial class MoveTransformUiTests
     {
         var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
         var state = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, viewport);
-        var length = MoveGizmoScreenSize.ComputeWorldAxisLength(
+        var length = MoveScreenSize.ComputeWorldAxisLength(
             vm.RenderSnapshot.CameraState, viewport, vm.RenderSnapshot.Entity.Transform.Position);
         var layout = MoveGizmoLayout.Project(
             state, vm.RenderSnapshot.Entity.Transform.Position, length);

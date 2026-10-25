@@ -5,7 +5,7 @@ namespace XuanYu.Core.Tests.Render.Grid;
 
 public sealed class ReverseZWorldGridContractTests
 {
-    static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+    static string Root => TestSourceRoot.Root;
     static string Shader => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "editor_world_reference_grid.frag"));
     static string Pipeline => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
 

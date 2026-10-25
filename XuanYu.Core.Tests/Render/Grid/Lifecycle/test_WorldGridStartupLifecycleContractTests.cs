@@ -5,7 +5,7 @@ namespace XuanYu.Core.Tests.Render.Grid;
 
 public sealed class WorldGridStartupLifecycleContractTests
 {
-    static string Root => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+    static string Root => TestSourceRoot.Root;
     static string GridSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.Grid.cs"));
     static string ScaleSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.GridScale.cs"));
 

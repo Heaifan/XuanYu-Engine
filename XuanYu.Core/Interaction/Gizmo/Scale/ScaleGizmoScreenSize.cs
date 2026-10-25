@@ -3,7 +3,7 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Gizmo;
 
-// Scale Gizmo 屏幕空间恒定尺寸换算（与 RotateGizmoScreenRadius 同思路）。
+// Scale Gizmo 屏幕空间恒定尺寸换算（与 RotateScreenRadius 同思路）。
 // CPU 命中布局与 Vulkan 绘制共用同一世界轴长，保证“所看到 ≈ 点得到”。
 public static class ScaleGizmoScreenSize
 {
