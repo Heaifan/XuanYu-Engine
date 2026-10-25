@@ -35,3 +35,12 @@ Rules:
 - `Diagnostics/System`: self-test and workspace path diagnostics.
 
 Migration note: This layout groups existing files without changing their contents or C# namespaces. Directory location is not a namespace contract. The current `.csproj` uses SDK-default recursive `*.cs` inclusion. Runtime and test integration still require a build on a suitable Windows/.NET environment.
+
+## 2026-10-25 Camera / WP2 candidate map (v0.3.0.37-fix)
+
+Camera/Projection: `ProjectionMode.cs`, `ReverseZ.cs`, `ViewState.cs`, `ViewState.Project.cs`, `ViewState.Unproject.cs`.
+Camera/Rays: `RayFactory.cs`, `WorldRay.cs`.
+Camera/State: `CameraState.cs`, `EditorCamera.cs`, `ViewportState.cs`.
+Old exported names remain as facades for cross-project consumers; `ViewProjectionState` remains the public state type pending repository-wide migration.
+Terrain/Bounds now contains `TerrainVisibilityTypes.cs`, and Spatial/Intersections contains shared `RayBoxInterval.cs`.
+This migration includes limited correctness fixes; it does not assert Windows build success or WP2 real-GPU graduation.
