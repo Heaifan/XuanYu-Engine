@@ -76,6 +76,17 @@ public sealed class TerrainChunkMeshBuilderTests
         Assert.NotEmpty(mesh.Vertices);
     }
 
+    [Fact]
+    public void Masked_heightfield_does_not_emit_surface_triangles_through_holes()
+    {
+        var field = new TerrainHeightfield(3, 3, Enumerable.Repeat(4d, 9).ToArray(),
+            new[] { true, false, false, false, false, false, false, false, false },
+            TerrainRenderMetadata.Empty, 1);
+        var chunk = TerrainChunkPartitioner.Partition(field, "terrain", 1)[0];
+        var mesh = TerrainChunkMeshBuilder.Build(field, chunk, TerrainLodLevel.Lod0, 1);
+        Assert.DoesNotContain((uint)0, mesh.Indices);
+    }
+
     static TerrainHeightfield Field(int width, int height, double[]? values = null) =>
         new(width, height, values ?? Enumerable.Repeat(1d, width * height).ToArray(),
             new bool[width * height], TerrainRenderMetadata.Empty, 1d);

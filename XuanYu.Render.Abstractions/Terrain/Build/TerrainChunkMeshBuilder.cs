@@ -1,6 +1,6 @@
 namespace XuanYu.Render.Abstractions;
 
-public static class TerrainChunkMeshBuilder
+public static partial class TerrainChunkMeshBuilder
 {
     public static TerrainChunkMesh Build(TerrainHeightfield field,
         TerrainChunkDescriptor chunk, TerrainLodLevel lodLevel, double verticalExaggeration)
@@ -22,7 +22,12 @@ public static class TerrainChunkMeshBuilder
         var indices = new List<uint>();
         for (var y = 0; y < ys.Count - 1; y++)
             for (var x = 0; x < xs.Count - 1; x++)
+            {
+                if (Missing(field, xs[x], ys[y]) || Missing(field, xs[x + 1], ys[y]) ||
+                    Missing(field, xs[x], ys[y + 1]) || Missing(field, xs[x + 1], ys[y + 1]))
+                    continue;
                 AddQuad(indices, y * xs.Count + x, (y + 1) * xs.Count + x, xs.Count);
+            }
         AddSkirts(vertices, indices, field, xs, ys, verticalExaggeration);
         return new(vertices, indices, xs.Count * ys.Count, stride);
     }
@@ -46,6 +51,9 @@ public static class TerrainChunkMeshBuilder
             normal.X, normal.Y, normal.Z);
     }
 
+    static bool Missing(TerrainHeightfield f, int x, int y) =>
+        f.NoDataMask[y * f.Width + x];
+
     static void AddQuad(List<uint> indices, int topLeft, int bottomLeft, int width)
     {
         var topRight = topLeft + 1;
@@ -54,39 +62,4 @@ public static class TerrainChunkMeshBuilder
             (uint)topRight, (uint)bottomLeft, (uint)bottomRight]);
     }
 
-    static void AddSkirts(List<TerrainMeshVertex> vertices, List<uint> indices,
-        TerrainHeightfield field, List<int> xs, List<int> ys, double exaggeration)
-    {
-        var surface = vertices.Count;
-        AddEdge(vertices, indices, field, exaggeration, surface,
-            Enumerable.Range(0, xs.Count).Select(x => x), xs.Count, 0, xs, ys, true);
-        AddEdge(vertices, indices, field, exaggeration, surface,
-            Enumerable.Range(0, xs.Count).Select(x => (ys.Count - 1) * xs.Count + x),
-            xs.Count, ys.Count - 1, xs, ys, true);
-        AddEdge(vertices, indices, field, exaggeration, surface,
-            Enumerable.Range(0, ys.Count).Select(y => y * xs.Count), ys.Count, 0, ys, xs, false);
-        AddEdge(vertices, indices, field, exaggeration, surface,
-            Enumerable.Range(0, ys.Count).Select(y => y * xs.Count + xs.Count - 1),
-            ys.Count, xs.Count - 1, ys, xs, false);
-    }
-
-    static void AddEdge(List<TerrainMeshVertex> vertices, List<uint> indices,
-        TerrainHeightfield field, double exaggeration, int surface, IEnumerable<int> edge,
-        int count, int fixedIndex, List<int> varying, List<int> other, bool horizontal)
-    {
-        var baseIndex = vertices.Count;
-        foreach (var i in edge)
-        {
-            var v = vertices[i];
-            vertices.Add(v with { Z = v.Z - Math.Max(1,
-                Math.Max(field.CellSizeMeters, field.CellSizeYMeters) * exaggeration) });
-        }
-        var edgeArray = edge.ToArray();
-        for (var i = 0; i < count - 1; i++)
-        {
-            var a = edgeArray[i]; var b = edgeArray[i + 1];
-            var c = (uint)(baseIndex + i); var d = c + 1;
-            indices.AddRange([(uint)a, c, (uint)b, (uint)b, c, d]);
-        }
-    }
 }

@@ -24,6 +24,8 @@ public static class TerrainMeshBuilder
                 var topLeft = (uint)(row * field.Width + column);
                 var topRight = topLeft + 1; var bottomLeft = topLeft + (uint)field.Width;
                 var bottomRight = bottomLeft + 1;
+                if (field.NoDataMask[(int)topLeft] || field.NoDataMask[(int)topRight] ||
+                    field.NoDataMask[(int)bottomLeft] || field.NoDataMask[(int)bottomRight]) continue;
                 indices.AddRange([topLeft, bottomLeft, topRight, topRight, bottomLeft, bottomRight]);
             }
         return new(vertices, indices);

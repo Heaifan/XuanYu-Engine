@@ -33,10 +33,13 @@ public static class TerrainChunkPartitioner
         for (var y = startY; y <= startY + countY; y++)
             for (var x = startX; x <= startX + countX; x++)
             {
+                if (field.NoDataMask[y * field.Width + x]) continue;
                 var value = field.ElevationAt(y, x);
+                if (!double.IsFinite(value)) continue;
                 min = Math.Min(min, value);
                 max = Math.Max(max, value);
             }
+        if (double.IsPositiveInfinity(min)) { min = 0; max = 0; }
         var sizeX = field.CellSizeMeters;
         var sizeY = field.CellSizeYMeters;
         return new(id, revision, chunkX, chunkY, startX, startY, countX, countY,
