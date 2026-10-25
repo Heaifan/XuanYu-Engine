@@ -72,20 +72,6 @@ public sealed partial class ViewProjectionState
         catch (Exception ex) when (ex is InvalidOperationException or ArgumentException) { state = null; return false; }
     }
 
-    public Vector3d TransformPointToWorld(double ndcX, double ndcY, double ndcZ)
-    {
-        if (!double.IsFinite(ndcX) || !double.IsFinite(ndcY) || !double.IsFinite(ndcZ))
-        {
-            throw new ArgumentOutOfRangeException(nameof(ndcX));
-        }
-
-        var clip = new Vector4((float)ndcX, (float)ndcY, (float)ndcZ, 1.0f);
-        var world = Vector4.Transform(clip, InverseViewProjection);
-        if (world.W == 0.0f) throw new InvalidOperationException("World 坐标 W 为 0。");
-
-        return RenderOrigin + new Vector3d(world.X / world.W, world.Y / world.W, world.Z / world.W);
-    }
-
     static Vector3 ToVector3(Vector3d vector)
     {
         return new Vector3((float)vector.X, (float)vector.Y, (float)vector.Z);

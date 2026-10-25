@@ -25,7 +25,7 @@ public static partial class ViewportProbe
         if (_lastGpuFrame == CurrentFrameId && _lastGpuHash == hash) return;
         _lastGpuFrame = CurrentFrameId;
         _lastGpuHash = hash;
-        Log("terrain", $"[CPU-GPU] CpuCameraRevision={camera.Revision};GpuCameraRevision={camera.Revision};CpuViewProjectionRevision={camera.Revision};GpuViewProjectionRevision={camera.Revision};CpuViewProjectionHash={hash};GpuViewProjectionHash={hash};CpuRenderOriginRevision={camera.Revision};GpuRenderOriginRevision={camera.Revision};CpuGpuCameraMatch=YES;CpuGpuRenderOriginMatch=YES;RenderOrigin={origin}");
+        Log("terrain", $"[CPU-GPU] CpuCameraRevision={camera.Revision};GpuCameraRevision={camera.Revision};CpuViewProjectionRevision={camera.Revision};GpuViewProjectionRevision={camera.Revision};CpuViewProjectionHash=NOT_CAPTURED;GpuViewProjectionHash={hash};CpuRenderOriginRevision=UNKNOWN;GpuRenderOriginRevision=UNKNOWN;CpuGpuCameraMatch=UNKNOWN;CpuGpuRenderOriginMatch=UNKNOWN;RenderOrigin={origin}");
     }
 
     static string MatrixHash(Matrix4x4 matrix)
