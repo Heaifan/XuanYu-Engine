@@ -41,6 +41,7 @@ sealed class VulkanTerrainGpuResource : IDisposable
             (float)(v.Y + chunk.StartSampleY * resource.CellSizeYMeters), (float)v.Z,
             (float)v.Nx, (float)v.Ny, (float)v.Nz, 0, 0)).ToArray();
         buildTimer.Stop(); meshBuildMs = buildTimer.Elapsed.TotalMilliseconds;
+        if (mesh.Indices.Count == 0) { error = "NO_TRIANGLES"; return null; }
         var uploadTimer = Stopwatch.StartNew();
         var vb = VulkanStaticModelBuffer.Create(vk, device, vertices, BufferUsageFlags.VertexBufferBit, out error);
         if (vb is null) { uploadMs = uploadTimer.Elapsed.TotalMilliseconds; return null; }

@@ -8,7 +8,7 @@ internal static class RayBoxInterval
         var valid = Axis(ray.Origin.X, ray.Direction.X, box.Min.X, box.Max.X, ref lo, ref hi)
             && Axis(ray.Origin.Y, ray.Direction.Y, box.Min.Y, box.Max.Y, ref lo, ref hi)
             && Axis(ray.Origin.Z, ray.Direction.Z, box.Min.Z, box.Max.Z, ref lo, ref hi);
-        distance = valid ? Math.Max(0, lo) : 0;
+        distance = valid ? global::System.Math.Max(0, lo) : 0;
         return valid;
     }
 
@@ -19,7 +19,7 @@ internal static class RayBoxInterval
         var a = (min - origin) / direction;
         var b = (max - origin) / direction;
         if (a > b) (a, b) = (b, a);
-        lo = Math.Max(lo, a); hi = Math.Min(hi, b);
+        lo = global::System.Math.Max(lo, a); hi = global::System.Math.Min(hi, b);
         return lo <= hi;
     }
 }

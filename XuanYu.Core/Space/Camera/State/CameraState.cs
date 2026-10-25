@@ -56,7 +56,7 @@ public readonly record struct CameraState
             throw new ArgumentOutOfRangeException(nameof(farPlane));
         Position = source.Position; Forward = source.Forward; Right = source.Right; Up = source.Up;
         VerticalFovDegrees = source.VerticalFovDegrees; NearPlane = source.NearPlane;
-        FarPlane = farPlane; Revision = source.Revision; Mode = source.Mode;
+        FarPlane = farPlane; Revision = checked(source.Revision + 1); Mode = source.Mode;
         OrthographicScale = source.OrthographicScale;
     }
 

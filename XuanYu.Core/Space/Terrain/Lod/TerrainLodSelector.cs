@@ -21,7 +21,7 @@ public static class TerrainLodSelector
         var projectedPixels = ProjectedPixels(state, bounds);
         if (CrossesNearPlane(state, bounds))
             return new TerrainLodSelection(MinLod, projectedPixels,
-                projectedPixels / Math.Max(cellCountX, cellCountY));
+                projectedPixels / global::System.Math.Max(cellCountX, cellCountY));
         var baseCellPixels = projectedPixels /
             global::System.Math.Max(cellCountX, cellCountY);
         var candidate = Candidate(baseCellPixels);
@@ -56,7 +56,7 @@ public static class TerrainLodSelector
         {
             var depth = (TerrainFrustumCuller.Corner(bounds, corner) -
                 state.Camera.Position).Dot(state.Camera.Forward);
-            min = Math.Min(min, depth); max = Math.Max(max, depth);
+            min = global::System.Math.Min(min, depth); max = global::System.Math.Max(max, depth);
         }
         return min <= state.Camera.NearPlane && max >= state.Camera.NearPlane;
     }

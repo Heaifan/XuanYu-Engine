@@ -43,7 +43,12 @@ sealed partial class VulkanTerrainGpuCache : IDisposable
         var next = VulkanTerrainGpuResource.Create(_vk, _device, resource, chunk, lod, transform,
             out var error, out var meshMs, out var uploadMs);
         MeshBuildMilliseconds += meshMs; UploadMilliseconds += uploadMs;
-        if (next is null) { _log?.Invoke($"Terrain Chunk GPU 资源创建失败：{error}"); return null; }
+        if (next is null)
+        {
+            if (error != "NO_TRIANGLES")
+                _log?.Invoke($"Terrain Chunk GPU 资源创建失败：{error}");
+            return null;
+        }
         _resources[key] = next; _lru.AddLast(key);
         _meshBuilds++; _vertexUploads++; _indexUploads++; _bufferCreates += 2;
         RecordResource(next);

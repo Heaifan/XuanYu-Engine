@@ -40,6 +40,7 @@ public sealed class CameraFarRecoveryTests
         Assert.Equal(camera.Forward, updated.Forward);
         Assert.Equal(camera.Right, updated.Right);
         Assert.Equal(camera.Up, updated.Up);
+        Assert.Equal(camera.Revision + 1, updated.Revision);
     }
 
     static CameraState CameraAt(double distance, double farPlane) => new(new Vector3d(distance, 0, 0),
