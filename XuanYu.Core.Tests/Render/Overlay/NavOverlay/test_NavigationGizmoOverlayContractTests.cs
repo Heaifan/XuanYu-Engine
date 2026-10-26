@@ -15,8 +15,8 @@ public sealed partial class NavigationGizmoOverlayContractTests
     static string ShaderFile(string name)
     {
         var root = TestSourceRoot.Root;
-        var full = Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders", name);
-        Assert.True(File.Exists(full), $"Shader 缺失：{full}");
+        var full = Directory.GetFiles(Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders", "Sources"), name, SearchOption.AllDirectories).SingleOrDefault()!;
+        Assert.True(full is not null, $"Shader 缺失：{name}");
         return File.ReadAllText(full);
     }
 

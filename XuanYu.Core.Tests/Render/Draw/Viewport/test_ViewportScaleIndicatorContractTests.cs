@@ -15,9 +15,9 @@ public sealed class ViewportScaleIndicatorContractTests
         Assert.Contains("<Grid>", xaml);
         Assert.DoesNotContain("RowDefinitions=\"*,Auto\"", xaml);
         Assert.DoesNotContain("ScaleIndicator", xaml);
-        var drawPlan = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Abstractions", "RenderDrawPlan.cs"));
-        var pipeline = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
-        var shader = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders", "editor_scale_indicator.frag"));
+        var drawPlan = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Abstractions", "Contracts", "Scene", "Draw", "RenderDrawPlan.cs"));
+        var pipeline = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline", "Owners", "Grid", "Grid.cs"));
+        var shader = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders", "Sources", "VectorScale", "editor_scale_indicator.frag"));
         var nativeDir = Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan");
         Assert.Contains("RenderDrawKind.ScaleIndicatorOverlay", drawPlan);
         Assert.Contains("CreateScaleIndicator", pipeline);
@@ -27,7 +27,7 @@ public sealed class ViewportScaleIndicatorContractTests
         Assert.Contains("0.973, 0.980, 0.984", shader);
         Assert.Contains("0.196, 0.435, 0.541", shader);
         Assert.Contains("CardWidthDip", File.ReadAllText(Path.Combine(root,
-            "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.ScaleIndicator.cs")));
+            "XuanYu.Render.Vulkan", "Render", "Overlay", "Navigation", "VulkanClearFrameOwner.ScaleIndicator.cs")));
         Assert.False(File.Exists(Path.Combine(nativeDir, "Win32ViewportHost.ScaleIndicator.cs")));
         Assert.False(File.Exists(Path.Combine(nativeDir, "Win32ViewportHost.ScaleIndicator.Paint.cs")));
         Assert.False(File.Exists(Path.Combine(nativeDir, "VulkanNativeHost.ScaleIndicator.cs")));

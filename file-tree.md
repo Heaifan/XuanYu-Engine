@@ -1,5 +1,4 @@
 ﻿# XuanYuEngine 文件树
-
 - XuanYu.Core/Diagnostics/ViewportPresentedFrame.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Diagnostics/ViewportProbe.GpuCapture.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Diagnostics/XyeWorkspacePaths.cs — XYE 受控任务诊断目录解析与路径约束。
@@ -106,13 +105,213 @@
 - XuanYu.Render.Abstractions/Runtime/MapSurface/MapSurfaceResourceUpdatePolicy.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
 - XuanYu.Render.Abstractions/Runtime/MapSurface/MapSurfaceResourceUpdateText.cs — Render.Abstractions 源码，职责见 XYE-RENDER-ABSTRACTIONS-R1 审计表。
 - XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj — Render.Abstractions 项目定义（仅依赖 Core）。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.OffscreenInitialize.cs — 离屏 framebuffer owner 初始化。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Offscreen.cs — Vulkan 离屏提交、Fence 等待与 GPU Readback。
-- XuanYu.Render.Vulkan/Render/Readback/VulkanOffscreenColorTarget.cs — 无窗口 Vulkan ColorAttachment / TransferSrc 图像所有权。
-- XuanYu.Render.Vulkan/Session/VulkanOffscreenTerrainRenderer.cs — Surface-free Terrain RenderPass / PNG 渲染会话。
-- XuanYu.Render.Vulkan/Benchmark/VulkanGpuTimestampQuery.cs — Vulkan Graphics Queue GPU timestamp query 与有效位/period 换算。
-- XuanYu.Render.Vulkan/Benchmark/VulkanBenchmarkPercentiles.cs — Benchmark nearest-rank P50/P95 统计。
-- XuanYu.World.Tests/Render/VulkanBenchmarkPercentileTests.cs — GPU benchmark 百分位合同测试。
+- XuanYu.World.Tests/Render/test_VulkanBenchmarkPercentile.cs — GPU benchmark 百分位合同测试。
+- XuanYu.Render.Vulkan/Device/Instance/Create/VulkanInstanceCreateInfoBuilder.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Instance/Create/VulkanInstanceOwner.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Instance/Create/VulkanInstanceResult.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Instance/Diagnostics/VulkanInstanceLogFormatter.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Instance/Extensions/VulkanInstanceExtensionAvailability.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Instance/Extensions/VulkanInstanceExtensions.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Owner/VulkanDeviceOwner.Create.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Owner/VulkanDeviceOwner.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Owner/VulkanDeviceOwner.Physical.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Physical/VulkanPhysicalDeviceInfo.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Physical/VulkanPhysicalDeviceSelection.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Physical/VulkanPhysicalDeviceSelector.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Physical/VulkanPhysicalDeviceSelector.Offscreen.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Queue/VulkanPresentFenceCapability.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Queue/VulkanQueueFamilySelection.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Surface/VulkanSurfaceLogFormatter.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Surface/VulkanSurfaceOwner.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Device/Surface/VulkanSurfaceResult.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Contracts/ScenePushConstants.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Diagnostics/PipelineLogFormatter.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Modules/ShaderModuleOwner.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Content/MapLabel.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Content/StaticModelInput.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Content/Terrain.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Content/VectorOverlayShaders.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Core/Depth.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Core/Owner.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Core/Sky.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Fullscreen/Creation.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Fullscreen/Fullscreen.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Fullscreen/State.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Grid/Grid.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Owners/Grid/GridLine.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Pipeline/Sets/GridPipelineSet.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Commands/VulkanClearFrameOwner.Commands.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Commands/VulkanClearFrameOwner.FrameCommands.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Commands/VulkanClearFrameOwner.Matrix.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Commands/VulkanClearFrameOwner.PipelineBind.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Commands/VulkanClearFrameOwner.PushConstants.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Diagnostics/VulkanClearFrameLogFormatter.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Diagnostics/VulkanClearFrameOwner.Trace.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Offscreen/VulkanClearFrameOwner.Offscreen.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Offscreen/VulkanClearFrameOwner.OffscreenInitialize.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Resources/VulkanClearFrameOwner.Resources.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Resources/VulkanDepthAttachment.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Resources/VulkanOffscreenColorTarget.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/Resources/VulkanReadbackBuffer.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Initialize.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Lifecycle.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Readback.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.State.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentDiagnostics/VulkanPresentLoop.StructuredEvents.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentDiagnostics/VulkanPresentLoop.TerrainProbe.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentFrame/VulkanFrameContext.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentFrame/VulkanFrameInFlightPolicy.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentFrame/VulkanFrameProbeContract.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentFrame/VulkanFrameResourceRetirement.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentGeneration/VulkanAcquireResultPolicy.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentGeneration/VulkanPresentGenerationPolicy.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentGeneration/VulkanPresentLoop.GenerationRetirement.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentGeneration/VulkanPresentSyncGeneration.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentLoop/VulkanPresentLoop.Acquire.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentLoop/VulkanPresentLoop.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentLoop/VulkanPresentLoop.Frame.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentLoop/VulkanPresentLoop.Lifecycle.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentLoop/VulkanPresentLoop.RunFrames.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentSync/VulkanPresentFenceQueuePolicy.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentSync/VulkanPresentLoop.PresentFence.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentSync/VulkanPresentLoop.PresentSubmission.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentSync/VulkanPresentLoop.Submission.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/PresentSync/VulkanPresentLoop.Sync.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/VulkanFrameState.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/VulkanGpuResourceState.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Frame/VulkanRenderChangeState.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/LabelCache/VulkanMapLabelTexture.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/LabelCache/VulkanMapLabelTextureCache.Create.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/LabelCache/VulkanMapLabelTextureCache.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/LabelCache/VulkanMapLabelTextureCache.Descriptors.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/LabelCache/VulkanMapLabelTextureCache.Upload.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/LabelOwner/VulkanClearFrameOwner.DrawMapLabels.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/LabelOwner/VulkanClearFrameOwner.LabelResources.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/Navigation/VulkanClearFrameOwner.NavGizmo.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/Navigation/VulkanClearFrameOwner.ScaleIndicator.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/Navigation/VulkanClearFrameOwner.WorldAxes.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/VectorDrawing/VulkanClearFrameOwner.DrawVectorOverlay.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/VectorDrawing/VulkanClearFrameOwner.VectorOverlayPipeline.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/VectorResources/VulkanVectorOverlayBufferReusePolicy.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/VectorResources/VulkanVectorOverlayCache.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/VectorResources/VulkanVectorOverlayResource.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/VectorResources/VulkanVectorOverlayValidator.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Overlay/VectorResources/VulkanVectorOverlayVertex.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Dispatch/VulkanClearFrameOwner.DrawAssist.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Dispatch/VulkanClearFrameOwner.DrawDispatch.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Dispatch/VulkanClearFrameOwner.DrawEntity.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Dispatch/VulkanClearFrameOwner.DrawGizmo.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Frame/VulkanClearFrameOwner.Draw.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Frame/VulkanClearFrameOwner.R7ViewportProbe.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/ModelDrawing/VulkanClearFrameOwner.DrawStaticBounds.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/ModelDrawing/VulkanClearFrameOwner.DrawStaticModel.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Models/VulkanStaticModelBuffer.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Models/VulkanStaticModelResource.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/Models/VulkanStaticModelVertex.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/ModelSupport/VulkanStaticModelCache.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/ModelSupport/VulkanStaticModelFailureTracker.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/ModelSupport/VulkanStaticModelLog.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/ModelSupport/VulkanStaticModelValidator.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Scene.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Grid/VulkanClearFrameOwner.Grid.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Grid/VulkanClearFrameOwner.GridScale.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Grid/VulkanClearFrameOwner.ViewPlaneGrid.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Map/VulkanClearFrameOwner.MapSurface.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Map/VulkanClearFrameOwner.MapSurface.Draw.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Map/VulkanClearFrameOwner.MapSurface.Lifetime.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Map/VulkanClearFrameOwner.MapSurfacePatch.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Terrain/VulkanClearFrameOwner.Terrain.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Terrain/VulkanClearFrameOwner.Terrain.Replay.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Terrain/VulkanClearFrameOwner.TerrainCacheLifetime.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/Terrain/VulkanClearFrameOwner.TerrainStats.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/TerrainCache/VulkanTerrainGpuCache.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/TerrainCache/VulkanTerrainGpuCache.Retirement.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/TerrainCache/VulkanTerrainGpuResource.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/TerrainOffscreen/VulkanOffscreenTerrainRenderer.CacheProbe.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/TerrainOffscreen/VulkanOffscreenTerrainRenderer.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Render/World/TerrainOffscreen/VulkanOffscreenTerrainRenderer.Dispose.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Attach/VulkanNativeHostSurfaceBridge.Attach.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Attach/VulkanNativeHostSurfaceBridge.AttachFlow.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Attach/VulkanNativeHostSurfaceBridge.AttachPolicy.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Diagnostics/VulkanBridgeLogFormatter.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Stages/VulkanBridgeDeviceAttachStep.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Stages/VulkanBridgePhysicalDeviceAttachStep.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Stages/VulkanBridgeRenderSessionAttachStep.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Stages/VulkanBridgeSwapchainAttachStep.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Surface/VulkanNativeHostSurfaceBridge.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Surface/VulkanNativeHostSurfaceBridge.Lifecycle.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Surface/VulkanNativeHostSurfaceBridge.Resize.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Surface/VulkanNativeHostSurfaceBridge.Scene.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Bridge/Surface/VulkanNativeHostSurfaceBridgeFactory.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Diagnostics/Performance/VulkanBenchmarkPercentiles.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Diagnostics/Performance/VulkanFenceWaitSampleSink.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Diagnostics/Performance/VulkanGpuTimestampQuery.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Diagnostics/Probe/VulkanApiProbe.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Diagnostics/Probe/VulkanDeviceInfo.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Diagnostics/Probe/VulkanProbeLogFormatter.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Diagnostics/Probe/VulkanProbeResult.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Diagnostics/Probe/VulkanResizeTracer.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Owner/Create.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Owner/VulkanRenderSession.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Runtime/Attachments.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Runtime/Lifecycle.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Runtime/Recover.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Runtime/Resize.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/Creation/VulkanSwapchainCandidateCleanup.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/Creation/VulkanSwapchainCreation.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/Diagnostics/VulkanSwapchainEvents.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/Diagnostics/VulkanSwapchainLogFormatter.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/VulkanSwapchainBuilder.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/VulkanSwapchainCapabilities.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/VulkanSwapchainOwner.Accessors.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/VulkanSwapchainOwner.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Session/Swapchain/VulkanSwapchainUsagePolicy.cs — C# 源码文件，承载 Vulkan 模块实现。
+- XuanYu.Render.Vulkan/Shaders/Generated/EditorOverlays/ShaderBytecode.EditorMapLabelFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/EditorOverlays/ShaderBytecode.EditorMapLabelVert.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/EditorOverlays/ShaderBytecode.EditorVectorOverlayFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/EditorOverlays/ShaderBytecode.EditorVectorOverlayVert.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/EditorOverlays/ShaderBytecode.ScaleIndicatorFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/FragmentParts/ShaderBytecode.Frag.Generate.ps1 — ShaderBytecode 生成脚本。
+- XuanYu.Render.Vulkan/Shaders/Generated/FragmentParts/ShaderBytecode.Frag.Part04.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/FragmentParts/ShaderBytecode.Frag.Part05.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/FragmentParts/ShaderBytecode.Frag.Part06.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/FragmentParts/ShaderBytecode.Frag.Part07.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/GridTerrain/ShaderBytecode.GridLineFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/GridTerrain/ShaderBytecode.GridLineVert.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/GridTerrain/ShaderBytecode.GridVert.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/GridTerrain/ShaderBytecode.TerrainFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/GridTerrain/ShaderBytecode.TerrainVert.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/Navigation/ShaderBytecode.NavGizmoFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/Navigation/ShaderBytecode.NavGizmoVert.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/Navigation/ShaderBytecode.WorldAxesFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/Navigation/ShaderBytecode.WorldOriginFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/ShaderBytecode.Frag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/ShaderBytecode.Frag.Part01.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/ShaderBytecode.Frag.Part02.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/ShaderBytecode.Frag.Part03.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/ShaderBytecode.Vert.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/WorldReference/ShaderBytecode.ViewPlaneGridFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Generated/WorldReference/ShaderBytecode.WorldReferenceGridFrag.cs — GENERATED（自动生成 ShaderBytecode C# 源码）。
+- XuanYu.Render.Vulkan/Shaders/Sources/EditorOverlay/editor_map_label.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/EditorOverlay/editor_map_label.vert — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/EditorOverlay/editor_nav_gizmo.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/EditorOverlay/editor_nav_gizmo.vert — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/ReferenceGrid/editor_reference_grid_line.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/ReferenceGrid/editor_reference_grid_line.vert — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/ReferenceGrid/editor_reference_grid.vert — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/ReferenceGrid/editor_view_plane_grid.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/SceneTerrain/scene.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/SceneTerrain/scene.vert — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/SceneTerrain/terrain.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/SceneTerrain/terrain.vert — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/VectorScale/editor_scale_indicator.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/VectorScale/editor_vector_overlay.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/VectorScale/editor_vector_overlay.vert — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/WorldAxes/editor_world_axes.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/WorldAxes/editor_world_origin.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/Shaders/Sources/WorldAxes/editor_world_reference_grid.frag — 着色器源码文件。
+- XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj — Vulkan 项目配置。
 - XuanYu.World.Tests/Diagnostics/XyeWorkspacePathsTests.cs — XYE 诊断目录路径约束测试。
 - tools/xyc-offscreen/BenchmarkConfigurationRunner.cs — 单配置 CPU/GPU/readback/PNG 多阶段采样。
 - tools/xyc-offscreen/BenchmarkCsvWriter.cs — 12 配置汇总 CSV 导出。
@@ -130,12 +329,9 @@
 - tools/xyc-offscreen/OffscreenSingleRender.cs — A2b 单张离屏 PNG 兼容入口。
 - tools/xyc-offscreen/TerrainBenchmarkRunner.cs — 513/1025/2049 × 四姿态矩阵调度。
 - tools/xyc-offscreen/Invoke-XYC-B1.ps1 — Resolver 驱动三次独立进程和报告聚合。
-- XuanYu.World.Tests/Render/VulkanOffscreenDeviceTests.cs — Vulkan 离屏设备与 Terrain RenderPass GPU 合同测试。
+- XuanYu.World.Tests/Render/test_VulkanOffscreenDevice.cs — Vulkan 离屏设备与 Terrain RenderPass GPU 合同测试。
 - tools/xyc-offscreen/Program.cs — NASADEM HGT 输入、无窗口 Terrain GPU PNG 命令行入口。
 - tools/xyc-offscreen/XuanYu.OffscreenTerrain.csproj — 离屏 Terrain 命令行项目。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Readback.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Readback/VulkanReadbackBuffer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainUsagePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Control/VulkanPngEncoderTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Control/VulkanSwapchainUsagePolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Control/XycCaptureCommandTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -144,7 +340,6 @@
 - XuanYu.World.Tests/Control/XycTestDemPolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - tools/terrain/Invoke-XYC-WP2-NoMouse.ps1 — PowerShell 脚本，承载仓库执行或验证职责。
 以下内容由当前 Git tracked 文件与本轮新增文件重建；每行对应一个文件及其职责。
-
 - .gitattributes — 仓库资源文件，承载对应路径定义的项目内容。
 - .github/workflows/m2-cloud-cpu.yml — M2 Windows 云端 CPU 构建、架构与渲染合同定向验证流程。
 - .gitignore — 仓库资源文件，承载对应路径定义的项目内容。
@@ -1460,179 +1655,6 @@
 - XuanYu.Editor/Workspace/RegionAuthoringMode.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/XuanYu.Editor.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Engine.slnx — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Bridge/VulkanBridgeDeviceAttachStep.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Bridge/VulkanBridgeRenderSessionAttachStep.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Bridge/VulkanBridgeSwapchainAttachStep.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.Create.cs — Surface-aware 与 Graphics-only LogicalDevice 创建。
-- XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.Offscreen.cs — 无 Surface 的 Graphics 队列设备选择。- XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.Physical.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceInfo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.EditorMapLabelFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.EditorMapLabelVert.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.EditorVectorOverlayFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.EditorVectorOverlayVert.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.Generate.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.Part01.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.Part02.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.Part03.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.Part04.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.Part05.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.Part06.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.Part07.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridLineFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridLineVert.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridVert.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoVert.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.ScaleIndicatorFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.TerrainFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.TerrainVert.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.ViewPlaneGridFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldAxesFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldOriginFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldReferenceGridFrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.Creation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.State.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.GridLine.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.MapLabel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Sky.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.StaticModelInput.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Terrain.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.VectorOverlayShaders.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.FrameCommands.cs — Vulkan 帧命令缓冲与资源退休操作。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Initialize.cs — Vulkan clear-frame 初始化流程.
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Matrix.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.PipelineBind.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.PushConstants.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Resources.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.State.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Trace.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.VectorOverlayPipeline.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Frame/VulkanFrameState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Frame/VulkanGpuResourceState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Frame/VulkanRenderChangeState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.Grid.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.GridScale.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.NavGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.ScaleIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.ViewPlaneGrid.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.WorldAxes.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Label/VulkanClearFrameOwner.DrawMapLabels.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Label/VulkanClearFrameOwner.LabelResources.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Label/VulkanMapLabelTexture.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Label/VulkanMapLabelTextureCache.Create.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Label/VulkanMapLabelTextureCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Label/VulkanMapLabelTextureCache.Descriptors.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Label/VulkanMapLabelTextureCache.Upload.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Map/VulkanClearFrameOwner.MapSurface.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Map/VulkanClearFrameOwner.MapSurface.Draw.cs — 地图地面与边界绘制命令。
-- XuanYu.Render.Vulkan/Render/Map/VulkanClearFrameOwner.MapSurface.Lifetime.cs — 地图表面 GPU 缓冲退休与清理。
-- XuanYu.Render.Vulkan/Render/Map/VulkanClearFrameOwner.MapSurfacePatch.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.Frame.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.GenerationRetirement.cs — Swapchain 同步代次安全退休。
-- XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.RunFrames.cs — Present 帧循环与 image ownership 校验。
-- XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.Submission.cs — 帧命令缓冲 QueueSubmit 与提交事件。
-- XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.TerrainProbe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Draw.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.DrawAssist.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.DrawDispatch.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.DrawEntity.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.DrawGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Scene.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawStaticBounds.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawStaticModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelBuffer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelFailureTracker.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelLog.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelResource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelValidator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelVertex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Terrain/VulkanClearFrameOwner.Terrain.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Terrain/VulkanClearFrameOwner.TerrainStats.cs — Terrain 帧统计合并。
-- XuanYu.Render.Vulkan/Render/Terrain/Offscreen/VulkanOffscreenTerrainRenderer.Dispose.cs — Offscreen Terrain 渲染器资源释放。
-- XuanYu.Render.Vulkan/Render/Terrain/VulkanClearFrameOwner.Terrain.Replay.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Terrain/VulkanTerrainGpuCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/Terrain/VulkanTerrainGpuResource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanClearFrameOwner.DrawVectorOverlay.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayBufferReusePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayResource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayValidator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayVertex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Render/VulkanDepthAttachment.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Session/GridPipelineSet.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Session/VulkanRenderSession.Create.cs — Vulkan render session 组合根创建与失败回滚。
-- XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Session/VulkanRenderSession.MapLabel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Session/VulkanRenderSession.Terrain.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Session/VulkanRenderSession.VectorOverlay.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Shaders/editor_map_label.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_map_label.vert — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.vert — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_reference_grid_line.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_reference_grid_line.vert — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_scale_indicator.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_vector_overlay.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_vector_overlay.vert — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_view_plane_grid.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_world_axes.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_world_origin.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/editor_world_reference_grid.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/scene.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/scene.vert — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/terrain.frag — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Shaders/terrain.vert — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainCapabilities.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.Accessors.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanApiProbe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanBridgeLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanDeviceInfo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanInstanceCreateInfoBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanInstanceExtensions.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanInstanceLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanInstanceOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanInstanceResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Attach.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Resize.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Scene.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridgeFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanProbeLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanProbeResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanSurfaceLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanSurfaceOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/VulkanSurfaceResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.WarCore.Tests/Identity/MilitaryIdentityTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.WarCore.Tests/State/SoldierStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.WarCore.Tests/WarCoreDependencyTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -1666,10 +1688,10 @@
 - XuanYu.World.Tests/Assets/StaticModelAuthoringServiceTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Assets/StaticModelBaseVertexTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Assets/StaticModelCatalogTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Assets/StaticModelFailureTrackerTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Assets/test_StaticModelFailureTracker.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Assets/StaticModelProjectionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Assets/StaticModelUiTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Assets/StaticModelValidatorTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Assets/test_StaticModelValidator.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Camera/CameraC2DraftFramingTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Camera/CameraC2MapFramingTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Camera/CameraC2MapFramingTests.Helpers.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -1845,15 +1867,15 @@
 - XuanYu.World.Tests/Render/ReverseZDepthPipelineContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/StartupGridDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/TerrainChunkDrawContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/TerrainMultiTileRenderContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_TerrainMultiTileRenderContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/TerrainNavigationAllocationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/TerrainNavigationAllocationTests.Helpers.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/TerrainPreviewLightingContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/VulkanPresentLoopContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/VulkanPresentModeSelectionTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/VulkanResizeContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/VulkanSwapchainChurnTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/VulkanTerrainPipelineLifecycleTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_TerrainPreviewLightingContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_VulkanPresentLoopContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_VulkanPresentModeSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_VulkanResizeContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_VulkanSwapchainChurn.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_VulkanTerrainPipelineLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/WorldGridIndependenceContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/WorldGridRenderOriginContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/WorldGridStartupContractTests.Camera.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2076,7 +2098,7 @@
 - XuanYu.World.Tests/UiRuntime/MapVectorOverlayDepthPolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/MapVectorOverlayStrokeContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/MapVectorOverlayV1Tests.Colors.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/UiRuntime/MapVectorOverlayV1Tests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/UiRuntime/test_MapVectorOverlayV1.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/PointFeatureEntryCompositionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/R2BPropertyEditorVisualContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/RegionDrawContextSyncFix1Tests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2134,7 +2156,7 @@
 - XuanYu.World.Tests/UiRuntime/UiRuntimeTestHost.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/UiTestAppBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/UiTestPlatformServices.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/UiRuntime/VectorOverlayRenderOriginContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/UiRuntime/test_VectorOverlayRenderOriginContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/WorkspaceSelectorR2ContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/WP3RoadViewportDispatchHistoryTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/XYUI2R2BContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -3272,12 +3294,10 @@
 - xyui/tokens/architecture/token-canonical-map.json — 仓库资源文件，承载对应路径定义的项目内容。
 - xyui/tokens/audit/token-audit.md — 项目文档文件，承载规范、计划或记录。
 - xyui/tokens/audit/token-collision-matrix.json — 仓库资源文件，承载对应路径定义的项目内容。
-- xyui/tokens/audit/token-occurrences.json — 仓库资源文件，承载对应路径定义的项目内容。- XuanYu.Render.Vulkan/Render/Terrain/Offscreen/VulkanOffscreenTerrainRenderer.CacheProbe.cs — 离屏 Terrain GPU cache probe 配置。
-- XuanYu.Render.Vulkan/Render/Terrain/VulkanClearFrameOwner.TerrainCacheLifetime.cs — Terrain GPU cache 与提交生命周期协调。
-- XuanYu.Render.Vulkan/Render/Terrain/VulkanTerrainGpuCache.Retirement.cs — GPU terrain buffer 延迟退役与释放。
-- XuanYu.World.Tests/Render/TerrainGpuCacheRetirementContractTests.cs — GPU cache 退役策略合同测试。
+- xyui/tokens/audit/token-occurrences.json — 仓库资源文件，承载对应路径定义的项目内容。
+- XuanYu.World.Tests/Render/test_TerrainGpuCacheRetirementContract.cs — GPU cache 退役策略合同测试。
 - XuanYu.World.Tests/Render/TerrainGpuCacheRetirementSimulationTests.cs — GPU cache 释放时序模拟测试。
-- XuanYu.World.Tests/Render/VulkanTerrainGpuCacheRetirementDeviceTests.cs — 真实 Vulkan GPU cache 退役测试。
+- XuanYu.World.Tests/Render/test_VulkanTerrainGpuCacheRetirementDevice.cs — 真实 Vulkan GPU cache 退役测试。
 - XuanYu.World.Tests/TestSourceRoot.cs — World.Tests 源码根路径解析。
 - XuanYu.World.Tests/UiTokens/UiDebtBaselineWin32Tests.cs — Windows UI debt baseline 测试。
 - XuanYu.Core.Tests/Diagnostics/Core/Math/test_Vector3dBoundsTests.cs — 三维向量极端数值与单位化回归。

@@ -5,8 +5,8 @@ namespace XuanYu.Core.Tests.Render;
 public sealed class WorldReferenceGridFarFadeSourceContractTests
 {
     static string Root => TestSourceRoot.Root;
-    static string Shader() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "editor_world_reference_grid.frag"));
-    static string Bytecode() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "ShaderBytecode.WorldReferenceGridFrag.cs"));
+    static string Shader() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "Sources", "WorldAxes", "editor_world_reference_grid.frag"));
+    static string Bytecode() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "Generated", "WorldReference", "ShaderBytecode.WorldReferenceGridFrag.cs"));
 
     [Fact]
     public void World_grid_has_independent_density_fades_for_fine_and_coarse_lines()

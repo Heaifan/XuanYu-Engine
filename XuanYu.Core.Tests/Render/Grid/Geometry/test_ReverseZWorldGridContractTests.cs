@@ -6,8 +6,8 @@ namespace XuanYu.Core.Tests.Render.Grid;
 public sealed class ReverseZWorldGridContractTests
 {
     static string Root => TestSourceRoot.Root;
-    static string Shader => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "editor_world_reference_grid.frag"));
-    static string Pipeline => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
+    static string Shader => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "Sources", "WorldAxes", "editor_world_reference_grid.frag"));
+    static string Pipeline => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "Owners", "Grid", "Grid.cs"));
 
     [Fact]
     public void GridShaderSourceDoesNotWriteFragmentDepth()

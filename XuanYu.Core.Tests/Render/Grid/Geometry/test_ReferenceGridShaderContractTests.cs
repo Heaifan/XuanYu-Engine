@@ -5,8 +5,8 @@ namespace XuanYu.Core.Tests.Render;
 public sealed class ReferenceGridShaderSourceContractTests
 {
     static string Root => TestSourceRoot.Root;
-    static string ShaderSource(string name) => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", name));
-    static string PipelineSource() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
+    static string ShaderSource(string name) => File.ReadAllText(Directory.GetFiles(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "Sources"), name, SearchOption.AllDirectories).Single());
+    static string PipelineSource() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "Owners", "Grid", "Grid.cs"));
 
     [Fact]
     public void Shader_source_is_fullscreen_frame_step_with_cpu_lod_weights()
@@ -41,7 +41,7 @@ public sealed class ReferenceGridShaderSourceContractTests
     [Fact]
     public void Draw_source_uses_fullscreen_triangle_and_world_plane_state()
     {
-        var source = File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.Grid.cs"));
+        var source = File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "World", "Grid", "VulkanClearFrameOwner.Grid.cs"));
         Assert.Contains("_referenceGridLevels.FineSpacing", source);
         Assert.Contains("_referenceGridLevels.CoarseWeight", source);
         Assert.Contains("RenderDrawPlan.FullscreenTriangleVertexCount", source);

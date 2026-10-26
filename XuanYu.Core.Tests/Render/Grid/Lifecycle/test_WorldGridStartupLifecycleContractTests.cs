@@ -6,8 +6,8 @@ namespace XuanYu.Core.Tests.Render.Grid;
 public sealed class WorldGridStartupLifecycleContractTests
 {
     static string Root => TestSourceRoot.Root;
-    static string GridSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.Grid.cs"));
-    static string ScaleSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.GridScale.cs"));
+    static string GridSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "World", "Grid", "VulkanClearFrameOwner.Grid.cs"));
+    static string ScaleSource => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "World", "Grid", "VulkanClearFrameOwner.GridScale.cs"));
 
     static RenderProjection EmptyScene() => new(default, [], true, default,
         Assist: new EditorViewportAssistState(ShowGrid: true, ShowOrigin: false,

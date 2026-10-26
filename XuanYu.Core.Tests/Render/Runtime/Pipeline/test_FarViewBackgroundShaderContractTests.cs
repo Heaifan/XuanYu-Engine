@@ -5,8 +5,8 @@ namespace XuanYu.Core.Tests.Render.Background;
 public sealed class FarViewBackgroundShaderSourceContractTests
 {
     private static string Root => TestSourceRoot.Root;
-    private static string Shader() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "scene.frag"));
-    private static string Bytecode() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "ShaderBytecode.Frag.cs"));
+    private static string Shader() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "Sources", "SceneTerrain", "scene.frag"));
+    private static string Bytecode() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Shaders", "Generated", "ShaderBytecode.Frag.cs"));
 
     [Fact]
     public void Background_shader_source_does_not_define_fake_ground_layers()

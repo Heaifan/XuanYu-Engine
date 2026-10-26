@@ -8,7 +8,7 @@ public sealed class ReverseZDepthContractPrototypeTests
     public void ReverseDepthContractIsExplicit()
     {
         var root = TestSourceRoot.Root;
-        var clear = Read(root, "XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.FrameCommands.cs");
+        var clear = Read(root, "XuanYu.Render.Vulkan/Render/ClearFrame/Commands/VulkanClearFrameOwner.FrameCommands.cs");
         Assert.Contains("Depth = 0.0f", clear);
         foreach (var source in PipelineSources(root)) Assert.Contains("CompareOp.GreaterOrEqual", source);
     }
@@ -25,7 +25,7 @@ public sealed class ReverseZDepthContractPrototypeTests
     public void GlFragDepthAuditFindsAllCurrentWriters()
     {
         var root = TestSourceRoot.Root;
-        var shaders = Directory.GetFiles(Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders"), "*.frag");
+        var shaders = Directory.GetFiles(Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders", "Sources"), "*.frag", SearchOption.AllDirectories);
         var writers = shaders.Where(x => Read(x).Contains("gl_FragDepth")).Select(Path.GetFileName).ToArray();
         Assert.DoesNotContain("editor_world_reference_grid.frag", writers);
         Assert.Contains("editor_view_plane_grid.frag", writers);
@@ -46,11 +46,15 @@ public sealed class ReverseZDepthContractPrototypeTests
     static double ReversePerspective(double z, double n, double f) => (f * n / z - n) / (f - n);
     static IEnumerable<string> PipelineSources(string root)
     {
-        var dir = Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline");
-        foreach (var prefix in new[] { "VulkanGraphicsPipelineOwner.Depth", "VulkanGraphicsPipelineOwner.Fullscreen",
-            "VulkanGraphicsPipelineOwner.GridLine", "VulkanGraphicsPipelineOwner.Terrain" })
-            yield return string.Join("\n", Directory.GetFiles(dir, $"{prefix}*.cs")
-                .OrderBy(path => path).Select(Read));
+        var dir = Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline", "Owners");
+        foreach (var prefix in new[] { "Depth", "Fullscreen", "GridLine", "Terrain" })
+        {
+            var typeDirectory = Path.Combine(dir, prefix);
+            var files = Directory.Exists(typeDirectory)
+                ? Directory.GetFiles(typeDirectory, "*.cs")
+                : Directory.GetFiles(dir, $"{prefix}*.cs", SearchOption.AllDirectories);
+            yield return string.Join("\n", files.OrderBy(path => path).Select(Read));
+        }
     }
     static string Root()
     {

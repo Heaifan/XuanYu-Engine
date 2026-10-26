@@ -9,9 +9,9 @@ public sealed class WorldReferenceGridDepthContractTests
     [Fact]
     public void Reference_grid_is_depth_independent_without_writing_depth()
     {
-        var grid = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs");
-        var fullscreen = ReadType("VulkanGraphicsPipelineOwner.Fullscreen");
-        var shader = Read("XuanYu.Render.Vulkan", "Shaders", "editor_world_reference_grid.frag");
+        var grid = Read("XuanYu.Render.Vulkan", "Pipeline", "Owners", "Grid", "Grid.cs");
+        var fullscreen = ReadType("Fullscreen");
+        var shader = Read("XuanYu.Render.Vulkan", "Shaders", "Sources", "WorldAxes", "editor_world_reference_grid.frag");
 
         var createReferenceGrid = Method(grid, "CreateReferenceGrid");
         Assert.Contains("ShaderBytecodeWorldReferenceGridFrag.Code", createReferenceGrid);
@@ -29,7 +29,7 @@ public sealed class WorldReferenceGridDepthContractTests
     [Fact]
     public void Non_grid_fullscreen_passes_keep_depth_off()
     {
-        var grid = Read("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs");
+        var grid = Read("XuanYu.Render.Vulkan", "Pipeline", "Owners", "Grid", "Grid.cs");
 
         Assert.Contains("ShaderBytecodeWorldOriginFrag.Code", Method(grid, "CreateWorldOrigin"));
         Assert.Contains("ShaderBytecodeNavGizmoFrag.Code", Method(grid, "CreateNavigationGizmo"));
@@ -68,7 +68,11 @@ public sealed class WorldReferenceGridDepthContractTests
 
     static string ReadType(string prefix)
     {
-        return string.Join("\n", Directory.GetFiles(Path.Combine(TestSourceRoot.Root, "XuanYu.Render.Vulkan", "Pipeline"), $"{prefix}*.cs")
-            .OrderBy(path => path).Select(File.ReadAllText));
+        var root = Path.Combine(TestSourceRoot.Root, "XuanYu.Render.Vulkan", "Pipeline", "Owners");
+        var typeDirectory = Path.Combine(root, prefix);
+        var files = Directory.Exists(typeDirectory)
+            ? Directory.GetFiles(typeDirectory, "*.cs")
+            : Directory.GetFiles(root, $"{prefix}*.cs", SearchOption.AllDirectories);
+        return string.Join("\n", files.OrderBy(path => path).Select(File.ReadAllText));
     }
 }

@@ -28,8 +28,8 @@ public sealed class WorldGridStartupContractTests
         Assert.Equal(0, consumed.Projection.EntityCount);
         Assert.Contains(RenderDrawPlan.GetFrameDrawPlan(consumed.Projection),
             x => x.Kind == RenderDrawKind.EditorReferenceGrid);
-        var draw = Read("XuanYu.Render.Vulkan", "Render", "Scene", "VulkanClearFrameOwner.Draw.cs");
-        var dispatch = Read("XuanYu.Render.Vulkan", "Render", "Scene", "VulkanClearFrameOwner.DrawDispatch.cs");
+        var draw = Read("XuanYu.Render.Vulkan", "Render", "Scene", "Frame", "VulkanClearFrameOwner.Draw.cs");
+        var dispatch = Read("XuanYu.Render.Vulkan", "Render", "Scene", "Dispatch", "VulkanClearFrameOwner.DrawDispatch.cs");
         Assert.Contains("RenderDrawPlan.GetFrameDrawPlan(_renderProjection)", draw);
         Assert.Contains("DrawReferenceGrid(cb)", dispatch);
         Assert.True(state.GridAvailable && state.GridDrawPlanned && state.CameraValid &&

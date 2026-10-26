@@ -5,7 +5,7 @@ public sealed class WorldGridRenderOriginContractTests
     [Fact]
     public void Grid_push_constants_publish_render_origin_for_large_worlds()
     {
-        var source = Read("XuanYu.Render.Vulkan", "Render", "Grid",
+        var source = Read("XuanYu.Render.Vulkan", "Render", "World", "Grid",
             "VulkanClearFrameOwner.GridScale.cs");
 
         Assert.Contains("scene[32] = (float)state.RenderOrigin.X", source);
@@ -17,7 +17,7 @@ public sealed class WorldGridRenderOriginContractTests
     [Fact]
     public void Grid_shader_reconstructs_absolute_world_xy_from_relative_view()
     {
-        var shader = Read("XuanYu.Render.Vulkan", "Shaders",
+        var shader = Read("XuanYu.Render.Vulkan", "Shaders", "Sources", "WorldAxes",
             "editor_world_reference_grid.frag");
 
         Assert.Contains("renderOrigin", shader);
@@ -27,7 +27,7 @@ public sealed class WorldGridRenderOriginContractTests
 
     static string Read(params string[] parts)
     {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        var dir = new DirectoryInfo(TestSourceRoot.Root);
         while (dir is not null)
         {
             var path = Path.Combine([dir.FullName, .. parts]);
