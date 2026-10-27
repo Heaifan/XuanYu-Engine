@@ -22,7 +22,8 @@ sealed unsafe partial class VulkanMapLabelTextureCache
             if (staging is null) throw new InvalidOperationException(error);
             Upload(staging.Buffer, image, (uint)bitmap.Width, (uint)bitmap.Height, (uint)(bitmap.Stride / 4));
             var descriptor = AllocateDescriptor(view);
-            var texture = new VulkanMapLabelTexture(_vk, _device, image, memory, view, descriptor);
+            var texture = new VulkanMapLabelTexture(_vk, _device, image, memory,
+                view, descriptor, FreeDescriptor);
             image = default; memory = default; view = default;
             return texture;
         }

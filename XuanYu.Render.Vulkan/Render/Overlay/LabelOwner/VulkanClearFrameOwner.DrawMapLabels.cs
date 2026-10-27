@@ -8,7 +8,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
     void DrawMapLabels(CommandBuffer cb, float* scene, VulkanVectorOverlayResource overlay)
     {
         if (_mapLabelPipeline.Handle == 0 || _mapLabelTextures is null || overlay.Labels.Count == 0) return;
-        _mapLabelTextures.RetainOnly(overlay.LabelBitmaps.Select(x => x.CacheKey));
         _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _mapLabelPipeline);
         foreach (var label in overlay.Labels)
         {

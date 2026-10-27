@@ -45,7 +45,13 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _terrainCache?.RetainOnly(_renderProjection.TerrainResources);
             _staticModels.RetainOnly(_renderProjection.Entities.Select(e => e.StaticModelKey));
             _vectorOverlays.RetainOnly(_renderProjection.VectorOverlayResources.Select(r => r.Key));
-            foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
+            var drawPlan = RenderDrawPlan.GetFrameDrawPlan(_renderProjection);
+            _mapLabelTextures?.RetainOnly(drawPlan
+                .Where(draw => draw.Kind == RenderDrawKind.MapVectorOverlay)
+                .SelectMany(draw => _renderProjection.VectorOverlayResources.ElementAtOrDefault(draw.EntityIndex)?.LabelBitmaps
+                    ?? Array.Empty<RenderLabelBitmap>())
+                .Select(bitmap => bitmap.CacheKey));
+            foreach (var draw in drawPlan)
             {
                 if (!CanRecordDraw(draw.Kind))
                 {

@@ -18,6 +18,7 @@ sealed unsafe partial class VulkanMapLabelTextureCache
     {
         var size = new DescriptorPoolSize { Type = DescriptorType.CombinedImageSampler, DescriptorCount = 256 };
         var info = new DescriptorPoolCreateInfo { SType = StructureType.DescriptorPoolCreateInfo,
+            Flags = DescriptorPoolCreateFlags.FreeDescriptorSetBit,
             MaxSets = 256, PoolSizeCount = 1, PPoolSizes = &size };
         Check(_vk.CreateDescriptorPool(_device.LogicalDevice, &info, null, out var pool), "CreateLabelDescriptorPool");
         return pool;
@@ -31,5 +32,11 @@ sealed unsafe partial class VulkanMapLabelTextureCache
             AddressModeW = SamplerAddressMode.ClampToEdge, MaxLod = 1 };
         Check(_vk.CreateSampler(_device.LogicalDevice, &info, null, out var sampler), "CreateLabelSampler");
         return sampler;
+    }
+
+    void FreeDescriptor(DescriptorSet descriptor)
+    {
+        Check(_vk.FreeDescriptorSets(_device.LogicalDevice, _descriptorPool, 1, &descriptor),
+            "FreeLabelDescriptor");
     }
 }
