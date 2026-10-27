@@ -30,7 +30,6 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
             log?.Invoke(VulkanPipelineLogFormatter.Failed("ShaderModule 创建失败"));
             return null;
         }
-        log?.Invoke(VulkanPipelineLogFormatter.ShaderModuleCreated());
         var range = new PushConstantRange { StageFlags = PushConstantStages(analyticStroke), Offset = 0, Size = VulkanScenePushConstants.SizeInBytes };
         var layoutInfo = new PipelineLayoutCreateInfo { SType = StructureType.PipelineLayoutCreateInfo, SetLayoutCount = 0, PushConstantRangeCount = 1, PPushConstantRanges = &range };
         var layoutResult = vk.CreatePipelineLayout(deviceOwner.LogicalDevice, &layoutInfo, null, out var layout);
@@ -41,7 +40,6 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
             log?.Invoke(VulkanPipelineLogFormatter.Failed($"CreatePipelineLayout {layoutResult}"));
             return null;
         }
-        log?.Invoke(VulkanPipelineLogFormatter.PipelineLayoutCreated());
         var entry = System.Text.Encoding.ASCII.GetBytes("main\0");
         Silk.NET.Vulkan.Pipeline pipeline = default;
         fixed (byte* pName = entry)
@@ -76,17 +74,20 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
             var res = vk.CreateGraphicsPipelines(deviceOwner.LogicalDevice, default, 1, &pipelineInfo, null, out pipeline);
             if (res != Result.Success)
             {
-                log?.Invoke(VulkanPipelineLogFormatter.Failed($"CreateGraphicsPipelines {res}"));
                 vk.DestroyPipelineLayout(deviceOwner.LogicalDevice, layout, null);
                 VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
                 VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
+                log?.Invoke(VulkanPipelineLogFormatter.Failed($"CreateGraphicsPipelines {res}"));
                 return null;
             }
         }
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
-        log?.Invoke(VulkanPipelineLogFormatter.GraphicsPipelineCreated());
-        return new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        var owner = new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        return VulkanPipelineCreationCompletion.Complete(owner, log, owner.Dispose,
+            VulkanPipelineLogFormatter.ShaderModuleCreated(),
+            VulkanPipelineLogFormatter.PipelineLayoutCreated(),
+            VulkanPipelineLogFormatter.GraphicsPipelineCreated());
     }
     internal static ShaderStageFlags PushConstantStages(bool analyticStroke) => analyticStroke ? ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit : ShaderStageFlags.VertexBit;
     public void Dispose()

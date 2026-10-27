@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
-using Silk.NET.Core;
 using XuanYu.Render.Vulkan;
 
 namespace XuanYu.Render.Vulkan.Device;
@@ -15,27 +14,30 @@ public sealed unsafe partial class VulkanPhysicalDeviceSelector
     public static VulkanPhysicalDeviceSelection Select(
         Vk vk, Instance instance, SurfaceKHR surface, Action<string>? log = null)
     {
-        uint count = 0;
-        vk.EnumeratePhysicalDevices(instance, &count, null);
-        if (count == 0)
+        if (!VulkanPhysicalDeviceQuery.TryEnumerate(vk, instance,
+                out var devices, out var enumerationError))
         {
-            var msg = "【VulkanDevice】枚举物理设备失败：未找到任何物理设备";
+            var msg = $"【VulkanDevice】枚举物理设备失败：{enumerationError}";
             log?.Invoke(msg);
-            return new VulkanPhysicalDeviceSelection(false, default, null, null, "未枚举到物理设备");
+            return new VulkanPhysicalDeviceSelection(false, default, null, null, enumerationError);
         }
-        var devices = stackalloc PhysicalDevice[(int)count];
-        vk.EnumeratePhysicalDevices(instance, &count, devices);
         vk.TryGetInstanceExtension(instance, out KhrSurface? khr);
-        Log(log, $"【VulkanDevice】开始枚举物理设备；候选数量：{count}");
+        Log(log, $"【VulkanDevice】开始枚举物理设备；候选数量：{devices.Length}");
 
         VulkanPhysicalDeviceInfo? best = null, info = null; PhysicalDevice bestDevice = default;
         VulkanQueueFamilySelection? bestQ = null, q = null;
         string? reason = null;
-        for (var i = 0; i < count; i++)
+        for (var i = 0; i < devices.Length; i++)
         {
             vk.GetPhysicalDeviceProperties(devices[i], out var props);
             var name = Encoding.UTF8.GetString(props.DeviceName, 256).TrimEnd('\0');
-            q = SelectQueueFamilies(vk, khr, devices[i], surface);
+            q = VulkanQueueFamilySelector.Select(vk, devices[i], khr, surface,
+                requirePresent: true, out var queueError);
+            if (queueError is not null)
+            {
+                log?.Invoke($"【VulkanDevice】{queueError}");
+                return new VulkanPhysicalDeviceSelection(false, default, null, null, queueError);
+            }
             info = new VulkanPhysicalDeviceInfo(name, props.DeviceType, props.ApiVersion,
                 props.DeviceType == PhysicalDeviceType.DiscreteGpu, q.HasGraphics && q.HasPresent);
             Log(log, $"【VulkanDevice】候选设备[{i}]：{info.Name}；类型：{TypeName(info.Type)}；" +
@@ -56,28 +58,6 @@ public sealed unsafe partial class VulkanPhysicalDeviceSelector
                   $"Graphics 族：{bestQ.GraphicsFamily}；Present 族：{bestQ.PresentFamily}；" +
                   $"队列族合并：{(bestQ.SameFamily ? "是" : "否")}");
         return new VulkanPhysicalDeviceSelection(true, bestDevice, best, bestQ, reason!);
-    }
-    static VulkanQueueFamilySelection SelectQueueFamilies(
-        Vk vk, KhrSurface? khr, PhysicalDevice device, SurfaceKHR surface)
-    {
-        uint qf = 0;
-        vk.GetPhysicalDeviceQueueFamilyProperties(device, &qf, null);
-        if (qf == 0) return VulkanQueueFamilySelection.None;
-        var fam = stackalloc QueueFamilyProperties[(int)qf];
-        vk.GetPhysicalDeviceQueueFamilyProperties(device, &qf, fam);
-        var g = -1; var p = -1;
-        for (var i = 0; i < qf; i++)
-        {
-            if (g < 0 && fam[i].QueueFlags.HasFlag(QueueFlags.GraphicsBit)) g = i;
-            if (p < 0 && khr is not null)
-            {
-                Bool32 supported = default;
-                khr.GetPhysicalDeviceSurfaceSupport(device, (uint)i, surface, &supported);
-                if (supported) p = i;
-            }
-        }
-        var hasG = g >= 0; var hasP = p >= 0;
-        return new VulkanQueueFamilySelection(g, p, hasG, hasP, hasG && hasP && g == p);
     }
     static void Log(Action<string>? log, string msg) { log?.Invoke(msg); }
 

@@ -1,3 +1,9 @@
+## v0.3.0.45-fix · Vulkan Device、Pipeline 与 GPU 输入边界（Candidate）
+- Device：Instance/Surface 创建后交付失败会回滚句柄；物理设备枚举双阶段检查 VkResult，Surface 队列能力查询失败作为错误返回，并合并 Graphics/Present 队列扫描。
+- Pipeline：GridPipelineSet 部分创建异常时清空 ClearFrame 借用句柄并逆序释放 Owner；创建成功日志回调异常会回滚资源，失败日志移到清理之后。
+- GPU 输入：Vector Overlay 校验 BaseVertex 后索引及范围溢出；StaticModel 校验索引值和 primitive 范围；Terrain 上传前校验 mesh 索引。
+- Release World.Tests 定向构建 0 Warning / 0 Error；Device、Pipeline、索引边界及 A-D 生命周期合同测试 36/36 PASS。基于含既存 Dirty overlay 的 checkout；真实 Vulkan/GPU、Validation Layer 和 Editor 验收未运行。
+
 ## v0.3.0.44-fix · PresentLoop 恢复失败与 DeviceLost 终态（Candidate）
 - Acquire Out-of-date 恢复失败会锁存 PresentLoop Failed 状态和原因；线程退出发布终态，失败循环不可被 Start 误报重启，Fatal 回调异常不会逸出。
 - 将上传 DeviceLost 明确传入 PresentLoop，跳过失效设备上的 Fence 等待并完成允许的同步对象清理；普通 Acquire/Submit/Present 成功路径保持原顺序。

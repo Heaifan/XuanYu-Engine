@@ -22,10 +22,17 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             SetLayoutCount = 1, PSetLayouts = layouts, PushConstantRangeCount = 1, PPushConstantRanges = &range };
         if (vk.CreatePipelineLayout(device.LogicalDevice, &layoutInfo, null, out var layout) != Result.Success)
             return FailLabel(vk, device, vert, frag, log);
-        var pipeline = CreateLabelGraphics(vk, device, clear, vert, frag, layout, log);
+        var pipeline = CreateLabelGraphics(vk, device, clear, vert, frag, layout);
         VulkanShaderModuleOwner.Destroy(vk, device, vert); VulkanShaderModuleOwner.Destroy(vk, device, frag);
-        if (pipeline.Handle == 0) { vk.DestroyPipelineLayout(device.LogicalDevice, layout, null); return null; }
-        return new(vk, device, layout, pipeline, log);
+        if (pipeline.Handle == 0)
+        {
+            vk.DestroyPipelineLayout(device.LogicalDevice, layout, null);
+            log?.Invoke(VulkanPipelineLogFormatter.Failed("Map Label GraphicsPipeline 创建失败"));
+            return null;
+        }
+        var owner = new VulkanGraphicsPipelineOwner(vk, device, layout, pipeline, log);
+        return VulkanPipelineCreationCompletion.Complete(owner, log, owner.Dispose,
+            VulkanPipelineLogFormatter.GraphicsPipelineCreated());
     }
 
     static VulkanGraphicsPipelineOwner? FailLabel(Vk vk, VulkanDeviceOwner device, ShaderModule vert,
@@ -36,8 +43,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
     }
 
     static Silk.NET.Vulkan.Pipeline CreateLabelGraphics(Vk vk, VulkanDeviceOwner device,
-        VulkanClearFrameOwner clear, ShaderModule vert, ShaderModule frag, PipelineLayout layout,
-        Action<string>? log)
+        VulkanClearFrameOwner clear, ShaderModule vert, ShaderModule frag, PipelineLayout layout)
     {
         var name = Encoding.ASCII.GetBytes("main\0");
         fixed (byte* pName = name)
@@ -58,6 +64,6 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             var info = new GraphicsPipelineCreateInfo { SType = StructureType.GraphicsPipelineCreateInfo, StageCount = 2, PStages = stages, PVertexInputState = &input, PInputAssemblyState = &assembly, PViewportState = &viewport, PRasterizationState = &raster, PMultisampleState = &multisample, PDepthStencilState = &depth, PColorBlendState = &color, PDynamicState = &dynamic, Layout = layout, RenderPass = clear.RenderPass, Subpass = 0 };
             if (vk.CreateGraphicsPipelines(device.LogicalDevice, default, 1, &info, null, out var pipeline) == Result.Success) return pipeline;
         }
-        log?.Invoke(VulkanPipelineLogFormatter.Failed("Map Label GraphicsPipeline 创建失败")); return default;
+        return default;
     }
 }

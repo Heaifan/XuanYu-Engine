@@ -15,16 +15,16 @@
 | R3-02 | `Render/Overlay/LabelCache/VulkanMapLabelTextureCache.Descriptors.cs` 的 descriptor pool 固定 256 个 set；原驱逐路径不释放 descriptor。 | 中 | 反复创建/驱逐后 descriptor 可回收；仅在所有在途帧引用退休后释放。 | CANDIDATE FIX / PENDING VALIDATION |
 | R3-03 | `Render/Overlay/LabelCache/VulkanMapLabelTextureCache.Create.cs` 的 image/memory/view 创建阶段曾有失败路径缺少完整回滚。 | 中 | 对创建、分配、绑定、view、上传、descriptor 失败分别确认句柄所有权与回滚；GPU 在途资源不得提前释放。 | CANDIDATE FIX / PENDING VALIDATION |
 | R3-04 | `Render/Overlay/LabelCache/VulkanMapLabelTextureCache.Upload.cs` 上传后 `QueueWaitIdle`；导航/比例尺绘制每次绘制有托管数组分配。 | 中 / 低 | 先验证同步与资源安全合同；再分别测量分配，不改变绘制顺序。 | OPEN |
-| R3-05 | `Render/Overlay/VectorDrawing` validator 未校验 `BaseVertex` 叠加后的最终索引及数值边界。 | 中 | 覆盖最终索引范围、溢出、非有限顶点；坏输入在 GPU draw 前拒绝。 | UNKNOWN |
+| R3-05 | `Render/Overlay/VectorDrawing` validator 未校验 `BaseVertex` 叠加后的最终索引及数值边界。 | 中 | 覆盖最终索引范围、溢出、非有限顶点；坏输入在 GPU draw 前拒绝。 | CLOSED：候选修复检查最终索引与 primitive 范围溢出；4 个边界用例随 36 项定向测试通过。真实 GPU 验收仍未执行。 |
 | R3-06 | `VulkanVectorOverlayResource.Update` 不更新 GPU geometry；`CanReuse`、`Stride` 等未发现生产使用，布局契约可能重复。 | 低 | 核对所有调用者；保留成员须有生产用途，stride 只保留一个权威定义。 | OPEN |
 | R3-07 | R3 发现若干 Present、日志、Overlay 名称与实际职责/范围不一致。 | 低 | 逐项回到原审计命名清单核实调用影响；改名不得冒充职责拆分。 | OPEN |
 | R4-01 | `Render/Scene/Models/VulkanStaticModelBuffer.cs:29-30` 的 MapMemory 失败分支曾先释放已绑定 memory、再销毁 buffer。 | 高 | 注入 MapMemory 失败，证明 DestroyBuffer → FreeMemory 以及仅回收成功取得的句柄；验证层无生命周期错误。 | CANDIDATE FIX / PENDING VALIDATION |
-| R4-02 | `VulkanStaticModelValidator` 检查 primitive 区间，但未逐项确认 index 小于顶点数量。 | 中 | 越界 index 在 `CmdDrawIndexed` 前被拒绝，并覆盖索引边界用例。 | OPEN |
+| R4-02 | `VulkanStaticModelValidator` 检查 primitive 区间，但未逐项确认 index 小于顶点数量。 | 中 | 越界 index 在 `CmdDrawIndexed` 前被拒绝，并覆盖索引边界用例。 | CLOSED：候选验证器拒绝越界 index 和溢出的 primitive 区间；3 个边界用例通过。 |
 | R4-03 | `ResolveDrawOwner`/pipeline readiness 与 `DispatchDraw` 分别维护 draw-kind 映射。 | 低 | 核对每种 draw kind 的 Owner、ready 判定和 handler 映射一致。 | OPEN |
 | R4-04 | `FailureTracker.Clear/Count`、`CapacityBytes`、`IndexCount`、静态模型 `TryUpdate` 未发现生产调用者。 | 低 | 检索非源码消费者；保留项需证明生产用途，删除需证明不破坏外部契约。 | OPEN |
 | R5-01 | Map resource key 可能包含不会改变当前固定地面几何的字段，造成多余重建。 | 低 | 对照 key 与 geometry builder；证明字段会影响几何或从 key 移除并回归缓存正确性。 | UNKNOWN |
 | R5-02 | Terrain chunk-list cache key 未包含 replay `ChunkCellsOverride`。 | 中，条件性 | 先证明同一 revision 内 override 可变；若可变，改键并验证参数变化不命中旧 partition。 | UNKNOWN |
-| R5-03 | Terrain 上传前没有独立 index 上界扫描，索引由内部 mesh builder 生成。 | 中，条件性 | 核实 builder 的输出约束和输入边界；无效 chunk 不产生越界 GPU 读取。 | UNKNOWN |
+| R5-03 | Terrain 上传前没有独立 index 上界扫描，索引由内部 mesh builder 生成。 | 中，条件性 | 核实 builder 的输出约束和输入边界；无效 chunk 不产生越界 GPU 读取。 | CLOSED：候选在转换/上传前验证全部 builder indices；有效/越界用例通过。未复现 builder 产生坏 mesh，属于边界防护补齐。 |
 | R5-04 | GridScale 有未使用 `viewport` 局部；另一 VP/metric 网格计算用途不同，不能仅因相似而合并。 | 低 | 清除无用局部；以单位/用途证据确认两条计算路径，回归网格比例和绘制语义。 | OPEN |
 
 ## A～D 状态

@@ -34,21 +34,47 @@ internal sealed class GridPipelineSet : IDisposable
     public static GridPipelineSet Create(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clear, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
     {
-        var grid = VulkanGraphicsPipelineOwner.CreateReferenceGrid(vk, deviceOwner, clear, swapchain, physicalDevice, log);
+        VulkanGraphicsPipelineOwner? grid = null;
+        VulkanGraphicsPipelineOwner? axes = null;
+        VulkanGraphicsPipelineOwner? origin = null;
+        VulkanGraphicsPipelineOwner? navGizmo = null;
+        VulkanGraphicsPipelineOwner? scaleIndicator = null;
+        VulkanGraphicsPipelineOwner? viewPlaneGrid = null;
+        try
+        {
+        grid = VulkanGraphicsPipelineOwner.CreateReferenceGrid(vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (grid is not null) clear.SetReferenceGridPipeline(grid.Pipeline, grid.Layout);
-        var axes = VulkanGraphicsPipelineOwner.CreateWorldAxes(vk, deviceOwner, clear, swapchain, physicalDevice, log);
+        axes = VulkanGraphicsPipelineOwner.CreateWorldAxes(vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (axes is not null) clear.SetWorldAxesPipeline(axes.Pipeline, axes.Layout);
-        var origin = VulkanGraphicsPipelineOwner.CreateWorldOrigin(vk, deviceOwner, clear, swapchain, physicalDevice, log);
+        origin = VulkanGraphicsPipelineOwner.CreateWorldOrigin(vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (origin is not null) clear.SetWorldOriginPipeline(origin.Pipeline, origin.Layout);
-        var navGizmo = VulkanGraphicsPipelineOwner.CreateNavigationGizmo(vk, deviceOwner, clear, swapchain, physicalDevice, log);
+        navGizmo = VulkanGraphicsPipelineOwner.CreateNavigationGizmo(vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (navGizmo is not null) clear.SetNavGizmoPipeline(navGizmo.Pipeline, navGizmo.Layout);
-        var scaleIndicator = VulkanGraphicsPipelineOwner.CreateScaleIndicator(
+        scaleIndicator = VulkanGraphicsPipelineOwner.CreateScaleIndicator(
             vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (scaleIndicator is not null)
             clear.SetScaleIndicatorPipeline(scaleIndicator.Pipeline, scaleIndicator.Layout);
-        var viewPlaneGrid = VulkanGraphicsPipelineOwner.CreateViewPlaneGrid(vk, deviceOwner, clear, swapchain, physicalDevice, log);
+        viewPlaneGrid = VulkanGraphicsPipelineOwner.CreateViewPlaneGrid(vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (viewPlaneGrid is not null) clear.SetViewPlaneGridPipeline(viewPlaneGrid.Pipeline, viewPlaneGrid.Layout);
         return new GridPipelineSet(grid, axes, origin, navGizmo, scaleIndicator, viewPlaneGrid);
+        }
+        catch (Exception failure)
+        {
+            clear.SetViewPlaneGridPipeline(default, default);
+            clear.SetScaleIndicatorPipeline(default, default);
+            clear.SetNavGizmoPipeline(default, default);
+            clear.SetWorldOriginPipeline(default, default);
+            clear.SetWorldAxesPipeline(default, default);
+            clear.SetReferenceGridPipeline(default, default);
+            VulkanPipelineCreationCompletion.Rollback(failure,
+                () => viewPlaneGrid?.Dispose(),
+                () => scaleIndicator?.Dispose(),
+                () => navGizmo?.Dispose(),
+                () => origin?.Dispose(),
+                () => axes?.Dispose(),
+                () => grid?.Dispose());
+            throw;
+        }
     }
 
     public void Dispose()

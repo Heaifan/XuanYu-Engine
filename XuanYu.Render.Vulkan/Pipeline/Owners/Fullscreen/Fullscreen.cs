@@ -47,16 +47,18 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             log?.Invoke(VulkanPipelineLogFormatter.Failed("全屏 Pass CreatePipelineLayout 失败"));
             return null;
         }
-        if (!TryCreateFullscreenPipeline(vk, deviceOwner, clearFrame, vert, frag, layout, depthTest, topology, log, out var pipeline))
+        if (!TryCreateFullscreenPipeline(vk, deviceOwner, clearFrame, vert, frag, layout, depthTest, topology, out var pipeline))
         {
             vk.DestroyPipelineLayout(deviceOwner.LogicalDevice, layout, null);
             VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
             VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
+            log?.Invoke(VulkanPipelineLogFormatter.Failed("全屏 Pass CreateGraphicsPipelines 失败"));
             return null;
         }
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
-        log?.Invoke(VulkanPipelineLogFormatter.GridCreated());
-        return new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        var owner = new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        return VulkanPipelineCreationCompletion.Complete(owner, log, owner.Dispose,
+            VulkanPipelineLogFormatter.GridCreated());
     }
 }

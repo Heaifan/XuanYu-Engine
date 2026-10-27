@@ -7,9 +7,8 @@ using XuanYu.Render.Vulkan.Swapchain;
 namespace XuanYu.Render.Vulkan.Pipeline;
 
 // GRID-RW-1-CORR2：参考网格专用 Empty-input procedural LineList 管线。
-// 不再复用 CreateFullscreenPass（其声明 StaticModel VertexBinding/Attributes，与程序化顶点矛盾）。
 // Depth Bias 向相机偏移（负 ConstantFactor），消除与 MapGround 共面 Z=BaseHeight 的深度竞争；
-// DepthTest=On(GreaterOrEqual)、DepthWrite=Off、AlphaBlend=On。
+// DepthTest=GreaterOrEqual、DepthWrite=Off、AlphaBlend=On。
 internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
     internal static VulkanGraphicsPipelineOwner? CreateReferenceGridLinePass(Vk vk,
@@ -94,7 +93,8 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
         }
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
-        log?.Invoke(VulkanPipelineLogFormatter.GridCreated());
-        return new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        var owner = new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        return VulkanPipelineCreationCompletion.Complete(owner, log, owner.Dispose,
+            VulkanPipelineLogFormatter.GridCreated());
     }
 }

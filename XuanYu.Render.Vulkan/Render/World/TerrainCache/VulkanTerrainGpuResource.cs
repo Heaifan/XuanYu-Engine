@@ -36,12 +36,13 @@ sealed class VulkanTerrainGpuResource : IDisposable
         var buildTimer = Stopwatch.StartNew();
         var mesh = TerrainChunkMeshBuilder.Build(resource.Heightfield, chunk, lod,
             transform.VerticalExaggeration);
+        if (mesh.Indices.Count == 0) { error = "NO_TRIANGLES"; return null; }
+        if (!VulkanTerrainGpuMeshIndexValidator.TryValidate(mesh, out error)) return null;
         var vertices = mesh.Vertices.Select(v => new VulkanStaticModelVertex(
             (float)(v.X + chunk.StartSampleX * resource.CellSizeMeters),
             (float)(v.Y + chunk.StartSampleY * resource.CellSizeYMeters), (float)v.Z,
             (float)v.Nx, (float)v.Ny, (float)v.Nz, 0, 0)).ToArray();
         buildTimer.Stop(); meshBuildMs = buildTimer.Elapsed.TotalMilliseconds;
-        if (mesh.Indices.Count == 0) { error = "NO_TRIANGLES"; return null; }
         var uploadTimer = Stopwatch.StartNew();
         var vb = VulkanStaticModelBuffer.Create(vk, device, vertices, BufferUsageFlags.VertexBufferBit, out error);
         if (vb is null) { uploadMs = uploadTimer.Elapsed.TotalMilliseconds; return null; }

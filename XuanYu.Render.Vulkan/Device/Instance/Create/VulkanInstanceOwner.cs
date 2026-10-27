@@ -43,9 +43,10 @@ public sealed unsafe class VulkanInstanceOwner : IDisposable
 
     static VulkanInstanceResult CreateWithResult(Vk vk, bool offscreen)
     {
+        Instance created = default;
         try
         {
-            Instance created = default; Result createResult = Result.Success;
+            Result createResult = Result.Success;
             var enableProperties2 = !offscreen && VulkanInstanceExtensionAvailability.Supports(vk, VulkanInstanceExtensions.Properties2);
             var enableSurfaceCapabilities2 = !offscreen && VulkanInstanceExtensionAvailability.Supports(vk, VulkanInstanceExtensions.SurfaceCapabilities2);
             var enableSurfaceMaintenance1 = !offscreen && enableSurfaceCapabilities2 &&
@@ -73,6 +74,7 @@ public sealed unsafe class VulkanInstanceOwner : IDisposable
         }
         catch (Exception ex)
         {
+            if (created.Handle != 0) vk.DestroyInstance(created, null);
             Console.WriteLine(VulkanInstanceLogFormatter.CreateFailed(ex.GetType().Name, ex.Message));
             return new VulkanInstanceResult(false, null, 0, ex.GetType().Name, ex.Message);
         }

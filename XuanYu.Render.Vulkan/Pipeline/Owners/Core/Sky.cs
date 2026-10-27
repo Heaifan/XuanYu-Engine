@@ -68,7 +68,8 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
         }
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
         VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
-        log?.Invoke(VulkanPipelineLogFormatter.SkyCreated());
-        return new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        var owner = new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        return VulkanPipelineCreationCompletion.Complete(owner, log, owner.Dispose,
+            VulkanPipelineLogFormatter.SkyCreated());
     }
 }

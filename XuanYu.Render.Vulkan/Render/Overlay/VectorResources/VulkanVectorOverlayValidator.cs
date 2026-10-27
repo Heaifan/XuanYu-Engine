@@ -13,8 +13,17 @@ public static class VulkanVectorOverlayValidator
         foreach (var index in resource.Indices)
             if (index >= resource.Vertices.Count) return Fail("index out of range", out error);
         foreach (var p in resource.Primitives)
-            if (p.FirstIndex < 0 || p.IndexCount <= 0 || p.FirstIndex + p.IndexCount > resource.Indices.Count)
+        {
+            if (p.FirstIndex < 0 || p.IndexCount <= 0 || p.IndexCount > resource.Indices.Count ||
+                p.FirstIndex > resource.Indices.Count - p.IndexCount)
                 return Fail("primitive range", out error);
+            for (var offset = p.FirstIndex; offset < p.FirstIndex + p.IndexCount; offset++)
+            {
+                var finalIndex = (long)resource.Indices[offset] + p.BaseVertex;
+                if (finalIndex < 0 || finalIndex >= resource.Vertices.Count)
+                    return Fail("final index out of range", out error);
+            }
+        }
         return true;
     }
 

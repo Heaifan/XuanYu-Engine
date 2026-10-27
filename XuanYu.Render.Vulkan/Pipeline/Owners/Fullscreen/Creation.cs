@@ -10,7 +10,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
     static bool TryCreateFullscreenPipeline(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, ShaderModule vert, ShaderModule frag,
         PipelineLayout layout, bool depthTest, PrimitiveTopology topology,
-        Action<string>? log, out Silk.NET.Vulkan.Pipeline pipeline)
+        out Silk.NET.Vulkan.Pipeline pipeline)
     {
         var entry = System.Text.Encoding.ASCII.GetBytes("main\0");
         pipeline = default;
@@ -78,7 +78,6 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             if (vk.CreateGraphicsPipelines(deviceOwner.LogicalDevice, default, 1,
                     &pipelineInfo, null, out pipeline) != Result.Success)
             {
-                log?.Invoke(VulkanPipelineLogFormatter.Failed("全屏 Pass CreateGraphicsPipelines 失败"));
                 return false;
             }
         }

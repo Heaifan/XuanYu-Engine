@@ -21,8 +21,11 @@ static class VulkanStaticModelValidator
         {
             if (p.FirstIndex < 0 || p.IndexCount <= 0) return Fail("bad primitive range", out error);
             if (p.BaseVertex != 0) return Fail("non-zero BaseVertex not supported", out error);
-            if (p.FirstIndex + p.IndexCount > m.Indices.Count) return Fail("primitive overflow", out error);
+            if (p.IndexCount > m.Indices.Count || p.FirstIndex > m.Indices.Count - p.IndexCount)
+                return Fail("primitive overflow", out error);
         }
+        foreach (var index in m.Indices)
+            if (index >= (uint)m.Vertices.Count) return Fail("index outside vertex range", out error);
         return true;
     }
 
