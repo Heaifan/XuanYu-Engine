@@ -1,3 +1,7 @@
+## v0.3.0.42-fix · Vulkan MapMemory 失败真实设备注入验证（Candidate）
+- 为静态模型 Buffer 的 MapMemory 结果及失败清理加入内部窄调用边界；在真实 offscreen Vulkan Device 上注入 MapMemory 失败并仍调用实际 DestroyBuffer、FreeMemory，核对句柄与释放顺序。
+- 此版本对应 R4-01 / A。隔离定向测试 22/22 PASS；Validation Layer 告警、完整 Editor 验收及集成仍待完成。
+
 ## v0.3.0.41-fix · Vulkan Framebuffer 重建失败安全停止（Candidate）
 - Framebuffer 重建失败时清理部分创建资源、失效活动帧目标与命令缓冲，并经 Resize 失败路径停止呈现；新增 `test_VulkanFramebufferRebuildFailure` 源码合同测试。
 - 此版本对应 R1-02 / D。原候选契约结果可作参考；Acquire Out-of-date 恢复失败、真实 Vulkan 注入、正常关闭与恢复仍待验收。

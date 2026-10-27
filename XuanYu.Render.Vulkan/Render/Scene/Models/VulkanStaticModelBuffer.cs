@@ -1,12 +1,19 @@
 using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan.Device;
+using VkDevice = global::Silk.NET.Vulkan.Device;
 using VkBuffer = Silk.NET.Vulkan.Buffer;
 
 namespace XuanYu.Render.Vulkan.Render.StaticModels;
 
 sealed unsafe class VulkanStaticModelBuffer : IDisposable
 {
+    internal delegate Result MapCall(Vk vk, VkDevice device, DeviceMemory memory, ulong size, out nint data);
+    internal readonly record struct Calls(MapCall Map, Action<Vk, VkDevice, VkBuffer> Destroy, Action<Vk, VkDevice, DeviceMemory> Free);
+    static readonly Calls NativeCalls = new((Vk v, VkDevice d, DeviceMemory m, ulong s, out nint data) =>
+        { void* pointer; var result = v.MapMemory(d, m, 0, s, 0, &pointer); data = (nint)pointer; return result; },
+        VulkanStaticModelBufferMapFailureCalls.DestroyBuffer,
+        VulkanStaticModelBufferMapFailureCalls.FreeMemory);
     readonly Vk _vk; readonly VulkanDeviceOwner _device;
     VkBuffer _buffer; DeviceMemory _memory; readonly ulong _capacityBytes;
     VulkanStaticModelBuffer(Vk vk, VulkanDeviceOwner device, VkBuffer b, DeviceMemory m, ulong capacity) =>
@@ -15,7 +22,11 @@ sealed unsafe class VulkanStaticModelBuffer : IDisposable
     public ulong CapacityBytes => _capacityBytes;
 
     public static VulkanStaticModelBuffer? Create<T>(Vk vk, VulkanDeviceOwner device,
-        T[] data, BufferUsageFlags usage, out string error) where T : unmanaged
+        T[] data, BufferUsageFlags usage, out string error) where T : unmanaged =>
+        Create(vk, device, data, usage, out error, NativeCalls);
+
+    internal static VulkanStaticModelBuffer? Create<T>(Vk vk, VulkanDeviceOwner device,
+        T[] data, BufferUsageFlags usage, out string error, Calls calls) where T : unmanaged
     {
         error = "";
         if (data.Length == 0) { error = "empty data"; return null; }
@@ -26,8 +37,9 @@ sealed unsafe class VulkanStaticModelBuffer : IDisposable
         if (vk.BindBufferMemory(device.LogicalDevice, buffer, memory, 0) != Result.Success)
         { vk.FreeMemory(device.LogicalDevice, memory, null); vk.DestroyBuffer(device.LogicalDevice, buffer, null); error = "BindBufferMemory"; return null; }
         void* dst;
-        if (vk.MapMemory(device.LogicalDevice, memory, 0, (ulong)bytes.Length, 0, &dst) != Result.Success)
-        { vk.DestroyBuffer(device.LogicalDevice, buffer, null); vk.FreeMemory(device.LogicalDevice, memory, null); error = "MapMemory"; return null; }
+        if (calls.Map(vk, device.LogicalDevice, memory, (ulong)bytes.Length, out var mapped) != Result.Success)
+        { calls.Destroy(vk, device.LogicalDevice, buffer); calls.Free(vk, device.LogicalDevice, memory); error = "MapMemory"; return null; }
+        dst = (void*)mapped;
         bytes.CopyTo(new Span<byte>(dst, bytes.Length));
         vk.UnmapMemory(device.LogicalDevice, memory);
         return new VulkanStaticModelBuffer(vk, device, buffer, memory, (ulong)bytes.Length);
