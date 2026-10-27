@@ -69,9 +69,11 @@ public sealed unsafe partial class VulkanPresentLoop
 
     void Fatal(string reason)
     {
+        if (!MarkFailed(reason)) return;
         PublishRendererEvent(RendererEventCodes.PresentFatal, RendererEventLevel.Error, reason: reason);
         Log(VulkanClearFrameLogFormatter.PresentError(reason));
-        _onFatal?.Invoke(reason);
+        try { _onFatal?.Invoke(reason); }
+        catch (Exception ex) { Log($"Present fatal callback failed: {ex.Message}"); }
     }
 
     void Log(string message)

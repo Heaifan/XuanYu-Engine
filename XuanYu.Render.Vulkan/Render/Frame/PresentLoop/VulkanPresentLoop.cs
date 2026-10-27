@@ -6,6 +6,7 @@ using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Swapchain;
 using XuanYu.Render.Vulkan.Render.Frame;
+using XuanYu.Render.Vulkan.Render.Label;
 using Semaphore = Silk.NET.Vulkan.Semaphore;
 
 namespace XuanYu.Render.Vulkan.Render;
@@ -52,20 +53,40 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
 
     public bool Start()
     {
-        if (_thread is not null) return true;
-        if (!_syncCreated && !CreateSync()) return false;
+        if (!VulkanPresentLoopStatePolicy.CanStart(State) || Volatile.Read(ref _fatalReported) != 0) return false;
+        if (_thread is { IsAlive: true })
+            return State == VulkanPresentLoopState.Running && Volatile.Read(ref _stopRequested) == 0;
+        if (!_syncCreated && !CreateSync())
+        {
+            Fatal("Present 同步对象创建失败。");
+            return false;
+        }
         Volatile.Write(ref _stopRequested, 0);
+        Volatile.Write(ref _state, (int)VulkanPresentLoopState.Starting);
         _thread = new Thread(Run) { IsBackground = true, Name = "VulkanPresent" };
-        _thread.Start();
+        Volatile.Write(ref _state, (int)VulkanPresentLoopState.Running);
+        try { _thread.Start(); }
+        catch (Exception ex)
+        {
+            _thread = null;
+            Fatal($"Present 线程启动失败：{ex.Message}");
+            return false;
+        }
         PublishLoopStarted();
         Log(VulkanClearFrameLogFormatter.LoopStarted());
-        return true;
+        return State == VulkanPresentLoopState.Running;
     }
 
     void Run()
     {
         try { RunFrames(); }
+        catch (VulkanLabelUploadDeviceLostException ex)
+        {
+            _deviceLost = true;
+            Fatal($"Present 线程遇到 Vulkan DeviceLost：{ex.Message}");
+        }
         catch (Exception ex) { Fatal($"Present 线程异常：{ex.Message}"); }
+        finally { CompleteWorker(); }
     }
 
 }

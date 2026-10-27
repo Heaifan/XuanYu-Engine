@@ -69,7 +69,7 @@ public sealed unsafe partial class VulkanPresentLoop
 
     bool CompleteForStop()
     {
-        if (_deviceLost) return false;
+        if (_deviceLost) return true;
         if (!WaitFence(_deviceOwner.LogicalDevice)) return false;
         for (uint i = 0; i < _presentPendingImages.Length; i++)
             if (!WaitPresentFence(i, FindPresentFrame(i))) return false;

@@ -30,8 +30,11 @@ public sealed unsafe partial class VulkanPresentLoop
                 res.ToString(), "AcquireNextImage");
         var decision = VulkanAcquireResultPolicy.Decide(res,
             res == Result.ErrorOutOfDateKhr ? () => _onOutOfDate?.Invoke("AcquireNextImage") ?? true : null);
-        if (decision == AcquireDecision.StopOrFatal && res != Result.ErrorOutOfDateKhr)
-            Check(res, "AcquireNextImage");
+        if (decision == AcquireDecision.StopOrFatal)
+        {
+            if (res == Result.ErrorOutOfDateKhr) Fatal("AcquireNextImage 恢复失败");
+            else Check(res, "AcquireNextImage");
+        }
         return decision;
     }
 

@@ -1,3 +1,8 @@
+## v0.3.0.44-fix · PresentLoop 恢复失败与 DeviceLost 终态（Candidate）
+- Acquire Out-of-date 恢复失败会锁存 PresentLoop Failed 状态和原因；线程退出发布终态，失败循环不可被 Start 误报重启，Fatal 回调异常不会逸出。
+- 将上传 DeviceLost 明确传入 PresentLoop，跳过失效设备上的 Fence 等待并完成允许的同步对象清理；普通 Acquire/Submit/Present 成功路径保持原顺序。
+- 此版本对应 R1-02 / D，并收口 R3-03 / B 的 DeviceLost 关闭支路。定向自动化测试待最终候选复验；真实 Acquire 故障注入和 Vulkan 验证层验收待执行。
+
 ## v0.3.0.43-fix · Vulkan 标签上传不确定状态安全终止（Candidate）
 - 标签 QueueSubmit / QueueWaitIdle / DeviceWaitIdle 结果分类为未提交、完成、DeviceLost、完成状态未知；等待最多一次 QueueWaitIdle 与一次 DeviceWaitIdle，异常或未知结果不会触发无界重试。
 - 未知完成状态下隔离上传命令与 GPU 资源；Session 关闭预检失败时标记失败并保留 Device 与资源。DeviceLost 独立进入终态并允许适用的同步对象销毁。
