@@ -24,6 +24,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     public void Dispose()
     {
         if (_disposed) return;
+        _mapLabelTextures?.EnsureUploadQuarantineSafe();
         _disposed = true;
         _resourceRetirement.Complete(0);
         _resourceRetirement.Complete(1);

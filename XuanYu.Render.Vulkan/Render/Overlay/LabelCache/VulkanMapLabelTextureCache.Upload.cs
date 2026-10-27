@@ -6,9 +6,10 @@ sealed unsafe partial class VulkanMapLabelTextureCache
 {
     void Upload(Silk.NET.Vulkan.Buffer staging, Image image, uint width, uint height, uint rowLength)
     {
+        CommandBuffer command = default; var safeToFree = true;
         var allocate = new CommandBufferAllocateInfo { SType = StructureType.CommandBufferAllocateInfo,
             CommandPool = _commandPool, Level = CommandBufferLevel.Primary, CommandBufferCount = 1 };
-        Check(_vk.AllocateCommandBuffers(_device.LogicalDevice, &allocate, out var command), "AllocateLabelCommand");
+        Check(_vk.AllocateCommandBuffers(_device.LogicalDevice, &allocate, out command), "AllocateLabelCommand");
         try
         {
             var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo,
@@ -25,9 +26,20 @@ sealed unsafe partial class VulkanMapLabelTextureCache
             Check(_vk.EndCommandBuffer(command), "EndLabelCommand");
             var submit = new SubmitInfo { SType = StructureType.SubmitInfo, CommandBufferCount = 1, PCommandBuffers = &command };
             Check(_vk.QueueSubmit(_queue, 1, &submit, default), "SubmitLabelCommand");
-            Check(_vk.QueueWaitIdle(_queue), "WaitLabelCommand");
+            var queueWait = _vk.QueueWaitIdle(_queue);
+            if (queueWait != Result.Success)
+            {
+                if (queueWait == Result.ErrorDeviceLost) Check(queueWait, "WaitLabelCommand");
+                var deviceWait = _vk.DeviceWaitIdle(_device.LogicalDevice);
+                if (deviceWait is not Result.Success and not Result.ErrorDeviceLost)
+                {
+                    safeToFree = false;
+                    throw new VulkanLabelUploadCompletionUnknownException(command, queueWait, deviceWait);
+                }
+                Check(queueWait, "WaitLabelCommand");
+            }
         }
-        finally { _vk.FreeCommandBuffers(_device.LogicalDevice, _commandPool, 1, in command); }
+        finally { if (safeToFree) _vk.FreeCommandBuffers(_device.LogicalDevice, _commandPool, 1, in command); }
     }
 
     void Transition(CommandBuffer command, Image image, ImageLayout oldLayout, ImageLayout newLayout,

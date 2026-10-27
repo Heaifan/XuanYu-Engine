@@ -1,6 +1,7 @@
 using XuanYu.Render.Vulkan.Render;
 using System.Threading;
 using XuanYu.Render.Abstractions.Diagnostics;
+using XuanYu.Render.Vulkan.Render.Label;
 
 namespace XuanYu.Render.Vulkan.Session;
 
@@ -35,18 +36,28 @@ public sealed partial class VulkanRenderSession
     public bool TryDispose()
     {
         if (_disposed) return true;
+        if (_disposeBlocked) return false;
         if (!_presentLoop.Stop()) return false;
+        try
+        {
+            _presentLoop.Dispose();
+            _pipeline?.Dispose();
+            _terrainPipeline?.Dispose();
+            _clearFrame.DisposeTerrain();
+            _vectorOverlayPipeline?.Dispose();
+            _vectorStrokePipeline?.Dispose();
+            _mapLabelPipeline?.Dispose();
+            _skyPipeline?.Dispose();
+            _gridPipelines?.Dispose();
+            _clearFrame.Dispose();
+        }
+        catch (VulkanLabelUploadCompletionUnknownException error)
+        {
+            _disposeBlocked = true;
+            _log?.Invoke($"Vulkan 资源释放阻断，保留 Device 以避免释放 GPU 在途资源：{error.Message}");
+            return false;
+        }
         _disposed = true;
-        _presentLoop.Dispose();
-        _pipeline?.Dispose();
-        _terrainPipeline?.Dispose();
-        _clearFrame.DisposeTerrain();
-        _vectorOverlayPipeline?.Dispose();
-        _vectorStrokePipeline?.Dispose();
-        _mapLabelPipeline?.Dispose();
-        _skyPipeline?.Dispose();
-        _gridPipelines?.Dispose();
-        _clearFrame.Dispose();
         _log?.Invoke(VulkanClearFrameLogFormatter.SessionDisposed());
         return true;
     }

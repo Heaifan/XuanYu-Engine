@@ -29,6 +29,7 @@ public sealed partial class VulkanRenderSession : IDisposable
     uint _generation;
     int _recoverTries;
     bool _disposed;
+    bool _disposeBlocked;
     int _failed;
     bool _resizeStopping;
     string? _failureReason;

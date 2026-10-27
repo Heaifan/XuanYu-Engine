@@ -11,6 +11,7 @@ sealed unsafe partial class VulkanMapLabelTextureCache : IDisposable
     readonly Queue _queue; readonly Action<string>? _log;
     readonly Action<IDisposable>? _retire;
     readonly Dictionary<string, VulkanMapLabelTexture> _items = [];
+    readonly List<VulkanMapLabelUploadQuarantine> _uploadQuarantines = [];
     readonly DescriptorPool _descriptorPool;
     public DescriptorSetLayout DescriptorSetLayout { get; }
     public Sampler Sampler { get; }
@@ -39,6 +40,10 @@ sealed unsafe partial class VulkanMapLabelTextureCache : IDisposable
             _items[bitmap.CacheKey] = next;
             return next;
         }
+        catch (VulkanLabelUploadCompletionUnknownException)
+        {
+            throw;
+        }
         catch (Exception error)
         {
             _log?.Invoke($"Map Label Texture 创建失败：{error.Message}");
@@ -55,6 +60,7 @@ sealed unsafe partial class VulkanMapLabelTextureCache : IDisposable
 
     public void Dispose()
     {
+        EnsureUploadQuarantineSafe();
         foreach (var item in _items.Values) Retire(item);
         _items.Clear();
         if (Sampler.Handle != 0) _vk.DestroySampler(_device.LogicalDevice, Sampler, null);
@@ -64,4 +70,15 @@ sealed unsafe partial class VulkanMapLabelTextureCache : IDisposable
 
     void Retire(IDisposable resource)
     { if (_retire is null) resource.Dispose(); else _retire(resource); }
+
+    internal void EnsureUploadQuarantineSafe()
+    {
+        if (_uploadQuarantines.Count == 0) return;
+        var result = _vk.DeviceWaitIdle(_device.LogicalDevice);
+        if (result is not Result.Success and not Result.ErrorDeviceLost)
+            throw new VulkanLabelUploadCompletionUnknownException(
+                _uploadQuarantines[0].Command, Result.Success, result);
+        foreach (var upload in _uploadQuarantines) upload.Dispose();
+        _uploadQuarantines.Clear();
+    }
 }

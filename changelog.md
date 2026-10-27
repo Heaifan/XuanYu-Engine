@@ -1,3 +1,7 @@
+## v0.3.0.39-fix · Vulkan 标签纹理创建失败回滚（Candidate）
+- 补齐 Image、Memory、ImageView 创建失败清理；上传完成状态未知时隔离仍可能被 GPU 使用的资源，关闭阶段等待安全完成后回收。
+- 此版本对应 R3-03 / B。自动化契约已在原候选验证；未知完成状态、关闭阻断和真实 Vulkan 失败注入待验收。
+
 ## v0.3.0.38-fix · Vulkan 静态模型映射失败资源释放顺序（Candidate）
 - MapMemory 失败时先销毁已绑定的 Vulkan Buffer，再释放 DeviceMemory；新增 `test_VulkanStaticModelBufferCleanup` 源码合同测试。
 - 此版本对应 R4-01 / A。候选自动化结果沿用基线证据；身份绑定构建、真实 Vulkan 故障注入和 Editor 验收待完成。
