@@ -7,25 +7,41 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     bool CreateFramebuffers()
     {
-        _depthAttachments = new VulkanDepthAttachment?[_views.Length];
-        for (var i = 0; i < _views.Length; i++)
+        var nextFramebuffers = new Framebuffer[_views.Length];
+        var nextDepthAttachments = new VulkanDepthAttachment?[_views.Length];
+        try
         {
-            _depthAttachments[i] = VulkanDepthAttachment.Create(_vk, _deviceOwner, _extent);
-            if (_depthAttachments[i] is not { } depth) return false;
-            var attachments = new[] { _views[i], depth.View };
-            fixed (ImageView* pAttachments = attachments)
+            for (var i = 0; i < _views.Length; i++)
             {
-                var fbInfo = new FramebufferCreateInfo
+                nextDepthAttachments[i] = VulkanDepthAttachment.Create(_vk, _deviceOwner, _extent);
+                if (nextDepthAttachments[i] is not { } depth)
+                { DestroyCandidateFramebuffers(nextFramebuffers, nextDepthAttachments); return false; }
+                var attachments = new[] { _views[i], depth.View };
+                fixed (ImageView* pAttachments = attachments)
                 {
-                    SType = StructureType.FramebufferCreateInfo,
-                    RenderPass = _renderPass, AttachmentCount = 2, PAttachments = pAttachments,
-                    Width = _extent.Width, Height = _extent.Height, Layers = 1
-                };
-                var result = _vk.CreateFramebuffer(_deviceOwner.LogicalDevice, &fbInfo, null, out _framebuffers[i]);
-                if (!Ok(result, "CreateFramebuffer")) return false;
+                    var fbInfo = new FramebufferCreateInfo
+                    {
+                        SType = StructureType.FramebufferCreateInfo,
+                        RenderPass = _renderPass, AttachmentCount = 2, PAttachments = pAttachments,
+                        Width = _extent.Width, Height = _extent.Height, Layers = 1
+                    };
+                    var result = _vk.CreateFramebuffer(_deviceOwner.LogicalDevice, &fbInfo, null, out nextFramebuffers[i]);
+                    if (!Ok(result, "CreateFramebuffer"))
+                    { DestroyCandidateFramebuffers(nextFramebuffers, nextDepthAttachments); return false; }
+                }
             }
         }
+        catch { DestroyCandidateFramebuffers(nextFramebuffers, nextDepthAttachments); throw; }
+        _framebuffers = nextFramebuffers;
+        _depthAttachments = nextDepthAttachments;
         return true;
+    }
+
+    void DestroyCandidateFramebuffers(Framebuffer[] framebuffers, VulkanDepthAttachment?[] depths)
+    {
+        foreach (var framebuffer in framebuffers)
+            if (framebuffer.Handle != 0) _vk.DestroyFramebuffer(_deviceOwner.LogicalDevice, framebuffer, null);
+        foreach (var depth in depths) depth?.Dispose();
     }
 
     bool RecordCommandBuffers(ImageView[] views)

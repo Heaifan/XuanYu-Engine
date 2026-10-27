@@ -14,6 +14,7 @@ sealed unsafe class VulkanDepthAttachment : IDisposable
 
     public static VulkanDepthAttachment? Create(Vk vk, VulkanDeviceOwner device, Extent2D extent)
     {
+        Image image = default; DeviceMemory memory = default; ImageView view = default;
         var imageInfo = new ImageCreateInfo
         {
             SType = StructureType.ImageCreateInfo, ImageType = ImageType.Type2D, Format = DepthFormat,
@@ -22,22 +23,28 @@ sealed unsafe class VulkanDepthAttachment : IDisposable
             Tiling = ImageTiling.Optimal, Usage = ImageUsageFlags.DepthStencilAttachmentBit,
             SharingMode = SharingMode.Exclusive, InitialLayout = ImageLayout.Undefined
         };
-        if (vk.CreateImage(device.LogicalDevice, &imageInfo, null, out var image) != Result.Success) return null;
-        if (!Allocate(vk, device, image, out var memory))
-        { vk.DestroyImage(device.LogicalDevice, image, null); return null; }
-        if (vk.BindImageMemory(device.LogicalDevice, image, memory, 0) != Result.Success)
-        { vk.FreeMemory(device.LogicalDevice, memory, null); vk.DestroyImage(device.LogicalDevice, image, null); return null; }
-        var range = new ImageSubresourceRange { AspectMask = ImageAspectFlags.DepthBit, LevelCount = 1, LayerCount = 1 };
-        var viewInfo = new ImageViewCreateInfo
+        try
         {
-            SType = StructureType.ImageViewCreateInfo, Image = image, ViewType = ImageViewType.Type2D,
-            Format = DepthFormat, SubresourceRange = range
-        };
-        if (vk.CreateImageView(device.LogicalDevice, &viewInfo, null, out var view) == Result.Success)
-            return new VulkanDepthAttachment(vk, device, image, memory, view);
-        vk.FreeMemory(device.LogicalDevice, memory, null);
-        vk.DestroyImage(device.LogicalDevice, image, null);
-        return null;
+            if (vk.CreateImage(device.LogicalDevice, &imageInfo, null, out image) != Result.Success) return null;
+            if (!Allocate(vk, device, image, out memory)) return null;
+            if (vk.BindImageMemory(device.LogicalDevice, image, memory, 0) != Result.Success) return null;
+            var range = new ImageSubresourceRange { AspectMask = ImageAspectFlags.DepthBit, LevelCount = 1, LayerCount = 1 };
+            var viewInfo = new ImageViewCreateInfo
+            {
+                SType = StructureType.ImageViewCreateInfo, Image = image, ViewType = ImageViewType.Type2D,
+                Format = DepthFormat, SubresourceRange = range
+            };
+            if (vk.CreateImageView(device.LogicalDevice, &viewInfo, null, out view) != Result.Success) return null;
+            var target = new VulkanDepthAttachment(vk, device, image, memory, view);
+            image = default; memory = default; view = default;
+            return target;
+        }
+        finally
+        {
+            if (view.Handle != 0) vk.DestroyImageView(device.LogicalDevice, view, null);
+            if (image.Handle != 0) vk.DestroyImage(device.LogicalDevice, image, null);
+            if (memory.Handle != 0) vk.FreeMemory(device.LogicalDevice, memory, null);
+        }
     }
 
     static bool Allocate(Vk vk, VulkanDeviceOwner d, Image image, out DeviceMemory mem)

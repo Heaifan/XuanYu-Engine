@@ -4,6 +4,17 @@ namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
 {
+    bool FailClosedFrameTargets()
+    {
+        _commandBuffers = [];
+        DestroyFramebuffers();
+        foreach (var buffer in _readbackBuffers) buffer.Dispose();
+        _readbackBuffers = [];
+        _views = [];
+        _extent = default;
+        _framebufferGeneration++;
+        return false;
+    }
     void DestroyFramebuffers()
     {
         foreach (var f in _framebuffers)
