@@ -72,8 +72,7 @@ sealed partial class VulkanTerrainGpuCache
             Retire(resource);
         }
         foreach (var key in _chunks.Keys.Where(key =>
-                     !retained.TryGetValue(key.Split(':')[0], out var revision) ||
-                     !key.EndsWith($":{revision}", StringComparison.Ordinal)).ToArray())
+                     !retained.TryGetValue(key.TerrainId, out var revision) || revision != key.Revision).ToArray())
             _chunks.Remove(key);
     }
 

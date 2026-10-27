@@ -9,7 +9,6 @@ internal sealed class VulkanFrameState
 {
     public RenderProjection Projection { get; private set; }
     public bool HasProjection { get; private set; }
-    public bool FrameDirty { get; private set; }
     public Vector3d RenderOrigin => _viewProjection?.RenderOrigin ?? default;
     ViewProjectionState? _viewProjection;
 
@@ -17,7 +16,6 @@ internal sealed class VulkanFrameState
     {
         Projection = projection;
         HasProjection = true;
-        FrameDirty = true;
         _viewProjection = null;
     }
 
@@ -32,9 +30,6 @@ internal sealed class VulkanFrameState
     public void Clear()
     {
         HasProjection = false;
-        FrameDirty = false;
         _viewProjection = null;
     }
-
-    public void MarkRecorded() => FrameDirty = false;
 }

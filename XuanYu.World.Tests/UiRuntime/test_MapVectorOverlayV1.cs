@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
 using XuanYu.Render.Abstractions;
-using XuanYu.Render.Vulkan.Render.VectorOverlay;
 using XuanYu.World.Map;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -56,13 +55,6 @@ public sealed partial class MapVectorOverlayV1Tests
         var shader = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Render.Vulkan", "Shaders", "Sources", "SceneTerrain", "scene.vert"));
         Assert.Contains("pc.gizmoRingRadius * 2.0 / viewport", shader);
         Assert.Contains("selectionMode < 1.5", shader);
-    }
-
-    [Fact]
-    public void V1_R10_reuses_buffer_only_when_capacity_is_enough()
-    {
-        Assert.True(VulkanVectorOverlayBufferReusePolicy.CanReuse(128, 64));
-        Assert.False(VulkanVectorOverlayBufferReusePolicy.CanReuse(64, 128));
     }
 
     [Fact]

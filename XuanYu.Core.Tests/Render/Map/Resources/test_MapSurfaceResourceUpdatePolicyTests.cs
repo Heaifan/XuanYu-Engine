@@ -39,6 +39,23 @@ public sealed class MapSurfaceResourceUpdatePolicyTests
     }
 
     [Fact]
+    public void Surface_metadata_does_not_rebuild_fixed_flat_geometry()
+    {
+        var current = MapSurfaceResourceKey.From(Snap(1));
+        var changedMetadata = Snap(2) with
+        { SurfaceKind = MapSurfaceKind.GentleHillsV1, AmplitudeMeters = 50, WavelengthMeters = 300, Seed = 9 };
+
+        var update = MapSurfaceResourceUpdatePolicy.Decide(changedMetadata, 1, current);
+
+        Assert.Equal(MapSurfaceResourceUpdateKind.NoRebuild, update.Kind);
+        var originalSurface = MapSurfaceGeometryBuilder.Build(Snap(1));
+        var changedSurface = MapSurfaceGeometryBuilder.Build(changedMetadata);
+        Assert.Equal(originalSurface.Vertices, changedSurface.Vertices);
+        Assert.Equal(originalSurface.Indices, changedSurface.Indices);
+        Assert.Equal(MapBoundsGeometryBuilder.Build(Snap(1)), MapBoundsGeometryBuilder.Build(changedMetadata));
+    }
+
+    [Fact]
     public void Resize_triggers_recreate()
     {
         var current = MapSurfaceResourceKey.From(Snap(1));

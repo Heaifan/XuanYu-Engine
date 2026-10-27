@@ -1,4 +1,5 @@
 using XuanYu.Render.Vulkan.Render;
+using XuanYu.Render.Vulkan.Session.Diagnostics;
 using System.Threading;
 using XuanYu.Render.Abstractions.Diagnostics;
 using XuanYu.Render.Vulkan.Render.Label;
@@ -69,7 +70,7 @@ public sealed partial class VulkanRenderSession
             return false;
         }
         _disposed = true;
-        _log?.Invoke(VulkanClearFrameLogFormatter.SessionDisposed());
+        _log?.Invoke(VulkanRenderSessionLogFormatter.Disposed());
         return true;
     }
 

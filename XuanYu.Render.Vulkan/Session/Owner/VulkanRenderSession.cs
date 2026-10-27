@@ -5,6 +5,7 @@ using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Pipeline;
+using XuanYu.Render.Vulkan.Pipeline.Sets;
 using XuanYu.Render.Vulkan.Render;
 using XuanYu.Render.Vulkan.Swapchain;
 using XuanYu.Render.Vulkan.Render.Frame;
@@ -21,7 +22,7 @@ public sealed partial class VulkanRenderSession : IDisposable
     readonly VulkanPresentLoop _presentLoop;
     readonly VulkanGraphicsPipelineOwner? _pipeline;
     readonly VulkanGraphicsPipelineOwner? _skyPipeline;
-    readonly XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? _gridPipelines; // F2-R2：网格/世界轴/原点全屏 Pass 组合
+    readonly VulkanGridAndOverlayPipelineSet? _gridPipelines; // 全屏网格与编辑器 Overlay 管线组合
     readonly Action<string>? _log;
     readonly VulkanFenceWaitSampleSink? _performanceSamples;
     readonly NativeHostSurfaceHandle? _surfaceHandle;
@@ -37,7 +38,7 @@ public sealed partial class VulkanRenderSession : IDisposable
     VulkanRenderSession(VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner,
         VulkanClearFrameOwner clearFrame, VulkanPresentLoop presentLoop,
         VulkanGraphicsPipelineOwner? pipeline, VulkanGraphicsPipelineOwner? skyPipeline,
-        XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? gridPipelines,
+        VulkanGridAndOverlayPipelineSet? gridPipelines,
         Action<string>? log, NativeHostSurfaceHandle? surfaceHandle,
         VulkanFenceWaitSampleSink? performanceSamples)
     {

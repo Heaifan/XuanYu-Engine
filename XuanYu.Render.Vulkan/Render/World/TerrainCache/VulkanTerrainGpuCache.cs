@@ -11,7 +11,7 @@ sealed partial class VulkanTerrainGpuCache : IDisposable
     readonly Action<IDisposable, Action?>? _retire;
     readonly Dictionary<TerrainChunkGpuKey, VulkanTerrainGpuResource> _resources = [];
     readonly LinkedList<TerrainChunkGpuKey> _lru = [];
-    readonly Dictionary<string, IReadOnlyList<TerrainChunkDescriptor>> _chunks = [];
+    readonly Dictionary<TerrainChunkListKey, IReadOnlyList<TerrainChunkDescriptor>> _chunks = [];
     int _meshBuilds; int _vertexUploads; int _indexUploads; int _bufferCreates;
     public double MeshBuildMilliseconds { get; private set; }
     public double UploadMilliseconds { get; private set; }
@@ -27,7 +27,7 @@ sealed partial class VulkanTerrainGpuCache : IDisposable
         var cells = XuanYu.Core.Diagnostics.TerrainReplayOptions.Enabled
             ? XuanYu.Core.Diagnostics.TerrainReplayOptions.ChunkCellsOverride
             : TerrainChunkPartitioner.CellsPerChunk;
-        var key = $"{resource.TerrainId}:{resource.Revision}";
+        var key = new TerrainChunkListKey(resource.TerrainId, resource.Revision, cells);
         return _chunks.TryGetValue(key, out var chunks) ? chunks :
             _chunks[key] = TerrainChunkPartitioner.Partition(
                 resource.Heightfield, resource.TerrainId, resource.Revision, cells);

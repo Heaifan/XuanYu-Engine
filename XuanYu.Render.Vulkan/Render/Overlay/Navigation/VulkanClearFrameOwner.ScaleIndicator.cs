@@ -36,7 +36,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
             ScaleIndicatorOverlayProjection.CardWidthDip,
             ScaleIndicatorOverlayProjection.CardHeightDip,
             16.0, 16.0, ViewportOverlayAnchor.BottomLeft));
-        var scene = new float[ScaleIndicatorPushFloatCount];
+        Span<float> scene = stackalloc float[(int)ScaleIndicatorPushFloatCount];
+        scene.Clear();
         scene[0] = _extent.Width; scene[1] = _extent.Height;
         scene[2] = (float)dpi; scene[3] = 1.0f;
         scene[4] = (float)rect.X; scene[5] = (float)rect.Y;

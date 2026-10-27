@@ -14,8 +14,6 @@ sealed class VulkanStaticModelFailureTracker
 
     public void Record(RenderStaticModelKey key, int revision) => _failed[key] = revision;
 
-    public void Clear(RenderStaticModelKey key) => _failed.Remove(key);
-
     public void ClearNotIn(IEnumerable<RenderStaticModelKey> keys)
     {
         var keep = keys.Where(k => k.IsValid).ToHashSet();
@@ -25,5 +23,4 @@ sealed class VulkanStaticModelFailureTracker
         }
     }
 
-    public int Count => _failed.Count;
 }

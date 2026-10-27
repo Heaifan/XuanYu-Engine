@@ -17,11 +17,11 @@ public static unsafe class VulkanInstanceCreateInfoBuilder
         bool enableProperties2, bool enableSurfaceCapabilities2, bool enableSurfaceMaintenance1)
     {
         var appName = Encoding.UTF8.GetBytes("XuanYu Engine\0");
-        var surfaceExt = Encoding.UTF8.GetBytes(VulkanInstanceExtensions.Surface);
-        var win32Ext = Encoding.UTF8.GetBytes(VulkanInstanceExtensions.Win32Surface);
-        var properties2Ext = Encoding.ASCII.GetBytes(VulkanInstanceExtensions.Properties2 + "\0");
-        var surfaceMaintenanceExt = Encoding.ASCII.GetBytes(VulkanInstanceExtensions.SurfaceMaintenance1 + "\0");
-        var surfaceCapabilities2Ext = Encoding.ASCII.GetBytes(VulkanInstanceExtensions.SurfaceCapabilities2 + "\0");
+        var surfaceExt = VulkanExtensionNameEncoder.Encode(VulkanInstanceExtensions.Surface);
+        var win32Ext = VulkanExtensionNameEncoder.Encode(VulkanInstanceExtensions.Win32Surface);
+        var properties2Ext = VulkanExtensionNameEncoder.Encode(VulkanInstanceExtensions.Properties2);
+        var surfaceMaintenanceExt = VulkanExtensionNameEncoder.Encode(VulkanInstanceExtensions.SurfaceMaintenance1);
+        var surfaceCapabilities2Ext = VulkanExtensionNameEncoder.Encode(VulkanInstanceExtensions.SurfaceCapabilities2);
         fixed (byte* pApp = appName, pSurface = surfaceExt, pWin32 = win32Ext,
             pProperties2 = properties2Ext, pSurfaceMaintenance = surfaceMaintenanceExt,
             pSurfaceCapabilities2 = surfaceCapabilities2Ext)

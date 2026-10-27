@@ -41,7 +41,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _resourceRetirement.Complete(1);
         _proceduralVertexBuffer?.Dispose();
         _proceduralVertexBuffer = null;
-        ClearMapSurface();
+        _mapSurface.Dispose();
         _staticModels.Dispose();
         _vectorOverlays.Dispose();
         foreach (var buffer in _readbackBuffers) buffer.Dispose();

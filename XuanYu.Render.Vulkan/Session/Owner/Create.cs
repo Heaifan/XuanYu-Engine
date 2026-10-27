@@ -4,6 +4,7 @@ using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Pipeline;
+using XuanYu.Render.Vulkan.Pipeline.Sets;
 using XuanYu.Render.Vulkan.Render;
 using XuanYu.Render.Vulkan.Swapchain;
 using XuanYu.Render.Vulkan.Render.Frame;
@@ -27,7 +28,7 @@ public sealed partial class VulkanRenderSession
         VulkanClearFrameOwner? clear = null;
         VulkanGraphicsPipelineOwner? pipeline = null;
         VulkanGraphicsPipelineOwner? skyPipeline = null;
-        XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet? gridPipelines = null;
+        VulkanGridAndOverlayPipelineSet? gridPipelines = null;
         VulkanPresentLoop? loop = null;
         try
         {
@@ -46,12 +47,12 @@ public sealed partial class VulkanRenderSession
             else if (projection is { Success: false } fail)
                 log?.Invoke(VulkanClearFrameLogFormatter.RenderProjectionSkipped(
                     fail.FailureReason ?? "未知原因"));
-            pipeline = VulkanGraphicsPipelineOwner.Create(vk, deviceOwner, clear, swapchainOwner, log);
+            pipeline = VulkanScenePipelineFactory.Create(vk, deviceOwner, clear, log);
             if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline, pipeline.Layout);
-            skyPipeline = VulkanGraphicsPipelineOwner.CreateSky(vk, deviceOwner, clear, swapchainOwner, log);
+            skyPipeline = VulkanSkyPipelineFactory.Create(vk, deviceOwner, clear, log);
             if (skyPipeline is not null) clear.SetSkyPipeline(skyPipeline.Pipeline, skyPipeline.Layout);
             // F2-R2：网格/世界轴/世界原点三个全屏 Pass（设备不支持则禁用对应 Pass）。
-            gridPipelines = XuanYu.Render.Vulkan.Render.Passes.GridPipelineSet.Create(vk, deviceOwner, clear, swapchainOwner, selection.Handle, log);
+            gridPipelines = VulkanGridAndOverlayPipelineSet.Create(vk, deviceOwner, clear, selection.Handle, log);
             loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,
                 source => session!.RecoverFromOutOfDate(source),
                 reason => session!.MarkFailed(reason),

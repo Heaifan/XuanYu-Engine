@@ -16,7 +16,7 @@ public sealed class VulkanPresentLoopContractTests
         var acquired = loop.IndexOf("case AcquireDecision.Acquired:", decision, StringComparison.Ordinal);
         var reset = loop.IndexOf("ResetFence(device, frame)", acquired, StringComparison.Ordinal);
         var submit = loop.IndexOf("SubmitFrame(device, frame, imageIndex", reset, StringComparison.Ordinal);
-        var acquirePath = RenderVulkanFile(Path.Combine("Render", "Frame", "PresentLoop", "VulkanPresentLoop.Acquire.cs"));
+        var acquirePath = RenderVulkanFile(Path.Combine("Render", "Frame", "PresentLoop", "Execution", "VulkanPresentLoopAcquire.cs"));
         var acquireGuard = acquirePath.IndexOf("decision != AcquireDecision.Acquired", StringComparison.Ordinal);
         var validate = acquirePath.IndexOf("HasValidImageIndex(index", acquireGuard, StringComparison.Ordinal);
 
@@ -30,15 +30,7 @@ public sealed class VulkanPresentLoopContractTests
     }
 
     static string RepositoryRoot
-    {
-        get
-        {
-            var source = Environment.GetEnvironmentVariable("XYE_WORKSPACE_SOURCE_DIRECTORY");
-            return string.IsNullOrWhiteSpace(source)
-                ? Path.GetFullPath(TestSourceRoot.Root)
-                : Path.GetFullPath(source);
-        }
-    }
+        => Path.GetFullPath(TestSourceRoot.Root);
 
     static string RenderVulkanFile(string path)
     {
@@ -49,7 +41,7 @@ public sealed class VulkanPresentLoopContractTests
 
     static string ReadPresentFrameSources() => string.Join("\n", new[]
     {
-        RenderVulkanFile(Path.Combine("Render", "Frame", "PresentLoop", "VulkanPresentLoop.RunFrames.cs")),
+        RenderVulkanFile(Path.Combine("Render", "Frame", "PresentLoop", "Execution", "VulkanPresentLoopRunFrames.cs")),
         RenderVulkanFile(Path.Combine("Render", "Frame", "PresentSync", "VulkanPresentLoop.Submission.cs"))
     });
 

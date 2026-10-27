@@ -28,8 +28,8 @@ public sealed class VulkanPipelineCreationSafetyTests
     [Fact]
     public void Grid_pipeline_set_rolls_back_owners_in_reverse_creation_order()
     {
-        var source = ReadPipelineFile("Sets", "GridPipelineSet.cs");
-        var create = source.IndexOf("public static GridPipelineSet Create", StringComparison.Ordinal);
+        var source = ReadPipelineFile("Sets", "VulkanGridAndOverlayPipelineSet.cs");
+        var create = source.IndexOf("public static VulkanGridAndOverlayPipelineSet Create", StringComparison.Ordinal);
         var catcher = source.IndexOf("catch (Exception", create, StringComparison.Ordinal);
         var rollback = catcher < 0
             ? Enumerable.Repeat(-1, 6).ToArray()

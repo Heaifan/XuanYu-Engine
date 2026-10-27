@@ -7,7 +7,7 @@ public sealed class VulkanFrameReconfigurationTests
     [Fact]
     public void Frame_mode_switch_drains_before_reconfiguring_and_restarts_after_sync_creation()
     {
-        var source = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Render.Vulkan", "Render", "Frame", "PresentLoop", "VulkanPresentLoop.Lifecycle.cs"));
+        var source = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Render.Vulkan", "Render", "Frame", "PresentLoop", "Lifecycle", "VulkanPresentLoopLifecycle.cs"));
         var start = source.IndexOf("public bool TrySetFramesInFlight", StringComparison.Ordinal);
         var end = source.IndexOf("public void Dispose()", start, StringComparison.Ordinal);
         var body = source[start..end];

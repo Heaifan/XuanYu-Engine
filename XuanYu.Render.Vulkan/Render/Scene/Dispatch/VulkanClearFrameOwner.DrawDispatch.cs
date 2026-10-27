@@ -44,21 +44,24 @@ public sealed unsafe partial class VulkanClearFrameOwner
 
     void DispatchDraw(CommandBuffer cb, float* scene, RenderDrawPlan.FrameEntry draw)
     {
-        switch (draw.Kind)
+        switch (ResolveDrawOwner(draw.Kind))
         {
-            case RenderDrawKind.EditorBackground: DrawAssist(cb, scene, draw); break;
-            case RenderDrawKind.EditorReferenceGrid: DrawReferenceGrid(cb); break;
-            case RenderDrawKind.WorldOrigin: DrawWorldOrigin(cb); break;
-            case RenderDrawKind.WorldAxes: DrawWorldAxes(cb); break;
-            case RenderDrawKind.MapGround: DrawMapSurface(cb, scene); break;
-            case RenderDrawKind.MapBounds: DrawMapBounds(cb, scene); break;
-            case RenderDrawKind.Terrain: DrawTerrain(cb, scene, draw.EntityIndex); break;
-            case RenderDrawKind.MapVectorOverlay: DrawVectorOverlay(cb, scene, draw.EntityIndex); break;
-            case RenderDrawKind.EntityFill or RenderDrawKind.EntityOutline: DrawEntity(cb, scene, draw); break;
-            case RenderDrawKind.MoveGizmo or RenderDrawKind.RotateGizmo or RenderDrawKind.ScaleGizmo: DrawGizmo(cb, scene, draw); break;
-            case RenderDrawKind.ScaleIndicatorOverlay: DrawScaleIndicator(cb); break;
-            case RenderDrawKind.NavigationGizmo: DrawNavigationGizmo(cb); break;
-            case RenderDrawKind.EditorViewPlaneGrid: DrawViewPlaneGrid(cb); break;
+            case DrawOwner.EditorBackground: DrawAssist(cb, scene, draw); break;
+            case DrawOwner.EditorReferenceGrid: DrawReferenceGrid(cb); break;
+            case DrawOwner.WorldOrigin: DrawWorldOrigin(cb); break;
+            case DrawOwner.WorldAxes: DrawWorldAxes(cb); break;
+            case DrawOwner.MapGround: _mapSurface.DrawMapSurface(cb, scene,
+                _activeFrameContext?.FrameIndex ?? 0, PushMapSurfaceSceneConstants,
+                BindProceduralVertexBuffer); break;
+            case DrawOwner.MapBounds: _mapSurface.DrawMapBounds(cb, scene,
+                PushMapSurfaceSceneConstants, BindProceduralVertexBuffer); break;
+            case DrawOwner.Terrain: DrawTerrain(cb, scene, draw.EntityIndex); break;
+            case DrawOwner.VectorOverlay: DrawVectorOverlay(cb, scene, draw.EntityIndex); break;
+            case DrawOwner.Entity: DrawEntity(cb, scene, draw); break;
+            case DrawOwner.Gizmo: DrawGizmo(cb, scene, draw); break;
+            case DrawOwner.ScaleIndicatorOverlay: DrawScaleIndicator(cb); break;
+            case DrawOwner.NavigationGizmo: DrawNavigationGizmo(cb); break;
+            case DrawOwner.EditorViewPlaneGrid: DrawViewPlaneGrid(cb); break;
             default: throw new ArgumentOutOfRangeException(nameof(draw.Kind), draw.Kind, "Unsupported RenderDrawKind");
         }
     }

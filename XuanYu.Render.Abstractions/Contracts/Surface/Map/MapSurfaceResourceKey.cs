@@ -26,4 +26,9 @@ public readonly record struct MapSurfaceResourceKey(
         map.WavelengthMeters,
         map.Seed,
         map.IsVisible);
+
+    public bool HasSameBufferGeometry(MapSurfaceResourceKey other) =>
+        MapId == other.MapId && WidthMeters == other.WidthMeters &&
+        DepthMeters == other.DepthMeters && BaseHeightMeters == other.BaseHeightMeters &&
+        IsVisible == other.IsVisible;
 }

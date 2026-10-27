@@ -21,7 +21,7 @@ public sealed class VulkanMapLabelCacheLifecycleTests
     [Fact]
     public void Descriptor_pool_allows_sets_to_be_freed_after_frame_retirement()
     {
-        var pool = Read("Render", "Overlay", "LabelCache", "VulkanMapLabelTextureCache.Descriptors.cs");
+        var pool = Read("Render", "Overlay", "LabelCache", "Descriptors", "VulkanMapLabelTextureCache.Descriptors.cs");
         var texture = Read("Render", "Overlay", "LabelCache", "VulkanMapLabelTexture.cs");
 
         Assert.Contains("FreeDescriptorSetBit", pool);

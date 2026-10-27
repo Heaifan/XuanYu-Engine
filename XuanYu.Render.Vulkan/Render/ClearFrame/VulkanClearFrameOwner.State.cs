@@ -11,7 +11,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
     public RenderProjection RenderProjection => _frameState.Projection;
     public bool HasRenderProjection => _frameState.HasProjection;
     internal VulkanFrameState FrameState => _frameState;
-    internal VulkanGpuResourceState GpuResourceState => _gpuResourceState;
 
     public void SetPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
     {

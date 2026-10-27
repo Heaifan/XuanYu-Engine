@@ -25,6 +25,5 @@ public sealed class VulkanVectorOverlayPushConstantContractTests
         Assert.Contains("ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit", source);
     }
 
-    static string RepositoryRoot => Environment.GetEnvironmentVariable("XYE_WORKSPACE_SOURCE_DIRECTORY")
-        ?? Path.GetFullPath(TestSourceRoot.Root);
+    static string RepositoryRoot => Path.GetFullPath(TestSourceRoot.Root);
 }

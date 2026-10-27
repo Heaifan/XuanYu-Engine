@@ -26,9 +26,9 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     Silk.NET.Vulkan.Pipeline _pipeline = default;
     PipelineLayout _pipelineLayout = default;
     readonly VulkanFrameState _frameState = new();
-    readonly VulkanGpuResourceState _gpuResourceState = new();
     readonly VulkanStaticModelCache _staticModels;
     readonly VulkanVectorOverlayCache _vectorOverlays;
+    readonly VulkanMapSurfaceOwner _mapSurface;
     VulkanStaticModelBuffer? _proceduralVertexBuffer;
     Extent2D _extent;
     int _recordCommandDepth;
@@ -54,6 +54,8 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
         _vk = vk; _deviceOwner = deviceOwner; _swapchainOwner = swapchainOwner; _log = log;
         _staticModels = new VulkanStaticModelCache(vk, deviceOwner, log, RetireGpuResource);
         _vectorOverlays = new VulkanVectorOverlayCache(vk, deviceOwner, log, RetireGpuResource);
+        _mapSurface = new VulkanMapSurfaceOwner(vk, deviceOwner, frameSlotCount,
+            RetireGpuResource, TrackFrameResource, log);
         _proceduralVertexBuffer = VulkanStaticModelBuffer.Create(vk, deviceOwner,
             new VulkanStaticModelVertex[RenderDrawPlan.RotateGizmoVertexCount],
             BufferUsageFlags.VertexBufferBit, out _);

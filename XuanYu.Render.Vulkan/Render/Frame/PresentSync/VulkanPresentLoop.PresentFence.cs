@@ -24,7 +24,7 @@ public sealed unsafe partial class VulkanPresentLoop
     bool FinishPresent(Result result, VulkanFrameContext frame, uint imageIndex)
     {
         var disposition = VulkanPresentFenceQueuePolicy.Classify(result);
-        if (disposition == PresentQueueDisposition.Enqueued)
+        if (VulkanPresentFenceQueuePolicy.RequiresFenceWait(disposition))
         {
             _presentPendingImages[imageIndex] = true;
             _presentPending = true;

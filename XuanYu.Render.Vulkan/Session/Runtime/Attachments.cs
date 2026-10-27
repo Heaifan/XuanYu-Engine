@@ -14,8 +14,8 @@ public sealed partial class VulkanRenderSession
     {
         var layout = _clearFrame.MapLabelDescriptorSetLayout;
         if (layout.Handle == 0) return;
-        var pipeline = VulkanGraphicsPipelineOwner.CreateMapLabel(vk, _deviceOwner, _clearFrame,
-            _swapchainOwner, layout, _log);
+        var pipeline = VulkanMapLabelPipelineFactory.Create(vk, _deviceOwner, _clearFrame,
+            layout, _log);
         if (pipeline is null) return;
         try
         {
@@ -27,7 +27,7 @@ public sealed partial class VulkanRenderSession
 
     void AttachTerrainPipeline(Vk vk)
     {
-        var pipeline = VulkanGraphicsPipelineOwner.CreateTerrain(vk, _deviceOwner, _clearFrame, _log);
+        var pipeline = VulkanTerrainPipelineFactory.Create(vk, _deviceOwner, _clearFrame, _log);
         TryTransferTerrainPipeline(pipeline,
             value => _clearFrame.SetTerrainPipeline(value.Pipeline, value.Layout),
             value => _terrainPipeline = value, value => value.Dispose());
@@ -50,10 +50,10 @@ public sealed partial class VulkanRenderSession
 
     void AttachVectorOverlayPipeline(Vk vk)
     {
-        var pipeline = VulkanGraphicsPipelineOwner.Create(vk, _deviceOwner, _clearFrame,
-            _swapchainOwner, _log, depthTest: false, depthWrite: false);
-        var stroke = VulkanGraphicsPipelineOwner.Create(vk, _deviceOwner, _clearFrame,
-            _swapchainOwner, _log, depthTest: false, depthWrite: false, analyticStroke: true);
+        var pipeline = VulkanScenePipelineFactory.Create(vk, _deviceOwner, _clearFrame,
+            _log, depthTest: false, depthWrite: false);
+        var stroke = VulkanScenePipelineFactory.Create(vk, _deviceOwner, _clearFrame,
+            _log, depthTest: false, depthWrite: false, analyticStroke: true);
         if (pipeline is null || stroke is null)
         { pipeline?.Dispose(); stroke?.Dispose(); return; }
         try

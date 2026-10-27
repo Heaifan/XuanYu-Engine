@@ -17,7 +17,7 @@ public sealed class VulkanLabelUploadDeviceLostShutdownTests
     public void Device_lost_stop_skips_fences_and_allows_sync_destruction()
     {
         var fences = Read("Render", "Frame", "PresentSync", "VulkanPresentLoop.PresentFence.cs");
-        var lifecycle = Read("Render", "Frame", "PresentLoop", "VulkanPresentLoop.Lifecycle.cs");
+        var lifecycle = Read("Render", "Frame", "PresentLoop", "Lifecycle", "VulkanPresentLoopLifecycle.cs");
         var stop = fences.IndexOf("bool CompleteForStop()", StringComparison.Ordinal);
         var deviceLost = fences.IndexOf("if (_deviceLost) return true", stop, StringComparison.Ordinal);
         var fenceWait = fences.IndexOf("WaitFence(_deviceOwner.LogicalDevice)", stop, StringComparison.Ordinal);

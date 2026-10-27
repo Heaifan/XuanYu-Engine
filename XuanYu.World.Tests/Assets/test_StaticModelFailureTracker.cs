@@ -13,7 +13,6 @@ public sealed class StaticModelFailureTrackerTests
         tracker.Record(key, 1);
 
         Assert.True(tracker.ShouldSkip(key, 1));
-        Assert.Equal(1, tracker.Count);
     }
 
     [Fact]
@@ -25,18 +24,6 @@ public sealed class StaticModelFailureTrackerTests
 
         Assert.True(tracker.ShouldSkip(key, 1));
         Assert.False(tracker.ShouldSkip(key, 2));
-    }
-
-    [Fact]
-    public void Clear_allows_retry_for_same_revision()
-    {
-        var tracker = new VulkanStaticModelFailureTracker();
-        var key = new RenderStaticModelKey("a");
-        tracker.Record(key, 1);
-        tracker.Clear(key);
-
-        Assert.False(tracker.ShouldSkip(key, 1));
-        Assert.Equal(0, tracker.Count);
     }
 
     [Fact]
@@ -52,7 +39,6 @@ public sealed class StaticModelFailureTrackerTests
 
         Assert.True(tracker.ShouldSkip(keep, 1));
         Assert.False(tracker.ShouldSkip(drop, 1));
-        Assert.Equal(1, tracker.Count);
     }
 
     [Fact]
@@ -65,6 +51,5 @@ public sealed class StaticModelFailureTrackerTests
 
         Assert.True(tracker.ShouldSkip(a, 1));
         Assert.False(tracker.ShouldSkip(b, 1));
-        Assert.Equal(1, tracker.Count);
     }
 }

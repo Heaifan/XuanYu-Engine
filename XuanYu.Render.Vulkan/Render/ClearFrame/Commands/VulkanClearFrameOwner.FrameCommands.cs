@@ -13,7 +13,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         _resourceRetirement.Complete(frame.FrameIndex);
         _activeFrameContext = frame;
-        UpdateMapSurfacePatch();
+        _mapSurface.UpdatePatch(CurrentViewProjectionState(), frame.FrameIndex);
     }
 
     internal bool PreparePresentCommandBuffer(int frameSlot, uint imageIndex) =>
@@ -33,7 +33,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _commandBuffers = [];
         _frameSlotCount = frameCount;
         _activeFrameContext = null;
-        if (!ReconfigureMapSurfaceFrames(frameCount)) return false;
+        if (!_mapSurface.ReconfigureFrames(frameCount)) return false;
         return _views.Length == 0 || RecordCommandBuffers(_views);
     }
 
@@ -63,9 +63,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (!Ok(_vk.ResetCommandBuffer(_commandBuffers[index], 0), "ResetCommandBuffer")) return false;
         if (!RecordOne(_commandBuffers[index], _framebuffers[imageIndex], checked((int)imageIndex)))
             return false;
-        _gpuResourceState.MarkUploadsConsumed();
-        _gpuResourceState.MarkFrameRecorded();
-        _frameState.MarkRecorded();
         return true;
     }
 

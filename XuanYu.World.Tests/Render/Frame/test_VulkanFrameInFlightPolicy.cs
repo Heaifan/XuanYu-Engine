@@ -48,18 +48,6 @@ public sealed class VulkanFrameInFlightPolicyTests
         Assert.True(VulkanFrameInFlightPolicy.CanChangeFrameCount(2, 0));
     }
 
-    [Theory]
-    [InlineData(true, true, false, false, true)]
-    [InlineData(true, false, false, false, false)]
-    [InlineData(false, true, false, false, false)]
-    [InlineData(true, true, true, false, false)]
-    [InlineData(false, false, false, true, false)]
-    public void Retires_a_generation_only_after_all_completion_proofs(
-        bool graphicsComplete, bool presentComplete, bool unknown, bool deviceLost,
-        bool expected)
-        => Assert.Equal(expected, VulkanFrameInFlightPolicy.CanRetireGeneration(
-            graphicsComplete, presentComplete, unknown, deviceLost));
-
     [Fact]
     public void Resource_retirement_waits_for_every_frame_slot_lease()
     {

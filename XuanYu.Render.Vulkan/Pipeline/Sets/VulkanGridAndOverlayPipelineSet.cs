@@ -1,0 +1,88 @@
+using System;
+using Silk.NET.Vulkan;
+using XuanYu.Render.Vulkan.Device;
+using XuanYu.Render.Vulkan.Pipeline;
+using XuanYu.Render.Vulkan.Render;
+
+namespace XuanYu.Render.Vulkan.Pipeline.Sets;
+
+// MAP-A-R1-D5-R1-F2-R2/F3-F1：全屏 Pass 管线组合（参考网格 / 世界轴 / 世界原点 / 导航 Gizmo）。
+// 设备不支持时对应 Pass 禁用（返回 null），不阻止编辑器启动。
+internal sealed class VulkanGridAndOverlayPipelineSet : IDisposable
+{
+    VulkanGridAndOverlayPipelineSet(VulkanGraphicsPipelineOwner? grid, VulkanGraphicsPipelineOwner? axes,
+        VulkanGraphicsPipelineOwner? origin, VulkanGraphicsPipelineOwner? navGizmo,
+        VulkanGraphicsPipelineOwner? scaleIndicator,
+        VulkanGraphicsPipelineOwner? viewPlaneGrid)
+    {
+        Grid = grid;
+        Axes = axes;
+        Origin = origin;
+        NavGizmo = navGizmo;
+        ScaleIndicator = scaleIndicator;
+        ViewPlaneGrid = viewPlaneGrid;
+    }
+
+    public VulkanGraphicsPipelineOwner? Grid { get; }
+    public VulkanGraphicsPipelineOwner? Axes { get; }
+    public VulkanGraphicsPipelineOwner? Origin { get; }
+    public VulkanGraphicsPipelineOwner? NavGizmo { get; }
+    public VulkanGraphicsPipelineOwner? ScaleIndicator { get; }
+    public VulkanGraphicsPipelineOwner? ViewPlaneGrid { get; }
+
+    public static VulkanGridAndOverlayPipelineSet Create(Vk vk, VulkanDeviceOwner deviceOwner,
+        VulkanClearFrameOwner clear, PhysicalDevice physicalDevice, Action<string>? log)
+    {
+        VulkanGraphicsPipelineOwner? grid = null;
+        VulkanGraphicsPipelineOwner? axes = null;
+        VulkanGraphicsPipelineOwner? origin = null;
+        VulkanGraphicsPipelineOwner? navGizmo = null;
+        VulkanGraphicsPipelineOwner? scaleIndicator = null;
+        VulkanGraphicsPipelineOwner? viewPlaneGrid = null;
+        try
+        {
+        grid = VulkanGridPipelineFactory.CreateReferenceGrid(vk, deviceOwner, clear, physicalDevice, log);
+        if (grid is not null) clear.SetReferenceGridPipeline(grid.Pipeline, grid.Layout);
+        axes = VulkanGridPipelineFactory.CreateWorldAxes(vk, deviceOwner, clear, physicalDevice, log);
+        if (axes is not null) clear.SetWorldAxesPipeline(axes.Pipeline, axes.Layout);
+        origin = VulkanGridPipelineFactory.CreateWorldOrigin(vk, deviceOwner, clear, physicalDevice, log);
+        if (origin is not null) clear.SetWorldOriginPipeline(origin.Pipeline, origin.Layout);
+        navGizmo = VulkanGridPipelineFactory.CreateNavigationGizmo(vk, deviceOwner, clear, physicalDevice, log);
+        if (navGizmo is not null) clear.SetNavGizmoPipeline(navGizmo.Pipeline, navGizmo.Layout);
+        scaleIndicator = VulkanGridPipelineFactory.CreateScaleIndicator(
+            vk, deviceOwner, clear, physicalDevice, log);
+        if (scaleIndicator is not null)
+            clear.SetScaleIndicatorPipeline(scaleIndicator.Pipeline, scaleIndicator.Layout);
+        viewPlaneGrid = VulkanGridPipelineFactory.CreateViewPlaneGrid(vk, deviceOwner, clear, physicalDevice, log);
+        if (viewPlaneGrid is not null) clear.SetViewPlaneGridPipeline(viewPlaneGrid.Pipeline, viewPlaneGrid.Layout);
+        return new VulkanGridAndOverlayPipelineSet(grid, axes, origin, navGizmo, scaleIndicator, viewPlaneGrid);
+        }
+        catch (Exception failure)
+        {
+            clear.SetViewPlaneGridPipeline(default, default);
+            clear.SetScaleIndicatorPipeline(default, default);
+            clear.SetNavGizmoPipeline(default, default);
+            clear.SetWorldOriginPipeline(default, default);
+            clear.SetWorldAxesPipeline(default, default);
+            clear.SetReferenceGridPipeline(default, default);
+            VulkanPipelineCreationCompletion.Rollback(failure,
+                () => viewPlaneGrid?.Dispose(),
+                () => scaleIndicator?.Dispose(),
+                () => navGizmo?.Dispose(),
+                () => origin?.Dispose(),
+                () => axes?.Dispose(),
+                () => grid?.Dispose());
+            throw;
+        }
+    }
+
+    public void Dispose()
+    {
+        Grid?.Dispose();
+        Axes?.Dispose();
+        Origin?.Dispose();
+        NavGizmo?.Dispose();
+        ScaleIndicator?.Dispose();
+        ViewPlaneGrid?.Dispose();
+    }
+}

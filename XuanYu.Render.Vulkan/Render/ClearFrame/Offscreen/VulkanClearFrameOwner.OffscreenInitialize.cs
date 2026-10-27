@@ -17,6 +17,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk = vk; _deviceOwner = deviceOwner; _offscreenTarget = target; _log = log;
         _staticModels = new VulkanStaticModelCache(vk, deviceOwner, log);
         _vectorOverlays = new VulkanVectorOverlayCache(vk, deviceOwner, log);
+        _mapSurface = new VulkanMapSurfaceOwner(vk, deviceOwner, 1,
+            RetireGpuResource, TrackFrameResource, log);
         _proceduralVertexBuffer = VulkanStaticModelBuffer.Create(vk, deviceOwner,
             new VulkanStaticModelVertex[RenderDrawPlan.RotateGizmoVertexCount],
             BufferUsageFlags.VertexBufferBit, out _);

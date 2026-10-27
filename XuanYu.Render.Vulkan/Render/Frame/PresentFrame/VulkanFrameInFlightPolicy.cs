@@ -1,3 +1,5 @@
+using XuanYu.Render.Vulkan.Render.Generation;
+
 namespace XuanYu.Render.Vulkan.Render.Frame;
 
 /// <summary>Pure ownership rules shared by the present loop and CPU contract tests.</summary>
@@ -26,12 +28,10 @@ internal static class VulkanFrameInFlightPolicy
 
     internal static bool CanUseImage(uint imageIndex, uint imageCount, uint generation,
         uint activeGeneration, bool ownerComplete)
-        => imageIndex < imageCount && generation == activeGeneration && ownerComplete;
+        => VulkanPresentGenerationPolicy.CanSelectImage(
+            imageIndex, imageCount, generation == activeGeneration) && ownerComplete;
 
     internal static bool CanChangeFrameCount(int frameCount, int pendingFrameCount)
         => frameCount is >= 1 and <= 2 && pendingFrameCount == 0;
 
-    internal static bool CanRetireGeneration(bool graphicsComplete, bool presentComplete,
-        bool unknownCompletion, bool deviceLost)
-        => graphicsComplete && presentComplete && !unknownCompletion && !deviceLost;
 }

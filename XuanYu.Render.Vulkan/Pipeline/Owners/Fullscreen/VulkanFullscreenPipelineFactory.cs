@@ -1,0 +1,64 @@
+using System;
+using Silk.NET.Vulkan;
+using XuanYu.Render.Vulkan.Device;
+using XuanYu.Render.Vulkan.Render;
+
+namespace XuanYu.Render.Vulkan.Pipeline;
+
+// MAP-A-R1-D5-R1-F2-R2：全屏 Pass 管线通用创建（参考网格 / 世界轴 / 世界原点共用）。
+// 全屏三角形、DepthTest=On(GreaterOrEqual)、DepthWrite=Off、AlphaBlend=On；
+// 创建时校验设备 maxPushConstantsSize 支持 pushSize 独立 PushConstant。
+internal static unsafe class VulkanFullscreenPipelineFactory
+{
+    internal static VulkanGraphicsPipelineOwner? CreatePass(Vk vk, VulkanDeviceOwner deviceOwner,
+        VulkanClearFrameOwner clearFrame, PhysicalDevice physicalDevice,
+        uint[] vertCode, uint[] fragCode, uint pushSize, Action<string>? log, bool depthTest = true,
+        PrimitiveTopology topology = PrimitiveTopology.TriangleList)
+    {
+        var props = new PhysicalDeviceProperties();
+        vk.GetPhysicalDeviceProperties(physicalDevice, &props);
+        if (props.Limits.MaxPushConstantsSize < pushSize)
+        {
+            log?.Invoke(PipelineLogFormatter.Failed($"全屏 Pass：设备 maxPushConstantsSize={props.Limits.MaxPushConstantsSize} < {pushSize}，Pass 禁用"));
+            return null;
+        }
+
+        var vert = VulkanShaderModuleFactory.Create(vk, deviceOwner, vertCode);
+        var frag = VulkanShaderModuleFactory.Create(vk, deviceOwner, fragCode);
+        if (vert.Handle == 0 || frag.Handle == 0)
+        {
+            VulkanShaderModuleFactory.Destroy(vk, deviceOwner, vert);
+            VulkanShaderModuleFactory.Destroy(vk, deviceOwner, frag);
+            log?.Invoke(PipelineLogFormatter.Failed("全屏 Pass ShaderModule 创建失败"));
+            return null;
+        }
+        var range = new PushConstantRange
+        {
+            StageFlags = ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit,
+            Offset = 0,
+            Size = pushSize
+        };
+        var layoutInfo = new PipelineLayoutCreateInfo { SType = StructureType.PipelineLayoutCreateInfo, SetLayoutCount = 0, PushConstantRangeCount = 1, PPushConstantRanges = &range };
+        if (vk.CreatePipelineLayout(deviceOwner.LogicalDevice, &layoutInfo, null, out var layout) != Result.Success)
+        {
+            VulkanShaderModuleFactory.Destroy(vk, deviceOwner, vert);
+            VulkanShaderModuleFactory.Destroy(vk, deviceOwner, frag);
+            log?.Invoke(PipelineLogFormatter.Failed("全屏 Pass CreatePipelineLayout 失败"));
+            return null;
+        }
+        if (!VulkanFullscreenPipelineCreation.TryCreate(vk, deviceOwner, clearFrame,
+                vert, frag, layout, depthTest, topology, out var pipeline))
+        {
+            vk.DestroyPipelineLayout(deviceOwner.LogicalDevice, layout, null);
+            VulkanShaderModuleFactory.Destroy(vk, deviceOwner, vert);
+            VulkanShaderModuleFactory.Destroy(vk, deviceOwner, frag);
+            log?.Invoke(PipelineLogFormatter.Failed("全屏 Pass CreateGraphicsPipelines 失败"));
+            return null;
+        }
+        VulkanShaderModuleFactory.Destroy(vk, deviceOwner, vert);
+        VulkanShaderModuleFactory.Destroy(vk, deviceOwner, frag);
+        var owner = new VulkanGraphicsPipelineOwner(vk, deviceOwner, layout, pipeline, log);
+        return VulkanPipelineCreationCompletion.Complete(owner, log, owner.Dispose,
+            PipelineLogFormatter.GridCreated());
+    }
+}

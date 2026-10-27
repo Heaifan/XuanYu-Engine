@@ -33,7 +33,7 @@ public static class MapSurfaceResourceUpdatePolicy
             snapshot.SourceChangeSequence < lastConsumedSequence)
             return new MapSurfaceResourceUpdate(MapSurfaceResourceUpdateKind.RejectStale, default);
         var key = MapSurfaceResourceKey.From(snapshot);
-        var kind = currentKey == key
+        var kind = currentKey is { } previous && previous.HasSameBufferGeometry(key)
             ? MapSurfaceResourceUpdateKind.NoRebuild
             : MapSurfaceResourceUpdateKind.Recreate;
         return new MapSurfaceResourceUpdate(kind, key);

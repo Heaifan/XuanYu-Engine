@@ -27,7 +27,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
     void DrawNavigationGizmo(CommandBuffer cb)
     {
         if (_navGizmoPipeline.Handle == 0 || _navGizmoPipelineLayout.Handle == 0) return;
-        var scene = new float[NavGizmoPushFloatCount];
+        Span<float> scene = stackalloc float[(int)NavGizmoPushFloatCount];
+        scene.Clear();
         var camera = _renderProjection.Camera;
         scene[0] = (float)camera.Right.X;
         scene[1] = (float)camera.Right.Y;

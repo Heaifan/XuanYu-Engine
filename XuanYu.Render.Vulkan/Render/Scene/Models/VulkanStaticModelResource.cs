@@ -10,11 +10,10 @@ sealed class VulkanStaticModelResource : IDisposable
         int revision,
         VulkanStaticModelBuffer vertices,
         VulkanStaticModelBuffer indices,
-        IReadOnlyList<RenderStaticModelPrimitive> primitives,
-        uint indexCount)
+        IReadOnlyList<RenderStaticModelPrimitive> primitives)
     {
         Key = key; Revision = revision; VertexBuffer = vertices;
-        IndexBuffer = indices; Primitives = primitives; IndexCount = indexCount;
+        IndexBuffer = indices; Primitives = primitives;
     }
 
     public RenderStaticModelKey Key { get; }
@@ -22,8 +21,6 @@ sealed class VulkanStaticModelResource : IDisposable
     public VulkanStaticModelBuffer VertexBuffer { get; }
     public VulkanStaticModelBuffer IndexBuffer { get; }
     public IReadOnlyList<RenderStaticModelPrimitive> Primitives { get; }
-    public uint IndexCount { get; }
-
     public void Dispose()
     {
         VertexBuffer.Dispose();

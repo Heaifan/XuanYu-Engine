@@ -53,7 +53,7 @@ public sealed unsafe partial class VulkanOffscreenTerrainRenderer : IDisposable
                 selection.Queue!.GraphicsFamily, log);
             _frame.SetTerrainGpuCacheBudgetForProbe(terrainGpuCacheBudgetBytes);
             _frame.SetRenderProjection(projection);
-            _terrainPipeline = VulkanGraphicsPipelineOwner.CreateTerrain(_vk, _device, _frame, log)
+            _terrainPipeline = VulkanTerrainPipelineFactory.Create(_vk, _device, _frame, log)
                 ?? throw new InvalidOperationException("Terrain GraphicsPipeline 创建失败");
             _frame.SetPipeline(_terrainPipeline.Pipeline, _terrainPipeline.Layout);
             _frame.SetTerrainPipeline(_terrainPipeline.Pipeline, _terrainPipeline.Layout);

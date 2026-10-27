@@ -15,16 +15,18 @@ public sealed class GroundSnapshotLifecycleContractTests
     [Fact]
     public void Clearing_resources_preserves_authoritative_map_snapshot()
     {
-        var owner = (VulkanClearFrameOwner)RuntimeHelpers.GetUninitializedObject(
-            typeof(VulkanClearFrameOwner));
-        var field = typeof(VulkanClearFrameOwner).GetField("_mapSurfaceMap",
+        var ownerType = typeof(VulkanClearFrameOwner).Assembly.GetType(
+            "XuanYu.Render.Vulkan.Render.VulkanMapSurfaceOwner")!;
+        var owner = RuntimeHelpers.GetUninitializedObject(ownerType);
+        var field = ownerType.GetField("_mapSurfaceMap",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
-        var buffers = typeof(VulkanClearFrameOwner).GetField("_mapSurfaceFrameVertexBuffers",
+        var buffers = ownerType.GetField("_mapSurfaceFrameVertexBuffers",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
         buffers.SetValue(owner, Array.CreateInstance(buffers.FieldType.GetElementType()!, 0));
         field.SetValue(owner, Snap(7));
 
-        owner.ClearMapSurface();
+        ownerType.GetMethod("ClearMapSurface", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(owner, null);
 
         var snapshot = (MapRenderSnapshot)field.GetValue(owner)!;
         Assert.True(snapshot.HasMap);

@@ -29,7 +29,7 @@ public sealed class VulkanPresentLoopRecoveryTerminalStateTests
     {
         var source = File.ReadAllText(Path.Combine(
             TestSourceRoot.Root,
-            "XuanYu.Render.Vulkan", "Render", "Frame", "PresentLoop", "VulkanPresentLoop.Frame.cs"));
+            "XuanYu.Render.Vulkan", "Render", "Frame", "PresentLoop", "Execution", "VulkanPresentLoopFrame.cs"));
 
         Assert.Contains("decision == AcquireDecision.StopOrFatal", source);
         Assert.Contains("Fatal(\"AcquireNextImage 恢复失败\")", source);

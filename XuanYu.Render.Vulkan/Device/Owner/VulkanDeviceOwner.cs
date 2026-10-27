@@ -26,6 +26,7 @@ public sealed unsafe partial class VulkanDeviceOwner : IDisposable
     }
 
     public VulkanDevice LogicalDevice => _device;
+    public PhysicalDevice PhysicalDevice => _physicalDevice;
     public Queue GraphicsQueue => _graphicsQueue;
     public Queue PresentQueue => _presentQueue;
 

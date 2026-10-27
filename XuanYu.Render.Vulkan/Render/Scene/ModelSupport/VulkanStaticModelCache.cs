@@ -54,8 +54,7 @@ sealed class VulkanStaticModelCache : IDisposable
         var ib = VulkanStaticModelBuffer.Create(_vk, _device, m.Indices.ToArray(),
             BufferUsageFlags.IndexBufferBit, out error);
         if (ib is null) { vb.Dispose(); return false; }
-        resource = new VulkanStaticModelResource(m.Key, m.Revision, vb, ib,
-            m.Primitives.ToArray(), checked((uint)m.Indices.Count));
+        resource = new VulkanStaticModelResource(m.Key, m.Revision, vb, ib, m.Primitives.ToArray());
         return true;
     }
 

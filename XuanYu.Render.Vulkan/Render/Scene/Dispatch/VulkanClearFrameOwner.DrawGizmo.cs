@@ -42,6 +42,13 @@ public sealed unsafe partial class VulkanClearFrameOwner
             VulkanScenePushConstants.SizeInBytes, scene);
     }
 
+    void PushMapSurfaceSceneConstants(CommandBuffer cb, float* scene, float gizmoModeOverride)
+    {
+        FillScenePushConstants(scene, _renderProjection, Vector3d.Zero, Vector3d.Zero,
+            new Vector3d(1, 1, 1), 0.0f, gizmoModeOverride: gizmoModeOverride);
+        PushSceneConstants(cb, scene);
+    }
+
     void PushLabelConstants(CommandBuffer cb, float* scene) =>
         _vk.CmdPushConstants(cb, _mapLabelPipelineLayout,
             ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit, 0,
