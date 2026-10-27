@@ -25,18 +25,19 @@ sealed unsafe partial class VulkanMapLabelTextureCache
                 PipelineStageFlags.TransferBit, PipelineStageFlags.FragmentShaderBit);
             Check(_vk.EndCommandBuffer(command), "EndLabelCommand");
             var submit = new SubmitInfo { SType = StructureType.SubmitInfo, CommandBufferCount = 1, PCommandBuffers = &command };
-            Check(_vk.QueueSubmit(_queue, 1, &submit, default), "SubmitLabelCommand");
-            var queueWait = _vk.QueueWaitIdle(_queue);
-            if (queueWait != Result.Success)
+            var submitted = _vk.QueueSubmit(_queue, 1, &submit, default);
+            var completion = VulkanMapLabelUploadCompletion.Resolve(
+                submitted,
+                () => _vk.QueueWaitIdle(_queue),
+                () => _vk.DeviceWaitIdle(_device.LogicalDevice));
+            if (completion.State == VulkanLabelUploadState.NotSubmitted)
+                Check(completion.Submit!.Value, "SubmitLabelCommand");
+            if (completion.State == VulkanLabelUploadState.DeviceLost)
+                throw new VulkanLabelUploadDeviceLostException(completion);
+            if (completion.State == VulkanLabelUploadState.CompletionUnknown)
             {
-                if (queueWait == Result.ErrorDeviceLost) Check(queueWait, "WaitLabelCommand");
-                var deviceWait = _vk.DeviceWaitIdle(_device.LogicalDevice);
-                if (deviceWait is not Result.Success and not Result.ErrorDeviceLost)
-                {
-                    safeToFree = false;
-                    throw new VulkanLabelUploadCompletionUnknownException(command, queueWait, deviceWait);
-                }
-                Check(queueWait, "WaitLabelCommand");
+                safeToFree = false;
+                throw new VulkanLabelUploadCompletionUnknownException(command, completion);
             }
         }
         finally { if (safeToFree) _vk.FreeCommandBuffers(_device.LogicalDevice, _commandPool, 1, in command); }

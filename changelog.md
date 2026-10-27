@@ -1,3 +1,8 @@
+## v0.3.0.43-fix · Vulkan 标签上传不确定状态安全终止（Candidate）
+- 标签 QueueSubmit / QueueWaitIdle / DeviceWaitIdle 结果分类为未提交、完成、DeviceLost、完成状态未知；等待最多一次 QueueWaitIdle 与一次 DeviceWaitIdle，异常或未知结果不会触发无界重试。
+- 未知完成状态下隔离上传命令与 GPU 资源；Session 关闭预检失败时标记失败并保留 Device 与资源。DeviceLost 独立进入终态并允许适用的同步对象销毁。
+- 此版本对应 R3-03 / B（并补上 DeviceLost 到 PresentLoop 的终态传播）。自动化状态及关闭合同测试待最终候选复验；真实设备异常注入待验证。
+
 ## v0.3.0.42-fix · Vulkan MapMemory 失败真实设备注入验证（Candidate）
 - 为静态模型 Buffer 的 MapMemory 结果及失败清理加入内部窄调用边界；在真实 offscreen Vulkan Device 上注入 MapMemory 失败并仍调用实际 DestroyBuffer、FreeMemory，核对句柄与释放顺序。
 - 此版本对应 R4-01 / A。隔离定向测试 22/22 PASS；Validation Layer 告警、完整 Editor 验收及集成仍待完成。

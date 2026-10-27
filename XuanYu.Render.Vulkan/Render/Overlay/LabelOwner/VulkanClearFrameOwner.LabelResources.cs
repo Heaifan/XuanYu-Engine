@@ -26,4 +26,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         _mapLabelTextures?.Dispose(); _mapLabelTextures = null;
     }
+
+    internal void EnsureMapLabelUploadsSafe() => _mapLabelTextures?.EnsureUploadQuarantineSafe();
 }

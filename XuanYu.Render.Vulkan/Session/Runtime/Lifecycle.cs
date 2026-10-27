@@ -38,6 +38,15 @@ public sealed partial class VulkanRenderSession
         if (_disposed) return true;
         if (_disposeBlocked) return false;
         if (!_presentLoop.Stop()) return false;
+        try { _clearFrame.EnsureMapLabelUploadsSafe(); }
+        catch (VulkanLabelUploadCompletionUnknownException error)
+        {
+            _disposeBlocked = true;
+            var reason = $"上传完成状态未知，保留 Vulkan Device 及全部 GPU 资源：{error.Message}";
+            MarkFailed(reason);
+            _log?.Invoke(reason);
+            return false;
+        }
         try
         {
             _presentLoop.Dispose();
@@ -54,7 +63,9 @@ public sealed partial class VulkanRenderSession
         catch (VulkanLabelUploadCompletionUnknownException error)
         {
             _disposeBlocked = true;
-            _log?.Invoke($"Vulkan 资源释放阻断，保留 Device 以避免释放 GPU 在途资源：{error.Message}");
+            var reason = $"Vulkan 资源释放阻断，保留 Device 以避免释放 GPU 在途资源：{error.Message}";
+            MarkFailed(reason);
+            _log?.Invoke(reason);
             return false;
         }
         _disposed = true;

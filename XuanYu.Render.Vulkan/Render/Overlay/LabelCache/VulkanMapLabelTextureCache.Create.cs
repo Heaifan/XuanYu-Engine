@@ -30,8 +30,7 @@ sealed unsafe partial class VulkanMapLabelTextureCache
         catch (VulkanLabelUploadCompletionUnknownException error)
         {
             if (staging is null) throw;
-            _uploadQuarantines.Add(new(_vk, _device, _commandPool, error.Command,
-                staging, view, image, memory));
+            _uploadQuarantines.Add(new(error.Command, error.Resolution, staging, view, image, memory));
             staging = null; view = default; image = default; memory = default;
             throw;
         }

@@ -44,6 +44,11 @@ sealed unsafe partial class VulkanMapLabelTextureCache : IDisposable
         {
             throw;
         }
+        catch (VulkanLabelUploadDeviceLostException error)
+        {
+            _log?.Invoke($"Map Label Texture 上传进入 DeviceLost 终态：{error.Message}");
+            throw;
+        }
         catch (Exception error)
         {
             _log?.Invoke($"Map Label Texture 创建失败：{error.Message}");
@@ -74,11 +79,7 @@ sealed unsafe partial class VulkanMapLabelTextureCache : IDisposable
     internal void EnsureUploadQuarantineSafe()
     {
         if (_uploadQuarantines.Count == 0) return;
-        var result = _vk.DeviceWaitIdle(_device.LogicalDevice);
-        if (result is not Result.Success and not Result.ErrorDeviceLost)
-            throw new VulkanLabelUploadCompletionUnknownException(
-                _uploadQuarantines[0].Command, Result.Success, result);
-        foreach (var upload in _uploadQuarantines) upload.Dispose();
-        _uploadQuarantines.Clear();
+        var upload = _uploadQuarantines[0];
+        throw new VulkanLabelUploadCompletionUnknownException(upload.Command, upload.Resolution);
     }
 }
