@@ -1,3 +1,7 @@
+## v0.3.0.38-fix · Vulkan 静态模型映射失败资源释放顺序（Candidate）
+- MapMemory 失败时先销毁已绑定的 Vulkan Buffer，再释放 DeviceMemory；新增 `test_VulkanStaticModelBufferCleanup` 源码合同测试。
+- 此版本对应 R4-01 / A。候选自动化结果沿用基线证据；身份绑定构建、真实 Vulkan 故障注入和 Editor 验收待完成。
+
 ## v0.3.0.37-fix · Core Space 相机短名与 WP2 边界修复（Candidate）
 - Camera：5 个长文件名精简为 ReverseZ、ViewState、RayFactory、EditorCamera 相关文件；新增短名入口，保留旧公开 API 兼容，并增加独立的 ViewState.Unproject.cs。
 - Camera：修复相机相对渲染原点下的小世界坐标投影精度、TryCreate 异常范围、反投影有限性、FarPlane 改变后的相机修订号。

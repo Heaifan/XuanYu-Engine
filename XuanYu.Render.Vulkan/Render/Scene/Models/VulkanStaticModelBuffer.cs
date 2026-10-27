@@ -27,7 +27,7 @@ sealed unsafe class VulkanStaticModelBuffer : IDisposable
         { vk.FreeMemory(device.LogicalDevice, memory, null); vk.DestroyBuffer(device.LogicalDevice, buffer, null); error = "BindBufferMemory"; return null; }
         void* dst;
         if (vk.MapMemory(device.LogicalDevice, memory, 0, (ulong)bytes.Length, 0, &dst) != Result.Success)
-        { vk.FreeMemory(device.LogicalDevice, memory, null); vk.DestroyBuffer(device.LogicalDevice, buffer, null); error = "MapMemory"; return null; }
+        { vk.DestroyBuffer(device.LogicalDevice, buffer, null); vk.FreeMemory(device.LogicalDevice, memory, null); error = "MapMemory"; return null; }
         bytes.CopyTo(new Span<byte>(dst, bytes.Length));
         vk.UnmapMemory(device.LogicalDevice, memory);
         return new VulkanStaticModelBuffer(vk, device, buffer, memory, (ulong)bytes.Length);
