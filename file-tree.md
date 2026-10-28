@@ -2281,10 +2281,10 @@
 - XuanYu.World/EntityRegistry.Authoring.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/EntityRegistry.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/EntityRegistry.Replace.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Geo/CoordinateReferenceSystem.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Geo/GeographicCoordinateTransform.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Geo/GeographicPosition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Geo/GeographicWorldMapping.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Geo/Coordinates/CoordinateReferenceSystem.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Geo/Coordinates/GeographicCoordinateTransform.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Geo/Coordinates/GeographicPosition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Geo/Coordinates/GeographicWorldMapping.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/GlobalWorld.Authoring.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/GlobalWorld.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/GlobalWorld.Query.cs — C# 源码文件，承载仓库实现或测试职责。
