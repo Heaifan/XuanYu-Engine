@@ -16,21 +16,19 @@ public static unsafe class VulkanSwapchainCapabilities
         if (!vk.TryGetInstanceExtension(instance, out KhrSurface? khr) || khr is null)
             return VulkanSwapchainCapabilitiesResult.Failed("缺 VK_KHR_surface 实例扩展");
 
-        khr.GetPhysicalDeviceSurfaceCapabilities(physicalDevice, surface, out var caps);
-
-        uint fmtCount;
-        khr.GetPhysicalDeviceSurfaceFormats(physicalDevice, surface, &fmtCount, null);
-        var formats = new SurfaceFormatKHR[fmtCount];
-        fixed (SurfaceFormatKHR* p = formats)
-            khr.GetPhysicalDeviceSurfaceFormats(physicalDevice, surface, &fmtCount, p);
-
-        uint pmCount;
-        khr.GetPhysicalDeviceSurfacePresentModes(physicalDevice, surface, &pmCount, null);
-        var presentModes = new PresentModeKHR[pmCount];
-        fixed (PresentModeKHR* p = presentModes)
-            khr.GetPhysicalDeviceSurfacePresentModes(physicalDevice, surface, &pmCount, p);
-
-        var format = ChooseFormat(formats);
+        var capsResult = khr.GetPhysicalDeviceSurfaceCapabilities(
+            physicalDevice, surface, out var caps);
+        if (capsResult != Result.Success)
+            return VulkanSwapchainCapabilitiesResult.Failed(
+                $"查询 Surface 能力失败：{capsResult}");
+        if (!TryGetFormats(khr, physicalDevice, surface, out var formats))
+            return VulkanSwapchainCapabilitiesResult.Failed("查询 Surface 格式列表失败");
+        if (!TryGetPresentModes(khr, physicalDevice, surface, out var presentModes))
+            return VulkanSwapchainCapabilitiesResult.Failed("查询 Surface 呈现模式列表失败");
+        if (!TryChooseFormat(formats, out var format))
+            return VulkanSwapchainCapabilitiesResult.Failed("Surface 未提供可用格式");
+        if (presentModes.Length == 0)
+            return VulkanSwapchainCapabilitiesResult.Failed("Surface 未提供呈现模式");
         var presentMode = ChoosePresentMode(presentModes);
         var extent = ChooseExtent(caps, width, height);
         uint minImages = caps.MinImageCount + 1;
@@ -43,13 +41,61 @@ public static unsafe class VulkanSwapchainCapabilities
         return VulkanSwapchainCapabilitiesResult.Ok(new SwapchainCaps(format, presentMode, extent, minImages, caps.CurrentTransform, caps.SupportedUsageFlags));
     }
 
-    static SurfaceFormatKHR ChooseFormat(SurfaceFormatKHR[] formats)
+    static bool TryGetFormats(KhrSurface khr, PhysicalDevice physicalDevice,
+        SurfaceKHR surface, out SurfaceFormatKHR[] formats)
+        => VulkanSwapchainEnumeration.TryEnumerate(
+            () =>
+            {
+                uint count = 0;
+                var result = khr.GetPhysicalDeviceSurfaceFormats(
+                    physicalDevice, surface, &count, null);
+                return (result, count);
+            }, capacity =>
+            {
+                var values = new SurfaceFormatKHR[(int)capacity];
+                var count = capacity;
+                Result result;
+                fixed (SurfaceFormatKHR* pointer = values)
+                    result = khr.GetPhysicalDeviceSurfaceFormats(
+                        physicalDevice, surface, &count, pointer);
+                return new VulkanEnumerationFetch<SurfaceFormatKHR>(
+                    result, count, values);
+            }, out formats);
+
+    static bool TryGetPresentModes(KhrSurface khr, PhysicalDevice physicalDevice,
+        SurfaceKHR surface, out PresentModeKHR[] modes)
+        => VulkanSwapchainEnumeration.TryEnumerate(
+            () =>
+            {
+                uint count = 0;
+                var result = khr.GetPhysicalDeviceSurfacePresentModes(
+                    physicalDevice, surface, &count, null);
+                return (result, count);
+            }, capacity =>
+            {
+                var values = new PresentModeKHR[(int)capacity];
+                var count = capacity;
+                Result result;
+                fixed (PresentModeKHR* pointer = values)
+                    result = khr.GetPhysicalDeviceSurfacePresentModes(
+                        physicalDevice, surface, &count, pointer);
+                return new VulkanEnumerationFetch<PresentModeKHR>(
+                    result, count, values);
+            }, out modes);
+
+    internal static bool TryChooseFormat(SurfaceFormatKHR[] formats,
+        out SurfaceFormatKHR format)
     {
+        format = default;
         foreach (var f in formats)
-            if (f.Format == Format.B8G8R8A8Unorm && f.ColorSpace == ColorSpaceKHR.SpaceSrgbNonlinearKhr) return f;
+            if (f.Format == Format.B8G8R8A8Unorm && f.ColorSpace == ColorSpaceKHR.SpaceSrgbNonlinearKhr)
+            { format = f; return true; }
         foreach (var f in formats)
-            if (f.Format == Format.B8G8R8A8Unorm) return f;
-        return formats.Length > 0 ? formats[0] : new SurfaceFormatKHR { Format = Format.B8G8R8A8Unorm, ColorSpace = ColorSpaceKHR.SpaceSrgbNonlinearKhr };
+            if (f.Format == Format.B8G8R8A8Unorm)
+            { format = f; return true; }
+        if (formats.Length == 0) return false;
+        format = formats[0];
+        return true;
     }
 
     // VK-PERF-R1：FIFO（垂直同步）为首选，Mailbox 不再作为默认；Vulkan 规范保证 FIFO 必被支持。

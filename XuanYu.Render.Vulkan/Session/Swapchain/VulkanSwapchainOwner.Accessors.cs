@@ -44,6 +44,7 @@ public sealed unsafe partial class VulkanSwapchainOwner
     public bool ReadbackEnabled => _readbackEnabled;
     public string FormatName => _format.ToString();
     public SwapchainKHR Swapchain => _swapchain;
+    public bool HasUsableSwapchain => _swapchain.Handle != 0 && !_disposed;
     public KhrSwapchain Khr => _khr!;
 
     static void Log(Action<string>? log, string m) { log?.Invoke(m); }

@@ -38,15 +38,26 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
         { PublishSkipped(width, height, "尺寸为零"); Log(_log, VulkanSwapchainLogFormatter.Skipped($"0 尺寸跳过重建（{width}x{height}）")); return false; }
         if (_swapchain.Handle != 0 && _extent.Width == (uint)width && _extent.Height == (uint)height)
         { PublishSkipped(width, height, "请求尺寸未变化"); Log(_log, VulkanSwapchainLogFormatter.Skipped($"同尺寸跳过重建（{width}x{height}）")); return true; }
+        if (_swapchain.Handle != 0 && retireCurrentGeneration is null)
+        { PublishFailure(width, height, "替换现有 Swapchain 必须先退休当前 generation"); return false; }
         _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain 重建开始", $"请求尺寸={width}x{height}"));
         PublishSwapchain(XuanYu.Render.Abstractions.Diagnostics.RendererEventCodes.SwapchainCreating,
             XuanYu.Render.Abstractions.Diagnostics.RendererEventLevel.Info, width, height);
+        var oldSwapchainRetired = false;
         try
         {
             if (retireCurrentGeneration is not null && !retireCurrentGeneration())
             { PublishFailure(width, height, "旧 generation 未满足安全退休条件"); return false; }
-            var (swapchain, images, views, format, extent, ok, readbackEnabled) = VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice, _surface, _khr, _deviceOwner.LogicalDevice, width, height, _log, _swapchain, _events);
-            if (!ok) { PublishFailure(width, height, "构建器未能创建 Swapchain"); return false; }
+            var (swapchain, images, views, format, extent, ok, readbackEnabled) =
+                VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice,
+                    _surface, _khr, _deviceOwner.LogicalDevice, width, height,
+                    _log, _swapchain, _events, () => oldSwapchainRetired = true);
+            if (!ok)
+            {
+                if (oldSwapchainRetired) InvalidateRetiredSwapchain();
+                PublishFailure(width, height, "构建器未能创建 Swapchain");
+                return false;
+            }
             DestroyImagesAndViews();
             _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent; _readbackEnabled = readbackEnabled;
             _resourceGeneration++;
@@ -55,7 +66,13 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
             _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain 重建完成", $"物理尺寸={extent.Width}x{extent.Height}"));
             return true;
         }
-        catch (Exception ex) { PublishFailure(width, height, ex.Message); Log(_log, VulkanSwapchainLogFormatter.Failed($"重建异常：{ex.Message}")); return false; }
+        catch (Exception ex)
+        {
+            if (oldSwapchainRetired) InvalidateRetiredSwapchain();
+            PublishFailure(width, height, ex.Message);
+            Log(_log, VulkanSwapchainLogFormatter.Failed($"重建异常：{ex.Message}"));
+            return false;
+        }
     }
     public bool TryRecreateToCurrent(out Extent2D newExtent, out bool rebuilt, uint generation = 0, Func<bool>? retireCurrentGeneration = null)
     {
@@ -77,6 +94,15 @@ public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
         foreach (var v in _imageViews) if (v.Handle != 0) _vk.DestroyImageView(_deviceOwner.LogicalDevice, v, null);
         if (_swapchain.Handle != 0) _khr?.DestroySwapchain(_deviceOwner.LogicalDevice, _swapchain, null);
         _imageViews = []; _images = []; _swapchain = default;
+    }
+
+    void InvalidateRetiredSwapchain()
+    {
+        DestroyImagesAndViews();
+        _extent = default;
+        _format = default;
+        _readbackEnabled = false;
+        _resourceGeneration++;
     }
     public void Dispose()
     {

@@ -4,6 +4,7 @@ public sealed partial class VulkanNativeHostSurfaceBridge
 {
     public void Resize(int width, int height)
     {
+        VerifyOwnerThread();
         if (_instanceOwner is null || _surfaceOwner is null || _renderSession is null || _failed)
         {
             Emit(VulkanBridgeLogFormatter.ResizedSkipped(width, height));

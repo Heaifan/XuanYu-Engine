@@ -334,3 +334,7 @@
 ## XYE-INFRA-TEMP-WORKSPACE-R1 · XYE 受控临时工作区
 - 新增 XYE_WORKSPACE_ROOT 专用工作区、隔离任务启动入口、任务清单与只读回收预览；接入 XYC SilentProbe、WP2-P4 与指定 XYC 构建/回放入口。
 - 产品版本保持 0.3.0.24-fix；产品 Version Event: NONE。治理事件 $eventId 按 EXP-GOVERNANCE-003 记录，待提交后结账。
+## v0.3.0.46-fix · Vulkan 遗留问题整改与生成合同（Candidate）
+- 修复 Swapchain 枚举结果与实际数量校验、空 Surface 格式处理、旧 Swapchain retired 失败路径、Resize 计时隔离、Vulkan API 版本探测语义、Bridge 线程合同及 Timestamp Query 幂等释放；MapMemory 失败回滚在真实 offscreen Vulkan Device 上验证释放顺序。
+- 为 16 个仍有生产用途的 Shader 模块建立统一 GLSL → SPIR-V → C# 生成/校验工具；移除无生产消费者的 GridLine Shader。NavGizmo Fragment 仅做可读性排版，编译 SPIR-V 字节哈希保持不变。
+- 补齐 Scene、MapLabel、Vector、Terrain Push Constants 与实际 SPIR-V、CPU 写入和 Pipeline Layout 对照；定向测试 12/12、Shader 生成校验 16/16 PASS。R1-01、R3-04、SES-03 保持 PARTIAL；真实窗口 Swapchain、Validation Layer 和 SES-03 原生失败注入待验收，R3-04 异步替代 BLOCKED。

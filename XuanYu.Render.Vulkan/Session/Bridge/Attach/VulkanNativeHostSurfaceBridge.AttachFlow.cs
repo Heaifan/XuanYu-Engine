@@ -12,6 +12,7 @@ public sealed partial class VulkanNativeHostSurfaceBridge
 {
     public bool Attach(NativeHostSurfaceHandle handle)
     {
+        VerifyOwnerThread();
         if (_disposed) throw new ObjectDisposedException(nameof(VulkanNativeHostSurfaceBridge));
         if (_instanceOwner is not null && _surfaceOwner is not null && !_failed) return true;
         var ownedVk = _vk is null; var vk = _vk ?? Vk.GetApi();

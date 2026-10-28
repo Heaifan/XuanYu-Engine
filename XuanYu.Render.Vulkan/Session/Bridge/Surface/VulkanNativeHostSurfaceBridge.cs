@@ -15,6 +15,7 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
 {
     readonly Action<string>? _log;
     readonly IRenderProjectionSource? _projectionSource;
+    readonly int _ownerThreadId;
     Vk? _vk;
     VulkanInstanceOwner? _instanceOwner;
     VulkanSurfaceOwner? _surfaceOwner;
@@ -34,13 +35,21 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
     public long PerformanceSampleDroppedCount => _renderSession?.PerformanceSampleDroppedCount ?? 0;
     public VulkanNativeHostSurfaceBridge(Action<string>? log = null, IRenderProjectionSource? projectionSource = null)
     {
+        _ownerThreadId = Environment.CurrentManagedThreadId;
         _log = log;
         _projectionSource = projectionSource;
         if (_projectionSource is not null) _projectionSource.RenderProjectionChanged += OnRenderProjectionChanged;
     }
 
+    void VerifyOwnerThread()
+    {
+        if (Environment.CurrentManagedThreadId != _ownerThreadId)
+            throw new InvalidOperationException("Vulkan surface bridge must be used on the thread that created it.");
+    }
+
     public void Detach()
     {
+        VerifyOwnerThread();
         if (_instanceOwner is null && _surfaceOwner is null && _rendererEvents is null)
         { Emit(VulkanBridgeLogFormatter.DetachedSkipped()); return; }
         if (_renderSession is not null && !_renderSession.TryDispose())

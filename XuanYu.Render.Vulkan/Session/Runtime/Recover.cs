@@ -9,6 +9,7 @@ public sealed partial class VulkanRenderSession
     bool RecoverFromOutOfDate(string source)
     {
         if (_disposed || IsFailed) return false;
+        VulkanResizeTracer.StartTrace();
         _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Present 过期", $"来源={source}；进入自愈"));
         lock (_rebuildLock)
         {
@@ -18,6 +19,11 @@ public sealed partial class VulkanRenderSession
             _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", "查询中..."));
             if (!_swapchainOwner.TryRecreateToCurrent(out _, out var rebuilt, _generation, _presentLoop.RetireGenerationForSwapchainReplacement))
             {
+                if (!_swapchainOwner.HasUsableSwapchain)
+                {
+                    MarkFailed("Swapchain 创建失败且旧 Swapchain 已 retired");
+                    return false;
+                }
                 if (_clearFrame.CommandBuffers.Length == 0 && !_clearFrame.RebuildFramebuffers(_generation, true)) return false;
                 return RetryOrStop(source, old);
             }

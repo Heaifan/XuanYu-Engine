@@ -7,6 +7,7 @@ public sealed partial class VulkanNativeHostSurfaceBridge
     public void Dispose()
     {
         if (_disposed) return;
+        VerifyOwnerThread();
         if (_projectionSource is not null) _projectionSource.RenderProjectionChanged -= OnRenderProjectionChanged;
         Detach();
         if (_renderSession is not null) return;

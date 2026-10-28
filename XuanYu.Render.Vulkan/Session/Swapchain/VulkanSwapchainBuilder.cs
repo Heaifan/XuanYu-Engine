@@ -16,7 +16,8 @@ public static unsafe class VulkanSwapchainBuilder
     public static (SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool ok, bool readbackEnabled) Build(
         Vk vk, Instance instance, PhysicalDevice physicalDevice, SurfaceKHR surface,
         KhrSwapchain khr, VulkanDevice device, int width, int height, Action<string>? log,
-        SwapchainKHR oldSwapchain = default, RendererEventSession? events = null)
+        SwapchainKHR oldSwapchain = default, RendererEventSession? events = null,
+        Action? oldSwapchainRetirementStarted = null)
     {
         var caps = VulkanSwapchainCapabilities.Query(vk, instance, physicalDevice, surface, width, height, log);
         if (!caps.Success || caps.Caps is null)
@@ -30,9 +31,11 @@ public static unsafe class VulkanSwapchainBuilder
             VulkanSwapchainEvents.PublishFailure(events, width, height, null, "ColorAttachmentUnsupported");
             return default;
         }
-        var swapchain = CreateSwapchain(khr, device, surface, chosen, oldSwapchain, log, events);
+        var swapchain = CreateSwapchain(khr, device, surface, chosen,
+            oldSwapchain, log, events, oldSwapchainRetirementStarted);
         if (swapchain.Handle == 0) return default;
-        var (images, views) = CreateImagesAndViews(vk, khr, device, swapchain, chosen.Format.Format, log);
+        var (images, views) = CreateImagesAndViews(vk, khr, device,
+            swapchain, chosen.Format.Format, log);
         if (!VulkanSwapchainCandidateCleanup.Validate(vk, khr, device, swapchain, views, events, width, height, log)) return default;
         var readback = (usage & ImageUsageFlags.TransferSrcBit) != 0;
         Log(log, $"【VulkanReadback】Swapchain TransferSrc={(readback ? "SUPPORTED" : "UNAVAILABLE")}");
@@ -40,7 +43,8 @@ public static unsafe class VulkanSwapchainBuilder
     }
 
     static SwapchainKHR CreateSwapchain(KhrSwapchain khr, VulkanDevice device, SurfaceKHR surface,
-        SwapchainCaps caps, SwapchainKHR oldSwapchain, Action<string>? log, RendererEventSession? events)
+        SwapchainCaps caps, SwapchainKHR oldSwapchain, Action<string>? log,
+        RendererEventSession? events, Action? oldSwapchainRetirementStarted)
     {
         var info = new SwapchainCreateInfoKHR
         {
@@ -60,6 +64,7 @@ public static unsafe class VulkanSwapchainBuilder
             Clipped = true,
             OldSwapchain = oldSwapchain
         };
+        if (oldSwapchain.Handle != 0) oldSwapchainRetirementStarted?.Invoke();
         var result = khr.CreateSwapchain(device, &info, null, out var swapchain);
         if (result != Result.Success)
         {
@@ -71,12 +76,31 @@ public static unsafe class VulkanSwapchainBuilder
         return swapchain;
     }
 
-    static (Image[], ImageView[]) CreateImagesAndViews(Vk vk, KhrSwapchain khr, VulkanDevice device, SwapchainKHR swapchain, Format format, Action<string>? log)
+    static (Image[], ImageView[]) CreateImagesAndViews(Vk vk, KhrSwapchain khr,
+        VulkanDevice device, SwapchainKHR swapchain, Format format, Action<string>? log)
     {
-        uint count;
-        khr.GetSwapchainImages(device, swapchain, &count, null);
-        var images = new Image[count];
-        fixed (Image* p = images) khr.GetSwapchainImages(device, swapchain, &count, p);
+        if (!VulkanSwapchainEnumeration.TryEnumerate(
+                () =>
+                {
+                    uint count = 0;
+                    var result = khr.GetSwapchainImages(device, swapchain,
+                        &count, null);
+                    return (result, count);
+                }, capacity =>
+                {
+                    var values = new Image[(int)capacity];
+                    var count = capacity;
+                    Result result;
+                    fixed (Image* pointer = values)
+                        result = khr.GetSwapchainImages(device, swapchain,
+                            &count, pointer);
+                    return new VulkanEnumerationFetch<Image>(
+                        result, count, values);
+                }, out var images))
+        {
+            Log(log, "Swapchain image 列表查询失败或返回数量无效");
+            return ([], []);
+        }
         var views = new ImageView[images.Length];
         for (int i = 0; i < images.Length; i++)
         {

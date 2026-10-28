@@ -5,4 +5,5 @@ public sealed record VulkanProbeResult(
     uint InstanceVersion,
     IReadOnlyList<VulkanDeviceInfo> Devices,
     string ErrorType = "",
-    string ErrorMessage = "");
+    string ErrorMessage = "",
+    bool UsedVersion10Fallback = false);

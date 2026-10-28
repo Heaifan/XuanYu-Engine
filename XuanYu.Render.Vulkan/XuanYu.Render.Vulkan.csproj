@@ -19,5 +19,6 @@
   <ItemGroup>
     <InternalsVisibleTo Include="XuanYu.World.Tests" />
     <InternalsVisibleTo Include="XuanYu.Core.Tests" />
+    <InternalsVisibleTo Include="XuanYu.Render.Vulkan.Tests" />
   </ItemGroup>
 </Project>

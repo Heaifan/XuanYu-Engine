@@ -10,9 +10,17 @@ public sealed unsafe class VulkanGpuTimestampQuery : IDisposable
     readonly QueryPool _pool;
     readonly uint _validBits;
     readonly float _periodNs;
+    readonly Action _destroy;
+    bool _disposed;
 
-    VulkanGpuTimestampQuery(Vk vk, VulkanDeviceOwner device, QueryPool pool, uint bits, float period)
-        => (_vk, _device, _pool, _validBits, _periodNs) = (vk, device, pool, bits, period);
+    internal VulkanGpuTimestampQuery(Vk vk, VulkanDeviceOwner device,
+        QueryPool pool, uint bits, float period, Action? destroy = null)
+    {
+        (_vk, _device, _pool, _validBits, _periodNs) =
+            (vk, device, pool, bits, period);
+        _destroy = destroy ?? (() =>
+            _vk.DestroyQueryPool(_device.LogicalDevice, _pool, null));
+    }
 
     public static VulkanGpuTimestampQuery? TryCreate(Vk vk, VulkanDeviceOwner device, uint family)
     {
@@ -55,5 +63,10 @@ public sealed unsafe class VulkanGpuTimestampQuery : IDisposable
         return double.IsFinite(milliseconds) && milliseconds >= 0;
     }
 
-    public void Dispose() => _vk.DestroyQueryPool(_device.LogicalDevice, _pool, null);
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        _destroy();
+    }
 }

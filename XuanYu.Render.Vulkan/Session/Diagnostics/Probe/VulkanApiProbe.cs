@@ -11,25 +11,22 @@ public static unsafe class VulkanApiProbe
         try { vk = Vk.GetApi(); }
         catch (Exception ex) { return Fail(0, ex); }
 
-        uint instanceVersion = Vk.Version10;
-        try
-        {
-            var version = 0u;
-            vk.EnumerateInstanceVersion(&version);
-            instanceVersion = version;
-        }
-        catch (Exception ex) { _ = ex; }
-
         Instance instance = default;
+        var versionProbe = VulkanInstanceVersionProbe.Query(vk);
         try
         {
+            if (!versionProbe.Success)
+                return Fail(0, new InvalidOperationException(versionProbe.Error));
+            var instanceVersion = versionProbe.Version;
             CreateInstance(vk, instanceVersion, out instance);
             var devices = EnumerateDevices(vk, instance);
-            return devices.Count == 0 ? Fail(instanceVersion, new InvalidOperationException("未枚举到物理设备")) : new(true, instanceVersion, devices);
+            return devices.Count == 0
+                ? Fail(instanceVersion, new InvalidOperationException("未枚举到物理设备"), versionProbe.UsedVersion10Fallback)
+                : new(true, instanceVersion, devices, UsedVersion10Fallback: versionProbe.UsedVersion10Fallback);
         }
         catch (Exception ex)
         {
-            return Fail(instanceVersion, ex);
+            return Fail(versionProbe.Version, ex, versionProbe.UsedVersion10Fallback);
         }
         finally
         {
@@ -38,8 +35,10 @@ public static unsafe class VulkanApiProbe
         }
     }
 
-    static VulkanProbeResult Fail(uint instanceVersion, Exception ex) =>
-        new(false, instanceVersion, [], ex.GetType().Name, ex.Message);
+    static VulkanProbeResult Fail(uint instanceVersion, Exception ex,
+        bool usedVersion10Fallback = false) =>
+        new(false, instanceVersion, [], ex.GetType().Name, ex.Message,
+            usedVersion10Fallback);
 
     static void CreateInstance(Vk vk, uint instanceVersion, out Instance instance)
     {

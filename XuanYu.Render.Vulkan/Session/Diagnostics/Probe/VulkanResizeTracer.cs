@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace XuanYu.Render.Vulkan.Diagnostic;
 
@@ -8,23 +9,31 @@ namespace XuanYu.Render.Vulkan.Diagnostic;
 // 帮助定位"慢半拍"发生在哪一段（UI 合并 / Win32 子窗口 / Swapchain 重建 / Framebuffer 重录 / Present 自愈）。
 public static class VulkanResizeTracer
 {
-    static readonly Stopwatch _sw = new();
-    static long _traceStartTicks;
-    static bool _running;
+    sealed class TraceState
+    {
+        internal readonly Stopwatch Clock = Stopwatch.StartNew();
+        internal long StartTicks;
+    }
+
+    static readonly AsyncLocal<TraceState?> Current = new();
 
     // 开始一段新的 Resize/自愈追踪。返回起点相对绝对时间无意义，只用于 ElapsedMs 差值。
     public static long StartTrace()
     {
-        if (!_running) { _sw.Start(); _running = true; }
-        _traceStartTicks = _sw.ElapsedTicks;
-        return _traceStartTicks;
+        var state = new TraceState();
+        Current.Value = state;
+        state.StartTicks = state.Clock.ElapsedTicks;
+        return state.StartTicks;
     }
 
     // 从追踪起点到现在的毫秒数。
     public static double ElapsedMs(long startTicks = 0)
     {
-        var baseTicks = startTicks != 0 ? startTicks : _traceStartTicks;
-        return (_sw.ElapsedTicks - baseTicks) / (double)Stopwatch.Frequency * 1000.0;
+        var state = Current.Value;
+        if (state is null) return 0;
+        var baseTicks = startTicks != 0 ? startTicks : state.StartTicks;
+        return (state.Clock.ElapsedTicks - baseTicks) /
+            (double)Stopwatch.Frequency * 1000.0;
     }
 
     // 格式化阶段日志前缀：[T+XXXms 代际=N 阶段]
