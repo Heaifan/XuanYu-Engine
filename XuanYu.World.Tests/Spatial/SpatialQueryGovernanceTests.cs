@@ -9,7 +9,7 @@ public sealed class SpatialQueryGovernanceTests
         var files = new[]
         {
             Path.Combine(root, "XuanYu.World", "GlobalWorld.Query.cs"),
-            Path.Combine(root, "XuanYu.World", "WorldQuery.cs")
+            Path.Combine(root, "XuanYu.World", "Spatial", "Query", "WorldQuery.cs")
         };
 
         foreach (var file in files)

@@ -2334,15 +2334,15 @@
 - XuanYu.World/Scene/SceneStateOwner.Transform.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/Scene/SceneStateOwner.WorldMutationContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/Scene/SceneWorldProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/DynamicAabbTree.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/DynamicAabbTree.Insert.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/DynamicAabbTree.Node.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/DynamicAabbTree.Query.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/DynamicAabbTree.Refit.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/DynamicAabbTree.Remove.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/ISpatialIndex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/SpatialIndexOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/Spatial/SpatialRaycastResolver.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Index/DynamicAabbTree.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Index/Tree/DynamicAabbTree.Insert.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Index/Tree/DynamicAabbTree.Node.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Index/Tree/DynamicAabbTree.Query.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Index/Tree/DynamicAabbTree.Refit.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Index/Tree/DynamicAabbTree.Remove.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Index/ISpatialIndex.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Query/SpatialIndexOwner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Query/SpatialRaycastResolver.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/SurfaceQueryResult.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/Terrain/Import/EsriAsciiGridTerrainReader.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/Terrain/Import/HgtTerrainElevationTileReader.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2379,7 +2379,7 @@
 - XuanYu.World/WorldEntityType.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/WorldPartitionEntry.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/WorldPartitionMembership.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World/WorldQuery.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World/Spatial/Query/WorldQuery.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/WorldQueryStatus.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World/XuanYu.World.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - xyt.bat — 仓库资源文件，承载对应路径定义的项目内容。
