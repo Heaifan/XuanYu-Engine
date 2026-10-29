@@ -8,7 +8,7 @@ public sealed class SpatialQueryGovernanceTests
         var root = FindRepoRoot();
         var files = new[]
         {
-            Path.Combine(root, "XuanYu.World", "GlobalWorld.Query.cs"),
+            Path.Combine(root, "XuanYu.World", "WorldState", "World", "GlobalWorld.Query.cs"),
             Path.Combine(root, "XuanYu.World", "Spatial", "Query", "WorldQuery.cs")
         };
 
