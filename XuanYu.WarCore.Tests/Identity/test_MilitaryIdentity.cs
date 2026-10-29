@@ -6,6 +6,25 @@ namespace XuanYu.WarCore.Tests.Identity;
 public sealed class MilitaryIdentityTests
 {
     [Fact]
+    public void Constructor_accepts_soldier_kind()
+    {
+        var identity = new MilitaryIdentity(UnitId.FromInt(1), "士兵 S-0001", UnitKind.Soldier);
+
+        Assert.Equal(UnitKind.Soldier, identity.Kind);
+    }
+
+    [Theory]
+    [InlineData(99)]
+    [InlineData(-1)]
+    public void Constructor_rejects_undefined_unit_kind(int value)
+    {
+        var error = Assert.Throws<ArgumentOutOfRangeException>(
+            () => new MilitaryIdentity(UnitId.FromInt(1), "士兵 S-0001", (UnitKind)value));
+
+        Assert.Equal("kind", error.ParamName);
+    }
+
+    [Fact]
     public void NewSoldier_creates_legal_identity()
     {
         var identity = MilitaryIdentity.NewSoldier(UnitId.FromInt(1), "士兵 S-0001");
@@ -62,5 +81,19 @@ public sealed class MilitaryIdentityTests
 
         Assert.NotEqual(first.UnitId, second.UnitId);
         Assert.NotEqual(first.DisplayName, second.DisplayName);
+    }
+
+    [Fact]
+    public void FactionId_accepts_zero_and_rejects_negative()
+    {
+        Assert.Equal(FactionId.Unnamed, FactionId.FromInt(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => FactionId.FromInt(-1));
+    }
+
+    [Fact]
+    public void OrganizationId_accepts_zero_and_rejects_negative()
+    {
+        Assert.Equal(OrganizationId.Unassigned, OrganizationId.FromInt(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => OrganizationId.FromInt(-1));
     }
 }

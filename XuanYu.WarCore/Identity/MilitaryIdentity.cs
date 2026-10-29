@@ -18,6 +18,11 @@ public sealed record MilitaryIdentity
             throw new ArgumentException("显示名称不能为空。", nameof(displayName));
         }
 
+        if (!Enum.IsDefined(kind))
+        {
+            throw new ArgumentOutOfRangeException(nameof(kind), kind, "军事单位类型未定义。");
+        }
+
         UnitId = unitId;
         DisplayName = displayName;
         Kind = kind;

@@ -1655,9 +1655,9 @@
 - XuanYu.Editor/Workspace/RegionAuthoringMode.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/XuanYu.Editor.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Engine.slnx — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.WarCore.Tests/Identity/MilitaryIdentityTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.WarCore.Tests/State/SoldierStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.WarCore.Tests/WarCoreDependencyTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.WarCore.Tests/Identity/test_MilitaryIdentity.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.WarCore.Tests/State/test_SoldierState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.WarCore.Tests/test_WarCoreDependency.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.WarCore.Tests/XuanYu.WarCore.Tests.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.WarCore/Identity/FactionId.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.WarCore/Identity/MilitaryIdentity.cs — C# 源码文件，承载仓库实现或测试职责。
