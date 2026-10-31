@@ -110,3 +110,7 @@ Dirty dependency 只要参与编译、运行、测试或行为验证，即属于
 任一条件失败，必须输出 `COMMIT ELIGIBILITY = NO`。Lane 不得自行宣告 YES。
 
 本轮 `XYK-C0-GOVERNANCE-SEDIMENT-R1` 的 Incident Evidence 仅供本次追溯：`XYE Dirty Paths = 68`、`XYE OwnDirty = 53`、`XYUI known dirty = 15`、`True ForeignDirty = 0`、`Candidate Tree Match = NO`、`Confirmed Current-Wave Regression = 4`、`Unresolved Unknown = 11`。这些数字不得固化为永久默认值。
+
+## 2026-10-31 补录常态化
+
+Codex、Gemini 或其他 Agent 的每份任务报告如含 XYK / XYK CANDIDATE 或明确可复用经验，ChatGPT XYK Owner 必须先搜索既有条目，按 CREATE / UPDATE / STRENGTHEN / SUPERSEDE / REJECT / NONE 裁定，并说明 SourceProductCommit 与知识 K Commit 的不同。未推送产品源码的证据须明确保留 - 和局部状态。正式知识修改需同步索引、K Event、远端提交；任何 SourceFingerprint、测试、GPU、Editor、Git 发布事实未经验证不得从报告自动推断。当前补录范围及待补证清单见 xyk/governance/backfill-2026-10-r1.md。

@@ -35,3 +35,28 @@ K-20261001-007	CREATE	K-GOV-006	Governance	HANDOFF-PS51-ENCODING	33afb8936061efc
 K-20261009-001	STRENGTHEN	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-C2	-	Interim nested XYT full selftest incomplete; K commit 7602d26e; uncommitted product changes on HEAD 79476c4c	ACTIVE
 K-20261009-002	UPDATE	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-PARENT	-	Follow-up exit 0 and stable XYT hash; knowledge update 9d0c224f; uncommitted product changes on HEAD 79476c4c	ACTIVE
 K-20261009-003	STRENGTHEN	K-XYT-EXEC-001	Engineering	XYE-GOVERNANCE-SIMPLIFICATION-R1-PARENT	7cc8be331496e1cb750142aaad4e7c5195919635	Clean baseline Core fail; XYUI intermittent full suite; K commit e4735196	ACTIVE
+K-20261031-R1-001	CREATE	K-GOV-007	Governance	XYE-WORKSPACE-BOUNDARY-20261022	-	Repository only write and cache boundary	ACTIVE
+K-20261031-R1-002	CREATE	K-GOV-008	Governance	XYE-BUILD-REUSE-20261030	-	Single bounded build no auto restore retry	ACTIVE
+K-20261031-R1-003	CREATE	K-GOV-009	Governance	XYK-REQUIRED-AUDIT-20261030	-	Candidate dedup and formal writeback	ACTIVE
+K-20261031-R1-004	CREATE	K-GOV-010	Governance	M2-GATE-SCOPE-20261023	6dd62073e0c91a925000c6297d873020dd0df36c	Static candidate integration and Git push separated	ACTIVE
+K-20261031-R1-005	CREATE	K-ARCH-003	Architecture	CORE-5X5X5-20261024	84d49d437d6a59060c18d37fc72b2d4594fb07ac	Three-level 5+100 test_ and dependency guard	ACTIVE
+K-20261031-R1-006	CREATE	K-WORLD-001	Architecture	WORLD-R2-A-20261029	b8ae01f92f942074c81a1da70c2fc8220c3870b5	World State Candidate isolation and invariant validation	ACTIVE
+K-20261031-R1-007	CREATE	K-GEO-004	Architecture	GROUND-WP2-R2-20261023	-	Raw DEM/render LOD and ObservationCenter distinct	ACTIVE
+K-20261031-R1-008	CREATE	K-REN-006	Rendering	M2-A2-20261023	6dd62073e0c91a925000c6297d873020dd0df36c	Frames in flight and resource retirement ownership	ACTIVE
+K-20261031-R1-009	CREATE	K-REN-007	Rendering	M2-C-20261023	6dd62073e0c91a925000c6297d873020dd0df36c	Perf schema not GPU/Editor real measurements	ACTIVE
+K-20261031-R1-010	CREATE	K-UI-003	UI	XYUI-R2-20261030	a88a06aa05608bfc279d9028650749c83bae62e7	Keep numbered components and typography semantics	ACTIVE
+K-20261031-R1-011	CREATE	EXP-GOVERNANCE-006	Governance	T0-WORKSPACE-20261026	-	Boundary suspicion STOP and evidence distinction	ACTIVE
+K-20261031-R1-012	CREATE	L-GOV-001	Governance	T0-WORKSPACE-20261026	-	Unbounded build copies fill disk	ACTIVE
+K-20261031-R1-013	CREATE	L-GOV-002	Governance	ARCH-STATIC-MIGRATION-20261030	-	Static migration is not runtime validation	ACTIVE
+K-20261031-R1-014	CREATE	ERR-20261026-001	Incident	T0-INCIDENT-R2-20261026	-	Disk incident facts and closure scope	VERIFIED
+K-20261031-R1-015	CREATE	DEC-XYE-ARCH-5X5X5-R1	Governance	CORE-XYUI-ARCH-20261024-30	84d49d437d6a59060c18d37fc72b2d4594fb07ac	User approved 5+100 strict three tiers and index	ACTIVE
+K-20261031-R1-016	STRENGTHEN	K-GOV-005	Governance	M2-CANDIDATE-TREE-20261023	6dd62073e0c91a925000c6297d873020dd0df36c	Candidate and test asset identity	ACTIVE
+K-20261031-R1-017	STRENGTHEN	K-VAL-001	Engineering	M2-PROVENANCE-20261023	6dd62073e0c91a925000c6297d873020dd0df36c	Build manifest artifact and runtime source identity	ACTIVE
+K-20261031-R1-018	STRENGTHEN	K-VAL-002	Engineering	M2-RENDERER-20261023	6dd62073e0c91a925000c6297d873020dd0df36c	CPU vs GPU vs Editor evidence separation	ACTIVE
+K-20261031-R1-019	STRENGTHEN	K-XYT-EXEC-001	Engineering	XYT-OCT-BASELINE	-	Baseline flaky and unknown cause distinct	ACTIVE
+K-20261031-R1-020	STRENGTHEN	K-GEO-003	Architecture	GROUND-AUTHORING-20261021	-	GroundPick Invalid cannot silently fallback	ACTIVE
+K-20261031-R1-021	STRENGTHEN	K-REN-005	Rendering	VULKAN-SHADER-AUDIT-20261028	-	GLSL bytecode and visual gates separated	ACTIVE
+K-20261031-R1-022	STRENGTHEN	K-INP-001	Input	NATIVE-INPUT-P3-20261028	-	Input ownership across real HWND lifecycle	ACTIVE
+K-20261031-R1-023	STRENGTHEN	K-UI-002	UI	NATIVE-INPUT-P3-20261028	-	Pointer feedback vs real Capture route	ACTIVE
+K-20261031-R1-024	STRENGTHEN	EXP-GOVERNANCE-005	Governance	M2-XYUI-20261030	-	Lane PASS and XYUI visual CLOSED not remote integration	ACTIVE
+K-20261031-R1-025	STRENGTHEN	EXP-TEST-001	Engineering	NATIVE-GPU-P3-20261028	-	Synthetic tests not true native runtime evidence	ACTIVE
