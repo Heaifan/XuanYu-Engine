@@ -330,7 +330,7 @@
 - XuanYu.Editor.UI/Panels/Workspace/TerrainRendering/TerrainRenderProjectionAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/TerrainRendering/UiVm.TerrainRenderCache.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/TerrainRendering/UiVm.TerrainRevision.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Panels/Workspace/UiVm.EntityCommands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/EntityCommands/UiVm.EntityCommands.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/UiVm.History.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/UiVm.History.Entities.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/UiVm.History.Transaction.cs — C# 源码文件，承载仓库实现或测试职责。
