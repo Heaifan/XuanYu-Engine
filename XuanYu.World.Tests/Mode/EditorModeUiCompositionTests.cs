@@ -39,8 +39,8 @@ public sealed class EditorModeUiCompositionTests
         var left = Read("XuanYu.Editor.UI", "Panels", "Navigation", "LeftWorkspace", "Left.axaml");
         Assert.Contains("<local:ProjectWorkspace", left);
         Assert.DoesNotContain("XYNavigationRail", left);
-        Assert.Contains("<local:HierarchyWorkspace", Read("XuanYu.Editor.UI", "Panels", "Inspector", "EditorRightTabs.axaml"));
-        Assert.Contains("<xy:XYTabs", Read("XuanYu.Editor.UI", "Panels", "Inspector", "EditorRightTabs.axaml"));
+        Assert.Contains("<local:HierarchyWorkspace", Read("XuanYu.Editor.UI", "Panels", "Inspector", "RightPanel", "EditorRightTabs.axaml"));
+        Assert.Contains("<xy:XYTabs", Read("XuanYu.Editor.UI", "Panels", "Inspector", "RightPanel", "EditorRightTabs.axaml"));
     }
 
     [Fact]
@@ -50,16 +50,16 @@ public sealed class EditorModeUiCompositionTests
         Assert.Contains("InspectorPropertyRow", inspector);
         Assert.Equal(1, Count(inspector, "<local:MapEditorPanel"));
         Assert.Equal(1, Count(inspector, "<local:FeatureInspectorPanel"));
-        Assert.DoesNotContain("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "Right.axaml"));
+        Assert.DoesNotContain("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Panels", "Inspector", "RightPanel", "Right.axaml"));
         Assert.Contains("MapPagePanel", Read("XuanYu.Editor.UI", "MapUI", "Presentation", "MapToolPanels", "MapPagePanel.axaml"));
-        Assert.Contains("EditorLayerDock", Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "Right.axaml"));
+        Assert.Contains("EditorLayerDock", Read("XuanYu.Editor.UI", "Panels", "Inspector", "RightPanel", "Right.axaml"));
     }
 
     [Fact]
     public void Region_context_shows_the_current_drawing_target_and_old_right_map_tab_is_retired()
     {
-        var rightShell = Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "Right.axaml");
-        var right = Read("XuanYu.Editor.UI", "Panels", "Inspector", "EditorRightTabs.axaml");
+        var rightShell = Read("XuanYu.Editor.UI", "Panels", "Inspector", "RightPanel", "Right.axaml");
+        var right = Read("XuanYu.Editor.UI", "Panels", "Inspector", "RightPanel", "EditorRightTabs.axaml");
         var inspector = Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml");
         var top = Read("XuanYu.Editor.UI", "Panels", "Tools", "WorkspaceModules", "Top.axaml");
         var toolbar = Read("XuanYu.Editor.UI", "Panels", "Tools", "ContextTools", "ContextToolBar.axaml");

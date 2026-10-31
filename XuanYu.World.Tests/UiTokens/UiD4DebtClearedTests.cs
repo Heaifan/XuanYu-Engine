@@ -13,7 +13,7 @@ public sealed class UiD4DebtClearedTests
     {
         var d4Files = new[]
         {
-            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/Right.axaml",
+            "XuanYu.Editor.UI/Panels/Inspector/RightPanel/Right.axaml",
             "XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapEditorPanel.axaml",
             "XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.axaml",
             "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/LayerInspectorPanel.axaml",
@@ -44,8 +44,8 @@ public sealed class UiD4DebtClearedTests
         {
             "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml",
             "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml.cs",
-            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EntityInspectorPanel.axaml",
-            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EntityInspectorPanel.axaml.cs",
+            "XuanYu.Editor.UI/Panels/Inspector/Entity/EntityInspectorPanel.axaml",
+            "XuanYu.Editor.UI/Panels/Inspector/Entity/EntityInspectorPanel.axaml.cs",
             "XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/MapPagePanel.axaml",
             "XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/MapPagePanel.axaml.cs",
             "XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapFormPanel.axaml",

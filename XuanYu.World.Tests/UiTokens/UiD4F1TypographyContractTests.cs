@@ -14,7 +14,7 @@ public sealed class UiD4F1TypographyContractTests
         "Infrastructure/Resources/Theme/Ui.axaml",
         "Infrastructure/Resources/Theme/UiStyles.D4F1.axaml",
         "Panels/Inspector/InspectorPanels/InspectorPanel.axaml",
-        "Panels/Inspector/EditorRightTabs.axaml",
+        "Panels/Inspector/RightPanel/EditorRightTabs.axaml",
         "MapUI/Presentation/MapToolPanels/MapPagePanel.axaml",
         "MapUI/Presentation/EditorPanels/MapEditorPanel.axaml",
         "MapUI/Editing/LayerPanels/LayerPanel.axaml",
@@ -84,7 +84,7 @@ public sealed class UiD4F1TypographyContractTests
     public void Manifest_stays_frozen()
     {
         var manifest = System.Text.Json.JsonSerializer.Deserialize<UiTokenManifestSnapshot>(
-            File.ReadAllText(Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Design", "UiTokenManifest.json")));
+            File.ReadAllText(Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Infrastructure", "Resources", "Theme", "UiTokenManifest.json")));
         Assert.NotNull(manifest);
         Assert.Equal(112, manifest.Tokens!.Length);
         Assert.All(manifest.Tokens, t => Assert.Equal("Frozen", t.SpecStatus));

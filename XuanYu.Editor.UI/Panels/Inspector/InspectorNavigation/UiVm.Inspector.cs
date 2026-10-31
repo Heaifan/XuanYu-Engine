@@ -31,7 +31,8 @@ public sealed partial class UiVm
             new("全局位置", EditorDisplayText.Position(entity.GlobalPosition)),
             new("变换", "", IsGroupHeader: true),
             new("位置", $"X {InspectorDraft.FormatNumber(p.X)}    Y {InspectorDraft.FormatNumber(p.Y)}    Z {InspectorDraft.FormatNumber(p.Z)}"),
-            new("旋转", $"X {InspectorDraft.FormatNumber(r.X)}°    Y {InspectorDraft.FormatNumber(r.Y)}°    Z {InspectorDraft.FormatNumber(r.Z)}"),
+            new("旋转", string.Concat(RotationAxis("X", r.X), "    ",
+                RotationAxis("Y", r.Y), "    ", RotationAxis("Z", r.Z))),
             new("缩放", $"X {InspectorDraft.FormatNumber(s.X)}    Y {InspectorDraft.FormatNumber(s.Y)}    Z {InspectorDraft.FormatNumber(s.Z)}")
         ];
     }
@@ -42,4 +43,7 @@ public sealed partial class UiVm
         var key = EditorDisplayText.Entity(entity.EntityKey);
         return $"主世界/{region}/{key}";
     }
+
+    static string RotationAxis(string axis, double value) =>
+        string.Concat(axis, " ", InspectorDraft.FormatNumber(value), "\u00B0");
 }

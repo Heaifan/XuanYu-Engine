@@ -70,13 +70,13 @@ public sealed class UiTopTabStripContractTests
         Assert.Contains("LinearGradientBrush", tpl);                      // 渐隐提示
         Assert.Contains("滚动鼠标滚轮或点击箭头查看更多页签。", tpl);       // 一次性提示文案（§10.1-7）
         Assert.DoesNotContain("WrapPanel", tpl);
-        Assert.DoesNotContain("WrapPanel", Read("XuanYu.Editor.UI/Panels/Inspector/EditorRightTabs.axaml"));
+        Assert.DoesNotContain("WrapPanel", Read("XuanYu.Editor.UI/Panels/Inspector/RightPanel/EditorRightTabs.axaml"));
     }
 
     [Fact]
     public void Right_panel_hosts_canonical_xy_tabs_and_exact_real_tab_set()
     {
-        var right = Read("XuanYu.Editor.UI/Panels/Inspector/EditorRightTabs.axaml");
+        var right = Read("XuanYu.Editor.UI/Panels/Inspector/RightPanel/EditorRightTabs.axaml");
         Assert.Contains("<xy:XYTabs", right);
         Assert.DoesNotContain("<TabControl", right);
         Assert.DoesNotContain("<TabItem", right);

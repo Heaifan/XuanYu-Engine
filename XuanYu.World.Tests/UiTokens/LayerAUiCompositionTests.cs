@@ -10,7 +10,7 @@ public sealed class LayerAUiCompositionTests
     [Fact]
     public void Right_dock_is_edit_only_and_map_context_has_no_layer_page()
     {
-        var right = Read("Panels/Inspector/InspectorPanels/Right.axaml");
+        var right = Read("Panels/Inspector/RightPanel/Right.axaml");
         var map = Read("MapUI/Presentation/EditorPanels/MapEditorPanel.axaml");
         Assert.Contains("EditorLayerDock", right);
         Assert.Contains("IsVisible=\"{Binding IsEditMode}\"", right);

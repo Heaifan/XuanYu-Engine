@@ -231,8 +231,8 @@
 - XuanYu.Editor.UI/MapUI/Rendering/Projection/MapRegionRenderStyle.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/MapUI/Rendering/Projection/MapRenderSnapshotProjection.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/MapUI/Rendering/UiVm.MapRender.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Panels/Inspector/EditorRightTabs.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Panels/Inspector/EditorRightTabs.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/RightPanel/EditorRightTabs.axaml — Avalonia XAML 文件，承载右侧停靠区页签。
+- XuanYu.Editor.UI/Panels/Inspector/RightPanel/EditorRightTabs.axaml.cs — C# 右侧停靠区页签实现。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.EntityInspector.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.InspectorFeatureEditing.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.InspectorInput.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -244,14 +244,14 @@
 - XuanYu.Editor.UI/Panels/Inspector/InspectorNavigation/UiVm.InspectorSections.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorNavigation/UiVm.TerrainInspector.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EditorCompactStyles.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EntityInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EntityInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/Entity/EntityInspectorPanel.axaml — Avalonia XAML 文件，承载实体 Inspector 界面。
+- XuanYu.Editor.UI/Panels/Inspector/Entity/EntityInspectorPanel.axaml.cs — C# 实体 Inspector 控件事件实现。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/LayerInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/LayerInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/Right.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/Right.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/RightPanel/Right.axaml — Avalonia XAML 文件，承载右侧停靠区结构。
+- XuanYu.Editor.UI/Panels/Inspector/RightPanel/Right.axaml.cs — C# 右侧停靠区控件实现。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorPropertySearch.cs — Inspector 全局属性包含搜索逻辑。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorReadOnlyValuePresenter.axaml — Inspector 只读值与复制入口的统一内容 Presenter。
 - XuanYu.Editor.UI/Panels/Inspector/InspectorReadOnlyValuePresenter.axaml.cs — Inspector 只读值复制行为实现。
