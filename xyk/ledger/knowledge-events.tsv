@@ -79,3 +79,6 @@ K-20261031-R2-016	STRENGTHEN	L-TEST-001	Testing	EDITOR-R1-G-R2-20261031	-	Physic
 K-20261031-R2-017	STRENGTHEN	K-REN-006	Rendering	M2-B1-TERRAIN-RETIREMENT-20261023	6dd62073e0c91a925000c6297d873020dd0df36c	GPU completion plus old command buffer ref removal	ACTIVE
 K-20261031-R2-018	STRENGTHEN	K-WORLD-001	Architecture	WORLD-R2-B-DESIGN-20261029	b8ae01f92f942074c81a1da70c2fc8220c3870b5	GlobalWorld Replace atomicity is not proven by R2-A	ACTIVE
 K-20261031-R2-019	STRENGTHEN	K-GOV-009	Governance	XYK-CANDIDATE-CHANGELOG-20261031	-	Future Codex task-specific candidate changelog	ACTIVE
+K-20261031-R3-001	STRENGTHEN	K-GOV-002	Governance	XYE-EDITOR-R1-H-R2	-	77 unique mapping capacity and leaf-depth check; static only; blob ae4834560cd3c5015a903aeceb19c3ee0ef6ae2d	ACTIVE
+K-20261031-R3-002	STRENGTHEN	K-ARCH-003	Architecture	XYE-EDITOR-R1-H-R2	-	53 UiVm and 6 MapVectorOverlayBuilder partials not type SRP closure; no Build/Test	ACTIVE
+K-20261031-R3-003	CREATE	DEC-XYE-MCP-SERVER-20261001	Decision	XYE-MCP-R1-20261001	-	User-approved external Host Editor Bridge Server-only non-source-editing design	ACTIVE

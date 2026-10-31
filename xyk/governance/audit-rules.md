@@ -118,3 +118,7 @@ Codex、Gemini 或其他 Agent 的每份任务报告如含 XYK / XYK CANDIDATE �
 ## 2026-10-31 R2 历史对话反向审计与专用候选登记
 
 通过定向检索10月份聊天历史生成R2审计，分别保存已批准且可追溯知识与尚未验证的Candidate，不得把候选变成ACTIVE或事故已证实。审计记录见 xyk/governance/conversation-audit-2026-10-r2.md，待核验候选见 xyk/governance/conversation-candidates-2026-10-r2.md。下一轮Codex开始之前，需核对产品仓既有文档约定，将XYK草案写入专用Changelog，而不是发布CHANGELOG；该草案由ChatGPT知识Owner去重裁决后才正式写入xyk/main并给K Commit回执。历史曾拟用K-REN-006命名ReferencePlane规则，与现正式Renderer K-REN-006冲突，已收敛至K-REN-004，禁止重新分配。
+
+## 2026-10-31 R3｜Editor Candidate三态审计及10月1日历史MCP决策
+
+XYE-EDITOR-R1-H-R2 的产品Changelog blob ae4834560cd3c5015a903aeceb19c3ee0ef6ae2d 属 WORKTREE WRITTEN / GIT UNCOMMITTED，不是产品Git提交。CAND-001正式强化K-GOV-002及K-ARCH-003，CAND-002无Runtime证据继续DEFERRED，CAND-003拒绝新增通用知识（K-DATA-001/002已覆盖）且保留Editor本地整改。知识与产品证据分层。另于10月1日用户批准过MCP Server-only、外部Host、Editor Bridge、MCP不可修改源码等设计条款，已收DEC-XYE-MCP-SERVER-20261001；本次只收长期设计，不称运行验收。审计报告见xyk/governance/conversation-audit-2026-10-r3.md。

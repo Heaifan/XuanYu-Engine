@@ -118,7 +118,13 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | DEC-XYE-EMPTY-WORLD-20261003 | Decision | Rendering | 逻辑ReferencePlane与可见Grid独立 | P0 | Design | 2026-10-03 | Active |
 | DEC-XYE-XYC-CONTROL-20261014 | Decision | Automation | XYC后台语义控制与权限边界 | P0 | Design | 2026-10-14 | Active |
 
+| DEC-XYE-MCP-SERVER-20261001 | Decision | Automation | MCP Server-only、外置Host和Editor Bridge、源码控制权限 | P0 | Design | 2026-10-01 | Active |
+
 ## 分类文件
+
+- `xyk/decisions/mcp-server-boundary-2026-10.md`：10月1日MCP Server-only与控制权边界
+- `xyk/governance/conversation-audit-2026-10-r3.md`：Editor R1H-R2三条候选及10月1日MCP补证
+
 
 - `xyk/knowledge/2026-10-conversation-recovery.md`：10月历史聊天新增Drawing、XYC、SSE、只读净空知识
 - `xyk/governance/conversation-audit-2026-10-r2.md`：10月逐日追查与证据分级
