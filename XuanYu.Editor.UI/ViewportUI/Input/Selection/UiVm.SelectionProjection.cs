@@ -24,7 +24,7 @@ public sealed partial class UiVm
                     projection.Title,
                     projection.Type,
                     projection.Path));
-            Set(ref _selectedProjectItem, project, nameof(SelectedProjectItem));
+            if (_projectTreePresenter.SetSelectedItem(project)) OnPropertyChanged(nameof(SelectedProjectItem));
             Set(ref _selectedHierarchyItem, hierarchy, nameof(SelectedHierarchyItem));
             if (changed is not null)
             {

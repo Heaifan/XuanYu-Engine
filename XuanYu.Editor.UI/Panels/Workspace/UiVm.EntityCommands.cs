@@ -74,7 +74,7 @@ public sealed partial class UiVm
     {
         var node = BuildHierarchyItems().FirstOrDefault(x => x.Key == key.ToString());
         if (node is null) return;
-        _selectedProjectItem = null;
+        _projectTreePresenter.SetSelectedItem(null);
         OnPropertyChanged(nameof(SelectedProjectItem));
         SetHierarchySelection(node);
         FooterMessage = $"{source}：{node.Title}";

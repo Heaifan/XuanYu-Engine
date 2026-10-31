@@ -19,11 +19,11 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     readonly EditorContextOwner _contextState;
     readonly EditorAuthoringOwner _authoringState;
     readonly EditorHistoryOwner _historyOwner = new();
+    readonly ProjectTreePresenter _projectTreePresenter = new();
     readonly IEditorDialogService _dialogService = new NullEditorDialogService();
     readonly Dictionary<string, EditorTreeNode> _hierarchyNodeCache = new();
-    readonly HashSet<string> _collapsedProjectKeys = new(StringComparer.Ordinal);
     readonly HashSet<string> _collapsedHierarchyKeys = new(StringComparer.Ordinal);
-    EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
+    EditorTreeNode? _selectedHierarchyItem;
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
     string _footerMessage = "已就绪。当前为空白未命名场景。";
     bool _isLogOpen;
@@ -61,7 +61,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     public string FooterState { get => _documentStatusPresenter.FooterState; private set => _documentStatusPresenter.SetFooterState(value); }
     public bool HasSelection => _editorState.Snapshot.HasSelection;
     public bool IsEmptySelection => !HasSelection;
-    public EditorTreeNode? SelectedProjectItem { get => _selectedProjectItem; set => SetProjectSelection(value); }
+    public EditorTreeNode? SelectedProjectItem { get => _projectTreePresenter.SelectedItem; set => SetProjectSelection(value); }
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
     void Run(string name)
     {

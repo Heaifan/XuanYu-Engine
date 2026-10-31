@@ -5,10 +5,6 @@ using XuanYu.Editor.UI;
 
 public sealed class UiTreeToggleTests
 {
-    static HashSet<string> CollapsedProjectKeys(UiVm vm) =>
-        (HashSet<string>)typeof(UiVm).GetField("_collapsedProjectKeys", BindingFlags.NonPublic | BindingFlags.Instance)!
-            .GetValue(vm)!;
-
     static HashSet<string> CollapsedHierarchyKeys(UiVm vm) =>
         (HashSet<string>)typeof(UiVm).GetField("_collapsedHierarchyKeys", BindingFlags.NonPublic | BindingFlags.Instance)!
             .GetValue(vm)!;
@@ -24,10 +20,10 @@ public sealed class UiTreeToggleTests
 
         vm.ToggleProjectNode(root);
         Assert.Single(vm.ProjectItems);
-        Assert.Empty(CollapsedProjectKeys(vm));
+        Assert.False(root.IsCollapsed);
 
         vm.ToggleProjectNode(root);
-        Assert.Empty(CollapsedProjectKeys(vm));
+        Assert.False(root.IsCollapsed);
         Assert.Equal(before, vm.ProjectItems.Count);
     }
 
@@ -42,7 +38,7 @@ public sealed class UiTreeToggleTests
 
         vm.SelectedProjectItem = root;
         Assert.Single(vm.ProjectItems);
-        Assert.Empty(CollapsedProjectKeys(vm));
+        Assert.False(root.IsCollapsed);
     }
 
     [Fact]

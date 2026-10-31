@@ -34,14 +34,18 @@ public sealed partial class UiVm
 
     void ApplyClearSelection()
     {
-        if (_selectedProjectItem is not null || _selectedHierarchyItem is not null) return;
+        if (SelectedProjectItem is not null || _selectedHierarchyItem is not null) return;
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "树节点清空");
     }
     void SetProjectSelection(EditorTreeNode? value)
     {
         if (HasBlockingInput && !_isSynchronizingSelectionProjection) return;
-        var already = _selectedProjectItem == value;
-        if (!Set(ref _selectedProjectItem, value, nameof(SelectedProjectItem)) && !already) return;
+        var already = SelectedProjectItem == value;
+        if (!_projectTreePresenter.SetSelectedItem(value))
+        {
+            if (!already) return;
+        }
+        else OnPropertyChanged(nameof(SelectedProjectItem));
         SetSelectedNodeKey(value?.Key ?? "");
         if (value is null)
         {
@@ -67,8 +71,7 @@ public sealed partial class UiVm
             if (_isSynchronizingSelectionProjection) return;
             if (value is null)
             {
-                _selectedProjectItem = null;
-                OnPropertyChanged(nameof(SelectedProjectItem));
+                if (_projectTreePresenter.SetSelectedItem(null)) OnPropertyChanged(nameof(SelectedProjectItem));
                 ApplyClearSelection();
                 return;
             }

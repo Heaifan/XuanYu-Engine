@@ -299,3 +299,12 @@
 - Known Risk: Presenter notifications remain synchronous on the mutating caller thread; UI-thread dispatch safety remains unproven. No startup smoke or visual acceptance was run.
 - XYK: NONE (task-local ownership extraction; no new reusable rule identified). Existing L-TEST-001 STRENGTHEN handoff remains pending Coordinator receipt.
 - Verification Boundary: One scoped Release build and named focused tests only; no full suite or post-change application launch.
+
+### TASK XYE-EDITOR-UIVM-R4-PROJECTTREE — XYK NONE
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; Parent=a120c087df62ea4d673ab9f0b2b71a7babd1fb3a; pre-existing root untracked path `5` preserved.
+- Changes: Added ProjectTreePresenter owning project tree node cache, current-scene node, collapsed keys and selected display-node reference. SceneStateOwner remains entity source; EditorStateOwner remains canonical selection owner. UiVm retains ProjectItems / SelectedProjectItem bindings and selection coordination. Hierarchy ownership and commands remain unchanged.
+- Evidence: XuanYu.World.Tests Release build succeeded 0 warnings / 0 errors; tree guide, toggle, project selection, workspace and selection re-entry contracts passed 21/21. Added `test_ProjectTreePresenter` contracts; no XAML binding names changed.
+- Known Risk: No Editor startup smoke in this slice; notification remains synchronous on caller thread as before. Visual behavior remains for final combined runtime pass.
+- XYK: NONE (task-local ownership extraction; no reusable rule change). Existing L-TEST-001 STRENGTHEN receipt remains pending.
+- Verification Boundary: Focused Release build/tests only; no full suite or visual acceptance.
