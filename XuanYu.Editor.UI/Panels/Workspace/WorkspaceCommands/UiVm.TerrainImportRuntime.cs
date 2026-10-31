@@ -1,5 +1,4 @@
 using XuanYu.World.Terrain;
-using XuanYu.World.Terrain.Import;
 using XuanYu.World.Terrain.Source;
 
 namespace XuanYu.Editor.UI;
@@ -9,25 +8,11 @@ public sealed partial class UiVm
     async Task<bool> ImportTerrainSourcesCoreAsync(IReadOnlyList<string> paths)
     {
         if (IsTerrainImporting) return false;
-        TerrainImportState = TerrainImportState.Importing; TerrainImportPercentage = 0;
-        TerrainImportMessage = "准备导入"; RaiseImportBindings();
-        _terrainImportCancellation = new CancellationTokenSource();
-        var progress = new Progress<TerrainImportProgress>(ReportTerrainProgress);
-        try
-        {
-            var tiles = await Task.Run(() => TerrainSourceImport.ReadMany(paths, progress,
-                _terrainImportCancellation.Token), _terrainImportCancellation.Token);
-            _terrainImportCancellation.Token.ThrowIfCancellationRequested();
-            ActivateTerrainTiles(tiles);
-            ReportTerrainProgress(new(TerrainImportStage.Activating, 1, 1, 100, "导入完成"));
-            TerrainImportState = TerrainImportState.Completed; RaiseImportBindings();
-            NotifySuccess("地形导入完成");
-            return true;
-        }
-        catch (OperationCanceledException) { TerrainImportState = TerrainImportState.Cancelled; FailTerrainImport("已取消导入。", UiNotificationLevel.Warning); return false; }
-        catch (TerrainSourceReadException error) { TerrainImportState = TerrainImportState.Error; FailTerrainImport(error.Message, UiNotificationLevel.Error); return false; }
-        catch (Exception error) { TerrainImportState = TerrainImportState.Error; FailTerrainImport($"Runtime 激活失败：{error.Message}", UiNotificationLevel.Error); return false; }
-        finally { _terrainImportCancellation?.Dispose(); _terrainImportCancellation = null; RaiseImportBindings(); }
+        var succeeded = await _terrainImportCoordinator.RunAsync(paths, ActivateTerrainTiles);
+        if (succeeded) NotifySuccess("地形导入完成");
+        else FailTerrainImport(TerrainImportMessage, TerrainImportState == TerrainImportState.Cancelled
+            ? UiNotificationLevel.Warning : UiNotificationLevel.Error);
+        return succeeded;
     }
 
     void ActivateTerrainTiles(TerrainTileSet tiles)
@@ -61,31 +46,4 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(TerrainSource)); OnPropertyChanged(nameof(TerrainWorld));
         OnPropertyChanged(nameof(TerrainStatus));
     }
-
-    void ReportTerrainProgress(TerrainImportProgress value)
-    {
-        if (!IsTerrainImporting) return;
-        TerrainImportPercentage = Math.Max(TerrainImportPercentage, Math.Clamp(value.Percentage, 0, 100));
-        TerrainImportMessage = value.Message; RaiseImportBindings();
-    }
-
-    void CancelTerrainImport() => _terrainImportCancellation?.Cancel();
-
-    void RaiseImportBindings()
-    {
-        foreach (var name in new[] { nameof(TerrainImportState), nameof(IsTerrainImporting), nameof(IsTerrainImportComplete), nameof(TerrainImportPercentage), nameof(TerrainImportMessage), nameof(TerrainTileId), nameof(TerrainTileCount), nameof(TerrainSourceName), nameof(TerrainDatumText), nameof(TerrainResolutionText), nameof(TerrainBoundsText), nameof(TerrainProbeText) })
-            OnPropertyChanged(name);
-    }
-
-    string Probe(TerrainTileSet tiles)
-    {
-        var latitude = (tiles.Bounds.South + tiles.Bounds.North) / 2;
-        var longitude = (tiles.Bounds.West + tiles.Bounds.East) / 2;
-        var sample = tiles.GetElevation(latitude, longitude);
-        return $"Longitude {longitude:0.######}° · Latitude {latitude:0.######}° · " +
-            $"Tiles {tiles.Tiles.Count} · Elevation {(sample.IsValid ? $"{sample.ElevationMeters:0.0} m" : "NoData")}";
-    }
-
-    static string FormatBounds(TerrainGeoBounds bounds) =>
-        $"{bounds.South:0}°N–{bounds.North:0}°N {bounds.West:0}°E–{bounds.East:0}°E";
 }

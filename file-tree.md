@@ -343,6 +343,7 @@
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/UiVm.TerrainPresentationHook.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/UiVm.Workspace.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/HistoryCoordinator.cs — 场景与地图撤销重做路由协调器。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/TerrainImportCoordinator.cs — 地形源导入生命周期与状态协调器。
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceSelector.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceSelector.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Composition/Application/Main.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
@@ -1821,6 +1822,7 @@
 - XuanYu.World.Tests/Map/MapBoundsTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/MapCoordinateValidationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/MapDatasetContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Map/test_MapDatasetRegistryManifestOwnerTests.cs — MapDatasetRegistry 与 Manifest 唯一权威 Owner 合同测试。
 - XuanYu.World.Tests/Map/MapDatasetDocumentTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/MapDatasetLayerStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Map/MapDatasetRegistryF1FailureTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2195,6 +2197,7 @@
 - XuanYu.World.Tests/UiRuntime/TerrainContextRuntimeFixTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/TerrainHotpathTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/TerrainImportOrchestrationR1Tests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/UiRuntime/test_TerrainImportCoordinatorTests.cs — 地形导入失败与激活隔离合同测试。
 - XuanYu.World.Tests/UiRuntime/TerrainInspectorCompositionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/TerrainRenderCompositionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/TerrainTopContextCompositionTests.cs — C# 源码文件，承载仓库实现或测试职责。
