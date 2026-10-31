@@ -449,3 +449,13 @@
 - Evidence: Release dependency build compiled `XuanYu.Editor.UI`, `XuanYu.Editor.App`, and `XuanYu.World.Tests` with 0 warnings / 0 errors. DocumentStatusPresenter and SceneDocument feedback contracts passed 12/12.
 - Boundary: The callback into scene dirty state remains read-only. Runtime UI/thread validation remains for final integration.
 - XYK: NONE (no new durable rule). Existing L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator.
+
+### TASK XYE-EDITOR-UIVM-R9 — lifecycle fix and final integration
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; pre-lifecycle HEAD=0283ea1762654323fb44d385fccc697baa28b3af; final Release source identity=7B44E87787FAD6FCEAD4FEF6FECC119143AEA3586E82B156EA4CD7914A38F008.
+- Changes: Replaced the anonymous UiWin title PropertyChanged handler with a named handler and detach it when the attached UiVm changes, closing the verified subscription leak. R9 reuses NotificationPresenter, LogPresenter and DocumentStatusPresenter for three direct panel binding boundaries; no duplicate mutable owner was added.
+- Evidence: Final Editor.UI Release dependency build passed 0 warnings / 0 errors. De-duplicated affected tests passed 59/59 (57 in the combined suite plus 2 NotificationPresenter contracts). Editor startup smoke initialized Project Tree, Inspector, main viewport, navigation Gizmo, status controls and log panel without visible binding/resource errors; full panel interaction and visual acceptance remain MANUAL.
+- R9 result: PARTIAL. ProjectTree, Layer and Inspector direct DataContext migration was not safe to claim: their UiVm still owns row projection, command routing, dual-tree selection and model/commit coordination. Caller-thread notification semantics are preserved; general Avalonia Dispatcher safety remains unverified. Map multi-file atomic rollback and Terrain activation-failure rollback remain independent transaction risks.
+- UiVm counts: 154→149 partials; 136→132 fields; 531→523 methods; 421→375 properties. These are exact declaration deltas from the R9 diffs, not a regenerated full Roslyn index. Three direct panel binding roots were migrated (NotificationBar, Foot/LogDetailPanel, Runtime Status badge).
+- 5+100: Touched production C# files and source directories were checked against the applicable local limits; existing test tree was not reorganized. Root untracked `5` and the three R6–R8 plan files remain untouched.
+- XYK: NONE (no new durable reusable rule identified). L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator; no formal XYK entry was changed.

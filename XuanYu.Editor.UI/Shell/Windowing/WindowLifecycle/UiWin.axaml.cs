@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -46,16 +47,19 @@ public partial class UiWin : Window
         {
             _attachedVm.FileCommandRequested -= OnFileCommandRequested;
             _attachedVm.DangerousCommandConfirmRequested -= OnDangerousCommandRequested;
+            _attachedVm.PropertyChanged -= OnAttachedVmPropertyChanged;
         }
         _attachedVm = DataContext as UiVm;
         if (_attachedVm is null) return;
         _attachedVm.FileCommandRequested += OnFileCommandRequested;
         _attachedVm.DangerousCommandConfirmRequested += OnDangerousCommandRequested;
         Title = _attachedVm.DocumentWindowTitle;
-        _attachedVm.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(UiVm.DocumentWindowTitle)) Title = _attachedVm.DocumentWindowTitle;
-        };
+        _attachedVm.PropertyChanged += OnAttachedVmPropertyChanged;
+    }
+
+    void OnAttachedVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(UiVm.DocumentWindowTitle) && sender is UiVm vm) Title = vm.DocumentWindowTitle;
     }
 
     async void OnFileCommandRequested(string command) => await RunSceneCommand(command);
