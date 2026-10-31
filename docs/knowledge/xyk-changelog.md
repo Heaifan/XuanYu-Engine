@@ -308,3 +308,12 @@
 - Known Risk: No Editor startup smoke in this slice; notification remains synchronous on caller thread as before. Visual behavior remains for final combined runtime pass.
 - XYK: NONE (task-local ownership extraction; no reusable rule change). Existing L-TEST-001 STRENGTHEN receipt remains pending.
 - Verification Boundary: Focused Release build/tests only; no full suite or visual acceptance.
+
+### TASK XYE-EDITOR-UIVM-R4-LAYER — XYK NONE
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; Parent=ea1d407d; root untracked path `5` preserved.
+- Changes: Added LayerPresenter owning the layer row projection, selected LayerId, active-row projection, and move/reorder availability calculations. MapEditSession remains the only layer data authority and is queried live for derived availability. Kept row command callbacks and existing UiVm binding/selection notifications. Moved EditorLayerProviderAdapter into the existing Layout directory to preserve the LayerRows direct-file capacity.
+- Tests: Editor.UI dependency Release build succeeded 0 warnings / 0 errors. Layer/panel/MapLayerSession/visual contract focused suites passed 52/52. Updated stale AXAML source paths in two contract test files only; all test assertions remain unchanged.
+- Known Risk: No Editor startup smoke in this slice; visual runtime acceptance is part of the combined final pass. Synchronous notifications remain on the original caller thread.
+- XYK: NONE (task-local presenter ownership; no reusable rule change). Existing L-TEST-001 STRENGTHEN remains pending formal Coordinator receipt.
+- Verification Boundary: Focused build/tests only; no full suite or product visual acceptance.

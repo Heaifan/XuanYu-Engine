@@ -12,8 +12,8 @@ public sealed partial class UiVm
         : IsMapEditMode ? _mapLayerProvider ??= new EditorLayerProviderAdapter(this, false) : null;
 
     public IReadOnlyList<MapLayerRowViewModel> CurrentLayerItems => IsMapEditMode
-        ? _layerItems : IsRegionEditMode
-            ? _layerItems.Where(item => item.IsRegion).ToArray()
+        ? LayerItems : IsRegionEditMode
+            ? LayerItems.Where(item => item.IsRegion).ToArray()
             : Array.Empty<MapLayerRowViewModel>();
 
     public bool HasCurrentLayerItems => CurrentLayerItems.Count > 0;

@@ -6,7 +6,7 @@ namespace XuanYu.World.Tests.Map.Editing;
 // MAP-A-R2-D4-F3 预验收补丁：状态图标真实消费（A）、插入线通知（B）、整行插入线（C）、清理（D）。
 public sealed class UiLayerStateFeedbackTests
 {
-    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "LayerPanel.axaml"));
+    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "MapUI", "Editing", "LayerPanels", "LayerPanel.axaml"));
 
     static UiVm NewVm() => new(null, () => true);
 

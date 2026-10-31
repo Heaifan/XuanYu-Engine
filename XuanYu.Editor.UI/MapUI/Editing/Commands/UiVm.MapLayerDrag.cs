@@ -15,7 +15,7 @@ public sealed partial class UiVm
     {
         if (_dropRegionIndex == regionIndex) return;
         _dropRegionIndex = regionIndex;
-        foreach (var row in _layerItems)
+        foreach (var row in LayerItems)
         {
             var position = RegionPositionOf(row.LayerId);
             row.IsDropBefore = position >= 0 && position == regionIndex;

@@ -5,25 +5,27 @@ namespace XuanYu.Editor.UI;
 // MAP-A-R2-D4：图层列表与工具栏命令入口（唯一数据源 = MapSession.CurrentMap）。
 public sealed partial class UiVm
 {
-    List<MapLayerRowViewModel> _layerItems = [];
-    MapLayerId? _selectedLayerId;
-
-    public IReadOnlyList<MapLayerRowViewModel> LayerItems => _layerItems;
+    public IReadOnlyList<MapLayerRowViewModel> LayerItems => _layerPresenter.Items;
     public MapLayerRowViewModel? SelectedLayer
     {
-        get => _layerItems.FirstOrDefault(l => l.LayerId == _selectedLayerId);
-        set
-        {
-            var id = value?.LayerId;
-            if (_selectedLayerId == id) return;
-            _selectedLayerId = id;
-            if (IsRegionEditMode && value is not null && TryGetDatasetIdForLayer(value.LayerId, out var datasetId))
-                DatasetSelectedId = datasetId;
-            OnLayerSelectionChanged();
-        }
+        get => _layerPresenter.SelectedLayer;
+        set => SetSelectedLayer(value);
     }
 
-    public bool HasLayerSelection => SelectedLayer is not null;
+    public bool HasLayerSelection => _layerPresenter.HasSelection;
+    public bool CanMoveLayerUp => _layerPresenter.CanMoveSelected(MapSession.CurrentMap.Layers, up: true);
+    public bool CanMoveLayerDown => _layerPresenter.CanMoveSelected(MapSession.CurrentMap.Layers, up: false);
+    public int UserLayerCount => _layerPresenter.UserLayerCount(MapSession.CurrentMap.Layers);
+    public bool CanReorderLayers => _layerPresenter.CanReorderLayers(MapSession.CurrentMap.Layers);
+    public bool IsLayerReorderHintVisible => _layerPresenter.IsReorderHintVisible(MapSession.CurrentMap.Layers);
+
+    void SetSelectedLayer(MapLayerRowViewModel? value)
+    {
+        if (!_layerPresenter.SetSelectedLayer(value)) return;
+        if (IsRegionEditMode && value is not null && TryGetDatasetIdForLayer(value.LayerId, out var datasetId))
+            DatasetSelectedId = datasetId;
+        OnLayerSelectionChanged();
+    }
     public void AddLayer()
     {
         var result = MapSession.AddRegionLayer();
@@ -31,7 +33,7 @@ public sealed partial class UiVm
         var name = MapSession.CurrentMap.Layers[^1].DisplayName;
         LogLayer($"添加图层：名称={name}");
         FooterMessage = $"已添加图层：{name}。";
-        SelectedLayer = _layerItems.FirstOrDefault(); // 新图层在列表最上方，自动选中
+        SelectedLayer = LayerItems.FirstOrDefault(); // 新图层在列表最上方，自动选中
     }
 
     public void MoveLayerUp() => MoveLayer(up: true);
@@ -45,7 +47,7 @@ public sealed partial class UiVm
 
     public void DeleteLayer(MapLayerId layerId)
     {
-        var layer = _layerItems.FirstOrDefault(item => item.LayerId == layerId);
+        var layer = LayerItems.FirstOrDefault(item => item.LayerId == layerId);
         if (layer is null) { MapEditError = "要删除的图层已不存在。"; return; }
         var result = MapSession.RemoveLayer(layerId);
         if (!result.IsSuccess) { FailLayerEdit("图层删除", result); return; }
