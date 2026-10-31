@@ -8,7 +8,20 @@ internal sealed class SceneDocumentCoordinator(
     SceneDocumentLoadTransaction load)
 {
     public SceneDocumentSession Session { get; } = new();
-    public void MarkNew() => Session.MarkNew();
+
+    public void StartNew(Action cancelInteraction, Action clearHistory, Action clearAssets,
+        Action clearEntities, Action resetMap, Action resetCamera, Action clearSelection, Action complete)
+    {
+        cancelInteraction();
+        clearHistory();
+        Session.MarkNew();
+        clearAssets();
+        clearEntities();
+        resetMap();
+        resetCamera();
+        clearSelection();
+        complete();
+    }
 
     public async Task<bool> SaveAsync(string? path, bool saveAs, Action prepare,
         Func<string, SceneDocumentSnapshot> capture,

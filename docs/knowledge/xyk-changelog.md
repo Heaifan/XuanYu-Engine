@@ -398,3 +398,10 @@
 - Source Identity: Branch=codex/world-r1-migration-20261028; final source base HEAD=edd1f436fa060203424726e787d3a3a30c1f5844.
 - Correction: Final review restored the original save ordering: capture the document snapshot before raising the busy/status notification. This is a deterministic behavior-order preservation fix.
 - Final Evidence: After this correction, Release `XuanYu.World.Tests` dependency build succeeded 0 warnings / 0 errors (identity=A3FB92A55E198469D6B90BF9A2B3A034F8D1F76E13B7E4E0A810FD5EBE882F82) and the affected SceneDocument/blank-scene tests passed 12/12. The 25/25 combined Scene/History/Map/draft suite was run immediately before this ordering-only correction; History code was not changed by the correction and its 13/13 focused result remains from that same built revision. Startup smoke was performed after the preceding successful Release build; the correction affects only the save callback order, not startup/composition.
+
+### TASK XYE-EDITOR-UIVM-R7 — New Scene flow closeout
+- Time: 2026-10-31 12:14:47 (UTC+00:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; implementation HEAD=30e16a69cf6e57066eb1daea7adbb9208f4d0e3b.
+- Changes: Moved the NewBlankScene lifecycle order into `SceneDocumentCoordinator.StartNew`: cancel active input, clear scene history, mark the new document, clear assets/entities, reset the existing map session/manifest/camera, clear selection, then publish status/projection. Each action still delegates to its existing authority; MapManifest transaction internals remain unchanged.
+- Final Evidence: After the New Scene sequence migration, Release `XuanYu.World.Tests` dependency build succeeded 0 warnings / 0 errors (identity=B030A1BF8ADAA76AE5286EC5C4B8D1A2E23BB0AD533E9992C3D022ACF4FC1778); SceneDocument/blank-scene tests passed 12/12. No History or R6 Camera tests were repeated.
+- Counts: UiVm partial 154; fields 136; methods 532; properties 421. The method count is the R6 baseline plus exact R7 declarations (derived from the diff).
