@@ -10,7 +10,7 @@ public sealed class UiMapDatasetF3ContractTests
     [Fact]
     public void Dataset_list_is_a_single_28_dip_name_and_status_row()
     {
-        var panel = Read("XuanYu.Editor.UI", "Right", "DatasetPanel.axaml");
+        var panel = Read("XuanYu.Editor.UI", "MapUI", "Data", "Catalog", "DatasetPanel.axaml");
         Assert.Contains("Control.Height.Standard", panel);
         Assert.Contains("Text=\"{Binding Name}\"", panel);
         Assert.Contains("Text=\"{Binding Status}\"", panel);
@@ -22,7 +22,7 @@ public sealed class UiMapDatasetF3ContractTests
     [Fact]
     public void Dataset_layer_is_a_32_dip_single_line_formal_layer_switch_row()
     {
-        var panel = Read("XuanYu.Editor.UI", "Right", "DatasetLayerPanel.axaml");
+        var panel = Read("XuanYu.Editor.UI", "MapUI", "Data", "Catalog", "DatasetLayerPanel.axaml");
         Assert.Contains("LayerPanel.States.axaml", panel);
         Assert.Contains("Control.Height.Emphasized", panel);
         Assert.Contains("ColumnDefinitions=\"24,*,Auto,26,26\"", panel);
@@ -35,8 +35,8 @@ public sealed class UiMapDatasetF3ContractTests
     [Fact]
     public void Dataset_rows_center_text_and_reserve_a_64_dip_status_area()
     {
-        var dataset = Read("XuanYu.Editor.UI", "Right", "DatasetPanel.axaml");
-        var layer = Read("XuanYu.Editor.UI", "Right", "DatasetLayerPanel.axaml");
+        var dataset = Read("XuanYu.Editor.UI", "MapUI", "Data", "Catalog", "DatasetPanel.axaml");
+        var layer = Read("XuanYu.Editor.UI", "MapUI", "Data", "Catalog", "DatasetLayerPanel.axaml");
         Assert.All([dataset, layer], panel =>
         {
             Assert.Contains("<xy:XYTruncatedText", panel);
@@ -51,8 +51,8 @@ public sealed class UiMapDatasetF3ContractTests
     [Fact]
     public void Dataset_selection_hides_map_form_and_names_dataset_inspector()
     {
-        var panel = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
-        var mapPage = Read("XuanYu.Editor.UI", "Right", "MapPagePanel.axaml");
+        var panel = Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml");
+        var mapPage = Read("XuanYu.Editor.UI", "MapUI", "Presentation", "MapToolPanels", "MapPagePanel.axaml");
         Assert.Contains("<local:MapFormPanel", mapPage);
         Assert.DoesNotContain("<local:MapFormPanel", panel);
         Assert.Contains("Text=\"{Binding InspectorSectionTitle}\"", panel);

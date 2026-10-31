@@ -38,8 +38,8 @@ public sealed class UiMapDatasetF1ContractTests : IDisposable
     public void Dataset_ui_rows_stretch_and_drag_visuals_do_not_replace_projection()
     {
         var root = TestSourceRoot.Root;
-        var left = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Right", "DatasetPanel.axaml"));
-        var drag = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Right", "DatasetLayerPanel.Drag.cs"));
+        var left = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "MapUI", "Data", "Catalog", "DatasetPanel.axaml"));
+        var drag = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "MapUI", "Data", "Catalog", "DatasetLayerPanel.Drag.cs"));
         Assert.Contains("ListBoxItem", left);
         Assert.Contains("HorizontalContentAlignment\" Value=\"Stretch", left);
         Assert.Contains("DatasetNameText", left);

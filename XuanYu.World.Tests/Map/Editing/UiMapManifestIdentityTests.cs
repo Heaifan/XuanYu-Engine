@@ -51,7 +51,7 @@ public sealed class UiMapManifestIdentityTests : IDisposable
     public void Id_row_uses_selectable_text_builtin_copy_only()
     {
         var path = Path.Combine(TestSourceRoot.Root,
-            "XuanYu.Editor.UI", "Right", "MapPagePanel.axaml");
+            "XuanYu.Editor.UI", "MapUI", "Presentation", "MapToolPanels", "MapPagePanel.axaml");
         var text = File.ReadAllText(path);
 
         Assert.Contains("x:Name=\"MapIdRow\"", text);

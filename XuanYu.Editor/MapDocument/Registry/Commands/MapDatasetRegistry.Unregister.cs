@@ -23,7 +23,7 @@ public sealed partial class MapDatasetRegistry
         if (!valid.Succeeded) return MapDocumentResult<string>.Fail(valid.ErrorCode, valid.Message, valid.Stage, valid.Detail);
         var saved = await _manifestStorage.SaveAsync(MapPath, candidate);
         if (!saved.Succeeded) return saved;
-        CurrentManifest = candidate;
+        PublishManifest(candidate);
         return MapDocumentResult<string>.Ok(id);
     }
 }

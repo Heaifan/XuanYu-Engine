@@ -18,7 +18,6 @@ public sealed partial class UiVm
         if (_datasetRegistry is null || DatasetSelectedId is not { } id) return false;
         var result = _datasetRegistry.RenameDataset(id, DatasetNameText);
         if (!result.Succeeded) { FooterMessage = result.Message; return false; }
-        _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
         var runtime = MapDatasetRuntimeProjection.Apply(MapSession.CurrentMap, _datasetRegistry.CurrentManifest);
         if (!runtime.Succeeded || runtime.Value is null) { FooterMessage = runtime.Message; return false; }
         var applied = MapSession.ApplyRuntimeLayerProjection(runtime.Value);

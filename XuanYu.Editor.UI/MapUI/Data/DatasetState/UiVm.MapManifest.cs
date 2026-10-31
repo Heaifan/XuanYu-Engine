@@ -50,7 +50,7 @@ public sealed partial class UiVm
         var replaced = MapSession.ReplaceCurrentMap(runtime.Value, true, path);
         if (!replaced.IsSuccess) { FooterMessage = replaced.Error!.Value.Message; return false; }
         _mapManifestOwner.Load(path, result.Value);
-        _datasetRegistry = registry;
+        _datasetRegistry = new MapDatasetRegistry(path, _mapManifestOwner);
         await RefreshDatasetProjectionAsync();
         FooterMessage = "地图 Manifest 已打开。";
         RaiseMapDocumentChanged();
@@ -75,7 +75,7 @@ public sealed partial class UiVm
             return false;
         }
         _mapManifestOwner.Save(result.Value);
-        _datasetRegistry = new MapDatasetRegistry(result.Value, CurrentMapManifest);
+        _datasetRegistry = new MapDatasetRegistry(result.Value, _mapManifestOwner);
         MapSession.MarkSaved(result.Value);
         await RefreshDatasetProjectionAsync();
         FooterMessage = "地图 Manifest 已保存。";

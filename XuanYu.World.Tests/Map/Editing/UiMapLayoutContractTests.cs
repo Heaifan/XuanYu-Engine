@@ -5,15 +5,15 @@ namespace XuanYu.World.Tests.Map.Editing;
 // EDITOR-A-R3：Map Context 只在 Edit Mode 的左侧出现；Inspector 与 Shell 保持全局。
 public sealed class UiMapLayoutContractTests
 {
-    static readonly string Left = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Left", "Left.axaml"));
+    static readonly string Left = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Navigation", "LeftWorkspace", "Left.axaml"));
 
-    static readonly string MapEditor = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
+    static readonly string MapEditor = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "MapUI", "Presentation", "EditorPanels", "MapEditorPanel.axaml"));
 
-    static readonly string Right = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
+    static readonly string Right = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Inspector", "EditorRightTabs.axaml"));
 
-    static readonly string FileModule = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Top", "FileModule.axaml"));
+    static readonly string FileModule = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Tools", "WorkspaceModules", "FileModule.axaml"));
 
-    static readonly string Top = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Top", "Top.axaml"));
+    static readonly string Top = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Tools", "WorkspaceModules", "Top.axaml"));
 
     [Fact]
     public void Left_is_only_local_project_file_content()
@@ -49,7 +49,7 @@ public sealed class UiMapLayoutContractTests
     [Fact]
     public void Global_inspector_has_no_layer_panel()
     {
-        Assert.DoesNotContain("LayerInspectorPanel", File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml")));
+        Assert.DoesNotContain("LayerInspectorPanel", File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml")));
     }
 
     // F2：顶部"添加"菜单扁平化——无"基础实体"级联，"立方体"为直接子项。
@@ -67,12 +67,12 @@ public sealed class UiMapLayoutContractTests
     {
         Assert.Contains("Label=\"检查器\"", Right);
         Assert.Contains("Label=\"调试\"", Right);
-        var rightShell = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "Right.axaml"));
-        var inspector = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+        var rightShell = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "Right.axaml"));
+        var inspector = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml"));
         Assert.Contains("InspectorPropertyRow", inspector);
         Assert.DoesNotContain("<local:MapEditorPanel", rightShell);
         Assert.DoesNotContain("<local:RegionalAuthoringPanel", rightShell);
-        Assert.DoesNotContain("<local:RegionalAuthoringPanel", File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml")));
+        Assert.DoesNotContain("<local:RegionalAuthoringPanel", File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml")));
         Assert.DoesNotContain("Header=\"偏好\"", Right);
         Assert.DoesNotContain("Header=\"模式\"", Right);
         Assert.DoesNotContain("PropertyItems", Right);

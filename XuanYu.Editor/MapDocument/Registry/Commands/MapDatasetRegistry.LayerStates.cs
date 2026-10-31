@@ -13,7 +13,7 @@ public sealed partial class MapDatasetRegistry
         var valid = MapManifestValidator.Validate(candidate);
         if (!valid.Succeeded)
             return MapDocumentResult<string>.Fail(valid.ErrorCode, valid.Message, valid.Stage, valid.Detail);
-        CurrentManifest = candidate;
+        PublishManifest(candidate);
         return MapDocumentResult<string>.Ok(MapPath);
     }
 }

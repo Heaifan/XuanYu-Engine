@@ -55,7 +55,6 @@ public sealed partial class UiVm
         if (_datasetRegistry is null) return;
         var saved = _datasetRegistry.UpdateLayerStates(states);
         if (!saved.Succeeded) { FooterMessage = saved.Message; return; }
-        _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
         var runtime = MapDatasetRuntimeProjection.Apply(MapSession.CurrentMap, _datasetRegistry.CurrentManifest);
         if (!runtime.Succeeded || runtime.Value is null) { FooterMessage = runtime.Message; return; }
         var applied = MapSession.ApplyRuntimeLayerProjection(runtime.Value);

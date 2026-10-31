@@ -29,7 +29,7 @@ public sealed partial class MapDatasetRegistry
             return Fail<MapDatasetDescriptor>(documentValid.ErrorCode, documentValid.Message, "Validate");
         var committed = await CommitCreateAsync(candidate.Value, document, datasetPath);
         if (!committed.Succeeded) return Fail<MapDatasetDescriptor>(committed);
-        CurrentManifest = candidate.Value;
+        PublishManifest(candidate.Value);
         return MapDocumentResult<MapDatasetDescriptor>.Ok(descriptor);
     }
 
@@ -45,7 +45,7 @@ public sealed partial class MapDatasetRegistry
             return Fail<MapDatasetDescriptor>(loaded.ErrorCode, loaded.Message, "Read");
         var saved = await _manifestStorage.SaveAsync(MapPath, candidate.Value);
         if (!saved.Succeeded) return Fail<MapDatasetDescriptor>(saved);
-        CurrentManifest = candidate.Value;
+        PublishManifest(candidate.Value);
         return MapDocumentResult<MapDatasetDescriptor>.Ok(descriptor);
     }
 

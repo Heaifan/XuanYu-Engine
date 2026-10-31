@@ -14,7 +14,7 @@ public sealed partial class UiVm
             if (!working.Succeeded || working.Value is null) return false;
             path = working.Value;
         }
-        _datasetRegistry = new MapDatasetRegistry(path, CurrentMapManifest);
+        _datasetRegistry = new MapDatasetRegistry(path, _mapManifestOwner);
         return true;
     }
 
@@ -25,7 +25,6 @@ public sealed partial class UiVm
         {
             var result = await _datasetRegistry!.CreateAutoAsync(DatasetCreateType);
             if (!result.Succeeded) return DatasetFailed(result.Message);
-            _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
             var runtime = MapDatasetRuntimeProjection.Apply(MapSession.CurrentMap, _datasetRegistry.CurrentManifest);
             if (!runtime.Succeeded || runtime.Value is null) return DatasetFailed(runtime.Message);
             var applied = MapSession.ApplyRuntimeLayerProjection(runtime.Value);
@@ -59,7 +58,6 @@ public sealed partial class UiVm
         if (_roadDrawing.IsActive) CancelRoadDrawingFromEscape();
         var result = await _datasetRegistry.UnregisterAsync(target);
         if (!result.Succeeded) return DatasetFailed(result.Message, false);
-        _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
         var runtime = MapDatasetRuntimeProjection.Remove(MapSession.CurrentMap, target);
         var applied = MapSession.ApplyRuntimeLayerProjection(runtime);
         if (!applied.IsSuccess) return DatasetFailed(applied.Error!.Value.Message, false);
