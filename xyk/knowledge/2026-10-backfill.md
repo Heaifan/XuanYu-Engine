@@ -24,6 +24,10 @@
 报告逐一给出 PASS / PARTIAL / BLOCKED / NOT RUN 的作用域。CPU 合同 PASS、GPU Smoke、Editor 视觉、Release 0W0E、全仓测试、Git 本地提交/远端 Push/PR 合并互不替代。测试 TRX、SourceFingerprint、Build DLL SHA、资产身份、Git Tree、Fixture 和被排除测试必须匹配同一 Candidate。不同算法指纹不可直接比较。M2 远端 [6dd62073](https://github.com/Heaifan/XuanYu-Engine/commit/6dd62073e0c91a925000c6297d873020dd0df36c) 只能证明该候选存在，不能覆盖之后所有 Dirty。
 
 ## K-ARCH-003｜5+100 与严格三级目录的定位合同
+
+### 2026-10-31 R3｜目录容量与类型SRP分别验收
+77文件目标树可以在MapUI/四个职责目录/主题末级≤5的范围内静态成立，但UiVm的53个partial和MapVectorOverlayBuilder六个partial跨两个叶目录仍须按**逻辑类型与成员职责**审查。不能通过移动partial、缩短文件名、减少路径层级伪称职责解耦；项目根和Vm已有超限必须独立列出，不以Map局部PASS替代全Editor.UI门禁。来源XYE-EDITOR-R1-H-R2，未Restore/Build/Test、未Git固化。
+
 **ACTIVE｜P0｜E2｜U：10/24～30；R：[84d49d43](https://github.com/Heaifan/XuanYu-Engine/commit/84d49d437d6a59060c18d37fc72b2d4594fb07ac)。**
 单 C# 文件≤100 行、末级目录≤5 文件、SRP、严格三级目录；不允许无限增加四级目录躲避 5+100。一级有超过10个二级是考虑拆编的警戒线而非绝对违例。短文件名、测试源码 test_ 前缀且放独立 *.Tests。Core / World / Render.Abstractions 不可反向依赖 Editor 或 Render.Vulkan；迁移路径静态通过不代表 Build/Test/运行通过。Scene 短名迁移远端证据：[bfaa3342](https://github.com/Heaifan/XuanYu-Engine/commit/bfaa33425abd51325544c743168c764805376a83)。
 
