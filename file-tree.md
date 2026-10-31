@@ -494,8 +494,9 @@
 - XuanYu.Editor.UI/ViewportUI/Input/Selection/UiVm.SelectionProjection.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/ViewportUI/Input/Selection/UiVm.SelectionValidity.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/ViewportUI/Input/Selection/UiVm.ViewportSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/ViewportUI/Input/SelectionTrace/UiVm.SelectionTrace.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/ViewportUI/Input/SelectionTrace/ViewportPickingLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/SelectionCoordination/UiVm.SelectionTrace.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/SelectionCoordination/SelectionCoordinator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/SelectionCoordination/ViewportPickingLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/ViewportUI/Interaction/Gesture/UiVm.Interaction.Begin.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/ViewportUI/Interaction/Gesture/UiVm.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/ViewportUI/Interaction/Gesture/UiVm.InteractionCancel.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -511,6 +512,7 @@
 - XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/UiVm.InputGuards.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/UiVm.Tool.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/UiVm.TransformAvailability.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/TransformInteractionController.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/UiVm.ViewportAssist.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/XuanYu.Editor.UI.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceFenceWaitAdapterTests.cs — 独立测试源码（test_ 前缀）。
