@@ -273,3 +273,17 @@ Region Drawing 同时跨 Pointer、Picking、MapPoint、Draft、Vector Overlay�
 **适用范围**：平台 Adapter、Input Router、Source Contract、Runtime Wiring。
 
 人工构造的错误平台值、把 Source Contains 当成 Runtime Wiring、或只验证 Helper PASS，都可能让错误实现稳定绿灯。跨平台行为测试必须从真实平台 Enum / Message Contract 开始，随后覆盖 Adapter、统一模型、Router、Consumer 和领域结果。
+
+### 2026-10-31 正式强化：物理路径迁移必须核验 MSBuild 路径属性并完成真实 Build
+
+**候选来源**：`XYK-CAND-20261031-EDITOR-BUILD-01-R2-001`；本地 `docs/knowledge/xyk-changelog.md` 的 `BUILD-01-R2-001` / `BUILD-02` 去重与复核段（用户提供交接，候选原文件仍未提交）；**裁定**：STRENGTHEN 既有 `L-TEST-001`，不另建知识 ID。
+
+**复现与修复报告**：Editor.UI 源码物理目录迁移后，首次 Release Build 在 `.csproj` 的旧 `ApplicationManifest` 文件引用上出现 **CS1926**。将引用改为按项目目录解析的迁移后路径 `Infrastructure/Resources/app.manifest`，后续 Editor/UI Release Build 报告 **0W0E**。以上为施工方的本地构建交接证据，本条知识审核**未重新运行 Build**；产品远端基线仍有旧 `<ApplicationManifest>app.manifest</ApplicationManifest>` 和旧位置文件，不能以本知识提交冒称产品修复已推送。
+
+**可复用规则**：源码、资源或测试文件发生物理路径迁移时，除审查测试源码枚举、测试发现数和 AXAML `avares://` 资源 URI 外，**必须逐项审查项目文件与导入的 MSBuild 文件中的路径型属性/项目项**。重点包含 `ApplicationManifest`，也应按实际项目检查 `None` / `Content` / `EmbeddedResource` / `AdditionalFiles`、自定义路径属性以及 `Import` 等；不能因为 SDK 默认 `Compile` 包含、IDE 能找到新源码或某一层测试 PASS，就认定所有资源路径有效。
+
+**验证顺序**：① 固定迁移前后的源/目标路径清单及 `.csproj` 所在目录；② 对每项路径表达式按照 **MSBuild 的实际求值基准**解析（普通 `ApplicationManifest` 等项目相对路径以项目文件目录为基准；遇到 `$(MSBuildThisFileDirectory)`、导入文件或条件属性须使用实际 MSBuild 求值结果，不得机械套用同一基准）；③ 核实条件配置下所指文件存在、大小写/分隔符和包含语义正确；④ 对包含 Manifest/AXAML/测试资源的真实目标执行仓库批准的 Release Build 并检查错误、警告和产物引用；⑤ 需要时执行真实发现/资源加载/运行时验证，避免测试空跑和路径伪绿。
+
+**禁止做法**：只改代码引用或测试硬编码路径，漏掉 `.csproj` / `.props` / `.targets`；使用迁移前文件残留让构建偶然绿灯；用未运行 Build 的静态 `git diff --check` 冒充路径有效；将 Build 0W0E 推广为 Editor 产品全部运行时或 Integration PASS。
+
+**证据与范围**：产品 HEAD=`a88a06aa05608bfc279d9028650749c83bae62e7` 是交接时所报基线，不是此次修复提交。施工方本地 Changelog 记录仍是 **PENDING / GIT UNCOMMITTED**；正式知识写回仅修改 `xyk/main`，不修改该候选记录或产品工作树。证据等级沿用 E2，待独立构建日志/产品提交纳入后可补充追溯。
