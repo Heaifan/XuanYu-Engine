@@ -32,6 +32,19 @@ internal sealed class CameraController
         AcceptRevision(frame.Camera.Revision);
     }
 
+    public bool TryDolly(double wheelDelta, Vector3d? anchor,
+        out CameraFrameResult result, out string failureReason)
+    {
+        if (_session is not null)
+        {
+            result = default;
+            failureReason = "相机导航会话正在进行";
+            return false;
+        }
+        return CameraNavigation.TryDolly(_camera, _observationCenter, wheelDelta,
+            _revision + 1, anchor, out result, out failureReason);
+    }
+
     public bool SetDpiScale(double value)
     {
         if (!double.IsFinite(value) || value <= 0 || System.Math.Abs(_dpiScale - value) < 0.001) return false;

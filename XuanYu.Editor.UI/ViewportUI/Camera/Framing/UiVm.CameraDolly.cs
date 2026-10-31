@@ -27,9 +27,7 @@ public sealed partial class UiVm
         ViewportProbe.Log("input-camera", $"[ZOOM-ANCHOR] Pointer=({cursorX:0.###},{cursorY:0.###});" +
             $"Source={(hit.IsValid ? hit.SurfaceBinding.Kind : "Invalid")};" +
             $"Hit={(hit.IsValid ? $"{anchor}" : "INVALID")};RenderOrigin=WorldSpace");
-        if (!CameraNavigation.TryDolly(_camera, _observationCenter, wheelDelta,
-            _cameraRevision + 1, anchor,
-            out var result, out var reason))
+        if (!_cameraController.TryDolly(wheelDelta, anchor, out var result, out var reason))
         {
             _logBus.Error(EditorLogSource.Input, EditorLogCategory.Command, "相机 Dolly 失败", reason);
 

@@ -21,6 +21,20 @@ public sealed partial class CameraNavigationUiTests
     }
 
     [Fact]
+    public void Camera_controller_dolly_keeps_center_and_minimum_distance()
+    {
+        var camera = new CameraController();
+        var center = camera.ObservationCenter;
+
+        Assert.True(camera.TryDolly(1000, null, out var result, out _));
+        Assert.Equal(0.25, result.Camera.Position.DistanceTo(result.ObservationCenter), 8);
+        Assert.Equal(center, result.ObservationCenter);
+
+        camera.ApplyFrame(result);
+        Assert.Equal(center, camera.ObservationCenter);
+    }
+
+    [Fact]
     public void Pan_publishes_camera_state_and_can_cancel()
     {
         var vm = new UiVm(null, () => true, seedInitialScene: false);
