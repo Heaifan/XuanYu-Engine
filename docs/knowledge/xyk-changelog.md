@@ -425,3 +425,10 @@
 - 5+100: No touched C# file exceeded 100 lines. WorkspaceManagement has 4 direct files, WorkspaceLifecycle has 5, and Workspace tests have 5. No new cycle or duplicated mutable Map Manifest source was introduced. Caller-thread notification semantics remain; general UI Dispatcher safety remains unverified.
 - Git: Local commits 28132a57 (Map Manifest authority), b4c867c9 (Terrain import lifecycle), 7132bdee (Workspace transition coordination). Final R8 source HEAD=7132bdee53b5581e975f52e390010f145be3eead. Root untracked `5` and R6/R7/R8 temporary plan files were preserved; no Push, Merge, Reset, Clean or unrelated staging occurred.
 - XYK: NONE (no new durable reusable rule beyond existing K-DATA-001 / K-DATA-002 constraints). L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator; this task did not modify formal XYK or treat PENDING as completion.
+### TASK XYE-EDITOR-UIVM-R9 — Notification panel binding batch
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; base HEAD=3bb2712d7906deb6e73e18ccaf00c488dfd8f530.
+- Changes: `NotificationBar` now binds directly to `NotificationPresenter`; the close action calls the presenter. UiVm no longer mirrors its 11 display properties or forwards its PropertyChanged events; notification producers and the synchronous `NotificationChanged` contract remain unchanged. `ApplicationState` reads the presenter snapshot directly.
+- Evidence: Release dependency build compiled `XuanYu.Editor.UI`, `XuanYu.Editor.App`, and `XuanYu.World.Tests` with 0 warnings / 0 errors. Focused notification presenter, UiD5, and terrain notification contracts passed 16/16.
+- Boundary: This is the first R9 panel batch only. Logging, Document Status, ProjectTree, Layer, Inspector and remaining cross-domain coordination have not been closed or reclassified. UI visual startup validation remains pending final integration.
+- XYK: NONE (no reusable rule change identified). Existing L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator.

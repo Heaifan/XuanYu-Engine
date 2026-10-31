@@ -30,11 +30,11 @@ public sealed class UiD5CorrectionNotifyTests
     {
         var vm = NewVm();
         vm.NotifyInfo("信息");
-        Assert.True(vm.HasNotification);
+        Assert.True(vm.NotificationPanel.HasNotification);
         vm.DismissNotification();
-        Assert.False(vm.HasNotification);
+        Assert.False(vm.NotificationPanel.HasNotification);
         vm.DismissNotification(); // 已关闭再次关闭无副作用
-        Assert.False(vm.HasNotification);
+        Assert.False(vm.NotificationPanel.HasNotification);
     }
 
     [Fact]
@@ -44,9 +44,9 @@ public sealed class UiD5CorrectionNotifyTests
         vm.NotifySuccess("保存成功");
         vm.NotifySuccess("保存成功");
         vm.NotifySuccess("保存成功");
-        Assert.Equal("保存成功", vm.NotificationText);
-        Assert.Equal(3, vm.NotificationCount);
-        Assert.True(vm.ShowNotificationCount);
+        Assert.Equal("保存成功", vm.NotificationPanel.NotificationText);
+        Assert.Equal(3, vm.NotificationPanel.NotificationCount);
+        Assert.True(vm.NotificationPanel.ShowNotificationCount);
     }
 
     [Fact]
@@ -55,10 +55,10 @@ public sealed class UiD5CorrectionNotifyTests
         var vm = NewVm();
         vm.NotifyError("保存失败");
         vm.NotifySuccess("保存成功"); // 低优先级不覆盖
-        Assert.Equal(UiNotificationLevel.Error, vm.NotificationLevel);
-        Assert.Equal("保存失败", vm.NotificationText);
+        Assert.Equal(UiNotificationLevel.Error, vm.NotificationPanel.NotificationLevel);
+        Assert.Equal("保存失败", vm.NotificationPanel.NotificationText);
         vm.NotifyWarning("磁盘不足"); // Warning(2) < Error(3)：仍不覆盖
-        Assert.Equal(UiNotificationLevel.Error, vm.NotificationLevel);
+        Assert.Equal(UiNotificationLevel.Error, vm.NotificationPanel.NotificationLevel);
     }
 
     [Fact]
@@ -67,6 +67,6 @@ public sealed class UiD5CorrectionNotifyTests
         var vm = NewVm();
         vm.NotifyInfo("编辑器已就绪");
         vm.NotifyError("致命错误");
-        Assert.Equal(UiNotificationLevel.Error, vm.NotificationLevel);
+        Assert.Equal(UiNotificationLevel.Error, vm.NotificationPanel.NotificationLevel);
     }
 }

@@ -19,7 +19,7 @@
     </Style>
   </UserControl.Styles>
   <StackPanel Spacing="8" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-    <local:NotificationBar IsHitTestVisible="True"/>
+    <local:NotificationBar DataContext="{Binding NotificationPanel}" IsHitTestVisible="True"/>
     <Border Classes="terrainProgressCard"
             IsVisible="{Binding IsTerrainImporting}"
             IsHitTestVisible="True">

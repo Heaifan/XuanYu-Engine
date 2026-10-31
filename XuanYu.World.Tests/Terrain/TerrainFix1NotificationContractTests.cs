@@ -37,13 +37,13 @@ public sealed class TerrainFix1NotificationContractTests
         var vm = new UiVm(null, () => true, seedInitialScene: false);
 
         vm.NotifySuccess("地形导入完成");
-        Assert.True(vm.HasNotification);
-        Assert.Equal("地形导入完成", vm.NotificationText);
-        var sequence = vm.NotificationSequence;
+        Assert.True(vm.NotificationPanel.HasNotification);
+        Assert.Equal("地形导入完成", vm.NotificationPanel.NotificationText);
+        var sequence = vm.NotificationPanel.NotificationSequence;
 
         vm.NotifySuccess("地形导入完成");
-        Assert.Equal(sequence + 1, vm.NotificationSequence);
-        Assert.Equal(2, vm.NotificationCount);
+        Assert.Equal(sequence + 1, vm.NotificationPanel.NotificationSequence);
+        Assert.Equal(2, vm.NotificationPanel.NotificationCount);
         Assert.Equal(1, Count(TerrainFix1Source.Read(
             "XuanYu.Editor.UI/Infrastructure/Services/Notifications/BottomRightNotificationHost.axaml"),
             "<local:NotificationBar"));

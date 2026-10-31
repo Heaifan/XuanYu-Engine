@@ -7,5 +7,6 @@ public sealed partial class UiVm
         _editorState.Snapshot, _editorState.InteractionSnapshot, _authoringState.Snapshot,
         LastDrawTool,
         TerrainImportPercentage, TerrainImportMessage, IsTerrainImporting,
-        new(NotificationLevel, NotificationText, NotificationCount));
+        new(NotificationPanel.NotificationLevel, NotificationPanel.NotificationText,
+            NotificationPanel.NotificationCount));
 }

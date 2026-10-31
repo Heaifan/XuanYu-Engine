@@ -3,7 +3,7 @@
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.NotificationBar"
-             x:DataType="local:UiVm">
+             x:DataType="local:NotificationPresenter">
   <UserControl.Styles>
     <!-- ARCH-UI-SPEC-R1-D5：四级通知条（不刷屏——同类合并计数；可关闭；技术详情进日志） -->
     <Style Selector="Border.notificationBar">
