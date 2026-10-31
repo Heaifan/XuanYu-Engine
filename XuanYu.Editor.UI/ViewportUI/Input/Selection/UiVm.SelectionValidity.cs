@@ -5,7 +5,7 @@ public sealed partial class UiVm
     bool IsSelectedEntityValid()
     {
         if (!TrySelectedEntityKey(out var key)) return true;
-        return _sceneState.TryGetEntity(key, out _);
+        return _selectionCoordinator.IsEntityValid(key);
     }
 
     void ClearInvalidEntitySelection(string source)

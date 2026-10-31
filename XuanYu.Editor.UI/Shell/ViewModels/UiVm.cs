@@ -15,6 +15,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     XuanYu.Render.Abstractions.IRenderProjectionSource
 {
     readonly EditorStateOwner _editorState;
+    SelectionCoordinator _selectionCoordinator = null!;
     readonly IWorldTransformMutationContract _worldMutation;
     readonly EditorContextOwner _contextState;
     readonly EditorAuthoringOwner _authoringState;

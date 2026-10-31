@@ -336,3 +336,11 @@
 - Residual: caller-thread synchronous notification contract is preserved; UI-thread dispatch safety is unverified. Transform fields remain direct numeric commit controls rather than persistent per-axis drafts. Visual acceptance remains MANUAL.
 - XYK: NONE for this extraction. Existing L-TEST-001 STRENGTHEN remains pending formal XYK Coordinator receipt; no formal knowledge entry was changed.
 - Verification boundary: Named focused suites and Release build only; no full test suite. Root untracked path `5` remains untouched and excluded from task commits.
+
+### TASK XYE-EDITOR-UIVM-R5-A — Selection coordination / PARTIAL
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; Parent=5a6ebd5445d4756c9cb35936ca330ff783e3ef2b; root untracked path `5` preserved.
+- Changes: Added `SelectionCoordinator` to own canonical Editor selection commits/clears and synchronization of selected entity identity into `SceneStateOwner`. The canonical selection remains `EditorStateOwner`; `MapEditSession` map selection remains independent; `ProjectTreePresenter` remains tree display owner. UiVm retains dual-tree projection, interaction cancellation, Inspector/render notification cascade, and AXAML binding façade.
+- Evidence: `XuanYu.Editor.UI` Release build succeeded 0 warnings / 0 errors (identity=909FCAE91949F29DE91F9D694B3441D937BA0EC9963BA0EFD3C1E8E95066FDCE). `XuanYu.World.Tests` Release build succeeded 0 warnings / 0 errors (identity=40C7EBC152D93543395D34CCF811CFE3FFA65B4B9F1D8FF074EF40570D5B33DA). Focused Selection/Scene reentry/Selection tool state/Inspector selection contracts passed 17/17 using Release test output.
+- Boundary: The extracted owner has actual state-transition behavior, but Selection's view/lifecycle coordination remains in UiVm; therefore Selection is PARTIAL, not CLOSED. No map selection authority or third entity-selection source was added.
+- XYK: NONE (task-local extraction). Existing L-TEST-001 STRENGTHEN formal receipt remains pending XYK Coordinator.

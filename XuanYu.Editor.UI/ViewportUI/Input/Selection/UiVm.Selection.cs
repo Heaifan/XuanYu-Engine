@@ -15,12 +15,12 @@ public sealed partial class UiVm
         {
             var command = new SelectEditorItemCommand(
                 source, node.Key, node.Title, node.Type, node.Path);
-            var changed = _editorState.Select(command);
-            var activeChanged = TryEntityKey(node.Key, out var key)
-                && _sceneState.SetActiveEntity(key, publish: false);
-            if (changed is null && !activeChanged) return;
+            XuanYu.Core.Identity.EntityId? activeEntity =
+                TryEntityKey(node.Key, out var key) ? key : null;
+            var transition = _selectionCoordinator.Select(command, activeEntity);
+            if (transition.Changed is null && !transition.ActiveEntityChanged) return;
             RaiseSelectionChanged();
-            if (changed is not null) LogSelectionCommit(command, changed);
+            if (transition.Changed is not null) LogSelectionCommit(command, transition.Changed);
             FooterMessage = $"{source}已选择：{SelectionTitle}";
             FooterState = "状态：就绪";
 
@@ -89,7 +89,7 @@ public sealed partial class UiVm
 
     void ApplySelectionCommand(ClearEditorSelectionCommand command, string source)
     {
-        var changed = _editorState.Clear(command);
+        var changed = _selectionCoordinator.Clear(command);
         if (changed is null) return;
         RaiseSelectionChanged();
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
