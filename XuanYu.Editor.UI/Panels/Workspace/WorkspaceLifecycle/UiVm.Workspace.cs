@@ -6,10 +6,11 @@ namespace XuanYu.Editor.UI;
 // EDITOR-A-R2：UiVm 持有唯一 Workspace Manager；World、Camera、Selection 仍由既有 Owner 管理。
 public sealed partial class UiVm
 {
-    readonly EditorWorkspaceManager _workspaceManager = new();
+    readonly EditorWorkspaceTransitionCoordinator _workspaceCoordinator =
+        new(new EditorWorkspaceManager());
     ICommand? _openPointFeatureEditorCommand;
 
-    public EditorWorkspaceDefinition CurrentWorkspace => _workspaceManager.CurrentWorkspace;
+    public EditorWorkspaceDefinition CurrentWorkspace => _workspaceCoordinator.CurrentWorkspace;
     public string CurrentWorkspaceDisplayName => CurrentWorkspace.DisplayName;
     public string WorkspaceSelectorId => IsManageMode ? "management" : "feature-editing";
     public bool IsMapWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.MapEditor;
@@ -35,13 +36,15 @@ public sealed partial class UiVm
 
     void SwitchWorkspace(object? value)
     {
-        if (!TryWorkspaceId(value, out var target) || CurrentWorkspace.Id == target) return;
-        if (IsEditMode) CancelActiveInput("切换编辑工作区");
-        var transition = _workspaceManager.Switch(target);
-        if (!transition.Changed) return;
-        ClearLayerSelection();
-        if (IsRegionWorkspace) SyncRegionAuthoringModeFromDatasetSelection();
-        if (IsEditMode) SelectTool("选择", logTool: false);
+        if (!TryWorkspaceId(value, out var target)) return;
+        _workspaceCoordinator.Switch(target, IsEditMode,
+            () => CancelActiveInput("切换编辑工作区"), ClearLayerSelection,
+            SyncRegionAuthoringModeFromDatasetSelection,
+            () => SelectTool("选择", logTool: false), _ => PublishWorkspaceChange());
+    }
+
+    void PublishWorkspaceChange()
+    {
         OnPropertyChanged(nameof(CurrentWorkspace));
         OnPropertyChanged(nameof(CurrentWorkspaceDisplayName));
         OnPropertyChanged(nameof(IsMapWorkspace));
@@ -51,8 +54,6 @@ public sealed partial class UiVm
         RaiseModeBindings();
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
             $"编辑目标已切换为：{CurrentWorkspaceDisplayName}", "Manage 只改变目标；Edit 保留上下文后切换工作区。");
-
-
     }
 
     static bool TryWorkspaceId(object? value, out EditorWorkspaceId id)

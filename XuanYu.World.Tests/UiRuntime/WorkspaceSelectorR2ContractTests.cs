@@ -16,8 +16,8 @@ public sealed class WorkspaceSelectorR2ContractTests
     [Fact]
     public void Selector_has_one_workspace_selection_control()
     {
-        var source = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml") +
-                     Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml.cs");
+        var source = Read("XuanYu.Editor.UI", "Panels", "Workspace", "WorkspaceSelector.axaml") +
+                     Read("XuanYu.Editor.UI", "Panels", "Workspace", "WorkspaceSelector.axaml.cs");
         Assert.Contains("XYWorkspaceSwitcher", source);
         Assert.DoesNotContain("XYMenuBarItem", source);
         Assert.DoesNotContain("Shortcut=\"暂未开放\"", source);
@@ -72,18 +72,18 @@ public sealed class WorkspaceSelectorR2ContractTests
 
     [Fact] public void Top_declares_one_environment_menu()
     {
-        var source = Read("XuanYu.Editor.UI", "Top", "ViewModule.axaml");
+        var source = Read("XuanYu.Editor.UI", "Panels", "Tools", "ViewTools", "ViewModule.axaml");
         Assert.Equal(1, Count(source, "Label=\"环境\""));
     }
 
     [Fact] public void Area_a_uses_canonical_xyui_menu_apis()
     {
-        var workspace = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml");
-        var file = Read("XuanYu.Editor.UI", "Top", "FileModule.axaml");
-        var view = Read("XuanYu.Editor.UI", "Top", "ViewModule.axaml");
-        var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
+        var workspace = Read("XuanYu.Editor.UI", "Panels", "Workspace", "WorkspaceSelector.axaml");
+        var file = Read("XuanYu.Editor.UI", "Panels", "Tools", "WorkspaceModules", "FileModule.axaml");
+        var view = Read("XuanYu.Editor.UI", "Panels", "Tools", "ViewTools", "ViewModule.axaml");
+        var top = Read("XuanYu.Editor.UI", "Panels", "Tools", "WorkspaceModules", "Top.axaml");
 
-        Assert.Contains("XYWorkspaceSwitcher", workspace + Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml.cs"));
+        Assert.Contains("XYWorkspaceSwitcher", workspace + Read("XuanYu.Editor.UI", "Panels", "Workspace", "WorkspaceSelector.axaml.cs"));
         Assert.DoesNotContain("XYMenuBarItem", workspace);
         Assert.DoesNotContain("点要素编辑", workspace);
         Assert.DoesNotContain("OpenPointFeatureEditorCommand", workspace);
