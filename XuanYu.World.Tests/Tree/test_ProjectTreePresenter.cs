@@ -26,9 +26,14 @@ public sealed class test_ProjectTreePresenter
     {
         var presenter = new ProjectTreePresenter();
         var node = Assert.Single(presenter.Build("场景", "场景", []));
+        var notifications = new List<string>();
+        var observable = Assert.IsAssignableFrom<System.ComponentModel.INotifyPropertyChanged>(presenter);
+        observable.PropertyChanged += (_, args) => notifications.Add(args.PropertyName!);
+
         Assert.True(presenter.SetSelectedItem(node));
 
         Assert.Same(node, presenter.SelectedItem);
+        Assert.Contains(nameof(presenter.SelectedItem), notifications);
         Assert.False(presenter.SetSelectedItem(node));
     }
 

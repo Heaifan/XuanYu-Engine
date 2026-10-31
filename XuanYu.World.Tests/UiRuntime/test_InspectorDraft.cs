@@ -7,6 +7,21 @@ namespace XuanYu.World.Tests.UiRuntime;
 public sealed class test_InspectorDraft
 {
     [Fact]
+    public void Draft_text_changes_notify_direct_binding_paths()
+    {
+        var draft = new InspectorDraft();
+        var notifications = new List<string>();
+        var observable = Assert.IsAssignableFrom<System.ComponentModel.INotifyPropertyChanged>(draft);
+        observable.PropertyChanged += (_, args) => notifications.Add(args.PropertyName!);
+
+        draft.SetEntityNameText("实体草稿");
+        draft.SetLayerNameText("图层草稿");
+
+        Assert.Contains(nameof(draft.EntityNameText), notifications);
+        Assert.Contains(nameof(draft.LayerNameText), notifications);
+    }
+
+    [Fact]
     public void Entity_name_draft_captures_target_and_cancel_restores_start_text()
     {
         var target = new InspectorEditTarget(InspectorObjectKind.Entity, "entity:7", "Entity.Basic.Name");

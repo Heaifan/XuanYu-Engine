@@ -7,7 +7,7 @@
   <ScrollViewer x:Name="HierarchyScrollHost"
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
-    <ListBox x:Name="HierarchyList"
+    <ListBox x:Name="HierarchyList" DataContext="{Binding ProjectTreePanel}" x:DataType="local:ProjectTreePresenter"
              Classes="treeList"
              AutoScrollToSelectedItem="False"
              ItemsSource="{Binding HierarchyItems}"

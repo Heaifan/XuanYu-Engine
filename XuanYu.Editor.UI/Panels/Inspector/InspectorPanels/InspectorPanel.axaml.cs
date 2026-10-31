@@ -13,6 +13,7 @@ namespace XuanYu.Editor.UI;
 public partial class InspectorPanel : UserControl
 {
     XYNavigationState? _inspectorRailState;
+    UiVm? _attachedVm;
     public static FuncValueConverter<string?, bool> IsTechnicalField { get; } =
         new(label => label is "数据集 ID" or "实体编号" or "路径");
 
@@ -28,7 +29,13 @@ public partial class InspectorPanel : UserControl
 
     void AttachInspectorViewModel()
     {
-        if (DataContext is UiVm vm) { vm.PropertyChanged += OnInspectorViewModelChanged; RefreshInspectorRail(vm); }
+        if (_attachedVm is not null) _attachedVm.PropertyChanged -= OnInspectorViewModelChanged;
+        _attachedVm = DataContext as UiVm;
+        if (_attachedVm is not null)
+        {
+            _attachedVm.PropertyChanged += OnInspectorViewModelChanged;
+            RefreshInspectorRail(_attachedVm);
+        }
     }
 
     void OnInspectorViewModelChanged(object? sender, PropertyChangedEventArgs e)

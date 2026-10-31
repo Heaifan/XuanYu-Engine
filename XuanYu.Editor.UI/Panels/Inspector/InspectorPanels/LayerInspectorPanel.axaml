@@ -10,7 +10,7 @@
     <xy:XYSeparator Variant="Section"/>
     <Grid ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4">
       <xy:XYLabel Text="名称"/>
-      <xy:XYTextField Grid.Column="1" Text="{Binding LayerInspectorNameText, Mode=TwoWay}"
+      <xy:XYTextField Grid.Column="1" Text="{Binding InspectorDraft.LayerNameText, Mode=TwoWay}"
                IsReadOnly="{Binding LayerInspectorIsSystem}"
                LostFocus="NameBox_LostFocus" KeyDown="NameBox_KeyDown"/>
       <xy:XYLabel Grid.Row="1" Text="类型"/>

@@ -9,8 +9,8 @@ public sealed class EditorScrollAuditContractTests
     [Fact]
     public void Inspector_has_one_right_content_scroll_host_and_fixed_shell()
     {
-        var inspector = File.ReadAllText(Path.Combine(Root, "Right", "InspectorPanel.axaml"));
-        var map = File.ReadAllText(Path.Combine(Root, "Right", "MapEditorPanel.axaml"));
+        var inspector = File.ReadAllText(Path.Combine(Root, "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml"));
+        var map = File.ReadAllText(Path.Combine(Root, "MapUI", "Presentation", "EditorPanels", "MapEditorPanel.axaml"));
         Assert.Contains("x:Name=\"SearchBox\"", inspector);
         Assert.Contains("XYNavigationRail", inspector);
         Assert.Equal(1, inspector.Split("<ScrollViewer", StringSplitOptions.None).Length - 1);

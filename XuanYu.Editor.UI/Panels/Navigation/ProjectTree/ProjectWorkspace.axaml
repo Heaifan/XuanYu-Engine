@@ -8,11 +8,11 @@
   <ScrollViewer x:Name="ProjectScrollHost"
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
-    <ListBox x:Name="ProjectList"
+    <ListBox x:Name="ProjectList" DataContext="{Binding ProjectTreePanel}" x:DataType="local:ProjectTreePresenter"
              Classes="treeList"
              AutoScrollToSelectedItem="False"
              ItemsSource="{Binding ProjectItems}"
-             SelectedItem="{Binding SelectedProjectItem, Mode=TwoWay}"
+             SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
              KeyDown="SelectionList_KeyDown">
     <ListBox.ItemsPanel>
       <ItemsPanelTemplate>

@@ -35,6 +35,9 @@ public sealed partial class UiVm
         _contextState = new EditorContextOwner(); _authoringState = new EditorAuthoringOwner();
         _sceneState = sceneState; _worldMutation = sceneState;
         _selectionCoordinator = new SelectionCoordinator(_editorState, _sceneState, _projectTreePresenter);
+        _projectTreePresenter.ProjectSelectionRequested += SetProjectSelection;
+        _projectTreePresenter.HierarchySelectionRequested += SetHierarchySelection;
+        _layerPresenter.SelectionRequested += SetSelectedLayer;
         var sceneStorage = new SceneStorageService();
         _sceneDocumentCoordinator = new SceneDocumentCoordinator(
             new SceneDocumentSaveTransaction(sceneStorage),
@@ -43,6 +46,7 @@ public sealed partial class UiVm
             _historyOwner, ApplyHistory, FenceAppliedXycHistory, message => FooterMessage = message);
         _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();
         if (_sceneState.RenderSnapshot.HasEntity) _sceneState.EnsureEntityCount(10);
+        _ = BuildProjectItems(); _ = BuildHierarchyItems();
         SurfaceBridgeFactory = surfaceBridgeFactory;
         if (dialogService is not null) _dialogService = dialogService;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
@@ -52,6 +56,7 @@ public sealed partial class UiVm
         ToggleSnapCommand = new RelayCommand(_ => TryToggleSnap()); ToggleEditorModeCommand = new RelayCommand(_ => ToggleEditorMode());
         InteractionCommand = new RelayCommand(name => RunInteraction(name?.ToString() ?? string.Empty));
         MapSession = mapSession; MapSession.MarkBaseline();
+        _layerPresenter.SetWorkspaceMode(IsMapEditMode, IsRegionEditMode);
         AttachMapSession(MapSession); MapSession.ClearSelection(); InitializeMapManifest(); InitNotificationPresenter();
         ViewportInput = UiVmViewportInputComposition.Create(this);
     }

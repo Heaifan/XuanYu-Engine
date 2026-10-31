@@ -50,9 +50,11 @@ public sealed partial class TransformFoundationTests
         SceneOf(vm).RestoreTransform(key, transform);
         vm.SelectedHierarchyItem = vm.HierarchyItems.Single(i => i.Key == key.ToString());
 
+        Assert.Equal(key.ToString(), vm.SelectionKey);
+        Assert.True(vm.IsEntityInspector);
         Assert.Contains(vm.InspectorFields, f => f.IsGroupHeader && f.Label == "变换");
         Assert.Contains(vm.InspectorFields, f => f.Label == "位置" && f.Value == "X 1    Y 2    Z 3");
-        Assert.Contains(vm.InspectorFields, f => f.Label == "旋转" && f.Value == "X 10°    Y 20°    Z 30°");
+        Assert.Equal("X 10°    Y 20°    Z 30°", Assert.Single(vm.InspectorFields, f => f.Label == "旋转").Value);
         Assert.Contains(vm.InspectorFields, f => f.Label == "缩放" && f.Value == "X 2    Y 2    Z 2");
     }
 

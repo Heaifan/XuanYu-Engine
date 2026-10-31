@@ -24,6 +24,7 @@ public sealed partial class UiVm
 
     void RaiseLayerContextBindings()
     {
+        _layerPresenter.SetWorkspaceMode(IsMapEditMode, IsRegionEditMode);
         OnPropertyChanged(nameof(CurrentLayerProvider));
         OnPropertyChanged(nameof(CurrentLayerItems));
         OnPropertyChanged(nameof(HasCurrentLayerItems));

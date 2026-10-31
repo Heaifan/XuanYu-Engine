@@ -5,11 +5,11 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D4：图层面板结构合同（K03/K04/W50~W52）——图标 16/热区/笔画、Layer.* Token、三重区分。
 public sealed class UiD4LayerContractTests
 {
-    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "LayerPanel.axaml")) +
+    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "MapUI", "Editing", "LayerPanels", "LayerPanel.axaml")) +
         File.ReadAllText(Path.Combine(TestSourceRoot.Root,
-            "XuanYu.Editor.UI", "Right", "LayerPanel.States.axaml"));
+            "XuanYu.Editor.UI", "MapUI", "Editing", "LayerPanels", "LayerPanel.States.axaml"));
 
-    static readonly string Inspector = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "LayerInspectorPanel.axaml"));
+    static readonly string Inspector = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "LayerInspectorPanel.axaml"));
 
     [Fact]
     public void State_icons_use_16_viewport_and_15_stroke()

@@ -1,21 +1,23 @@
 using System.Globalization;
+using System.ComponentModel;
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 
 namespace XuanYu.Editor.UI;
 
-internal sealed class InspectorDraft
+public sealed class InspectorDraft : INotifyPropertyChanged
 {
     string _entityNameText = "", _entityNameStart = "", _layerNameText = "";
     InspectorEditTarget? _entityNameTarget;
     bool _cancelledEntityNameCommit;
 
-    public string EntityNameText => _entityNameText;
-    public string LayerNameText => _layerNameText;
+    public event PropertyChangedEventHandler? PropertyChanged;
+    public string EntityNameText { get => _entityNameText; set => Set(ref _entityNameText, value, nameof(EntityNameText)); }
+    public string LayerNameText { get => _layerNameText; set => Set(ref _layerNameText, value, nameof(LayerNameText)); }
     public InspectorEditTarget? EntityNameTarget => _entityNameTarget;
 
-    public bool SetEntityNameText(string value) => Set(ref _entityNameText, value);
-    public bool SetLayerNameText(string value) => Set(ref _layerNameText, value);
+    public bool SetEntityNameText(string value) => Set(ref _entityNameText, value, nameof(EntityNameText));
+    public bool SetLayerNameText(string value) => Set(ref _layerNameText, value, nameof(LayerNameText));
 
     public void BeginEntityNameEdit(InspectorEditTarget target, string text)
     {
@@ -28,7 +30,7 @@ internal sealed class InspectorDraft
     {
         if (_entityNameTarget is null) return false;
         _entityNameTarget = null;
-        _entityNameText = _entityNameStart;
+        EntityNameText = _entityNameStart;
         _cancelledEntityNameCommit = true;
         return true;
     }
@@ -84,10 +86,11 @@ internal sealed class InspectorDraft
         _ => new Vector3d(value.X, value.Y, next)
     };
 
-    static bool Set(ref string target, string value)
+    bool Set(ref string target, string value, string name)
     {
         if (target == value) return false;
         target = value;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         return true;
     }
 }

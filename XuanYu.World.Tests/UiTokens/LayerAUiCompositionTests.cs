@@ -30,7 +30,7 @@ public sealed class LayerAUiCompositionTests
         Assert.DoesNotContain("LayerInspectorPanel", inspector);
         Assert.DoesNotContain("HasCurrentLayerSelection", inspector);
         Assert.Contains("InspectorPropertyRow", inspector);
-        Assert.Contains("CurrentLayerItems", layer);
+        Assert.Contains("VisibleItems", layer);
         Assert.DoesNotContain("区域绘制", map);
     }
 

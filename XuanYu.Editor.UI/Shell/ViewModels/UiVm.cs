@@ -26,8 +26,6 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     readonly LayerPresenter _layerPresenter = new();
     readonly InspectorDraft _inspectorDraft = new();
     readonly IEditorDialogService _dialogService = new NullEditorDialogService();
-    readonly Dictionary<string, EditorTreeNode> _hierarchyNodeCache = new();
-    readonly HashSet<string> _collapsedHierarchyKeys = new(StringComparer.Ordinal);
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
     string _footerMessage = "已就绪。当前为空白未命名场景。";
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -37,8 +35,11 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     public ICommand ToggleSnapCommand { get; }
     public ICommand InteractionCommand { get; }
     public MapEditSession MapSession { get; }
-    public IReadOnlyList<EditorTreeNode> ProjectItems => BuildProjectItems();
-    public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
+    public ProjectTreePresenter ProjectTreePanel => _projectTreePresenter;
+    public LayerPresenter LayerPresentation => _layerPresenter;
+    public InspectorDraft InspectorDraft => _inspectorDraft;
+    public IReadOnlyList<EditorTreeNode> ProjectItems => _projectTreePresenter.ProjectItems;
+    public IReadOnlyList<EditorTreeNode> HierarchyItems => _projectTreePresenter.HierarchyItems;
     public IReadOnlyList<InspectorFieldRow> InspectorFields => BuildInspectorFields();
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems;
     public IReadOnlyList<string> ToolItems => UiText.ToolItems; public IReadOnlyList<InspectorFieldRow> DebugContextItems => BuildDebugContextItems(); public IReadOnlyList<InspectorFieldRow> DebugObjectItems => BuildDebugObjectItems();
@@ -74,5 +75,10 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
         ApplyRunCommand(name);
     }
     bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return false; field = value; OnPropertyChanged(name); return true; }
-    void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    void OnPropertyChanged([CallerMemberName] string? name = null)
+    {
+        if (name == nameof(ProjectItems)) _ = BuildProjectItems();
+        if (name == nameof(HierarchyItems)) _ = BuildHierarchyItems();
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
 }

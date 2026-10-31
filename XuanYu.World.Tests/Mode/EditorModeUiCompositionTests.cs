@@ -10,7 +10,7 @@ public sealed class EditorModeUiCompositionTests
     [Fact]
     public void Top_has_only_the_unified_mode_control()
     {
-        var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
+        var top = Read("XuanYu.Editor.UI", "Panels", "Tools", "WorkspaceModules", "Top.axaml");
         Assert.Contains("WorkspaceSelector", top);
         Assert.DoesNotContain("进入编辑", top); Assert.DoesNotContain("返回管理", top);
         Assert.DoesNotContain("Tab 切换", top); Assert.DoesNotContain("编辑目标", top);
@@ -19,51 +19,51 @@ public sealed class EditorModeUiCompositionTests
     [Fact]
     public void Root_has_only_foot_but_one_main_and_viewport()
     {
-        var root = Read("XuanYu.Editor.UI", "Root", "UiRoot.axaml");
+        var root = Read("XuanYu.Editor.UI", "Shell", "Composition", "Application", "UiRoot.axaml");
         Assert.DoesNotContain("BottomDockHost", root); Assert.Equal(1, Count(root, "<local:Foot"));
         Assert.Equal(1, Count(root, "<local:Main"));
-        Assert.Equal(1, Count(Read("XuanYu.Editor.UI", "Main", "Main.axaml"), "VulkanViewport"));
+        Assert.Equal(1, Count(Read("XuanYu.Editor.UI", "Shell", "Composition", "Application", "Main.axaml"), "VulkanViewport"));
     }
 
     [Fact]
     public void Bottom_asset_browser_is_retired_but_file_import_remains()
     {
         Assert.False(File.Exists(Path.Combine(Root, "XuanYu.Editor.UI", "Shell", "BottomDockHost.axaml")));
-        var file = Read("XuanYu.Editor.UI", "Top", "FileModule.axaml");
+        var file = Read("XuanYu.Editor.UI", "Panels", "Tools", "WorkspaceModules", "FileModule.axaml");
         Assert.Contains("CommandParameter=\"导入 GLB\"", file);
     }
 
     [Fact]
     public void Project_and_inspector_remain_global_shell_panels()
     {
-        var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
+        var left = Read("XuanYu.Editor.UI", "Panels", "Navigation", "LeftWorkspace", "Left.axaml");
         Assert.Contains("<local:ProjectWorkspace", left);
         Assert.DoesNotContain("XYNavigationRail", left);
-        Assert.Contains("<local:HierarchyWorkspace", Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
-        Assert.Contains("<xy:XYTabs", Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
+        Assert.Contains("<local:HierarchyWorkspace", Read("XuanYu.Editor.UI", "Panels", "Inspector", "EditorRightTabs.axaml"));
+        Assert.Contains("<xy:XYTabs", Read("XuanYu.Editor.UI", "Panels", "Inspector", "EditorRightTabs.axaml"));
     }
 
     [Fact]
     public void Map_context_lives_in_inspector_content_and_not_right_sibling()
     {
-        var inspector = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
+        var inspector = Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml");
         Assert.Contains("InspectorPropertyRow", inspector);
         Assert.Equal(1, Count(inspector, "<local:MapEditorPanel"));
         Assert.Equal(1, Count(inspector, "<local:FeatureInspectorPanel"));
-        Assert.DoesNotContain("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));
-        Assert.Contains("MapPagePanel", Read("XuanYu.Editor.UI", "Right", "MapPagePanel.axaml"));
-        Assert.Contains("EditorLayerDock", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));
+        Assert.DoesNotContain("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "Right.axaml"));
+        Assert.Contains("MapPagePanel", Read("XuanYu.Editor.UI", "MapUI", "Presentation", "MapToolPanels", "MapPagePanel.axaml"));
+        Assert.Contains("EditorLayerDock", Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "Right.axaml"));
     }
 
     [Fact]
     public void Region_context_shows_the_current_drawing_target_and_old_right_map_tab_is_retired()
     {
-        var rightShell = Read("XuanYu.Editor.UI", "Right", "Right.axaml");
-        var right = Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml");
-        var inspector = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
-        var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
-        var toolbar = Read("XuanYu.Editor.UI", "Top", "ContextToolBar.axaml");
-        var toolbarCode = Read("XuanYu.Editor.UI", "Top", "ContextToolBar.axaml.cs");
+        var rightShell = Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "Right.axaml");
+        var right = Read("XuanYu.Editor.UI", "Panels", "Inspector", "EditorRightTabs.axaml");
+        var inspector = Read("XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml");
+        var top = Read("XuanYu.Editor.UI", "Panels", "Tools", "WorkspaceModules", "Top.axaml");
+        var toolbar = Read("XuanYu.Editor.UI", "Panels", "Tools", "ContextTools", "ContextToolBar.axaml");
+        var toolbarCode = Read("XuanYu.Editor.UI", "Panels", "Tools", "ContextTools", "ContextToolBar.axaml.cs");
         Assert.DoesNotContain("RegionalAuthoringPanel", rightShell);
         Assert.DoesNotContain("RegionalAuthoringPanel", inspector);
         Assert.Equal(1, Count(inspector, "<ScrollViewer"));
@@ -78,7 +78,7 @@ public sealed class EditorModeUiCompositionTests
     [Fact]
     public void Shortcut_routes_tab_without_changing_escape_contract()
     {
-        var code = Read("XuanYu.Editor.UI", "Win", "UiWin.Shortcuts.cs");
+        var code = Read("XuanYu.Editor.UI", "Shell", "Windowing", "Shortcuts", "UiWin.Shortcuts.cs");
         Assert.Contains("e.Key == Key.Tab", code); Assert.Contains("ToggleEditorMode", code);
         Assert.Contains("e.Key != Key.Escape", code);
     }
@@ -86,8 +86,8 @@ public sealed class EditorModeUiCompositionTests
     [Fact]
     public void Selector_uses_one_workspace_selection_gesture()
     {
-        var selector = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml");
-        var code = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml.cs");
+        var selector = Read("XuanYu.Editor.UI", "Panels", "Workspace", "WorkspaceSelector.axaml");
+        var code = Read("XuanYu.Editor.UI", "Panels", "Workspace", "WorkspaceSelector.axaml.cs");
         Assert.Contains("XYWorkspaceSwitcher", selector + code);
         Assert.DoesNotContain("Command=\"{Binding ToggleEditorModeCommand}\"", selector);
         Assert.DoesNotContain("XYMenuBarItem", selector);

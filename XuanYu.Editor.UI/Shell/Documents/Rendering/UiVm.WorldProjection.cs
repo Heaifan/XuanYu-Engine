@@ -4,52 +4,7 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    IReadOnlyList<EditorTreeNode> BuildHierarchyItems()
-    {
-        var liveKeys = new HashSet<string>(StringComparer.Ordinal);
-        var items = new List<EditorTreeNode>();
-        foreach (var group in _sceneState.Entities
-            .GroupBy(item => item.RegionKey)
-            .OrderBy(item => item.Key.ToString()))
-        {
-            var region = EditorDisplayText.Region(group.Key);
-            items.Add(Node(liveKeys, group.Key.ToString(), region, "Region",
-                $"主世界/{region}", 0, "region"));
-            items.AddRange(group.OrderBy(entity => entity.EntityKey.Value).Select(entity =>
-                Node(liveKeys, entity.EntityKey.ToString(), entity.Name,
-                    EditorDisplayText.EntityType(entity.Type),
-                    $"主世界/{region}/{EditorDisplayText.Entity(entity.EntityKey)}", 1, "entity")));
-        }
-        PruneHierarchyNodeCache(liveKeys);
-        return TreeGuideBuilder.Visible(items, _collapsedHierarchyKeys);
-    }
-
-    EditorTreeNode Node(
-        HashSet<string> liveKeys,
-        string key,
-        string title,
-        string type,
-        string path,
-        int level,
-        string icon)
-    {
-        liveKeys.Add(key);
-        if (!_hierarchyNodeCache.TryGetValue(key, out var node))
-        {
-            node = new EditorTreeNode(key, title, type, path, level, icon);
-            _hierarchyNodeCache.Add(key, node);
-        }
-        else node.Update(title, type, path, level, icon);
-        return node;
-    }
-
-    void PruneHierarchyNodeCache(HashSet<string> liveKeys)
-    {
-        foreach (var key in _hierarchyNodeCache.Keys
-            .Where(key => !liveKeys.Contains(key))
-            .ToArray())
-            _hierarchyNodeCache.Remove(key);
-    }
+    IReadOnlyList<EditorTreeNode> BuildHierarchyItems() => _projectTreePresenter.BuildHierarchy(_sceneState.Entities);
 
     bool TrySelectedEntityKey(out EntityId key)
     {

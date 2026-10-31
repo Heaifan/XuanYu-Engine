@@ -4,14 +4,13 @@ public sealed partial class UiVm
 {
     public void ToggleProjectNode(EditorTreeNode node)
     {
-        if (_projectTreePresenter.Toggle(node)) OnPropertyChanged(nameof(ProjectItems));
+        if (_projectTreePresenter.Toggle(node))
+            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(ProjectItems)));
     }
-    public void ToggleHierarchyNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedHierarchyKeys, nameof(HierarchyItems));
-    void ToggleTreeNode(EditorTreeNode node, HashSet<string> collapsed, string propertyName)
+    public void ToggleHierarchyNode(EditorTreeNode node)
     {
-        if (!node.CanToggle) return;
-        if (!collapsed.Add(node.Key)) collapsed.Remove(node.Key);
-        OnPropertyChanged(propertyName);
+        if (_projectTreePresenter.ToggleHierarchy(node))
+            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(HierarchyItems)));
     }
 
     bool TryRequestFileCommand(string name)

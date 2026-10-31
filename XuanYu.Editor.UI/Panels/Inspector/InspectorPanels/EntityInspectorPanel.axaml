@@ -20,7 +20,7 @@
     <xy:XYToggleButton Content="基础" IsChecked="{Binding IsInspectorBasicExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Basic" HorizontalAlignment="Stretch"/>
     <Grid x:Name="BaseInfoGrid" IsVisible="{Binding IsInspectorBasicExpanded}" ColumnDefinitions="80,*" RowDefinitions="Auto,Auto" ColumnSpacing="8">
       <xy:XYLabel Text="名称" VerticalAlignment="Center"/>
-      <xy:XYTextField x:Name="NameBox" Grid.Column="1" Text="{Binding InspectorEntityNameText, Mode=TwoWay}"/>
+      <xy:XYTextField x:Name="NameBox" Grid.Column="1" Text="{Binding InspectorDraft.EntityNameText, Mode=TwoWay}"/>
       <xy:XYLabel Grid.Row="1" Text="类型" VerticalAlignment="Center"/>
       <xy:XYText Grid.Row="1" Grid.Column="1" Text="Entity"/>
     </Grid>

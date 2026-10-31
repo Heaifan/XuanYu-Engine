@@ -25,6 +25,22 @@ public sealed class test_LayerPresenter
     }
 
     [Fact]
+    public void Presenter_notifies_direct_list_binding_after_refresh_and_selection()
+    {
+        var vm = new UiVm(null, () => true);
+        var presenter = new LayerPresenter();
+        var notifications = new List<string>();
+        var observable = Assert.IsAssignableFrom<System.ComponentModel.INotifyPropertyChanged>(presenter);
+        observable.PropertyChanged += (_, args) => notifications.Add(args.PropertyName!);
+        presenter.Refresh(vm.MapSession.CurrentMap.Layers, vm.MapSession.ActiveRegionLayerId,
+            layer => new MapLayerRowViewModel(vm, layer));
+        presenter.SetSelectedLayer(presenter.Items[0]);
+
+        Assert.Contains(nameof(presenter.Items), notifications);
+        Assert.Contains(nameof(presenter.SelectedLayer), notifications);
+    }
+
+    [Fact]
     public void Clear_selection_removes_layer_display_selection()
     {
         var vm = new UiVm(null, () => true);

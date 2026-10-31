@@ -1,13 +1,10 @@
 namespace XuanYu.World.Tests.World;
 
-using System.Reflection;
 using XuanYu.Editor.UI;
 
 public sealed class UiTreeToggleTests
 {
-    static HashSet<string> CollapsedHierarchyKeys(UiVm vm) =>
-        (HashSet<string>)typeof(UiVm).GetField("_collapsedHierarchyKeys", BindingFlags.NonPublic | BindingFlags.Instance)!
-            .GetValue(vm)!;
+    static IReadOnlySet<string> CollapsedHierarchyKeys(UiVm vm) => vm.ProjectTreePanel.CollapsedHierarchyKeys;
 
     [Fact]
     public void ToggleProjectNode_twice_restores_original_visibility()

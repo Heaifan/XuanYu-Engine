@@ -33,7 +33,8 @@
     </UniformGrid>
     <xy:XYCaption Grid.Row="1" Text="添加至少 2 个用户图层后可拖拽排序" IsVisible="{Binding IsRegionLayerReorderHintVisible}" Margin="0,0,0,4"/>
     <!-- LAYER-A-R1：通用宿主只消费当前 Provider 的可见项目；拖动事件见 LayerPanel.DragDrop.cs -->
-    <ListBox Grid.Row="2" x:Name="LayerList" Classes="layerList" ItemsSource="{Binding CurrentLayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
+    <ListBox Grid.Row="2" x:Name="LayerList" DataContext="{Binding LayerPresentation}" x:DataType="local:LayerPresenter"
+             Classes="layerList" ItemsSource="{Binding VisibleItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
              Background="Transparent" BorderThickness="0" Margin="0,2,0,0" HorizontalAlignment="Stretch">
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="local:MapLayerRowViewModel">
