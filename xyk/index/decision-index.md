@@ -6,3 +6,6 @@
 - `xyk/decisions/xye-xyui-dual-lane-development-model.md` — DEC-XYE-XYUI-DUAL-LANE
 - `xyk/decisions/xyk-knowledge-plane.md` — DEC-XYK-KNOWLEDGE-PLANE
 - `xyk/decisions/architecture-layout-2026-10.md` — DEC-XYE-ARCH-5X5X5-R1 架构目录/命名/XYUI 编号决策
+- `xyk/decisions/terrain-hydrology-2026-10.md` — DEC-XYE-TERRAIN-HYDROLOGY-20261003
+- `xyk/decisions/empty-world-2026-10.md` — DEC-XYE-EMPTY-WORLD-20261003
+- `xyk/decisions/xyc-control-2026-10.md` — DEC-XYE-XYC-CONTROL-20261014

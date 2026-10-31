@@ -107,7 +107,25 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | L-GOV-002 | Lesson | Governance | 目录迁移 STATIC 不代表产品完成 | P0 | E2 | 2026-10-30 | Active |
 | DEC-XYE-ARCH-5X5X5-R1 | Decision | Architecture | 严格三级、5+100、test_ 与 XYUI 编号 | P0 | R1 | 2026-10-24～30 | Active |
 
+| K-DRAW-001 | Knowledge | Input | Drawing Session Snapshot 唯一事实源 | P0 | E2 | 2026-10-04 · 518a0849 | Active |
+| K-DRAW-002 | Knowledge | Input | 绘制Accepted/Rejected/Blocked及Reason | P0 | E2 | 2026-10-04 | Active |
+| K-SPA-004 | Knowledge | Spatial | 相机净空查询只读不得更改观察中心 | P0 | E2 | 2026-10-10 | Active |
+| K-XYC-001 | Knowledge | Automation | XYC语义命令使用Editor权威写线程及Revision | P0 | E2 | 2026-10-14 · 6b19798 | Active |
+| K-XYC-002 | Knowledge | Automation | 自动化截图需同帧身份和GPU完成证据 | P0 | E2 | 2026-10-14～15 · d2d011a | Active |
+| K-XYC-003 | Knowledge | Automation | 写命令成功须核对World Projection History | P0 | E2 | 2026-10-18～19 · fa666cb | Active |
+| K-PERF-002 | Knowledge | Performance | 动态SSE须使用Renderer视锥和SourceRevision | P0 | E2 | 2026-10-18 | Active |
+| DEC-XYE-TERRAIN-HYDROLOGY-20261003 | Decision | Terrain | Base DEM只读和水文Graph局部增量更新 | P0 | Design | 2026-10-03～04 | Active |
+| DEC-XYE-EMPTY-WORLD-20261003 | Decision | Rendering | 逻辑ReferencePlane与可见Grid独立 | P0 | Design | 2026-10-03 | Active |
+| DEC-XYE-XYC-CONTROL-20261014 | Decision | Automation | XYC后台语义控制与权限边界 | P0 | Design | 2026-10-14 | Active |
+
 ## 分类文件
+
+- `xyk/knowledge/2026-10-conversation-recovery.md`：10月历史聊天新增Drawing、XYC、SSE、只读净空知识
+- `xyk/governance/conversation-audit-2026-10-r2.md`：10月逐日追查与证据分级
+- `xyk/governance/conversation-candidates-2026-10-r2.md`：未证实候选单独登记
+- `xyk/decisions/terrain-hydrology-2026-10.md`：Terrain与Hydrology架构裁定
+- `xyk/decisions/empty-world-2026-10.md`：空世界与ReferencePlane边界
+- `xyk/decisions/xyc-control-2026-10.md`：XYC设计边界
 
 - `xyk/knowledge/2026-10-backfill.md`：2026-10-10～31 新知识 K-GOV/K-ARCH/K-WORLD/K-GEO/K-REN/K-UI
 - `xyk/experience/backfill-2026-10.md`：EXP/L-GOV-001～002 与 EXP 强化

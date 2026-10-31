@@ -114,3 +114,7 @@ Dirty dependency 只要参与编译、运行、测试或行为验证，即属于
 ## 2026-10-31 补录常态化
 
 Codex、Gemini 或其他 Agent 的每份任务报告如含 XYK / XYK CANDIDATE 或明确可复用经验，ChatGPT XYK Owner 必须先搜索既有条目，按 CREATE / UPDATE / STRENGTHEN / SUPERSEDE / REJECT / NONE 裁定，并说明 SourceProductCommit 与知识 K Commit 的不同。未推送产品源码的证据须明确保留 - 和局部状态。正式知识修改需同步索引、K Event、远端提交；任何 SourceFingerprint、测试、GPU、Editor、Git 发布事实未经验证不得从报告自动推断。当前补录范围及待补证清单见 xyk/governance/backfill-2026-10-r1.md。
+
+## 2026-10-31 R2 历史对话反向审计与专用候选登记
+
+通过定向检索10月份聊天历史生成R2审计，分别保存已批准且可追溯知识与尚未验证的Candidate，不得把候选变成ACTIVE或事故已证实。审计记录见 xyk/governance/conversation-audit-2026-10-r2.md，待核验候选见 xyk/governance/conversation-candidates-2026-10-r2.md。下一轮Codex开始之前，需核对产品仓既有文档约定，将XYK草案写入专用Changelog，而不是发布CHANGELOG；该草案由ChatGPT知识Owner去重裁决后才正式写入xyk/main并给K Commit回执。历史曾拟用K-REN-006命名ReferencePlane规则，与现正式Renderer K-REN-006冲突，已收敛至K-REN-004，禁止重新分配。
