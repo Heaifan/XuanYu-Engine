@@ -35,7 +35,7 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-VAL-002 | Knowledge | Engineering | UI/Native 功能必须分层验收 | P0 | E2 | v0.2.24.50-fix · 2026-08-09 19:42:41 · 60fd339 | Active |
 | L-VAL-001 | Lesson | Engineering | 修复存在但真机完全不变时先证明运行时实际路由 | P0 | E1 | MAP-DATA-A-R2-F2-F2-F1 · 2026-08-12 · 3d53de0 | Active |
 | L-NATIVE-001 | Lesson | Rendering | Native/Avalonia UI 问题连续两次局部 Placement 修复失败后审查 Airspace 与 Ownership | P0 | E2 | Diagnostic + Viewport R1 · 2026-09-25 | Active |
-| L-TEST-001 | Lesson | Engineering | 测试使用自己制造的错误平台前提时绿灯更危险 | P0 | E2 | Region Snap R1 · 2026-09-25 | Active |
+| L-TEST-001 | Lesson | Engineering | 测试假绿与迁移路径链验证（Test、AXAML、MSBuild Manifest） | P0 | E2 | Region Snap R1 · 2026-09-25；Editor BUILD-01-R2-001 / BUILD-02 · 2026-10-31 | Active |
 | K-GOV-001 | Knowledge | Engineering | 历史唯一身份以 Commit Hash 为准 | P0 | E2 | SHR-2026-08-R2 · 涉及 3 组重复版本 | Active |
 | K-GOV-002 | Knowledge | Engineering | 治理成果必须建立自动防回潮门禁 | P1 | E3 | 8.8-0 · 2026-06-23 23:09:45 · 4c4d82c | Active |
 | K-SPA-001 | Knowledge | Architecture | 大地图 Screen↔World CPU 链使用双精度并做往返验证 | P0 | E2 | v0.2.25.12-rz · 2026-08-10 12:20:03 · 0594c4c | Active |
@@ -90,3 +90,5 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 ### Knowledge Preflight helper
 
 `tools/governance/knowledge-preflight.ps1` 是只读定位工具。它接受 `-Phase Planning|Execution`、`-Domain` 与 `-Keywords`，只输出索引命中、候选 ID 和对应文件路径，不替 Agent 读取正文、判断冲突或执行 Supersede。`knowledge-preflight.selftest.ps1` 固定验证 Rendering / Grid / Depth 的关键候选与无匹配查询。
+
+> 2026-10-31 Coordinator Review：`XYK-CAND-20261031-EDITOR-BUILD-01-R2-001` → **STRENGTHEN `L-TEST-001`**，正式新增段落在 `docs/knowledge/lessons.md` / `xyk/experience/lessons.md`，审计回执 `xyk/governance/review-editor-build-01-r2-001.md`。产品本地候选 Changelog 仍为 PENDING / 未提交，不可视作自动同步。
