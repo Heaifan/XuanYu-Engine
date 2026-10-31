@@ -51,7 +51,7 @@ public sealed partial class UiVm
 
     public bool BeginRenameSelectedEntity()
     {
-        if (HasBlockingInput || _selectedHierarchyItem is not { IsEntity: true } node) return false;
+        if (HasBlockingInput || SelectedHierarchyItem is not { IsEntity: true } node) return false;
         node.BeginRename();
         return true;
     }

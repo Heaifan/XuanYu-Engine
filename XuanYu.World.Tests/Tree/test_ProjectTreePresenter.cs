@@ -33,6 +33,19 @@ public sealed class test_ProjectTreePresenter
     }
 
     [Fact]
+    public void Hierarchy_selection_is_owned_by_the_tree_presenter()
+    {
+        var presenter = new ProjectTreePresenter();
+        var node = new EditorTreeNode("entity", "实体", "对象", "场景/实体", 1, "entity");
+
+        Assert.True(presenter.SetSelectedHierarchyItem(node));
+        Assert.Same(node, presenter.SelectedHierarchyItem);
+        Assert.False(presenter.SetSelectedHierarchyItem(node));
+        Assert.True(presenter.SetSelectedHierarchyItem(null));
+        Assert.Null(presenter.SelectedHierarchyItem);
+    }
+
+    [Fact]
     public void UiVm_keeps_project_tree_notification_name_and_entity_selection()
     {
         var vm = new UiVm(null, () => true, seedInitialScene: false);

@@ -2,44 +2,29 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    bool _isSynchronizingSelectionProjection;
-    int _selectionCommitDepth, _hierarchySelectionDepth, _projectionSyncDepth;
-
     void ApplySelection(string source, EditorTreeNode node)
     {
-        if (HasBlockingInput) return;
-        _selectionCommitDepth++;
-        TraceSelection("选择提交", _selectionCommitDepth, $"来源={source}；键={node.Key}");
-        CancelInteraction("切换选择对象");
-        try
-        {
-            var command = new SelectEditorItemCommand(
-                source, node.Key, node.Title, node.Type, node.Path);
-            XuanYu.Core.Identity.EntityId? activeEntity =
-                TryEntityKey(node.Key, out var key) ? key : null;
-            var transition = _selectionCoordinator.Select(command, activeEntity);
-            if (transition.Changed is null && !transition.ActiveEntityChanged) return;
-            RaiseSelectionChanged();
-            if (transition.Changed is not null) LogSelectionCommit(command, transition.Changed);
-            FooterMessage = $"{source}已选择：{SelectionTitle}";
-            FooterState = "状态：就绪";
-
-        }
-        finally
-        {
-            TraceSelection("选择提交完成", _selectionCommitDepth, $"键={node.Key}");
-            _selectionCommitDepth--;
-        }
+        var command = new SelectEditorItemCommand(source, node.Key, node.Title, node.Type, node.Path);
+        XuanYu.Core.Identity.EntityId? activeEntity = TryEntityKey(node.Key, out var key) ? key : null;
+        var transition = _selectionCoordinator.Select(command, activeEntity, HasBlockingInput,
+            () => CancelInteraction("切换选择对象"),
+            depth => TraceSelection("选择提交", depth, $"来源={source}；键={node.Key}"),
+            depth => TraceSelection("选择提交完成", depth, $"键={node.Key}"));
+        if (transition is null || transition.Changed is null && !transition.ActiveEntityChanged) return;
+        RaiseSelectionChanged();
+        if (transition.Changed is not null) LogSelectionCommit(command, transition.Changed);
+        FooterMessage = $"{source}已选择：{SelectionTitle}";
+        FooterState = "状态：就绪";
     }
 
     void ApplyClearSelection()
     {
-        if (SelectedProjectItem is not null || _selectedHierarchyItem is not null) return;
+        if (SelectedProjectItem is not null || SelectedHierarchyItem is not null) return;
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "树节点清空");
     }
     void SetProjectSelection(EditorTreeNode? value)
     {
-        if (HasBlockingInput && !_isSynchronizingSelectionProjection) return;
+        if (HasBlockingInput && !_selectionCoordinator.IsSynchronizingProjection) return;
         var already = SelectedProjectItem == value;
         if (!_projectTreePresenter.SetSelectedItem(value))
         {
@@ -49,8 +34,7 @@ public sealed partial class UiVm
         SetSelectedNodeKey(value?.Key ?? "");
         if (value is null)
         {
-            _selectedHierarchyItem = null;
-            OnPropertyChanged(nameof(SelectedHierarchyItem));
+            if (_projectTreePresenter.SetSelectedHierarchyItem(null)) OnPropertyChanged(nameof(SelectedHierarchyItem));
             ApplyClearSelection();
             return;
         }
@@ -60,15 +44,16 @@ public sealed partial class UiVm
 
     void SetHierarchySelection(EditorTreeNode? value)
     {
-        if (HasBlockingInput && !_isSynchronizingSelectionProjection) return;
-        _hierarchySelectionDepth++;
-        TraceSelection("层级选择", _hierarchySelectionDepth, $"键={value?.Key ?? "空"}");
+        if (HasBlockingInput && !_selectionCoordinator.IsSynchronizingProjection) return;
+        _selectionCoordinator.BeginHierarchySelection();
+        TraceSelection("层级选择", _selectionCoordinator.HierarchySelectionDepth, $"键={value?.Key ?? "空"}");
         try
         {
-            var already = _selectedHierarchyItem == value;
-            if (!Set(ref _selectedHierarchyItem, value, nameof(SelectedHierarchyItem)) && !already) return;
+            var already = SelectedHierarchyItem == value;
+            if (!_projectTreePresenter.SetSelectedHierarchyItem(value) && !already) return;
+            if (!already) OnPropertyChanged(nameof(SelectedHierarchyItem));
             SetSelectedNodeKey(value?.Key ?? "");
-            if (_isSynchronizingSelectionProjection) return;
+            if (_selectionCoordinator.IsSynchronizingProjection) return;
             if (value is null)
             {
                 if (_projectTreePresenter.SetSelectedItem(null)) OnPropertyChanged(nameof(SelectedProjectItem));
@@ -80,8 +65,8 @@ public sealed partial class UiVm
         }
         finally
         {
-            TraceSelection("层级选择完成", _hierarchySelectionDepth, $"键={value?.Key ?? "空"}");
-            _hierarchySelectionDepth--;
+            TraceSelection("层级选择完成", _selectionCoordinator.HierarchySelectionDepth, $"键={value?.Key ?? "空"}");
+            _selectionCoordinator.EndHierarchySelection();
         }
     }
 

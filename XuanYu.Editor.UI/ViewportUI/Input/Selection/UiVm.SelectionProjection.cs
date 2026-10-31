@@ -4,43 +4,24 @@ public sealed partial class UiVm
 {
     void SynchronizeSelectionProjection()
     {
-        if (_isSynchronizingSelectionProjection) return;
-        _isSynchronizingSelectionProjection = true;
-        _projectionSyncDepth++;
-        TraceSelection("选择投影同步", _projectionSyncDepth,
+        TraceSelection("选择投影同步", _selectionCoordinator.ProjectionSyncDepth,
             $"选择={_editorState.Snapshot.SelectionKey}");
-        try
-        {
-            var key = _editorState.Snapshot.HasSelection ? _editorState.Snapshot.SelectionKey : "";
-            var project = ProjectItems.FirstOrDefault(item => item.Key == key);
-            var hierarchy = BuildHierarchyItems().FirstOrDefault(item => item.Key == key);
-            var projection = hierarchy ?? project;
-            SetSelectedNodeKey(key);
-            var changed = projection is null
-                ? null
-                : _editorState.Select(new SelectEditorItemCommand(
-                    "投影刷新",
-                    projection.Key,
-                    projection.Title,
-                    projection.Type,
-                    projection.Path));
-            if (_projectTreePresenter.SetSelectedItem(project)) OnPropertyChanged(nameof(SelectedProjectItem));
-            Set(ref _selectedHierarchyItem, hierarchy, nameof(SelectedHierarchyItem));
-            if (changed is not null)
-            {
-                OnPropertyChanged(nameof(SelectionTitle));
-                OnPropertyChanged(nameof(SelectionSubtitle));
-                OnPropertyChanged(nameof(SelectionPath));
-                OnPropertyChanged(nameof(SelectionKey));
-            }
-        }
-        finally
-        {
-            TraceSelection("选择投影同步完成", _projectionSyncDepth,
-                $"选择={_editorState.Snapshot.SelectionKey}");
-            _projectionSyncDepth--;
-            _isSynchronizingSelectionProjection = false;
-        }
+        var key = _editorState.Snapshot.HasSelection ? _editorState.Snapshot.SelectionKey : "";
+        var project = ProjectItems.FirstOrDefault(item => item.Key == key);
+        var hierarchy = BuildHierarchyItems().FirstOrDefault(item => item.Key == key);
+        _selectionCoordinator.SynchronizeProjection(key, project, hierarchy, SetSelectedNodeKey,
+            () => OnPropertyChanged(nameof(SelectedProjectItem)),
+            () => OnPropertyChanged(nameof(SelectedHierarchyItem)), NotifySelectionMetadata);
+        TraceSelection("选择投影同步完成", _selectionCoordinator.ProjectionSyncDepth,
+            $"选择={_editorState.Snapshot.SelectionKey}");
+    }
+
+    void NotifySelectionMetadata()
+    {
+        OnPropertyChanged(nameof(SelectionTitle));
+        OnPropertyChanged(nameof(SelectionSubtitle));
+        OnPropertyChanged(nameof(SelectionPath));
+        OnPropertyChanged(nameof(SelectionKey));
     }
 
     void LogSelectionCommit(SelectEditorItemCommand command, EditorStateChangedResult changed)
@@ -54,8 +35,14 @@ public sealed partial class UiVm
 
     void RaiseSelectionChanged()
     {
-        SynchronizeSelectionProjection();
-        RefreshInspectorEntityProjection();
+        _selectionCoordinator.PublishSelectionChange(
+            SynchronizeSelectionProjection, RefreshInspectorEntityProjection,
+            NotifySelectionBindings, RaiseInspectorSelectionBindings,
+            NotifySelectionCommands, PublishSceneRenderSnapshot);
+    }
+
+    void NotifySelectionBindings()
+    {
         OnPropertyChanged(nameof(SelectionTitle));
         OnPropertyChanged(nameof(SelectionSubtitle));
         OnPropertyChanged(nameof(SelectionPath));
@@ -69,10 +56,12 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InspectorSelectionSubtitle));
         OnPropertyChanged(nameof(InspectorSectionTitle));
         OnPropertyChanged(nameof(InspectorFields));
-        RaiseInspectorSelectionBindings();
+    }
+
+    void NotifySelectionCommands()
+    {
         OnPropertyChanged(nameof(HasTransformableSelection));
         OnPropertyChanged(nameof(CanTransformSelectedEntity));
         (SelectToolCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        PublishSceneRenderSnapshot();
     }
 }

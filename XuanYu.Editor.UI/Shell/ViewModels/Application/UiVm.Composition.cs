@@ -34,7 +34,7 @@ public sealed partial class UiVm
         _editorState = new EditorStateOwner(isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         _contextState = new EditorContextOwner(); _authoringState = new EditorAuthoringOwner();
         _sceneState = sceneState; _worldMutation = sceneState;
-        _selectionCoordinator = new SelectionCoordinator(_editorState, _sceneState);
+        _selectionCoordinator = new SelectionCoordinator(_editorState, _sceneState, _projectTreePresenter);
         _saveTransaction = new SceneDocumentSaveTransaction(_sceneStorage);
         _loadTransaction = new SceneDocumentLoadTransaction(_sceneStorage, new GlbImportService(), _partitionStrategy);
         _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();

@@ -9,6 +9,7 @@ internal sealed class ProjectTreePresenter
     readonly EditorTreeNode _scene = new("scene:current", "未命名场景", "场景", "未命名场景", 0, "project");
 
     public EditorTreeNode? SelectedItem { get; private set; }
+    public EditorTreeNode? SelectedHierarchyItem { get; private set; }
     public IReadOnlySet<string> CollapsedKeys => _collapsed;
 
     public IReadOnlyList<EditorTreeNode> Build(
@@ -35,6 +36,13 @@ internal sealed class ProjectTreePresenter
     {
         if (SelectedItem == node) return false;
         SelectedItem = node;
+        return true;
+    }
+
+    public bool SetSelectedHierarchyItem(EditorTreeNode? node)
+    {
+        if (SelectedHierarchyItem == node) return false;
+        SelectedHierarchyItem = node;
         return true;
     }
 
