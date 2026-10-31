@@ -25,7 +25,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     readonly HashSet<string> _collapsedHierarchyKeys = new(StringComparer.Ordinal);
     EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
-    string _footerMessage = "已就绪。当前为空白未命名场景。", _footerState = "状态：就绪";
+    string _footerMessage = "已就绪。当前为空白未命名场景。";
     bool _isLogOpen;
     public event PropertyChangedEventHandler? PropertyChanged;
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }
@@ -58,7 +58,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     public string SelectedNodeKey => _selectedNodeKey;
     public string FooterMessage { get => _footerMessage; private set => Set(ref _footerMessage, value); }
     public string FooterMode => ApplicationState.StatusLabel;
-    public string FooterState { get => _footerState; private set => SetFooterState(value); }
+    public string FooterState { get => _documentStatusPresenter.FooterState; private set => _documentStatusPresenter.SetFooterState(value); }
     public bool HasSelection => _editorState.Snapshot.HasSelection;
     public bool IsEmptySelection => !HasSelection;
     public EditorTreeNode? SelectedProjectItem { get => _selectedProjectItem; set => SetProjectSelection(value); }

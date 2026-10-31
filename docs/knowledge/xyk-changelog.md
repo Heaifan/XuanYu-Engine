@@ -290,3 +290,12 @@
 - Existing Handoff: XYK-CAND-20261031-EDITOR-BUILD-01-R2-001 remains PENDING; proposed STRENGTHEN target L-TEST-001 in docs/knowledge/lessons.md, with index path docs/knowledge/knowledge-index.md. Submitted to XYK Coordinator for formal entry and receipt; no formal knowledge files changed by this task.
 - XYK: NONE (no additional reusable rule identified; existing pending handoff is tracked separately).
 - Verification Boundary: Targeted release compile and tests only. A broader initial UiD5 filter selected 19 unrelated source-contract tests that still point at the removed XuanYu.Editor.UI/Win/UiWin.SceneCommands.cs path; exact responsibility filters passed. No full suite, startup smoke, staging, commit, or push.
+
+### TASK XYE-EDITOR-UIVM-R2-DOCSTATUS — XYK NONE
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; Parent=6232519f0a1481259a48f6cba3564d0187f782d4; Root untracked file `5` remains preserved and excluded.
+- Changes: Added DocumentStatusPresenter owning footer status, scene-busy state, transient status lifetime, and derived save/status projections. UiVm retains existing AXAML-facing properties and forwarding methods; footer storage and busy/token state now have a single presenter owner. Scene save transaction remains in UiVm.
+- Evidence: Release build of XuanYu.World.Tests.csproj succeeded with 0 warnings / 0 errors. Focused DocumentStatusPresenter, SceneDocument, and UiMapDatasetRegionToolActivation tests passed 15/15. Presenter tests assert dirty/busy projection and notification forwarding.
+- Known Risk: Presenter notifications remain synchronous on the mutating caller thread; UI-thread dispatch safety remains unproven. No startup smoke or visual acceptance was run.
+- XYK: NONE (task-local ownership extraction; no new reusable rule identified). Existing L-TEST-001 STRENGTHEN handoff remains pending Coordinator receipt.
+- Verification Boundary: One scoped Release build and named focused tests only; no full suite or post-change application launch.

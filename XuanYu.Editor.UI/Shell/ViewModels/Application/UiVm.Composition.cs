@@ -29,6 +29,8 @@ public sealed partial class UiVm
     {
         ViewportProbe.RefreshLoadedAssemblies();
         ArgumentNullException.ThrowIfNull(sceneState); ArgumentNullException.ThrowIfNull(mapSession);
+        _documentStatusPresenter = new DocumentStatusPresenter(() => IsSceneDirty);
+        _documentStatusPresenter.PropertyChanged += (_, args) => OnPropertyChanged(args.PropertyName);
         _editorState = new EditorStateOwner(isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         _contextState = new EditorContextOwner(); _authoringState = new EditorAuthoringOwner();
         _sceneState = sceneState; _worldMutation = sceneState;
