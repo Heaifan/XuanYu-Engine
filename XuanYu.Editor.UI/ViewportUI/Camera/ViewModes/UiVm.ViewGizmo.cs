@@ -39,7 +39,7 @@ public sealed partial class UiVm
             _camera.VerticalFovDegrees,
             _camera.NearPlane,
             _camera.FarPlane,
-            ++_cameraRevision,
+            _cameraController.NextRevision(),
             ProjectionMode.Orthographic,
             scale);
         ApplyCameraFrame(new(next, center), "ModeChange");

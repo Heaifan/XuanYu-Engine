@@ -41,7 +41,7 @@ public sealed partial class UiVm
             result = ConstrainDollyToTerrain(result, wheelDelta);
             constrained = result.Camera.Position != unconstrainedPosition;
         }
-        _cameraRevision = result.Camera.Revision;
+        _cameraController.AcceptRevision(result.Camera.Revision);
         ApplyCameraResult(result);
         TraceFarDolly(new(_camera, _observationCenter));
         return true;

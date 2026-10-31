@@ -66,7 +66,7 @@ public sealed partial class UiVm
     }
     void PublishSceneRenderSnapshot()
     {
-        _camera = RefreshFarPlanePolicyForGeometryChange(_camera);
+        _cameraController.SetCamera(RefreshFarPlanePolicyForGeometryChange(_camera));
         UpdateScaleIndicator();
         var snapshot = RenderSnapshot;
         TraceRenderSnapshotPublish(snapshot.Entities.Count);

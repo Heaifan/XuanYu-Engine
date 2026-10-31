@@ -11,19 +11,18 @@ public sealed record NavigationCameraSnapshot(
 
 public sealed partial class UiVm
 {
-    CameraState _camera = DefaultEditorCamera.Create(1);
-    Vector3d _observationCenter = DefaultEditorCamera.Target;
-    double _viewportAspect = 16.0 / 9.0;
-    double _viewportDpiScale = 1.0;
-    long _cameraRevision = 1;
-    bool _viewportCameraFramed;
+    CameraState _camera => _cameraController.Camera;
+    Vector3d _observationCenter => _cameraController.ObservationCenter;
+    double _viewportAspect => _cameraController.Aspect;
+    double _viewportDpiScale => _cameraController.DpiScale;
+    long _cameraRevision => _cameraController.Revision;
+    bool _viewportCameraFramed => _cameraController.IsFramed;
+    CameraSessionSnapshot? _cameraSession => _cameraController.Session;
 
     // F3-F1：DPI 更新（导航 Gizmo Overlay 用 DIP→像素换算；默认 1.0）。
     public void UpdateViewportDpi(double dpiScale)
     {
-        if (!double.IsFinite(dpiScale) || dpiScale <= 0.0) return;
-        if (System.Math.Abs(_viewportDpiScale - dpiScale) < 0.001) return;
-        _viewportDpiScale = dpiScale;
+        if (!_cameraController.SetDpiScale(dpiScale)) return;
         if (_lastViewport is { } viewport)
             _lastViewport = new ViewportState(viewport.LogicalX, viewport.LogicalY,
                 viewport.LogicalWidth, viewport.LogicalHeight,
@@ -54,7 +53,7 @@ public sealed partial class UiVm
             global::System.Math.Abs(_viewportAspect - ((double)width / height)) > 0.000001;
         if (_cameraSession is not null && aspectChanged)
             CancelCameraNavigation("Resize");
-        _viewportAspect = (double)width / height;
+        _cameraController.SetAspect((double)width / height);
         var physicalW = Math.Max(1, (int)Math.Round(width * _viewportDpiScale));
         var physicalH = Math.Max(1, (int)Math.Round(height * _viewportDpiScale));
         _lastViewport = new ViewportState(0, 0, width, height, physicalW, physicalH,
@@ -65,7 +64,7 @@ public sealed partial class UiVm
             PublishSceneRenderSnapshot();
             return;
         }
-        _viewportCameraFramed = true;
+        _cameraController.MarkFramed();
         FrameAllCamera("启动看全");
     }
 
@@ -74,14 +73,14 @@ public sealed partial class UiVm
         if (frameEntities)
         {
             var frame = EditorCameraFraming.FrameAllWithCenter(
-                _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position), _viewportAspect, ++_cameraRevision);
+                _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position), _viewportAspect, _cameraController.NextRevision());
             ApplyCameraFrame(frame, "FrameAll");
         }
         else
         {
-            ApplyCameraFrame(new(DefaultEditorCamera.Create(++_cameraRevision), DefaultEditorCamera.Target), "ViewReset");
+            ApplyCameraFrame(new(DefaultEditorCamera.Create(_cameraController.NextRevision()), DefaultEditorCamera.Target), "ViewReset");
         }
-        _viewportCameraFramed = true;
+        _cameraController.MarkFramed();
         PublishSceneRenderSnapshot();
     }
 }

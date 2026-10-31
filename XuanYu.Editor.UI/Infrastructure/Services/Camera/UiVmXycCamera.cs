@@ -30,10 +30,10 @@ public sealed partial class UiVm
         if (!Dispatcher.UIThread.CheckAccess())
             throw new InvalidOperationException("相机写入必须位于 UI 线程。");
         var mode = Enum.Parse<ProjectionMode>(pose.Mode);
-        _cameraRevision = Math.Max(_cameraRevision, _camera.Revision) + 1;
+        var revision = _cameraController.NextRevisionAfter(_camera.Revision);
         var next = new CameraState(ToCore(pose.Position), ToCore(pose.Forward),
             ToCore(pose.Up), pose.FovDegrees, pose.NearPlane, pose.FarPlane,
-            _cameraRevision, mode, pose.OrthographicScale);
+            revision, mode, pose.OrthographicScale);
         ApplyCameraFrame(new(next, ToCore(pose.ObservationCenter)), "XYC Test Pose");
         PublishSceneRenderSnapshot();
         return ReadXycCamera();

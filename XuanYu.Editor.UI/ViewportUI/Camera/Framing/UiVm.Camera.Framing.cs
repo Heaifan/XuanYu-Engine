@@ -26,10 +26,10 @@ public sealed partial class UiVm
             ? EditorCameraFraming.FrameOrthographicWithCenter(
                 _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position),
                 _camera.Forward, _camera.Up, _viewportAspect,
-                _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision)
+                _camera.Position.DistanceTo(_observationCenter), _cameraController.NextRevision())
             : EditorCameraFraming.FrameAllWithCenter(
                 _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position),
-                _viewportAspect, ++_cameraRevision);
+                _viewportAspect, _cameraController.NextRevision());
         ApplyCameraFrame(frame, "FrameAll");
         PublishSceneRenderSnapshot();
         FooterMessage = $"{source}：当前可见实体已进入视野。";
@@ -46,8 +46,8 @@ public sealed partial class UiVm
         if (points.Length == 0) return;
         var frame = _camera.Mode == ProjectionMode.Orthographic
             ? EditorCameraFraming.FrameOrthographicWithCenter(points, _camera.Forward, _camera.Up,
-                _viewportAspect, _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision)
-            : EditorCameraFraming.FrameAllWithCenter(points, _viewportAspect, ++_cameraRevision);
+                _viewportAspect, _camera.Position.DistanceTo(_observationCenter), _cameraController.NextRevision())
+            : EditorCameraFraming.FrameAllWithCenter(points, _viewportAspect, _cameraController.NextRevision());
         if (entities.Length == 0) frame = GroundTerrainFrame(frame, resources);
         ApplyCameraFrame(frame, "FrameTerrain");
         PublishSceneRenderSnapshot();
@@ -73,9 +73,9 @@ public sealed partial class UiVm
         var frame = _camera.Mode == ProjectionMode.Orthographic
             ? EditorCameraFraming.FrameOrthographicWithCenter(
                 [entity.Transform.Position], _camera.Forward, _camera.Up, _viewportAspect,
-                _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision)
+                _camera.Position.DistanceTo(_observationCenter), _cameraController.NextRevision())
             : EditorCameraFraming.FrameSelectedWithCenter(
-                entity.Transform.Position, _viewportAspect, ++_cameraRevision);
+                entity.Transform.Position, _viewportAspect, _cameraController.NextRevision());
         ApplyCameraFrame(frame, "Focus");
         PublishSceneRenderSnapshot();
         FooterMessage = $"聚焦：{EditorDisplayText.Entity(EntityId.FromInt(key.Value))} 已进入视野。";

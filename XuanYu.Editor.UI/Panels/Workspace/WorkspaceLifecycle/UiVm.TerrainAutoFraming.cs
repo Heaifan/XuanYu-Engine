@@ -21,11 +21,11 @@ public sealed partial class UiVm
         var frame = _camera.Mode == ProjectionMode.Orthographic
             ? EditorCameraFraming.FrameOrthographicWithCenter(points, _camera.Forward,
                 _camera.Up, _viewportAspect, _camera.Position.DistanceTo(_observationCenter),
-                ++_cameraRevision)
-            : EditorCameraFraming.FrameAllWithCenter(points, _viewportAspect, ++_cameraRevision);
+                _cameraController.NextRevision())
+            : EditorCameraFraming.FrameAllWithCenter(points, _viewportAspect, _cameraController.NextRevision());
         frame = GroundTerrainFrame(frame, resources.ToArray());
         ApplyCameraFrame(frame, "FrameTerrain");
-        _viewportCameraFramed = true;
+        _cameraController.MarkFramed();
         PublishSceneRenderSnapshot();
     }
 

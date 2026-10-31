@@ -17,8 +17,8 @@ public sealed partial class UiVm
         var frame = _camera.Mode == ProjectionMode.Orthographic
             ? EditorCameraFraming.FrameOrthographicWithCenter(
                 points, _camera.Forward, _camera.Up, _viewportAspect,
-                _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision, 75.0)
-            : EditorCameraFraming.FrameDraftWithCenter(points, _viewportAspect, ++_cameraRevision);
+                _camera.Position.DistanceTo(_observationCenter), _cameraController.NextRevision(), 75.0)
+            : EditorCameraFraming.FrameDraftWithCenter(points, _viewportAspect, _cameraController.NextRevision());
         ApplyCameraFrame(frame, "FrameDraft");
         PublishSceneRenderSnapshot();
         FooterMessage = "聚焦：当前区域草稿已进入视野。";

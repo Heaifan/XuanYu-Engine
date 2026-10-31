@@ -7,46 +7,34 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    CameraSessionSnapshot? _cameraSession;
-    long _cameraSessionRevision;
     public Vector3d ObservationCenter => _observationCenter;
     public bool IsCameraNavigationActive => _cameraSession is not null;
     public bool BeginCameraNavigation(long pointerId, double x, double y, bool shift, int width, int height)
     {
-        if (_cameraSession is not null || _editorState.InteractionSnapshot.HasCapture) return false;
-        if (width <= 0 || height <= 0 || x < 0 || y < 0 || x > width || y > height) return false;
+        if (_editorState.InteractionSnapshot.HasCapture) return false;
         var mode = shift ? CameraSessionMode.Pan : CameraSessionMode.Orbit;
         var orbit = mode == CameraSessionMode.Orbit ? ResolveOrbitPivot() : null;
-        FrozenOrbitSession? frozenOrbit = null;
-        if (orbit is not null && !FrozenOrbitSession.TryBegin(_camera, orbit.Pivot, out frozenOrbit)) return false;
-        _cameraSession = new CameraSessionSnapshot(++_cameraSessionRevision, pointerId, mode, x, y, _camera,
-            _observationCenter, width, height, frozenOrbit);
-        if (orbit is not null) StartOrbitProbe(_cameraSession.SessionId, orbit);
+        if (!_cameraController.TryBeginNavigation(pointerId, x, y, mode, width, height, orbit)) return false;
+        var session = _cameraSession!;
+        if (orbit is not null) StartOrbitProbe(session.SessionId, orbit);
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture, "相机会话开始",
-            $"模式={mode}；会话={_cameraSession.SessionId}");
+            $"模式={mode}；会话={session.SessionId}");
 
         return true;
     }
     public bool PreviewCameraNavigation(long pointerId, double x, double y)
     {
-        if (_cameraSession is not { } session || session.PointerId != pointerId) return false;
-        var dx = x - session.StartX;
-        var dy = y - session.StartY;
-        CameraFrameResult result;
-        var ok = session.Mode == CameraSessionMode.Orbit
-            ? TryPreviewFrozenOrbit(session, dx, dy, out result)
-            : CameraNavigation.TryPan(session.StartCamera, session.StartCenter, dx, dy,
-                session.Height, _cameraRevision + 1, out result, out _);
-        if (!ok) return false;
-        _cameraRevision = result.Camera.Revision;
+        if (!_cameraController.TryPreviewNavigation(pointerId, x, y,
+            out var result, out var dx, out var dy)) return false;
+        if (_cameraSession?.Mode == CameraSessionMode.Orbit)
+            AddFrozenOrbitProbe(OrbitProbePhase.Move, new(dx, dy, 0));
         ApplyCameraResult(result);
         return true;
     }
     public bool EndCameraNavigation(long pointerId)
     {
-        if (_cameraSession is not { } session || session.PointerId != pointerId) return false;
+        if (!_cameraController.TryEndNavigation(pointerId, out var session)) return false;
         if (session.Mode == CameraSessionMode.Orbit) EndFrozenOrbit();
-        _cameraSession = null;
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture, "相机会话结束",
             $"模式={session.Mode}；会话={session.SessionId}");
 
@@ -54,24 +42,14 @@ public sealed partial class UiVm
     }
     public bool CancelCameraNavigation(string reason)
     {
-        if (_cameraSession is not { } session) return false;
+        if (!_cameraController.TryCancelNavigation(out var session, out var restore)) return false;
         if (session.Mode == CameraSessionMode.Orbit) EndFrozenOrbit();
-        ApplyCameraFrame(new(session.StartCamera, session.StartCenter), "ViewReset");
-        _cameraSession = null;
+        ApplyCameraFrame(restore, "ViewReset");
         PublishSceneRenderSnapshot();
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture, "相机会话已取消",
             $"原因={reason}；会话={session.SessionId}");
 
         return true;
-    }
-    bool TryPreviewFrozenOrbit(CameraSessionSnapshot session, double dx, double dy,
-        out CameraFrameResult result)
-    {
-        if (session.FrozenOrbit is null) { result = default; return false; }
-        var ok = session.FrozenOrbit.TryMoveTo(dx * 0.008, dy * 0.006, _cameraRevision + 1,
-            out result, out _);
-        if (ok) AddFrozenOrbitProbe(OrbitProbePhase.Move, new(dx, dy, 0));
-        return ok;
     }
     void EndFrozenOrbit()
     {
@@ -93,8 +71,7 @@ public sealed partial class UiVm
     {
         var finalCamera = ApplyFarPlanePolicy(result.Camera);
         ViewportProbe.CameraWriter(writer, _camera, _observationCenter, finalCamera, result.ObservationCenter);
-        _camera = finalCamera;
-        _observationCenter = result.ObservationCenter;
+        _cameraController.ApplyFrame(new(finalCamera, result.ObservationCenter));
         ViewportProbe.CameraSnapshot("T1_CAMERA_AFTER", _camera, _observationCenter);
     }
 }

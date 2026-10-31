@@ -31,11 +31,11 @@ public sealed partial class UiVm
         var frame = _camera.Mode == ProjectionMode.Orthographic
             ? XuanYu.Editor.Camera.EditorCameraFraming.FrameMapOrthographicWithCenter(
                 corners, _viewportAspect,
-                _camera.Position.DistanceTo(_observationCenter), ++_cameraRevision)
+                _camera.Position.DistanceTo(_observationCenter), _cameraController.NextRevision())
             : XuanYu.Editor.Camera.EditorCameraFraming.FrameMapAllWithCenter(
-                corners, _viewportAspect, ++_cameraRevision);
+                corners, _viewportAspect, _cameraController.NextRevision());
         ApplyCameraFrame(frame, "FrameMap");
-        _viewportCameraFramed = true;
+        _cameraController.MarkFramed();
         PublishSceneRenderSnapshot(); // F1：取景后必须发布新相机（与 FrameSelectedCamera 同模式）
         FooterMessage = $"{source}：整张地图已进入视野。";
     }
