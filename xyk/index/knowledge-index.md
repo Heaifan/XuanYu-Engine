@@ -1,6 +1,6 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-10-01
+> 最后治理更新：2026-10-31
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
 
 ## 任务域预检映射
@@ -93,7 +93,27 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | K-HANDOFF-001 | Knowledge | Engineering | Stale Commit Mutex 必须有受控恢复路径 | P0 | E2 | XYT-L2/Handoff · 2026-09-29 | Active |
 | K-XYT-P3-002 | Knowledge | Engineering | P3 构建准备与 Runtime Probe 必须分开计时 | P1 | E2 | XYT-H2/H3 · 2026-09-29 | Active |
 
+| K-GOV-007 | Knowledge | Governance | 仓库内可写边界与缓存根控制 | P0 | E2 | 2026-10-22～30 | Active |
+| K-GOV-008 | Knowledge | Governance | 单次受控 Build/Restore 与禁止自动重试 | P0 | E2 | 2026-10-30 | Active |
+| K-GOV-009 | Knowledge | Governance | XYK 候选逐轮去重审计与 Git 事件闭环 | P0 | E2 | 2026-10-30 | Active |
+| K-GOV-010 | Knowledge | Governance | 静态/Lane/Candidate/Integration/发布分层 | P0 | E2 | 2026-10-23～30 | Active |
+| K-ARCH-003 | Knowledge | Architecture | 5+100、严格三级、test_ 与依赖方向 | P0 | E2 | 2026-10-24～30 | Active |
+| K-WORLD-001 | Knowledge | Architecture | WorldState Candidate 先验证后发布 | P0 | E2 | 2026-10-29 · b8ae01f | Active |
+| K-GEO-004 | Knowledge | Architecture | raw DEM 与 LOD/观察中心分离 | P0 | E2 | 2026-10-21～23 | Active |
+| K-REN-006 | Knowledge | Rendering | 在途帧/图像/资源 Fence 生命周期解耦 | P0 | E2 | 2026-10-23 · 6dd6207 | Active |
+| K-REN-007 | Knowledge | Rendering | 性能 Schema 不等于真实 GPU 采样 | P0 | E2 | 2026-10-23 · 6dd6207 | Active |
+| K-UI-003 | Knowledge | UI | XYUI 组件编号及 Typography 语义不变量 | P0 | E2 | 2026-10-30 · a88a06a | Active |
+| L-GOV-001 | Lesson | Governance | 无界构建副本导致磁盘事故 | P0 | E2 | 2026-10-26 | Active |
+| L-GOV-002 | Lesson | Governance | 目录迁移 STATIC 不代表产品完成 | P0 | E2 | 2026-10-30 | Active |
+| DEC-XYE-ARCH-5X5X5-R1 | Decision | Architecture | 严格三级、5+100、test_ 与 XYUI 编号 | P0 | R1 | 2026-10-24～30 | Active |
+
 ## 分类文件
+
+- `xyk/knowledge/2026-10-backfill.md`：2026-10-10～31 新知识 K-GOV/K-ARCH/K-WORLD/K-GEO/K-REN/K-UI
+- `xyk/experience/backfill-2026-10.md`：EXP/L-GOV-001～002 与 EXP 强化
+- `xyk/incidents/backfill-2026-10.md`：ERR-20261026-001
+- `xyk/decisions/architecture-layout-2026-10.md`：DEC-XYE-ARCH-5X5X5-R1
+- `xyk/governance/backfill-2026-10-r1.md`：审计覆盖、待验收项和证据边界
 
 - `engineering.md`：K-VAL-001～K-VAL-003、K-GOV-001～K-GOV-006、K-XYT-MAP-001～002、K-XYT-EXEC-001、K-XYT-AUDIT-001、K-XYT-WIT-001、K-XYT-EVID-001、K-XYT-CLOSE-001、K-XYT-P3-001～002、K-XYT-HARNESS-001、K-HANDOFF-001
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001、K-GEO-003；R2 Closeout / Point Foundation 见 K-GEO-002

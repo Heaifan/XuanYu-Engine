@@ -12,3 +12,4 @@
 - EXP-GOVERNANCE-003 Process Version Telemetry Must Advance
 - EXP-GOVERNANCE-004 Governance RED 先分类，禁止“修绿”
 - EXP-GOVERNANCE-005 Lane PASS ≠ Integration PASS
+- EXP-GOVERNANCE-006 越界写入疑点必须 Fail-Closed（详见 experience/backfill-2026-10.md）
