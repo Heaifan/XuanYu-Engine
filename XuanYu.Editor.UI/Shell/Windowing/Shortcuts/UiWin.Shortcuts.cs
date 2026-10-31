@@ -13,7 +13,7 @@ public partial class UiWin
         { (DataContext as UiVm)?.ToggleEditorMode(); e.Handled = true; return; }
         if (HandleEntityShortcut(e)) return;
         if (e.Key == Key.C && e.KeyModifiers.HasFlag(KeyModifiers.Control)
-            && DataContext is UiVm { IsLogOpen: true, HasSelectedEntries: true } copyVm)
+            && DataContext is UiVm copyVm && copyVm.LogPresentation is { IsOpen: true, HasSelectedEntries: true })
         { if (await CopySelectedLogs(copyVm)) e.Handled = true; return; }
         if (e.Key == Key.Z && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         { (DataContext as UiVm)?.TryUndoFromShortcut(); e.Handled = true; return; }

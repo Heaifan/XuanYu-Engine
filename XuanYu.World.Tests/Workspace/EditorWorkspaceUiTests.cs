@@ -34,10 +34,10 @@ public sealed class EditorWorkspaceUiTests
         var vm = Create(); vm.ToggleEditorMode();
         vm.SelectedHierarchyItem = vm.HierarchyItems.First(item => item.IsEntity);
         vm.SelectToolCommand.Execute("移动");
-        var camera = vm.NavigationCamera; var logs = vm.LogItems.Count;
+        var camera = vm.NavigationCamera; var logs = vm.LogPresentation.LogItems.Count;
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.MapEditor);
         Assert.Equal("移动", vm.ActiveTool); Assert.Equal(camera, vm.NavigationCamera);
-        Assert.Equal(logs, vm.LogItems.Count);
+        Assert.Equal(logs, vm.LogPresentation.LogItems.Count);
     }
 
     [Fact]

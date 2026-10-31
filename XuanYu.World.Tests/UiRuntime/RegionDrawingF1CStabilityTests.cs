@@ -64,7 +64,7 @@ public sealed class RegionDrawingF1CStabilityTests
         var vm = DraftVm();
         vm.RegionDrawingPointerMoved(400, 300, Viewport);
         vm.CancelRegionDrawingFromEscape();
-        var text = string.Join("\n", vm.LogItems.Select(item => item.Message));
+        var text = string.Join("\n", vm.LogPresentation.LogItems.Select(item => item.Message));
 
         Assert.Contains("开始区域绘制", text);
         Assert.Contains("已取消区域绘制", text);

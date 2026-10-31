@@ -15,7 +15,6 @@ public partial class UiRoot : UserControl
     const double LogRowFloor = 120;        // 矮窗口下日志区最低可压缩高度（展开态最小 120，规范 §7.1）
 
     bool _clamping;
-    bool _vmHooked;
 
     public UiRoot()
     {
@@ -28,25 +27,6 @@ public partial class UiRoot : UserControl
         AttachedToVisualTree += (_, _) => RefreshDiagnosticRegistry();
         Unloaded += (_, _) => DiagnosticRegistry.Clear();
         ClampLayout();
-    }
-
-    void HookVm()
-    {
-        if (DataContext is not UiVm vm || _vmHooked) return;
-        _vmHooked = true;
-        vm.PropertyChanged += OnVmPropertyChanged;
-        ClampLayout(); // DataContext 就位时 IsLogOpen 可能已是 true（初始展开态）
-    }
-
-    // F4：日志展开/折叠 → 重新分配日志行高度（窗口尺寸变化由 SizeChanged 覆盖）。
-    void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(UiVm.IsLogOpen)) ClampLayout();
-        if (e.PropertyName == nameof(UiVm.InspectorIdentity))
-        {
-            RefreshDiagnosticRegistry();
-            Dispatcher.UIThread.Post(RefreshDiagnosticRegistry, DispatcherPriority.Render);
-        }
     }
 
     void RefreshDiagnosticRegistry()
@@ -74,7 +54,7 @@ public partial class UiRoot : UserControl
     void ClampLogRow()
     {
         var rows = RootGrid.RowDefinitions;
-        if (DataContext is not UiVm { IsLogOpen: true })
+        if (DataContext is not UiVm vm || !vm.LogPresentation.IsOpen)
         {
             rows[3].Height = GridLength.Auto;
             return;

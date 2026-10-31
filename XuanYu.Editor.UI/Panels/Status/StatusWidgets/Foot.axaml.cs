@@ -16,7 +16,7 @@ namespace XuanYu.Editor.UI;
 public partial class Foot : UserControl
 {
     readonly LogListAutoScrollController _autoScroll;
-    bool _vmHooked;
+    LogPresenter? _hookedPresenter;
 
     public Foot()
     {
@@ -52,49 +52,48 @@ public partial class Foot : UserControl
     void SelectSource(string label)
     {
         var source = label switch { "编辑器" => EditorLogSource.Editor, "项目" => EditorLogSource.Project, "构建" => EditorLogSource.Build, "任务" => EditorLogSource.Task, "输入" => EditorLogSource.Input, "渲染" => EditorLogSource.Render, _ => (EditorLogSource?)null };
-        if (DataContext is UiVm vm) vm.SetLogSource(source);
+        if (DataContext is LogPresenter presenter) presenter.SetSource(source);
         SourceFilterPopup.IsOpen = false;
     }
 
     void HookVm()
     {
-        if (DataContext is UiVm vm && !_vmHooked)
-        {
-            vm.PropertyChanged += OnVmPropertyChanged;
-            _vmHooked = true;
-        }
+        if (ReferenceEquals(_hookedPresenter, DataContext)) return;
+        if (_hookedPresenter is not null) _hookedPresenter.PropertyChanged -= OnPresenterPropertyChanged;
+        _hookedPresenter = DataContext as LogPresenter;
+        if (_hookedPresenter is not null) _hookedPresenter.PropertyChanged += OnPresenterPropertyChanged;
     }
 
-    void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    void OnPresenterPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(UiVm.LogItems))
+        if (e.PropertyName == nameof(LogPresenter.LogItems))
             _autoScroll.OnLogItemsChanged();
-        if (e.PropertyName?.StartsWith("IsLogFilter") == true)
+        if (e.PropertyName?.StartsWith("IsFilter") == true)
             _autoScroll.ForceFollow(); // F2：切换日志分类 → 定位到该分类最新一条
     }
 
     void LogList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (sender is ListBox lb && DataContext is UiVm vm)
-            vm.SetSelectedEntries(lb.SelectedItems?.OfType<LogEntry>().ToArray() ?? []);
+        if (sender is ListBox lb && DataContext is LogPresenter presenter)
+            presenter.SetSelectedEntries(lb.SelectedItems?.OfType<LogEntry>().ToArray() ?? []);
     }
 
     async void Foot_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (DataContext is not UiVm vm || !vm.IsLogOpen) return;
+        if (DataContext is not LogPresenter presenter || !presenter.IsOpen) return;
         if (!e.KeyModifiers.HasFlag(KeyModifiers.Control)) return;
         if (e.Key == Key.A) { LogList.SelectAll(); e.Handled = true; return; }
-        if (e.Key != Key.C || !vm.HasSelectedEntries) return;
-        if (await CopySelectedLogs(vm)) e.Handled = true;
+        if (e.Key != Key.C || !presenter.HasSelectedEntries) return;
+        if (await CopySelectedLogs(presenter)) e.Handled = true;
     }
 
-    async Task<bool> CopySelectedLogs(UiVm vm)
+    async Task<bool> CopySelectedLogs(LogPresenter presenter)
     {
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
         if (clipboard is null) return false;
-        try { await clipboard.SetTextAsync(vm.SelectedEntriesClipboardText); }
+        try { await clipboard.SetTextAsync(presenter.SelectedEntriesClipboardText); }
         catch (Exception ex) { Debug.WriteLine($"[LogList] copy failed: {ex}"); return false; }
-        vm.NotifyLogCopied();
+        presenter.NotifyLogCopied();
         return true;
     }
 }

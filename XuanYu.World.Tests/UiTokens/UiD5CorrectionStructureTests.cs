@@ -69,8 +69,8 @@ public sealed class UiD5CorrectionStructureTests
         // 纠偏：禁止同一行多个公共属性/语句压缩（UiVm.Logging 系列已按职责拆分）
         var logging = Read("Infrastructure/Logging/ViewModel/UiVm.Logging.cs");
         Assert.DoesNotContain("; public", logging);
-        var state = Read("Infrastructure/Logging/Refresh/UiVm.Logging.State.cs");
-        Assert.DoesNotContain("; public", state);
+        var presenter = Read("Infrastructure/Logging/ViewModel/LogPresenter.cs");
+        Assert.DoesNotContain("; public", presenter);
         var mapEditor = Read("MapUI/Editing/Editor/UiVm.MapEditor.cs");
         Assert.DoesNotContain("; public", mapEditor);
     }
@@ -78,8 +78,7 @@ public sealed class UiD5CorrectionStructureTests
     [Fact]
     public void Validation_files_are_split_by_responsibility()
     {
-        Assert.True(File.Exists(Path.Combine(Repo, "XuanYu.Editor.UI", "Vm", "Logging", "UiVm.Logging.State.cs")));
-        Assert.True(File.Exists(Path.Combine(Repo, "XuanYu.Editor.UI", "Vm", "Logging", "UiVm.Logging.Refresh.cs")));
-        Assert.True(File.Exists(Path.Combine(Repo, "XuanYu.Editor.UI", "Vm", "Map", "UiVm.MapEditor.Validation.cs")));
+        Assert.True(File.Exists(Path.Combine(Repo, "XuanYu.Editor.UI", "Infrastructure", "Logging", "ViewModel", "LogPresenter.cs")));
+        Assert.True(File.Exists(Path.Combine(Repo, "XuanYu.Editor.UI", "MapUI", "Editing", "Editor", "UiVm.MapEditor.Validation.cs")));
     }
 }

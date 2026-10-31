@@ -57,13 +57,13 @@ public sealed class UiLayerStateFeedbackTests
         var vm = NewVm();
         vm.RunCommand.Execute("添加图层");
         var stateId = vm.MapSession.CurrentStateId;
-        var logCount = vm.LogItems.Count;
+        var logCount = vm.LogPresentation.LogItems.Count;
         var footer = vm.FooterMessage;
         var canUndo = vm.MapSession.CanUndo;
         var id = vm.LayerItems[0].LayerId.Value;
         vm.CommitLayerDrag(id, 0); // 区域 2 已在最上方（位置 0）
         Assert.Equal(stateId, vm.MapSession.CurrentStateId);
-        Assert.Equal(logCount, vm.LogItems.Count);
+        Assert.Equal(logCount, vm.LogPresentation.LogItems.Count);
         Assert.Equal(footer, vm.FooterMessage);
         Assert.Equal(canUndo, vm.MapSession.CanUndo); // No-op 不新增历史
     }

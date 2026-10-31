@@ -12,17 +12,17 @@ public sealed class UiD5CorrectionNotifyTests
     {
         var vm = NewVm();
         // 初始（「全部」筛选 + 无日志）：只显示初始空态
-        Assert.True(vm.ShowInitialLogEmpty);
-        Assert.False(vm.ShowNoFilterResults);
+        Assert.True(vm.LogPresentation.ShowInitialLogEmpty);
+        Assert.False(vm.LogPresentation.ShowNoFilterResults);
         // 筛选无结果：只显示筛选空态
-        vm.SelectLogFilterCommand.Execute("错误");
-        Assert.False(vm.ShowInitialLogEmpty);
-        Assert.True(vm.ShowNoFilterResults);
+        vm.LogPresentation.SelectLogFilterCommand.Execute("错误");
+        Assert.False(vm.LogPresentation.ShowInitialLogEmpty);
+        Assert.True(vm.LogPresentation.ShowNoFilterResults);
         // 有日志：两个空态都不显示
-        vm.SelectLogFilterCommand.Execute("全部");
+        vm.LogPresentation.SelectLogFilterCommand.Execute("全部");
         vm.NotifyLogCopied(); // public 日志写入（复制日志）
-        Assert.False(vm.ShowInitialLogEmpty);
-        Assert.False(vm.ShowNoFilterResults);
+        Assert.False(vm.LogPresentation.ShowInitialLogEmpty);
+        Assert.False(vm.LogPresentation.ShowNoFilterResults);
     }
 
     [Fact]

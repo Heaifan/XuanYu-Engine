@@ -12,29 +12,29 @@ public sealed class LogPerformanceGovernanceTests
 
         for (var i = 0; i < 100; i++) Assert.True(vm.DollyCamera(1));
 
-        Assert.DoesNotContain(vm.LogItems, item => item.Message == "相机 Dolly 已执行");
+        Assert.DoesNotContain(vm.LogPresentation.LogItems, item => item.Message == "相机 Dolly 已执行");
     }
 
     [Fact]
     public void High_frequency_wheel_does_not_refresh_log_ui()
     {
         var vm = new UiVm(null, () => true);
-        var refreshes = vm.LogCollectionRefreshCount;
+        var refreshes = vm.LogPresentation.CollectionRefreshCount;
 
         for (var i = 0; i < 100; i++) Assert.True(vm.DollyCamera(1));
 
-        Assert.Equal(refreshes, vm.LogCollectionRefreshCount);
+        Assert.Equal(refreshes, vm.LogPresentation.CollectionRefreshCount);
     }
 
     [Fact]
     public void Log_items_keep_a_stable_collection_identity()
     {
         var vm = new UiVm(null, () => true);
-        var first = vm.LogItems;
+        var first = vm.LogPresentation.LogItems;
 
         Assert.True(vm.BeginCameraNavigation(1, 10, 10, false, 800, 600));
 
-        Assert.Same(first, vm.LogItems);
+        Assert.Same(first, vm.LogPresentation.LogItems);
     }
 
     [Fact]
@@ -42,14 +42,14 @@ public sealed class LogPerformanceGovernanceTests
     {
         var vm = new UiVm(null, () => true);
         var notifications = new List<string?>();
-        vm.PropertyChanged += Capture(notifications);
+        vm.LogPresentation.PropertyChanged += Capture(notifications);
 
         Assert.True(vm.BeginCameraNavigation(1, 10, 10, false, 800, 600));
 
-        Assert.DoesNotContain(nameof(vm.LogSearchText), notifications);
-        Assert.DoesNotContain(nameof(vm.LogSourceFilter), notifications);
-        Assert.DoesNotContain(nameof(vm.SelectedLogEntry), notifications);
-        Assert.DoesNotContain(nameof(vm.IsLogFilterAll), notifications);
+        Assert.DoesNotContain(nameof(LogPresenter.SearchText), notifications);
+        Assert.DoesNotContain(nameof(LogPresenter.Source), notifications);
+        Assert.DoesNotContain(nameof(LogPresenter.SelectedLogEntry), notifications);
+        Assert.DoesNotContain(nameof(LogPresenter.IsFilterAll), notifications);
     }
 
     [Fact]
@@ -57,12 +57,12 @@ public sealed class LogPerformanceGovernanceTests
     {
         var vm = new UiVm(null, () => true);
         Assert.True(vm.BeginCameraNavigation(1, 10, 10, false, 800, 600));
-        var total = vm.LogItems.Count;
+        var total = vm.LogPresentation.LogItems.Count;
 
-        vm.SelectLogFilterCommand.Execute("信息");
+        vm.LogPresentation.SelectLogFilterCommand.Execute("信息");
 
-        Assert.Equal(total.ToString(), vm.AllCount);
-        Assert.All(vm.LogItems, item => Assert.Equal(EditorLogLevel.Info, item.Level));
+        Assert.Equal(total.ToString(), vm.LogPresentation.AllCount);
+        Assert.All(vm.LogPresentation.LogItems, item => Assert.Equal(EditorLogLevel.Info, item.Level));
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public sealed class LogPerformanceGovernanceTests
         var vm = new UiVm(null, () => true);
         Assert.False(vm.DollyCamera(double.NaN));
 
-        Assert.Contains(vm.LogItems, item => item.Level == EditorLogLevel.Error);
+        Assert.Contains(vm.LogPresentation.LogItems, item => item.Level == EditorLogLevel.Error);
     }
 
     static LogEntry NewEntry(string message) => new(

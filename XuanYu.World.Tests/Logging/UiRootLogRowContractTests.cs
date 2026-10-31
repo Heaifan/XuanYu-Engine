@@ -31,7 +31,7 @@ public sealed class UiRootLogRowContractTests
         // 展开时按可用高度 clamp 为像素行；折叠时回 Auto——缺一不可。
         Assert.Contains("GridLength.Auto", UiRootCs);
         Assert.Contains("Math.Clamp", UiRootCs);
-        Assert.Contains("IsLogOpen", UiRootCs);
+        Assert.Contains("LogPresentation.IsOpen", UiRootCs);
     }
 
     [Fact]

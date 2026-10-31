@@ -8,7 +8,7 @@ public sealed partial class UiMapLayerPanelTests
 {
     static UiVm NewVm() => new(null, () => true);
 
-    static string Logs(UiVm vm) => string.Join("\n", vm.LogItems.Select(e => e.Message));
+    static string Logs(UiVm vm) => string.Join("\n", vm.LogPresentation.LogItems.Select(e => e.Message));
 
     [Fact]
     public void Default_list_shows_three_layers_region_first()

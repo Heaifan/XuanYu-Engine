@@ -93,7 +93,7 @@ public sealed class UiMapCommandRoutingTests
         var vm = NewVm();
         vm.MapWidthText = "200"; vm.MapDepthText = "200"; vm.MapBaseHeightText = "0";
         Execute(vm, "应用地图属性");
-        var text = string.Join("\n", vm.LogItems.Select(e => e.Message));
+        var text = string.Join("\n", vm.LogPresentation.LogItems.Select(e => e.Message));
         Assert.Contains("地图命令收到", text); Assert.Contains("地图属性提交开始", text);
         Assert.Contains("地图属性提交成功", text); Assert.Contains("地图渲染快照已发布", text);
     }

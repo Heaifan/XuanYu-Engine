@@ -30,16 +30,13 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     readonly HashSet<string> _collapsedHierarchyKeys = new(StringComparer.Ordinal);
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
     string _footerMessage = "已就绪。当前为空白未命名场景。";
-    bool _isLogOpen;
     public event PropertyChangedEventHandler? PropertyChanged;
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }
     public ICommand RunCommand { get; }
     public ICommand SelectToolCommand { get; } public ICommand SwitchWorkspaceCommand { get; }
     public ICommand ToggleSnapCommand { get; }
     public ICommand InteractionCommand { get; }
-    public ICommand ToggleLogCommand { get; }
-    public ICommand SelectLogFilterCommand { get; } public MapEditSession MapSession { get; }
-    public ICommand ClearLogsCommand { get; }
+    public MapEditSession MapSession { get; }
     public IReadOnlyList<EditorTreeNode> ProjectItems => BuildProjectItems();
     public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
     public IReadOnlyList<InspectorFieldRow> InspectorFields => BuildInspectorFields();

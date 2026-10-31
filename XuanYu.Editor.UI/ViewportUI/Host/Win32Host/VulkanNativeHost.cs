@@ -9,7 +9,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     readonly NativeHostResizeCoalescer _resizer;
     INativeHostSurfaceBridge? _bridge;
     bool _createdReported;
-    bool _layoutSyncHooked;
+    LogPresenter? _layoutSyncOwner;
     int _lastNativeWidth;
     int _lastNativeHeight;
     int _lastBridgeWidth;

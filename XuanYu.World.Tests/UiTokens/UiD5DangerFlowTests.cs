@@ -10,7 +10,7 @@ public sealed class UiD5DangerFlowTests
 {
     static UiVm NewVm() => new(null, () => true);
 
-    static string Logs(UiVm vm) => string.Join("\n", vm.LogItems.Select(e => e.Message));
+    static string Logs(UiVm vm) => string.Join("\n", vm.LogPresentation.LogItems.Select(e => e.Message));
 
     [Fact]
     public void Delete_layer_without_handler_is_blocked_fail_closed()

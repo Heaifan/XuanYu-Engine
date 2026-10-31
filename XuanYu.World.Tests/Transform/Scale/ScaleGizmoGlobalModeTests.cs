@@ -27,7 +27,7 @@ public sealed class ScaleGizmoGlobalModeTests
         vm.SelectedHierarchyItem = vm.HierarchyItems.Single(i => i.Key == "EntityId(1)");
         vm.SelectToolCommand.Execute("缩放");
 
-        Assert.DoesNotContain(vm.LogItems, x => x.Message.Contains("Local", StringComparison.Ordinal));
+        Assert.DoesNotContain(vm.LogPresentation.LogItems, x => x.Message.Contains("Local", StringComparison.Ordinal));
         Assert.Equal(Vector3d.Zero, vm.RenderProjection.Projection.GizmoRotation);
     }
 }

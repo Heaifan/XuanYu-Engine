@@ -12,8 +12,8 @@ public partial class LogDetailPanel : UserControl
 
     async void CopyDetail_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (DataContext is not UiVm vm || string.IsNullOrWhiteSpace(vm.SelectedLogClipboardText)) return;
+        if (DataContext is not LogPresenter presenter || string.IsNullOrWhiteSpace(presenter.SelectedLogClipboardText)) return;
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-        if (clipboard is not null) await clipboard.SetTextAsync(vm.SelectedLogClipboardText);
+        if (clipboard is not null) await clipboard.SetTextAsync(presenter.SelectedLogClipboardText);
     }
 }

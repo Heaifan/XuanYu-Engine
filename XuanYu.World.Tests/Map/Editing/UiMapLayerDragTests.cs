@@ -8,7 +8,7 @@ public sealed class UiMapLayerDragTests
 {
     static UiVm NewVm() => new(null, () => true);
 
-    static string Messages(UiVm vm) => string.Join("\n", vm.LogItems.Select(e => e.Message));
+    static string Messages(UiVm vm) => string.Join("\n", vm.LogPresentation.LogItems.Select(e => e.Message));
 
     [Fact]
     public void U01_region_layer_has_drag_capability()
@@ -42,7 +42,7 @@ public sealed class UiMapLayerDragTests
         vm.CommitLayerDrag(region.LayerId.Value, 0);
         Assert.Equal(stateId + 1, vm.MapSession.CurrentStateId);
         Assert.Equal(region.LayerId, vm.LayerItems[0].LayerId);
-        Assert.Single(vm.LogItems, e => e.Message.StartsWith("调整图层顺序："));
+        Assert.Single(vm.LogPresentation.LogItems, e => e.Message.StartsWith("调整图层顺序："));
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public sealed class UiMapLayerDragTests
         vm.CommitLayerDrag(vm.LayerItems[1].LayerId.Value, 0);
         var text = Messages(vm);
         Assert.Contains("调整图层顺序：区域 2 → 第 1 位", text);
-        Assert.Single(vm.LogItems, e => e.Message.StartsWith("调整图层顺序："));
+        Assert.Single(vm.LogPresentation.LogItems, e => e.Message.StartsWith("调整图层顺序："));
     }
 
     [Fact]
@@ -90,6 +90,6 @@ public sealed class UiMapLayerDragTests
         vm.RunCommand.Execute("添加图层");
         vm.RunCommand.Execute("添加图层");
         vm.CommitLayerDrag(vm.LayerItems[1].LayerId.Value, 0);
-        Assert.Contains("调整图层顺序", vm.LogSummary);
+        Assert.Contains("调整图层顺序", vm.LogPresentation.LogSummary);
     }
 }

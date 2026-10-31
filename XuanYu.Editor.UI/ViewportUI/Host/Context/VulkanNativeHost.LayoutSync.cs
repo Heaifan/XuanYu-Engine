@@ -12,21 +12,23 @@ public sealed partial class VulkanNativeHost
 {
     void HookLayoutSync()
     {
-        if (_layoutSyncHooked || DataContext is not UiVm vm) return;
-        vm.PropertyChanged += OnLayoutSyncProp;
-        _layoutSyncHooked = true;
+        var presenter = (DataContext as UiVm)?.LogPresentation;
+        if (ReferenceEquals(_layoutSyncOwner, presenter)) return;
+        UnhookLayoutSync();
+        _layoutSyncOwner = presenter;
+        if (presenter is not null) presenter.PropertyChanged += OnLayoutSyncProp;
     }
 
     void UnhookLayoutSync()
     {
-        if (!_layoutSyncHooked || DataContext is not UiVm vm) return;
-        vm.PropertyChanged -= OnLayoutSyncProp;
-        _layoutSyncHooked = false;
+        if (_layoutSyncOwner is null) return;
+        _layoutSyncOwner.PropertyChanged -= OnLayoutSyncProp;
+        _layoutSyncOwner = null;
     }
 
     void OnLayoutSyncProp(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(UiVm.IsLogOpen))
+        if (e.PropertyName == nameof(LogPresenter.IsOpen))
             Dispatcher.UIThread.InvokeAsync(SyncFinalSize, DispatcherPriority.Render);
     }
 
@@ -43,7 +45,7 @@ public sealed partial class VulkanNativeHost
         _resizer.Cancel();
         ApplyNativeSize(physicalW, physicalH);
         var (aw, ah) = Win32ViewportHost.GetClientSize(_hwnd);
-        var open = DataContext is UiVm vm && vm.IsLogOpen;
+        var open = DataContext is UiVm vm && vm.LogPresentation.IsOpen;
         ViewportNativeHostRoute.ReportProbe(DataContext as UiVm, open, logicalW, logicalH, dpi, physicalW, physicalH, aw, ah);
         _resizer.OnResize(logicalW, logicalH, dpi, true, _hwnd);
     }

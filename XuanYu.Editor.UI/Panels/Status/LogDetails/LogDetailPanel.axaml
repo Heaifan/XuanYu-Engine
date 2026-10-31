@@ -3,7 +3,7 @@
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.LogDetailPanel"
-             x:DataType="local:UiVm">
+             x:DataType="local:LogPresenter">
   <Border BorderBrush="#d9e2ee" BorderThickness="1,0,0,0" Padding="10,0,0,0">
     <Grid RowDefinitions="Auto,*">
       <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,6">

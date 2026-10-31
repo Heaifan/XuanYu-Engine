@@ -45,7 +45,7 @@ public sealed class HeadlessUiRiskTests
         {
             var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
             vm.SelectToolCommand.Execute("移动");
-            vm.IsLogOpen = true;
+            vm.LogPresentation.IsOpen = true;
             var foot = new Foot { DataContext = vm };
             host.Show(foot, 1200, 420);
             var list = foot.FindControl<ListBox>("LogList")!;

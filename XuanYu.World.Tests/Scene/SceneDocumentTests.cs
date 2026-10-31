@@ -42,7 +42,7 @@ public sealed partial class SceneDocumentTests
         Assert.False(opened);
         Assert.Empty(vm.HierarchyItems);
         Assert.False(vm.IsSceneDirty);
-        Assert.Contains(vm.LogItems, x => x.Message == "场景加载失败" &&
+        Assert.Contains(vm.LogPresentation.LogItems, x => x.Message == "场景加载失败" &&
             x.Detail.Contains("Code=BrokenJson", StringComparison.Ordinal));
     }
 

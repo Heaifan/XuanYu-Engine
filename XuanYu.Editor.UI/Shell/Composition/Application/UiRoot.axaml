@@ -72,6 +72,6 @@
                   ResizeDirection="Rows"
                   ResizeBehavior="PreviousAndNext"/>
 
-    <Border Grid.Row="3" Classes="panel" Padding="8,2" MinHeight="32" MaxHeight="420"><local:Foot local:XYDiagnostic.AreaId="XYE.AREA.BOTTOM"/></Border>
+    <Border Grid.Row="3" Classes="panel" Padding="8,2" MinHeight="32" MaxHeight="420"><local:Foot DataContext="{Binding LogPresentation}" local:XYDiagnostic.AreaId="XYE.AREA.BOTTOM"/></Border>
   </Grid>
 </UserControl>

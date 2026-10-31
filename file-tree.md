@@ -63,18 +63,15 @@
 - XuanYu.Editor.UI/Infrastructure/Logging/Filtering/EditorLogFilterQuery.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Logging/Filtering/EditorLogFilterState.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Logging/Filtering/EditorLogNoiseFilter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Infrastructure/Logging/Presentation/EditorDisplayText.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/DisplayText/EditorDisplayText.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Logging/Presentation/EditorLogClipboardText.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Logging/Presentation/EditorLogRepeatKey.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Logging/Presentation/EditorLogSummary.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Logging/Presentation/LogProjectionCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Infrastructure/Logging/Refresh/UiVm.Logging.Refresh.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Infrastructure/Logging/Refresh/UiVm.Logging.State.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiText.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/LogPresenter.cs — C# 源码文件，承载日志面板状态、选择与投影行为。
 - XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiVm.DebugProjection.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiVm.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiVm.Logging.Filters.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiVm.Logging.Metrics.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Resources/Accessibility/UiAutomationNamer.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Resources/Accessibility/UiDpiContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Infrastructure/Resources/Accessibility/UiMotionPreference.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -350,6 +347,7 @@
 - XuanYu.Editor.UI/Shell/Composition/Application/Main.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Composition/Application/UiRoot.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
 - XuanYu.Editor.UI/Shell/Composition/Application/UiRoot.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Composition/Application/UiRoot.ContextBinding.cs — C# 源码文件，承载 UiRoot 的 ViewModel 订阅生命周期。
 - XuanYu.Editor.UI/Shell/Composition/DialogServices/IEditorDialogService.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Composition/DialogServices/NullEditorDialogService.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Documents/ImportAndState/D2StaticModelDemo.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -372,7 +370,6 @@
 - XuanYu.Editor.UI/Shell/ViewModels/Application/UiVm.ApplicationState.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/ViewModels/Application/UiVm.Composition.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/ViewModels/Diagnostics/UiVm.DiagnosticReplayLogs.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Shell/ViewModels/Diagnostics/UiVm.LogShell.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/ViewModels/Notifications/UiVm.Notification.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/ViewModels/Notifications/UiVm.NotificationLifetime.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/ViewModels/Panels/UiVm.RightPanel.cs — C# 源码文件，承载仓库实现或测试职责。

@@ -19,7 +19,7 @@ public sealed partial class SceneDocumentTests
         Assert.Equal(10, vm.RenderSnapshot.Entities.Count);
         Assert.Equal(10, vm.HierarchyItems.Count(x => x.Key.StartsWith("EntityId(", StringComparison.Ordinal)));
         Assert.Contains(vm.RenderSnapshot.Entities, x => x.Name == "测试实体 10");
-        Assert.Contains(vm.LogItems, x => x.Message == "场景加载成功" && x.Detail.Contains("Entities=10", StringComparison.Ordinal));
+        Assert.Contains(vm.LogPresentation.LogItems, x => x.Message == "场景加载成功" && x.Detail.Contains("Entities=10", StringComparison.Ordinal));
     }
 
     [Fact]

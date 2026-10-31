@@ -66,7 +66,7 @@ public sealed class UiLogSummaryPriorityTests
         var vm = NewVm();
         vm.SelectedLayer = vm.LayerItems[0];
         vm.LayerInspectorLocked = true;
-        Assert.Contains("锁定图层：区域 1（区域）", vm.LogSummary);
+        Assert.Contains("锁定图层：区域 1（区域）", vm.LogPresentation.LogSummary);
     }
 
     [Fact]

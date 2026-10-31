@@ -9,9 +9,9 @@ public sealed class UiMapLayerLockLogTests
 {
     static UiVm NewVm() => new(null, () => true);
 
-    static string Messages(UiVm vm) => string.Join("\n", vm.LogItems.Select(e => e.Message));
+    static string Messages(UiVm vm) => string.Join("\n", vm.LogPresentation.LogItems.Select(e => e.Message));
 
-    static string Details(UiVm vm) => string.Join("\n", vm.LogItems.Select(e => e.Detail));
+    static string Details(UiVm vm) => string.Join("\n", vm.LogPresentation.LogItems.Select(e => e.Detail));
 
     [Fact]
     public void L01_lock_region_layer_logs_chinese_action()
@@ -59,9 +59,9 @@ public sealed class UiMapLayerLockLogTests
         var vm = NewVm();
         vm.SelectedLayer = vm.LayerItems[0];
         vm.LayerInspectorLocked = true;
-        var count = vm.LogItems.Count;
+        var count = vm.LogPresentation.LogItems.Count;
         vm.LayerInspectorLocked = true; // 同值 No-op
-        Assert.Equal(count, vm.LogItems.Count);
+        Assert.Equal(count, vm.LogPresentation.LogItems.Count);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public sealed class UiMapLayerLockLogTests
         var vm = NewVm();
         vm.SelectedLayer = vm.LayerItems[0];
         vm.LayerInspectorLocked = true;
-        Assert.Single(vm.LogItems, e => e.Message.Contains("锁定图层"));
+        Assert.Single(vm.LogPresentation.LogItems, e => e.Message.Contains("锁定图层"));
     }
 
     [Fact]

@@ -57,7 +57,7 @@ public sealed class WorkspaceAuthorityProjectionTests
         {
             Assert.True(vm.ToggleEditorMode());
             vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
-            var logCount = vm.LogItems.Count;
+            var logCount = vm.LogPresentation.LogItems.Count;
             vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
 
             Assert.True(vm.IsEditMode);
@@ -66,7 +66,7 @@ public sealed class WorkspaceAuthorityProjectionTests
             Assert.Contains("要素编辑", vm.FooterMode);
             Assert.Contains("要素编辑", footer.Text);
             Assert.True(ContextRoot(context).IsVisible);
-            Assert.Equal(logCount, vm.LogItems.Count);
+            Assert.Equal(logCount, vm.LogPresentation.LogItems.Count);
         });
     }
 

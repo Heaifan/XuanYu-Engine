@@ -52,10 +52,8 @@ public sealed partial class UiVm
         SelectRegionAuthoringModeCommand = new RelayCommand(SelectRegionAuthoringModeCommandTarget);
         ToggleSnapCommand = new RelayCommand(_ => TryToggleSnap()); ToggleEditorModeCommand = new RelayCommand(_ => ToggleEditorMode());
         InteractionCommand = new RelayCommand(name => RunInteraction(name?.ToString() ?? string.Empty));
-        ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
-        SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
-        ClearLogsCommand = new RelayCommand(_ => ClearLogs()); MapSession = mapSession; MapSession.MarkBaseline();
-        AttachMapSession(MapSession); MapSession.ClearSelection(); InitializeMapManifest(); InitLogs(); InitNotificationPresenter();
+        MapSession = mapSession; MapSession.MarkBaseline();
+        AttachMapSession(MapSession); MapSession.ClearSelection(); InitializeMapManifest(); InitNotificationPresenter();
         ViewportInput = UiVmViewportInputComposition.Create(this);
     }
 }

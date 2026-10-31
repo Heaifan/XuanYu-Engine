@@ -12,7 +12,7 @@ public sealed class UiMapLogChineseTests
     {
         vm.MapWidthText = width; vm.MapDepthText = "600"; vm.MapBaseHeightText = "0";
         vm.RunCommand.Execute("应用地图属性");
-        return string.Join("\n", vm.LogItems.Select(e => e.Message));
+        return string.Join("\n", vm.LogPresentation.LogItems.Select(e => e.Message));
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public sealed class UiMapLogChineseTests
         vm.MapWidthText = "600"; vm.MapDepthText = "600"; vm.MapBaseHeightText = "0";
         vm.RunCommand.Execute("应用地图属性");
         vm.RunCommand.Execute("撤销地图修改");
-        var text = string.Join("\n", vm.LogItems.Select(e => e.Message));
+        var text = string.Join("\n", vm.LogPresentation.LogItems.Select(e => e.Message));
 
         Assert.Contains("原因=撤销", text);
         Assert.Contains("地图撤销成功", text);

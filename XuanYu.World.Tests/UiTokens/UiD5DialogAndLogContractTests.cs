@@ -85,6 +85,6 @@ public sealed class UiD5DialogAndLogContractTests
     public void Log_empty_state_vm_flag_works()
     {
         var vm = new UiVm(null, () => true);
-        Assert.False(vm.ShowNoFilterResults); // 默认「全部」筛选下不显示筛选空态
+        Assert.False(vm.LogPresentation.ShowNoFilterResults); // 默认「全部」筛选下不显示筛选空态
     }
 }
