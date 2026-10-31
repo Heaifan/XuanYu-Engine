@@ -2,6 +2,10 @@
 
 ## K-VAL-001 用户运行产物必须与验证产物一致
 
+### 2026-10-31 强化｜源码/资产/产品和证据关联
+每份 Build/Runtime 报告需列 Tree、输入 SourceFingerprint 算法、DLL 与资源 SHA、测试 TRX、Process Version、真实运行入口；同名文件或测试通过数不能替代源码身份比较。不同指纹算法/范围导致 SHA 不同，先解释口径，不直接断言代码内容不同。
+
+
 **状态**：Active
 **优先级**：P0
 **证据等级**：E1
@@ -88,6 +92,10 @@ scene.vert
 ---
 
 ## K-VAL-002 UI / Native 功能必须采用分层验收
+
+### 2026-10-31 强化｜M2/Native/真机层级
+CPU 同步合同、Headless、Win32 Surface Present、Swapchain Resize、GPU timestamp、Editor 视觉/真实 OS 输入、P50/P95 与用户最终验收各自独立。尚未采集真实 Editor Sink、双帧 GPU 或 Native P3 消息时必须记 NOT RUN；`1419` 对 Present 不能推广成全负载性能达标。
+
 
 **状态**：Active
 **优先级**：P0
@@ -355,6 +363,10 @@ Architecture Guard 报出冻结边界外文件、依赖或白名单违规时，�
 
 ## K-GOV-005 Candidate Tree Purity
 
+### 2026-10-31 强化｜Candidate 与真实验证产物双身份
+WorkspaceRoot 与 SourceRoot 可以分离，但 Source Tree / SourceFingerprint、Build DLL SHA、TRX、Fixture、Manifest、GPU/Editor 运行入口必须对应同一个冻结 Candidate。M2 的 A/B/C 各 Lane 不能跨候选互借 PASS；DEM Fixture 缺失/Arch-A RED 保留 PARTIAL；远端候选 `6dd62073e0c91a925000c6297d873020dd0df36c` 不代表所有后续本地 Dirty 已推送。
+
+
 **状态**：Active
 **优先级**：P0
 **证据等级**：E2
@@ -441,6 +453,10 @@ A/B 对照中，仅移除额外 `SetupWithoutStarting()`、让 `HeadlessUnitTest
 **证据**：XYT-C · `0d75987cff361cefd3ccd4864ea9c17fe17f3581` · 2026-09-29。
 
 ## K-XYT-EXEC-001 执行失败根因在证据不足时必须保持 UNKNOWN
+
+### 2026-10-31 强化｜基线失败与能力边界
+清洁基线稳定失败、间歇性 UI 测试失败、环境缺失、测试框架错误与产品逻辑回归不得混报；父级 Selftest Exit 0 和某个嵌套命令的进程退出码需要分别记录。禁止为了报告全绿而删除 Required Tests 或把 UNKNOWN 强行归为产品修复。
+
 **状态**：Active　**优先级**：P0　**证据等级**：E3  
 FAIL、TIMEOUT、FLAKY 或 Harness 异常只说明执行结果；完成根因分类前必须保持 `UNKNOWN / UNCLASSIFIED`，不得自动升级成产品根因。应先完成 Failure Sweep，再区分 Product / Harness / Oracle / Environment / Unknown。
 **证据**：XYT-D · `673dae7f02c4d9c43a5a5fc83b1952233471f4d5` · 2026-09-29。

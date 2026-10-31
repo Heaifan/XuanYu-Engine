@@ -212,6 +212,10 @@ A = new A(B)
 ---
 
 ## K-GEO-003 地理对象必须显式绑定 Ground Surface，Terrain 查询失败不得静默回退
+
+### 2026-10-31 强化｜Ground Authoring
+GroundPick 区分 Terrain / Plane / Invalid；Terrain 采样失败禁止回退 Z=0。Region 2D XY 与 SurfaceBinding 是两个职责；MapGround 与 Terrain 的权威地表关系必须明确。DEM 成功导入不能直接证明 Region 可绘制、缩放稳定或 Pickup/Preview 全部成立。
+
 **状态**：Active　**优先级**：P0　**证据等级**：E2  
 **适用范围**：Region、Road、Marker 及其它贴地编辑对象。
 

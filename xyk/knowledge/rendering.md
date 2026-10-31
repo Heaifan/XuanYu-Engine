@@ -2,6 +2,10 @@
 
 ## K-REN-005 图形功能必须以语义正确的最终像素和 Runtime Visual Gate 收口
 
+### 2026-10-31 强化｜Shader 源码与 SPIR-V 的证据层
+GLSL、SPIR-V/字节码、Descriptor/Pipeline 合同必须关联同一 Source Tree 和可复现构建，单一 Fragment 校验不能冒称全套 Shader 16/16 验收。静态源码和字节码一致也不代表真实 GPU 最终像素、Depth 与用户视觉通过；对未测项维持 UNKNOWN/PARTIAL。
+
+
 **状态**：Active
 **优先级**：P0
 **证据等级**：E1

@@ -287,6 +287,10 @@ Superseded by：
 
 ## EXP-TEST-001 平台与生产链测试必须从权威边界进入
 
+### 2026-10-31 强化｜P3 真机验证
+HWND/OS Message、真实 Router/Owner/Capture、Consumer 和业务结果、相同产品 Source/Asset Identity 必须成链。Headless 的 Synthetic Event、渲染 Probe、CPU Contract 不能充当这一闭环；没有真实运行数据时标 NOT RUN。
+
+
 状态：ACTIVE
 适用范围：Input Adapter / Native / Avalonia / Runtime Wiring / Platform Contract / Production Path / Headless Runtime UI / Test Bootstrap
 触发条件：测试涉及平台消息、键值、Pointer、Adapter、Router、生产接线、Headless Session 生命周期、Visual 坐标转换，或以源码字符串/Helper 证明行为。
@@ -483,6 +487,10 @@ Occurrences：1
 ---
 
 ## EXP-GOVERNANCE-005 Lane PASS ≠ Integration PASS
+
+### 2026-10-31 强化
+M2 A/B/C 不同源码指纹、DEM Fixture/Arch-A、双帧 GPU 与实机帧采集有不同剩余门禁；局部 PASS 无法继承为整体 Integration。XYUI R2 708/708 与用户视觉 CLOSED 也不等于未暂存、未提交的最后一批已经远端推送。必须分栏报告 Candidate / Integration / Git Remote。
+
 
 状态：ACTIVE
 适用范围：C0 / Forensic / Convergence / Integration 报告、Lane 汇报、Coordinator 裁决、Commit 与 Release Eligibility。

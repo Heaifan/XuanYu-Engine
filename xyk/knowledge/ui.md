@@ -92,6 +92,10 @@ Diagnostic 开启与关闭不应改变目标 Viewport 的输入可用性。任�
 
 ## K-UI-002 拖拽反馈必须保持 Pointer Grab Point 不变量
 
+### 2026-10-31 强化｜真实输入生命周期
+UI 的拖拽视觉 Feedback、原生消息 Capture、领域提交须分别检查；按事件坐标链定位错误，不能使用额外 Offset 或 DPI 二次乘法掩盖。无真机报告不得从合同 PASS 自动推断实际 Win32 输入已接通。
+
+
 **状态**：Active
 **优先级**：P1
 **证据等级**：E2

@@ -2,6 +2,10 @@
 
 ## K-INP-001 同一 Pointer 手势必须只有一个实时 Owner
 
+### 2026-10-31 强化｜Native 输入真实性
+Owner、Router 与 Capture 需覆盖 PointerDown/Move/Up、CaptureLost、FocusLost、工具切换及 Preview 终止；Synthetic Headless 事件通过不代表 Win32 HWND/OS 消息最终走到了 Consumer/领域结果。Native P3 如未实测必须保留 NOT RUN。
+
+
 **状态**：Active
 **优先级**：P0
 **证据等级**：E2
