@@ -1752,7 +1752,7 @@
 - XuanYu.World.Tests/Camera/CameraFramingOccupancyTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Camera/CameraFramingTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Camera/CameraNavigationUiTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Camera/CameraNavigationUiTests.Focus.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Camera/Navigation/test_CameraNavigationUiTests.Focus.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Camera/CameraOrbitCaptureRegressionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Camera/CAuditR1SurfaceAabbTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Camera/EditorOrbitObservationCenterTests.cs — C# 源码文件，承载仓库实现或测试职责。

@@ -13,17 +13,14 @@ internal sealed class SelectionCoordinator(
 {
     bool _synchronizingProjection;
     int _commitDepth, _hierarchySelectionDepth, _projectionSyncDepth;
-
     public bool IsSynchronizingProjection => _synchronizingProjection;
     public int CommitDepth => _commitDepth;
     public int HierarchySelectionDepth => _hierarchySelectionDepth;
     public int ProjectionSyncDepth => _projectionSyncDepth;
-
     public void BeginCommit() => _commitDepth++;
     public void EndCommit() => _commitDepth--;
     public void BeginHierarchySelection() => _hierarchySelectionDepth++;
     public void EndHierarchySelection() => _hierarchySelectionDepth--;
-
     public bool TryBeginProjectionSync()
     {
         if (_synchronizingProjection) return false;
@@ -31,13 +28,11 @@ internal sealed class SelectionCoordinator(
         _projectionSyncDepth++;
         return true;
     }
-
     public void EndProjectionSync()
     {
         _projectionSyncDepth--;
         _synchronizingProjection = false;
     }
-
     public void PublishSelectionChange(Action syncTrees, Action refreshInspector,
         Action notifySelection, Action notifyInspector, Action notifyCommands, Action publishRender)
     {
@@ -48,7 +43,6 @@ internal sealed class SelectionCoordinator(
         notifyCommands();
         publishRender();
     }
-
     public SelectionTransition? Select(SelectEditorItemCommand command, EntityId? activeEntity,
         bool blocked, Action cancelInteraction, Action<int> traceStart, Action<int> traceEnd)
     {
@@ -64,12 +58,10 @@ internal sealed class SelectionCoordinator(
         }
         finally { traceEnd(CommitDepth); EndCommit(); }
     }
-
     public EditorStateChangedResult? Clear(ClearEditorSelectionCommand command) =>
         selection.Clear(command);
 
     public bool IsEntityValid(EntityId key) => scene.TryGetEntity(key, out _);
-
     public ViewportSelectionRequest ResolveViewportSelection(ViewportPickingResult result)
     {
         if (!result.HasHit) return new("视口空白", null);
