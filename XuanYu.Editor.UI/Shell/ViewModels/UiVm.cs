@@ -21,6 +21,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
     readonly EditorHistoryOwner _historyOwner = new();
     readonly ProjectTreePresenter _projectTreePresenter = new();
     readonly LayerPresenter _layerPresenter = new();
+    readonly InspectorDraft _inspectorDraft = new();
     readonly IEditorDialogService _dialogService = new NullEditorDialogService();
     readonly Dictionary<string, EditorTreeNode> _hierarchyNodeCache = new();
     readonly HashSet<string> _collapsedHierarchyKeys = new(StringComparer.Ordinal);

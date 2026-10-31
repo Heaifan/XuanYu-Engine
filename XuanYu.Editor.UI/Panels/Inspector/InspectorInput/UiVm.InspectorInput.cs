@@ -18,12 +18,12 @@ public sealed partial class UiVm
             FooterMessage = "检查器提交失败：未选择有效实体。";
             return false;
         }
-        if (!TryParseInspectorNumber(text, out var value))
+        if (!InspectorDraft.TryParseNumber(text, out var value))
         {
             FooterMessage = "检查器提交失败：请输入有效数字。";
             return false;
         }
-        if (!TryBuildInspectorTransform(entity.Transform, group, axis, value, out var next, out var error))
+        if (!InspectorDraft.TryBuildTransform(entity.Transform, group, axis, value, out var next, out var error))
         {
             FooterMessage = error;
             return false;
@@ -42,7 +42,7 @@ public sealed partial class UiVm
             return false;
         }
         RecordTransformHistory(commit);
-        FooterMessage = $"检查器已提交：{group} {axis} = {FormatNumber(value)}。";
+        FooterMessage = $"检查器已提交：{group} {axis} = {InspectorDraft.FormatNumber(value)}。";
         OnPropertyChanged(nameof(InspectorFields));
         OnPropertyChanged(nameof(DebugObjectItems));
         RaiseInspectorEntityBindings();

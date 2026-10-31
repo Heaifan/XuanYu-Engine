@@ -44,7 +44,7 @@ public sealed partial class UiVm
     internal bool CommitTerrainVerticalExaggeration(InspectorEditTarget target, string text)
     {
         if (!IsTerrainInspector || target.ObjectKind != InspectorObjectKind.Terrain ||
-            target.ObjectId != InspectorObjectId() || !TryParseInspectorNumber(text, out var value))
+            target.ObjectId != InspectorObjectId() || !InspectorDraft.TryParseNumber(text, out var value))
             return false;
         VerticalExaggeration = value;
         FooterMessage = $"垂直夸张已更新：{VerticalExaggerationText}。";

@@ -4,9 +4,9 @@ namespace XuanYu.World.Tests.UiTokens;
 
 public sealed class InspectorFix1ContractTests
 {
-    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml"));
 
-    static readonly string ReadOnlyPresenter = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorReadOnlyValuePresenter.axaml"));
+    static readonly string ReadOnlyPresenter = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorReadOnlyValuePresenter.axaml"));
 
     [Fact]
     public void Readonly_values_use_inline_copy_presenter_without_selectable_text_template()

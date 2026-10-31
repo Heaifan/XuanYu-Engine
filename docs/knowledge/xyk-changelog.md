@@ -317,3 +317,12 @@
 - Known Risk: No Editor startup smoke in this slice; visual runtime acceptance is part of the combined final pass. Synchronous notifications remain on the original caller thread.
 - XYK: NONE (task-local presenter ownership; no reusable rule change). Existing L-TEST-001 STRENGTHEN remains pending formal Coordinator receipt.
 - Verification Boundary: Focused build/tests only; no full suite or product visual acceptance.
+
+### TASK XYE-EDITOR-UIVM-R4-INSPECTOR — XYK NONE
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; Parent=fab5ae60; root untracked path `5` preserved.
+- Changes: Replaced the UiVm Inspector parse partial with InspectorDraft, which owns entity/layer name draft values, stable entity-name edit target, cancel restoration, numeric parsing, transform candidate validation, and formatting. UiVm retains command/transaction/history orchestration and existing AXAML properties. Escape restores the initial entity-name draft and suppresses the ensuing focus-loss commit. SceneStateOwner and MapEditSession remain authoritative models.
+- Evidence: World.Tests Release build succeeded 0 warnings / 0 errors. Inspector draft, stable target, commit, scene document, property mutability/target/color, and layer rename tests passed 41/41. Inspector AXAML/token/focus/layout contracts passed 28/28 after correcting legacy source paths only; assertions were unchanged.
+- Known Risk: Editor startup smoke is still pending final combined pass. Transform controls remain OneWay numeric bindings with direct commit calls; no persistent per-axis text draft was introduced. UI-thread scheduling remains unverified.
+- XYK: NONE (local extraction; no new reusable rule). L-TEST-001 STRENGTHEN formal receipt remains pending XYK Coordinator.
+- Verification Boundary: Focused Release build and named test groups only; startup/visual acceptance not yet claimed.

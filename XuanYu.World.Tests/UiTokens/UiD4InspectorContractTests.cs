@@ -6,11 +6,11 @@ namespace XuanYu.World.Tests.UiTokens;
 // 公共语义样式、无卡片嵌套、调试页 96 列。
 public sealed class UiD4InspectorContractTests
 {
-    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+    static readonly string Panel = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "InspectorPanel.axaml"));
 
-    static readonly string Entity = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "EntityInspectorPanel.axaml"));
+    static readonly string Entity = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Panels", "Inspector", "InspectorPanels", "EntityInspectorPanel.axaml"));
 
-    static readonly string Right = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
+    static readonly string Right = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Panels", "Inspector", "EditorRightTabs.axaml"));
 
     [Fact]
     public void Inspector_fonts_reference_formal_tokens()
@@ -81,7 +81,7 @@ public sealed class UiD4InspectorContractTests
     [Fact]
     public void Inspector_input_routing_preserves_textbox_focus()
     {
-        var shortcuts = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Win", "UiWin.Shortcuts.cs"));
+        var shortcuts = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Shell", "Windowing", "Shortcuts", "UiWin.Shortcuts.cs"));
         Assert.Contains("GetFocusedElement() is TextBox", shortcuts);
     }
 

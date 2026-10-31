@@ -33,7 +33,7 @@ public sealed partial class UiVm
 
     void OnLayerSelectionChanged()
     {
-        _layerInspectorNameText = SelectedLayer?.Name ?? "";
+        _inspectorDraft.SetLayerNameText(SelectedLayer?.Name ?? "");
         OnPropertyChanged(nameof(HasLayerSelection));
         OnPropertyChanged(nameof(CanMoveLayerUp));
         OnPropertyChanged(nameof(CanMoveLayerDown));

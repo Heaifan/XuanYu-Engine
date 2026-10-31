@@ -30,9 +30,9 @@ public sealed partial class UiVm
             new("活动状态", EditorDisplayText.Activity(entity.Activity)),
             new("全局位置", EditorDisplayText.Position(entity.GlobalPosition)),
             new("变换", "", IsGroupHeader: true),
-            new("位置", $"X {FormatNumber(p.X)}    Y {FormatNumber(p.Y)}    Z {FormatNumber(p.Z)}"),
-            new("旋转", $"X {FormatNumber(r.X)}°    Y {FormatNumber(r.Y)}°    Z {FormatNumber(r.Z)}°"),
-            new("缩放", $"X {FormatNumber(s.X)}    Y {FormatNumber(s.Y)}    Z {FormatNumber(s.Z)}")
+            new("位置", $"X {InspectorDraft.FormatNumber(p.X)}    Y {InspectorDraft.FormatNumber(p.Y)}    Z {InspectorDraft.FormatNumber(p.Z)}"),
+            new("旋转", $"X {InspectorDraft.FormatNumber(r.X)}°    Y {InspectorDraft.FormatNumber(r.Y)}°    Z {InspectorDraft.FormatNumber(r.Z)}"),
+            new("缩放", $"X {InspectorDraft.FormatNumber(s.X)}    Y {InspectorDraft.FormatNumber(s.Y)}    Z {InspectorDraft.FormatNumber(s.Z)}")
         ];
     }
 

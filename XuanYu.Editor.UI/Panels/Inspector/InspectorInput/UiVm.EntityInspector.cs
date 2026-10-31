@@ -4,9 +4,6 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    string _inspectorEntityNameText = "";
-    InspectorEditTarget? _entityNameEditTarget;
-
     public bool IsEntityInspector => SelectedDataset is null &&
         TrySelectedEntityKey(out var key) && _sceneState.TryGetEntity(key, out _);
 
@@ -15,8 +12,8 @@ public sealed partial class UiVm
 
     public string InspectorEntityNameText
     {
-        get => _inspectorEntityNameText;
-        set => Set(ref _inspectorEntityNameText, value);
+        get => _inspectorDraft.EntityNameText;
+        set { if (_inspectorDraft.SetEntityNameText(value)) OnPropertyChanged(nameof(InspectorEntityNameText)); }
     }
 
     public double InspectorPositionX => InspectorVector("位置").X;
@@ -29,13 +26,18 @@ public sealed partial class UiVm
     public double InspectorScaleY => InspectorVector("缩放").Y;
     public double InspectorScaleZ => InspectorVector("缩放").Z;
 
-    public void BeginInspectorEntityNameEdit() =>
-        _entityNameEditTarget = CreateInspectorEditTarget("Entity.Basic.Name");
+    public void BeginInspectorEntityNameEdit() => _inspectorDraft.BeginEntityNameEdit(
+        CreateInspectorEditTarget("Entity.Basic.Name"), InspectorEntityNameText);
+
+    public void CancelInspectorEntityNameEdit()
+    {
+        if (_inspectorDraft.CancelEntityNameEdit()) OnPropertyChanged(nameof(InspectorEntityNameText));
+    }
 
     public bool CommitInspectorEntityName()
     {
-        var target = _entityNameEditTarget ?? CreateInspectorEditTarget("Entity.Basic.Name");
-        _entityNameEditTarget = null;
+        if (_inspectorDraft.ConsumeCancelledEntityNameCommit()) return false;
+        var target = _inspectorDraft.TakeEntityNameTarget() ?? CreateInspectorEditTarget("Entity.Basic.Name");
         return CommitInspectorProperty(target, InspectorEntityNameText);
     }
 
@@ -52,7 +54,7 @@ public sealed partial class UiVm
 
     void RefreshInspectorEntityProjection()
     {
-        _inspectorEntityNameText = TrySelectedEntity(out var entity) ? entity.Name : "";
+        _inspectorDraft.SetEntityNameText(TrySelectedEntity(out var entity) ? entity.Name : "");
         RaiseInspectorEntityBindings();
     }
 

@@ -6,14 +6,11 @@ namespace XuanYu.Editor.UI;
 
 public partial class EntityInspectorPanel : UserControl
 {
-    string _nameEditStart = "";
-
     public EntityInspectorPanel()
     {
         InitializeComponent();
         NameBox.GotFocus += (_, _) =>
         {
-            _nameEditStart = NameBox.Text ?? "";
             (DataContext as UiVm)?.BeginInspectorEntityNameEdit();
         };
         NameBox.KeyDown += NameBox_KeyDown;
@@ -26,7 +23,7 @@ public partial class EntityInspectorPanel : UserControl
     void NameBox_KeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter) { CommitName(); e.Handled = true; }
-        else if (e.Key == Key.Escape) { NameBox.Text = _nameEditStart; e.Handled = true; }
+        else if (e.Key == Key.Escape) { (DataContext as UiVm)?.CancelInspectorEntityNameEdit(); e.Handled = true; }
     }
 
     void CommitName() => (DataContext as UiVm)?.CommitInspectorEntityName();

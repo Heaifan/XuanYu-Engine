@@ -7,12 +7,10 @@ namespace XuanYu.Editor.UI;
 // 名称提交采用"输入框文本 + CommitLayerRename"（Enter/失焦提交，逐键不触发会话命令）。
 public sealed partial class UiVm
 {
-    string _layerInspectorNameText = "";
-
     public string LayerInspectorNameText
     {
-        get => _layerInspectorNameText;
-        set => Set(ref _layerInspectorNameText, value); // 暂存输入框文本；提交由 CommitLayerRename 执行
+        get => _inspectorDraft.LayerNameText;
+        set { if (_inspectorDraft.SetLayerNameText(value)) OnPropertyChanged(nameof(LayerInspectorNameText)); } // 提交由 CommitLayerRename 执行
     }
 
     public string LayerInspectorKindText => SelectedLayer?.KindTagText ?? "";
