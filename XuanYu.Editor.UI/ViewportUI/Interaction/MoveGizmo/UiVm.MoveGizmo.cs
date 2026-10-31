@@ -8,9 +8,6 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    readonly TransformSession _transformSession = new();
-    MoveDragConstraint? _moveDragConstraint;
-
     public bool TryBeginMoveGizmoCapture(
         long pointerId,
         double x,
@@ -41,14 +38,13 @@ public sealed partial class UiVm
         var start = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}";
         var result = BeginEditorInteraction(new BeginInteractionCommand(sessionTool, start, pointer));
         if (result is null) return false;
-        if (!_transformSession.Begin(result.Snapshot.SessionId, entity, axis.Value,
-            _worldMutation.WorldRevision))
+        if (!_transformInteraction.BeginMove(result.Snapshot.SessionId, entity, axis.Value,
+            _worldMutation.WorldRevision, CreateMoveDragConstraint(layout, axis.Value, x, y)))
         {
             _editorState.Cancel(new CancelInteractionCommand(
                 result.Snapshot.SessionId, sessionTool, "Transform Session 启动失败"));
             return false;
         }
-        _moveDragConstraint = CreateMoveDragConstraint(layout, axis.Value, x, y);
         FooterState = "状态：捕获中";
         FooterMessage = $"移动轴 {axis} 已捕获";
         var detail = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}";
@@ -67,9 +63,7 @@ public sealed partial class UiVm
 
     bool PreviewMoveGizmo(long sessionId, double x, double y)
     {
-        if (!_transformSession.IsActive || _moveDragConstraint is not { } constraint) return false;
-        var position = constraint.Solve(_transformSession.StartSnapshot.Transform.Position, x, y);
-        if (!_transformSession.TryPreview(sessionId, position)) return false;
+        if (!_transformInteraction.PreviewMove(sessionId, x, y)) return false;
         PublishSceneRenderSnapshot();
         return true;
     }

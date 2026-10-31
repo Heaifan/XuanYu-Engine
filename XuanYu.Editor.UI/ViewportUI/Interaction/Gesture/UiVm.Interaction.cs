@@ -44,11 +44,9 @@ public sealed partial class UiVm
             snap.SessionId, snap.OwnerTool, snap.Pointer.PointerId));
         if (result is null) return;
         var commit = default(TransformCommit);
-        var transformCommitted = _transformSession.TryCreateCommand(snap.SessionId, out var command)
+        var transformCommitted = _transformInteraction.TryCreateCommand(snap.SessionId, out var command)
             && command.TryApply(_worldMutation, out commit);
-        _moveDragConstraint = null;
-        _rotateDrag = null;
-        _scaleDrag = null;
+        _transformInteraction.ClearPointerState();
         if (transformCommitted)
         {
             RecordTransformHistory(commit);
@@ -68,10 +66,8 @@ public sealed partial class UiVm
         var snap = _editorState.InteractionSnapshot;
         var result = _editorState.Cancel(new CancelInteractionCommand(snap.SessionId, snap.OwnerTool, reason));
         if (result is null) return;
-        var transformCanceled = _transformSession.TryCancel(snap.SessionId);
-        _moveDragConstraint = null;
-        _rotateDrag = null;
-        _scaleDrag = null;
+        var transformCanceled = _transformInteraction.TryCancel(snap.SessionId);
+        _transformInteraction.ClearPointerState();
         if (transformCanceled) PublishSceneRenderSnapshot();
         FooterState = "状态：就绪";
         FooterMessage = $"交互已取消：{reason}";

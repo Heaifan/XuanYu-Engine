@@ -353,3 +353,11 @@
 - Evidence: The successful Editor.UI Release build for the current source identity succeeded 0 warnings / 0 errors. Focused Release camera/orbit/Dolly/terrain far-plane tests passed 124/124.
 - Boundary: Camera extraction is PARTIAL because equivalent behavior ownership cannot be proved without coordinated changes across the listed paths. No changes to ObservationCenter Dolly, 0.25m floor, terrain constraint/recovery, resize/DPI, or navigation cancellation semantics.
 - XYK: NONE. Existing L-TEST-001 STRENGTHEN formal receipt remains pending XYK Coordinator.
+
+### TASK XYE-EDITOR-UIVM-R5-C — Transform/Gizmo interaction owner / CLOSED
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; Parent=0b0685a20c6837d8e92c061a3ebe40565bda023d; root untracked path `5` preserved.
+- Changes: Added `TransformInteractionController` owning the existing `TransformSession`, Move constraint, Rotate drag, Scale drag, and their Preview calculations. UiVm retains pointer routing, capture termination, business transaction application, history recording, notifications and snapshot publication. Preview remains non-authoritative; Cancel clears session/drag state without history; Commit still creates/applies one existing TransformCommand through the prior history path.
+- Evidence: Editor.UI Release build succeeded 0 warnings / 0 errors (identity=9E55F98F4CE5C8AC47CDD9C552B4CE07DBB8CF2BFD4C1DDA121EF9715E4E8060). World.Tests Release build succeeded 0 warnings / 0 errors (identity=DD7AB6F1C202BDA7C571B6B6009385597E612616F78DAA397CE35DB9635C9374). Focused Move/Rotate/Scale/TransformSession/boundary/projection suite passed 70/70. Updated an existing reflection-based drag cleanup test to inspect the relocated owner; its null-after-commit/cancel assertions are unchanged.
+- Known risk: Pointer lifecycle remains coordinated by UiVm/ViewportInput; full native capture-loss behavior remains covered only by the named automated contracts, not separate manual pointer instrumentation.
+- XYK: NONE (task-local ownership extraction). Existing L-TEST-001 STRENGTHEN formal receipt remains pending XYK Coordinator.

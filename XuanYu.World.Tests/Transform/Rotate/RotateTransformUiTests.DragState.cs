@@ -39,8 +39,11 @@ public sealed partial class RotateTransformUiTests
 
     static object? DragOf(UiVm vm)
     {
-        var field = typeof(UiVm).GetField(
-            "_rotateDrag", BindingFlags.Instance | BindingFlags.NonPublic);
-        return field!.GetValue(vm);
+        var owner = typeof(UiVm).GetField(
+            "_transformInteraction", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var controller = owner.GetValue(vm)!;
+        var field = controller.GetType().GetField(
+            "_rotate", BindingFlags.Instance | BindingFlags.NonPublic);
+        return field!.GetValue(controller);
     }
 }

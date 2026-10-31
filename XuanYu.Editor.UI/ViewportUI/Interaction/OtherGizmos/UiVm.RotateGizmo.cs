@@ -8,8 +8,6 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    RotateGizmoDrag? _rotateDrag;
-
     public bool TryBeginRotateGizmoCapture(
         long pointerId,
         double x,
@@ -40,21 +38,19 @@ public sealed partial class UiVm
         var start = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}";
         var result = BeginEditorInteraction(new BeginInteractionCommand(sessionTool, start, pointer));
         if (result is null) return false;
-        if (!_transformSession.BeginRotate(result.Snapshot.SessionId, entity, axis.Value,
-            _worldMutation.WorldRevision))
-        {
-            _editorState.Cancel(new CancelInteractionCommand(
-                result.Snapshot.SessionId, sessionTool, "Transform Session 启动失败"));
-            return false;
-        }
-        _rotateDrag = new RotateGizmoDrag(
+        var drag = new RotateGizmoDrag(
             state, entity.Transform.Position, axis.Value, entity.Transform.Rotation, x, y);
-        if (!_rotateDrag.TryInitialize(x, y))
+        var begin = _transformInteraction.BeginRotate(result.Snapshot.SessionId, entity, axis.Value,
+            _worldMutation.WorldRevision, drag, x, y);
+        if (begin != RotateBeginResult.Started)
         {
-            _transformSession.TryCancel(result.Snapshot.SessionId);
+            if (begin == RotateBeginResult.InvalidRay)
+                _transformInteraction.TryCancel(result.Snapshot.SessionId);
             _editorState.Cancel(new CancelInteractionCommand(
-                result.Snapshot.SessionId, sessionTool, "旋转射线与环无有效交点"));
-            _rotateDrag = null;
+                result.Snapshot.SessionId, sessionTool,
+                begin == RotateBeginResult.InvalidRay
+                    ? "旋转射线与环无有效交点"
+                    : "Transform Session 启动失败"));
             return false;
         }
         FooterState = "状态：捕获中";
@@ -75,11 +71,7 @@ public sealed partial class UiVm
 
     bool PreviewRotateGizmo(long sessionId, double x, double y)
     {
-        if (!_transformSession.IsActive || _rotateDrag is not { } drag) return false;
-        var rotation = drag.Solve(x, y);
-        if (rotation is null) return false;
-        if (!_transformSession.TryPreviewRotation(sessionId, rotation.Value)) return false;
-        _rotateDrag = drag;
+        if (!_transformInteraction.PreviewRotate(sessionId, x, y)) return false;
         PublishSceneRenderSnapshot();
         return true;
     }

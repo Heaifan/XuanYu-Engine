@@ -11,9 +11,7 @@ public sealed partial class UiVm
             _geometrySnap.IsSnapped || _selectedMapGeometryVertexIndex >= 0;
         var hadDrawingTransient = IsDrawingTransactionActive || _regionDrawing.IsActive ||
             _roadDrawing.IsActive || _regionDrawingSnap.IsSnapped;
-        _moveDragConstraint = null;
-        _rotateDrag = null;
-        _scaleDrag = null;
+        _transformInteraction.ClearPointerState();
         ClearNavigationGizmoInteractionState();
         _regionDrawing.Cancel();
         _roadDrawing.Cancel();

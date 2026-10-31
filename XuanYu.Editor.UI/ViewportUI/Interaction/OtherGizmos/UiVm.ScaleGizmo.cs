@@ -7,8 +7,6 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    ScaleGizmoDrag? _scaleDrag;
-
     public bool TryBeginScaleGizmoCapture(
         long pointerId,
         double x,
@@ -40,14 +38,6 @@ public sealed partial class UiVm
         var start = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；手柄={handle}";
         var result = BeginEditorInteraction(new BeginInteractionCommand(sessionTool, start, pointer));
         if (result is null) return false;
-        if (!_transformSession.BeginScale(result.Snapshot.SessionId, entity, handle.Value,
-            _worldMutation.WorldRevision))
-        {
-            _editorState.Cancel(new CancelInteractionCommand(
-                result.Snapshot.SessionId, sessionTool, "Transform Session 启动失败"));
-            return false;
-        }
-
         // 轴向屏幕归一化方向（Uniform 未使用）；Scale 当前锁定 Global，CPU 命中层与绘制层共用世界轴。
         ScreenPoint axisDir = default;
         if (handle.Value != ScaleGizmoHandle.Uniform)
@@ -59,8 +49,14 @@ public sealed partial class UiVm
             var len = System.Math.Sqrt(dx * dx + dy * dy);
             if (len > 1e-6) axisDir = new ScreenPoint(dx / len, dy / len);
         }
-        _scaleDrag = new ScaleGizmoDrag(
-            handle.Value, entity.Transform.Scale, x, y, axisDir);
+        if (!_transformInteraction.BeginScale(result.Snapshot.SessionId, entity, handle.Value,
+            _worldMutation.WorldRevision,
+            new ScaleGizmoDrag(handle.Value, entity.Transform.Scale, x, y, axisDir)))
+        {
+            _editorState.Cancel(new CancelInteractionCommand(
+                result.Snapshot.SessionId, sessionTool, "Transform Session 启动失败"));
+            return false;
+        }
         FooterState = "状态：捕获中";
         FooterMessage = $"缩放手柄 {handle} 已捕获";
         var detail = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；手柄={handle}";
@@ -82,10 +78,7 @@ public sealed partial class UiVm
 
     bool PreviewScaleGizmo(long sessionId, double x, double y)
     {
-        if (!_transformSession.IsActive || _scaleDrag is not { } drag) return false;
-        var scale = drag.Solve(x, y);
-        if (!_transformSession.TryPreviewScale(sessionId, scale)) return false;
-        _scaleDrag = drag;
+        if (!_transformInteraction.PreviewScale(sessionId, x, y)) return false;
         PublishSceneRenderSnapshot();
         return true;
     }

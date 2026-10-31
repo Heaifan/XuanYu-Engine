@@ -16,6 +16,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.IRe
 {
     readonly EditorStateOwner _editorState;
     SelectionCoordinator _selectionCoordinator = null!;
+    readonly TransformInteractionController _transformInteraction = new();
     readonly IWorldTransformMutationContract _worldMutation;
     readonly EditorContextOwner _contextState;
     readonly EditorAuthoringOwner _authoringState;

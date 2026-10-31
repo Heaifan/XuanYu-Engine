@@ -26,7 +26,7 @@ public sealed partial class UiVm
             return new SceneRenderSnapshot(
                 entity,
                 selected,
-                _transformSession.Preview,
+                _transformInteraction.Preview,
                 showMove,
                 scene.Entities,
                 _camera,
