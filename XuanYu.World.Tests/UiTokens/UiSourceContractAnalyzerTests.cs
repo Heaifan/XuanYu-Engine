@@ -69,7 +69,7 @@ public sealed class UiSourceContractAnalyzerTests
     public void Icon_resource_dictionary_in_design_passes()
     {
         var v = UiSourceContractAnalyzer.AnalyzeAxaml(
-            "<StreamGeometry x:Key=\"SearchIcon\">M1 2Z</StreamGeometry>", "XuanYu.Editor.UI/Design/UiTokens.axaml");
+            "<StreamGeometry x:Key=\"SearchIcon\">M1 2Z</StreamGeometry>", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.axaml");
         Assert.DoesNotContain(v, x => x.Kind == UiRuleKind.TokenDeclaration);
     }
 

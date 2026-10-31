@@ -33,7 +33,7 @@
     {
       "TestId": "terrain.render.draw-plan.stable-multi-tile-order",
       "Project": "XuanYu.World.Tests",
-      "File": "XuanYu.World.Tests/Render/TerrainMultiTileRenderContractTests.cs",
+      "File": "XuanYu.World.Tests/Render/test_TerrainMultiTileRenderContract.cs",
       "Capability": "Render",
       "TestName": "Draw_plan_contains_one_entry_per_terrain_in_stable_order",
       "Claim": "The CPU draw plan emits one Terrain entry per resource in stable order.",
@@ -164,7 +164,7 @@
     {
       "TestId": "render.draw-plan.terrain-before-reference-grid",
       "Project": "XuanYu.World.Tests",
-      "File": "XuanYu.World.Tests/Render/WorldReferenceGridDepthContractTests.cs",
+      "File": "XuanYu.World.Tests/Render/test_WorldReferenceGridDepthContract.cs",
       "Capability": "Render",
       "TestName": "Draw_plan_keeps_terrain_and_map_before_reference_grid",
       "Claim": "Terrain and map draw entries precede the reference grid in the CPU plan.",

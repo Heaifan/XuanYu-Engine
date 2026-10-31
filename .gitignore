@@ -24,6 +24,7 @@ codex_chat_export_*.zip
 # Local package/cache folders
 .nuget-local/
 .agents/
+/.xye-local/
 
 # Rider IDE
 .idea/

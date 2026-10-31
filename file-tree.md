@@ -1,12 +1,518 @@
-﻿# XuanYuEngine 文件树
+# XuanYuEngine 文件树
 - XuanYu.Core/Diagnostics/ViewportPresentedFrame.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core/Diagnostics/ViewportProbe.GpuCapture.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core/Diagnostics/XyeWorkspacePaths.cs — XYE 受控任务诊断目录解析与路径约束。
+- XuanYu.Core/Diagnostics/System/XyeDiagnosticPaths.cs — 规范项目内诊断路径解析与约束。
 - XuanYu.Core/Diagnostics/VulkanPngEncoder.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.Control.Cli/XycCliProcessBridge.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Control/UiVmXycCamera.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Control/XycCameraValidator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Control/XycTestDemPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Capture/XycUiCaptureCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Capture/XycUiNativeCapture.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Capture/XycUiRuntime.Capture.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Capture/XycUiRuntime.CaptureAvalonia.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/ControlSurface/XycUiContracts.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/ControlSurface/XycUiControlDiscovery.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/ControlSurface/XycUiControlLookup.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/ControlSurface/XycUiRuntime.Controls.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/ControlSurface/XycUiWindowNative.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Runtime/XycUiRuntime.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Runtime/XycUiRuntime.Region.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Runtime/XycUiRuntime.State.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Runtime/XycUiRuntime.Theme.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/Runtime/XycUiRuntime.Window.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/XycSceneCore/UiVm.XycScene.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/XycSceneState/UiVm.XycScene.Guards.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/XycSceneState/UiVm.XycScene.History.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/XycSceneState/UiVm.XycScene.HistoryTracking.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/XycSceneState/UiVm.XycScene.Projection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Controls/XycSceneState/UiVm.XycScene.Session.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/DiagnosticAutoBinder.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/DiagnosticBadge.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/DiagnosticBadge.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/DiagnosticDetailPanel.axaml — 界面或脚本源码文件，承载对应产品职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/DiagnosticDetailPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/DiagnosticOverlayHost.ToolWindowState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBase/DiagnosticOverlayHost.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBase/DiagnosticOverlayHost.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBase/DiagnosticOverlayHost.Bounds.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBase/DiagnosticOverlayHost.FloatingLayer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBase/DiagnosticOverlayHost.Registry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBase/DiagnosticOverlayHost.TargetKind.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBehavior/DiagnosticOverlayHost.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBehavior/DiagnosticOverlayHost.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBehavior/DiagnosticOverlayHost.Restore.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBehavior/DiagnosticOverlayHost.Sync.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayBehavior/DiagnosticOverlayHost.Tracking.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayNative/DiagnosticOverlayHost.NativeDialog.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayNative/DiagnosticOverlayHost.NativeOverlay.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayNative/DiagnosticOverlayHost.NativeViewportProbe.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayNative/DiagnosticOverlayHost.ToolWindow.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayNative/DiagnosticOverlayHost.ToolWindowPlacement.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayProbe/DiagnosticOverlayHost.PopupLayers.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayProbe/DiagnosticOverlayHost.PopupProbe.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayProbe/DiagnosticOverlayHost.Probe.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayProbe/DiagnosticOverlayHost.ProbeBounds.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayProbe/DiagnosticOverlayHost.ProbeCard.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayState/UiVm.DiagnosticIdentity.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayState/UiVm.DiagnosticMode.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/EditorLogBuffer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/EditorLogBus.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/EditorLogCategory.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/EditorLogLevel.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/LogEntry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/EditorLogSource.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Filtering/EditorLogFilter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Filtering/EditorLogFilterQuery.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Filtering/EditorLogFilterState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Filtering/EditorLogNoiseFilter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Presentation/EditorDisplayText.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Presentation/EditorLogClipboardText.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Presentation/EditorLogRepeatKey.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Presentation/EditorLogSummary.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Presentation/LogProjectionCache.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Refresh/UiVm.Logging.Refresh.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/Refresh/UiVm.Logging.State.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiText.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiVm.DebugProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiVm.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiVm.Logging.Filters.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Logging/ViewModel/UiVm.Logging.Metrics.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Accessibility/UiAutomationNamer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Accessibility/UiDpiContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Accessibility/UiMotionPreference.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/app.manifest — 仓库资源文件，承载对应路径定义的项目内容。
+- XuanYu.Editor.UI/Infrastructure/Resources/Bootstrap/App.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Bootstrap/App.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Bootstrap/Program.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Capture/SilentCaptureEvidence.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Capture/XycSilentApplicationStartup.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Capture/XycSilentCaptureCommands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Host/SilentHostDiagnostics.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Host/SilentNativeWindow.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Host/SilentVulkanHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Host/UiVmXycRuntime.Diagnostics.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/EditorIcons.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/RelayCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiStyles.D4F1.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiStyles.D5.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokenManifest.json — 仓库资源文件，承载对应路径定义的项目内容。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.Colors.Components.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.Colors.Core.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.Controls.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.Fonts.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.Icons.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.Motion.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.Spacing.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Camera/UiVmXycCamera.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Camera/UiVmXycRuntime.Dolly.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Camera/XycCameraValidator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Camera/XycDollyCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Commands/XycCommandProcessor.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Commands/XycStdioHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Commands/XycUiCommandProcessor.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/IXycRuntime.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Notifications/BottomRightNotificationHost.axaml — 界面或脚本源码文件，承载对应产品职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Notifications/BottomRightNotificationHost.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Scene/UiVmXycRuntime.Scene.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Scene/UiVmXycScene.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Scene/XycSceneCommandProcessor.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/Scene/XycSceneContracts.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/UiVmXycRuntime.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/XycAppSession.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/XycModels.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Infrastructure/Services/XycTestDemPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/Catalog/DatasetLayerPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Data/Catalog/DatasetLayerPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/Catalog/DatasetLayerPanel.Drag.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/Catalog/DatasetPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Data/Catalog/DatasetPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/Catalog/MapDatasetRow.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/Catalog/MapDatasetTypePresentation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetAuthoring/UiVm.MapDataset.DrawingBootstrap.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetAuthoring/UiVm.MapDataset.DrawingTarget.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetAuthoring/UiVm.MapDataset.MarkerBootstrap.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetAuthoring/UiVm.MapDataset.RoadBootstrap.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetCommands/UiVm.MapDataset.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetCommands/UiVm.MapDataset.Routing.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetCommands/UiVm.MapDataset.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetPresentation/UiVm.MapDataset.Inspector.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetPresentation/UiVm.MapDataset.LayerBridge.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetPresentation/UiVm.MapDataset.RegionPresentation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetPresentation/UiVm.MapDataset.RoadPresentation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetState/UiVm.MapDataset.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetState/UiVm.MapDataset.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetState/UiVm.MapDataset.Name.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetState/UiVm.MapManifest.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Data/DatasetState/UiVm.MapWorld.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Commands/UiVm.MapCommandRouting.Danger.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Commands/UiVm.MapDanger.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Commands/UiVm.MapLayerDrag.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Commands/UiVm.MapLayerSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Commands/UiVm.RoadTool.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Editor/UiVm.MapEditor.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Editor/UiVm.MapEditor.Display.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Editor/UiVm.MapEditor.NumericDraft.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Editor/UiVm.MapEditor.Validation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Editor/UiVm.MapEditor.Validation.Rules.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Geometry/UiVm.MapGeometryEditing.Bindings.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Geometry/UiVm.MapGeometryEditing.Helpers.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Geometry/UiVm.MapGeometryEditing.Inspector.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Geometry/UiVm.MapGeometryEditing.Points.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/Geometry/UiVm.MapGeometryEditing.RoadVertices.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/History/UiVm.MapHistory.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.DragDrop.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.Rename.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.States.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Editing/UiVm.MapCommandRouting.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/UiVm.MapGeometryEditing.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Editing/UiVm.MapGeometryEditing.State.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/ContextMenu/MapContextMenuInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/ContextMenu/UiVm.MapContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/Marker/UiVm.MapMarkerInspector.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/Marker/UiVm.MapMarkerPlacement.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/RegionCommit/UiVm.RegionDrawing.Close.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/RegionCommit/UiVm.RegionDrawing.Commit.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/RegionCommit/UiVm.RegionDrawing.DraftHistory.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/RegionCommit/UiVm.RegionDrawing.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/RegionInput/UiVm.RegionDrawing.Capture.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/RegionInput/UiVm.RegionDrawing.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/RegionInput/UiVm.RegionDrawing.Input.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/RegionInput/UiVm.RegionDrawing.Snap.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/Road/UiVm.MapRoadSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/Road/UiVm.RoadDrawing.Commit.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/Road/UiVm.RoadDrawing.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/Road/UiVm.RoadDrawing.History.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Interaction/Road/UiVm.RoadDrawing.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/EditorLayerDock.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/EditorLayerDock.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapEditorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapEditorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapFormPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapFormPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/Inspectors/FeatureInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/Inspectors/FeatureInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/Inspectors/MarkerInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/Inspectors/MarkerInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/Inspectors/UiVm.MapLayerInspector.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/LayerRows/EditorLayerProviderAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/LayerRows/MapLayerRowViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/LayerRows/MapLayerRowViewModel.Rename.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/LayerRows/UiVm.LayerContext.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/LayerRows/UiVm.MapLayers.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/Layout/EditableFormLayoutModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/Layout/MapEditorLayoutModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapIdDisplayFormat.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/MapPagePanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/MapPagePanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/MarkerPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/MarkerPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/RegionalAuthoringPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/RegionalAuthoringPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/RegionPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/RegionPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/RoadPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/RoadPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Diagnostics/UiVm.MapDiagnostics.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Diagnostics/UiVm.MapDiagnostics.Format.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Diagnostics/UiVm.MapLayerDiagnostics.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Geometry/MapVectorOverlayBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Geometry/MapVectorOverlayBuilder.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Geometry/MapVectorOverlayBuilder.Labels.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Geometry/MapVectorOverlayBuilder.Road.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Geometry/MapVectorOverlayBuilder.Surface.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/LabelCache/MapLabelBitmapCache.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/LabelCache/MapLabelCacheKey.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/LabelCache/MapLabelRasterizer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Labels/UiVm.MapLabelCache.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/MapVectorOverlayBuilder.Finalize.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/MapVectorOverlayTriangulation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Projection/MapRegionColorPreviewProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Projection/MapRegionLabelProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Projection/MapRegionRenderProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Projection/MapRegionRenderStyle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/Projection/MapRenderSnapshotProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/MapUI/Rendering/UiVm.MapRender.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/EditorRightTabs.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Inspector/EditorRightTabs.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.EntityInspector.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.InspectorFeatureEditing.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.InspectorInput.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.InspectorInput.Parse.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.InspectorNavigation.Commands.cs — Inspector 键盘导航、激活与属性提交命令。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorNavigation/UiVm.Inspector.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorNavigation/UiVm.InspectorNavigation.cs — Inspector 分类导航、Single Focus 与搜索状态。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorNavigation/UiVm.InspectorRegionColorPreview.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorNavigation/UiVm.InspectorSections.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorNavigation/UiVm.TerrainInspector.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EditorCompactStyles.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EntityInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EntityInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/LayerInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/LayerInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/Right.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/Right.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorPropertySearch.cs — Inspector 全局属性包含搜索逻辑。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorReadOnlyValuePresenter.axaml — Inspector 只读值与复制入口的统一内容 Presenter。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorReadOnlyValuePresenter.axaml.cs — Inspector 只读值复制行为实现。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorRecentStore.cs — 按对象类型隔离的 Session Recent MRU 存储。
+- XuanYu.Editor.UI/Panels/Inspector/InspectorSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyModels/InspectorCategoryItem.cs — Inspector 语义导航项及其选中状态模型。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyModels/InspectorColorValue.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyModels/InspectorDescriptors.cs — Inspector 对象类型与语义属性描述符定义。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyModels/InspectorEditTarget.cs — Inspector 编辑目标与对象身份稳定键模型。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyRows/InspectorFieldRow.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyRows/InspectorPanel.RegionColor.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyRows/InspectorPropertyDescriptor.cs — Inspector 属性键、编辑性与显示信息模型。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyRows/InspectorPropertyRow.cs — Inspector 属性搜索与展示行模型。
+- XuanYu.Editor.UI/Panels/Inspector/PropertyRows/RegionFillColorPreview.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/Hierarchy/HierarchyWorkspace.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Navigation/Hierarchy/HierarchyWorkspace.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/Hierarchy/HierarchyWorkspace.Context.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/Hierarchy/HierarchyWorkspace.Rename.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/LeftWorkspace/Left.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Navigation/LeftWorkspace/Left.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/LeftWorkspace/Left.Styles.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Navigation/ProjectTree/InlineRenameActivation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/ProjectTree/ProjectWorkspace.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Navigation/ProjectTree/ProjectWorkspace.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/ProjectTree/UiVm.ProjectTree.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/ProjectTree/UiVm.TreeCommands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/Tree/EditorTreeNode.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/Tree/TreeGuide.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/Tree/TreeGuideBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Navigation/Tree/TreeGuideSegment.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Status/LogControls/LogAutoScrollPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Status/LogControls/LogListAutoScrollController.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Status/LogControls/LogListAutoScrollController.Follow.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Status/LogControls/LogListAutoScrollController.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.States.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Status/StatusWidgets/NotificationBar.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Status/StatusWidgets/NotificationBar.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/ContextTools/ContextToolBar.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/ContextTools/ContextToolBar.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/ContextTools/ContextToolbarDiagnosticBridge.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/ContextTools/EditToolsModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/ContextTools/EditToolsModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/ContextTools/SnapModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/ContextTools/SnapModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripController.AllTabs.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripController.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripController.Hint.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripController.Visible.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripTemplate.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/ViewTools/ViewModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/ViewTools/ViewModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/ViewTools/ViewOptionsMenu.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/ViewTools/ViewOptionsMenu.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/FileModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/FileModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/RuntimeStatusModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/RuntimeStatusModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainModel/TerrainDiagnosticSamples.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainModel/TerrainImportState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainModel/TerrainRevisionLedger.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainModel/TerrainWorldBounds.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainModel/TerrainWorldPlacement.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainRendering/TerrainRenderContentFingerprint.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainRendering/TerrainRenderGroundSurface.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainRendering/TerrainRenderProjectionAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainRendering/UiVm.TerrainRenderCache.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/TerrainRendering/UiVm.TerrainRevision.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/UiVm.EntityCommands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/UiVm.History.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/UiVm.History.Entities.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/UiVm.History.Transaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceCommands/UiVm.ContextToolbarDrawing.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceCommands/UiVm.RegionAuthoring.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceCommands/UiVm.TerrainContext.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceCommands/UiVm.TerrainImport.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceCommands/UiVm.TerrainImportRuntime.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/UiVm.TerrainAutoFraming.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/UiVm.TerrainPresentationHook.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/UiVm.Workspace.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceSelector.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceSelector.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Composition/Application/Main.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Shell/Composition/Application/Main.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Composition/Application/UiRoot.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Shell/Composition/Application/UiRoot.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Composition/DialogServices/IEditorDialogService.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Composition/DialogServices/NullEditorDialogService.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/ImportAndState/D2StaticModelDemo.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/ImportAndState/SceneHistoryEntry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/ImportAndState/UiVm.Scene.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/ImportAndState/UiVm.SceneSnapshotTrace.cs — 记录场景快照发布次数与实体数的首次诊断摘要。
+- XuanYu.Editor.UI/Shell/Documents/ImportAndState/UiVm.StaticModelImport.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Persistence/UiVm.SceneDocument.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Persistence/UiVm.SceneDocument.New.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Persistence/UiVm.SceneDocumentLog.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Persistence/UiVm.SceneDocumentMapRef.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Persistence/UiVm.SceneDocumentSave.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Rendering/SceneRenderProjectionAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Rendering/StaticModelRenderAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Rendering/UiVm.RenderProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/Rendering/UiVm.WorldProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Navigation/UiVm.Mode.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Application/EditorApplicationState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Application/UiVm.ApplicationState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Application/UiVm.Composition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Diagnostics/UiVm.DiagnosticReplayLogs.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Diagnostics/UiVm.LogShell.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Notifications/UiVm.Notification.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Notifications/UiVm.NotificationLifetime.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Panels/UiVm.RightPanel.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/UiVm.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Viewport/UiVm.NativeHostLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Viewport/UiVm.ViewportInput.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/Commands/UiWin.EntityShortcuts.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/Commands/UiWin.MapCommands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/Commands/UiWin.NativePicker.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/Commands/UiWin.SceneCommands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/Commands/UiWin.TerrainCommands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/DialogLifecycle/UiWin.DialogHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/DialogLifecycle/UiWin.DialogHost.Danger.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/DialogLifecycle/UiWin.DialogHost.Input.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/DialogLifecycle/UiWin.Dialogs.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/DialogLifecycle/UiWin.UnsavedDialog.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/Shortcuts/UiWin.Shortcuts.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/Shortcuts/UnsavedChangesConfirmationWindow.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Shell/Windowing/Shortcuts/UnsavedChangesConfirmationWindow.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/DialogFocusTrap.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/LayerDeleteConfirmationWindow.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/LayerDeleteConfirmationWindow.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/UiWin.Accessibility.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/UiWin.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/UiWin.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/UiWin.CloseLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/FarProjection/SceneFarBounds.cs — 按静态模型 Bounds 与场景实体变换构建世界空间可视范围。
+- XuanYu.Editor.UI/ViewportUI/Camera/FarProjection/TerrainFarPlanePolicy.cs — 按最终相机与有效场景/地形 Bounds 计算有界 FarPlane 的视锥策略。
+- XuanYu.Editor.UI/ViewportUI/Camera/FarProjection/UiVm.FarProjectionDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/FarProjection/UiVm.TerrainFarBounds.cs — 构建渲染一致的地形 Chunk Bounds，并在几何输入变化时刷新相机 FarPlane。
+- XuanYu.Editor.UI/ViewportUI/Camera/Framing/UiVm.Camera.Framing.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Framing/UiVm.Camera.Framing.Draft.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Framing/UiVm.CameraDolly.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Framing/UiVm.CameraDollyTerrainConstraint.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Framing/UiVm.ScaleIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Navigation/UiVm.Camera.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Navigation/UiVm.CameraNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Navigation/UiVm.CameraNavigation.Orbit.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Session/CameraSessionMode.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Session/CameraSessionSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/Session/OrbitPivotAuthority.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/ViewModes/OrbitProbe.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/ViewModes/StandardViewResolver.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Camera/ViewModes/UiVm.ViewGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/DiagnosticNativePointerProbe.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/DiagnosticNativeViewportEvent.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/DiagnosticPopupHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/DiagnosticProbeResolver.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/DiagnosticProbeResolver.Semantic.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Inspection/DiagnosticClipboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Inspection/DiagnosticElementFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Inspection/DiagnosticElementSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Inspection/DiagnosticReportFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Inspection/DiagnosticSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/NativeViewport/DiagnosticNativeCoordinateMapping.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/NativeViewport/DiagnosticNativeViewportTarget.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/NativeViewport/TerrainCameraReplayRunner.Actions.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/NativeViewport/TerrainCameraReplayRunner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/NativeViewport/TerrainNativeInputReplay.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Placement/DiagnosticCardPlacementMode.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Placement/DiagnosticFloatingCard.axaml — 界面或脚本源码文件，承载对应产品职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Placement/DiagnosticFloatingCard.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Placement/DiagnosticFloatingToolWindow.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Placement/DiagnosticPlacementModels.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Placement/DiagnosticPlacementPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Probing/DiagnosticProbeResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Probing/DiagnosticXyuiIdentity.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Probing/DiagnosticXyuiResolver.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Probing/TerrainReplayCapture.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Probing/TerrainReplayScaleCapture.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Registry/DiagnosticId.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Registry/DiagnosticRegistry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Registry/DiagnosticSnapshotFactory.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Registry/FeatureDiagnosticIds.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Diagnostics/Registry/XYDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Context/VulkanNativeHost.ContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Context/VulkanNativeHost.Dpi.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Context/VulkanNativeHost.LayoutSync.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Context/VulkanNativeHost.RegionSnapInput.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Diagnostics/VulkanNativeHost.DiagnosticPointer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Diagnostics/VulkanNativeHost.Log.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Diagnostics/VulkanNativeHost.Probe.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Input/VulkanNativeHost.AvaloniaKeyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Input/VulkanNativeHost.AvaloniaPointer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Input/VulkanNativeHost.CameraPointer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Input/VulkanNativeHost.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Input/VulkanNativeHost.Pointer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Lifecycle/VulkanNativeHost.AvaloniaLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Lifecycle/VulkanNativeHost.Bridge.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Lifecycle/VulkanNativeHost.ContextMenuLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Lifecycle/VulkanNativeHost.InputLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Lifecycle/VulkanNativeHost.SurfaceAttach.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/NativeHostResizeCoalescer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/NativeHostResizeSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/NativeHostSurfaceContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/ViewportNativeHostRoute.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/VulkanViewport.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- XuanYu.Editor.UI/ViewportUI/Host/VulkanViewport.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Win32Host/VulkanNativeHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Win32Host/Win32ViewportHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Win32Host/Win32ViewportHost.Input.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Win32Host/Win32ViewportHost.Input.Diagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Host/Win32Host/Win32ViewportHost.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/AvaloniaAdapters/AvaloniaKeyboardEventAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/AvaloniaAdapters/AvaloniaPointerEventAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/AvaloniaAdapters/AvaloniaViewportInputForwarder.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/AvaloniaAdapters/AvaloniaViewportKeyboardInputForwarder.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/NativeAdapters/NativeKeyboardEventAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/NativeAdapters/NativePointerEventAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/NativeAdapters/NativePointerSourceBoundary.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/NativeAdapters/NativeViewportInputForwarder.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/NativeAdapters/NativeViewportKeyboardInputForwarder.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/NativeKeyMessage.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/NativePointerMessage.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/NativePointerRoutePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Routing/UiVmD1Handler.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Routing/UiVmMapBackend.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Routing/UiVmNavigationViewportInputHandler.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Routing/UiVmViewportInputComposition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Selection/UiVm.Picking.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Selection/UiVm.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Selection/UiVm.SelectionProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Selection/UiVm.SelectionValidity.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/Selection/UiVm.ViewportSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/SelectionTrace/UiVm.SelectionTrace.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Input/SelectionTrace/ViewportPickingLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/Gesture/UiVm.Interaction.Begin.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/Gesture/UiVm.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/Gesture/UiVm.InteractionCancel.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/Gesture/UiVm.InteractionPointer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/Gesture/UiVm.InteractionTransientCleanup.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/MoveGizmo/UiVm.MoveGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/MoveGizmo/UiVm.MoveGizmoLogging.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/MoveGizmo/UiVm.MoveScreenSize.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/NavigationGizmo/ViewNavigationGizmo.HitTest.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/NavigationGizmo/ViewNavigationGizmo.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/OtherGizmos/UiVm.RotateGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/OtherGizmos/UiVm.ScaleGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/UiVm.InputGuards.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/UiVm.Tool.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/UiVm.TransformAvailability.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/ViewportUI/Interaction/TransformTools/UiVm.ViewportAssist.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/XuanYu.Editor.UI.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceFenceWaitAdapterTests.cs — 独立测试源码（test_ 前缀）。
 - XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceSampleBufferTests.cs — 独立测试源码（test_ 前缀）。
 - XuanYu.Render.Abstractions.Tests/Performance/test_PerformanceSampleContractTests.cs — 独立测试源码（test_ 前缀）。
@@ -312,7 +818,7 @@
 - XuanYu.Render.Vulkan/Shaders/Sources/WorldAxes/editor_world_origin.frag — 着色器源码文件。
 - XuanYu.Render.Vulkan/Shaders/Sources/WorldAxes/editor_world_reference_grid.frag — 着色器源码文件。
 - XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj — Vulkan 项目配置。
-- XuanYu.World.Tests/Diagnostics/XyeWorkspacePathsTests.cs — XYE 诊断目录路径约束测试。
+- XuanYu.World.Tests/Diagnostics/test_XyeDiagnosticPaths.cs — 规范项目诊断路径测试。
 - tools/xyc-offscreen/BenchmarkConfigurationRunner.cs — 单配置 CPU/GPU/readback/PNG 多阶段采样。
 - tools/xyc-offscreen/BenchmarkCsvWriter.cs — 12 配置汇总 CSV 导出。
 - tools/xyc-offscreen/BenchmarkFailureFactory.cs — 分辨率资源预算与失败状态归类。
@@ -511,6 +1017,9 @@
 - docs/knowledge/rendering.md — 项目文档文件，承载规范、计划或记录。
 - docs/knowledge/ui.md — 项目文档文件，承载规范、计划或记录。
 - docs/knowledge/ui/viewport-ui-control-development-guide.md — 项目文档文件，承载规范、计划或记录。
+- docs/knowledge/xyk-changelog.md — XYK 候选登记、审核轨迹与状态记录；不是正式知识库。
+- docs/milestones/EDITOR-R1-K/editor-migration-map.csv — Editor R1-K 迁移源目标映射与 SHA-256 清单。
+- docs/milestones/EDITOR-R1-K/editor-structure-audit.md — Editor R1-L 四级目录容量与 SRP 审计结果。
 - docs/milestones/closed/MAP-A/R2-closeout.md — 项目文档文件，承载规范、计划或记录。
 - docs/milestones/closed/MAP-DATA-A/MAP-DATA-A-R2-closeout.md — 项目文档文件，承载规范、计划或记录。
 - docs/milestones/closed/MAP-DATA-A/R1-closeout.md — 项目文档文件，承载规范、计划或记录。
@@ -728,9 +1237,8 @@
 - scripts/xuanyu-dotnet.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
 - scripts/xye-bootstrap.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
 - scripts/xye-dotnet.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
-- scripts/XyeWorkspace.psm1 — XYE 临时工作区解析、快照、清单与预览实现。
-- scripts/xye-workspace.ps1 — XYE 受控任务启动和生命周期入口。
-- scripts/xye-workspace.selftest.ps1 — XYE 临时工作区入口自检。
+- scripts/xye-build.ps1 — 规范共享输出的串行 Restore/Build 与产物身份复用。
+- scripts/xye-write-guard.ps1 — 文件写入归属与基线冲突检查。
 - tools/governance/knowledge-preflight.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
 - tools/governance/knowledge-preflight.selftest.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
 - tools/governance/workspace/safe-fast-forward.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
@@ -778,9 +1286,9 @@
 - XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/Background/FarViewBackgroundShaderContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Runtime/Pipeline/test_FarViewBackgroundShaderContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Camera/StandardViewResolverTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/Diagnostics/RenderLogNoiseContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Runtime/Pipeline/test_RenderLogNoiseContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Dispatch/VulkanDrawDispatchContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/DrawPlan/CubeRenderDrawPlanTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/DrawPlan/FrameExecutionPolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -790,19 +1298,19 @@
 - XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/DrawPlan/ViewportAssistDrawPlanTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/DrawPlan/ViewportChromeContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Draw/Viewport/test_ViewportScaleIndicatorContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/EmptyWorldBaselineContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/Grid/BlenderStyleGridTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Grid/Geometry/test_BlenderStyleGrid.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Grid/ReferenceGridFrameStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/Grid/ReferenceGridShaderContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/Grid/ReverseZWorldGridContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Grid/Geometry/test_ReferenceGridShaderContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Grid/Geometry/test_ReverseZWorldGridContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Grid/ScaleIndicatorMetricTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Grid/ViewportLongRangeProbeTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Grid/ViewportMetricScaleTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/Grid/WorldGridStartupLifecycleContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/Grid/WorldReferenceGridFarFadeContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/LatestRenderProjectionQueueTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Grid/Lifecycle/test_WorldGridStartupLifecycleContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Grid/Lifecycle/test_WorldReferenceGridFarFadeContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Draw/Frame/test_LatestRenderProjectionQueue.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Map/GroundSnapshotLifecycleContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Map/MapRegionDrawPlanTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Map/MapRenderDrawPlanTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -813,21 +1321,21 @@
 - XuanYu.Core.Tests/Render/Map/MapSurfaceResourceUpdatePolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Map/ReferencePlaneHorizonCoverageTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Map/ReferencePlaneHorizonProbeTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoDipContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Overlay/NavLayout/test_NavigationGizmoDipContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoDirectionContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoInputIsolationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoLayoutTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoLayoutTests.Facing.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoOverlayContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoOverlayContractTests.Shader.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Overlay/NavOverlay/test_NavigationGizmoOverlayContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Overlay/NavOverlay/test_NavigationGizmoOverlayContractTests.Shader.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Overlay/ScaleIndicatorGlyphLiteTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/Overlay/ViewportOverlayLayoutTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/ReferencePlaneBaselineContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/StaticModels/RegionModelTransformContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/StaticModels/StaticModelDepthRegressionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Runtime/Models/test_StaticModelDepthRegression.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/StaticModels/StaticModelRenderContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Render/TerrainVisibilitySelectorTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Core.Tests/Render/Vulkan/VulkanRenderStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Core.Tests/Render/Runtime/Pipeline/test_VulkanRenderState.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Space/CameraOrthographicTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Space/CameraStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Core.Tests/Space/DefaultEditorCameraTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -936,723 +1444,266 @@
 - XuanYu.Editor.Tests/History/TransformHistoryIntegrationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.Tests/History/TransformHistoryRedoIntegrationTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI.Tests/Contracts/UiCanonicalVersionContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Accessibility/UiAutomationNamer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Accessibility/UiDpiContract.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Accessibility/UiMotionPreference.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/app.manifest — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Editor.UI/Bootstrap/App.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Bootstrap/App.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Bootstrap/Program.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Design/UiStyles.D4F1.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiStyles.D5.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiTokenManifest.json — 仓库资源文件，承载对应路径定义的项目内容。
-- XuanYu.Editor.UI/Design/UiTokens.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiTokens.Colors.Components.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiTokens.Colors.Core.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiTokens.Controls.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiTokens.Fonts.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiTokens.Icons.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiTokens.Motion.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Design/UiTokens.Spacing.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticAutoBinder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticBadge.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticBadge.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticCardPlacementMode.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticClipboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticDetailPanel.axaml — 界面或脚本源码文件，承载对应产品职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticDetailPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticElementFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticElementSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticFloatingCard.axaml — 界面或脚本源码文件，承载对应产品职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticFloatingCard.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticFloatingToolWindow.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticId.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticNativeCoordinateMapping.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticNativePointerProbe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticNativeViewportEvent.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticNativeViewportTarget.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.Bounds.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.FloatingLayer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.NativeDialog.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.NativeOverlay.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.NativeViewportProbe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.PopupLayers.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.PopupProbe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.Probe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.ProbeBounds.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.ProbeCard.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.Registry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.Restore.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.Sync.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.TargetKind.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.ToolWindow.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.ToolWindowPlacement.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.ToolWindowState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.Tracking.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticPlacementModels.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticPlacementPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticPopupHost.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticProbeResolver.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticProbeResolver.Semantic.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticProbeResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticRegistry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticReportFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticSnapshotFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticXyuiIdentity.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/DiagnosticXyuiResolver.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/FeatureDiagnosticIds.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/TerrainCameraReplayRunner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/TerrainReplayCapture.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Diagnostic/XYDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Dialogs/IEditorDialogService.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Dialogs/NullEditorDialogService.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Foot/Foot.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Foot/Foot.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Foot/Foot.States.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Foot/LogAutoScrollPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Foot/LogDetailPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Foot/LogListAutoScrollController.Follow.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Foot/LogListAutoScrollController.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Foot/NotificationBar.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Foot/NotificationBar.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Icons/EditorIcons.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Input/MapContextMenuInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Input/UiVmD1Handler.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Input/UiVmMapBackend.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Input/UiVmNavigationViewportInputHandler.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Input/UiVmViewportInputComposition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/HierarchyWorkspace.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Left/HierarchyWorkspace.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/HierarchyWorkspace.Context.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/HierarchyWorkspace.Rename.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/InlineRenameActivation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/Left.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Left/Left.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/Left.Styles.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Left/MarkerPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Left/MarkerPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/ProjectWorkspace.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Left/ProjectWorkspace.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/RegionPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Left/RegionPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Left/RoadPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Left/RoadPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Main/Main.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Main/Main.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/NativeHostResizeCoalescer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/NativeHostResizeSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/NativeHostSurfaceContract.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Notification/BottomRightNotificationHost.axaml — 界面或脚本源码文件，承载对应产品职责。
-- XuanYu.Editor.UI/Notification/BottomRightNotificationHost.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/RelayCommand.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/DatasetLayerPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/DatasetLayerPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/DatasetLayerPanel.Drag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/DatasetPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/DatasetPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/EditableFormLayoutModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/EditorCompactStyles.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/EditorLayerDock.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/EditorLayerDock.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/EditorRightTabs.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/EditorRightTabs.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/EntityInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/EntityInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/FeatureInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/FeatureInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/InspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/InspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/InspectorPanel.RegionColor.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/InspectorReadOnlyValuePresenter.axaml — Inspector 只读值与复制入口的统一内容 Presenter。
-- XuanYu.Editor.UI/Right/InspectorReadOnlyValuePresenter.axaml.cs — Inspector 只读值复制行为实现。
-- XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/LayerPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/LayerPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/LayerPanel.DragDrop.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/LayerPanel.Rename.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/LayerPanel.States.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/MapEditorLayoutModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/MapEditorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/MapFormPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/MapFormPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/MapIdDisplayFormat.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/MapPagePanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/MapPagePanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/MarkerInspectorPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/MarkerInspectorPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/RegionalAuthoringPanel.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/RegionalAuthoringPanel.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/Right.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Right/Right.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/TopTabStripController.AllTabs.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/TopTabStripController.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/TopTabStripController.Hint.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/TopTabStripController.Visible.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/TopTabStripModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Right/TopTabStripTemplate.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Root/UiRoot.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Root/UiRoot.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/ContextToolBar.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Top/ContextToolBar.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/ContextToolbarDiagnosticBridge.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/EditToolsModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Top/EditToolsModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/FileModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Top/FileModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/RuntimeStatusModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Top/RuntimeStatusModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/SnapModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Top/SnapModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/Top.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Top/Top.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/ViewModule.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Top/ViewModule.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Top/ViewOptionsMenu.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Top/ViewOptionsMenu.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/TreeGuide.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/TreeGuideSegment.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Ui.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Viewport/Input/AvaloniaKeyboardEventAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Input/AvaloniaPointerEventAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Input/AvaloniaViewportInputForwarder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Input/AvaloniaViewportKeyboardInputForwarder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Input/NativeKeyboardEventAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Input/NativePointerEventAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Input/NativePointerSourceBoundary.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Input/NativeViewportInputForwarder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Input/NativeViewportKeyboardInputForwarder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.HitTest.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/NativeKeyMessage.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/NativePointerRoutePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaKeyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaPointer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.CameraPointer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.ContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.ContextMenuLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.DiagnosticPointer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.InputLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Log.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Probe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.RegionSnapInput.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.SurfaceAttach.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/ViewportNativeHostRoute.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/CameraSessionMode.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/CameraSessionSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/OrbitPivotAuthority.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/OrbitProbe.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/SceneFarBounds.cs — 按静态模型 Bounds 与场景实体变换构建世界空间可视范围。
-- XuanYu.Editor.UI/Vm/Camera/StandardViewResolver.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/TerrainFarPlanePolicy.cs — 按最终相机与有效场景/地形 Bounds 计算有界 FarPlane 的视锥策略。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.Draft.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.CameraDolly.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.Orbit.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.FarProjectionDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.ScaleIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.TerrainFarBounds.cs — 构建渲染一致的地形 Chunk Bounds，并在几何输入变化时刷新相机 FarPlane。
-- XuanYu.Editor.UI/Vm/Camera/UiVm.ViewGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Diagnostic/UiVm.DiagnosticIdentity.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Diagnostic/UiVm.DiagnosticMode.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/EditorApplicationState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/History/UiVm.EntityCommands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/History/UiVm.History.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/History/UiVm.History.Entities.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorCategoryItem.cs — Inspector 语义导航项及其选中状态模型。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorColorValue.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorDescriptors.cs — Inspector 对象类型与语义属性描述符定义。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorEditTarget.cs — Inspector 编辑目标与对象身份稳定键模型。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorFieldRow.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorPropertyDescriptor.cs — Inspector 属性键、编辑性与显示信息模型。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorPropertyRow.cs — Inspector 属性搜索与展示行模型。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorPropertySearch.cs — Inspector 全局属性包含搜索逻辑。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorRecentStore.cs — 按对象类型隔离的 Session Recent MRU 存储。
-- XuanYu.Editor.UI/Vm/Inspector/InspectorSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/RegionFillColorPreview.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.EntityInspector.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.Inspector.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorFeatureEditing.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorInput.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorInput.Parse.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorNavigation.Commands.cs — Inspector 键盘导航、激活与属性提交命令。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorNavigation.cs — Inspector 分类导航、Single Focus 与搜索状态。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorRegionColorPreview.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorSections.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Inspector/UiVm.TerrainInspector.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Layer/EditorLayerProviderAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Layer/UiVm.LayerContext.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorDisplayText.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogCategory.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogClipboardText.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogFilter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogFilterQuery.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogFilterState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogLevel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogNoiseFilter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogRepeatKey.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogSource.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/EditorLogSummary.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/LogEntry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/LogProjectionCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/UiText.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/UiVm.DebugProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.Filters.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.Metrics.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.Refresh.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.State.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapDatasetRow.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapDatasetTypePresentation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapLabelBitmapCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapLabelCacheKey.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapLabelRasterizer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.Rename.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapRegionColorPreviewProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapRegionLabelProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapRegionRenderStyle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapRenderSnapshotProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Finalize.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Labels.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Road.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Surface.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/MapVectorOverlayTriangulation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.Danger.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDanger.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingBootstrap.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingTarget.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Inspector.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.LayerBridge.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.MarkerBootstrap.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Name.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.RegionPresentation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.RoadBootstrap.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.RoadPresentation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Routing.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.Format.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Display.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.NumericDraft.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Validation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Validation.Rules.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.Bindings.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.Helpers.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.Inspector.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.Points.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.RoadVertices.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.State.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapHistory.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapLabelCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDiagnostics.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDrag.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerInspector.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapLayers.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapManifest.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapMarkerInspector.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapMarkerPlacement.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapRender.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapRoadSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.MapWorld.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Capture.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Close.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Commit.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.DraftHistory.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Input.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Snap.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RoadDrawing.Commit.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RoadDrawing.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RoadDrawing.History.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RoadDrawing.Logging.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Map/UiVm.RoadTool.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Mode/UiVm.Mode.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/D2StaticModelDemo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/SceneHistoryEntry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/SceneRenderProjectionAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/StaticModelRenderAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.RenderProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.Scene.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocument.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocument.New.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentLog.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentMapRef.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentSave.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.SceneSnapshotTrace.cs — 记录场景快照发布次数与实体数的首次诊断摘要。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.StaticModelImport.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Scene/UiVm.WorldProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Selection/UiVm.Picking.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Selection/UiVm.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Selection/UiVm.SelectionProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Selection/UiVm.SelectionTrace.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Selection/UiVm.SelectionValidity.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Selection/UiVm.ViewportSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Selection/ViewportPickingLogFormatter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/Move/UiVm.MoveGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/Move/UiVm.MoveGizmoLogging.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/Move/UiVm.MoveGizmoScreenSize.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/Rotate/UiVm.RotateGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/Scale/UiVm.ScaleGizmo.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.InputGuards.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.Interaction.Begin.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionCancel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionPointer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionTransientCleanup.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.Tool.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.TransformAvailability.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Transform/UiVm.ViewportAssist.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Tree/EditorTreeNode.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Tree/TreeGuideBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Tree/UiVm.ProjectTree.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Tree/UiVm.TreeCommands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.ApplicationState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.Composition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.LogShell.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.Notification.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.NotificationLifetime.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.RightPanel.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/UiVm.ViewportInput.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/TerrainImportState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/TerrainRenderContentFingerprint.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/TerrainRenderProjectionAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/TerrainRevisionLedger.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/TerrainWorldBounds.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/TerrainWorldPlacement.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.ContextToolbarDrawing.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.RegionAuthoring.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainAutoFraming.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainContext.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainImport.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainImportRuntime.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainPresentationHook.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainRenderCache.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.TerrainRevision.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Vm/Workspace/UiVm.Workspace.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/DialogFocusTrap.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/LayerDeleteConfirmationWindow.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Win/LayerDeleteConfirmationWindow.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.Accessibility.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Win/UiWin.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.CloseLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.DialogHost.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.DialogHost.Danger.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.DialogHost.Input.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.Dialogs.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.EntityShortcuts.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.MapCommands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.NativePicker.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.SceneCommands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.Shortcuts.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.TerrainCommands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Win/UnsavedChangesConfirmationWindow.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Win/UnsavedChangesConfirmationWindow.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor.UI/XuanYu.Editor.UI.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Editor.Win/MainForm.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.Win/XuanYu.Editor.Win.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Editor/Assets/Catalog/SceneStaticModelCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Hosting/HostedSceneAsset.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Hosting/ModelAssetRuntimeState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Hosting/Contracts/HostedSceneAsset.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Hosting/Contracts/ModelAssetRuntimeState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Hosting/Contracts/SceneAssetHostingError.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Hosting/Contracts/SceneAssetHostingState.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Assets/Hosting/Planning/SceneAssetHostingPlan.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Assets/Hosting/Planning/SceneAssetHostingPlanner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Hosting/SceneAssetHostingError.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Hosting/SceneAssetHostingState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Hosting/SceneAssetPathPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Hosting/Policies/SceneAssetPathPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Assets/Hosting/Transactions/SceneAssetHostingTransaction.Activate.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Assets/Hosting/Transactions/SceneAssetHostingTransaction.Complete.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Assets/Hosting/Transactions/SceneAssetHostingTransaction.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Assets/Hosting/Transactions/SceneAssetHostingTransaction.Rollback.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Assets/Identity/AssetId.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Import/Gltf/GlbContainer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Import/Gltf/GlbImportService.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Import/Gltf/GltfAccessorReader.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Import/Gltf/GltfCoordinatePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Import/Gltf/GltfJsonAccess.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Import/Gltf/GltfNodeTransform.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Import/Gltf/GltfStaticModelImporter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/Import/Gltf/ImportStop.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/SceneStaticModelBinding.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelAuthoringService.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelColor.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelData.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelImportCodes.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelImportResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelImportWarning.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelPrimitive.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Assets/StaticModels/StaticModelVertex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/CameraBasis.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/CameraDepthPrecisionDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/CameraFarProjectionDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/CameraFrameResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/CameraNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/CameraNavigation.Try.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/CameraNavigation.TryDolly.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/EditorCameraFraming.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/EditorCameraFraming.Draft.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/EditorCameraFraming.MapOrthographic.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/EditorCameraFraming.Orthographic.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/FrozenOrbitSession.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Camera/OrthographicViewFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Composition/EditorRuntimeComposition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/AuthoringInputCommand.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorAuthoringOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorContextCommand.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorContextOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorContextSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorInteractionChangedResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorInteractionCommand.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorInteractionPointerSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorInteractionSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorSelectionCommand.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorSelectionSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorStateChangedResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorStateOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorStateOwner.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorStateOwner.Tool.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorToolChangedResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorToolCommand.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorToolId.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorToolSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorToolText.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/EditorState/EditorTransformCapturePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/History/EditorHistoryOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/History/TransformHistoryEntry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Consumers/CameraViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Consumers/GizmoViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Consumers/INavigationViewportInputHandler.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Consumers/IViewportD1ConsumerHandler.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Consumers/NavigationViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Consumers/PickingViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Consumers/ViewportD1ConsumerSet.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Consumers/ViewportD1InputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/EditorKeyEvent.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/EditorPointerButtons.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/EditorPointerEvent.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/EditorPointerEventKind.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/EditorPointerModifiers.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/GestureOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/IViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/IViewportInputSink.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/IViewportPointerCaptureCoordinator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Lifecycle/ViewportCancellationReason.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Lifecycle/ViewportGestureContracts.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Lifecycle/ViewportGestureLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Map/IMapEditingInputBackend.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Map/MapEditingInputBackend.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Map/MapEditingInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Map/MapEditingInputSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Map/MapGeometryInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Map/MarkerInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Map/RegionInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/Map/RoadInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportGestureState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputCaptureCoordinator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputComposition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputDispatchResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputRouter.Cancellation.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputRouter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputRouter.Dispatch.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputRouter.Gesture.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputRouter.Idle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Input/ViewportInputRouter.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Layering/EditorLayerItem.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Layering/IEditorLayerProvider.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/DatasetLayerState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetDescriptor.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetDocument.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetDocumentJson.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetDocumentSerializer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetDocumentValidator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetFeatureBinding.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetIdGenerator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetLayerIdProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetPathPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegionBinding.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.FeatureQuery.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.LayerStates.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.Query.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.RegionTransaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.Rename.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.Transaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRegistry.Unregister.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetRuntimeProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDatasetStorageService.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDocument.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDocumentAggregateBridge.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDocumentJson.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDocumentOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDocumentResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapDocumentValidator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapEnvironmentDefinition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapJsonMapper.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapJsonSerializer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapManifest.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapManifestJson.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapManifestMapper.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapManifestOwner.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapManifestSerializer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapManifestStorageService.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapManifestValidator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapMarkerDatasetCodec.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapMarkerDatasetFeature.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapRegionDatasetCodec.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapRegionDatasetFeature.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapRoadDatasetCodec.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapRoadDatasetFeature.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapStorageService.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapWorkingStorage.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapDocument/MapWorkingStorage.Promotion.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/AuthoringInputSession.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometryCapability.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometryFeatureAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometryFeatureAdapters.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometryFeatureKey.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometrySnapArbitration.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometrySnapPipeline.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometrySnapPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometrySnapQuery.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometrySnapTypes.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GeometrySpatialIndex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GroundPickResolver.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/GroundPickResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/IGroundSurface.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditEvents.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditReason.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.ActiveLayer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.Commit.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.Document.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.FeatureNames.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.History.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.Layers.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.ObjectCommands.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.Regions.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.RegionSpatialIndex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.RegionStyle.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.RegionVertices.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.Roads.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.RuntimeProjection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapEditSession.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapGeometryContextHit.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapGeometryContextHitTester.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapGeometryContextHitTester.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapGeometryContextMenuSpec.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapGeometryEditTypes.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapGeometryHitTester.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapGeometryHitTester.Marker.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapHistoryEntry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapObjectNameAllocator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapSelectionKind.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/MapSurfacePicker.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/PolygonVisualCenter.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/PolygonVisualCenter.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionDrawingState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionEdgeSnapGeometry.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionEdgeSnapLockResolver.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionEdgeSnapRegion.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionEdgeSnapResolver.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionEdgeSnapResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionEdgeSnapSettings.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionEdgeSnapVertex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSnapKind.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSnapPipeline.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSnapQuery.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSnapState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSpatialBounds.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSpatialIndex.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSpatialNode.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSpatialQueryResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSpatialQueryWalker.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSpatialTreeBalancer.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionSpatialTreeEditor.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionVertexSnapResolver.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionVertexSnapResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionVertexSnapSettings.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RegionVertexSnapState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/RoadDrawingState.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/MapEditing/TerrainWorldGroundSurface.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Mode/EditorModeId.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Mode/EditorModeManager.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Mode/EditorModeTransition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/MapReference.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentAsset.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentEntity.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentJson.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentLoadTransaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentMapper.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentResult.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentSaveTransaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentSession.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentValidator.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentValidator.MapReference.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneDocumentWorldBridge.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneLoadCandidate.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneSaveOutcome.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/SceneDocument/SceneStorageService.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Transform/TransformCommand.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Transform/TransformRequest.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Transform/TransformSession.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Transform/TransformSession.Rotate.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Transform/TransformSession.Scale.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Workspace/EditorWorkspaceDefinition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Workspace/EditorWorkspaceDefinitions.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Workspace/EditorWorkspaceId.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Workspace/EditorWorkspaceManager.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Workspace/EditorWorkspaceTool.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Workspace/EditorWorkspaceTransition.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.Editor/Workspace/RegionAuthoringMode.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Gltf/Containers/GlbContainer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Gltf/Importers/GlbImportService.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Gltf/Reading/GltfAccessorReader.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Gltf/Transforms/GltfCoordinatePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Gltf/Reading/GltfJsonAccess.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Gltf/Transforms/GltfNodeTransform.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Gltf/Importers/GltfStaticModelImporter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/Gltf/Importers/ImportStop.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Data/SceneStaticModelBinding.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Authoring/StaticModelAuthoringService.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Authoring/StaticModelBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Data/StaticModelColor.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Data/StaticModelData.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Import/StaticModelImportCodes.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Import/StaticModelImportResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Import/StaticModelImportWarning.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Data/StaticModelPrimitive.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Assets/StaticModels/Data/StaticModelVertex.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraSpace/CameraBasis.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraDiagnostics/CameraDepthPrecisionDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraDiagnostics/CameraFarProjectionDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraFraming/CameraFrameResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraNavigation/CameraNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraNavigation/CameraNavigation.Try.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraNavigation/CameraNavigation.TryDolly.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraFraming/EditorCameraFraming.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraFraming/EditorCameraFraming.Draft.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraFraming/EditorCameraFraming.MapOrthographic.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraFraming/EditorCameraFraming.Orthographic.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraNavigation/FrozenOrbitSession.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/CameraSpace/OrthographicViewFactory.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/CompositionRoot/EditorRuntimeComposition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Commands/AuthoringInputCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Owners/EditorAuthoringOwner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Commands/EditorContextCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Owners/EditorContextOwner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Snapshots/EditorContextSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/StateContracts/EditorInteractionChangedResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Commands/EditorInteractionCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Snapshots/EditorInteractionPointerSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Snapshots/EditorInteractionSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Commands/EditorSelectionCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Snapshots/EditorSelectionSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/StateContracts/EditorStateChangedResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Owners/EditorStateOwner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Owners/EditorStateOwner.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Owners/EditorStateOwner.Tool.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/StateContracts/EditorToolChangedResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Commands/EditorToolCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/StateContracts/EditorToolId.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/Snapshots/EditorToolSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/StateContracts/EditorToolText.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/StateLayerPolicies/EditorTransformCapturePolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/History/EditorHistoryOwner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/History/TransformHistoryEntry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/DispatchConsumers/CameraViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/DispatchConsumers/GizmoViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/ConsumerContracts/INavigationViewportInputHandler.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/ConsumerContracts/IViewportD1ConsumerHandler.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/DispatchConsumers/NavigationViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/DispatchConsumers/PickingViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/ConsumerContracts/ViewportD1ConsumerSet.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/DispatchConsumers/ViewportD1InputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/Events/EditorKeyEvent.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/Events/EditorPointerButtons.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/Events/EditorPointerEvent.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/Events/EditorPointerEventKind.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/Events/EditorPointerModifiers.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/State/GestureOwner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/Ports/IViewportInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/Ports/IViewportInputSink.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/Ports/IViewportPointerCaptureCoordinator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/State/ViewportCancellationReason.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/LifecycleComposition/ViewportGestureContracts.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/LifecycleComposition/ViewportGestureLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/MapBackend/IMapEditingInputBackend.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/MapBackend/MapEditingInputBackend.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/MapConsumers/MapEditingInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/MapBackend/MapEditingInputSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/MapConsumers/MapGeometryInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/MapConsumers/MarkerInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/MapConsumers/RegionInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/MapConsumers/RoadInputConsumer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/State/ViewportGestureState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/LifecycleComposition/ViewportInputCaptureCoordinator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/LifecycleComposition/ViewportInputComposition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputContracts/State/ViewportInputDispatchResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/LifecycleComposition/ViewportInputRouter.Cancellation.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/RouterCore/ViewportInputRouter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/RouterCore/ViewportInputRouter.Dispatch.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/RouterCore/ViewportInputRouter.Gesture.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/RouterCore/ViewportInputRouter.Idle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/InputRuntime/RouterCore/ViewportInputRouter.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/StateLayerPolicies/EditorLayerItem.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationState/StateLayerPolicies/IEditorLayerProvider.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Manifest/DatasetLayerState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Manifest/MapDatasetDescriptor.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Dataset/MapDatasetDocument.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Dataset/MapDatasetDocumentJson.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/Serialization/MapDatasetDocumentSerializer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Validation/MapDatasetDocumentValidator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Mapping/Dataset/MapDatasetFeatureBinding.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Identity/MapDatasetIdGenerator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Mapping/Dataset/MapDatasetLayerIdProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Identity/MapDatasetPathPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Mapping/Dataset/MapDatasetRegionBinding.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Commands/MapDatasetRegistry.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/MapDatasetRegistry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Queries/MapDatasetRegistry.FeatureQuery.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Commands/MapDatasetRegistry.LayerStates.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Queries/MapDatasetRegistry.Query.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Transactions/MapDatasetRegistry.RegionTransaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Commands/MapDatasetRegistry.Rename.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Transactions/MapDatasetRegistry.Transaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Registry/Commands/MapDatasetRegistry.Unregister.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Mapping/Dataset/MapDatasetRuntimeProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/Storage/MapDatasetStorageService.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Document/MapDocument.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Mapping/Document/MapDocumentAggregateBridge.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Document/MapDocumentJson.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Owners/LegacyDocument/MapDocumentOwner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Document/MapDocumentResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Validation/MapDocumentValidator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Document/MapEnvironmentDefinition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Mapping/Document/MapJsonMapper.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/Serialization/MapJsonSerializer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Manifest/MapManifest.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Manifest/MapManifestJson.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Mapping/Manifest/MapManifestMapper.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Owners/ManifestBaseline/MapManifestOwner.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/Serialization/MapManifestSerializer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/Storage/MapManifestStorageService.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Validation/MapManifestValidator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/DatasetCodecs/MapMarkerDatasetCodec.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Dataset/MapMarkerDatasetFeature.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/DatasetCodecs/MapRegionDatasetCodec.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Dataset/MapRegionDatasetFeature.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/DatasetCodecs/MapRoadDatasetCodec.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Contracts/Dataset/MapRoadDatasetFeature.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/Storage/MapStorageService.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/Working/MapWorkingStorage.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapDocument/Persistence/Working/MapWorkingStorage.Promotion.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Drafts/AuthoringInputSession.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Features/GeometryCapability.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Features/GeometryFeatureAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Features/GeometryFeatureAdapters.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Features/GeometryFeatureKey.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Snap/GeometrySnapArbitration.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Snap/GeometrySnapPipeline.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Snap/GeometrySnapPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Snap/GeometrySnapQuery.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Snap/GeometrySnapTypes.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Spatial/GeometrySpatialIndex.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Ground/GroundPickResolver.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Ground/GroundPickResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Ground/IGroundSurface.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Contracts/MapEditEvents.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Contracts/MapEditReason.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Commands/MapEditSession.ActiveLayer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Commands/MapEditSession.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Authority/MapEditSession.Commit.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Authority/MapEditSession.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Authority/MapEditSession.Document.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Features/MapEditSession.FeatureNames.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Features/MapEditSession.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Authority/MapEditSession.History.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Commands/MapEditSession.Layers.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Operations/MapEditSession.ObjectCommands.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Features/MapEditSession.Regions.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Operations/MapEditSession.RegionSpatialIndex.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Features/MapEditSession.RegionStyle.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Operations/MapEditSession.RegionVertices.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Features/MapEditSession.Roads.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Operations/MapEditSession.RuntimeProjection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Commands/MapEditSession.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Context/MapGeometryContextHit.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/HitTesting/MapGeometryContextHitTester.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/HitTesting/MapGeometryContextHitTester.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Context/MapGeometryContextMenuSpec.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Context/MapGeometryEditTypes.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/HitTesting/MapGeometryHitTester.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/HitTesting/MapGeometryHitTester.Marker.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Authority/MapHistoryEntry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Operations/MapObjectNameAllocator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Contracts/MapSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Sessions/Contracts/MapSelectionKind.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Ground/MapSurfacePicker.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Spatial/PolygonVisualCenter.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/Geometry/Spatial/PolygonVisualCenter.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Drafts/RegionDrawingState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/EdgeResolution/RegionEdgeSnapGeometry.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/EdgeResolution/RegionEdgeSnapLockResolver.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/EdgeContracts/RegionEdgeSnapRegion.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/EdgeResolution/RegionEdgeSnapResolver.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/EdgeContracts/RegionEdgeSnapResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/EdgeContracts/RegionEdgeSnapSettings.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/EdgeContracts/RegionEdgeSnapVertex.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/Pipeline/RegionSnapKind.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/Pipeline/RegionSnapPipeline.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/Pipeline/RegionSnapQuery.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/Pipeline/RegionSnapState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSpatial/Core/RegionSpatialBounds.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSpatial/Core/RegionSpatialIndex.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSpatial/Core/RegionSpatialNode.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSpatial/Queries/RegionSpatialQueryResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSpatial/Queries/RegionSpatialQueryWalker.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSpatial/Tree/RegionSpatialTreeBalancer.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSpatial/Tree/RegionSpatialTreeEditor.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/VertexSnap/RegionVertexSnapResolver.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/VertexSnap/RegionVertexSnapResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/VertexSnap/RegionVertexSnapSettings.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/RegionSnap/VertexSnap/RegionVertexSnapState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Drafts/RoadDrawingState.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/MapEditing/ViewportInteraction/Ground/TerrainWorldGroundSurface.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/EditorModes/EditorModeId.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/EditorModes/EditorModeManager.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/EditorModes/EditorModeTransition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Contracts/Models/MapReference.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Contracts/Models/SceneDocumentAsset.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Contracts/Models/SceneDocumentEntity.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Contracts/Schema/SceneDocumentJson.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Transactions/SceneDocumentLoadTransaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Mapping/SceneDocumentMapper.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Contracts/Results/SceneDocumentResult.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Transactions/SceneDocumentSaveTransaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Persistence/SceneDocumentSession.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Contracts/Models/SceneDocumentSnapshot.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Validation/SceneDocumentValidator.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Validation/SceneDocumentValidator.MapReference.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Mapping/SceneDocumentWorldBridge.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Contracts/Results/SceneLoadCandidate.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Contracts/Results/SceneSaveOutcome.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/SceneDocument/Persistence/SceneStorageService.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/Transform/TransformCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/Transform/TransformRequest.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/Transform/TransformSession.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/Transform/TransformSession.Rotate.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/ViewportInteraction/Transform/TransformSession.Scale.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceContracts/EditorWorkspaceDefinition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceManagement/EditorWorkspaceDefinitions.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceContracts/EditorWorkspaceId.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceManagement/EditorWorkspaceManager.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceManagement/EditorWorkspaceTool.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceContracts/EditorWorkspaceTransition.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceContracts/RegionAuthoringMode.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/XuanYu.Editor.csproj — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.Engine.slnx — 仓库资源文件，承载对应路径定义的项目内容。
 - XuanYu.WarCore.Tests/Identity/test_MilitaryIdentity.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -1863,8 +1914,8 @@
 - XuanYu.World.Tests/Mode/WorkspaceAuthoritySceneResetTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/RegionDrawingTestVm.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/CAuditR1GenerationPolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/ReverseZDepthContractPrototypeTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/ReverseZDepthPipelineContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_ReverseZDepthContractPrototype.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_ReverseZDepthPipelineContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/StartupGridDiagnostic.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/TerrainChunkDrawContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/test_TerrainMultiTileRenderContract.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -1877,10 +1928,10 @@
 - XuanYu.World.Tests/Render/test_VulkanSwapchainChurn.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/test_VulkanTerrainPipelineLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/WorldGridIndependenceContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/WorldGridRenderOriginContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_WorldGridRenderOriginContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/WorldGridStartupContractTests.Camera.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/WorldGridStartupContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Render/WorldReferenceGridDepthContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_WorldGridStartupContract.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/Render/test_WorldReferenceGridDepthContract.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/XYEPR2GenerationPolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Render/XYEPR2GenerationWave2EpochPolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Scene/BlankSceneContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2095,7 +2146,7 @@
 - XuanYu.World.Tests/UiRuntime/MapRegionLabelProjectionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/MapVectorOverlayAnalyticStrokeRegressionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/MapVectorOverlayAnchorContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/UiRuntime/MapVectorOverlayDepthPolicyTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.World.Tests/UiRuntime/test_MapVectorOverlayDepthPolicy.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/MapVectorOverlayStrokeContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/MapVectorOverlayV1Tests.Colors.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/UiRuntime/test_MapVectorOverlayV1.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2411,6 +2462,7 @@
 - XYT/Runtime/xyt-runtime.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
 - XYT/Runtime/xyt-runtime.schema.json — 仓库资源文件，承载对应路径定义的项目内容。
 - XYT/Runtime/xyt-runtime.selftest.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
+- XYT/Runtime/test_xyt-runtime.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
 - XYT/tests/xyt.aggregate.selftest.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
 - XYT/tests/xyt.selftest.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
 - XYT/tests/xyt.test.selftest.ps1 — 仓库资源文件，承载对应路径定义的项目内容。
@@ -2450,326 +2502,326 @@
 - xyui/avalonia/gallery/README.md — 项目文档文件，承载规范、计划或记录。
 - xyui/avalonia/gallery/XYUI-1-COMPONENT-INVENTORY.md — 项目文档文件，承载规范、计划或记录。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/GalleryNavigationListBoxStyles.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/PaletteCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/PaletteViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Program.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/ShapeCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/ShapeViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/TypographyCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/TypographyViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/AccessibilityView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/AccessibilityView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Shell/Bootstrap/App.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Shell/Window/GalleryNavigationListBoxStyles.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Shell/Window/MainWindow.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Shell/Window/MainWindow.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/Shared/Palette/PaletteCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/Shared/Palette/PaletteViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Shell/Bootstrap/Program.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/Shared/Shape/ShapeCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/Shared/Shape/ShapeViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/Shared/Typography/TypographyCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/Shared/Typography/TypographyViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/AccessibilityView/AccessibilityView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/AccessibilityView/AccessibilityView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/AreaBLeftCompactPrototypeView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/AreaBLeftCompactPrototypeView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CatalogView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CatalogView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ComponentSamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ComponentSamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityCoreRulesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityCoreRulesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/01-05/AreaBLeftCompactPrototypeView/AreaBLeftCompactPrototypeView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/01-05/CatalogView/CatalogView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/01-05/CatalogView/CatalogView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/01-05/ComponentSamplesView/ComponentSamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/01-05/ComponentSamplesView/ComponentSamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensityCoreRulesView/DensityCoreRulesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensityCoreRulesView/DensityCoreRulesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityGuardrailsView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityGuardrailsView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityLabView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityLabView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityLabView.Rows.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityMatrixView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Density/DensityMatrixView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/DensitySamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/DensitySamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/GalleryDocumentShell.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/GalleryDoDontRow.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/GalleryKeyValueRow.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/GalleryTokenRow.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/GalleryVariantRow.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensityGuardrailsView/DensityGuardrailsView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensityLabView/DensityLabView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensityLabView/DensityLabView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensityLabView/DensityLabView.Rows.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensityMatrixView/DensityMatrixView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensityMatrixView/DensityMatrixView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensitySamplesView/DensitySamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/01-05/DensitySamplesView/DensitySamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/FoundationSamplesView/FoundationSamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/FoundationSamplesView/FoundationSamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/FoundationStatesView/FoundationStatesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/FoundationStatesView/FoundationStatesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/01-05/GalleryDocumentShell/GalleryDocumentShell.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/01-05/GalleryDoDontRow/GalleryDoDontRow.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/06-10/GalleryKeyValueRow/GalleryKeyValueRow.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/06-10/GalleryTokenRow/GalleryTokenRow.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/06-10/GalleryVariantRow/GalleryVariantRow.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/06-10/IconographyCoreRulesSection/IconographyCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/06-10/IconographyCoreRulesSection/IconographyCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyGuardrailsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyGuardrailsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyOpticalSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyOpticalSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographySpecSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographySpecSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyUsageSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyUsageSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/IconographyView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/InteractionStatesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/InteractionStatesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutRecipesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutRecipesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/06-10/IconographyGuardrailsSection/IconographyGuardrailsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/IconographyOpticalSection/IconographyOpticalSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/IconographyOpticalSection/IconographyOpticalSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/IconographySpecSection/IconographySpecSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/IconographySpecSection/IconographySpecSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/IconographyUsageSection/IconographyUsageSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/IconographyUsageSection/IconographyUsageSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/IconographyView/IconographyView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/IconographyView/IconographyView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/InteractionStatesView/InteractionStatesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/11-15/InteractionStatesView/InteractionStatesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/16-20/LayoutRecipesView/LayoutRecipesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Samples/16-20/LayoutRecipesView/LayoutRecipesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/PaletteView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/PaletteView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/PaletteView/PaletteView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderCoreRulesSection/RadiusBorderCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderCoreRulesSection/RadiusBorderCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderGuardrailsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderGuardrailsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderSeparatorView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderSeparatorView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderSpecSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderSpecSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderUsageSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/RadiusBorderUsageSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveDecisionMatrixSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveDecisionMatrixSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveLiveLabSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveLiveLabSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ResponsiveView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeCompositionSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeCompositionSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeMatrixSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeMatrixSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeSamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeSamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeScenariosSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeScenariosSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingAnatomySection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingAnatomySection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderGuardrailsSection/RadiusBorderGuardrailsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderSeparatorView/RadiusBorderSeparatorView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderSeparatorView/RadiusBorderSeparatorView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderSpecSection/RadiusBorderSpecSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderSpecSection/RadiusBorderSpecSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderUsageSection/RadiusBorderUsageSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/01-05/RadiusBorderUsageSection/RadiusBorderUsageSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveCodePatternsSection/ResponsiveCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveCodePatternsSection/ResponsiveCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveCoreRulesSection/ResponsiveCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveCoreRulesSection/ResponsiveCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveDecisionMatrixSection/ResponsiveDecisionMatrixSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveDecisionMatrixSection/ResponsiveDecisionMatrixSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveLiveLabSection/ResponsiveLiveLabSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveLiveLabSection/ResponsiveLiveLabSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveView/ResponsiveView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/06-10/ResponsiveView/ResponsiveView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeCodePatternsSection/ShapeCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeCodePatternsSection/ShapeCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeCompositionSection/ShapeCompositionSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeCompositionSection/ShapeCompositionSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeCoreRulesSection/ShapeCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeCoreRulesSection/ShapeCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeMatrixSection/ShapeMatrixSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeMatrixSection/ShapeMatrixSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeSamplesView/ShapeSamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/06-10/ShapeSamplesView/ShapeSamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/ShapeScenariosSection/ShapeScenariosSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/ShapeScenariosSection/ShapeScenariosSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/ShapeView/ShapeView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/ShapeView/ShapeView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingAnatomySection/SizingAnatomySection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingAnatomySection/SizingAnatomySection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingMatrixSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingMatrixSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SizingView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingDensityCompareSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingDensityCompareSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingLayoutView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingLayoutView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingLiveLabSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SpacingLiveLabSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesLiveLabSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesLiveLabSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesResolutionSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesResolutionSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/StatesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceCompositionSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceCompositionSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceMapSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceMapSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceScenariosSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceScenariosSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographySamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographySamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographyView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographyView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ComponentDocumentView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ComponentDocumentView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1DocumentationView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1DocumentationView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1GalleryView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1GalleryView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI2ModuleOverviewView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI2ModuleOverviewView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3ComponentDocumentView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3ComponentDocumentView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3CompositionSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3CompositionSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3CoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3CoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3DoDontSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3DoDontSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3HeaderSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3HeaderSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3LiveExamplesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3LiveExamplesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3ModuleOverviewView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3ModuleOverviewView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3QuickStartSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3QuickStartSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3VariantsStatesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI3VariantsStatesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingCodePatternsSection/SizingCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingCoreRulesSection/SizingCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingCoreRulesSection/SizingCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingMatrixSection/SizingMatrixSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingMatrixSection/SizingMatrixSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingView/SizingView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/11-15/SizingView/SizingView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingCodePatternsSection/SpacingCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingCodePatternsSection/SpacingCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingCoreRulesSection/SpacingCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingCoreRulesSection/SpacingCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingDensityCompareSection/SpacingDensityCompareSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingDensityCompareSection/SpacingDensityCompareSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingLayoutView/SpacingLayoutView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingLayoutView/SpacingLayoutView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingLiveLabSection/SpacingLiveLabSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/LayoutDensity/16-20/SpacingLiveLabSection/SpacingLiveLabSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/StatesCodePatternsSection/StatesCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/01-05/StatesCodePatternsSection/StatesCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/StatesCoreRulesSection/StatesCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/StatesCoreRulesSection/StatesCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/StatesLiveLabSection/StatesLiveLabSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/StatesLiveLabSection/StatesLiveLabSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/StatesResolutionSection/StatesResolutionSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/StatesResolutionSection/StatesResolutionSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/StatesView/StatesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/StatesView/StatesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/SurfaceCodePatternsSection/SurfaceCodePatternsSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/SurfaceCodePatternsSection/SurfaceCodePatternsSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/SurfaceCompositionSection/SurfaceCompositionSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/SurfaceCompositionSection/SurfaceCompositionSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/SurfaceCoreRulesSection/SurfaceCoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/11-15/SurfaceCoreRulesSection/SurfaceCoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/16-20/SurfaceMapSection/SurfaceMapSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/16-20/SurfaceMapSection/SurfaceMapSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/16-20/SurfaceScenariosSection/SurfaceScenariosSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/16-20/SurfaceScenariosSection/SurfaceScenariosSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/16-20/SurfaceView/SurfaceView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/SurfaceShape/16-20/SurfaceView/SurfaceView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/TypographySamplesView/TypographySamplesView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/06-10/TypographySamplesView/TypographySamplesView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/11-15/TypographyView/TypographyView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/CoreTokens/11-15/TypographyView/TypographyView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI1ComponentDocumentView/XYUI1ComponentDocumentView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI1ComponentDocumentView/XYUI1ComponentDocumentView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI1DocumentationView/XYUI1DocumentationView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI1DocumentationView/XYUI1DocumentationView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI1GalleryView/XYUI1GalleryView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI1GalleryView/XYUI1GalleryView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI1ModuleOverviewView/XYUI1ModuleOverviewView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI1ModuleOverviewView/XYUI1ModuleOverviewView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI2ModuleOverviewView/XYUI2ModuleOverviewView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/01-05/XYUI2ModuleOverviewView/XYUI2ModuleOverviewView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3ComponentDocumentView/XYUI3ComponentDocumentView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3ComponentDocumentView/XYUI3ComponentDocumentView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3CompositionSection/XYUI3CompositionSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3CompositionSection/XYUI3CompositionSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3CoreRulesSection/XYUI3CoreRulesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3CoreRulesSection/XYUI3CoreRulesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3DoDontSection/XYUI3DoDontSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3DoDontSection/XYUI3DoDontSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3HeaderSection/XYUI3HeaderSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/06-10/XYUI3HeaderSection/XYUI3HeaderSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/11-15/XYUI3LiveExamplesSection/XYUI3LiveExamplesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/11-15/XYUI3LiveExamplesSection/XYUI3LiveExamplesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/11-15/XYUI3ModuleOverviewView/XYUI3ModuleOverviewView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/11-15/XYUI3ModuleOverviewView/XYUI3ModuleOverviewView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/11-15/XYUI3QuickStartSection/XYUI3QuickStartSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/11-15/XYUI3QuickStartSection/XYUI3QuickStartSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/11-15/XYUI3VariantsStatesSection/XYUI3VariantsStatesSection.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/Components/11-15/XYUI3VariantsStatesSection/XYUI3VariantsStatesSection.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUIMenuLiveSampleView.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUIMenuLiveSampleView.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYBadgePreviewFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYIconButtonNamingExtensions.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYMonoPreviewFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYSelectableTextPreviewFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYSubMenuHierarchyDebugPreview.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Preview/XYBadgePreviewFactory.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Preview/XYIconButtonNamingExtensions.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Preview/XYMonoPreviewFactory.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Preview/XYSelectableTextPreviewFactory.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Preview/XYSubMenuHierarchyDebugPreview.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj — 仓库资源文件，承载对应路径定义的项目内容。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Api.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1A.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1A.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1A.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1B.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1B.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1B.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1B.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1C.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1C.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1C.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1C.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1D.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1D.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1D.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Phase1D.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationModels.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI2.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI3.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI4.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1GalleryCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1A.Caption.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1B.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1B.Icons.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1B.Status.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1C.Feedback1.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1C.Feedback2.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1C.Separator.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1D.SearchAndTrunc.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1D.SelectAndEmpty.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.Phase1D.TextAndPopup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1LiveExamplesFactory.TitlesAndLink.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2A.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2A.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2A.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2A.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2B.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2B.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2B.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2B.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2C.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2C.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2C.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2C.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Core/XYUI1DocumentationCatalog.Api.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Core/XYUI1DocumentationCatalog.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Core/XYUI1DocumentationCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1A/XYUI1DocumentationCatalog.Phase1A.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1A/XYUI1DocumentationCatalog.Phase1A.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1A/XYUI1DocumentationCatalog.Phase1A.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1B/XYUI1DocumentationCatalog.Phase1B.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1B/XYUI1DocumentationCatalog.Phase1B.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1B/XYUI1DocumentationCatalog.Phase1B.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1B/XYUI1DocumentationCatalog.Phase1B.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1C/XYUI1DocumentationCatalog.Phase1C.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1C/XYUI1DocumentationCatalog.Phase1C.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1C/XYUI1DocumentationCatalog.Phase1C.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1C/XYUI1DocumentationCatalog.Phase1C.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1D/XYUI1DocumentationCatalog.Phase1D.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1D/XYUI1DocumentationCatalog.Phase1D.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1D/XYUI1DocumentationCatalog.Phase1D.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationCatalog/Phase1D/XYUI1DocumentationCatalog.Phase1D.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/DocumentationModels/Core/XYUI1DocumentationModels.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/ViewModels/Core/XYUI1DocumentationViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/ViewModels/Core/XYUI1DocumentationViewModel.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/ViewModels/Core/XYUI1DocumentationViewModel.XYUI2.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/ViewModels/Core/XYUI1DocumentationViewModel.XYUI3.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/ViewModels/Core/XYUI1DocumentationViewModel.XYUI4.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/GalleryCatalog/Core/XYUI1GalleryCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Core/XYUI1LiveExamplesFactory.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1A/XYUI1LiveExamplesFactory.Phase1A.Caption.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1B/XYUI1LiveExamplesFactory.Phase1B.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1B/XYUI1LiveExamplesFactory.Phase1B.Icons.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1B/XYUI1LiveExamplesFactory.Phase1B.Status.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1C/XYUI1LiveExamplesFactory.Phase1C.Feedback1.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1C/XYUI1LiveExamplesFactory.Phase1C.Feedback2.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1C/XYUI1LiveExamplesFactory.Phase1C.Separator.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1D/XYUI1LiveExamplesFactory.Phase1D.SearchAndTrunc.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1D/XYUI1LiveExamplesFactory.Phase1D.SelectAndEmpty.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Phase1D/XYUI1LiveExamplesFactory.Phase1D.TextAndPopup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI1/LiveExamples/Core/XYUI1LiveExamplesFactory.TitlesAndLink.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Core/XYUI2DocumentationCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2A/XYUI2DocumentationCatalog.Phase2A.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2A/XYUI2DocumentationCatalog.Phase2A.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2A/XYUI2DocumentationCatalog.Phase2A.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2A/XYUI2DocumentationCatalog.Phase2A.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2B/XYUI2DocumentationCatalog.Phase2B.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2B/XYUI2DocumentationCatalog.Phase2B.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2B/XYUI2DocumentationCatalog.Phase2B.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2B/XYUI2DocumentationCatalog.Phase2B.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2C/XYUI2DocumentationCatalog.Phase2C.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2C/XYUI2DocumentationCatalog.Phase2C.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2C/XYUI2DocumentationCatalog.Phase2C.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2C/XYUI2DocumentationCatalog.Phase2C.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2D.Anatomy.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2D.Content.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2D.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Phase2D.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2D/XYUI2DocumentationCatalog.Phase2D.Content.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2D/XYUI2DocumentationCatalog.Phase2D.Foundation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/DocumentationCatalog/Phase2D/XYUI2DocumentationCatalog.Phase2D.HowToUse.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Properties.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.Usages.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Buttons.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Choices.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.ColorBool.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.DateTime.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.DropDown.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Inputs.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Properties.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.SearchPassword.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Actions.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Buttons.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2B.Choices.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2B.Complex.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2B.Inputs.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2C.DateTime.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2C.SearchPassword.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2C.SelectArea.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2D.ColorBool.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2D.EnumRef.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2LiveExamplesFactory.Phase2D.Properties.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3ContextToolbarGallery.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/Actions/XYUI2GalleryCatalog.Buttons.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/Choices/XYUI2GalleryCatalog.Choices.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/Choices/XYUI2GalleryCatalog.ColorBool.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/Properties/XYUI2GalleryCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/DateTime/XYUI2GalleryCatalog.DateTime.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/Choices/XYUI2GalleryCatalog.DropDown.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/Actions/XYUI2GalleryCatalog.Inputs.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/Properties/XYUI2GalleryCatalog.Properties.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/GalleryCatalog/Actions/XYUI2GalleryCatalog.SearchPassword.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Core/XYUI2LiveExamplesFactory.Actions.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Core/XYUI2LiveExamplesFactory.Buttons.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Core/XYUI2LiveExamplesFactory.Commands.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Core/XYUI2LiveExamplesFactory.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2B/XYUI2LiveExamplesFactory.Phase2B.Choices.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2B/XYUI2LiveExamplesFactory.Phase2B.Complex.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2B/XYUI2LiveExamplesFactory.Phase2B.Inputs.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2C/XYUI2LiveExamplesFactory.Phase2C.DateTime.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2C/XYUI2LiveExamplesFactory.Phase2C.SearchPassword.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2C/XYUI2LiveExamplesFactory.Phase2C.SelectArea.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2D/XYUI2LiveExamplesFactory.Phase2D.ColorBool.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2D/XYUI2LiveExamplesFactory.Phase2D.EnumRef.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI2/LiveExamples/Phase2D/XYUI2LiveExamplesFactory.Phase2D.Properties.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Catalogs/Gallery/XYUI3ContextToolbarGallery.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.Api.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.BackForwardNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.BottomNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.Breadcrumb.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.CommandBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.CommandPalette.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.ContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.DockTabs.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Workspace/XYUI3DocumentationCatalog.BackForwardNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationPrimary/XYUI3DocumentationCatalog.BottomNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationPrimary/XYUI3DocumentationCatalog.Breadcrumb.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Commands/XYUI3DocumentationCatalog.CommandBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Commands/XYUI3DocumentationCatalog.CommandPalette.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Menus/XYUI3DocumentationCatalog.ContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Catalogs/DocumentationCore/XYUI3DocumentationCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationSecondary/XYUI3DocumentationCatalog.DockTabs.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.Menu.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.MenuBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.NavigationDrawer.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.NavigationMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.NavigationRail.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.Pagination.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.Sidebar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.Steps.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.SubMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.TabBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.TableOfContents.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.Tabs.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.Toolbar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.ToolGroup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.TreeNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.ViewSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.WorkspaceSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.Final.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.Navigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.BackForwardNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.BottomNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.Breadcrumb.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.CommandBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.CommandPalette.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.ContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.DockTabs.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationPrimary/XYUI3DocumentationCatalog.NavigationDrawer.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Menus/XYUI3DocumentationCatalog.NavigationMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationPrimary/XYUI3DocumentationCatalog.NavigationRail.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationSecondary/XYUI3DocumentationCatalog.Pagination.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationPrimary/XYUI3DocumentationCatalog.Sidebar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationSecondary/XYUI3DocumentationCatalog.Steps.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Menus/XYUI3DocumentationCatalog.SubMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationSecondary/XYUI3DocumentationCatalog.TabBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Workspace/XYUI3DocumentationCatalog.TableOfContents.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Workspace/XYUI3DocumentationCatalog.Tabs.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Commands/XYUI3DocumentationCatalog.Toolbar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Commands/XYUI3DocumentationCatalog.ToolGroup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/NavigationSecondary/XYUI3DocumentationCatalog.TreeNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Workspace/XYUI3DocumentationCatalog.ViewSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Documentation/Workspace/XYUI3DocumentationCatalog.WorkspaceSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Catalogs/Gallery/XYUI3GalleryCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Catalogs/Gallery/XYUI3GalleryCatalog.Final.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/Catalogs/Gallery/XYUI3GalleryCatalog.Navigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Workspace/XYUI3LiveExamplesFactory.BackForwardNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationPrimary/XYUI3LiveExamplesFactory.BottomNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationPrimary/XYUI3LiveExamplesFactory.Breadcrumb.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Commands/XYUI3LiveExamplesFactory.CommandBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Commands/XYUI3LiveExamplesFactory.CommandPalette.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Menus/XYUI3LiveExamplesFactory.ContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Commands/XYUI3LiveExamplesFactory.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationSecondary/XYUI3LiveExamplesFactory.DockTabs.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.Menu.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.MenuBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.NavigationDrawer.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.NavigationMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.NavigationRail.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.Pagination.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.Sidebar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.Steps.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.SubMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.TabBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.TableOfContents.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.Tabs.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.Toolbar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.ToolGroup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.TreeNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.ViewSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3LiveExamplesFactory.WorkspaceSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4DocumentationCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.BoundingBox.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.DragFeedback.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.DropIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.InsertionIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.MultiSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.ProgressBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.ProgressBar.Stages.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.SelectionGestures.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4GalleryCatalog.SelectionOutline.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4StateDocumentation.Contracts.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI4StateDocumentation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationPrimary/XYUI3LiveExamplesFactory.NavigationDrawer.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Menus/XYUI3LiveExamplesFactory.NavigationMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationPrimary/XYUI3LiveExamplesFactory.NavigationRail.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationSecondary/XYUI3LiveExamplesFactory.Pagination.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationPrimary/XYUI3LiveExamplesFactory.Sidebar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationSecondary/XYUI3LiveExamplesFactory.Steps.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Menus/XYUI3LiveExamplesFactory.SubMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationSecondary/XYUI3LiveExamplesFactory.TabBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Workspace/XYUI3LiveExamplesFactory.TableOfContents.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Workspace/XYUI3LiveExamplesFactory.Tabs.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Commands/XYUI3LiveExamplesFactory.Toolbar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Commands/XYUI3LiveExamplesFactory.ToolGroup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/NavigationSecondary/XYUI3LiveExamplesFactory.TreeNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Workspace/XYUI3LiveExamplesFactory.ViewSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI3/LiveExamples/Workspace/XYUI3LiveExamplesFactory.WorkspaceSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/Documentation/Core/XYUI4DocumentationCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Geometry/XYUI4GalleryCatalog.BoundingBox.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Geometry/XYUI4GalleryCatalog.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Drop/XYUI4GalleryCatalog.DragFeedback.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Drop/XYUI4GalleryCatalog.DropIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Drop/XYUI4GalleryCatalog.InsertionIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Selection/XYUI4GalleryCatalog.MultiSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Progress/XYUI4GalleryCatalog.ProgressBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Progress/XYUI4GalleryCatalog.ProgressBar.Stages.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Selection/XYUI4GalleryCatalog.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Selection/XYUI4GalleryCatalog.SelectionGestures.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/GalleryCatalog/Selection/XYUI4GalleryCatalog.SelectionOutline.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/State/Core/XYUI4StateDocumentation.Contracts.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Catalogs/XYUI4/State/Core/XYUI4StateDocumentation.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUIMenuSampleViewModel.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogEntry.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogPaths.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2777,8 +2829,8 @@
 - xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogSpecReader.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogTruth.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogTypeMap.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/AdaptiveLayout.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/README.md — 项目文档文件，承载规范、计划或记录。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/Layout/AdaptiveLayout.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/README.md — 项目文档文件，承载规范、计划或记录。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/_Shared/Base/XyuiTextComponent.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/_Shared/Base/XyuiVectorTextSurface.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/_Shared/Geometry/XyuiBadgeTagPath.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2820,216 +2872,216 @@
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-22-EmptyText/XYEmptyText.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-23-SearchHighlight/XYSearchHighlight.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-24-TruncatedText/XYTruncatedText.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Base/XyuiEditableTextBox.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/ButtonFamily/XyuiActionEdge.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/ButtonFamily/XyuiButtonChrome.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/ButtonFamily/XyuiButtonVariant.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Property/XYPropertyLayoutMetrics.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ButtonFamily.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ColorBool.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ComboBox.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.DateTime.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.DropDownButton.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Edges.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.GhostAndToggle.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.NumberField.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.PropertyControls.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.SearchPassword.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Select.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Slider.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.SplitButton.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.TextArea.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-01-Button/XYButton.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-02-IconButton/XYIconButton.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-03-ToggleButton/XYToggleButton.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-04-SplitButton/Styles/XYSplitButton.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-04-SplitButton/XYSplitButton.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-05-DropDownButton/Styles/XYDropDownButton.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-05-DropDownButton/XYDropDownButton.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-06-Checkbox/Styles/XYCheckbox.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-06-Checkbox/XYCheckbox.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-07-RadioButton/Styles/XYRadioButton.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-07-RadioButton/XYRadioButton.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/Styles/XYSwitch.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/Styles/XYTextField.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/Interaction/XYNumberField.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/Interaction/XYNumberField.Scrub.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/Interaction/XYNumberField.Value.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/Styles/XYNumberField.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-11-Slider/Styles/XYSlider.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-11-Slider/XYSlider.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-11-Slider/XYSliderTrack.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/Interaction/XYComboBox.Filter.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/Interaction/XYComboBox.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/Interaction/XYComboBox.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/Styles/XYComboBox.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/Interaction/XYSelect.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/Interaction/XYSelect.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/Interaction/XYSelect.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/Styles/XYSelect.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/Styles/XYTextArea.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/Interaction/XYSearchField.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/Styles/XYSearchField.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/XYSearchField.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/Interaction/XYPasswordField.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/Interaction/XYPasswordField.Reveal.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/Styles/XYPasswordField.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/Interaction/XYDatePicker.Calendar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/Interaction/XYDatePicker.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/Interaction/XYDatePicker.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/Styles/XYDatePicker.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/Interaction/XYTimePicker.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/Interaction/XYTimePicker.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/Interaction/XYTimePicker.Scrub.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/Styles/XYTimePicker.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Color.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.EditLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Input.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Panel.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Styles/XYColorPicker.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/Styles/XYBoolProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/XYBoolProperty.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/Interaction/XYNumberProperty.Scrub.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/Styles/XYNumberProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/XYNumberProperty.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/Styles/XYVectorProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/XYVectorProperty.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Base/XyuiEditableTextBox.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/ButtonFamily/XyuiActionEdge.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/ButtonFamily/XyuiButtonChrome.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/ButtonFamily/XyuiButtonVariant.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Property/XYPropertyLayoutMetrics.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Buttons/XyuiControlStyles.ButtonFamily.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Choices/XyuiControlStyles.ChoiceControls.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Property/XyuiControlStyles.ColorBool.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Choices/XyuiControlStyles.ComboBox.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Core/XyuiControlStyles.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Property/XyuiControlStyles.DateTime.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Buttons/XyuiControlStyles.DropDownButton.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Core/XyuiControlStyles.Edges.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Core/XyuiControlStyles.GhostAndToggle.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Input/XyuiControlStyles.InputFamily.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Input/XyuiControlStyles.NumberField.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Property/XyuiControlStyles.PropertyControls.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Input/XyuiControlStyles.SearchPassword.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Choices/XyuiControlStyles.Select.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Choices/XyuiControlStyles.Slider.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Buttons/XyuiControlStyles.SplitButton.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Styles/Input/XyuiControlStyles.TextArea.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI2/Tokens/XyuiComponentTokens.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/01-05/XYUI2-01-Button/XYButton.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/01-05/XYUI2-02-IconButton/XYIconButton.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/01-05/XYUI2-03-ToggleButton/XYToggleButton.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/01-05/XYUI2-04-SplitButton/Styles/XYSplitButton.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/01-05/XYUI2-04-SplitButton/XYSplitButton.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/01-05/XYUI2-05-DropDownButton/Styles/XYDropDownButton.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/01-05/XYUI2-05-DropDownButton/XYDropDownButton.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-06-Checkbox/Styles/XYCheckbox.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-06-Checkbox/XYCheckbox.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-07-RadioButton/Styles/XYRadioButton.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-07-RadioButton/XYRadioButton.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-08-Switch/Styles/XYSwitch.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-08-Switch/XYSwitch.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-09-TextField/Styles/XYTextField.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-09-TextField/XYTextField.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-10-NumberField/Interaction/XYNumberField.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-10-NumberField/Interaction/XYNumberField.Scrub.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-10-NumberField/Interaction/XYNumberField.Value.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-10-NumberField/Styles/XYNumberField.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/06-10/XYUI2-10-NumberField/XYNumberField.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-11-Slider/Styles/XYSlider.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-11-Slider/XYSlider.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-11-Slider/XYSliderTrack.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-12-ComboBox/Interaction/XYComboBox.Filter.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-12-ComboBox/Interaction/XYComboBox.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-12-ComboBox/Interaction/XYComboBox.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-12-ComboBox/Styles/XYComboBox.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-12-ComboBox/XYComboBox.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-13-Select/Interaction/XYSelect.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-13-Select/Interaction/XYSelect.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-13-Select/Interaction/XYSelect.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-13-Select/Styles/XYSelect.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-13-Select/XYSelect.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-14-TextArea/Styles/XYTextArea.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-14-TextArea/XYTextArea.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-15-SearchField/Interaction/XYSearchField.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-15-SearchField/Styles/XYSearchField.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/11-15/XYUI2-15-SearchField/XYSearchField.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-16-PasswordField/Interaction/XYPasswordField.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-16-PasswordField/Interaction/XYPasswordField.Reveal.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-16-PasswordField/Styles/XYPasswordField.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-16-PasswordField/XYPasswordField.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-17-DatePicker/Interaction/XYDatePicker.Calendar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-17-DatePicker/Interaction/XYDatePicker.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-17-DatePicker/Interaction/XYDatePicker.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-17-DatePicker/Styles/XYDatePicker.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-17-DatePicker/XYDatePicker.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-18-TimePicker/Interaction/XYTimePicker.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-18-TimePicker/Interaction/XYTimePicker.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-18-TimePicker/Interaction/XYTimePicker.Scrub.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-18-TimePicker/Styles/XYTimePicker.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-18-TimePicker/XYTimePicker.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Color.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-19-ColorPicker/Interaction/XYColorPicker.EditLifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Input.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-19-ColorPicker/XYColorPicker.Panel.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-19-ColorPicker/XYColorPicker.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-19-ColorPicker/Styles/XYColorPicker.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-19-ColorPicker/XYColorPicker.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-20-BoolProperty/Styles/XYBoolProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/16-20/XYUI2-20-BoolProperty/XYBoolProperty.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-21-NumberProperty/Interaction/XYNumberProperty.Scrub.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-21-NumberProperty/Styles/XYNumberProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-21-NumberProperty/XYNumberProperty.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-22-VectorProperty/Styles/XYVectorProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-22-VectorProperty/XYVectorProperty.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/XYVectorProperty.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-23-EnumProperty/Styles/XYEnumProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-23-EnumProperty/XYEnumProperty.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/Interaction/XYReferenceProperty.DragDrop.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/Interaction/XYReferenceProperty.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/Styles/XYReferenceProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Models/XYMenuItemModel.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Models/XYNavigationState.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-23-EnumProperty/Styles/XYEnumProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-23-EnumProperty/XYEnumProperty.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-24-ReferenceProperty/Interaction/XYReferenceProperty.DragDrop.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-24-ReferenceProperty/Interaction/XYReferenceProperty.Popup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-24-ReferenceProperty/Styles/XYReferenceProperty.Template.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-24-ReferenceProperty/XYReferenceProperty.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/21-24/XYUI2-24-ReferenceProperty/XYReferenceProperty.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI3/Models/XYMenuItemModel.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI3/Models/XYNavigationState.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Styles/XyuiComponentStyles.Batch04.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Styles/XyuiComponentStyles.Batch05.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Styles/XyuiComponentStyles.BottomNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Styles/XyuiComponentStyles.ContextToolbar.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Styles/XyuiComponentStyles.XYUI3.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Tokens/XyuiCompactNavigationTokens.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Interaction/XYMenuBar.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Interaction/XYMenuBarItem.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Styles/XYMenuBarItem.Style.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/XYMenuBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/XYMenuBarItem.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Interaction/XYMenu.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Interaction/XYMenu.OverlayResources.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Interaction/XYMenuItem.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Styles/XYMenuItem.Visual.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/XYMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/XYMenuItem.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/Interaction/XYContextMenu.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/Styles/XYContextMenu.OverlayStyling.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/Styles/XYContextMenu.Style.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/XYContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/Interaction/XYSubMenu.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/Styles/XYSubMenuConnector.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/XYSubMenu.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-05-NavigationMenu/Interaction/XYNavigationItem.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-05-NavigationMenu/Interaction/XYNavigationMenu.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-05-NavigationMenu/UI/XYNavigationItem.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-05-NavigationMenu/UI/XYNavigationMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/_Shared/XYUI3/Tokens/XyuiCompactNavigationTokens.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-01-MenuBar/Interaction/XYMenuBar.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-01-MenuBar/Interaction/XYMenuBarItem.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-01-MenuBar/Styles/XYMenuBarItem.Style.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-01-MenuBar/XYMenuBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-01-MenuBar/XYMenuBarItem.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-02-Menu/Interaction/XYMenu.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-02-Menu/Interaction/XYMenu.OverlayResources.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-02-Menu/Interaction/XYMenuItem.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-02-Menu/Styles/XYMenuItem.Visual.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-02-Menu/XYMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-02-Menu/XYMenuItem.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-03-ContextMenu/Interaction/XYContextMenu.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-03-ContextMenu/Styles/XYContextMenu.OverlayStyling.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-03-ContextMenu/Styles/XYContextMenu.Style.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-03-ContextMenu/XYContextMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-04-SubMenu/Interaction/XYSubMenu.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-04-SubMenu/Styles/XYSubMenuConnector.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-04-SubMenu/XYSubMenu.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-05-NavigationMenu/Interaction/XYNavigationItem.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-05-NavigationMenu/Interaction/XYNavigationMenu.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-05-NavigationMenu/UI/XYNavigationItem.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/01-05/XYUI3-05-NavigationMenu/UI/XYNavigationMenu.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-05-NavigationMenu/UI/XYNavigationMenuStyles.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/Interaction/XYSidebar.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/UI/XYSidebar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-06-Sidebar/Interaction/XYSidebar.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-06-Sidebar/UI/XYSidebar.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/UI/XYUI3SidebarStyles.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-07-NavigationRail/Interaction/XYNavigationRail.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-07-NavigationRail/UI/XYNavigationRail.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-07-NavigationRail/UI/XyuiNavigationLayoutVariant.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/Interaction/XYTab.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/Interaction/XYTabs.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/Interaction/XYTabs.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/UI/XYTab.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/UI/XYTabs.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/UI/XyuiTabSizingMode.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-09-TabBar/Interaction/XYTabBar.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-09-TabBar/UI/XYTabBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-07-NavigationRail/Interaction/XYNavigationRail.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-07-NavigationRail/UI/XYNavigationRail.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-07-NavigationRail/UI/XyuiNavigationLayoutVariant.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-08-Tabs/Interaction/XYTab.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-08-Tabs/Interaction/XYTabs.Keyboard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-08-Tabs/Interaction/XYTabs.Selection.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-08-Tabs/UI/XYTab.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-08-Tabs/UI/XYTabs.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-08-Tabs/UI/XyuiTabSizingMode.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-09-TabBar/Interaction/XYTabBar.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-09-TabBar/UI/XYTabBar.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-09-TabBar/UI/XYTabBarStyles.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-DockTabs/Interaction/XYDockTab.Drag.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-DockTabs/Interaction/XYDockTabs.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-DockTabs/UI/XYDockTab.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-DockTabs/UI/XYDockTabs.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-Pager/UI/XYCollapsiblePane.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-Pager/UI/XYInspectorSection.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-Pager/UI/XYPager.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-Pager/UI/XYPager.Navigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-10-Pager/UI/XYPagerPage.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-11-Breadcrumb/Interaction/XYBreadcrumb.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-11-Breadcrumb/Interaction/XYBreadcrumbItem.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-11-Breadcrumb/UI/XYBreadcrumb.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-11-Breadcrumb/UI/XYBreadcrumbItem.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-DockTabs/XYDockTab.Drag.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-DockTabs/XYDockTabs.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-DockTabs/XYDockTab.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-DockTabs/XYDockTabs.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-Pager/XYCollapsiblePane.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-Pager/XYInspectorSection.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-Pager/XYPager.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-Pager/XYPager.Navigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/06-10/XYUI3-10/XYUI3-10-Pager/XYPagerPage.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-11-Breadcrumb/Interaction/XYBreadcrumb.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-11-Breadcrumb/Interaction/XYBreadcrumbItem.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-11-Breadcrumb/UI/XYBreadcrumb.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-11-Breadcrumb/UI/XYBreadcrumbItem.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-11-Breadcrumb/UI/XYBreadcrumbTreeStyles.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-12-TreeNavigation/Interaction/XYTreeNavigation.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-12-TreeNavigation/Interaction/XYTreeNode.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-12-TreeNavigation/UI/XYTreeNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-12-TreeNavigation/UI/XYTreeNode.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-13-Pagination/Interaction/XYPagination.Navigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-13-Pagination/UI/XYPagination.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-13-Pagination/UI/XYPaginationFooter.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-14-Steps/UI/XYStepNode.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-14-Steps/UI/XYSteps.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-15-Toolbar/UI/XYToolbar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-15-Toolbar/UI/XYToolbarTool.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-16-ToolGroup/UI/XYToolGroup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-CommandBar/UI/XYCommandBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextActionPane.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextCategoryList.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextDropdownBoard.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextGroup.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextHintBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextModels.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextOverlayHost.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextPopupHost.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-17-ContextToolbar/XYContextToolbar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-18-CommandPalette/Interaction/XYCommandPalette.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-18-CommandPalette/Interaction/XYCommandPalette.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-18-CommandPalette/UI/XYCommandPalette.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-18-CommandPalette/UI/XYCommandPalette.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-18-CommandPalette/UI/XYCommandPaletteItem.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-19-BackForwardNavigation/Interaction/XYBackForwardNavigation.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-19-BackForwardNavigation/Interaction/XYBackForwardNavigation.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-19-BackForwardNavigation/UI/XYBackForwardNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-20-WorkspaceSwitcher/Interaction/XYWorkspaceSwitcher.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-20-WorkspaceSwitcher/Interaction/XYWorkspaceSwitcher.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-20-WorkspaceSwitcher/UI/XYWorkspaceSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-21-ViewSwitcher/XYViewSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-22-TableOfContents/XYTableOfContents.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-23-BottomNavigation/XYBottomNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-24-NavigationDrawer/XYNavigationDrawer.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-01-HoverState/XYHoverState.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-07-MarqueeSelection/XYMarqueeSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-08-LassoSelection/XYLassoSelection.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-09-SelectionOutline/XYSelectionOutline.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-10-BoundingBox/XYBoundingBox.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-10-BoundingBox/XYBoundingBox.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-11-DragFeedback/XYDragFeedback.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-12-DropIndicator/XYDropIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-13-InsertionIndicator/XYInsertionIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-14-LoadingIndicator/XYLoadingIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-15-Spinner/XYSpinner.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-15-Spinner/XYSpinner.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-15-Spinner/XYSpinner.Rendering.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-16-ProgressBar/XYProgressBar.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/XYUI4-16-ProgressBar/XYProgressBar.Rendering.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-12-TreeNavigation/Interaction/XYTreeNavigation.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-12-TreeNavigation/Interaction/XYTreeNode.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-12-TreeNavigation/UI/XYTreeNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-12-TreeNavigation/UI/XYTreeNode.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-13-Pagination/Interaction/XYPagination.Navigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-13-Pagination/UI/XYPagination.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-13-Pagination/UI/XYPaginationFooter.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-14-Steps/UI/XYStepNode.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-14-Steps/UI/XYSteps.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-15-Toolbar/UI/XYToolbar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/11-15/XYUI3-15-Toolbar/UI/XYToolbarTool.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-16-17/XYUI3-16-ToolGroup/XYToolGroup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-16-17/XYUI3-17-CommandBar/XYCommandBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Parts/XYContextActionPane.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Parts/XYContextCategoryList.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Parts/XYContextDropdownBoard.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Parts/XYContextGroup.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Parts/XYContextHintBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Hosts/XYContextModels.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Hosts/XYContextOverlayHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Hosts/XYContextPopupHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-17-ContextToolbar/Hosts/XYContextToolbar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-18-CommandPalette/Interaction/XYCommandPalette.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-18-CommandPalette/Interaction/XYCommandPalette.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-18-CommandPalette/UI/XYCommandPalette.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-18-CommandPalette/UI/XYCommandPalette.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-18-CommandPalette/UI/XYCommandPaletteItem.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-19-BackForwardNavigation/Interaction/XYBackForwardNavigation.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-19-BackForwardNavigation/Interaction/XYBackForwardNavigation.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-19-BackForwardNavigation/UI/XYBackForwardNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-20-WorkspaceSwitcher/Interaction/XYWorkspaceSwitcher.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-20-WorkspaceSwitcher/Interaction/XYWorkspaceSwitcher.Lifecycle.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/16-20/XYUI3-20-WorkspaceSwitcher/UI/XYWorkspaceSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/21-24/XYUI3-21-ViewSwitcher/XYViewSwitcher.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/21-24/XYUI3-22-TableOfContents/XYTableOfContents.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/21-24/XYUI3-23-BottomNavigation/XYBottomNavigation.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/21-24/XYUI3-24-NavigationDrawer/XYNavigationDrawer.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/01-05/XYUI4-01-HoverState/XYHoverState.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/06-10/XYUI4-07-MarqueeSelection/XYMarqueeSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/06-10/XYUI4-08-LassoSelection/XYLassoSelection.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/06-10/XYUI4-09-SelectionOutline/XYSelectionOutline.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/06-10/XYUI4-10-BoundingBox/XYBoundingBox.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/06-10/XYUI4-10-BoundingBox/XYBoundingBox.Interaction.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/11-15/XYUI4-11-DragFeedback/XYDragFeedback.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/11-15/XYUI4-12-DropIndicator/XYDropIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/11-15/XYUI4-13-InsertionIndicator/XYInsertionIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/11-15/XYUI4-14-LoadingIndicator/XYLoadingIndicator.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/11-15/XYUI4-15-Spinner/XYSpinner.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/11-15/XYUI4-15-Spinner/XYSpinner.Geometry.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/11-15/XYUI4-15-Spinner/XYSpinner.Rendering.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/16-20/XYUI4-16-ProgressBar/XYProgressBar.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI4/16-20/XYUI4-16-ProgressBar/XYProgressBar.Rendering.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Density/XyuiDensity.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Density/XyuiDensityScope.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/Facade/XY.Foreground.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -3070,155 +3122,155 @@
 - xyui/avalonia/src/XYUI.Avalonia/XY.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/XYSize.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/src/XYUI.Avalonia/XYUI.Avalonia.csproj — 仓库资源文件，承载对应路径定义的项目内容。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/AdaptiveLayoutHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/BadgeHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/BrushPropertyContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/01-05/AdaptiveLayoutHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/01-05/BadgeHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/01-05/BrushPropertyContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/CanonicalAlignmentTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/CatalogSourceTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/CodeTextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/ConsumerApiTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/ControlSurfaceTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/DensityTokenContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/FoundationFacadeHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Gallery/01-05/CatalogSourceTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/01-05/CodeTextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/01-05/ConsumerApiTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/01-05/ControlSurfaceTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/01-05/DensityTokenContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/01-05/FoundationFacadeHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryInteractionContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryLayoutArchitectureTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryNavigationLayoutStabilityTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Gallery/01-05/GalleryNavigationLayoutStabilityTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryNavigationScrollAuthorityTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryShellNavigationArchitectureTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/GallerySmokeTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryThemeConstructionTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/IconHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/IconographyRulesTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/InputRadiusCanonicalTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/InspectorWorkflowControlTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionCombinationTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/MonoTextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/MonoTextResponsiveTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Gallery/06-10/GalleryShellNavigationArchitectureTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Gallery/06-10/GallerySmokeTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Gallery/06-10/GalleryThemeConstructionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/01-05/IconHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/01-05/IconographyRulesTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/01-05/InputRadiusCanonicalTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/01-05/InspectorWorkflowControlTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/01-05/InteractionCombinationTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/01-05/InteractionStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/06-10/MonoTextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/06-10/MonoTextResponsiveTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/NavigationCollapseTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1CFeedbackHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1CSeparatorHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1CShortcutHintHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1DSearchTruncatedHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1DSelectableEmptyHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/Phase1DTooltipRichTextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/R5F4F1AlignmentTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/R5F4StructureContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/SearchHighlightHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/01-05/Phase1CFeedbackHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/01-05/Phase1CSeparatorHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/01-05/Phase1CShortcutHintHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/06-10/Phase1DSearchTruncatedHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/06-10/Phase1DSelectableEmptyHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/06-10/Phase1DTooltipRichTextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/06-10/R5F4F1AlignmentTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/06-10/R5F4StructureContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/11-15/SearchHighlightHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/SecondTruthTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/SelectableTextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/ShapeHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/SkeletonTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/11-15/SelectableTextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/01-05/ShapeHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/06-10/SkeletonTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/SpatialTokenTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/SplitButtonCountingCommand.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/StatusAndIconLabelHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/TerrainCut1SemanticIconTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/ThemeHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/TypographyHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/06-10/SplitButtonCountingCommand.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/11-15/StatusAndIconLabelHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Interaction/11-15/TerrainCut1SemanticIconTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/06-10/ThemeHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/06-10/TypographyHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/TypographyTokenTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYFoundationContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYMenuCascadeR1Tests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYSubMenuHierarchyTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/06-10/XYFoundationContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Gallery/06-10/XYMenuCascadeR1Tests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Gallery/06-10/XYSubMenuHierarchyTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj — 仓库资源文件，承载对应路径定义的项目内容。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI08ShapeContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI10StateResolverTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1CoverageTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1DocumentationTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1StructureContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1TextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1TextVerticalLayoutContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2AlignmentContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2BadgeContrastContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2Batch01ReconcileTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2BoolPropertyTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ButtonHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ButtonHeadlessStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ChoiceControlsTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ColorPickerEditLifecycleTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ColorPickerTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ComboBoxTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ComponentReconcileTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DatePickerInteractionReworkTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DatePickerTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonHeadlessContractTests.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonHeadlessStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2GhostToggleHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2GhostToggleHeadlessStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InkAlignmentAuditTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InputControlsTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2NumberFieldTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2PasswordFieldTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2Phase2AContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2Phase2ARegressionTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2Phase2BContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2Phase2CContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2Phase2CIdentityTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2Phase2DContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2PropertyControlsTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2QuickStartNormalizationTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SearchFieldTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SelectTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SliderTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SplitButtonHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SplitButtonHeadlessStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextAreaFocusTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextAreaTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextInputInteractionTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TimePickerInteractionReworkTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TimePickerTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/11-15/XYUI08ShapeContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/XYUI1/01-05/XYUI10StateResolverTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/XYUI1/01-05/XYUI1CoverageTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/XYUI1/01-05/XYUI1DocumentationTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/XYUI1/01-05/XYUI1StructureContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/XYUI1/06-10/XYUI1TextHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Contracts/XYUI1/06-10/XYUI1TextVerticalLayoutContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Contracts/XYUI2AlignmentContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Contracts/XYUI2BadgeContrastContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/General/XYUI2Batch01ReconcileTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/BoolProperty/XYUI2BoolPropertyTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/01-05/Button/XYUI2ButtonHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/01-05/Button/XYUI2ButtonHeadlessStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/06-10/TextField/XYUI2ChoiceControlsTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/16-20/ColorPicker/XYUI2ColorPickerEditLifecycleTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/16-20/ColorPicker/XYUI2ColorPickerTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/11-15/ComboBox/XYUI2ComboBoxTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Contracts/XYUI2ComponentReconcileTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/16-20/DatePicker/XYUI2DatePickerInteractionReworkTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/16-20/DatePicker/XYUI2DatePickerTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/01-05/DropDownButton/XYUI2DropDownButtonHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/01-05/DropDownButton/XYUI2DropDownButtonHeadlessContractTests.Layout.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/01-05/DropDownButton/XYUI2DropDownButtonHeadlessStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/General/XYUI2GhostToggleHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/General/XYUI2GhostToggleHeadlessStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Contracts/XYUI2InkAlignmentAuditTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/06-10/TextField/XYUI2InputControlsTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/06-10/NumberField/XYUI2NumberFieldTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/16-20/PasswordField/XYUI2PasswordFieldTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Phases/XYUI2Phase2AContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Phases/XYUI2Phase2ARegressionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Phases/XYUI2Phase2BContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Phases/XYUI2Phase2CContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Phases/XYUI2Phase2CIdentityTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Phases/XYUI2Phase2DContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/Properties/XYUI2PropertyControlsTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/Shared/General/XYUI2QuickStartNormalizationTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/11-15/SearchField/XYUI2SearchFieldTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/11-15/Select/XYUI2SelectTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/11-15/Slider/XYUI2SliderTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/01-05/SplitButton/XYUI2SplitButtonHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/01-05/SplitButton/XYUI2SplitButtonHeadlessStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/11-15/TextArea/XYUI2TextAreaFocusTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/11-15/TextArea/XYUI2TextAreaTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/06-10/TextField/XYUI2TextInputInteractionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/16-20/TimePicker/XYUI2TimePickerInteractionReworkTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/16-20/TimePicker/XYUI2TimePickerTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2VectorPropertyLayoutStrategyTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2VectorPropertyLayoutTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3BackForwardNavigationTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3Batch04StructureTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3Batch05StructureTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3CommandPaletteTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3CompactInteractionTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3CompactNavigationInteractionTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3CompactNavigationStructureTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3ContextToolbarBoardTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3ContextToolbarCoreTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3ContextToolbarLifecycleTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3FinalNavigationTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3GalleryNavigationTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3InteractionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2/21-24/VectorProperty/XYUI2VectorPropertyLayoutTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/16-20/BackForwardNavigation/XYUI3BackForwardNavigationTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3Batch04StructureTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3Batch05StructureTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/16-20/CommandPalette/XYUI3CommandPaletteTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3CompactInteractionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3CompactNavigationInteractionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3CompactNavigationStructureTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/16-20/ContextToolbar/XYUI3ContextToolbarBoardTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/16-20/ContextToolbar/XYUI3ContextToolbarCoreTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/16-20/ContextToolbar/XYUI3ContextToolbarLifecycleTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3FinalNavigationTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3GalleryNavigationTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3InteractionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3MenuCapabilityTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3MenuGalleryCloseoutTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3MenuRadioStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3NavigationRailWorkspaceStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3NavigationRailWorkspaceTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3OverlayResourceBridgeTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3Round1HeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3Round2HeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3Round3FixTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3Round3HeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3Round4GalleryContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3StructureTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3TabDividerContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3TableOfContentsTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3TabSizingContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3TreeNavigationContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3ViewSwitcherTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3WorkspaceSwitcherProjectionTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3WorkspaceSwitcherTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4DragFeedbackGalleryTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4DragFeedbackTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4DropIndicatorTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4GalleryHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4GalleryInsertionTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4GalleryTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4HoverStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4InsertionIndicatorTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4LoadingIndicatorTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4ProgressBarTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4SpinnerTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4TypographyGalleryContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiBatchTestHost.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUICompositionReuseTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiHeadlessCollection.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiHeadlessFixture.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiTestAppBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
-- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUIVectorViewportTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/01-05/Menu/XYUI3MenuRadioStateContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/06-10/NavigationRail/XYUI3NavigationRailWorkspaceStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/06-10/NavigationRail/XYUI3NavigationRailWorkspaceTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3OverlayResourceBridgeTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3Round1HeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3Round2HeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3Round3FixTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3Round3HeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3Round4GalleryContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/Shared/XYUI3StructureTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/06-10/Tabs/XYUI3TabDividerContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/TableOfContents/XYUI3TableOfContentsTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/06-10/Tabs/XYUI3TabSizingContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/11-15/TreeNavigation/XYUI3TreeNavigationContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/21-24/ViewSwitcher/XYUI3ViewSwitcherTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/16-20/WorkspaceSwitcher/XYUI3WorkspaceSwitcherProjectionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3/16-20/WorkspaceSwitcher/XYUI3WorkspaceSwitcherTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4/11-15/11-DragFeedback/XYUI4DragFeedbackGalleryTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4/11-15/11-DragFeedback/XYUI4DragFeedbackTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4/11-15/12-DropIndicator/XYUI4DropIndicatorTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/06-10/XYUI4GalleryHeadlessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/06-10/XYUI4GalleryInsertionTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/06-10/XYUI4GalleryTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4/01-05/01-HoverState/XYUI4HoverStateTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4/11-15/13-InsertionIndicator/XYUI4InsertionIndicatorTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4/11-15/14-LoadingIndicator/XYUI4LoadingIndicatorTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4/16-20/16-ProgressBar/XYUI4ProgressBarTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI4/11-15/15-Spinner/XYUI4SpinnerTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Foundation/11-15/XYUI4TypographyGalleryContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/11-15/XyuiBatchTestHost.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/11-15/XYUICompositionReuseTests.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/11-15/XyuiHeadlessCollection.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/11-15/XyuiHeadlessFixture.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/11-15/XyuiTestAppBuilder.cs — C# 源码文件，承载仓库实现或测试职责。
+- xyui/avalonia/tests/XYUI.Avalonia.Tests/_Shared/Infrastructure/16-20/XYUIVectorViewportTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - xyui/avalonia/XYUI.Avalonia.slnx — 仓库资源文件，承载对应路径定义的项目内容。
 - xyui/governance/amendments.md — 项目文档文件，承载规范、计划或记录。
 - xyui/governance/XYUI-A-plan.md — 项目文档文件，承载规范、计划或记录。
@@ -3310,3 +3362,5 @@
 - XuanYu.Core/Scene/Snapshots/IRenderSnapshotSource.cs — 场景渲染快照来源接口。
 - XuanYu.Core/Scene/Map/SurfaceSampler.cs — 地图地表高度采样。
 - XuanYu.Core/Scene/History/HistorySnapshot.cs — 编辑历史条目与修订快照。
+
+

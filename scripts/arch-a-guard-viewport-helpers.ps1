@@ -46,9 +46,9 @@ function Assert-GuardPathExists([string]$root, [string[]]$paths, [string]$label)
 
 function Invoke-ViewportBoundaryGuard([string]$root) {
     $allowlist = @(
-        "XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs",
-        "XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs",
-        "XuanYu.Editor.UI/Diagnostic/DiagnosticOverlayHost.NativeOverlay.cs")
+        "XuanYu.Editor.UI/ViewportUI/Host/Win32Host/VulkanNativeHost.cs",
+        "XuanYu.Editor.UI/ViewportUI/Host/Win32Host/Win32ViewportHost.cs",
+        "XuanYu.Editor.UI/Infrastructure/Diagnostics/OverlayNative/DiagnosticOverlayHost.NativeOverlay.cs")
     Assert-GuardPathExists $root $allowlist "Legacy allowlist file"
 
     $uiFiles = Get-GuardFiles $root "XuanYu.Editor.UI"
@@ -58,7 +58,7 @@ function Invoke-ViewportBoundaryGuard([string]$root) {
             $file -ne $allowlist[0]) { Add-Failure "Second NativeControlHost implementation: $file" }
     }
     # XYC silent Vulkan creates a hidden WS_POPUP top-level host, not a viewport child HWND.
-    $silentHost = "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs"
+    $silentHost = "XuanYu.Editor.UI/Infrastructure/Resources/Host/SilentNativeWindow.cs"
     if (Test-Path (Get-GuardPath $root $silentHost)) {
         $hostSource = Read-GuardText $root $silentHost
         if ($hostSource -notmatch 'CreateWindowExW\(0,\s*name,\s*"XYC Silent Vulkan Host",\s*WsPopup\s*,' -or
@@ -70,11 +70,11 @@ function Invoke-ViewportBoundaryGuard([string]$root) {
     }
     Assert-GuardFiles $root "XuanYu.Editor.UI" @($allowlist[1], $silentHost) @(
         "CreateWindowEx", "RegisterClass", "WS_CHILD", "DestroyWindow") "Viewport child HWND ownership"
-    Assert-GuardFiles $root "XuanYu.Editor.UI/Viewport" @() @(
+    Assert-GuardFiles $root "XuanYu.Editor.UI/ViewportUI" @() @(
         "RenderTargetBitmap", "ReadPixels", "Readback") "Viewport CPU readback"
-    Assert-GuardFiles $root "XuanYu.Editor.UI/Diagnostic" @($allowlist[2],
-        "XuanYu.Editor.UI/Diagnostic/DiagnosticNativeWindowProbe.cs",
-        "XuanYu.Editor.UI/Diagnostic/DiagnosticNativePointerProbe.cs") @(
+    Assert-GuardFiles $root "XuanYu.Editor.UI/ViewportUI/Diagnostics" @($allowlist[2],
+        "XuanYu.Editor.UI/ViewportUI/Diagnostics/DiagnosticNativeCoordinateMapping.cs",
+        "XuanYu.Editor.UI/ViewportUI/Diagnostics/DiagnosticNativePointerProbe.cs") @(
         "CreateWindowEx", "RegisterClass", "DestroyWindow", "SetCapture", "regex:\bReleaseCapture\s*\(",
         "SetWindowPos", "SetWindowLong", "TopMost", "OwnerHwnd", "ShouldUseOverlayLayer = false",
         "TryGetPlatformHandle", 'DllImport("user32' ) "Diagnostic native workaround"

@@ -31,8 +31,13 @@ public sealed class WarCoreDependencyTests
     public void WarCore_csproj_architecture_dependency_contract_references_core()
     {
         // 这是项目声明契约，不是运行时程序集依赖行为断言。
-        var csprojPath = Path.Combine(
-            AppContext.BaseDirectory, "../../../../XuanYu.WarCore/XuanYu.WarCore.csproj");
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null &&
+            !File.Exists(Path.Combine(directory.FullName, "XuanYu.Engine.slnx")))
+            directory = directory.Parent;
+        Assert.NotNull(directory);
+        var csprojPath = Path.Combine(directory!.FullName,
+            "XuanYu.WarCore", "XuanYu.WarCore.csproj");
         var projectReferences = XDocument.Load(csprojPath)
             .Descendants("ProjectReference")
             .Select(reference => (string?)reference.Attribute("Include"))

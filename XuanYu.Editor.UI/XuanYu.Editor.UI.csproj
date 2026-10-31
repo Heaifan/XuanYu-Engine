@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationManifest>Infrastructure\Resources\app.manifest</ApplicationManifest>
     <AssemblyName>XuanYu.Editor.UI</AssemblyName>
     <UsedAvaloniaProducts></UsedAvaloniaProducts>
   </PropertyGroup>

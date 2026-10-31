@@ -13,10 +13,10 @@ public sealed class UiD4DebtClearedTests
     {
         var d4Files = new[]
         {
-            "XuanYu.Editor.UI/Right/Right.axaml",
-            "XuanYu.Editor.UI/Right/MapEditorPanel.axaml",
-            "XuanYu.Editor.UI/Right/LayerPanel.axaml",
-            "XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml",
+            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/Right.axaml",
+            "XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapEditorPanel.axaml",
+            "XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.axaml",
+            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/LayerInspectorPanel.axaml",
         };
         var remaining = UiDebtBaseline.Entries
             .Where(e => d4Files.Contains(e.Path)).ToList();
@@ -42,21 +42,21 @@ public sealed class UiD4DebtClearedTests
     {
         foreach (var rel in new[]
         {
-            "XuanYu.Editor.UI/Right/InspectorPanel.axaml",
-            "XuanYu.Editor.UI/Right/InspectorPanel.axaml.cs",
-            "XuanYu.Editor.UI/Right/EntityInspectorPanel.axaml",
-            "XuanYu.Editor.UI/Right/EntityInspectorPanel.axaml.cs",
-            "XuanYu.Editor.UI/Right/MapPagePanel.axaml",
-            "XuanYu.Editor.UI/Right/MapPagePanel.axaml.cs",
-            "XuanYu.Editor.UI/Right/MapFormPanel.axaml",
-            "XuanYu.Editor.UI/Right/MapFormPanel.axaml.cs",
-            "XuanYu.Editor.UI/Right/EditableFormLayoutModel.cs",
-            "XuanYu.Editor.UI/Right/MapEditorLayoutModel.cs",
-            "XuanYu.Editor.UI/Right/MapIdDisplayFormat.cs",
-            "XuanYu.Editor.UI/Design/UiStyles.D4F1.axaml",
-            "XuanYu.Editor.UI/Vm/Inspector/InspectorFieldRow.cs",
-            "XuanYu.Editor.UI/Vm/Inspector/UiVm.EntityInspector.cs",
-            "XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Display.cs",
+            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml",
+            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml.cs",
+            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EntityInspectorPanel.axaml",
+            "XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EntityInspectorPanel.axaml.cs",
+            "XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/MapPagePanel.axaml",
+            "XuanYu.Editor.UI/MapUI/Presentation/MapToolPanels/MapPagePanel.axaml.cs",
+            "XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapFormPanel.axaml",
+            "XuanYu.Editor.UI/MapUI/Presentation/EditorPanels/MapFormPanel.axaml.cs",
+            "XuanYu.Editor.UI/MapUI/Presentation/Layout/EditableFormLayoutModel.cs",
+            "XuanYu.Editor.UI/MapUI/Presentation/Layout/MapEditorLayoutModel.cs",
+            "XuanYu.Editor.UI/MapUI/Presentation/MapIdDisplayFormat.cs",
+            "XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiStyles.D4F1.axaml",
+            "XuanYu.Editor.UI/Panels/Inspector/PropertyRows/InspectorFieldRow.cs",
+            "XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.EntityInspector.cs",
+            "XuanYu.Editor.UI/MapUI/Editing/Editor/UiVm.MapEditor.Display.cs",
         })
             Assert.True(File.ReadAllLines(Path.Combine(RepoRoot, rel)).Length <= 100, $"{rel} 超 100 行");
     }

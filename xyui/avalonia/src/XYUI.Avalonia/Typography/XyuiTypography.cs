@@ -23,6 +23,13 @@ public static class XyuiTypography
         d["XY.FontSize.PanelTitle"] = XyuiTypographyTokens.FontSizePanelTitle;
         d["XY.FontSize.PageTitle"] = XyuiTypographyTokens.FontSizePageTitle;
         d["XY.FontSize.Mono"] = XyuiTypographyTokens.FontSizeMono;
+        d["XY.FontSize.Micro"] = XyuiTypographyTokens.FontSizeMicro;
+        d["XY.FontSize.MicroPlus"] = XyuiTypographyTokens.FontSizeMicroPlus;
+        d["XY.FontSize.FinePrint"] = XyuiTypographyTokens.FontSizeFinePrint;
+        d["XY.FontSize.CompactCaption"] = XyuiTypographyTokens.FontSizeCompactCaption;
+        d["XY.FontSize.CompactBody"] = XyuiTypographyTokens.FontSizeCompactBody;
+        d["XY.FontSize.CompactSection"] = XyuiTypographyTokens.FontSizeCompactSection;
+        d["XY.FontSize.CompactPanelTitle"] = XyuiTypographyTokens.FontSizeCompactPanelTitle;
         d["XY.FontWeight.Regular"] = FontWeight.Normal;
         d["XY.FontWeight.Medium"] = FontWeight.Medium;
         d["XY.FontWeight.Semibold"] = FontWeight.SemiBold;

@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.StatesView">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 头部：标题与 Badge -->
+      <StackPanel Spacing="6">
+        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+          <TextBlock Text="交互状态 / States" Classes="xyui-heading-page" FontSize="{DynamicResource XY.FontSize.CompactPanelTitle}" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+          <Border Background="#F5ECDB" BorderBrush="#F5ECDB" BorderThickness="1" CornerRadius="6" Padding="8,3" VerticalAlignment="Center">
+            <TextBlock Text="已锁定 · 0.10" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.CompactBody}" Foreground="#856F4E" />
+          </Border>
+        </StackPanel>
+        <TextBlock Text="大多数交互状态由 XYUI Runtime 自动管理；业务代码只设置组件语义属性；Resolver 负责统一生成最终视觉；Focus 通过独立通道表达。"
+                   Classes="xyui-text-caption" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <!-- Developer Quick Start 三列横幅 -->
+      <Border Background="#F9FBFC" BorderBrush="#E6ECEF" BorderThickness="1" CornerRadius="8" Padding="14,10">
+        <Grid ColumnDefinitions="*,Auto,*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="2">
+            <TextBlock Text="Hover / Pressed / Focus" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="Runtime 自动处理，无需业务代码编写" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="#E6ECEF" Margin="10,0" />
+          <StackPanel Grid.Column="2" Spacing="2">
+            <TextBlock Text="Disabled / Selected / ReadOnly / Locked" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="通过真实组件属性或组件语义声明" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+          <Rectangle Grid.Column="3" Width="1" Fill="#E6ECEF" Margin="10,0" />
+          <StackPanel Grid.Column="4" Spacing="2">
+            <TextBlock Text="State Resolver" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="Runtime 实现机制，普通业务代码不直接调用" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- 01 · 核心规则 -->
+      <views:StatesCoreRulesSection />
+
+      <!-- 02 · 实时状态实验室 -->
+      <views:StatesLiveLabSection />
+
+      <!-- 03 · 状态来源与解析 -->
+      <views:StatesResolutionSection />
+
+      <!-- 04 · 怎么使用 / 高级 / 禁止 -->
+      <views:StatesCodePatternsSection />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

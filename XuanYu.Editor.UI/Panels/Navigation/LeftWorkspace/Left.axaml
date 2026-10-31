@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
+             xmlns:xycore="using:XYUI.Avalonia"
+             x:Class="XuanYu.Editor.UI.Left"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/Panels/Navigation/LeftWorkspace/Left.Styles.axaml"/>
+  </UserControl.Styles>
+  <Grid RowDefinitions="24,28,*">
+    <Grid Grid.Row="0" ColumnDefinitions="*,28">
+      <xy:XYTabs x:Name="ContentTabs" Grid.Column="0" SizingMode="Content" SelectionChanged="ContentTabs_SelectionChanged"
+                 xycore:XY.Size="Compact" xycore:XY.Density="Compact"
+                 Height="{StaticResource Control.Height.Compact}" ClipToBounds="True">
+        <xy:XYTab Id="project" Label="项目" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>
+        <xy:XYTab Id="file" Label="文件" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>
+      </xy:XYTabs>
+      <xy:XYIconButton x:Name="ProjectMoreButton" Grid.Column="1" Classes="left-action"
+                       ToolTip.Tip="更多" AutomationProperties.Name="项目更多">
+        <xy:XYIcon Icon="MoreHorizontal" Size="Small"/>
+      </xy:XYIconButton>
+    </Grid>
+    <xy:XYText Grid.Row="1" Text="当前场景" Classes="treeContextLabel"/>
+    <Grid Grid.Row="2" x:Name="ContentHost">
+      <local:ProjectWorkspace x:Name="ProjectWorkspace"/>
+      <StackPanel x:Name="FileWorkspace" IsVisible="False" Classes="emptyWorkspace">
+        <xy:XYText Text="暂无文件" Classes="emptyWorkspaceText"/>
+        <xy:XYText Text="当前没有独立文件列表数据。" Classes="emptyWorkspaceHint"/>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</UserControl>

@@ -6,8 +6,8 @@ namespace XuanYu.World.Tests.UiTokens;
 // Focused/Disabled）、危险按钮、基线按钮色清零。
 public sealed class UiD5ButtonContractTests
 {
-    static readonly string D5 = Read("Design/UiStyles.D5.axaml");
-    static readonly string Ui = Read("Ui.axaml");
+    static readonly string D5 = Read("Infrastructure/Resources/Theme/UiStyles.D5.axaml");
+    static readonly string Ui = Read("Infrastructure/Resources/Theme/Ui.axaml");
 
     static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 

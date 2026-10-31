@@ -7,36 +7,36 @@ internal static partial class UiDebtBaseline
 {
     private static void AddTypography(System.Collections.Generic.List<BaselineEntry> list)
     {
-        list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:Button.logSummary", UiRuleKind.CornerRadius, "CornerRadius", "4"));
-        list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:Button.logFilter", UiRuleKind.CornerRadius, "CornerRadius", "4"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:TextBlock.logHead", UiRuleKind.FontSize, "FontSize", "12"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:ListBox.logList ListBoxItem", UiRuleKind.ControlHeight, "MinHeight", "28"));
-        list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:ROOT/UserControl/Grid/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "6"));
-        list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:Name:LogList/ListBox/DataTemplate/Grid/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "2"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:ROOT/UserControl/Grid/Border/Grid/Grid/Grid/StackPanel/TextBlock:1", UiRuleKind.FontSize, "FontSize", "16"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBlock.detailLabel", UiRuleKind.FontSize, "FontSize", "12"));
-        list.Add(new("W60", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBox.detailBody", UiRuleKind.ControlHeight, "MinHeight", "42"));
-        list.Add(new("W61", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border/Grid/Grid/ScrollViewer/StackPanel/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "5"));
-        list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.activeMark", UiRuleKind.CornerRadius, "CornerRadius", "1.5"));
-        list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.dropLine", UiRuleKind.CornerRadius, "CornerRadius", "1"));
-        list.Add(new("W22", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.commandRail", UiRuleKind.CornerRadius, "CornerRadius", "9"));
-        list.Add(new("W22", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.topGroup", UiRuleKind.CornerRadius, "CornerRadius", "0"));
-        list.Add(new("W22", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.statePill", UiRuleKind.CornerRadius, "CornerRadius", "7"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Button.xyui-button.cmdBtn", UiRuleKind.ControlHeight, "MinHeight", "32"));
-        list.Add(new("W22", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Button.xyui-button.cmdBtn", UiRuleKind.CornerRadius, "CornerRadius", "4"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Top/Top.axaml", "Style:ToggleButton.xyui-toggle-button.toolBtn", UiRuleKind.ControlHeight, "MinHeight", "32"));
-        list.Add(new("W22", "XuanYu.Editor.UI/Top/Top.axaml", "Style:ToggleButton.xyui-toggle-button.toolBtn", UiRuleKind.CornerRadius, "CornerRadius", "4"));
-        list.Add(new("W27", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Path.topIcon", UiRuleKind.StrokeThickness, "StrokeThickness", "1.6"));
-        list.Add(new("W10", "XuanYu.Editor.UI/Ui.axaml", "Style:Border.panel", UiRuleKind.CornerRadius, "CornerRadius", "6"));
-        list.Add(new("W04", "XuanYu.Editor.UI/Ui.axaml", "Style:Border.panel", UiRuleKind.BoxShadow, "BoxShadow", "0 14 30 0 #160f172a"));
-        list.Add(new("W10", "XuanYu.Editor.UI/Ui.axaml", "Style:Border.chrome", UiRuleKind.CornerRadius, "CornerRadius", "6"));
-        list.Add(new("W10", "XuanYu.Editor.UI/Ui.axaml", "Style:Border.pill", UiRuleKind.CornerRadius, "CornerRadius", "5"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.FontSize, "FontSize", "13"));
-        list.Add(new("W09", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.ControlHeight, "MinHeight", "30"));
-        list.Add(new("W10", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.CornerRadius, "CornerRadius", "5"));
-        list.Add(new("W12", "XuanYu.Editor.UI/Ui.axaml", "Style:ListBoxItem", UiRuleKind.ControlHeight, "MinHeight", "34"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Ui.axaml", "Style:TextBlock.caption", UiRuleKind.FontSize, "FontSize", "12"));
-        list.Add(new("AREA-B-R2", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:xy|XYNavigationItem.xyui-rail-workspace-item", UiRuleKind.ControlHeight, "Height", "50"));
-        list.Add(new("DIAG-V1", "XuanYu.Editor.UI/Diagnostic/DiagnosticBadge.axaml", "Name:BadgeSurface", UiRuleKind.CornerRadius, "CornerRadius", "2"));
+        list.Add(new("W57", "XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml", "Style:Button.logSummary", UiRuleKind.CornerRadius, "CornerRadius", "4"));
+        list.Add(new("W57", "XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml", "Style:Button.logFilter", UiRuleKind.CornerRadius, "CornerRadius", "4"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml", "Style:TextBlock.logHead", UiRuleKind.FontSize, "FontSize", "12"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml", "Style:ListBox.logList ListBoxItem", UiRuleKind.ControlHeight, "MinHeight", "28"));
+        list.Add(new("W57", "XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml", "Path:ROOT/UserControl/Grid/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "6"));
+        list.Add(new("W57", "XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml", "Path:Name:LogList/ListBox/DataTemplate/Grid/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "2"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Panels/Status/StatusWidgets/Foot.axaml", "Path:ROOT/UserControl/Grid/Border/Grid/Grid/Grid/StackPanel/TextBlock:1", UiRuleKind.FontSize, "FontSize", "16"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Style:TextBlock.detailLabel", UiRuleKind.FontSize, "FontSize", "12"));
+        list.Add(new("W60", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Style:TextBox.detailBody", UiRuleKind.ControlHeight, "MinHeight", "42"));
+        list.Add(new("W61", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border/Grid/Grid/ScrollViewer/StackPanel/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "5"));
+        list.Add(new("W51", "XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.axaml", "Style:Border.activeMark", UiRuleKind.CornerRadius, "CornerRadius", "1.5"));
+        list.Add(new("W51", "XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.axaml", "Style:Border.dropLine", UiRuleKind.CornerRadius, "CornerRadius", "1"));
+        list.Add(new("W22", "XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml", "Style:Border.commandRail", UiRuleKind.CornerRadius, "CornerRadius", "9"));
+        list.Add(new("W22", "XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml", "Style:Border.topGroup", UiRuleKind.CornerRadius, "CornerRadius", "0"));
+        list.Add(new("W22", "XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml", "Style:Border.statePill", UiRuleKind.CornerRadius, "CornerRadius", "7"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml", "Style:Button.xyui-button.cmdBtn", UiRuleKind.ControlHeight, "MinHeight", "32"));
+        list.Add(new("W22", "XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml", "Style:Button.xyui-button.cmdBtn", UiRuleKind.CornerRadius, "CornerRadius", "4"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml", "Style:ToggleButton.xyui-toggle-button.toolBtn", UiRuleKind.ControlHeight, "MinHeight", "32"));
+        list.Add(new("W22", "XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml", "Style:ToggleButton.xyui-toggle-button.toolBtn", UiRuleKind.CornerRadius, "CornerRadius", "4"));
+        list.Add(new("W27", "XuanYu.Editor.UI/Panels/Tools/WorkspaceModules/Top.axaml", "Style:Path.topIcon", UiRuleKind.StrokeThickness, "StrokeThickness", "1.6"));
+        list.Add(new("W10", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:Border.panel", UiRuleKind.CornerRadius, "CornerRadius", "6"));
+        list.Add(new("W04", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:Border.panel", UiRuleKind.BoxShadow, "BoxShadow", "0 14 30 0 #160f172a"));
+        list.Add(new("W10", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:Border.chrome", UiRuleKind.CornerRadius, "CornerRadius", "6"));
+        list.Add(new("W10", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:Border.pill", UiRuleKind.CornerRadius, "CornerRadius", "5"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.FontSize, "FontSize", "13"));
+        list.Add(new("W09", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.ControlHeight, "MinHeight", "30"));
+        list.Add(new("W10", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.CornerRadius, "CornerRadius", "5"));
+        list.Add(new("W12", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:ListBoxItem", UiRuleKind.ControlHeight, "MinHeight", "34"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:TextBlock.caption", UiRuleKind.FontSize, "FontSize", "12"));
+        list.Add(new("AREA-B-R2", "XuanYu.Editor.UI/Panels/Navigation/LeftWorkspace/Left.Styles.axaml", "Style:xy|XYNavigationItem.xyui-rail-workspace-item", UiRuleKind.ControlHeight, "Height", "50"));
+        list.Add(new("DIAG-V1", "XuanYu.Editor.UI/Infrastructure/Diagnostics/DiagnosticBadge.axaml", "Name:BadgeSurface", UiRuleKind.CornerRadius, "CornerRadius", "2"));
     }
 }

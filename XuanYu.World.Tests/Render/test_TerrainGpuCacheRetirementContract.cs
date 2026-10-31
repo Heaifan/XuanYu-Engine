@@ -6,9 +6,9 @@ public sealed class TerrainGpuCacheRetirementContractTests
     public void Production_recording_retains_evicted_resources_until_command_buffers_are_replaced()
     {
         var cache = ReadCacheSource();
-        var commands = File.ReadAllText(Path.Combine(WorkspaceRoot(),
+        var commands = File.ReadAllText(Path.Combine(RepositoryRoot(),
             "XuanYu.Render.Vulkan", "Render", "ClearFrame", "Commands", "VulkanClearFrameOwner.Commands.cs"));
-        var owner = File.ReadAllText(Path.Combine(WorkspaceRoot(),
+        var owner = File.ReadAllText(Path.Combine(RepositoryRoot(),
             "XuanYu.Render.Vulkan", "Render", "World", "Terrain", "VulkanClearFrameOwner.TerrainCacheLifetime.cs"));
 
         Assert.Contains("Retire(", cache);
@@ -22,17 +22,12 @@ public sealed class TerrainGpuCacheRetirementContractTests
 
     static string ReadCacheSource()
     {
-        var root = Path.Combine(WorkspaceRoot(), "XuanYu.Render.Vulkan", "Render", "World", "TerrainCache");
+        var root = Path.Combine(RepositoryRoot(), "XuanYu.Render.Vulkan", "Render", "World", "TerrainCache");
         return File.ReadAllText(Path.Combine(root, "VulkanTerrainGpuCache.cs")) +
             File.ReadAllText(Path.Combine(root, "VulkanTerrainGpuCache.Retirement.cs"));
     }
 
-    static string WorkspaceRoot()
-    {
-        var sourceRoot = Environment.GetEnvironmentVariable("XYE_WORKSPACE_SOURCE_DIRECTORY");
-        Assert.False(string.IsNullOrWhiteSpace(sourceRoot));
-        return sourceRoot!;
-    }
+    static string RepositoryRoot() => TestSourceRoot.Root;
 
     static string Member(string source, string start, string end)
     {

@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.XYUI3CompositionSection"
+             x:DataType="g:XYUI1ComponentDocument">
+  <Border Classes="xyui-surface-panel" Padding="16,14" CornerRadius="6" IsVisible="{Binding HasComposition}">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="04 · COMPOSITION / ADVANCED" Classes="xyui-text-section" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+        <TextBlock Text="组合与高级用法 · 复杂场景解剖" Classes="xyui-text-caption" />
+      </StackPanel>
+      <ContentControl x:Name="CompositionHost" HorizontalContentAlignment="Left" />
+    </StackPanel>
+  </Border>
+</UserControl>

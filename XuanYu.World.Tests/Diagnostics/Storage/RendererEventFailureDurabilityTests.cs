@@ -65,9 +65,7 @@ public sealed class RendererEventFailureDurabilityTests
     {
         public EventTestDirectory()
         {
-            var root = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT")
-                ?? throw new InvalidOperationException("XYE_WORKSPACE_ROOT is required.");
-            Path = System.IO.Path.Combine(root, "Temp", "renderer-durability", Guid.NewGuid().ToString("N"));
+            Path = System.IO.Path.Combine(TestSourceRoot.Root, "obj", "renderer-durability", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(Path);
         }
         public string Path { get; }

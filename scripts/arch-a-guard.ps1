@@ -1,11 +1,7 @@
 ﻿$ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
-Import-Module (Join-Path $PSScriptRoot "XyeWorkspace.psm1") -Force -DisableNameChecking
-$workspace = Get-XyeWorkspaceRoot
-Assert-XyeWorkspaceBoundary $workspace $root
-$guardTemp = Join-Path $workspace 'Temp\ArchA'
-Assert-XyeChildPath $workspace $guardTemp
+$guardTemp = Join-Path $root 'obj\arch-guard'
 New-Item -ItemType Directory -Force -Path $guardTemp | Out-Null
 . (Join-Path $PSScriptRoot "architecture/guard-bootstrap.ps1")
 Initialize-GuardBootstrap -Root $root -NewRun | Out-Null

@@ -6,14 +6,11 @@ public static class RendererEventSessionFactory
 {
     public static RendererEventSession? TryCreate()
     {
-        var runId = Environment.GetEnvironmentVariable("XYE_TASK_RUN_ID");
-        if (string.IsNullOrWhiteSpace(runId))
-            runId = $"local-{DateTime.UtcNow:yyyyMMddHHmmss}-{Environment.ProcessId}-{Guid.NewGuid():N}";
+        var runId = $"probe-{DateTime.UtcNow:yyyyMMddHHmmss}-{Environment.ProcessId}-{Guid.NewGuid():N}";
         try
         {
-            var directory = Environment.GetEnvironmentVariable("XYE_DIAGNOSTICS_DIRECTORY");
-            directory = string.IsNullOrWhiteSpace(directory) ? XyeWorkspacePaths.ResolveProbeDirectory(runId) : directory;
-            directory = XyeWorkspacePaths.EnsureInsideWorkspace(directory);
+            var directory = XyeDiagnosticPaths.ResolveProbeDirectory(runId);
+            directory = XyeDiagnosticPaths.EnsureInsideProject(directory);
             var probe = Environment.GetEnvironmentVariable("XYE_RENDERER_PROBE") == "1";
             return RendererEventSession.Create(new RendererEventSessionOptions(directory, runId,
                 RendererBuildIdentity.Current(), probe));

@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.XYUI3QuickStartSection"
+             x:DataType="g:XYUI1ComponentDocument">
+  <Border Classes="xyui-surface-panel" Padding="16,14" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="DEVELOPER QUICK START" Classes="xyui-text-section" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+        <TextBlock Text="基础快速接入 · 声明式代码与即时渲染" Classes="xyui-text-caption" />
+      </StackPanel>
+      <Grid ColumnDefinitions="52*,14,48*" MinHeight="80">
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="14,12" CornerRadius="4">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <TextBlock Text="{Binding QuickStartXaml}" Classes="xyui-text-code" TextWrapping="NoWrap" VerticalAlignment="Center" />
+          </ScrollViewer>
+        </Border>
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="14,12" CornerRadius="4">
+          <ContentControl x:Name="QuickStartHost" HorizontalContentAlignment="Left" VerticalAlignment="Center" />
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

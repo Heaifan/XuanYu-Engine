@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.ShapeView">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 头部：标题与 Badge -->
+      <StackPanel Spacing="6">
+        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+          <TextBlock Text="形状 / Shape" Classes="xyui-heading-page" FontSize="{DynamicResource XY.FontSize.CompactPanelTitle}" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+          <Border Background="#EEF2F5" BorderBrush="#E6ECEF" BorderThickness="1" CornerRadius="6" Padding="8,3" VerticalAlignment="Center">
+            <TextBlock Text="方案 A · 0.08" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.CompactBody}" Foreground="#526873" />
+          </Border>
+        </StackPanel>
+        <TextBlock Text="Shape 用来表达“几何形态语义”；Radius 负责转角，Surface 负责承载面。当前统一 Consumer API 待封装，先建立开发者心智。"
+                   Classes="xyui-text-caption" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <!-- Quick Start 三列横幅 -->
+      <Border Background="#F9FBFC" BorderBrush="#E6ECEF" BorderThickness="1" CornerRadius="8" Padding="14,10">
+        <Grid ColumnDefinitions="*,Auto,*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="2">
+            <TextBlock Text="Shape = 几何形态语义" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="先确定轮廓类型，再决定 Radius / Border / Surface" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="#E6ECEF" Margin="10,0" />
+          <StackPanel Grid.Column="2" Spacing="2">
+            <TextBlock Text="当前写法" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="优先复用 XY.Radius / XY.Surface / XY.Size，不伪造全局 Shape API" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+          <Rectangle Grid.Column="3" Width="1" Fill="#E6ECEF" Margin="10,0" />
+          <StackPanel Grid.Column="4" Spacing="2">
+            <TextBlock Text="不要做什么" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="不要在业务页或 Gallery 再发明第二套 Shape 规则" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- 01 · 核心规则 -->
+      <views:ShapeCoreRulesSection />
+
+      <!-- 02 · Shape 主矩阵 / 使用场景 -->
+      <views:ShapeMatrixSection />
+
+      <!-- 03 · Shape × Radius × Border × Surface -->
+      <views:ShapeCompositionSection />
+
+      <!-- 04 · 怎么使用 / 高级 / 禁止 -->
+      <views:ShapeCodePatternsSection />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

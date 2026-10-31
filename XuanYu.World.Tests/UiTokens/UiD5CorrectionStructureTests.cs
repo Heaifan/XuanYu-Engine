@@ -14,7 +14,7 @@ public sealed class UiD5CorrectionStructureTests
     [Fact]
     public void Focus_ring_contract_is_two_dip_plus_one_dip_offset()
     {
-        var d5 = Read("Design/UiStyles.D5.axaml");
+        var d5 = Read("Infrastructure/Resources/Theme/UiStyles.D5.axaml");
         Assert.Contains("FocusAdorner", d5);
         Assert.Contains("BorderThickness=\"2\"", d5); // 2 DIP 焦点框
         Assert.Contains("Margin=\"-1\"", d5);          // 1 DIP 外偏移
@@ -36,7 +36,7 @@ public sealed class UiD5CorrectionStructureTests
     [Fact]
     public void Dialog_close_restores_focus_to_previous_control()
     {
-        var dialog = Read("Win/UiWin.DialogHost.cs");
+        var dialog = Read("Shell/Windowing/DialogLifecycle/UiWin.DialogHost.cs");
         Assert.Contains("_focusBeforeDialog = CurrentFocus()", dialog);
         Assert.Contains("_focusBeforeDialog?.Focus()", dialog);
     }
@@ -44,7 +44,7 @@ public sealed class UiD5CorrectionStructureTests
     [Fact]
     public void Log_panel_has_no_unregistered_raw_colors()
     {
-        var foot = Read("Foot/Foot.axaml");
+        var foot = Read("Panels/Status/StatusWidgets/Foot.axaml");
         var rawHex = Regex.Matches(foot, "#[0-9a-fA-F]{6,8}").Select(m => m.Value).ToArray();
         Assert.Empty(rawHex);
     }
@@ -67,11 +67,11 @@ public sealed class UiD5CorrectionStructureTests
     public void No_hand_written_file_compresses_statements_to_escape_line_limit()
     {
         // 纠偏：禁止同一行多个公共属性/语句压缩（UiVm.Logging 系列已按职责拆分）
-        var logging = Read("Vm/Logging/UiVm.Logging.cs");
+        var logging = Read("Infrastructure/Logging/ViewModel/UiVm.Logging.cs");
         Assert.DoesNotContain("; public", logging);
-        var state = Read("Vm/Logging/UiVm.Logging.State.cs");
+        var state = Read("Infrastructure/Logging/Refresh/UiVm.Logging.State.cs");
         Assert.DoesNotContain("; public", state);
-        var mapEditor = Read("Vm/Map/UiVm.MapEditor.cs");
+        var mapEditor = Read("MapUI/Editing/Editor/UiVm.MapEditor.cs");
         Assert.DoesNotContain("; public", mapEditor);
     }
 

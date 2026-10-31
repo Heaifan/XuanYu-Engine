@@ -28,19 +28,13 @@ function Get-TreeFingerprint([string]$base, [string[]]$paths) {
 
 $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-if ([string]::IsNullOrWhiteSpace($env:XYE_TASK_RUN_ID) -or
-    [string]::IsNullOrWhiteSpace($env:XYE_DIAGNOSTICS_DIRECTORY) -or
-    [string]::IsNullOrWhiteSpace($env:XYE_BUILD_DIRECTORY)) {
-    throw 'Run WP2 replay through scripts\xye-workspace.ps1.'
-}
-$root = [IO.Path]::GetFullPath($env:XYE_DIAGNOSTICS_DIRECTORY)
-$buildRoot = [IO.Path]::GetFullPath($env:XYE_BUILD_DIRECTORY)
+$root = Join-Path $repo 'artifacts/diagnostics/wp2-p4-r3'
 New-Item -ItemType Directory -Force -Path $root | Out-Null
 if ([string]::IsNullOrWhiteSpace($TerrainPath)) {
     $TerrainPath = Join-Path $root 'fixture\n23e121.hgt'
     if (-not (Test-Path -LiteralPath $TerrainPath)) {
         & (Join-Path $PSScriptRoot 'New-WP2-P4-ReplayHgt.ps1') -OutputDirectory (Split-Path -Parent $TerrainPath)
-        if ($LASTEXITCODE -ne 0) { throw 'Replay HGT generation failed.' }
+        if (-not $?) { throw 'Replay HGT generation failed.' }
     }
 }
 $TerrainPath = (Resolve-Path -LiteralPath $TerrainPath).Path
@@ -48,14 +42,9 @@ $terrainHash = (Get-FileHash -LiteralPath $TerrainPath -Algorithm SHA256).Hash
 $head = if ($env:XYE_SOURCE_HEAD) { $env:XYE_SOURCE_HEAD } else { (& git -C $repo rev-parse HEAD).Trim() }
 $dirty = if ($env:XYE_SOURCE_DIRTY) { $env:XYE_SOURCE_DIRTY } elseif ((git -C $repo status --porcelain=v1).Count -gt 0) { 'YES' } else { 'NO' }
 $stamp = [DateTimeOffset]::UtcNow.ToString('O')
-$publish = Join-Path $buildRoot 'publish-v1'
-New-Item -ItemType Directory -Force -Path $publish | Out-Null
-$buildLog = Join-Path $root 'publish.log'
-& (Join-Path $repo 'scripts\xye-dotnet.ps1') publish `
-    (Join-Path $repo 'XuanYu.Editor.App\XuanYu.Editor.App.csproj') `
-    --no-restore --configuration Release --runtime win-x64 --self-contained false `
-    --output $publish *> $buildLog
-if ($LASTEXITCODE -ne 0) { throw "Windows Vulkan replay publish failed; see $buildLog" }
+& (Join-Path $repo 'scripts\xye-build.ps1') -Project 'XuanYu.Editor.App\XuanYu.Editor.App.csproj' -Configuration Release
+if ($LASTEXITCODE -ne 0) { throw 'Windows Vulkan replay build failed.' }
+$publish = Join-Path $repo 'XuanYu.Editor.App\bin\Release\net10.0'
 $exe = Join-Path $publish 'XuanYu.Editor.App.exe'
 if (-not (Test-Path -LiteralPath $exe)) { throw "Publish did not create $exe" }
 $sourcePaths = @(& git -C $repo ls-files --cached --others --exclude-standard 2>$null)
@@ -110,7 +99,6 @@ foreach ($spec in $runSpecs) {
     $dir = Join-Path (Join-Path $root $runId) $runName
     New-Item -ItemType Directory -Force -Path $dir | Out-Null
     $env:XYE_PROBE_VIEWPORT = '1'
-    $env:XYE_PROBE_DIRECTORY = $dir
     $env:XYE_PROBE_SOURCE_HEAD = $head
     $env:XYE_PROBE_SOURCE_DIRTY = $dirty
     $env:XYE_PROBE_BUILD_TIMESTAMP = $stamp
@@ -182,8 +170,11 @@ foreach ($spec in $runSpecs) {
                         $bitmap.Save($request.ScreenshotPath, [Drawing.Imaging.ImageFormat]::Png)
                     } finally { $graphics.Dispose(); $bitmap.Dispose() }
                     $imageHash = (Get-FileHash -LiteralPath $request.ScreenshotPath -Algorithm SHA256).Hash
-                    $nativePlan = Get-Content -LiteralPath (Join-Path $dir 'native-input.plan.json') -Raw | ConvertFrom-Json
-                    $viewportHandle = [IntPtr]$nativePlan.viewportHwnd
+                    $nativePlanPath = Join-Path $dir 'native-input.plan.json'
+                    $nativePlan = if (Test-Path -LiteralPath $nativePlanPath) {
+                        Get-Content -LiteralPath $nativePlanPath -Raw | ConvertFrom-Json
+                    } else { $null }
+                    $viewportHandle = if ($nativePlan) { [IntPtr]$nativePlan.viewportHwnd } else { [IntPtr]::Zero }
                     $rendererLog = Join-Path $dir 'viewport.log'
                     $rendererFrame = $null
                     if (Test-Path -LiteralPath $rendererLog) {
@@ -218,9 +209,9 @@ foreach ($spec in $runSpecs) {
                         rendererProjectionAspect=if ($rendererFrame) {
                             $dims=$rendererFrame.swapchainExtent -split 'x'; [double]$dims[0]/[double]$dims[1]
                         } else {$null}
-                        nativeViewportHwnd=$nativePlan.viewportHwnd
-                        nativeViewportClientPhysical=[Wp2ReplayWindow]::ClientSize($viewportHandle)
-                        nativeViewportDpi=[Wp2ReplayWindow]::Dpi($viewportHandle)
+                        nativeViewportHwnd=if ($nativePlan) { $nativePlan.viewportHwnd } else { $null }
+                        nativeViewportClientPhysical=if ($nativePlan) { [Wp2ReplayWindow]::ClientSize($viewportHandle) } else { $null }
+                        nativeViewportDpi=if ($nativePlan) { [Wp2ReplayWindow]::Dpi($viewportHandle) } else { $null }
                         nativeViewportCaptureTimeUtc=[DateTimeOffset]::UtcNow.ToString('O')
                         physicalViewport=@($request.PhysicalWidth,$request.PhysicalHeight)
                         windowBounds=$bounds; physicalImageSize=@($width,$height)

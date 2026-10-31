@@ -44,24 +44,25 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Release 全解决方案编译
+        id: build
         shell: pwsh
         run: |
-          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-dotnet.ps1 build XuanYu.Engine.slnx -c Release -warnaserror --nologo
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-build.ps1 -Configuration Release
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Render 抽象合同测试
-        if: ${{ always() && steps.sdk.outcome == 'success' }}
+        if: ${{ steps.build.outcome == 'success' }}
         shell: pwsh
         run: |
-          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-dotnet.ps1 test XuanYu.Render.Abstractions.Tests/XuanYu.Render.Abstractions.Tests.csproj -c Release --nologo
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-dotnet.ps1 test XuanYu.Render.Abstractions.Tests/XuanYu.Render.Abstractions.Tests.csproj -c Release --no-build --no-restore --nologo
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: M2 FenceWait 与 Present 定向测试
-        if: ${{ always() && steps.sdk.outcome == 'success' }}
+        if: ${{ steps.build.outcome == 'success' }}
         shell: pwsh
         run: |
           $filter = 'FullyQualifiedName~VulkanFenceWaitSampleSinkTests|FullyQualifiedName~VulkanPresentLoopContractTests'
-          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-dotnet.ps1 test XuanYu.World.Tests/XuanYu.World.Tests.csproj -c Release --nologo --filter $filter
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\xye-dotnet.ps1 test XuanYu.World.Tests/XuanYu.World.Tests.csproj -c Release --no-build --no-restore --nologo --filter $filter
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: 归档本轮诊断与工作区身份
@@ -70,7 +71,6 @@ jobs:
         with:
           name: m2-cloud-cpu-evidence
           path: |
-            .xye-workspace/Diagnostics/
-            .xye-workspace/Manifests/
+            '**/TestResults/*.trx'
           if-no-files-found: warn
           retention-days: 7

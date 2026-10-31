@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""生成 XuanYu.Editor.UI/Design/ 的 8 个 Token XAML 文件。
+"""生成 XuanYu.Editor.UI/Infrastructure/Resources/Theme/ 的 8 个 Token XAML 文件。
 唯一人工编辑源：Design/UiTokenManifest.json。
 确定性：Category 固定顺序 + Key 排序，连续两次生成结果完全一致。
 无第三方依赖。用法：python scripts/generate-ui-tokens.py"""
@@ -53,7 +53,7 @@ def main():
                  "                    xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">",
                  "  <ResourceDictionary.MergedDictionaries>"]
     for _, fname in CATEGORY_FILE:
-        aggregate.append(f'    <ResourceInclude Source="avares://XuanYu.Editor.UI/Design/{fname}"/>')
+        aggregate.append(f'    <ResourceInclude Source="avares://XuanYu.Editor.UI/Infrastructure/Resources/Theme/{fname}"/>')
     aggregate += ["  </ResourceDictionary.MergedDictionaries>", "</ResourceDictionary>"]
     with open(os.path.join(DESIGN, "UiTokens.axaml"), "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(aggregate) + "\n")

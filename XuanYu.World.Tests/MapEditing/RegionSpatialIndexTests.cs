@@ -72,9 +72,24 @@ public sealed class RegionSpatialIndexTests
     [Fact]
     public void Query_has_no_global_entity_or_full_map_scan_fallback()
     {
-        var root = Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor", "MapEditing");
-        var index = string.Join('\n', Directory.GetFiles(root, "RegionSpatial*.cs").Select(File.ReadAllText));
-        var session = File.ReadAllText(Path.Combine(root, "MapEditSession.RegionSpatialIndex.cs"));
+        var root = Path.Combine(TestSourceRoot.Root, "XuanYu.Editor", "MapEditing", "RegionSpatial");
+        var files = new[]
+        {
+            Path.Combine(root, "Core", "RegionSpatialBounds.cs"),
+            Path.Combine(root, "Core", "RegionSpatialNode.cs"),
+            Path.Combine(root, "Core", "RegionSpatialIndex.cs"),
+            Path.Combine(root, "Queries", "RegionSpatialQueryResult.cs"),
+            Path.Combine(root, "Queries", "RegionSpatialQueryWalker.cs"),
+            Path.Combine(root, "Tree", "RegionSpatialTreeEditor.cs"),
+            Path.Combine(root, "Tree", "RegionSpatialTreeBalancer.cs")
+        };
+        Assert.Equal(7, files.Length);
+        Assert.All(files, file => Assert.True(File.Exists(file), $"Missing source contract: {file}"));
+        var index = string.Join('\n', files.Select(File.ReadAllText));
+        var sessionPath = Path.Combine(TestSourceRoot.Root, "XuanYu.Editor", "MapEditing",
+            "Sessions", "Operations", "MapEditSession.RegionSpatialIndex.cs");
+        Assert.True(File.Exists(sessionPath), $"Missing session source contract: {sessionPath}");
+        var session = File.ReadAllText(sessionPath);
         Assert.DoesNotContain("EntityId", index + session, StringComparison.Ordinal);
         Assert.DoesNotContain("_currentMap.Regions", index, StringComparison.Ordinal);
         Assert.Contains("TryGetRegion", session, StringComparison.Ordinal);

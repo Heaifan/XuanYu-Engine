@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
+             x:Class="XuanYu.Editor.UI.RegionalAuthoringPanel"
+             Classes="compactEditor"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EditorCompactStyles.axaml"/>
+  </UserControl.Styles>
+  <Grid RowDefinitions="Auto,*">
+    <StackPanel Grid.Row="0" Spacing="6" Margin="2,8,2,0">
+      <xy:XYSectionTitle Text="内容类型"/>
+      <xy:XYPager x:Name="AuthoringPager" SelectionChanged="AuthoringPager_SelectionChanged">
+        <xy:XYPagerPage Id="region" Label="区域面"><local:RegionPanel/></xy:XYPagerPage>
+        <xy:XYPagerPage Id="road" Label="道路"><local:RoadPanel/></xy:XYPagerPage>
+        <xy:XYPagerPage Id="marker" Label="地图标记"><local:MarkerPanel/></xy:XYPagerPage>
+      </xy:XYPager>
+    </StackPanel>
+    <Grid Grid.Row="1">
+    </Grid>
+  </Grid>
+</UserControl>

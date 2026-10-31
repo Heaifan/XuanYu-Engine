@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.SurfaceView">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 头部：标题与 Badge -->
+      <StackPanel Spacing="6">
+        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+          <TextBlock Text="表面层级 / Surface" Classes="xyui-heading-page" FontSize="{DynamicResource XY.FontSize.CompactPanelTitle}" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+          <Border Background="#F5ECDB" BorderBrush="#F5ECDB" BorderThickness="1" CornerRadius="6" Padding="8,3" VerticalAlignment="Center">
+            <TextBlock Text="开发中 · 0.09" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.CompactBody}" Foreground="#856F4E" />
+          </Border>
+        </StackPanel>
+        <TextBlock Text="Surface 用来表达“内容承载层级”，不是随意换背景色；先判断内容处于哪一层，再决定 Border / Radius / Shadow 等辅助视觉。"
+                   Classes="xyui-text-caption" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <!-- Developer Quick Start 三列横幅 -->
+      <Border Background="#F9FBFC" BorderBrush="#E6ECEF" BorderThickness="1" CornerRadius="8" Padding="14,10">
+        <Grid ColumnDefinitions="*,Auto,*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="2">
+            <TextBlock Text="先问：内容在哪一层？" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="App → Panel → PanelAlt / Raised → 浮层 Overlay" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="#E6ECEF" Margin="10,0" />
+          <StackPanel Grid.Column="2" Spacing="2">
+            <TextBlock Text="Surface ≠ Shape / Border" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="Surface 决定承载层级；Shape/Radius/Border 负责轮廓与边界" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+          <Rectangle Grid.Column="3" Width="1" Fill="#E6ECEF" Margin="10,0" />
+          <StackPanel Grid.Column="4" Spacing="2">
+            <TextBlock Text="Canonical 共 10 项语义" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Caption}" Foreground="#526873" />
+            <TextBlock Text="主图重点讲 6 个常用层级；真实 Attached 声明 xy:XY.Surface" Classes="xyui-text-caption" FontSize="{DynamicResource XY.FontSize.CompactBody}" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- 01 · 核心规则 -->
+      <views:SurfaceCoreRulesSection />
+
+      <!-- 02 · Surface 层级地图 / 使用场景 -->
+      <views:SurfaceMapSection />
+
+      <!-- 03 · Surface × Border × Radius × Popup 关系 -->
+      <views:SurfaceCompositionSection />
+
+      <!-- 04 · 怎么使用 / 高级 / 禁止 -->
+      <views:SurfaceCodePatternsSection />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

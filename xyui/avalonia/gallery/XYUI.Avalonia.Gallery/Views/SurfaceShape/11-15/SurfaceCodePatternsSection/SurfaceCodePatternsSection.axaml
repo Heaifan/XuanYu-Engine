@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xy="using:XYUI.Avalonia"
+             x:Class="XYUI.Avalonia.Gallery.Views.SurfaceCodePatternsSection">
+  <StackPanel Spacing="8">
+    <TextBlock Text="04 · 怎么使用 / 高级 / 禁止" Classes="xyui-text-section" FontSize="{DynamicResource XY.FontSize.CompactSection}" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+    <Grid ColumnDefinitions="1.2*,1*,1*">
+      <!-- 怎么使用 (左列) -->
+      <Border Grid.Column="0" Margin="0,0,6,0" Background="#E1EEE6" BorderBrush="#80A58E" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="怎么使用 · 真实 XAML" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Auxiliary}" Foreground="#4E7B66" />
+          <!-- 示例 1 -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;Border xy:XY.Surface=&quot;XY.Surface.Panel&quot; xy:XY.Radius=&quot;XY.Radius.Panel&quot; /&gt;" Classes="xyui-text-code" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+              <TextBlock Text="→ 主工作区：Surface 决定承载层级，Radius 只调整边角。" Foreground="#4E7B66" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <!-- 示例 2 -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;Border xy:XY.Surface=&quot;XY.Surface.Raised&quot; xy:XY.Border=&quot;XY.Border.Subtle&quot; /&gt;" Classes="xyui-text-code" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+              <TextBlock Text="→ 局部卡片：用 Raised 浮起，Border 辅助边界。" Foreground="#4E7B66" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <TextBlock Text="Canonical Surface：共 10 项。本页重点讲解 6 个常用层级；完整成员见 API 速查。" Foreground="#4E7B66" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          </Border>
+        </StackPanel>
+      </Border>
+      <!-- 高级 (中列：避免文字截断) -->
+      <Border Grid.Column="1" Margin="3,0,3,0" Background="#E3EEF5" BorderBrush="#82A4BC" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="高级 (Advanced)" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Auxiliary}" Foreground="#4C7597" />
+          <TextBlock Text="[业务开发者]" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.CompactBody}" Foreground="#4C7597" />
+          <TextBlock Text="只声明 Surface 语义，不自己维护层级色板。" Classes="xyui-text-body" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="[组件作者]" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.CompactBody}" Foreground="#4C7597" Margin="0,4,0,0" />
+          <TextBlock Text="关注 Popup / Tooltip 生命周期，" Classes="xyui-text-body" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="保持各通道单一真值。" Classes="xyui-text-body" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+      <!-- 禁止 (右列) -->
+      <Border Grid.Column="2" Margin="6,0,0,0" Background="#F8E4E6" BorderBrush="#CA8087" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="4">
+          <TextBlock Text="禁止 (Forbidden)" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Auxiliary}" Foreground="#B34F58" />
+          <TextBlock Text="× 手写 Hex 背景冒充 Surface" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 用 Raised 填满整个 App" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× Raised + Shadow 冒充 Popup" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 业务页复制第二套 Surface 色板" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 把 Border 强弱当作层级" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 把 Radius 大小当作层级" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </StackPanel>
+</UserControl>

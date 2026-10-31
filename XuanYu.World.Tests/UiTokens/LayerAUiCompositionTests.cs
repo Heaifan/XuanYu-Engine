@@ -10,13 +10,13 @@ public sealed class LayerAUiCompositionTests
     [Fact]
     public void Right_dock_is_edit_only_and_map_context_has_no_layer_page()
     {
-        var right = Read("Right/Right.axaml");
-        var map = Read("Right/MapEditorPanel.axaml");
+        var right = Read("Panels/Inspector/InspectorPanels/Right.axaml");
+        var map = Read("MapUI/Presentation/EditorPanels/MapEditorPanel.axaml");
         Assert.Contains("EditorLayerDock", right);
         Assert.Contains("IsVisible=\"{Binding IsEditMode}\"", right);
         Assert.Contains("GridSplitter", right);
         Assert.DoesNotContain("<local:MapEditorPanel", right);
-        Assert.Equal(1, Read("Right/InspectorPanel.axaml").Split("<local:MapEditorPanel", StringSplitOptions.None).Length - 1);
+        Assert.Equal(1, Read("Panels/Inspector/InspectorPanels/InspectorPanel.axaml").Split("<local:MapEditorPanel", StringSplitOptions.None).Length - 1);
         Assert.DoesNotContain("Header=\"图层\"", map);
         Assert.DoesNotContain("LayerPanel", map);
     }
@@ -24,9 +24,9 @@ public sealed class LayerAUiCompositionTests
     [Fact]
     public void Inspector_owns_layer_attributes_and_map_is_empty()
     {
-        var inspector = Read("Right/InspectorPanel.axaml");
-        var map = Read("Right/MapPagePanel.axaml");
-        var layer = Read("Right/LayerPanel.axaml");
+        var inspector = Read("Panels/Inspector/InspectorPanels/InspectorPanel.axaml");
+        var map = Read("MapUI/Presentation/MapToolPanels/MapPagePanel.axaml");
+        var layer = Read("MapUI/Editing/LayerPanels/LayerPanel.axaml");
         Assert.DoesNotContain("LayerInspectorPanel", inspector);
         Assert.DoesNotContain("HasCurrentLayerSelection", inspector);
         Assert.Contains("InspectorPropertyRow", inspector);

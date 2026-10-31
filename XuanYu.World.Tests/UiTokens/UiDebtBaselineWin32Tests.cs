@@ -3,9 +3,9 @@ namespace XuanYu.World.Tests.UiTokens;
 public sealed class UiDebtBaselineWin32Tests
 {
     [Theory]
-    [InlineData("XuanYu.Editor.UI/Control/XycUiNativeCapture.cs", "XycUiNativeCapture.if", "0x00CC0020")]
-    [InlineData("XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs", "SilentNativeWindow.WsPopup", "0x80000000")]
-    [InlineData("XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs", "SilentNativeWindow.WsVisible", "0x10000000")]
+    [InlineData("XuanYu.Editor.UI/Infrastructure/Controls/Capture/XycUiNativeCapture.cs", "XycUiNativeCapture.if", "0x00CC0020")]
+    [InlineData("XuanYu.Editor.UI/Infrastructure/Resources/Host/SilentNativeWindow.cs", "SilentNativeWindow.WsPopup", "0x80000000")]
+    [InlineData("XuanYu.Editor.UI/Infrastructure/Resources/Host/SilentNativeWindow.cs", "SilentNativeWindow.WsVisible", "0x10000000")]
     public void Win32_constants_are_not_classified_as_ui_colors(string path, string locator, string value)
     {
         var source = File.ReadAllText(Path.Combine(TestSourceRoot.Root, path));

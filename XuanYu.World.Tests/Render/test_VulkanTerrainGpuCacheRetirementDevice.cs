@@ -25,7 +25,8 @@ public sealed class VulkanTerrainGpuCacheRetirementDeviceTests
         var driver = renderer.DeviceDriverVersion;
         var initialRetired = renderer.RetiredTerrainGpuResourceCount;
         var initialDisposed = renderer.DisposedTerrainGpuResourceCount;
-        var diagnostics = Environment.GetEnvironmentVariable("XYE_DIAGNOSTICS_DIRECTORY");
+        var diagnostics = Path.Combine(TestSourceRoot.Root, "artifacts", "diagnostics",
+            "terrain-gpu-retirement", Guid.NewGuid().ToString("N"));
         WriteSnapshot(diagnostics, "AfterRendererConstructionBeforeFirstReadback",
             deviceName, driver, renderer.TerrainStats.ToString(), initialRetired,
             initialDisposed, renderer.TerrainRetirementDiagnostics);

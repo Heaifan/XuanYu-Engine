@@ -17,8 +17,9 @@ public sealed class RegionSnapPipelineContractTests
     [Fact]
     public void Pipeline_does_not_add_edge_specific_history_or_dataset_writes()
     {
-        var root = Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor", "MapEditing");
+        var root = Path.Combine(TestSourceRoot.Root, "XuanYu.Editor", "MapEditing", "RegionSnap", "Pipeline");
         var files = Directory.GetFiles(root, "RegionSnap*.cs").Select(File.ReadAllText).ToArray();
+        Assert.Equal(4, files.Length);
         var text = string.Join('\n', files);
         Assert.DoesNotContain("EditRegionVertices", text);
         Assert.DoesNotContain("History", text);

@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-if ([string]::IsNullOrWhiteSpace($env:XYE_TASK_RUN_ID) -or [string]::IsNullOrWhiteSpace($env:XYE_DIAGNOSTICS_DIRECTORY)) { throw 'Run XYC B1 through scripts\xye-workspace.ps1.' }
+if ([string]::IsNullOrWhiteSpace($env:XYC_RUN_ID)) { $env:XYC_RUN_ID = [Guid]::NewGuid().ToString('N') }
 if ([string]::IsNullOrWhiteSpace($Source)) {
     $Source = Join-Path $repoRoot 'artifacts\diagnostics\wp2-p4-r3\n24e121.hgt'
 }
@@ -14,7 +14,7 @@ $expectedHash = 'BEF65347232885016C50F73B9EBDC09D52B82FD5EB4517377220F7B8211340E
 if ((Get-FileHash -LiteralPath $Source -Algorithm SHA256).Hash -ne $expectedHash) {
     throw 'n24e121 HGT SHA-256 与 Issue #32 基线不匹配。'
 }
-$allowedRoot = Join-Path $env:XYE_DIAGNOSTICS_DIRECTORY 'xyc-r0-b1'
+$allowedRoot = Join-Path $repoRoot 'artifacts\diagnostics\xyc-r0-b1'
 if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
     $OutputDirectory = $allowedRoot
 }
@@ -29,14 +29,14 @@ $bootstrap = & (Join-Path $repoRoot 'scripts\xye-bootstrap.ps1')
 if ($LASTEXITCODE -ne 0) { throw 'Bootstrap 未通过。' }
 $dotnet = & (Join-Path $repoRoot 'scripts\resolve-dotnet.ps1')
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($dotnet)) { throw '正式 .NET Resolver 未返回 SDK。' }
-& (Join-Path $repoRoot 'scripts\xye-dotnet.ps1') build (Join-Path $PSScriptRoot 'XuanYu.OffscreenTerrain.csproj') --no-restore
+& (Join-Path $repoRoot 'scripts\xye-build.ps1') -Project 'tools/xyc-offscreen/XuanYu.OffscreenTerrain.csproj' -Configuration Debug
 if ($LASTEXITCODE -ne 0) { throw 'XYC Offscreen benchmark Build 失败。' }
 
 $head = if ($env:XYE_SOURCE_HEAD) { $env:XYE_SOURCE_HEAD } else { (& git -C $repoRoot rev-parse HEAD).Trim() }
 $env:XYE_SOURCE_FINGERPRINT = (& (Join-Path $repoRoot 'scripts\xye-source-fingerprint.ps1') $repoRoot).Trim()
 $version = (Select-String -Path (Join-Path $repoRoot 'Directory.Build.props') -Pattern '<InformationalVersion>([^<]+)</InformationalVersion>').Matches.Groups[1].Value
 $env:XYC_BUILD_ID = "HEAD=$head;VERSION=$version;DIRTY=$env:XYE_SOURCE_DIRTY"
-$dll = Join-Path $env:XYE_BUILD_DIRECTORY 'bin\XuanYu.OffscreenTerrain\debug\XuanYu.OffscreenTerrain.dll'
+$dll = Join-Path $PSScriptRoot 'bin\Debug\net10.0\XuanYu.OffscreenTerrain.dll'
 $exitCodes = @()
 for ($replicate = 1; $replicate -le 3; $replicate++) {
     $arguments = @($dll, '--benchmark', '--source', $Source, '--out', $OutputDirectory,

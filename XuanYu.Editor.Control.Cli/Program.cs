@@ -1,5 +1,4 @@
 using System.Reflection;
-using XuanYu.Core.Diagnostics;
 using XuanYu.Editor.UI.XycControl;
 
 if (args.Length < 2 || args[0] != "--app")
@@ -22,15 +21,11 @@ var timeout = int.TryParse(Value(args, "--timeout-seconds"), out var seconds) ? 
 if (timeout is < 1 or > 3600) return 2;
 var uiHost = args.Contains("--xyc-ui");
 if (uiHost && args.Contains("--xyc-silent")) return 2;
-var diagnosticsRoot = Environment.GetEnvironmentVariable("XYE_DIAGNOSTICS_DIRECTORY");
-var defaultEvidenceDirectory = string.IsNullOrWhiteSpace(diagnosticsRoot)
-    ? Path.Combine(Environment.CurrentDirectory, "artifacts", "diagnostics", "xyc-ui-v0.1-p0", sessionId)
-    : Path.Combine(diagnosticsRoot, "xyc-ui", sessionId);
+var defaultEvidenceDirectory = Path.Combine(Environment.CurrentDirectory,
+    "artifacts", "diagnostics", "xyc-ui-v0.1-p0", sessionId);
 var evidenceDirectory = uiHost
     ? Path.GetFullPath(Value(args, "--evidence-dir") ?? defaultEvidenceDirectory)
     : null;
-if (uiHost && !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("XYE_TASK_RUN_ID")))
-    evidenceDirectory = XyeWorkspacePaths.EnsureInsideWorkspace(evidenceDirectory!);
 if (evidenceDirectory is not null) Directory.CreateDirectory(evidenceDirectory);
 var demPath = Value(args, "--test-dem");
 if (demPath is not null && !args.Contains("--diagnostic-write"))

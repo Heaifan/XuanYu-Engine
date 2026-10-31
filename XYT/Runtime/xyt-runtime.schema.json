@@ -1,8 +1,8 @@
 {
-  "schema": "XYT-P3-R1/2",
+  "schema": "XYT-P3-R1/4",
   "statuses": ["PASS", "FAIL", "TIMEOUT", "CRASH", "BLOCKED_NO_GUI", "HARNESS_FAILURE", "EVIDENCE_FAILURE"],
-  "required": ["Version", "Commit", "Branch", "DirtyState", "AppExePath", "AppBuildTimestamp", "GPU", "VulkanAdapter", "WindowHost", "VulkanDevice", "Swapchain", "PresentEvidence", "CandidateId", "RuntimeTestId", "Capability", "StartTime", "EndTime", "DurationMs", "Status", "Reason", "HarnessStatus", "EvidencePath", "StderrEvidencePath"],
-  "p3Rule": "PASS requires real App, Window/Native Host, Vulkan Device, Swapchain and Present markers required by the capability",
+  "required": ["Version", "Commit", "Branch", "DirtyState", "AppExePath", "AppBuildTimestamp", "GPU", "VulkanAdapter", "WindowHost", "VulkanSurface", "VulkanDevice", "Swapchain", "PresentEvidence", "FramePresentedEvidence", "ResizeRequested", "ResizeEvidence", "SwapchainRecreated", "PostResizePresent", "CloseRequested", "CloseRequestAccepted", "ProcessExitedAfterClose", "ForcedTermination", "PresentLoopStopped", "ResourceReleaseEvidence", "RendererEventPath", "EventIdentityValid", "CandidateId", "RuntimeTestId", "Capability", "StartTime", "EndTime", "DurationMs", "Status", "Reason", "HarnessStatus", "EvidencePath", "StderrEvidencePath", "ExitCode", "RequiredMarkers", "MissingMarkers"],
+  "p3Rule": "PASS requires real App, Window/Native Host, Vulkan Surface, Vulkan Device, Swapchain and Present evidence. P3-01 and P3-02 additionally require graceful close and renderer resource teardown; P3-02 requires a resize request after the initial frame, a newer Swapchain generation at an extent different from the initial Swapchain, and a later FramePresented event.",
   "productVerdict": "REAL RUNTIME AUTOMATED EVIDENCE PASS",
   "forbiddenVerdict": "PRODUCT PASS"
 }

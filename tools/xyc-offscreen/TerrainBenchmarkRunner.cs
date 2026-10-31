@@ -23,7 +23,6 @@ internal static class TerrainBenchmarkRunner
         var runDirectory = Path.Combine(options.OutputDirectory, $"run-{options.Replicate}");
         Directory.CreateDirectory(runDirectory);
         Environment.SetEnvironmentVariable("XYE_PROBE_VIEWPORT", "1");
-        Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", Path.Combine(runDirectory, "probes"));
         var import = Stopwatch.StartNew();
         var tile = TerrainSourceImport.ReadMany([options.Source]).Tiles.Single(); import.Stop();
         var results = new List<BenchmarkConfiguration>();

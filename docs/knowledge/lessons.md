@@ -281,3 +281,12 @@ Region Drawing 同时跨 Pointer、Picking、MapPoint、Draft、Vector Overlay�
 同一用例另行通过生产 `AvaloniaViewportInputForwarder` 输入一个明确标注为 synthetic 的平台样本，Router 随后取得 `Region` Capture，Domain hit count 与 Draft vertex 均为 1。普通 Headless Button 点击 2/2 通过；这只证明 Headless 对普通 Avalonia 控件可用，不证明 NativeControlHost 子 HWND 可被 Headless 命中。该样本同时确认 Router→Region Consumer→Ground Pick→有效 Layer→Draft 下游路径可工作，不覆盖真实平台 Source。
 
 **复用规则**：NativeControlHost 无 HWND 且 Headless `InputHitTest` 未命中时，将失败先分类为 Headless/测试前提边界；保留 Headless 可覆盖的下游合同，并用 Windows Native P3 验证 HWND Source。产品输入是否正确必须保持 UNKNOWN，直到真实 Native 输入证据到达 Adapter / Router / Consumer。
+
+
+### 2026-10-31 · 源码物理路径迁移与静态合同测试（R1-G-R2）
+
+当测试通过源码路径或文件枚举检查架构合同，生产源码目录迁移必须同步更新这些路径合同。目录变化可能使测试直接失败，也可能让枚举变为空并造成空通过。
+
+**复用规则**：明确列出预期文件集合；断言目标目录存在、集合非空且每个必需文件存在。若测试意图覆盖精确集合，还要断言实际成员与预期一致。不得把“枚举执行成功”当作“合同仍受保护”。
+
+**证据边界**：本轮发现三个 World.Tests 源码合同依赖旧 MapEditing 根路径；本轮静态修改了定位和存在性保护，但未运行测试，因此不据此宣称测试通过。

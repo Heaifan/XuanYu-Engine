@@ -11,7 +11,7 @@ public static class XyuiTypographyTokens
     public const string FontFallbackCjk = "Noto Sans CJK SC";
     public const string FontFallbackMono = "Noto Sans Mono";
 
-    // Font Size（DIP，八档）
+    // Font Size（DIP，语义字号与 Gallery 精度层级）
     public const double FontSizeCaption = 12;
     public const double FontSizeAuxiliary = 13;
     public const double FontSizeBody = 14;
@@ -20,6 +20,14 @@ public static class XyuiTypographyTokens
     public const double FontSizePanelTitle = 20;
     public const double FontSizePageTitle = 24;
     public const double FontSizeMono = 13;
+    // 精度字号阶：保留 Gallery 现存紧凑标签、注释与标题的字号层级。
+    public const double FontSizeMicro = 8;
+    public const double FontSizeMicroPlus = 8.5;
+    public const double FontSizeFinePrint = 9;
+    public const double FontSizeCompactCaption = 10;
+    public const double FontSizeCompactBody = 11;
+    public const double FontSizeCompactSection = 16;
+    public const double FontSizeCompactPanelTitle = 22;
 
     // Font Weight（OpenType 数值，四档）
     public const int WeightRegular = 400;

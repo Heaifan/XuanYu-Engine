@@ -33,27 +33,17 @@ echo    XuanYu Engine Editor - Build and Run
 echo ========================================
 echo.
 
-rem [0/3] Kill previous editor instance and shutdown build servers to avoid
-rem PDB/DLL file locks (CS2012). Only target this editor and MSBuild servers;
-rem NEVER use "taskkill /IM dotnet.exe" (would kill unrelated .NET tasks).
-echo [0/3] Closing previous editor instance...
+rem [0/2] Close only the editor before checking/reusing its build outputs.
+echo [0/2] Closing previous editor instance...
 taskkill /IM XuanYu.Editor.App.exe /T /F >nul 2>&1 || ver >nul
-call "%DOTNET_EXE%" build-server shutdown >nul 2>&1 || ver >nul
-%SystemRoot%\System32\timeout.exe /t 1 /nobreak >nul 2>&1 || ver >nul
 
 echo.
-echo [1/3] Restoring packages...
-call "%DOTNET_EXE%" restore "%PROJECT%" --configfile ".\NuGet.Config" -nologo
+echo [1/2] Reusing or building app outputs...
+call powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\xye-build.ps1" -Project "XuanYu.Editor.App\XuanYu.Editor.App.csproj"
 if errorlevel 1 goto fail
 
 echo.
-echo [2/3] Building app...
-set "MSBUILDDISABLENODEREUSE=1"
-call "%DOTNET_EXE%" build "%PROJECT%" --no-restore -t:Rebuild -nologo -clp:Summary=false -m:1 -nr:false -p:UseSharedCompilation=false
-if errorlevel 1 goto fail
-
-echo.
-echo [3/3] Starting editor...
+echo [2/2] Starting editor...
 echo.
 set "WT_DIRTY=false"
 for /f "delims=" %%S in ('git status --porcelain') do set "WT_DIRTY=true"

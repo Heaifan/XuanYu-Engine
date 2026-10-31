@@ -5,7 +5,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // 证明：删除旧债务后异位/异选择器/异 x:Name/异属性新增同值均失败；注释漂移不改变基线；基线不自动增长。
 public sealed class UiDebtBaselineBypassTests
 {
-    private static readonly string Ui = "XuanYu.Editor.UI/Ui.axaml";
+    private static readonly string Ui = "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml";
     private static int Scan(string text) => UiSourceContractAnalyzer.AnalyzeAxaml(text, Ui).Count;
 
     // 反例 1/2：原位置保留 PASS；删除 PASS。
@@ -32,9 +32,9 @@ public sealed class UiDebtBaselineBypassTests
     public void Moved_to_another_control_fails()
     {
         const string text = "<Border x:Name=\"OtherElm\" Background=\"#172033\"/>";
-        var v = UiSourceContractAnalyzer.AnalyzeAxaml(text, "XuanYu.Editor.UI/Ui.axaml");
+        var v = UiSourceContractAnalyzer.AnalyzeAxaml(text, "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml");
         Assert.Contains(v, x => x.Locator == "Name:OtherElm");
-        Assert.Equal(0, UiDebtBaseline.AllowedCountFor("XuanYu.Editor.UI/Ui.axaml", "Name:OtherElm", UiRuleKind.HexColor, "Color", "#172033"));
+        Assert.Equal(0, UiDebtBaseline.AllowedCountFor("XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Name:OtherElm", UiRuleKind.HexColor, "Color", "#172033"));
     }
 
     // 反例 5：同选择器另一属性 FAIL（Property 参与匹配）。
@@ -42,9 +42,9 @@ public sealed class UiDebtBaselineBypassTests
     public void Same_selector_other_property_fails()
     {
         const string text = "<Style Selector=\"TabItem.sideTab\"><Setter Property=\"Height\" Value=\"30\"/></Style>";
-        var v = UiSourceContractAnalyzer.AnalyzeAxaml(text, "XuanYu.Editor.UI/Ui.axaml");
+        var v = UiSourceContractAnalyzer.AnalyzeAxaml(text, "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml");
         Assert.Contains(v, x => x.Kind == UiRuleKind.ControlHeight && x.Property == "Height" && x.Value == "30");
-        Assert.Equal(0, UiDebtBaseline.AllowedCountFor("XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab",
+        Assert.Equal(0, UiDebtBaseline.AllowedCountFor("XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:TabItem.sideTab",
             UiRuleKind.ControlHeight, "Height", "30"));
     }
 
@@ -53,9 +53,9 @@ public sealed class UiDebtBaselineBypassTests
     public void Moved_to_another_style_fails()
     {
         const string text = "<Style Selector=\"Button\"><Setter Property=\"Foreground\" Value=\"#172033\"/></Style>";
-        var v = UiSourceContractAnalyzer.AnalyzeAxaml(text, "XuanYu.Editor.UI/Ui.axaml");
+        var v = UiSourceContractAnalyzer.AnalyzeAxaml(text, "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml");
         Assert.Contains(v, x => x.Locator == "Style:Button");
-        Assert.Equal(0, UiDebtBaseline.AllowedCountFor("XuanYu.Editor.UI/Ui.axaml", "Style:Button", UiRuleKind.HexColor, "Color", "#172033"));
+        Assert.Equal(0, UiDebtBaseline.AllowedCountFor("XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml", "Style:Button", UiRuleKind.HexColor, "Color", "#172033"));
     }
 
     // 反例 7/8：同值不同 x:Name / 不同属性 FAIL。

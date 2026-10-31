@@ -6,13 +6,13 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D5：弹窗宿主 + 日志空状态/回到底部结构合同。
 public sealed class UiD5DialogAndLogContractTests
 {
-    static readonly string Win = Read("Win/UiWin.axaml");
-    static readonly string Dialog = Read("Win/UiWin.DialogHost.cs");
-    static readonly string UnsavedModal = Read("Win/UnsavedChangesConfirmationWindow.axaml");
-    static readonly string DialogInput = Read("Win/UiWin.DialogHost.Input.cs");
-    static readonly string Shortcuts = Read("Win/UiWin.Shortcuts.cs");
-    static readonly string Unsaved = Read("Win/UiWin.UnsavedDialog.cs");
-    static readonly string Foot = Read("Foot/Foot.axaml");
+    static readonly string Win = Read("Shell/Windowing/WindowLifecycle/UiWin.axaml");
+    static readonly string Dialog = Read("Shell/Windowing/DialogLifecycle/UiWin.DialogHost.cs");
+    static readonly string UnsavedModal = Read("Shell/Windowing/Shortcuts/UnsavedChangesConfirmationWindow.axaml");
+    static readonly string DialogInput = Read("Shell/Windowing/DialogLifecycle/UiWin.DialogHost.Input.cs");
+    static readonly string Shortcuts = Read("Shell/Windowing/Shortcuts/UiWin.Shortcuts.cs");
+    static readonly string Unsaved = Read("Shell/Windowing/DialogLifecycle/UiWin.UnsavedDialog.cs");
+    static readonly string Foot = Read("Panels/Status/StatusWidgets/Foot.axaml");
 
     static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
@@ -67,7 +67,7 @@ public sealed class UiD5DialogAndLogContractTests
     {
         Assert.Contains("ScrollToBottomButton", Foot);
         Assert.Contains("ScrollToBottom_Click", Foot);
-        var cs = Read("Foot/Foot.axaml.cs");
+        var cs = Read("Panels/Status/StatusWidgets/Foot.axaml.cs");
         Assert.Contains("TailStateChanged", cs);
         Assert.Contains("ForceFollow", cs);
     }
@@ -75,9 +75,9 @@ public sealed class UiD5DialogAndLogContractTests
     [Fact]
     public void Log_auto_follow_keeps_user_scroll_pause_semantics()
     {
-        var layout = Read("Foot/LogListAutoScrollController.Layout.cs");
+        var layout = Read("Panels/Status/LogControls/LogListAutoScrollController.Layout.cs");
         Assert.Contains("LogAutoScrollPolicy.ShouldFollow", layout); // 用户滚动维护尾部状态
-        var controller = Read("Foot/LogListAutoScrollController.cs");
+        var controller = Read("Panels/Status/LogControls/LogListAutoScrollController.cs");
         Assert.Contains("_atTail && !_forceNext", controller);      // 阅读旧日志不强制拉回
     }
 

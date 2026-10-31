@@ -1,0 +1,54 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingLiveLabSection">
+  <Border Classes="xyui-surface-panel" Padding="14" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1.5" CornerRadius="8">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="② 实时空间实验室" Classes="xyui-text-section" FontSize="{DynamicResource XY.FontSize.Section}" />
+        <TextBlock Text="真实 XYUI 组件直接展示规范间距，不用单独 Token 表解释" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <!-- Middle: Toolbar & Form -->
+      <Grid ColumnDefinitions="*,*" Margin="0,2,0,0">
+        <!-- 1. Toolbar -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="0,0,6,0" CornerRadius="6">
+          <StackPanel Spacing="6">
+            <TextBlock Text="工具栏" Classes="xyui-text-caption" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+            <Panel x:Name="ToolbarHost" />
+            <TextBlock Text="项内 Gap 2 DIP · 组间 Gap 6 DIP" Classes="xyui-text-code" FontSize="{DynamicResource XY.FontSize.CompactCaption}" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Form -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="6,0,0,0" CornerRadius="6">
+          <StackPanel Spacing="6">
+            <TextBlock Text="表单" Classes="xyui-text-caption" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+            <Grid ColumnDefinitions="45,*">
+              <c:XYLabel Text="名称" VerticalAlignment="Center" />
+              <c:XYTextField Grid.Column="1" Text="Player_Main_Actor" />
+            </Grid>
+            <TextBlock Text="字段间 Gap 6 DIP" Classes="xyui-text-code" FontSize="{DynamicResource XY.FontSize.CompactCaption}" Foreground="{DynamicResource XY.Brush.Accent.Strong}" HorizontalAlignment="Right" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Bottom: Panel -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" CornerRadius="6" Margin="0,2,0,0">
+        <StackPanel Spacing="6">
+          <TextBlock Text="面板与区块" Classes="xyui-text-caption" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+          <Border Background="{DynamicResource XY.Brush.Surface.Panel}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" Padding="8" CornerRadius="4">
+            <StackPanel Spacing="8">
+              <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Padding="10,6" CornerRadius="3">
+                <TextBlock Text="区块 1 · 主区块" Classes="xyui-text-caption" />
+              </Border>
+              <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Padding="10,6" CornerRadius="3">
+                <TextBlock Text="区块 2 · 次区块" Classes="xyui-text-caption" />
+              </Border>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

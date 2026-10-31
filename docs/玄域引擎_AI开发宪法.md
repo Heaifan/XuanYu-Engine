@@ -1,7 +1,7 @@
-# 玄域引擎 AI 开发宪法 3.5
+# 玄域引擎 AI 开发宪法 3.6
 
-**版本：** 3.5
-**修订日期：** 2026-10-15
+**版本：** 3.6
+**修订日期：** 2026-10-31
 **维护者：** 用户指定的宪法维护 AI——ChatGPT  
 **生效条件：** 经用户批准并提交至玄域引擎正式仓库  
 **适用范围：** 玄域引擎、《兵无常势》及基于玄域引擎开展的代码、测试、文档、审计、规划、验收与 Git 操作
@@ -408,11 +408,11 @@ Loaded:
 
 EXECUTION AI AGENTS DO NOT HAVE DEFAULT XYK WRITE AUTHORITY.
 
-XYK 是独立维护的知识系统，不属于 XYT 测试系统或普通任务写入范围。知识候选必须随任务报告输出，不得由执行 Agent 自行写入任何知识/经验文件。知识与经验候选只能作为最终报告中的纯文本交给 ChatGPT；正式条目的搜索、审计、接受、合并、修订、拒绝、退役与写入由 ChatGPT 负责。
+XYK 是独立维护的知识系统，不属于 XYT 测试系统或普通任务写入范围。每轮 Codex 开发、修复、架构审计、工程事故及重要技术验证任务，都必须在结束前向 `docs/knowledge/xyk-changelog.md` 追加候选登记或 `XYK: NONE` 任务记录。该 Changelog 是候选及审核轨迹，不是正式知识库，也不授予执行 AI 修改正式知识条目的权限。
 
-执行 Agent 的默认权限是 `XYK PROPOSER`，不得把知识候选持久化到 Codex memory
-目录、仓库文件、`ad_hoc` / `notes`、Markdown、JSON/YAML、TXT 或其它 Agent 自建知识存储。
-ChatGPT 作为 XYK 唯一维护者，负责正式条目的审计与写入。
+执行 AI 获准在明确任务范围内追加 Changelog 记录；不得覆盖、删除或改写历史记录。正式知识条目的搜索、审计、接受、合并、修订、拒绝、退役与写入仍由 ChatGPT / XYK Coordinator 负责。审核前不得自动改写正式知识条目。
+
+执行 Agent 的默认权限是 `XYK PROPOSER`：仅可将候选或 NONE 任务记录追加到上述专用 Changelog，不得把候选写入正式知识文件、Codex memory 目录、`ad_hoc` / `notes` 或其它 Agent 自建知识存储。ChatGPT 作为 XYK 唯一维护者，负责正式条目的审计与写入。
 
 长期治理资料职责固定为：
 
@@ -424,6 +424,7 @@ Lesson       = 错误前提、停止条件与复盘教训
 ERR          = Agent 实际犯错事实与根因
 EXP          = 从一个或多个 ERR 提炼的防复发规则
 Index        = 任务域 → 必须读取内容
+XYK Changelog= 候选登记与审核/入库状态的追加式历史，不是正式知识
 Changelog    = 实际发生的有效变化
 File Tree    = 当前文件与职责
 Plan/Audit   = 过程材料，不自动成为长期知识
@@ -455,7 +456,7 @@ Critical / High / Medium / Low
 
 ## 第二十三条　知识候选报告规则
 
-任务完成前只做一次轻量知识判断，并且只在最终报告文本中输出：
+任务结束前只做一次轻量知识判断，并将结果追加登记到 XYK Changelog。报告仍须说明候选判断；不得因任务为静态审计就默认没有知识价值。静态发现可登记为风险候选，但必须标明未验证，不得描述成已发生故障。
 
 ```text
 是否产生新的长期决策？    → DEC
@@ -471,10 +472,13 @@ XYK CANDIDATE:
 NONE
 ```
 
-存在候选时，必须使用 `XYK CANDIDATE` 区块，按 Problem、Root Cause、
-Rule / Knowledge、Applies To、Evidence、Expiry / Revalidation、Suggested
-Action 以纯文本描述。该区块不得写入任何知识库、经验库、Codex memory、
-ad-hoc note 或其它文件；正式入库由 ChatGPT 后续决定。
+同时在 Changelog 追加简短任务记录，明确 `XYK: NONE`、Task、时间及时区、Source Identity 和去重理由。重复执行同一任务时先检查 Candidate ID，避免重复登记。
+
+存在候选时，使用 `XYK CANDIDATE` 区块并登记到 Changelog，至少包含 Candidate ID、Task、Time（明确时区）、Source Identity（HEAD 及必要的工作树文件身份）、Category、Problem、Evidence、Confidence、Proposed Knowledge、Suggested Action、Related Knowledge 与 `Review Status: PENDING`。Candidate ID 不得冒用正式 Knowledge ID；Related Knowledge 仅表示建议去重/强化目标。报告区块可简述候选并引用 Candidate ID，不得冒充正式知识。
+
+候选审核按 `SEARCH EXISTING → MATCH / NO MATCH → UPDATE / STRENGTHEN / CREATE / SUPERSEDE / REJECT / NONE` 执行。优先去重或强化已有条目；不得重复创建。事实、推论、假设和待验证项必须分开标注。
+
+Changelog 状态必须区分 `CANDIDATE LOGGED`、`REVIEWED`、`WORKTREE WRITTEN`、`GIT COMMITTED`、`PUSHED`、`PENDING` 和 `REJECTED`。审核或入库后以新的追加事件记录状态变化，不回写或删除原候选历史。正式入库回执需给出 Knowledge ID、正式文件路径、差异、Git blob 或 Commit 身份及当前状态；不得把 blob 称为 Commit。
 
 执行 AI 只能报告 `XYK CANDIDATE: PRESENT` 或 `XYK CANDIDATE: NONE`，不得报告
 “已沉淀至经验库”“已写入知识库”“已更新 memory”或“已保存至 Codex memories”，
@@ -655,7 +659,7 @@ Commit 不等于 Push；Push 不等于远端一致；必须实际核验远端分
 
 ## 第三十五条　XYK 知识审计
 
-XYK 独立于开发规则和 XYT，负责长期知识、经验与决策。执行 AI 只在最终报告中提交 `XYK CANDIDATE` 纯文本，不得自行写入正式 XYK 或其它知识存储。ChatGPT 负责搜索既有条目、审计候选并决定正式维护；普通任务不因此增加额外审批门禁。
+XYK 独立于开发规则和 XYT，负责长期知识、经验与决策。候选日志登记按第二十一、二十三条执行；Changelog 不构成正式知识入库。ChatGPT 负责搜索既有条目、审计候选并决定正式维护；普通任务不因此增加额外审批门禁。
 
 ## 第三十六条　最终报告最小事实集
 
@@ -670,6 +674,8 @@ XYK 独立于开发规则和 XYT，负责长期知识、经验与决策。执行
 - 当前分支与 HEAD；
 - 工作区 / 阻断；
 - 必要的知识回写结果。
+
+每轮最终报告另附固定 `XYK CHANGELOG` 回执，至少列出 Changelog Path、Candidate IDs、New Entries、Review Status、File Identity 和 `XYK: CANDIDATE / NONE`。正式知识入库已获授权时，再附正式入库回执。
 
 不得重复粘贴整个开发直播。
 

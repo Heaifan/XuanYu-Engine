@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Xunit;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -10,8 +10,8 @@ public sealed class FeatureEditUiContractTests
     [Fact]
     public void Context_toolbar_shows_draw_categories_without_breadcrumb_duplication()
     {
-        var toolbar = Read("Top/ContextToolBar.axaml");
-        var code = Read("Top/ContextToolBar.axaml.cs");
+        var toolbar = Read("Panels/Tools/ContextTools/ContextToolBar.axaml");
+        var code = Read("Panels/Tools/ContextTools/ContextToolBar.axaml.cs");
         
         Assert.Contains("IsVisible=\"{Binding IsEditMode}\"", toolbar);
         Assert.DoesNotContain("地图编辑", toolbar);
@@ -28,8 +28,8 @@ public sealed class FeatureEditUiContractTests
     [Fact]
     public void Workspace_selector_semantics_updated()
     {
-        var selector = Read("Workspace/WorkspaceSelector.axaml") +
-                       Read("Workspace/WorkspaceSelector.axaml.cs");
+        var selector = Read("Panels/Workspace/WorkspaceSelector.axaml") +
+                       Read("Panels/Workspace/WorkspaceSelector.axaml.cs");
         
         Assert.Contains("要素编辑", selector);
         Assert.Contains("feature-editing", selector);

@@ -79,9 +79,5 @@ public sealed class WorldPartitionInvariantTests
     }
 
     static string FindRepoRoot()
-    {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "XuanYu.Engine.slnx"))) dir = dir.Parent;
-        return dir?.FullName ?? throw new InvalidOperationException("无法定位仓库根目录。");
-    }
+        => TestSourceRoot.Root;
 }

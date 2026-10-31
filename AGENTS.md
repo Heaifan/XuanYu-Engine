@@ -13,7 +13,7 @@
 
 - Repository Bootstrap / Resolver First：写入前执行 `scripts/xye-bootstrap.ps1`，确认实际仓库、branch、HEAD、upstream、Ahead/Behind 和 Dirty 状态。
 - .NET SDK 由 `scripts/resolve-dotnet.ps1` Resolver Chain 解析；正式命令使用 `scripts/xye-dotnet.ps1`。PATH 中没有 `dotnet` 不代表 SDK 不存在。
-- XYE 临时工作必须使用 `XYE_WORKSPACE_ROOT` 与 `scripts/xye-workspace.ps1`；构建、测试、快照和诊断路径不得自行改用 `$env:TEMP`。
+- 开发和构建直接使用当前规范项目树，不创建任务级源码、Build 或 NuGet 副本。先执行 `scripts/xye-bootstrap.ps1`；编译经 `scripts/xye-build.ps1` 统一串行，测试经 `scripts/xye-dotnet.ps1 test ... --no-build --no-restore` 复用产物。
 - Dirty 文件必须原样保全。不得自动 reset、clean、stash、checkout 或覆盖；未知修改只阻断与其重叠或依赖的操作。
 - 跨设备同步先 fetch 并只读核对。只有 index/worktree clean、Ahead=0 且 Behind>0 时允许 `git pull --ff-only`；否则暂停同步并报告。
 - 写入前明确 Owner、WriteScope 和依赖；同一路径同一时段只能有一个写入者。不可确认来源或范围冲突时先停止受影响的操作。
@@ -23,7 +23,7 @@
 - MEDIUM / HIGH 及索引登记的任务域，按宪法执行 PLANNING 与 EXECUTION Knowledge Preflight；入口为 [`docs/knowledge/knowledge-index.md`](docs/knowledge/knowledge-index.md)。XYK 是独立知识系统，不属于 XYT 或普通任务 WriteScope。
 - XYT 负责测试、回归和验收证据。按宪法风险级别选择必要 Build、Test、静态检查或真实运行验证；不得把未执行或局部结果报告为通过或全量。
 - 自动验证不代替用户产品验收。真实 UI、渲染、输入或生命周期要求未获用户验收时，报告为待验收。
-- 报告说明 Changed、Verified、Residual Risk；施工任务附 `XYK CANDIDATE` 纯文本区块。不要直接写入 XYK。
+- 报告说明 Changed、Verified、Residual Risk；每轮按宪法向 [`docs/knowledge/xyk-changelog.md`](docs/knowledge/xyk-changelog.md) 追加 `XYK CANDIDATE` 或 `XYK: NONE` 记录，并附 `XYK CHANGELOG` 回执。Changelog 只登记候选，不得据此修改正式 XYK 条目。
 
 ## 规则导航
 

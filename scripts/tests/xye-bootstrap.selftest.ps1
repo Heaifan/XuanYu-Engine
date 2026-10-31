@@ -1,8 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$workspace = Join-Path $repo '.xye-workspace'
-$tempRoot = Join-Path $workspace ('Temp/XYW-BOOTSTRAP-R2-selftest-' + [guid]::NewGuid().ToString('N'))
+$tempRoot = Join-Path $repo ('obj/XYW-BOOTSTRAP-R2-selftest-' + [guid]::NewGuid().ToString('N'))
 $null = New-Item -ItemType Directory -Path $tempRoot -Force
 $foreignWorktree = Join-Path $tempRoot 'foreign-worktree'
 

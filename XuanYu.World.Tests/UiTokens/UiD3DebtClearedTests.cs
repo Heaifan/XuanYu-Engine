@@ -13,8 +13,8 @@ public sealed class UiD3DebtClearedTests
     {
         // W17（UiWin 背景）+ W21（UiRoot 分隔条/视口边框）：迁移后基线条目必须删除，总数只减不增。
         var remaining = UiDebtBaseline.Entries
-            .Where(e => e.Path == "XuanYu.Editor.UI/Win/UiWin.axaml"
-                || e.Path == "XuanYu.Editor.UI/Root/UiRoot.axaml").ToList();
+            .Where(e => e.Path == "XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/UiWin.axaml"
+                || e.Path == "XuanYu.Editor.UI/Shell/Composition/Application/UiRoot.axaml").ToList();
         Assert.Empty(remaining);
     }
 
@@ -30,12 +30,12 @@ public sealed class UiD3DebtClearedTests
     {
         foreach (var rel in new[]
         {
-            "XuanYu.Editor.UI/Right/TopTabStripModel.cs",
-            "XuanYu.Editor.UI/Right/TopTabStripController.cs",
-            "XuanYu.Editor.UI/Right/TopTabStripController.AllTabs.cs",
-            "XuanYu.Editor.UI/Right/TopTabStripController.Hint.cs",
-            "XuanYu.Editor.UI/Right/TopTabStripController.Visible.cs",
-            "XuanYu.Editor.UI/Right/TopTabStripTemplate.axaml",
+            "XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripModel.cs",
+            "XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripController.cs",
+            "XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripController.AllTabs.cs",
+            "XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripController.Hint.cs",
+            "XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripController.Visible.cs",
+            "XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripTemplate.axaml",
         })
             Assert.True(File.ReadAllLines(Path.Combine(RepoRoot, rel)).Length <= 100, $"{rel} 超 100 行");
     }

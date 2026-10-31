@@ -12,7 +12,7 @@ public sealed class UiCloseLifecycleContractTests
     [Fact]
     public void Close_confirmation_is_deferred_until_window_close_event_returns()
     {
-        var code = Read("Win/UiWin.CloseLifecycle.cs");
+        var code = Read("Shell/Windowing/WindowLifecycle/UiWin.CloseLifecycle.cs");
         Assert.DoesNotContain("protected override async void OnClosing", code);
         Assert.Contains("e.Cancel = true;", code);
         Assert.Contains("if (_closePromptActive)", code);
@@ -25,7 +25,7 @@ public sealed class UiCloseLifecycleContractTests
     [Fact]
     public void Dialog_card_is_above_input_blocking_overlay()
     {
-        var axaml = Read("Win/UiWin.axaml");
+        var axaml = Read("Shell/Windowing/WindowLifecycle/UiWin.axaml");
         Assert.Contains("x:Name=\"DialogOverlay\" ZIndex=\"90\"", axaml);
         Assert.Contains("x:Name=\"DialogCard\" ZIndex=\"100\"", axaml);
     }
@@ -33,7 +33,7 @@ public sealed class UiCloseLifecycleContractTests
     [Fact]
     public void Editor_lifetime_exits_when_main_window_closes()
     {
-        var app = ReadApp("Bootstrap/App.axaml.cs");
+        var app = ReadApp("Infrastructure/Resources/Bootstrap/App.axaml.cs");
         Assert.Contains("desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;", app);
     }
 }

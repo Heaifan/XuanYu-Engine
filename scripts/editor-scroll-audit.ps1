@@ -2,14 +2,14 @@ param([string]$EditorRoot = (Join-Path $PSScriptRoot '..\XuanYu.Editor.UI'))
 $ErrorActionPreference = 'Stop'
 $EditorRoot = (Resolve-Path -LiteralPath $EditorRoot).Path
 $legal = @{
-    'Left/HierarchyWorkspace.axaml' = @('HierarchyScrollHost')
-    'Left/ProjectWorkspace.axaml' = @('ProjectScrollHost')
-    'Foot/LogDetailPanel.axaml' = @('')
-    'Top/Top.axaml' = @('ContextToolScrollHost')
-    'Right/TopTabStripTemplate.axaml' = @('TabScroller')
-    'Right/InspectorPanel.axaml' = @('InspectorContentScrollHost')
-    'Diagnostic/DiagnosticDetailPanel.axaml' = @('')
-    'Diagnostic/DiagnosticFloatingCard.axaml' = @('')
+    'Panels/Navigation/Hierarchy/HierarchyWorkspace.axaml' = @('HierarchyScrollHost')
+    'Panels/Navigation/ProjectTree/ProjectWorkspace.axaml' = @('ProjectScrollHost')
+    'Panels/Status/LogDetails/LogDetailPanel.axaml' = @('')
+    'Panels/Tools/WorkspaceModules/Top.axaml' = @('ContextToolScrollHost')
+    'Panels/Tools/Tabs/TopTabStripTemplate.axaml' = @('TabScroller')
+    'Panels/Inspector/InspectorPanels/InspectorPanel.axaml' = @('InspectorContentScrollHost')
+    'Infrastructure/Diagnostics/DiagnosticDetailPanel.axaml' = @('')
+    'ViewportUI/Diagnostics/Placement/DiagnosticFloatingCard.axaml' = @('')
 }
 $violations = [Collections.Generic.List[string]]::new()
 foreach ($file in Get-ChildItem -LiteralPath $EditorRoot -Recurse -Filter '*.axaml') {

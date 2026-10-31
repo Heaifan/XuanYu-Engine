@@ -21,7 +21,6 @@ internal static class Program
         Environment.SetEnvironmentVariable("XYE_TERRAIN_REPLAY", "1");
         Environment.SetEnvironmentVariable("XYE_TERRAIN_AB", options.Variant);
         Environment.SetEnvironmentVariable("XYE_TERRAIN_SSE_ERROR_TABLE", options.ErrorTable);
-        Environment.SetEnvironmentVariable("XYE_PROBE_DIRECTORY", Path.Combine(options.Output, "probes"));
         Directory.CreateDirectory(options.Output);
         var tile = TerrainSourceImport.ReadMany([options.Source]).Tiles.Single();
         var terrain = tile.ToRenderSnapshot(tile.TileId, 1, 2049);

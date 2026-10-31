@@ -5,7 +5,7 @@ namespace XuanYu.World.Tests.UiTokens;
 // 不同父级同类型换位均失败；空白/注释/无关属性变化不造成基线漂移。
 public sealed class UiDebtBaselineBypassF2Tests
 {
-    private static readonly string Ui = "XuanYu.Editor.UI/Ui.axaml";
+    private static readonly string Ui = "XuanYu.Editor.UI/Infrastructure/Resources/Theme/Ui.axaml";
     private static int Allowed(string loc, UiRuleKind kind, string prop, string val) =>
         UiDebtBaseline.AllowedCountFor(Ui, loc, kind, prop, val);
 

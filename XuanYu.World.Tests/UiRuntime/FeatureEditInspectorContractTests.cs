@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Xunit;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -10,7 +10,7 @@ public sealed class FeatureEditInspectorContractTests
     [Fact]
     public void Inspector_edit_geometry_binding_contract()
     {
-        var inspector = Read("Right/InspectorPanel.axaml");
+        var inspector = Read("Panels/Inspector/InspectorPanels/InspectorPanel.axaml");
         
         Assert.Contains("IsVisible=\"{Binding IsMapGeometrySelected}\"", inspector);
         Assert.Contains("IsChecked=\"{Binding IsGeometryEditingActive}\"", inspector);

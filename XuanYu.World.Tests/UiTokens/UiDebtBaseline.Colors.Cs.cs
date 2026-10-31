@@ -9,31 +9,31 @@ internal static partial class UiDebtBaseline
     {
         // ALLOW-INSPECTOR-COLOR: approved by region color-picker contract
         // (e1964f11/c96c7b0e/12b3f7db and docs/superpowers/plans/2026-09-26-region-inspector-color-picker-r1.md).
-        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Inspector/InspectorColorValue.cs", "InspectorColorValue.FromRgb", UiRuleKind.CsHexColor, "ColorAPI", "Color.FromRgb("));
-        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Inspector/InspectorColorValue.cs", "InspectorColorValue.FromRgb", UiRuleKind.CsHexColor, "Colors", "Colors.Transparent"));
-        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorFeatureEditing.cs", "UiVm.FirstOrDefault", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF"));
-        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorRegionColorPreview.cs", "UiVm.if", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF", 2));
-        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Vm/Map/MapRegionColorPreviewProjection.cs", "MapRegionColorPreviewProjection.if", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF"));
-        list.Add(new("W71-ALLOW", "XuanYu.Editor.UI/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "Hex", "#C7D7EA"));
-        list.Add(new("ALLOW-RENDER", "XuanYu.Editor.UI/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "ColorAPI", "Color.Parse("));
-        list.Add(new("ALLOW-RENDER", "XuanYu.Editor.UI/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "Brush", "new SolidColorBrush("));
-        list.Add(new("ALLOW-WIN32", "XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs", "Win32ViewportHost.WS_CHILD", UiRuleKind.CsHexColor, "Uint", "0x40000000"));
-        list.Add(new("ALLOW-WIN32", "XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs", "Win32ViewportHost.WS_CHILD", UiRuleKind.CsHexColor, "Uint", "0x10000000"));
-        list.Add(new("W70", "XuanYu.Editor.UI/Vm/Logging/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#c75b5b"));
-        list.Add(new("W70", "XuanYu.Editor.UI/Vm/Logging/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#d89b32"));
-        list.Add(new("W70", "XuanYu.Editor.UI/Vm/Logging/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#4f7fb8", 2));
-        list.Add(new("W70", "XuanYu.Editor.UI/Vm/Logging/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#6b7a90"));
-        list.Add(new("W70", "XuanYu.Editor.UI/Vm/Logging/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#8b96a8"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBackground", UiRuleKind.CsHexColor, "Hex", "#fff7df"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBackground", UiRuleKind.CsHexColor, "Hex", "#fdeeee"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBackground", UiRuleKind.CsHexColor, "Hex", "#eef7f1", 2));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBorderBrush", UiRuleKind.CsHexColor, "Hex", "#e7c66d"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBorderBrush", UiRuleKind.CsHexColor, "Hex", "#e2aaaa"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBorderBrush", UiRuleKind.CsHexColor, "Hex", "#c9e3d0"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusForeground", UiRuleKind.CsHexColor, "Hex", "#8a6417"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusForeground", UiRuleKind.CsHexColor, "Hex", "#a43f3f"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusForeground", UiRuleKind.CsHexColor, "Hex", "#1f7a4d"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.SaveButtonBackground", UiRuleKind.CsHexColor, "Hex", "#fff6dd"));
-        list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.SaveButtonBorderBrush", UiRuleKind.CsHexColor, "Hex", "#d9ad43"));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Panels/Inspector/PropertyModels/InspectorColorValue.cs", "InspectorColorValue.FromRgb", UiRuleKind.CsHexColor, "ColorAPI", "Color.FromRgb("));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Panels/Inspector/PropertyModels/InspectorColorValue.cs", "InspectorColorValue.FromRgb", UiRuleKind.CsHexColor, "Colors", "Colors.Transparent"));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Panels/Inspector/InspectorInput/UiVm.InspectorFeatureEditing.cs", "UiVm.FirstOrDefault", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF"));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/Panels/Inspector/InspectorNavigation/UiVm.InspectorRegionColorPreview.cs", "UiVm.if", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF", 2));
+        list.Add(new("ALLOW-INSPECTOR-COLOR", "XuanYu.Editor.UI/MapUI/Rendering/Projection/MapRegionColorPreviewProjection.cs", "MapRegionColorPreviewProjection.if", UiRuleKind.CsHexColor, "Uint", "0x00FFFFFF"));
+        list.Add(new("W71-ALLOW", "XuanYu.Editor.UI/Panels/Navigation/Tree/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "Hex", "#C7D7EA"));
+        list.Add(new("ALLOW-RENDER", "XuanYu.Editor.UI/Panels/Navigation/Tree/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "ColorAPI", "Color.Parse("));
+        list.Add(new("ALLOW-RENDER", "XuanYu.Editor.UI/Panels/Navigation/Tree/TreeGuide.cs", "TreeGuide.Render", UiRuleKind.CsHexColor, "Brush", "new SolidColorBrush("));
+        list.Add(new("ALLOW-WIN32", "XuanYu.Editor.UI/ViewportUI/Host/Win32Host/Win32ViewportHost.cs", "Win32ViewportHost.WS_CHILD", UiRuleKind.CsHexColor, "Uint", "0x40000000"));
+        list.Add(new("ALLOW-WIN32", "XuanYu.Editor.UI/ViewportUI/Host/Win32Host/Win32ViewportHost.cs", "Win32ViewportHost.WS_CHILD", UiRuleKind.CsHexColor, "Uint", "0x10000000"));
+        list.Add(new("W70", "XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#c75b5b"));
+        list.Add(new("W70", "XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#d89b32"));
+        list.Add(new("W70", "XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#4f7fb8", 2));
+        list.Add(new("W70", "XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#6b7a90"));
+        list.Add(new("W70", "XuanYu.Editor.UI/Infrastructure/Logging/DataStructures/LogEntry.cs", "LogEntry.Accent", UiRuleKind.CsHexColor, "Hex", "#8b96a8"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBackground", UiRuleKind.CsHexColor, "Hex", "#fff7df"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBackground", UiRuleKind.CsHexColor, "Hex", "#fdeeee"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBackground", UiRuleKind.CsHexColor, "Hex", "#eef7f1", 2));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBorderBrush", UiRuleKind.CsHexColor, "Hex", "#e7c66d"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBorderBrush", UiRuleKind.CsHexColor, "Hex", "#e2aaaa"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusBorderBrush", UiRuleKind.CsHexColor, "Hex", "#c9e3d0"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusForeground", UiRuleKind.CsHexColor, "Hex", "#8a6417"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusForeground", UiRuleKind.CsHexColor, "Hex", "#a43f3f"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusForeground", UiRuleKind.CsHexColor, "Hex", "#1f7a4d"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.SaveButtonBackground", UiRuleKind.CsHexColor, "Hex", "#fff6dd"));
+        list.Add(new("W71", "XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs", "UiVm.SaveButtonBorderBrush", UiRuleKind.CsHexColor, "Hex", "#d9ad43"));
     }
 }

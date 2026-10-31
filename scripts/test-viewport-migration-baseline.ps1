@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
 $knownPath = Join-Path $root "docs/architecture/viewport-migration-known-failures-r1.txt"
-$resultRoot = Join-Path ([IO.Path]::GetTempPath()) ("xye-viewport-baseline-" + [guid]::NewGuid().ToString("N"))
+$resultRoot = Join-Path $root ("artifacts/diagnostics/viewport-baseline-" + [guid]::NewGuid().ToString("N"))
 $known = @(Get-Content -LiteralPath $knownPath | Where-Object { $_.Trim() })
 $projects = @("XuanYu.Core.Tests/XuanYu.Core.Tests.csproj", "XuanYu.World.Tests/XuanYu.World.Tests.csproj")
 $trxs = New-Object System.Collections.Generic.List[string]
@@ -13,12 +13,12 @@ $testExit = 0
 New-Item -ItemType Directory -Path $resultRoot | Out-Null
 
 try {
+    & (Join-Path $root 'scripts/xye-build.ps1') -Project 'XuanYu.Engine.slnx' -Configuration Debug
+    if ($LASTEXITCODE -ne 0) { throw 'canonical solution build failed' }
     foreach ($project in $projects) {
-        & dotnet restore $project --disable-parallel
-        if ($LASTEXITCODE -ne 0) { throw "restore failed: $project" }
         $name = [IO.Path]::GetFileNameWithoutExtension($project)
         $trx = Join-Path $resultRoot "$name.trx"
-        & dotnet test $project --no-restore -p:IsTestProject=true -m:1 -nr:false -p:UseSharedCompilation=false `
+        & (Join-Path $root 'scripts/xye-dotnet.ps1') test $project --no-build --no-restore -p:IsTestProject=true `
             --logger "trx;LogFileName=$name.trx" --results-directory $resultRoot
         if ($LASTEXITCODE -ne 0) { $testExit = 1 }
         $trxs.Add($trx)

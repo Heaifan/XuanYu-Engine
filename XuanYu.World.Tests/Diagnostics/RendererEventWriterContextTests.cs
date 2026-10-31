@@ -8,9 +8,7 @@ public sealed class RendererEventWriterContextTests
     [Fact]
     public async Task Lifecycle_event_round_trips_structured_resize_facts()
     {
-        var root = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT")
-            ?? throw new InvalidOperationException("受控测试必须设置 XYE_WORKSPACE_ROOT。");
-        var directory = Path.Combine(root, "Temp", "renderer-event-tests", Guid.NewGuid().ToString("N"));
+        var directory = Path.Combine(TestSourceRoot.Root, "obj", "renderer-event-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         try
         {
@@ -33,9 +31,7 @@ public sealed class RendererEventWriterContextTests
     {
         var previous = SynchronizationContext.Current;
         var dispatcher = new QueuedSynchronizationContext();
-        var root = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT")
-            ?? throw new InvalidOperationException("受控测试必须设置 XYE_WORKSPACE_ROOT。");
-        var directory = Path.Combine(root, "Temp", "renderer-event-tests", Guid.NewGuid().ToString("N"));
+        var directory = Path.Combine(TestSourceRoot.Root, "obj", "renderer-event-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         Task? close = null;
         using var completed = new ManualResetEventSlim();

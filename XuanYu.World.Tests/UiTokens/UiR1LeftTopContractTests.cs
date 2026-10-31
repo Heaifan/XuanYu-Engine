@@ -9,8 +9,8 @@ public sealed class UiR1LeftTopContractTests
     [Fact]
     public void Left_tree_titles_use_canonical_truncation()
     {
-        var project = Read("Left/ProjectWorkspace.axaml");
-        var hierarchy = Read("Left/HierarchyWorkspace.axaml");
+        var project = Read("Panels/Navigation/ProjectTree/ProjectWorkspace.axaml");
+        var hierarchy = Read("Panels/Navigation/Hierarchy/HierarchyWorkspace.axaml");
         Assert.Contains("<xy:XYTruncatedText", project);
         Assert.Contains("<xy:XYTruncatedText", hierarchy);
         Assert.Contains("Text=\"{Binding Title}\"", project);
@@ -19,8 +19,8 @@ public sealed class UiR1LeftTopContractTests
     [Fact]
     public void Regional_authoring_heading_uses_section_title()
     {
-        var panel = Read("Right/RegionalAuthoringPanel.axaml");
-        var code = Read("Right/RegionalAuthoringPanel.axaml.cs");
+        var panel = Read("MapUI/Presentation/MapToolPanels/RegionalAuthoringPanel.axaml");
+        var code = Read("MapUI/Presentation/MapToolPanels/RegionalAuthoringPanel.axaml.cs");
         Assert.Contains("<xy:XYSectionTitle Text=\"内容类型\"", panel);
         Assert.Contains("AuthoringPager_SelectionChanged", panel);
         Assert.Contains("SelectRegionAuthoringMode", code);
@@ -29,7 +29,7 @@ public sealed class UiR1LeftTopContractTests
     [Fact]
     public void Region_and_road_display_use_xyui1_semantics()
     {
-        foreach (var rel in new[] { "Left/RegionPanel.axaml", "Left/RoadPanel.axaml" })
+        foreach (var rel in new[] { "MapUI/Presentation/MapToolPanels/RegionPanel.axaml", "MapUI/Presentation/MapToolPanels/RoadPanel.axaml" })
         {
             var panel = Read(rel);
             Assert.Contains("<xy:XYSectionTitle", panel);
@@ -47,7 +47,7 @@ public sealed class UiR1LeftTopContractTests
     [Fact]
     public void Marker_display_uses_xyui1_semantics_and_keeps_button()
     {
-        var panel = Read("Left/MarkerPanel.axaml");
+        var panel = Read("MapUI/Presentation/MapToolPanels/MarkerPanel.axaml");
         Assert.Contains("<xy:XYSectionTitle", panel);
         Assert.Contains("<xy:XYText", panel);
         Assert.Contains("<xy:XYSelectableText", panel);
@@ -59,10 +59,10 @@ public sealed class UiR1LeftTopContractTests
     [Fact]
     public void Top_uses_badges_and_canonical_vertical_separators()
     {
-        var top = Read("Top/Top.axaml"); var runtime = Read("Top/RuntimeStatusModule.axaml");
-        var file = Read("Top/FileModule.axaml"); var tools = Read("Top/EditToolsModule.axaml");
-        var view = Read("Top/ViewModule.axaml"); var snap = Read("Top/SnapModule.axaml");
-        var workspace = Read("Workspace/WorkspaceSelector.axaml");
+        var top = Read("Panels/Tools/WorkspaceModules/Top.axaml"); var runtime = Read("Panels/Tools/WorkspaceModules/RuntimeStatusModule.axaml");
+        var file = Read("Panels/Tools/WorkspaceModules/FileModule.axaml"); var tools = Read("Panels/Tools/ContextTools/EditToolsModule.axaml");
+        var view = Read("Panels/Tools/ViewTools/ViewModule.axaml"); var snap = Read("Panels/Tools/ContextTools/SnapModule.axaml");
+        var workspace = Read("Panels/Workspace/WorkspaceSelector.axaml");
         Assert.DoesNotContain("玄域引擎", top); Assert.DoesNotContain("场景编辑器", top);
         Assert.DoesNotContain("XYSeparator", top);
         Assert.Contains("<local:WorkspaceSelector Grid.Column=\"0\"", top);
@@ -88,7 +88,7 @@ public sealed class UiR1LeftTopContractTests
         Assert.Contains("<xy:XYMenuBar", file); Assert.Contains("<xy:XYMenuItem", file);
         Assert.DoesNotContain("<xy:XYMenuBar", workspace); Assert.DoesNotContain("<xy:XYMenuItem", workspace);
         Assert.Contains("<xy:XYMenuBar", view); Assert.Contains("<xy:XYMenuItem", view);
-        Assert.Contains("WorkspaceSelectorButton", Read("Workspace/WorkspaceSelector.axaml.cs"));
+        Assert.Contains("WorkspaceSelectorButton", Read("Panels/Workspace/WorkspaceSelector.axaml.cs"));
         Assert.Contains("Label=\"文件\" Icon=\"File\"", file);
         Assert.Contains("Text=\"编辑\"", tools); Assert.Contains("Text=\"视图\"", view);
         Assert.Contains("Text=\"吸附\"", snap); Assert.Contains("Text=\"运行\"", runtime);

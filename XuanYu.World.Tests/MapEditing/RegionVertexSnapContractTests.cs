@@ -19,8 +19,9 @@ public sealed class RegionVertexSnapContractTests
     [Fact]
     public void Snap_core_has_no_dataset_or_spatial_index_writes()
     {
-        var root = Path.Combine(TestSourceRoot.Root,  MapRoot, "MapEditing");
+        var root = Path.Combine(TestSourceRoot.Root, MapRoot, "MapEditing", "RegionSnap", "VertexSnap");
         var files = Directory.GetFiles(root, "RegionVertexSnap*.cs");
+        Assert.Equal(4, files.Length);
         var text = string.Join('\n', files.Select(File.ReadAllText));
         Assert.DoesNotContain("EditRegionVertices", text);
         Assert.DoesNotContain("Upsert", text);
@@ -30,7 +31,7 @@ public sealed class RegionVertexSnapContractTests
     [Fact]
     public void Snap_core_uses_local_query_and_no_map_regions_fallback()
     {
-        var root = Path.Combine(TestSourceRoot.Root,  MapRoot, "MapEditing");
+        var root = Path.Combine(TestSourceRoot.Root, MapRoot, "MapEditing", "RegionSnap", "VertexSnap");
         var resolver = File.ReadAllText(Path.Combine(root, "RegionVertexSnapResolver.cs"));
         Assert.Contains("localQuery", resolver);
         Assert.DoesNotContain("map.Regions", resolver);

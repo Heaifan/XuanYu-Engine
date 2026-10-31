@@ -1,19 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$workspaceModule = Join-Path $repo 'scripts/XyeWorkspace.psm1'
-Import-Module $workspaceModule -Force -DisableNameChecking
-$previousWorkspaceRoot = [Environment]::GetEnvironmentVariable('XYE_WORKSPACE_ROOT', 'Process')
-[Environment]::SetEnvironmentVariable('XYE_WORKSPACE_ROOT', $null, 'Process')
-$workspace = Get-XyeWorkspaceRoot
-Assert-XyeWorkspaceBoundary $workspace $repo
-$repoRoot = [IO.Path]::GetFullPath($repo).TrimEnd('\') + '\'
-if (-not [IO.Path]::GetFullPath($workspace).StartsWith($repoRoot, [StringComparison]::OrdinalIgnoreCase)) {
-    throw "Default workspace escaped repository root: $workspace"
-}
-[Environment]::SetEnvironmentVariable('XYE_WORKSPACE_ROOT', $workspace, 'Process')
-$tempRoot = Join-Path $workspace ('Temp/arch-a-guard-selftest-' + [guid]::NewGuid().ToString('N'))
-Assert-XyeChildPath $workspace $tempRoot
+$tempRoot = Join-Path $repo ('obj/arch-a-guard-selftest-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Force -Path $tempRoot | Out-Null
 $script:TempRoot = $tempRoot
 $bootstrap = Join-Path $repo 'scripts/architecture/guard-bootstrap.ps1'
@@ -121,5 +109,4 @@ Assert-True ($version -match '^v[0-9]+(\.[0-9]+)+-[a-z0-9.-]+$') "Formal Version
 Assert-True (!$mainText.Contains('UiWin.axaml') -and !$mainText.Contains('changelog.md')) 'Main Guard reverse-checks UI/changelog version sources.'
 
 Write-Host 'ARCH-A Guard Bootstrap selftest passed.'
-Remove-Item -LiteralPath $tempRoot -Recurse -Force
-[Environment]::SetEnvironmentVariable('XYE_WORKSPACE_ROOT', $previousWorkspaceRoot, 'Process')
+Remove-Item -LiteralPath $tempRoot -Recurse -Force -ErrorAction SilentlyContinue

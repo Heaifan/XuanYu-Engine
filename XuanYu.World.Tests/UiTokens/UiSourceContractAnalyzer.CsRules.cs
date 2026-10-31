@@ -51,10 +51,10 @@ public static partial class UiSourceContractAnalyzer
     }
 
     private static bool IsWin32Flag(string path, string locator, string value) =>
-        (path == "XuanYu.Editor.UI/Control/XycUiNativeCapture.cs"
+        (path == "XuanYu.Editor.UI/Infrastructure/Controls/Capture/XycUiNativeCapture.cs"
             && locator == "XycUiNativeCapture.if" && value == "0x00CC0020")
-        || (path == "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs"
+        || (path == "XuanYu.Editor.UI/Infrastructure/Resources/Host/SilentNativeWindow.cs"
             && locator == "SilentNativeWindow.WsPopup" && value == "0x80000000")
-        || (path == "XuanYu.Editor.UI/Control/Silent/SilentNativeWindow.cs"
+        || (path == "XuanYu.Editor.UI/Infrastructure/Resources/Host/SilentNativeWindow.cs"
             && locator == "SilentNativeWindow.WsVisible" && value == "0x10000000");
 }

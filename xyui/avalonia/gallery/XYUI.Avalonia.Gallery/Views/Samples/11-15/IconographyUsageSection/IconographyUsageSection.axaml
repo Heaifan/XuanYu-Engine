@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.IconographyUsageSection">
+  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <!-- Section Title & Subtitle -->
+      <StackPanel Spacing="2">
+        <TextBlock Text="③ 真实组件与光学验证" Classes="xyui-text-section" FontSize="{DynamicResource XY.FontSize.CompactSection}" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+        <TextBlock Text="多组件共享同一 Registry 标识；数学居中与视觉居中分别验证" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <!-- A. 真实组件消费 -->
+      <TextBlock Text="真实组件消费 [Consumer]" Classes="xyui-text-caption" FontWeight="{DynamicResource XY.FontWeight.Bold}" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+      <Grid ColumnDefinitions="*,*,*">
+        <!-- 1. XYIconButton -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="5" Padding="12,8" Margin="0,0,6,0">
+          <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="XYIconButton" Classes="xyui-text-caption" FontWeight="{DynamicResource XY.FontWeight.Semibold}" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+              <c:XYIconButton Icon="Search" ToolTip.Tip="搜索实体" />
+              <TextBlock Text="Search" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <!-- 2. XYButton -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="5" Padding="12,8" Margin="3,0,3,0">
+          <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="XYButton" Classes="xyui-text-caption" FontWeight="{DynamicResource XY.FontWeight.Semibold}" VerticalAlignment="Center" />
+            <c:XYButton Grid.Column="2" Icon="Search" Content="搜索" Variant="Secondary" />
+          </Grid>
+        </Border>
+
+        <!-- 3. XYToolbar -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="5" Padding="12,8" Margin="6,0,0,0">
+          <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="XYToolbar" Classes="xyui-text-caption" FontWeight="{DynamicResource XY.FontWeight.Semibold}" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+              <Rectangle Width="1" Height="18" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="0,0,4,0" />
+              <c:XYIcon Icon="Search" />
+              <c:XYIcon Icon="Locate" />
+              <c:XYIcon Icon="MoreHorizontal" />
+              <TextBlock Text="同一 Registry" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+        </Border>
+      </Grid>
+
+      <!-- B. 光学验证 -->
+      <TextBlock Text="光学验证" Classes="xyui-text-caption" FontWeight="{DynamicResource XY.FontWeight.Bold}" Foreground="{DynamicResource XY.Brush.Accent.Strong}" Margin="0,4,0,0" />
+      <views:IconographyOpticalSection />
+    </StackPanel>
+  </Border>
+</UserControl>

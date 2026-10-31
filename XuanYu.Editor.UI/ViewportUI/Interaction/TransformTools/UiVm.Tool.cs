@@ -1,0 +1,90 @@
+namespace XuanYu.Editor.UI;
+
+using XuanYu.Editor.Input;
+
+public sealed partial class UiVm
+{
+    void TrySelectTool(object? value)
+    {
+        var name = value?.ToString() ?? string.Empty;
+        var tool = EditorToolText.FromText(name);
+        if (!CanSelectTool(value)) return;
+        if (!IsEditMode && tool is (EditorToolId.Move or EditorToolId.Rotate or EditorToolId.Scale))
+            ToggleEditorMode();
+        if (!CanUseEditTools) return;
+        SelectTool(name);
+    }
+    void TryToggleSnap()
+    {
+        if (CanToggleSnap) ToggleSnap();
+    }
+    void SelectTool(string name, bool logTool = true)
+    {
+        if (!CanChangeToolNow(name)) return;
+        var requestedTool = EditorToolText.FromText(name);
+        if (requestedTool == EditorToolId.RegionDrawing && !CanStartRegionDrawing)
+        {
+            FooterState = "状态：不可用";
+            FooterMessage = "请先选择一个正常且未锁定的区域数据集，并进入要素编辑。";
+            return;
+        }
+        if (requestedTool == EditorToolId.RoadDrawing && !CanStartRoadDrawing)
+        {
+            FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的道路数据集，并进入要素编辑。"; return;
+        }
+        if (requestedTool == EditorToolId.MarkerPlacement && !CanStartMarkerPlacement)
+        { FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的地图标记数据集。"; return; }
+        if (name is "框选")
+        {
+            FooterState = "状态：就绪";
+            FooterMessage = $"{name}尚未实装，当前仍保持：{ActiveTool}。";
+            _logBus.Info(EditorLogSource.Input, EditorLogCategory.Tool,
+                $"{name}工具尚未实装，当前工具仍为：{ActiveTool}", "未实装工具点击不切换真实工具。");
+
+
+            RaiseToolChanged();
+            return;
+        }
+
+        var changingTool = EditorToolText.FromText(ActiveTool) != requestedTool;
+        if (changingTool) ViewportInput.CancelForToolChange();
+        if (_editorState.ChangeTool(new ChangeEditorToolCommand(name)) is null)
+        {
+            RaiseToolChanged();
+            return;
+        }
+        ViewportInput.BeginInteractionEpoch();
+
+        RaiseToolChanged();
+        if (requestedTool == EditorToolId.RegionDrawing) BeginDrawingTransaction("区域面");
+        if (requestedTool == EditorToolId.RoadDrawing) BeginDrawingTransaction("道路");
+        PublishSceneRenderSnapshot();
+        FooterMessage = $"当前工具：{ActiveTool}。视口等待输入。";
+        FooterState = "状态：就绪";
+        if (logTool) LogTool(ActiveTool);
+
+    }
+    bool IsTool(EditorToolId tool) => _editorState.ToolSnapshot.ActiveTool == tool;
+
+    void ToggleSnap()
+    {
+        var result = _editorState.ToggleSnap(new ToggleEditorSnapCommand());
+        RaiseToolChanged();
+        FooterMessage = $"{result.Snapshot.SnapText}；当前工具：{ActiveTool}。";
+        FooterState = "状态：就绪";
+        LogCommand(result.Snapshot.SnapText);
+
+    }
+
+    void RaiseToolChanged()
+    {
+        OnPropertyChanged(nameof(ActiveTool)); OnPropertyChanged(nameof(FooterMode));
+        OnPropertyChanged(nameof(IsSelectTool)); OnPropertyChanged(nameof(IsBoxSelectTool));
+        OnPropertyChanged(nameof(IsMoveTool)); OnPropertyChanged(nameof(IsRotateTool));
+        OnPropertyChanged(nameof(IsScaleTool)); OnPropertyChanged(nameof(IsSnapEnabled));
+        OnPropertyChanged(nameof(IsRegionDrawingTool));
+        OnPropertyChanged(nameof(IsRoadDrawingTool));
+        OnPropertyChanged(nameof(IsMarkerPlacementTool));
+        OnPropertyChanged(nameof(SnapMode));
+    }
+}

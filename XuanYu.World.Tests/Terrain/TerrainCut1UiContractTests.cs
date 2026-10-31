@@ -5,8 +5,8 @@ public sealed class TerrainCut1UiContractTests
     [Fact]
     public void Terrain_context_exposes_only_select_dem_import_and_terrain_menu()
     {
-        var source = TestSource.Read("XuanYu.Editor.UI/Top/ContextToolBar.axaml");
-        var code = TestSource.Read("XuanYu.Editor.UI/Top/ContextToolBar.axaml.cs");
+        var source = TestSource.Read("XuanYu.Editor.UI/Panels/Tools/ContextTools/ContextToolBar.axaml");
+        var code = TestSource.Read("XuanYu.Editor.UI/Panels/Tools/ContextTools/ContextToolBar.axaml.cs");
 
         Assert.Contains("选择", source);
         Assert.Contains("导入DEM", source);
@@ -23,7 +23,7 @@ public sealed class TerrainCut1UiContractTests
     [Fact]
     public void Terrain_inspector_exposes_required_real_metadata()
     {
-        var source = TestSource.Read("XuanYu.Editor.UI/Right/InspectorPanel.axaml");
+        var source = TestSource.Read("XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/InspectorPanel.axaml");
 
         foreach (var label in new[] { "网格", "分辨率", "最低高程", "最高高程", "NoData", "垂直夸张" })
             Assert.Contains(label, source);

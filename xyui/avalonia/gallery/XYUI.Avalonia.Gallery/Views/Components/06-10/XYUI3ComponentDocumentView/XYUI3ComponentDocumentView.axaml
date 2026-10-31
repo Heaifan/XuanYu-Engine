@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.XYUI3ComponentDocumentView"
+             x:DataType="g:XYUI1ComponentDocument">
+  <views:GalleryDocumentShell x:Name="DocScrollViewer">
+    <StackPanel Margin="24" Spacing="14">
+      <views:XYUI3HeaderSection />
+      <views:XYUI3QuickStartSection />
+      <views:XYUI3CoreRulesSection />
+      <views:XYUI3VariantsStatesSection />
+      <views:XYUI3LiveExamplesSection />
+      <views:XYUI3CompositionSection />
+      <views:XYUI3DoDontSection />
+      <Border Classes="xyui-surface-panel" Padding="16,12" CornerRadius="6">
+        <StackPanel Spacing="6">
+          <TextBlock Text="FOUNDATION &amp; TOKEN CONTRACT" Classes="xyui-text-section" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+          <ItemsControl ItemsSource="{Binding Tokens}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="g:XYUIDocToken">
+                <views:GalleryTokenRow Margin="0,2">
+                  <TextBlock Text="{Binding Name}" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Accent.Strong}" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding Value}" Classes="xyui-text-label" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding Description}" Classes="xyui-text-caption" VerticalAlignment="Center" />
+                </views:GalleryTokenRow>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </views:GalleryDocumentShell>
+</UserControl>

@@ -9,11 +9,11 @@ public sealed class XyeToolbarTextPrimitiveContractTests
     {
         var files = new[]
         {
-            "Top/EditToolsModule.axaml",
-            "Top/FileModule.axaml",
-            "Top/ViewModule.axaml",
-            "Top/SnapModule.axaml",
-            "Top/RuntimeStatusModule.axaml"
+            "Panels/Tools/ContextTools/EditToolsModule.axaml",
+            "Panels/Tools/WorkspaceModules/FileModule.axaml",
+            "Panels/Tools/ViewTools/ViewModule.axaml",
+            "Panels/Tools/ContextTools/SnapModule.axaml",
+            "Panels/Tools/WorkspaceModules/RuntimeStatusModule.axaml"
         };
         foreach (var file in files)
         {
@@ -25,7 +25,7 @@ public sealed class XyeToolbarTextPrimitiveContractTests
     [Fact]
     public void Context_toolbar_uses_xyui4_hover_state_for_draw_action()
     {
-        var source = Read("Top/ContextToolBar.axaml");
+        var source = Read("Panels/Tools/ContextTools/ContextToolBar.axaml");
         Assert.Contains("<xy:XYHoverState", source);
         Assert.Contains("x:Name=\"DrawSplitButton\"", source);
         Assert.Contains("IsSelected=\"{Binding IsDrawingTransactionActive}\"", source);

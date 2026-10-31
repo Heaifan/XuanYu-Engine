@@ -29,10 +29,5 @@ public sealed class WorldRenderDependencyBoundaryTests
     }
 
     static string FindRoot()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "XuanYu.Engine.slnx")))
-            directory = directory.Parent;
-        return directory?.FullName ?? throw new DirectoryNotFoundException("Repository root not found.");
-    }
+        => TestSourceRoot.Root;
 }

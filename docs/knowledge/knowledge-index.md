@@ -1,7 +1,9 @@
 # 玄域引擎知识索引
 
-> 最后治理更新：2026-10-16（XYC-WP2-P4-R7：STRENGTHEN K-SPA-002）
+> 最后治理更新：2026-10-31（XYE-EDITOR-R1-G-R2：STRENGTHEN K-DATA-001、L-TEST-001）
 > 使用方法：先按任务域定位必须读取项，再读取对应正文；禁止默认把全部知识无差别塞入实现上下文。
+
+XYK 候选登记与审核轨迹见 [`xyk-changelog.md`](xyk-changelog.md)；该文件不是正式 Knowledge 条目。
 
 ## 任务域预检映射
 

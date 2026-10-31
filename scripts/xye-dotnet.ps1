@@ -1,103 +1,91 @@
 $ErrorActionPreference = 'Stop'
-$resolver = Join-Path $PSScriptRoot 'resolve-dotnet.ps1'
-$dotnet = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $resolver
-if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($dotnet)) {
-    exit $(if ($LASTEXITCODE -ne 0) { $LASTEXITCODE } else { 1 })
-}
+$root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+. (Join-Path $PSScriptRoot 'xye-local-environment.ps1')
 
 $forwarded = [Collections.Generic.List[string]]::new()
-for ($index = 0; $index -lt $args.Count; $index++) {
-    if ($args[$index] -in @('-m', '-nr', '-p', '-clp') -and $index + 1 -lt $args.Count) {
-        $forwarded.Add("$($args[$index]):$($args[$index + 1])")
-        $index++
-    } else { $forwarded.Add([string]$args[$index]) }
+for ($i = 0; $i -lt $args.Count; $i++) {
+    if ($args[$i] -in @('-m','-nr','-p','-clp') -and $i + 1 -lt $args.Count) {
+        $forwarded.Add("$($args[$i]):$($args[++$i])")
+    } else { $forwarded.Add([string]$args[$i]) }
 }
-$operation = if ($args.Count -gt 0) { [string]$args[0] } else { '' }
-$workspaceOperations = @('build','test','publish','pack','restore','clean','run')
+$operation = if ($forwarded.Count) { $forwarded[0].ToLowerInvariant() } else { '' }
+$arguments = @($forwarded | Select-Object -Skip 1)
+Assert-XyeInvocationPaths -RepositoryRoot $root -Arguments $arguments
 
-if ($operation -in $workspaceOperations) {
-    $workspaceRunner = Join-Path $PSScriptRoot 'xye-workspace.ps1'
-    if ([string]::IsNullOrWhiteSpace($env:XYE_TASK_RUN_ID)) {
-        $powershell = (Get-Command powershell.exe -ErrorAction Stop).Source
-        $childArguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',$PSCommandPath) + @($forwarded)
-        & $workspaceRunner -Action Invoke -TaskType "dotnet-$operation" `
-            -RepositoryRoot (Get-Location).Path -SourceRoot (Get-Location).Path `
-            -ExecutablePath $powershell -ExecutableArguments $childArguments
-        exit $LASTEXITCODE
+$targets = [Collections.Generic.List[string]]::new()
+for ($i=0; $i -lt $arguments.Count; $i++) {
+    $token = [string]$arguments[$i]
+    if ($token -match '(?i)^(?:-t|/t|-target|/target|--target)(?::|=)(.*)$') { $targets.Add($Matches[1]) }
+    elseif ($token -match '(?i)^(?:-t|/t|-target|/target|--target)$' -and $i + 1 -lt $arguments.Count) { $targets.Add([string]$arguments[++$i]) }
+}
+if (@($targets | ForEach-Object { $_ -split '[;,]' } | Where-Object { $_.Trim() -ieq 'Rebuild' }).Count) {
+    throw 'Rebuild is forbidden; use scripts/xye-build.ps1 to reuse canonical outputs.'
+}
+if ($operation -eq 'test' -and ('--no-build' -notin $arguments -or '--no-restore' -notin $arguments)) {
+    throw 'Tests must use --no-build --no-restore. Run scripts/xye-build.ps1 once first.'
+}
+if ($operation -eq 'build' -and '--no-restore' -notin $arguments) {
+    throw 'Build must use --no-restore. Run scripts/xye-build.ps1 for the unified Restore/Build.'
+}
+$outputProperties = @('ArtifactsPath','BaseOutputPath','OutputPath','OutDir','PublishDir',
+    'PackageOutputPath','BaseIntermediateOutputPath','IntermediateOutputPath',
+    'MSBuildProjectExtensionsPath','RestorePackagesPath','NuGetPackageRoot',
+    'RestoreFallbackFolders','RestoreAdditionalProjectSources','VSTestResultsDirectory',
+    'TestResultsDirectory','BaseTestResultsDirectory','VSTestLogger')
+for ($i=0; $i -lt $arguments.Count; $i++) {
+    $token = [string]$arguments[$i]
+    if ($token -match '(?i)^(?:--artifacts-path|--output|-o)(?:$|[=:].*)') {
+        throw 'Custom output or NuGet cache paths are forbidden; use canonical repository-local outputs.'
     }
-
-    if ([string]::IsNullOrWhiteSpace($env:XYE_BUILD_DIRECTORY)) {
-        throw 'XYE_BUILD_DIRECTORY is missing from the controlled task context.'
-    }
-    $nodeReuseFound = $false
-    for ($index = 0; $index -lt $forwarded.Count; $index++) {
-        if ($forwarded[$index] -match '^(?:-|/)(?:nr|nodeReuse)(?::|=|$)') {
-            $forwarded[$index] = '-nr:false'
-            $nodeReuseFound = $true
+    $property = [regex]::Match($token, '(?i)^(?:-p|/p|-property|/property|--property)(?::|=)(.*)$')
+    if ($property.Success) {
+        foreach ($assignment in ($property.Groups[1].Value -split '[;,]')) {
+            if ($outputProperties -contains ($assignment -split '=',2)[0].Trim()) {
+                throw 'Custom output or NuGet cache paths are forbidden; use canonical repository-local outputs.'
+            }
         }
-    }
-    if (-not $nodeReuseFound) { $forwarded.Add('-nr:false') }
-    $buildRoot = [IO.Path]::GetFullPath($env:XYE_BUILD_DIRECTORY)
-    $buildPrefix = $buildRoot.TrimEnd('\') + '\'
-    Import-Module (Join-Path $PSScriptRoot 'XyeWorkspace.psm1') -Force -DisableNameChecking
-    $cacheRoot = Join-Path $env:XYE_WORKSPACE_ROOT 'Cache'
-    $nugetRoot = Join-Path $cacheRoot 'NuGet'
-    $dotnetHome = Join-Path $cacheRoot 'Dotnet'
-    $env:NUGET_PACKAGES = Join-Path $nugetRoot 'Packages'
-    $env:NUGET_HTTP_CACHE_PATH = Join-Path $nugetRoot 'Http'
-    $env:NUGET_PLUGINS_CACHE_PATH = Join-Path $nugetRoot 'Plugins'
-    $env:NUGET_SCRATCH = Join-Path $nugetRoot 'Scratch'
-    $env:DOTNET_CLI_HOME = $dotnetHome
-    $hasArtifactsPath = $false
-    for ($index = 0; $index -lt $forwarded.Count; $index++) {
-        if ($forwarded[$index] -in @('--artifacts-path','--output','-o')) {
-            if ($index + 1 -ge $forwarded.Count) { throw "Missing path after $($forwarded[$index])." }
-            $path = $forwarded[$index + 1]
-            $fullPath = if ([IO.Path]::IsPathRooted($path)) { [IO.Path]::GetFullPath($path) }
-                else { [IO.Path]::GetFullPath((Join-Path (Get-Location).Path $path)) }
-            if ($fullPath -ne $buildRoot -and -not $fullPath.StartsWith($buildPrefix, [StringComparison]::OrdinalIgnoreCase)) {
-                throw "Build output path must be inside XYE_BUILD_DIRECTORY: $fullPath"
-            }
-            $hasArtifactsPath = $hasArtifactsPath -or $forwarded[$index] -eq '--artifacts-path'
-            $index++
-        } elseif ($forwarded[$index] -like '--artifacts-path=*') {
-            $path = $forwarded[$index].Substring('--artifacts-path='.Length)
-            $fullPath = if ([IO.Path]::IsPathRooted($path)) { [IO.Path]::GetFullPath($path) }
-                else { [IO.Path]::GetFullPath((Join-Path (Get-Location).Path $path)) }
-            if ($fullPath -ne $buildRoot -and -not $fullPath.StartsWith($buildPrefix, [StringComparison]::OrdinalIgnoreCase)) {
-                throw "Artifacts path must be inside XYE_BUILD_DIRECTORY: $fullPath"
-            }
-            $hasArtifactsPath = $true
-        } elseif ($forwarded[$index] -match '(?i)^(?:-p:|/(?:p|property):)(BaseOutputPath|BaseIntermediateOutputPath|MSBuildProjectExtensionsPath|IntermediateOutputPath|OutDir)=(.*)$') {
-            $path = $Matches[2]
-            if ([string]::IsNullOrWhiteSpace($path)) { throw "MSBuild output/intermediate path cannot be empty: $($forwarded[$index])" }
-            $fullPath = if ([IO.Path]::IsPathRooted($path)) { [IO.Path]::GetFullPath($path) }
-                else { [IO.Path]::GetFullPath((Join-Path (Get-Location).Path $path)) }
-            if (-not $fullPath.StartsWith($buildPrefix, [StringComparison]::OrdinalIgnoreCase)) {
-                throw "MSBuild output/intermediate path must be inside XYE_BUILD_DIRECTORY: $fullPath"
+    } elseif ($token -match '(?i)^(?:-p|/p|-property|/property|--property)$' -and $i + 1 -lt $arguments.Count) {
+        foreach ($assignment in ([string]$arguments[++$i] -split '[;,]')) {
+            if ($outputProperties -contains ($assignment -split '=',2)[0].Trim()) {
+                throw 'Custom output or NuGet cache paths are forbidden; use canonical repository-local outputs.'
             }
         }
     }
-    if (-not $hasArtifactsPath) {
-        $forwarded.Add('--artifacts-path')
-        $forwarded.Add($env:XYE_BUILD_DIRECTORY)
-    }
-    if ($forwarded.Contains('')) {
-        $filtered = [Collections.Generic.List[string]]::new()
-        foreach ($value in $forwarded) { if ($value -ne '') { $filtered.Add($value) } }
-        $forwarded = $filtered
+}
+
+$targetPathPattern = '(?i)\.(?:csproj|sln|slnx)$'
+foreach ($candidate in $arguments) {
+    if ([string]$candidate -match $targetPathPattern) {
+        $path = if ([IO.Path]::IsPathRooted([string]$candidate)) { [string]$candidate } else { Join-Path $root ([string]$candidate) }
+        Assert-XyeLocalPath -RepositoryRoot $root -Path $path | Out-Null
     }
 }
 
-$started = [DateTimeOffset]::UtcNow.ToString('O')
-& $dotnet @forwarded
-$exitCode = $LASTEXITCODE
-if (-not [string]::IsNullOrWhiteSpace($env:XYE_TASK_COMMAND_LOG)) {
-    $record = [pscustomobject]@{
-        Executable=$dotnet; Arguments=(Protect-XyeArguments $forwarded.ToArray());
-        WorkingDirectory=(Get-Location).Path; StartedUtc=$started
-        CompletedUtc=[DateTimeOffset]::UtcNow.ToString('O'); ExitCode=$exitCode
-    } | ConvertTo-Json -Compress
-    Add-Content -LiteralPath $env:XYE_TASK_COMMAND_LOG -Value $record -Encoding utf8
+$environmentState = Enter-XyeLocalEnvironment -RepositoryRoot $root
+$exitCode = 1
+$locationPushed = $false
+try {
+    Push-Location -LiteralPath $root
+    $locationPushed = $true
+    $resolver = Join-Path $PSScriptRoot 'resolve-dotnet.ps1'
+    $dotnetOutput = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $resolver 2>&1)
+    if ($LASTEXITCODE -ne 0 -or $dotnetOutput.Count -eq 0) {
+        throw "SDK resolver failed before any dotnet command: $($dotnetOutput -join "`n")"
+    }
+    $dotnet = [string]$dotnetOutput[-1]
+    if ([string]::IsNullOrWhiteSpace($dotnet)) { throw 'SDK resolver returned an empty executable path.' }
+    if ($operation -eq 'test' -and -not ($arguments -match '(?i)^--results-directory(?:=|$)')) {
+        $arguments += @('--results-directory',(Join-Path $environmentState.LocalRoot 'test-results'))
+        $forwarded.Add('--results-directory')
+        $forwarded.Add((Join-Path $environmentState.LocalRoot 'test-results'))
+    }
+    & $dotnet @forwarded
+    $exitCode = $LASTEXITCODE
+} catch {
+    [Console]::Error.WriteLine($_.Exception.Message)
+    $exitCode = 1
+} finally {
+    if ($locationPushed) { Pop-Location }
+    Exit-XyeLocalEnvironment -State $environmentState
 }
 exit $exitCode

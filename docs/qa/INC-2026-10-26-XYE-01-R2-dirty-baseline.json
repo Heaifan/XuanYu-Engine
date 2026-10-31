@@ -1,0 +1,451 @@
+{
+  "Root": "E:/MyDoc/project-VSCode/XuanYuEngine",
+  "Head": "fa3baecc07a5c6b3a1b49a1abc19348b69fe4072",
+  "Branch": "codex/渲染器架构重建",
+  "Count": 88,
+  "FreeBytes": 111149801472,
+  "TestDll": false,
+  "AppDll": true,
+  "Items": [
+    {
+      "Status": " M",
+      "Path": ".github/workflows/m2-cloud-cpu.yml",
+      "Sha256": "67BF4C1FFE3948688F1C853EE777D17E0A8E5C10B9E24295137EBCD773EC5086"
+    },
+    {
+      "Status": " M",
+      "Path": "AGENTS.md",
+      "Sha256": "8636B97520DFAF38E17BF28C8FC1918EFA91B723D4A7B7EC0873A792555681C8"
+    },
+    {
+      "Status": " M",
+      "Path": "XYT/Runtime/xyt-runtime.ps1",
+      "Sha256": "0471D00C7F524F99120524962322533F6070EBC9EDD1893739BA2AF16ED42667"
+    },
+    {
+      "Status": " M",
+      "Path": "XYT/Runtime/xyt-runtime.schema.json",
+      "Sha256": "09F4FECB83E12D5B30C82A46D89898A90FDF07DBF2D3D4D967569A851E4D8EE1"
+    },
+    {
+      "Status": " M",
+      "Path": "XYT/Runtime/xyt-runtime.selftest.ps1",
+      "Sha256": "1E20ED5B9B449984E534B57FFF07DEBF3EC3BB823D1726AB97FF98A881754EB8"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Draw/Viewport/test_ViewportScaleIndicatorContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Geometry/test_BlenderStyleGridTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Geometry/test_ReferenceGridShaderContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Geometry/test_ReverseZWorldGridContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Lifecycle/test_WorldGridStartupLifecycleContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Lifecycle/test_WorldReferenceGridFarFadeContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Overlay/NavLayout/test_NavigationGizmoDipContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Overlay/NavOverlay/test_NavigationGizmoOverlayContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Runtime/Pipeline/test_FarViewBackgroundShaderContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core.Tests/Render/Runtime/Pipeline/test_RenderLogNoiseContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.Core.Tests/TestSourceRoot.cs",
+      "Sha256": "4DCF3E50C5AF061471C8B0672353C7CB1BE2F35EA0D36E02A42DF12C653E8A57"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.Core/Diagnostics/System/XyeWorkspacePaths.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.Core/Diagnostics/Viewport/Probe/ViewportProbe.cs",
+      "Sha256": "C0BC65DD4FFE2764BDBD8354406A43247E43E8A26D03A3709A4DC29FA93B1E75"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.Editor.Control.Cli/Program.cs",
+      "Sha256": "E53051467CE15D3D8110B2DBB38049012437E2F60B82C134D008B49B556A44ED"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.Editor.Control.Cli/Silent/XycCliStartConfiguration.cs",
+      "Sha256": "FFAC4C07B53991DB07A7BB45E427BEB180C8E8110FAE0516D8016ED2F0AA3836"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.Editor.UI/Control/Silent/SilentCaptureEvidence.cs",
+      "Sha256": "56C4BAB484179F6A8D7DBDCA31235372BD8F67300561736848EFBDA02043C5D2"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.Render.Abstractions/Diagnostics/Events/Sessions/RendererEventSessionFactory.cs",
+      "Sha256": "E699087CD1D6B5CB03135D1BC157616D38EB9FD95680EF4E60951230866F2848"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.WarCore.Tests/WarCoreDependencyTests.cs",
+      "Sha256": "EDA0D0EAC0A64ECDE22D62C9DD19DA1FDD29DB43F9D1A218FB5E330C11A79AED"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Architecture/WorldRenderDependencyBoundaryTests.cs",
+      "Sha256": "626270673987A832151874C07B7DC800BDF0AB1BD9EF9A38BB23E7A6805006FC"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Diagnostics/RendererEventReaderTests.cs",
+      "Sha256": "6399C5475E6F758B85734772219B9EE2B47AC26FC725FB32AC001F40D922AC1C"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Diagnostics/RendererEventSessionIdentityTests.cs",
+      "Sha256": "5325E56A4FCA481732A9F542BD864481593F0E4FF8A757478C6C6B0204FEF9E6"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Diagnostics/RendererEventWriterContextTests.cs",
+      "Sha256": "5E2072B29889075FB0E9735D86395AC2E131ECEABC68E69E9C43003C43FCF45B"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Diagnostics/RendererEventWriterTests.cs",
+      "Sha256": "949FD853A73BBF23E79D3242575B7E36B8AF60A7E75734B4C67291D0B0A0F024"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Diagnostics/Storage/RendererEventFailureDurabilityTests.cs",
+      "Sha256": "71CA596536939B9321DA80012C5D06ADEB362F70B26FBEE44A9A55C3878AE243"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Diagnostics/Storage/RendererEventReliabilityTests.cs",
+      "Sha256": "B4938C8C89A234C94848AD781D1B2DB008A81F67DDF1C9F0DD146B37B051921B"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.World.Tests/Diagnostics/XyeWorkspacePathsTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.World.Tests/Render/ReverseZDepthContractPrototypeTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.World.Tests/Render/ReverseZDepthPipelineContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.World.Tests/Render/WorldGridRenderOriginContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.World.Tests/Render/WorldGridStartupContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "XuanYu.World.Tests/Render/WorldReferenceGridDepthContractTests.cs",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Render/test_TerrainGpuCacheRetirementContract.cs",
+      "Sha256": "A7EA22B43255B7E1F12513B7835ED245F8B6B899704EB1105251D1E4A1850E30"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Render/test_VulkanPresentLoopContract.cs",
+      "Sha256": "6C5C5C3E2001E6AF12D096677B201543087CD601C13F5CCDE8E60C7FB28E0B84"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Render/test_VulkanTerrainGpuCacheRetirementDevice.cs",
+      "Sha256": "9019D044431B8851FDA708DC795491EBE7FC4C933CAD21A6F32D58B83B25CC1C"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Render/test_VulkanVectorOverlayPushConstantContract.cs",
+      "Sha256": "5A0583C8B5A215FDA8172F9ED0D633691A66513E511ABD33AE898E10E60D8234"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Spatial/SpatialQueryGovernanceTests.cs",
+      "Sha256": "87CDC10686323BB05DFE36A382F9F332797FD981588C2E6FDC376F55539F7B32"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/TestSourceRoot.cs",
+      "Sha256": "A625D3CAA8151DD097E47F3F635E81A9E35BC8F90A6FE6A0FEAD226CBF7197E6"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/Viewport/InputIntegration/E5ProductionInputFreezeTests.cs",
+      "Sha256": "FADEAB9643FB608A157260CF3005E5C1C5921A35052277F3FDCAEF1DB70A6A5F"
+    },
+    {
+      "Status": " M",
+      "Path": "XuanYu.World.Tests/WorldPartition/WorldPartitionInvariantTests.cs",
+      "Sha256": "37B24A6C7A288764AFC307641F9B3F667A98E1FB8C3FB51FD02AABC65B0CE4C8"
+    },
+    {
+      "Status": " M",
+      "Path": "docs/dev-rules.md",
+      "Sha256": "2FBBFA593B1080CBA71C6D2ECDDFC91111E22BD69A56FDC27738EB6C7B8D469F"
+    },
+    {
+      "Status": " M",
+      "Path": "docs/governance/test-registry.json",
+      "Sha256": "E79F388C7B6B3286F12081C58B760759C3A1F19A7EE98EBF05C0F829E6893042"
+    },
+    {
+      "Status": " M",
+      "Path": "docs/governance/xyt-test-truth-registry.json",
+      "Sha256": "A94ABD7ADB40BEDF41CAA2E2D138D04B69F4984148F84E51DB3169BD8CBE1C9D"
+    },
+    {
+      "Status": " M",
+      "Path": "file-tree.md",
+      "Sha256": "4ADD29245357E7A38E61D6AB3C8C4FF492C7E546208C7E9CC8600F450CCDEE0C"
+    },
+    {
+      "Status": " M",
+      "Path": "run.bat",
+      "Sha256": "D45E4548F91FC403B6AA9E2DE1EBE46104D9F627790E271DC43010E0A07ADE11"
+    },
+    {
+      "Status": " D",
+      "Path": "scripts/XyeWorkspace.psm1",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " M",
+      "Path": "scripts/arch-a-guard.ps1",
+      "Sha256": "8E133EC81D4EF1599FEFD68DD967DBDA26E94AD5569F3D16E8B288025054F7F3"
+    },
+    {
+      "Status": " M",
+      "Path": "scripts/tests/arch-a-guard-bootstrap-selftest.ps1",
+      "Sha256": "AEED683D76D4626305594C5FAC8B80AE0711E9D765AF5753493DF0EEB6F4F310"
+    },
+    {
+      "Status": " M",
+      "Path": "scripts/tests/arch-a-guard-viewport-r2-fixtures.ps1",
+      "Sha256": "878BE9F4C48911C77CA291B5FAE73DC9253CB7514923DE91D0277B537C0465CE"
+    },
+    {
+      "Status": " M",
+      "Path": "scripts/tests/xye-bootstrap.selftest.ps1",
+      "Sha256": "084CBA8A063EA14F9B17263043135DF7C0D843CA6781B1800D3576D94D2EDAE4"
+    },
+    {
+      "Status": " M",
+      "Path": "scripts/xye-dotnet.ps1",
+      "Sha256": "51BBD28DD5ED02D5F1AA47C2820E7272935E77E02742086214C74BAF2C987553"
+    },
+    {
+      "Status": " M",
+      "Path": "scripts/xye-source-fingerprint.ps1",
+      "Sha256": "8424C4222FDCDA49C616D234F8DFBAEF88F9DBF4BD10E3F0FC21E85AE21441A2"
+    },
+    {
+      "Status": " D",
+      "Path": "scripts/xye-workspace.ps1",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " D",
+      "Path": "scripts/xye-workspace.selftest.ps1",
+      "Sha256": "MISSING"
+    },
+    {
+      "Status": " M",
+      "Path": "tools/terrain/Invoke-WP2-P4-VulkanReplay.ps1",
+      "Sha256": "67F1FD6F5B98BA39795E7AD7D268E4A6DF471110998926B3F7636F0D6175C83D"
+    },
+    {
+      "Status": " M",
+      "Path": "xyui/avalonia/tests/XYUI.Avalonia.Tests/CanonicalAlignmentTests.cs",
+      "Sha256": "96CAC2A2404B87DE33F2540884CC5B12189DB282D4B67F37130AC00637821337"
+    },
+    {
+      "Status": " M",
+      "Path": "xyui/avalonia/tests/XYUI.Avalonia.Tests/SecondTruthTests.cs",
+      "Sha256": "7FE41A1BB04AF5B26FBBF8386242773C8F5CA648109ACADE679C78A8CFDEB095"
+    },
+    {
+      "Status": " M",
+      "Path": "xyui/avalonia/tests/XYUI.Avalonia.Tests/SpatialTokenTests.cs",
+      "Sha256": "C5835A52F4CC53524ECE3AB1357A46E33F81398C20E035DEF9E21EE7FC010AA9"
+    },
+    {
+      "Status": " M",
+      "Path": "xyui/avalonia/tests/XYUI.Avalonia.Tests/TypographyTokenTests.cs",
+      "Sha256": "31A9C11452E819281DF7898C86236A6C78ED16BBDBF7404BB5839D78E09B0967"
+    },
+    {
+      "Status": "??",
+      "Path": "XYT/Runtime/test_xyt-runtime.ps1",
+      "Sha256": "D728D05F956490828FDA6544444CB900C898D6115086B3AC2602C0BF7BDFDFD5"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Draw/Viewport/test_ViewportScaleIndicatorContract.cs",
+      "Sha256": "443944688A8C7FB9B8D482137E379CE89F916F477F8F77426716277502193B8A"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Geometry/test_BlenderStyleGrid.cs",
+      "Sha256": "2169C605FAB58AB423D4538BFC83644CA26E56B033D296FC677798ABD3C1F319"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Geometry/test_ReferenceGridShaderContract.cs",
+      "Sha256": "9049FA08DE47067B8380126100AC281B272614ED62D2CD587C9597D85B0AFCBC"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Geometry/test_ReverseZWorldGridContract.cs",
+      "Sha256": "690CA046DF6AC1CEAF8B7CF9B3F2034632DD08A83FBB3F86A6D3F50EE5CC555D"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Lifecycle/test_WorldGridStartupLifecycleContract.cs",
+      "Sha256": "DEDDBA6D7F32F3335BD19BC2A3355CCC59E0B8C7A7E9214C8B03B96CDB2DAB69"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Grid/Lifecycle/test_WorldReferenceGridFarFadeContract.cs",
+      "Sha256": "B161B3BC12966F82CFFA73625B1946F400E9F8E3BE8189CD47EC2944CE8EA815"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Overlay/NavLayout/test_NavigationGizmoDipContract.cs",
+      "Sha256": "173709A9421F9470DF52F8F47FFF078C22C5A227C2B5E1CA53B1A2AB00B51D2F"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Overlay/NavOverlay/test_NavigationGizmoOverlayContract.cs",
+      "Sha256": "E183E783F7BD6CE3A87108C49D81E54BC865480B484B97D7B761805ED1657C2C"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Runtime/Pipeline/test_FarViewBackgroundShaderContract.cs",
+      "Sha256": "AE54FD1DF556A95051ED3D0DCE55D908C6501D18EA07F65D36F74894EB258B88"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core.Tests/Render/Runtime/Pipeline/test_RenderLogNoiseContract.cs",
+      "Sha256": "326593E4B168DA6F5FDE16C70564FBAF4FEE085E50B78E7A549BB25249AAB14E"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.Core/Diagnostics/System/XyeDiagnosticPaths.cs",
+      "Sha256": "CBD6F1E568B91013A1918D413DA1736845E0F7C49461C1C315BE7CBFF27F26A4"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.World.Tests/Diagnostics/test_XyeDiagnosticPaths.cs",
+      "Sha256": "37E3BA45B174B6A245D5713C8EA6D22346EF2FB4F5FCFC03A355E696474DBDA4"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.World.Tests/Render/test_ReverseZDepthContractPrototype.cs",
+      "Sha256": "0BA3A4C6959D8F2F60373E99EBFE03FCC99D03E9FF85042C352DFB9473D24784"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.World.Tests/Render/test_ReverseZDepthPipelineContract.cs",
+      "Sha256": "6388E17AAA877DF621A9BB6486A490CB1B1CF979CDB25FA2C19EAA82DE96BBD8"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.World.Tests/Render/test_WorldGridRenderOriginContract.cs",
+      "Sha256": "28A85BB54794D3E6A57901E2090820FD36B4F4D2099D76C60DD4E35930D3BA58"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.World.Tests/Render/test_WorldGridStartupContract.cs",
+      "Sha256": "E5C0C3A018C34903F2A231232F00DB8F8F45CEEF82EAF8025604F12FD2ACD07A"
+    },
+    {
+      "Status": "??",
+      "Path": "XuanYu.World.Tests/Render/test_WorldReferenceGridDepthContract.cs",
+      "Sha256": "482EEA0DE353B03F58E156AC2DE8A90BE36E00D909DA5303BF02BED27D275377"
+    },
+    {
+      "Status": "??",
+      "Path": "scripts/prepare-xye-dem-test-fixture.ps1",
+      "Sha256": "33445BBC6A1F8A1CC3EA81CADD75DC6B39361FBD939A603CC33DE0BDF99AC8FA"
+    },
+    {
+      "Status": "??",
+      "Path": "scripts/tests/test_xye_dotnet_reuse.ps1",
+      "Sha256": "52F537D2DD783877DE14CDBEA3815545045FF01D915569B753201F118C1F8138"
+    },
+    {
+      "Status": "??",
+      "Path": "scripts/tests/test_xye_write_guard.ps1",
+      "Sha256": "42F82D81D40A8F19428207430E5D17EE2FE6C5E9C2054BE91BCC52F23B355192"
+    },
+    {
+      "Status": "??",
+      "Path": "scripts/xye-build.ps1",
+      "Sha256": "7A5B6E56F2352DDDB95FEAB24C6A6626FD47A67843192ADDFB18DD5B703B5DD2"
+    },
+    {
+      "Status": "??",
+      "Path": "scripts/xye-write-guard.ps1",
+      "Sha256": "7A4FD0187BCA6853A546B78B0E31223A9E5F75ABDAECB86A45E75E6D4EC39CB2"
+    },
+    {
+      "Status": "??",
+      "Path": "xyui/avalonia/tests/XYUI.Avalonia.Tests/AssemblyInfo.cs",
+      "Sha256": "3F7EDD72EAC91614FCF49F709DD4E560C74EBEF8DA68A53A02947E5611CD1869"
+    },
+    {
+      "Status": "??",
+      "Path": "xyui/avalonia/tests/XYUI.Avalonia.Tests/TestSourceRoot.cs",
+      "Sha256": "153D922D64B65DD80874BD1DC95E8057369F2F3A6EEB7ABC8A6C1F42BAE70892"
+    }
+  ]
+}

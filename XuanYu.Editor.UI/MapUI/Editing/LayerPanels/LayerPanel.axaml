@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
+             xmlns:input="using:Avalonia.Input"
+             x:Class="XuanYu.Editor.UI.LayerPanel"
+             Focusable="True" KeyDown="LayerPanel_KeyDown"
+             x:DataType="local:UiVm">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Infrastructure/Resources/Theme/EditorIcons.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/Panels/Inspector/InspectorPanels/EditorCompactStyles.axaml"/>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/MapUI/Editing/LayerPanels/LayerPanel.States.axaml"/>
+    <!-- ARCH-UI-SPEC-R1-D4（W50）：工具栏按钮 24 紧凑档 -->
+    <Style Selector="Button.layerTool"><Setter Property="MinHeight" Value="{StaticResource Control.Height.Compact}"/><Setter Property="Padding" Value="6,2"/><Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/></Style>
+    <Style Selector="Path.layerIcon"><Setter Property="Width" Value="16"/><Setter Property="Height" Value="16"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
+    <Style Selector="Border.dragHandle"><Setter Property="Width" Value="24"/><Setter Property="Height" Value="28"/><Setter Property="Background" Value="Transparent"/><Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="Path.dragHandleIcon"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Fill" Value="{StaticResource Color.Text.Disabled}"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="Border.activeMark"><Setter Property="Background" Value="{StaticResource Color.Accent}"/><Setter Property="Width" Value="3"/><Setter Property="Margin" Value="0,4"/><Setter Property="CornerRadius" Value="1.5"/><Setter Property="VerticalAlignment" Value="Stretch"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4：拖动插入线 2 DIP，Layer.DropLine 冻结值 -->
+    <Style Selector="Border.dropLine"><Setter Property="Background" Value="{StaticResource Layer.DropLine}"/><Setter Property="Height" Value="2"/><Setter Property="CornerRadius" Value="1"/></Style>
+    <Style Selector="ListBox.layerList ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style>
+  </UserControl.Styles>
+  <Grid RowDefinitions="Auto,Auto,*">
+    <UniformGrid Grid.Row="0" Columns="2" Margin="0,8,0,4" ColumnSpacing="4" IsVisible="{Binding IsRegionEditMode}">
+      <xy:XYButton Classes="layerTool" Variant="Secondary" Content="添加" Command="{Binding RunCommand}" CommandParameter="添加图层" ToolTip.Tip="添加图层" AutomationProperties.Name="添加图层"/>
+      <xy:XYButton Classes="layerTool" Variant="Secondary" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}" AutomationProperties.Name="删除图层"/>
+    </UniformGrid>
+    <xy:XYCaption Grid.Row="1" Text="添加至少 2 个用户图层后可拖拽排序" IsVisible="{Binding IsRegionLayerReorderHintVisible}" Margin="0,0,0,4"/>
+    <!-- LAYER-A-R1：通用宿主只消费当前 Provider 的可见项目；拖动事件见 LayerPanel.DragDrop.cs -->
+    <ListBox Grid.Row="2" x:Name="LayerList" Classes="layerList" ItemsSource="{Binding CurrentLayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
+             Background="Transparent" BorderThickness="0" Margin="0,2,0,0" HorizontalAlignment="Stretch">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="local:MapLayerRowViewModel">
+          <Grid ColumnDefinitions="3,24,Auto,*,28,28" ColumnSpacing="4" MinHeight="32">
+            <!-- F3：拖动插入线（2 DIP，整行宽，显示在目标行上方） -->
+            <Border Classes="dropLine" Grid.ColumnSpan="6" ZIndex="10" IsVisible="{Binding IsDropBefore}" VerticalAlignment="Top" Margin="0,-1,0,0"/>
+            <Border Classes="activeMark" IsVisible="{Binding IsActive}"/>
+            <Border Grid.Column="1" Classes="dragHandle" IsVisible="{Binding IsRegion}" IsEnabled="{Binding IsDragEnabled}"
+                    ToolTip.Tip="{Binding DragHandleToolTip}" PointerPressed="DragHandle_PointerPressed">
+              <Path Classes="dragHandleIcon" Data="{StaticResource DragHandleIcon}"/>
+            </Border>
+            <xy:XYBadge Grid.Column="2" Variant="Accent" Text="{Binding KindTagText}" IsVisible="{Binding IsRegion}" VerticalAlignment="Center"/>
+            <xy:XYBadge Grid.Column="2" Variant="Default" Text="系统" IsVisible="{Binding IsSystem}" VerticalAlignment="Center"/>
+            <xy:XYTruncatedText Grid.Column="3" Text="{Binding Name}" Mode="End" ToolTip.Tip="{Binding Name}" IsVisible="{Binding !IsRenaming}" DoubleTapped="LayerName_DoubleTapped" VerticalAlignment="Center"/>
+            <xy:XYTextField Grid.Column="3" Text="{Binding RenameText, Mode=TwoWay}" IsVisible="{Binding IsRenaming}" KeyDown="LayerRename_KeyDown" LostFocus="LayerRename_LostFocus"/>
+            <xy:XYToggleButton Grid.Column="4" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏" AutomationProperties.Name="显示或隐藏图层">
+              <StackPanel>
+                <Path Classes="layerIcon" Data="{StaticResource VisibleIcon}" Stroke="{StaticResource Layer.State.Visible}" IsVisible="{Binding IsVisible}"/>
+                <Path Classes="layerIcon" Data="{StaticResource HiddenIcon}" Stroke="{StaticResource Layer.State.Hidden}" IsVisible="{Binding IsHidden}"/>
+              </StackPanel>
+            </xy:XYToggleButton>
+            <xy:XYToggleButton Grid.Column="5" Classes="layerLockSwitch" IsChecked="{Binding IsLocked, Mode=TwoWay}" ToolTip.Tip="锁定/解锁" AutomationProperties.Name="锁定或解锁图层">
+              <StackPanel>
+                <Path Classes="layerIcon" Data="{StaticResource LockedIcon}" Stroke="{StaticResource Layer.State.Locked}" IsVisible="{Binding IsLocked}"/>
+                <Path Classes="layerIcon" Data="{StaticResource UnlockedIcon}" Stroke="{StaticResource Layer.State.Unlocked}" IsVisible="{Binding IsUnlocked}"/>
+              </StackPanel>
+            </xy:XYToggleButton>
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</UserControl>

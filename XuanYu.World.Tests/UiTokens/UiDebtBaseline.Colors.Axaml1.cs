@@ -7,12 +7,12 @@ internal static partial class UiDebtBaseline
 {
     private static void AddAxaml1(System.Collections.Generic.List<BaselineEntry> list)
     {
-        list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBlock.detailLabel", UiRuleKind.HexColor, "Foreground", "#64748b"));
-        list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBlock.detailValue", UiRuleKind.HexColor, "Foreground", "#243246"));
-        list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBlock.detailTitle", UiRuleKind.HexColor, "Foreground", "#172337"));
-        list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBox.detailBody", UiRuleKind.HexColor, "Background", "#f2f6fb"));
-        list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border:1", UiRuleKind.HexColor, "BorderBrush", "#d9e2ee"));
-        list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border/Grid/Grid/TextBlock:1", UiRuleKind.HexColor, "Foreground", "#243246"));
-        list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border/Grid/Grid/ScrollViewer/StackPanel/Border:1", UiRuleKind.HexColor, "Background", "#edf4ff"));
+        list.Add(new("W62", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Style:TextBlock.detailLabel", UiRuleKind.HexColor, "Foreground", "#64748b"));
+        list.Add(new("W62", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Style:TextBlock.detailValue", UiRuleKind.HexColor, "Foreground", "#243246"));
+        list.Add(new("W62", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Style:TextBlock.detailTitle", UiRuleKind.HexColor, "Foreground", "#172337"));
+        list.Add(new("W62", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Style:TextBox.detailBody", UiRuleKind.HexColor, "Background", "#f2f6fb"));
+        list.Add(new("W62", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border:1", UiRuleKind.HexColor, "BorderBrush", "#d9e2ee"));
+        list.Add(new("W62", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border/Grid/Grid/TextBlock:1", UiRuleKind.HexColor, "Foreground", "#243246"));
+        list.Add(new("W62", "XuanYu.Editor.UI/Panels/Status/LogDetails/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border/Grid/Grid/ScrollViewer/StackPanel/Border:1", UiRuleKind.HexColor, "Background", "#edf4ff"));
     }
 }

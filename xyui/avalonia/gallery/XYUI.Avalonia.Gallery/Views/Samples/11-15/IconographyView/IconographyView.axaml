@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.IconographyView">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 标题 -->
+      <StackPanel Spacing="3">
+        <TextBlock Text="XYUI-0.06 · 图标体系" Classes="xyui-heading-panel" FontSize="{DynamicResource XY.FontSize.CompactPanelTitle}" />
+        <TextBlock Text="统一尺寸、视觉重量、Viewport 与光学居中" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <!-- ① 核心规则 -->
+      <views:IconographyCoreRulesSection />
+
+      <!-- ② 图标规格阶梯 -->
+      <views:IconographySpecSection />
+
+      <!-- ③ 真实组件与光学验证 -->
+      <views:IconographyUsageSection />
+
+      <!-- ④ 推荐写法 · 高级用法 · 禁止写法 -->
+      <views:IconographyGuardrailsSection />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

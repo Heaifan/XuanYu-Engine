@@ -5,13 +5,13 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D4-F1：展示型动态文本默认（NoWrap + CharacterEllipsis + MaxLines=1）+ Tooltip 完整值。
 public sealed class UiD4F1TextOverflowContractTests
 {
-    static readonly string Ui = Read("Design/UiStyles.D4F1.axaml"); // D4-F1 纠偏：公共样式独立文件
-    static readonly string Inspector = Read("Right/InspectorPanel.axaml");
-    static readonly string Right = Read("Right/EditorRightTabs.axaml");
-    static readonly string MapPage = Read("Right/MapPagePanel.axaml");
-    static readonly string MapForm = Read("Right/MapFormPanel.axaml");
-    static readonly string LayerPanel = Read("Right/LayerPanel.axaml");
-    static readonly string LayerInspector = Read("Right/LayerInspectorPanel.axaml");
+    static readonly string Ui = Read("Infrastructure/Resources/Theme/UiStyles.D4F1.axaml"); // D4-F1 纠偏：公共样式独立文件
+    static readonly string Inspector = Read("Panels/Inspector/InspectorPanels/InspectorPanel.axaml");
+    static readonly string Right = Read("Panels/Inspector/EditorRightTabs.axaml");
+    static readonly string MapPage = Read("MapUI/Presentation/MapToolPanels/MapPagePanel.axaml");
+    static readonly string MapForm = Read("MapUI/Presentation/EditorPanels/MapFormPanel.axaml");
+    static readonly string LayerPanel = Read("MapUI/Editing/LayerPanels/LayerPanel.axaml");
+    static readonly string LayerInspector = Read("Panels/Inspector/InspectorPanels/LayerInspectorPanel.axaml");
 
     static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 

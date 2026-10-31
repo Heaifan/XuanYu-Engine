@@ -62,9 +62,7 @@ public sealed class RendererEventReliabilityTests
     {
         public EventTestDirectory()
         {
-            var root = Environment.GetEnvironmentVariable("XYE_WORKSPACE_ROOT")
-                ?? throw new InvalidOperationException("受控测试必须设置 XYE_WORKSPACE_ROOT。");
-            Path = System.IO.Path.Combine(root, "Temp", "renderer-writer-tests", Guid.NewGuid().ToString("N"));
+            Path = System.IO.Path.Combine(TestSourceRoot.Root, "obj", "renderer-writer-tests", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(Path);
         }
         public string Path { get; }

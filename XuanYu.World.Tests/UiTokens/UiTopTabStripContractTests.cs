@@ -16,7 +16,7 @@ public sealed class UiTopTabStripContractTests
     [Fact]
     public void Main_window_matches_spec_initial_and_minimum_size()
     {
-        var axaml = Read("XuanYu.Editor.UI/Win/UiWin.axaml");
+        var axaml = Read("XuanYu.Editor.UI/Shell/Windowing/WindowLifecycle/UiWin.axaml");
         Assert.Contains("Width=\"1360\"", axaml);
         Assert.Contains("Height=\"820\"", axaml);
         Assert.Contains("MinWidth=\"1024\"", axaml);
@@ -28,7 +28,7 @@ public sealed class UiTopTabStripContractTests
     [Fact]
     public void Root_layout_matches_min_panel_and_viewport_contract()
     {
-        var axaml = Read("XuanYu.Editor.UI/Root/UiRoot.axaml");
+        var axaml = Read("XuanYu.Editor.UI/Shell/Composition/Application/UiRoot.axaml");
         Assert.Contains("MinWidth=\"210\"", axaml);   // Area B：左侧项目树最小 210
         Assert.Contains("MinWidth=\"300\"", axaml);   // W20：右侧面板最小 300
         Assert.Contains("MinWidth=\"480\"", axaml);   // 视口最小可用区域 480
@@ -45,7 +45,7 @@ public sealed class UiTopTabStripContractTests
     [Fact]
     public void Root_codebehind_clamp_matches_shell_mins()
     {
-        var cs = Read("XuanYu.Editor.UI/Root/UiRoot.axaml.cs");
+        var cs = Read("XuanYu.Editor.UI/Shell/Composition/Application/UiRoot.axaml.cs");
         Assert.Contains("RootMargin = 12", cs);
         Assert.Contains("(LeftColumn, 216, 210, 220)", cs);
         Assert.Contains("(RightColumn, 340, 300, 480)", cs);
@@ -55,7 +55,7 @@ public sealed class UiTopTabStripContractTests
     [Fact]
     public void Tab_host_template_is_single_line_with_overflow_controls()
     {
-        var tpl = Read("XuanYu.Editor.UI/Right/TopTabStripTemplate.axaml");
+        var tpl = Read("XuanYu.Editor.UI/Panels/Tools/Tabs/TopTabStripTemplate.axaml");
         Assert.Contains("x:Key=\"TopTabStripTemplate\"", tpl);
         Assert.Contains("ItemsPresenter Name=\"PART_TabStrip\"", tpl);
         Assert.Contains("StackPanel Orientation=\"Horizontal\"", tpl);   // 单行：横向 StackPanel
@@ -70,13 +70,13 @@ public sealed class UiTopTabStripContractTests
         Assert.Contains("LinearGradientBrush", tpl);                      // 渐隐提示
         Assert.Contains("滚动鼠标滚轮或点击箭头查看更多页签。", tpl);       // 一次性提示文案（§10.1-7）
         Assert.DoesNotContain("WrapPanel", tpl);
-        Assert.DoesNotContain("WrapPanel", Read("XuanYu.Editor.UI/Right/EditorRightTabs.axaml"));
+        Assert.DoesNotContain("WrapPanel", Read("XuanYu.Editor.UI/Panels/Inspector/EditorRightTabs.axaml"));
     }
 
     [Fact]
     public void Right_panel_hosts_canonical_xy_tabs_and_exact_real_tab_set()
     {
-        var right = Read("XuanYu.Editor.UI/Right/EditorRightTabs.axaml");
+        var right = Read("XuanYu.Editor.UI/Panels/Inspector/EditorRightTabs.axaml");
         Assert.Contains("<xy:XYTabs", right);
         Assert.DoesNotContain("<TabControl", right);
         Assert.DoesNotContain("<TabItem", right);

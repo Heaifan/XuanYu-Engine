@@ -9,9 +9,9 @@ namespace XuanYu.World.Tests.Logging;
 // 本测试锁定修复后的布局合同；几何级验证由真机复验（F4-A1~A8）承担。
 public sealed class UiRootLogRowContractTests
 {
-    static readonly string UiRootAxaml = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Root", "UiRoot.axaml"));
-    static readonly string UiRootCs = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Root", "UiRoot.axaml.cs"));
-    static readonly string FootAxaml = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Foot", "Foot.axaml"));
+    static readonly string UiRootAxaml = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Shell", "Composition", "Application", "UiRoot.axaml"));
+    static readonly string UiRootCs = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Shell", "Composition", "Application", "UiRoot.axaml.cs"));
+    static readonly string FootAxaml = File.ReadAllText(Path.Combine(TestSourceRoot.Root, "XuanYu.Editor.UI", "Panels", "Status", "StatusWidgets", "Foot.axaml"));
 
     [Fact]
     public void Log_row_has_upper_cap()

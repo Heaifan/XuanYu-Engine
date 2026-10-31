@@ -80,6 +80,15 @@ Plan
 
 事务测试必须覆盖：新根、旧根、激活中断、重复 Activate、Complete 状态守卫、Prepared Rollback、Activated Rollback、失败后旧数据内容一致、无路径逃逸。
 
+
+### 2026-10-31 · MapDocument 跨文件保存静态审计（R1-E）
+
+对当前 MapDatasetRegistry 保存链的源码检查发现：Dataset 写入正式路径发生在 Manifest 保存之前；失败回滚也直接写正式 Dataset 路径，缺少可确认的完整旧态恢复结果。该顺序与前述 Staging 事务规则相冲突，构成跨文件非原子提交的静态风险证据。
+
+**证据边界**：这是源码控制流审计，不证明故障已发生或用户数据已损坏；尚未进行故障注入。后续整改应使用可恢复的 staging/backup 提交协议，并通过 Dataset 写入失败、Manifest 写入失败、替换失败、Rollback 失败和进程中断场景验证两份正式文件的一致性。
+
+**关联任务**：XYE-EDITOR-R1-E · MapDocument
+
 **关联 Incident**：INC-2026-08-02-002
 **关联 Knowledge**：K-DATA-002
 

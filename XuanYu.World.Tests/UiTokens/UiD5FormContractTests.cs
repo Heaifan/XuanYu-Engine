@@ -5,8 +5,8 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D5：表单状态合同——输入框完整状态、错误非仅颜色（图标+文字+边框）。
 public sealed class UiD5FormContractTests
 {
-    static readonly string D5 = Read("Design/UiStyles.D5.axaml");
-    static readonly string Form = Read("Right/MapFormPanel.axaml");
+    static readonly string D5 = Read("Infrastructure/Resources/Theme/UiStyles.D5.axaml");
+    static readonly string Form = Read("MapUI/Presentation/EditorPanels/MapFormPanel.axaml");
 
     static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 

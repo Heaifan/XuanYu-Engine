@@ -6,13 +6,13 @@ namespace XuanYu.World.Tests.UiTokens;
 public sealed class UiTokenManifestGraphTests
 {
     private static readonly string RepoRoot = TestSourceRoot.Root;
-    private static readonly string DesignDir = Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Design");
+    private static readonly string DesignDir = Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Infrastructure", "Resources", "Theme");
 
     [Fact]
     public void Resource_includes_target_existing_files_without_cycles()
     {
         var agg = File.ReadAllText(Path.Combine(DesignDir, "UiTokens.axaml"));
-        var includes = System.Text.RegularExpressions.Regex.Matches(agg, @"Source=""avares://XuanYu.Editor.UI/Design/([^""]+)""")
+        var includes = System.Text.RegularExpressions.Regex.Matches(agg, @"Source=""avares://XuanYu.Editor.UI/Infrastructure/Resources/Theme/([^""]+)""")
             .Cast<System.Text.RegularExpressions.Match>().Select(m => m.Groups[1].Value).ToList();
         Assert.Equal(7, includes.Count);
         Assert.DoesNotContain("UiTokens.axaml", includes); // 无自引用/间接循环（子文件不得引用聚合）
@@ -27,9 +27,9 @@ public sealed class UiTokenManifestGraphTests
     [Fact]
     public void Application_merges_token_aggregate_exactly_once()
     {
-        var ui = File.ReadAllText(Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Ui.axaml"));
+        var ui = File.ReadAllText(Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Infrastructure/Resources/Theme/Ui.axaml"));
         Assert.Single(System.Text.RegularExpressions.Regex.Matches(
-            ui, @"ResourceInclude Source=""avares://XuanYu.Editor.UI/Design/UiTokens.axaml"""));
+            ui, @"ResourceInclude Source=""avares://XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.axaml"""));
     }
 
     [Fact]

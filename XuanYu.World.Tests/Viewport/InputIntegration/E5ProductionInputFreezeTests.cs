@@ -17,14 +17,6 @@ public sealed class E5ProductionInputFreezeTests
 
     static class TestContext
     {
-        public static string Root => FindRoot(AppContext.BaseDirectory);
-
-        static string FindRoot(string start)
-        {
-            var directory = new DirectoryInfo(start);
-            while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "XuanYu.Engine.slnx")))
-                directory = directory.Parent;
-            return directory?.FullName ?? throw new DirectoryNotFoundException("Repository root not found.");
-        }
+        public static string Root => TestSourceRoot.Root;
     }
 }

@@ -9,10 +9,10 @@ public sealed class AreaCR1ContextToolbarContractTests
     [Fact]
     public void Context_toolbar_owns_feature_tools_and_drawing_actions()
     {
-        var top = Read("Top/Top.axaml");
-        var toolbar = Read("Top/ContextToolBar.axaml");
-        var code = Read("Top/ContextToolBar.axaml.cs");
-        var inspector = Read("Right/InspectorPanel.axaml");
+        var top = Read("Panels/Tools/WorkspaceModules/Top.axaml");
+        var toolbar = Read("Panels/Tools/ContextTools/ContextToolBar.axaml");
+        var code = Read("Panels/Tools/ContextTools/ContextToolBar.axaml.cs");
+        var inspector = Read("Panels/Inspector/InspectorPanels/InspectorPanel.axaml");
 
         Assert.Contains("<local:ContextToolBar", top);
         Assert.Contains("DrawButtonLabel", toolbar);
@@ -29,13 +29,13 @@ public sealed class AreaCR1ContextToolbarContractTests
     [Fact]
     public void Context_toolbar_r2_uses_split_draw_entry_and_unified_transaction_labels()
     {
-        var toolbar = Read("Top/ContextToolBar.axaml");
-        var code = Read("Top/ContextToolBar.axaml.cs");
+        var toolbar = Read("Panels/Tools/ContextTools/ContextToolBar.axaml");
+        var code = Read("Panels/Tools/ContextTools/ContextToolBar.axaml.cs");
         Assert.Contains("XYSplitButton", toolbar);
         Assert.Contains("DrawButtonLabel", toolbar);
         Assert.Contains("XYContextDropdownBoard", code);
         Assert.Contains("AttachTrigger", code);
-        Assert.DoesNotContain("XYContextOverlayHost", Read("Win/UiWin.axaml"));
+        Assert.DoesNotContain("XYContextOverlayHost", Read("Shell/Windowing/WindowLifecycle/UiWin.axaml"));
         Assert.DoesNotContain("DrawSubMenuPopup", code);
         Assert.Contains("道路", code);
         Assert.Contains("区域", code);
@@ -50,7 +50,7 @@ public sealed class AreaCR1ContextToolbarContractTests
     [Fact]
     public void Inspector_keeps_fixed_navigation_and_one_content_scroll_host()
     {
-        var inspector = Read("Right/InspectorPanel.axaml");
+        var inspector = Read("Panels/Inspector/InspectorPanels/InspectorPanel.axaml");
         Assert.Contains("SearchBox", inspector);
         Assert.Contains("XYNavigationRail", inspector);
         Assert.Equal(1, inspector.Split("<ScrollViewer", StringSplitOptions.None).Length - 1);
@@ -62,7 +62,7 @@ public sealed class AreaCR1ContextToolbarContractTests
     [Fact]
     public void Context_toolbar_is_present_in_editor_mode_without_duplicate_breadcrumb()
     {
-        var toolbar = Read("Top/ContextToolBar.axaml");
+        var toolbar = Read("Panels/Tools/ContextTools/ContextToolBar.axaml");
         Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsEditMode}\"", toolbar);
         Assert.DoesNotContain("地图编辑", toolbar);
         Assert.DoesNotContain("要素编辑", toolbar);
@@ -71,8 +71,8 @@ public sealed class AreaCR1ContextToolbarContractTests
     [Fact]
     public void Top_context_row_keeps_hidden_horizontal_scroll_host()
     {
-        var top = Read("Top/Top.axaml");
-        var code = Read("Top/Top.axaml.cs");
+        var top = Read("Panels/Tools/WorkspaceModules/Top.axaml");
+        var code = Read("Panels/Tools/WorkspaceModules/Top.axaml.cs");
         Assert.Contains("<ScrollViewer x:Name=\"ContextToolScrollHost\"", top);
         Assert.Contains("x:Name=\"ContextToolScrollHost\"", top);
         Assert.Contains("HorizontalScrollBarVisibility=\"Hidden\"", top);

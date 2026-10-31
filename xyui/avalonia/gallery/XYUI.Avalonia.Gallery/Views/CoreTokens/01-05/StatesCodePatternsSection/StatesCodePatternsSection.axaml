@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.StatesCodePatternsSection">
+  <StackPanel Spacing="8">
+    <TextBlock Text="04 · 怎么使用 / 高级 / 禁止" Classes="xyui-text-section" FontSize="{DynamicResource XY.FontSize.CompactSection}" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+    <Grid ColumnDefinitions="1.3*,1*,1*">
+      <!-- 怎么使用 (左列) -->
+      <Border Grid.Column="0" Margin="0,0,6,0" Background="#E1EEE6" BorderBrush="#80A58E" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="怎么使用 · 真实 XAML" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Auxiliary}" Foreground="#4E7B66" />
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;xy:XYButton Content=&quot;保存&quot; /&gt;" Classes="xyui-text-code" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+              <TextBlock Text="→ Hover / Pressed / Focus 由 Runtime 自动响应。" Foreground="#4E7B66" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;xy:XYButton Content=&quot;禁止&quot; IsEnabled=&quot;False&quot; /&gt;" Classes="xyui-text-code" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+              <TextBlock Text="→ Disabled 由 IsEnabled 控制。" Foreground="#4E7B66" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;xy:XYToggleButton Content=&quot;吸附&quot; IsChecked=&quot;True&quot; /&gt;" Classes="xyui-text-code" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+              <TextBlock Text="→ Selected 由 Checked / Selection 语义产生。" Foreground="#4E7B66" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;xy:XYTextField Text=&quot;只读内容&quot; IsReadOnly=&quot;True&quot; /&gt;" Classes="xyui-text-code" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+              <TextBlock Text="→ ReadOnly 由 IsReadOnly 控制。" Foreground="#4E7B66" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+      <!-- 高级 (中列) -->
+      <Border Grid.Column="1" Margin="3,0,3,0" Background="#E3EEF5" BorderBrush="#82A4BC" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="高级 (Advanced)" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Auxiliary}" Foreground="#4C7597" />
+          <TextBlock Text="[业务开发者]" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.CompactBody}" Foreground="#4C7597" />
+          <TextBlock Text="只设置组件语义属性，依赖自然交互生成状态，不直接调用 Resolver。" Classes="xyui-text-body" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="[组件作者]" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.CompactBody}" Foreground="#4C7597" Margin="0,4,0,0" />
+          <TextBlock Text="遵循 Facts 共存模型，保持单通道单一真值，Focus 使用独立轮廓。" Classes="xyui-text-body" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+      <!-- 禁止 (右列) -->
+      <Border Grid.Column="2" Margin="6,0,0,0" Background="#F8E4E6" BorderBrush="#CA8087" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="3">
+          <TextBlock Text="禁止 (Forbidden)" FontWeight="{DynamicResource XY.FontWeight.Bold}" FontSize="{DynamicResource XY.FontSize.Auxiliary}" Foreground="#B34F58" />
+          <TextBlock Text="× 手工 Border 模拟 Focus" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 手写 Background 模拟 Hover" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 多状态 Background 无规则叠层" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 用 Height / Padding 制造状态" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 把 Locked 当作 Warning" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 业务代码直接调用 Resolver" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+          <TextBlock Text="× 把业务状态徽章当交互状态" Foreground="#B34F58" FontSize="{DynamicResource XY.FontSize.CompactCaption}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </StackPanel>
+</UserControl>

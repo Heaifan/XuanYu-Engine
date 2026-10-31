@@ -6,9 +6,9 @@ namespace XuanYu.World.Tests.UiTokens;
 // 只读摘要 72 列单行、MapId 压缩/复制、表单 96 列双模式、按钮网格布局。
 public sealed class UiD4MapEditorContractTests
 {
-    static readonly string Page = Read("Right/MapPagePanel.axaml");
-    static readonly string Form = Read("Right/MapFormPanel.axaml");
-    static readonly string Editor = Read("Right/MapEditorPanel.axaml");
+    static readonly string Page = Read("MapUI/Presentation/MapToolPanels/MapPagePanel.axaml");
+    static readonly string Form = Read("MapUI/Presentation/EditorPanels/MapFormPanel.axaml");
+    static readonly string Editor = Read("MapUI/Presentation/EditorPanels/MapEditorPanel.axaml");
 
     static string Read(string rel) => File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", rel));
 
@@ -83,7 +83,7 @@ public sealed class UiD4MapEditorContractTests
     [Fact]
     public void Map_id_copy_is_owned_by_xyui_selectable_text()
     {
-        var cs = Read("Right/MapPagePanel.axaml.cs");
+        var cs = Read("MapUI/Presentation/MapToolPanels/MapPagePanel.axaml.cs");
         Assert.DoesNotContain("SetTextAsync", cs);
         Assert.Contains("<xy:XYSelectableText", Page);
         Assert.DoesNotContain("<xy:XYIconButton", Page);

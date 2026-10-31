@@ -12,7 +12,7 @@ namespace XuanYu.World.Tests.UiTokens;
 public sealed class UiTokenManifestTests
 {
     private static readonly string RepoRoot = TestSourceRoot.Root;
-    private static readonly string DesignDir = Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Design");
+    private static readonly string DesignDir = Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Infrastructure", "Resources", "Theme");
 
     private record ManifestRow(string Key, string Type, string Value, string Category, string SpecStatus);
 

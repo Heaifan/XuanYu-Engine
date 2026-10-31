@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$RepositoryRoot
+    [string]$RepositoryRoot,
+    [switch]$RepositoryOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -60,11 +61,45 @@ try {
     $commonDir = [IO.Path]::GetFullPath($commonDir)
     if (-not (Test-Path -LiteralPath $commonDir -PathType Container)) { throw "Git CommonDir is not an existing directory: $commonDir" }
 
-    $required = @('AGENTS.md', 'run.bat', 'scripts\resolve-dotnet.ps1')
+    $required = @('AGENTS.md', 'run.bat')
+    if (-not $RepositoryOnly) { $required += 'scripts\resolve-dotnet.ps1' }
     foreach ($path in $required) {
         if (-not (Test-Path -LiteralPath (Join-Path $repo $path) -PathType Leaf)) {
             throw "Required repository file is missing: $path"
         }
+    }
+
+    if ($RepositoryOnly) {
+        $branch = Get-GitValue $repo @('branch', '--show-current')
+        if ([string]::IsNullOrWhiteSpace($branch)) { $branch = '(detached)' }
+        $head = Get-GitValue $repo @('rev-parse', 'HEAD')
+        $status = Get-GitValue $repo @('status', '--porcelain=v1', '--untracked-files=all')
+        $origin = Get-GitValue $repo @('remote', 'get-url', 'origin')
+        $upstreamOutput = @(& git -C $repo rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>&1)
+        $upstreamExitCode = $LASTEXITCODE
+        if ($upstreamExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace(($upstreamOutput -join '').Trim())) {
+            $upstream = ($upstreamOutput -join "`n").Trim()
+            $aheadBehind = Get-GitValue $repo @('rev-list', '--left-right', '--count', "HEAD...$upstream")
+        }
+        else {
+            $upstream = '(none)'
+            $aheadBehind = 'UNKNOWN'
+        }
+
+        Write-Output 'XYE BOOTSTRAP REPORT'
+        Write-Output "Repository: $repo"
+        Write-Output "SourceRoot: $repo"
+        Write-Output "GitCommonDir: $commonDir"
+        Write-Output "Branch: $branch"
+        Write-Output "HEAD: $head"
+        Write-Output "Upstream: $upstream"
+        Write-Output "Ahead/Behind: $aheadBehind"
+        Write-Output "WorkingTree: $(if ([string]::IsNullOrWhiteSpace($status)) { 'clean' } else { 'dirty' })"
+        Write-Output "Origin: $origin"
+        Write-Output 'Toolchain: NOT CHECKED'
+        Write-Output 'Resolver: NOT RUN'
+        Write-Output 'State: REPOSITORY READY'
+        exit 0
     }
 
     $resolver = Join-Path $repo 'scripts\resolve-dotnet.ps1'

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.XYUI3CoreRulesSection"
+             x:DataType="g:XYUI1ComponentDocument">
+  <Border Classes="xyui-surface-panel" Padding="16,14" CornerRadius="6" IsVisible="{Binding HasCoreRules}">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="01 · CORE RULES" Classes="xyui-text-section" FontWeight="{DynamicResource XY.FontWeight.Bold}" />
+        <TextBlock Text="核心设计规范与语义原则 · 唯一事实源" Classes="xyui-text-caption" />
+      </StackPanel>
+      <ItemsControl ItemsSource="{Binding CoreRules}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="g:XYUIDocRule">
+            <Border Classes="xyui-surface-panel" Padding="12,8" Margin="0,3" CornerRadius="4">
+              <views:GalleryRuleRow>
+                <TextBlock Text="{Binding Title}" Classes="xyui-text-label" FontWeight="{DynamicResource XY.FontWeight.Semibold}" TextWrapping="Wrap" VerticalAlignment="Top" />
+                <TextBlock Text="{Binding Content}" Classes="xyui-text-body" TextWrapping="Wrap" VerticalAlignment="Top" />
+              </views:GalleryRuleRow>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </Border>
+</UserControl>

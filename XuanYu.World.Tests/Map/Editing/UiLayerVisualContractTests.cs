@@ -10,7 +10,7 @@ public sealed class UiLayerVisualContractTests
         File.ReadAllText(Path.Combine(TestSourceRoot.Root,
             "XuanYu.Editor.UI", "Right", "LayerPanel.States.axaml"));
 
-    static readonly string Ui = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Ui.axaml"));
+    static readonly string Ui = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Infrastructure/Resources/Theme/Ui.axaml"));
 
     static readonly string MapEditor = File.ReadAllText(Path.Combine(TestSourceRoot.Root,  "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
 

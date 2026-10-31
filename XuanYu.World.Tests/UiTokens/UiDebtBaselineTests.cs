@@ -55,7 +55,7 @@ public sealed class UiDebtBaselineTests
             .Where(f => !f.Contains("\\Design\\") && !f.Contains("\\bin\\") && !f.Contains("\\obj\\"))
             .Select(f => Path.GetRelativePath(RepoRoot, f).Replace('\\', '/'));
         Assert.DoesNotContain(files, f => f.Contains("XuanYu.Render") || f.Contains("/Design/"));
-        Assert.Contains(files, f => f.EndsWith("Ui.axaml"));
+        Assert.Contains(files, f => f.EndsWith("Infrastructure/Resources/Theme/Ui.axaml"));
         Assert.Equal(53, files.Count()); // R1 新增颜色编辑 Inspector/Preview/Map projection 三个正式页面。
     }
 }

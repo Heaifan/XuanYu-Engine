@@ -11,14 +11,14 @@ public sealed class UiD4F1TypographyContractTests
 
     static readonly string[] Scope =
     [
-        "Ui.axaml",
-        "Design/UiStyles.D4F1.axaml",
-        "Right/InspectorPanel.axaml",
-        "Right/EditorRightTabs.axaml",
-        "Right/MapPagePanel.axaml",
-        "Right/MapEditorPanel.axaml",
-        "Right/LayerPanel.axaml",
-        "Right/LayerInspectorPanel.axaml",
+        "Infrastructure/Resources/Theme/Ui.axaml",
+        "Infrastructure/Resources/Theme/UiStyles.D4F1.axaml",
+        "Panels/Inspector/InspectorPanels/InspectorPanel.axaml",
+        "Panels/Inspector/EditorRightTabs.axaml",
+        "MapUI/Presentation/MapToolPanels/MapPagePanel.axaml",
+        "MapUI/Presentation/EditorPanels/MapEditorPanel.axaml",
+        "MapUI/Editing/LayerPanels/LayerPanel.axaml",
+        "Panels/Inspector/InspectorPanels/LayerInspectorPanel.axaml",
     ];
 
     static string Read(string rel) => File.ReadAllText(Path.Combine(RepoRoot, "XuanYu.Editor.UI", rel));
@@ -26,7 +26,7 @@ public sealed class UiD4F1TypographyContractTests
     [Fact]
     public void Public_semantic_styles_use_formal_tokens()
     {
-        var ui = Read("Design/UiStyles.D4F1.axaml");
+        var ui = Read("Infrastructure/Resources/Theme/UiStyles.D4F1.axaml");
         Assert.Contains("Font.Label.Size", ui);   // uiLabel / uiTextButton 12
         Assert.Contains("Font.Body.Size", ui);    // uiValue 13
         Assert.Contains("Font.Section.Size", ui); // uiSection 14
@@ -35,7 +35,7 @@ public sealed class UiD4F1TypographyContractTests
     [Fact]
     public void Style_files_are_readable_and_within_100_lines()
     {
-        foreach (var rel in new[] { "Ui.axaml", "Design/UiStyles.D4F1.axaml" })
+        foreach (var rel in new[] { "Infrastructure/Resources/Theme/Ui.axaml", "Infrastructure/Resources/Theme/UiStyles.D4F1.axaml" })
         {
             var lines = File.ReadAllLines(Path.Combine(RepoRoot, "XuanYu.Editor.UI", rel));
             Assert.True(lines.Length <= 100, $"{rel} 超过 100 行（{lines.Length}）");
@@ -61,9 +61,9 @@ public sealed class UiD4F1TypographyContractTests
             Assert.DoesNotContain("FontWeight\" Value=\"Regular\"", text);
         }
         // 全局字体族只允许在 Ui.axaml 的 Window 样式声明一处（不属"局部 FontFamily"）
-        Assert.Equal(1, CountOccurrences(Read("Ui.axaml"), "FontFamily\" Value=\"Microsoft YaHei UI"));
-        Assert.Equal(0, CountOccurrences(Read("Right/InspectorPanel.axaml"), "FontFamily"));
-        Assert.Equal(0, CountOccurrences(Read("Right/MapPagePanel.axaml"), "FontFamily"));
+        Assert.Equal(1, CountOccurrences(Read("Infrastructure/Resources/Theme/Ui.axaml"), "FontFamily\" Value=\"Microsoft YaHei UI"));
+        Assert.Equal(0, CountOccurrences(Read("Panels/Inspector/InspectorPanels/InspectorPanel.axaml"), "FontFamily"));
+        Assert.Equal(0, CountOccurrences(Read("MapUI/Presentation/MapToolPanels/MapPagePanel.axaml"), "FontFamily"));
     }
 
     static int CountOccurrences(string text, string needle) =>
@@ -72,10 +72,10 @@ public sealed class UiD4F1TypographyContractTests
     [Fact]
     public void Page_level_fonts_reference_only_public_styles_or_tokens()
     {
-        var mapEditor = Read("Right/MapEditorPanel.axaml");
+        var mapEditor = Read("MapUI/Presentation/EditorPanels/MapEditorPanel.axaml");
         Assert.Contains("<xy:XYToggleButton", mapEditor);
         Assert.Contains("Content=\"环境\"", mapEditor);
-        var layerPanel = Read("Right/LayerPanel.axaml");
+        var layerPanel = Read("MapUI/Editing/LayerPanels/LayerPanel.axaml");
         Assert.Contains("<xy:XYTruncatedText", layerPanel); // 图层名 13（XYUI-1-04）
         Assert.Contains("<xy:XYBadge", layerPanel);         // 类型标签（XYUI-1-09）
     }

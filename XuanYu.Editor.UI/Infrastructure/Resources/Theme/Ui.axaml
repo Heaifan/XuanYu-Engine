@@ -1,0 +1,99 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- ARCH-UI-SPEC-R1-D2：合并 UI Token 聚合入口（Infrastructure/Resources/Theme/UiTokens.axaml）。仅资源聚合，不改变任何现有视觉值。 -->
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiTokens.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+  <!-- ARCH-UI-SPEC-R1-D4-F1（纠偏）：公共语义样式独立文件，只在此聚合一次 -->
+  <StyleInclude Source="avares://XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiStyles.D4F1.axaml"/>
+  <!-- ARCH-UI-SPEC-R1-D5：按钮与表单状态样式（含 D5-FIX-01 内容居中） -->
+  <StyleInclude Source="avares://XuanYu.Editor.UI/Infrastructure/Resources/Theme/UiStyles.D5.axaml"/>
+  <Style Selector="Window">
+    <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI, Noto Sans CJK SC"/>
+    <Setter Property="Foreground" Value="#172033"/>
+  </Style>
+  <Style Selector="Border.panel">
+    <Setter Property="Background" Value="#fbfcff"/>
+    <Setter Property="BorderBrush" Value="#d9e0ec"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="BoxShadow" Value="0 14 30 0 #160f172a"/>
+  </Style>
+  <Style Selector="Border.chrome">
+    <Setter Property="Background" Value="#edf2f8"/>
+    <Setter Property="BorderBrush" Value="#d7dfeb"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="6"/>
+  </Style>
+  <Style Selector="Border.pill">
+    <Setter Property="CornerRadius" Value="5"/>
+    <Setter Property="Background" Value="#e8eef7"/>
+    <Setter Property="Padding" Value="10,5"/>
+  </Style>
+  <!-- Legacy controls opt in explicitly; XYUI derives from Avalonia controls and must not inherit Engine chrome. -->
+  <Style Selector="Button.legacyControl">
+    <Setter Property="MinWidth" Value="52"/>
+    <Setter Property="Padding" Value="10,7"/>
+    <Setter Property="Margin" Value="0,0,6,0"/>
+    <Setter Property="Background" Value="{StaticResource Color.Bg.Panel}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+  </Style>
+  <Style Selector="TabControl">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="TabControl.sideTabs">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+  </Style>
+  <Style Selector="TabItem.sideTab">
+    <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+    <Setter Property="Foreground" Value="#6d788a"/>
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="Margin" Value="0,0,4,0"/>
+    <Setter Property="MinHeight" Value="30"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0,0,0,0"/>
+    <Setter Property="CornerRadius" Value="5"/>
+  </Style>
+  <Style Selector="TabItem.sideTab:pointerover">
+    <Setter Property="Background" Value="#f2f6fb"/>
+    <Setter Property="Foreground" Value="#47627f"/>
+  </Style>
+  <Style Selector="TabItem.sideTab:selected">
+    <Setter Property="Foreground" Value="#185aa6"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Background" Value="#edf4ff"/>
+    <Setter Property="BorderBrush" Value="#8cb2e2"/>
+    <Setter Property="BorderThickness" Value="0,0,0,2"/>
+  </Style>
+  <Style Selector="ListBox">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+  </Style>
+  <Style Selector="ListBoxItem">
+    <Setter Property="MinHeight" Value="34"/>
+    <Setter Property="Padding" Value="10,7"/>
+    <Setter Property="Margin" Value="0,1"/>
+  </Style>
+  <Style Selector="TextBlock.section">
+    <Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/>
+    <Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/>
+    <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+  </Style>
+  <Style Selector="TextBlock.muted">
+    <Setter Property="Foreground" Value="#758197"/>
+  </Style>
+  <Style Selector="TextBlock.caption">
+    <Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/>
+    <Setter Property="Foreground" Value="#758197"/>
+  </Style>
+</Styles>

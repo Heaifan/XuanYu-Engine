@@ -50,16 +50,11 @@ internal static class XycCliStartConfiguration
     private static void ConfigureProbe(ProcessStartInfo start)
     {
         var projectRoot = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(start.FileName)!, "../../../../"));
-        var workspace = Path.Combine(projectRoot, ".xye-workspace");
         var runId = $"silent-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}";
-        var directory = Path.Combine(workspace, "Diagnostics", runId);
+        var directory = Path.Combine(projectRoot, "artifacts", "diagnostics", runId);
         Directory.CreateDirectory(directory);
         start.Environment["XYE_PROBE_VIEWPORT"] = "1";
         start.Environment["XYE_TERRAIN_REPLAY"] = "1";
-        start.Environment["XYE_WORKSPACE_ROOT"] = workspace;
-        start.Environment["XYE_TASK_RUN_ID"] = runId;
-        start.Environment["XYE_DIAGNOSTICS_DIRECTORY"] = directory;
-        start.Environment["XYE_PROBE_DIRECTORY"] = directory;
         start.Environment["XYE_PROBE_SOURCE_HEAD"] =
             Environment.GetEnvironmentVariable("XYE_SOURCE_HEAD") ?? "UNKNOWN";
         start.Environment["XYE_PROBE_SOURCE_DIRTY"] =
