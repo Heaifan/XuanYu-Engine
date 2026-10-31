@@ -31,6 +31,10 @@
 
 ## K-DATA-001 覆盖保存必须采用可回滚 Staging 事务
 
+### 2026-10-31 R2｜MapDocument/Dataset 与 Manifest 事务
+Dataset 文件先按 Generation 构建可验证候选，再以 Manifest 原子替换作唯一提交指针；旧 Generation 与 previous 不能自动覆盖受损当前文件。显式恢复需保留损坏当前文件和 previous 以备审计。引用保存失败不应悄悄移除引用；跨目录先规范工程根和路径。10/31 Editor R1-G-R2 本地相关修改仍未提交，不能称已推送。
+
+
 **状态**：Active
 **优先级**：P0
 **证据等级**：E3
@@ -86,6 +90,10 @@ Plan
 ---
 
 ## K-DATA-002 Load 必须 Candidate→Commit，结构失败与资源失败分级
+
+### 2026-10-31 R2｜Map 引用与 Generation 一致性
+加载先验证 Manifest、CommitId/Generation、Dataset、稳定 MapId/类型/路径一致，再构建候选World/Map；失败不应先污染当前Authority。previous 恢复属于用户显式操作，非自动降级。来源10/18 MAP-R1候选，不能据此宣称所有故障注入完成。
+
 
 **状态**：Active
 **优先级**：P0

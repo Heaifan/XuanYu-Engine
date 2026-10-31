@@ -168,6 +168,10 @@ E5 验收基线：World.Tests 22 个已登记 baseline failure，New Regression 
 
 ## K-INP-003 Input Router 只有接入真实生产 Source 才算完成
 
+### 2026-10-31 R2｜Router 外生产入口也需统一终止合同
+10/03 Lifecycle 2/36、Transform UI 8/50 失败的历史审计：直接Gizmo/Draw路径如绕过Router Begin/Pressed，也必须纳入同一终止状态机或真实集成测试。Router-only合同绿灯不能证明ToolChanged、CaptureLost、Preview/Commit/Cancel全部闭合，不能把L3/G2任务设计写作已修复。
+
+
 **状态**：Active
 **优先级**：P0
 **证据等级**：E2

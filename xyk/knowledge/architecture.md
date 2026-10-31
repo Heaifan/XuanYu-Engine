@@ -126,6 +126,10 @@ Screen A
 
 ## K-SPA-002 斜视 Metric 具有方向性，计算失败时保持上一合法状态
 
+### 2026-10-31 R2｜10月16日相机知识强化
+用户10/16确认产品知识提交15aa3ad0d3dcfb320272b4045e1b78b0412c8a45。渲染Heightfield三角面、Ground Query映射、Camera Pivot/净空、ScaleBar参考面必须分清；不得把Pivot修复视作513近地画质已通过。新增K-SPA-004约束只读净空不改变Anchor、ObservationCenter。
+
+
 **状态**：Active
 **优先级**：P1
 **证据等级**：E1

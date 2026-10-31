@@ -12,6 +12,10 @@
 静态架构迁移优先零构建，只读盘点、改目录、再统一提交审批。不得每迁一个目录、每个 Agent 并发、每次失败后自动反复 Build/Restore。获授权后冻结 Source Tree、进程入口、缓存根、输出身份，仅一次受控验证；失败保留诊断，下一轮需重新批准。所有缓存集中复用，严禁复制多个嵌套 .xye-workspace。静态 PASS 不能冒称 0W0E。
 
 ## K-GOV-009｜XYK 候选必须逐轮去重、裁定、写回
+
+### 2026-10-31 R2｜专用XYK Candidate Changelog
+用户裁定从下一轮Codex工程任务开始，施工Agent先核查仓库记录约定，在专门的XYK Candidate Changelog追加每轮全部候选草案，含任务、日期、Source Tree/Commit、证据、风险、去重建议与候选状态；不得混入产品发布CHANGELOG，也不得把本地候选日志当正式K Event。ChatGPT审核后才可正式提交xyk/main及回执。
+
 **ACTIVE｜P0｜E2｜U：10/30 用户 XYK 流程裁定。**
 凡 Codex/施工报告含 XYK、XYK CANDIDATE 或长期可复用规则，知识 Owner 必须按既有 ID 搜索，逐项 CREATE / UPDATE / STRENGTHEN / SUPERSEDE / REJECT / NONE，并区分「经验候选、知识已写入、Git 远端已推送」。正式改动都须有 K Event、更新索引、K Commit；未提交产品源码填 -，不得用候选报告当已落实的产品验收。避免因换任务名重复造知识卡。
 
@@ -24,6 +28,10 @@
 单 C# 文件≤100 行、末级目录≤5 文件、SRP、严格三级目录；不允许无限增加四级目录躲避 5+100。一级有超过10个二级是考虑拆编的警戒线而非绝对违例。短文件名、测试源码 test_ 前缀且放独立 *.Tests。Core / World / Render.Abstractions 不可反向依赖 Editor 或 Render.Vulkan；迁移路径静态通过不代表 Build/Test/运行通过。Scene 短名迁移远端证据：[bfaa3342](https://github.com/Heaifan/XuanYu-Engine/commit/bfaa33425abd51325544c743168c764805376a83)。
 
 ## K-WORLD-001｜WorldState Candidate 发布前先验身份/父子不变量
+
+### 2026-10-31 R2｜GlobalWorld.Replace原子性仍待B批验证
+10/29 R2-A 12/12、63/63只证明Candidate隔离/层级合同；原EntityRegistry.Replace从Clear开始逐项写入，跨Registry、Partition、SpatialIndex可能异常后部分污染。R2-B目标是在隔离结构中预建，短锁+Generation比对后整体交换，故障注入后旧World保持；B批当时只有DESIGN READY，不得把规则写作已完工。
+
 **ACTIVE｜P0｜E2｜R：[b8ae01f9](https://github.com/Heaifan/XuanYu-Engine/commit/b8ae01f92f942074c81a1da70c2fc8220c3870b5)。**
 World 更改须在隔离 Candidate 中验证 Identity、Parent Graph、层级环和发布前不变量；失败不可部分污染当前 World。相关远端提交具有 Candidate、Validator 与隔离性测试，只能证明 R2-A 局部整改；Registry.Replace 回滚、其他 World R2 能力及全仓门禁未因该提交自动 CLOSED。
 
@@ -32,6 +40,10 @@ World 更改须在隔离 Candidate 中验证 Identity、Parent Graph、层级环
 30m HGT raw 采样与低密度显示网格不是同一测量精度；近地 ray hit、GroundPick/绑定和渲染三角面须分别验证，不得假定粗 LOD 表面即地理事实。Wheel Dolly 保持 ObservationCenter 不变量，MinDistance=0.25m，不改成 Cursor-anchored Zoom；Camera 与渲染地形查询一致性需固定样本。GroundPick=Terrain/Plane/Invalid 时 Invalid 不可静默回退 Z=0。2.5m 近地画面/513、1025、2049 对照属于实验样本，未证明完整实时性能。
 
 ## K-REN-006｜在途帧槽、交换链图像与 GPU 资源生命周期分离
+
+### 2026-10-31 R2｜Terrain Cache双条件退休
+10/22～23 M2-B1报告发现GPU Fence/Readback完成仍不足，旧CommandBuffer可能持有GPU缓存Buffer引用。TerrainGpuCache追踪退休资源，FrameOwner追踪命令缓冲Committed引用集合；只有成功重录后替换旧集合，取消录制保留。销毁须同时满足GPU已完成、旧CommandBuffer不再引用。RTX3060 Offscreen样本Evict后3 retired/0 destroyed，重录后4 destroyed；不覆盖DeviceLost、录制失败、Swapchain/Present或线程安全。
+
 **ACTIVE｜P0｜E2｜R：[6dd62073](https://github.com/Heaifan/XuanYu-Engine/commit/6dd62073e0c91a925000c6297d873020dd0df36c)，U：M2-A2 51/51 CPU 合同。**
 Frame Slot、Swapchain Image、Fence、Semaphore、每图像 Depth Attachment 必须分别追踪；1↔2帧切换明确排空、资源租约和延迟退休，防止 GPU 在途引用被提前 Dispose。Acquire/Submit/Present/Resize/OutOfDate 分门禁记录。CPU 合同通过不代表双帧 RTX3060 GPU 性能或运行时切换全验收；默认单帧的事实不得隐去。
 

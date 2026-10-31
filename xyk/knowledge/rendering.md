@@ -116,6 +116,10 @@ Vulkan
 
 ## K-REN-004 Editor World Reference Grid 必须独立于 MapGround
 
+### 2026-10-31 R2｜10月3日空世界逻辑平面裁定
+ReferencePlane 只保留逻辑 Picking/Ground Authority，不再生成可见 DrawKind/Buffer；Sky/Grid 独立显示，空世界没有 Terrain/Map 时也应有 Grid。MapGround 与 Terrain 不拥有 ReferencePlane 生命周期；相关 DEC-XYE-EMPTY-WORLD-20261003。历史曾建议把此项命名 K-REN-006，因正式 K-REN-006 已分配帧生命周期，不得重复。
+
+
 **状态**：Active
 **优先级**：P0
 **证据等级**：E3
