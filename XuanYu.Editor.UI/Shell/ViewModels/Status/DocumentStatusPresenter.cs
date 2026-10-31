@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace XuanYu.Editor.UI;
 
-internal sealed class DocumentStatusPresenter(Func<bool> isDirty) : INotifyPropertyChanged
+public sealed class DocumentStatusPresenter(Func<bool> isDirty) : INotifyPropertyChanged
 {
     string _footerState = "状态：就绪";
     bool _isSceneBusy;

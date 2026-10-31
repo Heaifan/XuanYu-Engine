@@ -432,3 +432,19 @@
 - Evidence: Release dependency build compiled `XuanYu.Editor.UI`, `XuanYu.Editor.App`, and `XuanYu.World.Tests` with 0 warnings / 0 errors. Focused notification presenter, UiD5, and terrain notification contracts passed 16/16.
 - Boundary: This is the first R9 panel batch only. Logging, Document Status, ProjectTree, Layer, Inspector and remaining cross-domain coordination have not been closed or reclassified. UI visual startup validation remains pending final integration.
 - XYK: NONE (no reusable rule change identified). Existing L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator.
+
+### TASK XYE-EDITOR-UIVM-R9 — Logging panel binding batch
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; base includes notification batch `b6f6160b`; Release build identity=044C91640041D0E1FD6578F244784C31BF3C3568C3543AED7E138947E4EB4C8C.
+- Changes: `Foot` and `LogDetailPanel` now use `LogPresenter` directly. The presenter owns log projection/filter state, open/detail state, single/multiple selection and clipboard projection. Removed UiVm's redundant log binding aliases, selection state, shell state, log commands and obsolete partial files; retained only the `LogPresentation` composition binding plus three global-shortcut compatibility members. UiRoot and the native host now observe the presenter and detach old DataContext subscriptions. Updated existing tests to address the owning presenter without changing behavior assertions. Moved `LogPresenter` into the Logging ViewModel folder and general `EditorDisplayText` into Infrastructure/DisplayText to keep touched source directories within the local 5+100 bounds.
+- Evidence: Release dependency build compiled `XuanYu.Editor.UI`, `XuanYu.Editor.App`, and `XuanYu.World.Tests` with 0 warnings / 0 errors. Focused Log Presenter/performance, UiRoot row, UiD5 structure/empty-state suites passed 36/36.
+- Boundary: Startup/runtime visual validation remains for final integration. Log notifications keep the existing synchronous caller-thread behavior; cross-thread Avalonia binding safety is not established.
+- XYK: NONE (no new durable rule). Existing L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator.
+
+### TASK XYE-EDITOR-UIVM-R9 — Document Status panel binding batch
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; base includes `b6f6160b` (Notification) and `f08bf457` (Logging); Release build identity=78E195BFE6FBF8109480EB0199A49AAFB98BE5C989BFEF9E8019D967AC408E1D.
+- Changes: The Runtime Status badge binds directly to `DocumentStatusPresenter`; the Save button reads its CanRun state through the existing panel reference. Removed UiVm's eight mirrored status/button properties and the presenter-to-UiVm PropertyChanged bridge. Scene dirty authority and save command execution remain with their existing owners.
+- Evidence: Release dependency build compiled `XuanYu.Editor.UI`, `XuanYu.Editor.App`, and `XuanYu.World.Tests` with 0 warnings / 0 errors. DocumentStatusPresenter and SceneDocument feedback contracts passed 12/12.
+- Boundary: The callback into scene dirty state remains read-only. Runtime UI/thread validation remains for final integration.
+- XYK: NONE (no new durable rule). Existing L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator.

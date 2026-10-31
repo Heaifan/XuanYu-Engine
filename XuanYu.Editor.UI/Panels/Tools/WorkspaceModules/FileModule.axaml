@@ -46,7 +46,7 @@
                    x:Name="SaveSceneButton"
                    local:XYDiagnostic.DebugId="XYE.TOP.FILE.SAVE"
                    MinHeight="34"
-                   IsEnabled="{Binding CanRunSaveCommand}"
+                   IsEnabled="{Binding DocumentStatusPanel.CanRunSaveCommand}"
                    Command="{Binding RunCommand}"
                    CommandParameter="保存"
                    ToolTip.Tip="保存场景">

@@ -31,7 +31,6 @@ public sealed partial class UiVm
         ArgumentNullException.ThrowIfNull(sceneState); ArgumentNullException.ThrowIfNull(mapSession);
         _documentStatusPresenter = new DocumentStatusPresenter(() => IsSceneDirty);
         _terrainImportCoordinator.Changed += RaiseImportBindings;
-        _documentStatusPresenter.PropertyChanged += (_, args) => OnPropertyChanged(args.PropertyName);
         _editorState = new EditorStateOwner(isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         _contextState = new EditorContextOwner(); _authoringState = new EditorAuthoringOwner();
         _sceneState = sceneState; _worldMutation = sceneState;

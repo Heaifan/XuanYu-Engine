@@ -16,7 +16,7 @@ public sealed partial class SceneDocumentTests
 
         Assert.Equal(target, vm.CurrentScenePath);
         Assert.False(vm.IsSceneDirty);
-        Assert.Equal("状态：另存为成功", vm.DocumentStatusText);
+        Assert.Equal("状态：另存为成功", vm.DocumentStatusPanel.DocumentStatusText);
         Assert.Contains(Path.GetFileName(target), vm.DocumentTitle);
         Assert.Contains(vm.LogPresentation.LogItems, x => x.Message == $"场景另存为成功：{Path.GetFileName(target)}" &&
             x.Detail == $"Path={target}");
@@ -30,8 +30,8 @@ public sealed partial class SceneDocumentTests
 
         Assert.True(vm.IsSceneDirty);
         Assert.Contains("（未保存）", vm.DocumentTitle);
-        Assert.Equal("状态：未保存", vm.DocumentStatusText);
-        Assert.True(vm.IsSaveButtonHighlighted);
+        Assert.Equal("状态：未保存", vm.DocumentStatusPanel.DocumentStatusText);
+        Assert.True(vm.DocumentStatusPanel.IsSaveButtonHighlighted);
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public sealed partial class SceneDocumentTests
         Assert.True(await vm.SaveSceneAsync());
 
         Assert.False(vm.IsSceneDirty);
-        Assert.Equal("状态：保存成功", vm.DocumentStatusText);
+        Assert.Equal("状态：保存成功", vm.DocumentStatusPanel.DocumentStatusText);
         Assert.False(vm.DocumentTitle.Contains("（未保存）", StringComparison.Ordinal));
         Assert.Contains(vm.LogPresentation.LogItems, x => x.Message == $"场景保存成功：{Path.GetFileName(path)}" &&
             x.Detail == $"Path={path}");
@@ -60,11 +60,11 @@ public sealed partial class SceneDocumentTests
         Assert.True(vm.TryCommitInspectorTransformValue("位置", "X", "2"));
         vm.TryUndoFromShortcut();
         Assert.False(vm.IsSceneDirty);
-        Assert.Equal("状态：就绪", vm.DocumentStatusText);
+        Assert.Equal("状态：就绪", vm.DocumentStatusPanel.DocumentStatusText);
 
         vm.TryRedoFromShortcut();
         Assert.True(vm.IsSceneDirty);
-        Assert.Equal("状态：未保存", vm.DocumentStatusText);
+        Assert.Equal("状态：未保存", vm.DocumentStatusPanel.DocumentStatusText);
     }
 
     [Fact]
@@ -77,8 +77,8 @@ public sealed partial class SceneDocumentTests
         Assert.False(await vm.SaveSceneAsync(badTarget));
 
         Assert.True(vm.IsSceneDirty);
-        Assert.Equal("状态：保存失败", vm.DocumentStatusText);
-        Assert.True(vm.IsSaveButtonHighlighted);
+        Assert.Equal("状态：保存失败", vm.DocumentStatusPanel.DocumentStatusText);
+        Assert.True(vm.DocumentStatusPanel.IsSaveButtonHighlighted);
         Assert.Contains("（未保存）", vm.DocumentTitle);
         Assert.Contains(vm.LogPresentation.LogItems, x => x.Message == "场景保存失败" &&
             x.Detail.Contains("Code=InvalidScenePath", StringComparison.Ordinal));

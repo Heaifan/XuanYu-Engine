@@ -294,6 +294,7 @@
 - XuanYu.Editor.UI/Panels/Status/StatusWidgets/NotificationBar.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
 - XuanYu.Editor.UI/Panels/Status/StatusWidgets/NotificationBar.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Status/UiVm.DocumentStatus.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/ViewModels/Status/DocumentStatusPresenter.cs — C# 源码文件，承载文档状态与保存按钮投影。
 - XuanYu.Editor.UI/Panels/Tools/ContextTools/ContextToolBar.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
 - XuanYu.Editor.UI/Panels/Tools/ContextTools/ContextToolBar.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Tools/ContextTools/ContextToolbarDiagnosticBridge.cs — C# 源码文件，承载仓库实现或测试职责。

@@ -49,7 +49,9 @@
                   VerticalAlignment="Center">
         <xy:XYCaption Text="状态"
                       VerticalAlignment="Center"/>
-        <xy:XYBadge Text="{Binding DocumentStatusText}"
+        <xy:XYBadge DataContext="{Binding DocumentStatusPanel}"
+                    x:DataType="local:DocumentStatusPresenter"
+                    Text="{Binding DocumentStatusText}"
                     Variant="Default"
                     ToolTip.Tip="文档状态"/>
         <xy:XYBadge Text="{Binding FooterMode}"
