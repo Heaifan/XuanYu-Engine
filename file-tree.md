@@ -1707,7 +1707,6 @@
 - XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceContracts/EditorWorkspaceId.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceManagement/EditorWorkspaceManager.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceManagement/EditorWorkspaceTransitionCoordinator.cs — 工作区切换期间旧交互终止、上下文协调与发布顺序。
-- XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceManagement/EditorWorkspaceTransitionCoordinator.cs — 工作区切换期间旧交互终止、上下文协调与发布顺序。
 - XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceManagement/EditorWorkspaceTool.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceContracts/EditorWorkspaceTransition.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor/Authoring/CoordinationFlow/WorkspaceContracts/RegionAuthoringMode.cs — C# 源码文件，承载仓库实现或测试职责。
@@ -2327,7 +2326,6 @@
 - XuanYu.World.Tests/Viewport/UnifiedPointerReadinessContractTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Viewport/ViewportInputRouterLifecycleTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Workspace/EditorWorkspaceManagerTests.cs — C# 源码文件，承载仓库实现或测试职责。
-- XuanYu.World.Tests/Workspace/test_EditorWorkspaceTransitionCoordinatorTests.cs — 工作区切换协作顺序合同测试。
 - XuanYu.World.Tests/Workspace/test_EditorWorkspaceTransitionCoordinatorTests.cs — 工作区切换协作顺序合同测试。
 - XuanYu.World.Tests/Workspace/EditorWorkspaceUiCompositionTests.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.World.Tests/Workspace/EditorWorkspaceUiTests.cs — C# 源码文件，承载仓库实现或测试职责。
