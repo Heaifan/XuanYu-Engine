@@ -342,6 +342,7 @@
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/UiVm.TerrainAutoFraming.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/UiVm.TerrainPresentationHook.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/UiVm.Workspace.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Panels/Workspace/WorkspaceLifecycle/HistoryCoordinator.cs — 场景与地图撤销重做路由协调器。
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceSelector.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
 - XuanYu.Editor.UI/Panels/Workspace/WorkspaceSelector.axaml.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Composition/Application/Main.axaml — Avalonia XAML 文件，承载界面结构或样式职责。
@@ -360,6 +361,7 @@
 - XuanYu.Editor.UI/Shell/Documents/Persistence/UiVm.SceneDocumentLog.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Documents/Persistence/UiVm.SceneDocumentMapRef.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Documents/Persistence/UiVm.SceneDocumentSave.cs — C# 源码文件，承载仓库实现或测试职责。
+- XuanYu.Editor.UI/Shell/Documents/SceneDocument/SceneDocumentCoordinator.cs — 场景文档生命周期与保存/加载协调器。
 - XuanYu.Editor.UI/Shell/Documents/Rendering/SceneRenderProjectionAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Documents/Rendering/StaticModelRenderAdapter.cs — C# 源码文件，承载仓库实现或测试职责。
 - XuanYu.Editor.UI/Shell/Documents/Rendering/UiVm.RenderProjection.cs — C# 源码文件，承载仓库实现或测试职责。

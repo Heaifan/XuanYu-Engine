@@ -19,7 +19,7 @@ public sealed partial class UiVm
     {
         ValidateXycCreate(sceneId, revision);
         _xycSessionSceneId ??= SceneId;
-        _xycSessionLifecycleRevision ??= _documentSession.LifecycleRevision;
+        _xycSessionLifecycleRevision ??= DocumentSession.LifecycleRevision;
         XycBeforeWorldMutationForTest?.Invoke();
         var before = _sceneState.Entities.Select(x => x.EntityKey).ToHashSet();
         WorldEntitySnapshot? added = null;

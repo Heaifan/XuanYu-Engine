@@ -5,27 +5,6 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    bool TryApplyHistoryAndComplete(HistorySnapshot top, bool undo)
-    {
-        try
-        {
-            if (!ApplyHistory(top.Entry, undo) ||
-                !(undo ? _historyOwner.TryCompleteUndo(top) : _historyOwner.TryCompleteRedo(top)))
-            {
-                FenceAppliedXycHistory(top.Entry, undo, "HISTORY_COMPLETION_FAILED");
-                FooterMessage = "撤销/重做未能确认；历史栈保持待核验状态。";
-                return false;
-            }
-            return true;
-        }
-        catch (Exception error)
-        {
-            FenceAppliedXycHistory(top.Entry, undo, "HISTORY_APPLY_UNCONFIRMED:" + error.GetType().Name);
-            FooterMessage = "撤销/重做异常；历史栈未移动，请检查场景状态。";
-            return false;
-        }
-    }
-
     void FenceAppliedXycHistory(object entry, bool undo, string reason)
     {
         var id = entry switch

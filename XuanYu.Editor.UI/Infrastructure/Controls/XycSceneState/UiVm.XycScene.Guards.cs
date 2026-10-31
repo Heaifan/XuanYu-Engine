@@ -48,7 +48,7 @@ public sealed partial class UiVm
         if (_xycSessionSceneId is not null && _xycSessionSceneId != SceneId)
             throw new XycSceneOperationException("SCENE_MISMATCH");
         if (_xycSessionLifecycleRevision is not null &&
-            _xycSessionLifecycleRevision != _documentSession.LifecycleRevision)
+            _xycSessionLifecycleRevision != DocumentSession.LifecycleRevision)
             throw new XycSceneOperationException("SCENE_MISMATCH");
         if (_xycCommitStatus == "IN_DOUBT") throw new XycSceneOperationException("IN_DOUBT");
         if (revision != SceneRevision) throw new XycSceneOperationException("STALE_REVISION");

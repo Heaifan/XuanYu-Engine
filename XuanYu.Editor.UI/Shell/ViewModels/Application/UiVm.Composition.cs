@@ -35,8 +35,12 @@ public sealed partial class UiVm
         _contextState = new EditorContextOwner(); _authoringState = new EditorAuthoringOwner();
         _sceneState = sceneState; _worldMutation = sceneState;
         _selectionCoordinator = new SelectionCoordinator(_editorState, _sceneState, _projectTreePresenter);
-        _saveTransaction = new SceneDocumentSaveTransaction(_sceneStorage);
-        _loadTransaction = new SceneDocumentLoadTransaction(_sceneStorage, new GlbImportService(), _partitionStrategy);
+        var sceneStorage = new SceneStorageService();
+        _sceneDocumentCoordinator = new SceneDocumentCoordinator(
+            new SceneDocumentSaveTransaction(sceneStorage),
+            new SceneDocumentLoadTransaction(sceneStorage, new GlbImportService(), _partitionStrategy));
+        _historyCoordinator = new HistoryCoordinator(
+            _historyOwner, ApplyHistory, FenceAppliedXycHistory, message => FooterMessage = message);
         _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();
         if (_sceneState.RenderSnapshot.HasEntity) _sceneState.EnsureEntityCount(10);
         SurfaceBridgeFactory = surfaceBridgeFactory;

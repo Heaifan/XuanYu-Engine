@@ -9,7 +9,7 @@ public sealed partial class UiVm
     {
         CancelActiveInput("新建场景");
         _historyOwner.Clear();
-        _documentSession.MarkNew();
+        _sceneDocumentCoordinator.MarkNew();
         _staticModelCatalog.Clear();
         _staticModelResources.Clear();
         _sceneState.ReplaceEntities([]);
