@@ -326,3 +326,13 @@
 - Known Risk: Editor startup smoke is still pending final combined pass. Transform controls remain OneWay numeric bindings with direct commit calls; no persistent per-axis text draft was introduced. UI-thread scheduling remains unverified.
 - XYK: NONE (local extraction; no new reusable rule). L-TEST-001 STRENGTHEN formal receipt remains pending XYK Coordinator.
 - Verification Boundary: Focused Release build and named test groups only; startup/visual acceptance not yet claimed.
+
+### TASK XYE-EDITOR-UIVM-R4 — Final closeout / XYK NONE
+- Time: 2026-10-31 (UTC+08:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; HEAD before closeout=7b8ae28c05bfdab56181b414bafc82cab72e046c; root untracked path `5` preserved.
+- Combined verification: Editor.App Release build gate reused matching Release identity 060681A0C0FFC9F95779EB83B409AAA132B2A8CB6F51CD6E645FCF669CA4472A (SDK 10.0.400); the prior per-batch Release builds succeeded 0 warnings / 0 errors. Editor launched from the final build; window rendered the unnamed scene and initialized Project, Layer, and Inspector panes. No startup/resource/binding error was visible in the smoke observation. Automated UI-log instrumentation was not run; product visual acceptance remains MANUAL.
+- Focused test evidence across the three batches: ProjectTree 21/21; Layer 52/52; Inspector behavior/commit 41/41; Inspector AXAML/token/focus/layout 28/28. Suites overlap; counts are reported separately and not summed.
+- Ownership result: ProjectTreePresenter owns display-node projection/cache and tree-only display state; SceneStateOwner remains entity source and EditorStateOwner canonical selection. LayerPresenter owns list projection and derived selection/availability; MapEditSession remains layer authority. InspectorDraft owns input draft, parsing/validation, and cancel state; SceneStateOwner/MapEditSession remain models while UiVm retains commit/history orchestration.
+- Residual: caller-thread synchronous notification contract is preserved; UI-thread dispatch safety is unverified. Transform fields remain direct numeric commit controls rather than persistent per-axis drafts. Visual acceptance remains MANUAL.
+- XYK: NONE for this extraction. Existing L-TEST-001 STRENGTHEN remains pending formal XYK Coordinator receipt; no formal knowledge entry was changed.
+- Verification boundary: Named focused suites and Release build only; no full test suite. Root untracked path `5` remains untouched and excluded from task commits.
