@@ -8,7 +8,7 @@ namespace XuanYu.World.Tests.UiTokens;
 public sealed class UiD5UnsavedDialogBehaviorTests
 {
     static string SceneCommands() => File.ReadAllText(Path.Combine(TestSourceRoot.Root,
-        "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
+        "XuanYu.Editor.UI", "Shell", "Windowing", "Commands", "UiWin.SceneCommands.cs"));
 
     static string ConfirmNewMapMethod(string scene)
     {

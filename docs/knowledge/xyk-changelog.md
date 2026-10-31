@@ -405,3 +405,10 @@
 - Changes: Moved the NewBlankScene lifecycle order into `SceneDocumentCoordinator.StartNew`: cancel active input, clear scene history, mark the new document, clear assets/entities, reset the existing map session/manifest/camera, clear selection, then publish status/projection. Each action still delegates to its existing authority; MapManifest transaction internals remain unchanged.
 - Final Evidence: After the New Scene sequence migration, Release `XuanYu.World.Tests` dependency build succeeded 0 warnings / 0 errors (identity=B030A1BF8ADAA76AE5286EC5C4B8D1A2E23BB0AD533E9992C3D022ACF4FC1778); SceneDocument/blank-scene tests passed 12/12. No History or R6 Camera tests were repeated.
 - Counts: UiVm partial 154; fields 136; methods 532; properties 421. The method count is the R6 baseline plus exact R7 declarations (derived from the diff).
+
+### TASK XYE-EDITOR-UIVM-R7 — P0 verification supplement
+- Time: 2026-10-31 12:39:55 (UTC+00:00)
+- Source Identity: Branch=codex/world-r1-migration-20261028; source HEAD=84bfa8fd4277e47159426ba86ff01236a7cf47a9.
+- Changes: Confirmed PID 40248 was not running. Corrected only the `UiD5UnsavedDialogBehaviorTests` source locator from the retired `Win` path to `Shell/Windowing/Commands`; no behavior assertions or method slicing changed.
+- Evidence: Release `XuanYu.World.Tests` dependency build succeeded 0 warnings / 0 errors (identity=C41C98BA15BD76B2EF8BCBD9B857616EBDD40A04D935CF5CE69AF075EB8B4800). The corrected UiTokens class plus SceneDocument, BlankScene, Scene History, Map History, and region-draft contracts passed 34/34.
+- XYK: NONE. Existing L-TEST-001 STRENGTHEN formal receipt remains pending XYK Coordinator; no formal knowledge entry changed.
