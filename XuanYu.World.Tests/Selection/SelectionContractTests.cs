@@ -1,4 +1,8 @@
 using XuanYu.Editor.UI;
+using XuanYu.Editor;
+using XuanYu.Core.Picking;
+using XuanYu.Core.Spatial;
+using XuanYu.World.Scene;
 
 namespace XuanYu.World.Tests.World;
 
@@ -26,6 +30,20 @@ public sealed class SelectionContractTests
 
         Assert.Equal(11, publishes);
         Assert.Equal(entities[0].Key, vm.SelectionKey);
+    }
+
+    [Fact]
+    public void Viewport_miss_is_routed_as_a_selection_clear_request()
+    {
+        var coordinator = new SelectionCoordinator(
+            new EditorStateOwner(() => true), new SceneStateOwner(), new ProjectTreePresenter());
+
+        var miss = new ViewportPickingResult(1, 1, 0,
+            new SpatialRaycastResult(null, new(0, 0, 0, 0, 0, 0)));
+        var request = coordinator.ResolveViewportSelection(miss);
+
+        Assert.Equal("视口空白", request.Source);
+        Assert.Null(request.Node);
     }
 
     static List<EditorTreeNode> EntityNodes(UiVm vm)

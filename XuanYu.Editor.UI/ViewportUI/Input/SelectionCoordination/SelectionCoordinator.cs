@@ -1,4 +1,5 @@
 using XuanYu.Core.Identity;
+using XuanYu.Core.Picking;
 using XuanYu.Editor;
 using XuanYu.World;
 using XuanYu.World.Scene;
@@ -69,6 +70,15 @@ internal sealed class SelectionCoordinator(
 
     public bool IsEntityValid(EntityId key) => scene.TryGetEntity(key, out _);
 
+    public ViewportSelectionRequest ResolveViewportSelection(ViewportPickingResult result)
+    {
+        if (!result.HasHit) return new("视口空白", null);
+        if (result.EntityKey is not { } key || !scene.TryGetEntity(key, out var entity))
+            return new("视口失效命中", null);
+        return new("视口", new EditorTreeNode(entity.EntityKey.ToString(), entity.Name,
+            entity.Type, $"MainWorld/{entity.EntityKey}", 1, "entity"));
+    }
+
     public EditorStateChangedResult? SynchronizeProjection(string key,
         EditorTreeNode? project, EditorTreeNode? hierarchy, Action<string> setNodeKey,
         Action projectChanged, Action hierarchyChanged, Action selectionChanged)
@@ -92,3 +102,5 @@ internal sealed class SelectionCoordinator(
 internal sealed record SelectionTransition(
     EditorStateChangedResult? Changed,
     bool ActiveEntityChanged);
+
+internal sealed record ViewportSelectionRequest(string Source, EditorTreeNode? Node);
