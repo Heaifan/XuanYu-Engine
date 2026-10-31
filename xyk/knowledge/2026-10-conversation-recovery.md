@@ -10,15 +10,18 @@
 **ACTIVE；P0；E2；2026-10-04；历史别名 DRAWING-UX-FEEDBACK-001。**
 Accepted说明输入被当前Session接收；Rejected是单事件拒绝；Blocked是会话或环境前置条件阻断，必须给Reason。GroundPick、目标图层、Active Session缺失不得默默忽略。测试排错次序为Activation→Session→Input→Gesture/Capture→Commit；handled=false不是Router错误的充分条件。10/04历史W0/W1报告仅支持对应局部流程，不是所有Region/Road/Marker完成的证明。
 
-## K-SPA-004｜净空查询只读，不得夺取 Anchor/Orbit/ObservationCenter
-**ACTIVE；P0；E2（用户设计裁定）；2026-10-10。**
-允许狭义只读净空查询，但不得在查询中改变Anchor、Orbit Pivot或ObservationCenter。相机Wheel Dolly保持观察中心不变量，MinDistance=0.25m。渲染地形三角面、Ground Query及GeographicWorldMapping须明确同一事实基准；Camera-to-Pivot与相机距显示网格的净空分别报告。10/16 R6的Pivot修复不能推断513密度、ScaleBar或近地视觉P4均修复。关联旧K-SPA-002、K-GEO-004。
+## K-SPA-004｜Editor / Gameplay Zoom Authority（R2摘要已纠错）
 
+R2最初用“净空查询只读”作为此ID的完整标题，遗漏10月5日正式裁定的产品上下文分离及K-SPA-003的作用域继承。2026-10-31 R4已按产品历史原文纠正；**唯一正式正文见 xyk/knowledge/architecture.md 的 K-SPA-004**。原有10月10日只读净空规则和入地Zoom-Out恢复规则都保留为该主合同的补充，不能在此另外开立同名Knowledge。历史R2事件作为审计轨迹保留，并新增UPDATE事件说明。
 ## K-XYC-001｜XYC必须走Editor权威状态和唯一UI写线程
 **ACTIVE；P0；E2；2026-10-14；产品证据 6b1979899d7421ee63d75833ebc7ceb0648f1505。**
 XYC是后台、不占鼠标的语义控制层；复用Editor的相机/场景/对象权威状态、UI线程和事务，不另设Shadow State。成功返回应以独立会话的生产状态与Revision回读证明执行，不等于屏幕帧完成。能力分READ/DIAGNOSTIC/SANDBOX_WRITE/LIVE_WRITE；规划中的单位、装备、Linux或模拟命令不因为接口示例而成为已交付功能。
 
 ## K-XYC-002｜自动化截图须证明目标GPU帧的新鲜度与对应身份
+
+### 2026-10-31 R4｜10月17日RTX3060真实隐藏HWND帧取证补充
+
+GitHub产品`4df10e80bdf9f1d86a11da2a1b42029e3d363a4d`新增静默Host/Capture；产品知识补强提交`71fc8c365fcdd83166b9d57fdd123fe81316d618`明确记录Windows RTX3060、776×650、不可见Win32 HWND、真实Vulkan Surface/Swapchain Present和GPU Readback、Dolly/Orbit相关CameraRevision与图像，定向14/14和相关构建0W0E。该报告的BuildIdentity含DIRTY=YES，不能声称完整源码与远端SHA逐字节一致，也不能证明普通可见UiWin、UI输入/布局或WP2-P4。此项为已知产品文档证据的独立XYK迁移/强化，**不升级本轮证据等级、不新建K-XYC-004**。
 **ACTIVE；P0；E2；2026-10-14～15；产品阶段证据 d2d011ac98314f172e0e3d729583e67832099f1f。**
 CameraRevision/Present回读和PrintWindow图像均不足以证明新相机/地形已渲染；重复帧不得作为尺度/画质证据。可靠截图要求声明Surface或Offscreen能力，Capture绑定Terrain RenderPass、GPU copy/readback、Fence、FrameId、CameraRevision、SourceRevision和PNG哈希；Manifest与构建输入/输出身份一致。没有真实GPU复制证明时，只能描述为目标合同。Headless、Silent Vulkan、真实桌面UiWin和用户P4彼此不能替代。
 

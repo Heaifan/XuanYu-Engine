@@ -237,3 +237,20 @@ GroundPick 区分 Terrain / Plane / Invalid；Terrain 采样失败禁止回退 Z
 - `XuanYu.Editor/MapEditing/TerrainWorldGroundSurface.cs`
 - Ground Authoring 提交链：`403fcdf3` → `3c966b07` → `e63e81ac` → `67ca6fd5`。
 
+## K-SPA-003｜Screen→Surface Anchored Zoom 是独立技术能力，不是 Editor 默认策略
+
+**状态**：ACTIVE｜**优先级**：P0｜**证据等级**：E1（来源于历史产品知识/测试报告，本轮未重新运行）｜**首次确认**：2026-10-03。
+**权威产品知识**：GitHub 10/17 快照 [architecture.md](https://github.com/Heaifan/XuanYu-Engine/blob/71fc8c365fcdd83166b9d57fdd123fe81316d618/docs/knowledge/architecture.md) 的 K-SPA-003；**2026-10-05范围修订**：其“Editor Wheel必须使用Cursor Anchor”的全局解释由K-SPA-004取代，Screen→Surface能力仍ACTIVE。
+
+显式要求屏幕锚点的Gameplay/交互可以由 Screen XY → GroundPickResult → SurfaceSource + World XYZ → Anchored Dolly 形成权威链。有效Terrain Hit不能悄悄回退ReferencePlane或强制Z=0；查询失败/NoData/越界必须给显式状态，不得用异常或Magic Offset掩盖；Router必须完整保留Wheel Delta和Screen XY的语义输入。Pure Dolly不得把锚点选择偷换成修改Orbit Pivot/Focus。该能力不是默认Editor Wheel产品策略，不得用历史技术测试通过强推Cursor Anchor。
+
+## K-SPA-004｜Editor / Gameplay Zoom Authority 按产品上下文分离
+
+**状态**：ACTIVE｜**优先级**：P0｜**证据等级**：E1（2026-10-05用户批准与旧产品知识，不代表本轮重测）｜**确认日期**：2026-10-05。
+**Effective Baseline**：\`4277b242391e273080c4c19b82c9acf53b348843\`（历史用户报告P4 PASS）；**来源**：\`GOVERNANCE-SUPERSEDE-K-SPA-003-EDITOR-NAVIGATION-R1\`、DEC-CAM-001；旧产品知识参见 [原始K-SPA-004](https://github.com/Heaifan/XuanYu-Engine/blob/71fc8c365fcdd83166b9d57fdd123fe81316d618/docs/knowledge/architecture.md)。
+
+Editor Wheel Zoom/Orbit共用当前ObservationCenter，Wheel不依赖鼠标位置、Cursor Anchor或GroundPick。Empty World初始中心为World Origin；Orbit Begin冻结当时中心。只有明确Center Authority Event（Initial Content Establishment Auto Frame、Pan、Explicit Focus/Frame/View Reframe等）可以改变中心，普通Zoom/Orbit/Select/LOD/Refresh/Render不得夺取中心。Gameplay或明确要求Screen-Anchored Navigation的交互仍可选用K-SPA-003能力；Editor政策与Gameplay技术能力不得混同。
+
+**10月10日狭义例外**：Editor Dolly为检查候选相机路径净空可作**只读Surface Query**，但绝不因查询GroundPick/换导航中心或修改Anchor、Orbit Pivot、ObservationCenter；必须声明所查询的Terrain/Heightfield/LOD面、NoData/越界/垂直夸张策略。起点已陷地形的Zoom-Out允许在保持中心权威不变时向外恢复；\`5b464dcd...\`的RED→GREEN仅证明对应CPU定向回归，不等于完整有效净空、64段路径/山脊/多Tile/真机Vulkan验证。
+
+**R2纠错（2026-10-31）**：R2补录曾将本ID的标题简化为“只读净空查询”，遗漏10月5日已正式确认的主合同与对K-SPA-003的Scope Supersede。本次恢复原有语义，不废除10月10日的有效补充；只追加UPDATE事件，不覆写历史R2 K Event。相关DEC-CAM-001。

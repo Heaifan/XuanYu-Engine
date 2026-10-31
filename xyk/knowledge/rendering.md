@@ -2,6 +2,10 @@
 
 ## K-REN-005 图形功能必须以语义正确的最终像素和 Runtime Visual Gate 收口
 
+### 2026-10-31 R4｜10月17日三档DEM静默Vulkan同帧对照
+
+真实实验文件 [XYC-WP2-P4-R8-RUN1](https://github.com/Heaifan/XuanYu-Engine/blob/1ca3b515a1d4f7b86cad2d9add0cbd45686d6c8c/docs/qa/XYC-WP2-P4-R8/XYC-WP2-P4-R8-RUN1.md) 记录Windows RTX3060、NASADEM n24e121.hgt、513/1025/2049在固定世界姿态与匹配净空下的隐藏HWND Swapchain Present及9张GPU-origin PNG身份（FrameId、CameraRevision、Readback/PNG SHA）；高采样档在图中恢复明显地形轮廓。但2049固定2km姿态ScaleBar查询无效且未显示，不能将它列为2km ScaleBar PASS。Auto LOD始终开启且分区拓扑随采样变化，故图像差异不能证明Auto LOD是主因；记录的规则网格三角形数不是实际GPU提交量。R8测试5/5和Release 0W0E只限对应报告；Arch-A存在Render.Abstractions→Vulkan依赖失败、工作区Dirty及未测实际帧时/显存等限制。此结果是实机图像诊断的限定环境证据，不等于WP2-P4用户视觉收口。
+
 ### 2026-10-31 强化｜Shader 源码与 SPIR-V 的证据层
 GLSL、SPIR-V/字节码、Descriptor/Pipeline 合同必须关联同一 Source Tree 和可复现构建，单一 Fragment 校验不能冒称全套 Shader 16/16 验收。静态源码和字节码一致也不代表真实 GPU 最终像素、Depth 与用户视觉通过；对未测项维持 UNKNOWN/PARTIAL。
 
