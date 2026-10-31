@@ -13,6 +13,10 @@
 
 ## K-GOV-009｜XYK 候选必须逐轮去重、裁定、写回
 
+### 2026-10-31 R4：历史产品知识与独立XYK交叉查重
+10/31 R2误把K-SPA-004写成单纯净空查询，却未发现产品知识在10/05已用该ID记录Editor/Gameplay Zoom Authority分域；10/10净空只是补充。正式创建/更新时必须搜索xyk/main和历史产品docs/knowledge两个源，对ID、历史主旨、日期、Supersede关系做核验。冲突先STOP，保留历史事件，以追加UPDATE纠正而非静默覆盖。此次恢复K-SPA-003与DEC-CAM-001，并正确扩充K-SPA-004；10/17静默GPU报告强化K-XYC-002。
+
+
 ### 2026-10-31 R2｜专用XYK Candidate Changelog
 用户裁定从下一轮Codex工程任务开始，施工Agent先核查仓库记录约定，在专门的XYK Candidate Changelog追加每轮全部候选草案，含任务、日期、Source Tree/Commit、证据、风险、去重建议与候选状态；不得混入产品发布CHANGELOG，也不得把本地候选日志当正式K Event。ChatGPT审核后才可正式提交xyk/main及回执。
 

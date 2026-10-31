@@ -109,9 +109,11 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 
 | K-DRAW-001 | Knowledge | Input | Drawing Session Snapshot 唯一事实源 | P0 | E2 | 2026-10-04 · 518a0849 | Active |
 | K-DRAW-002 | Knowledge | Input | 绘制Accepted/Rejected/Blocked及Reason | P0 | E2 | 2026-10-04 | Active |
-| K-SPA-004 | Knowledge | Spatial | 相机净空查询只读不得更改观察中心 | P0 | E2 | 2026-10-10 | Active |
+| K-SPA-003 | Knowledge | Spatial | Screen to Surface Anchored Zoom capability remains scoped | P0 | E1 | 2026-10-03; context split 2026-10-05 | Active |
+| K-SPA-004 | Knowledge | Spatial | Editor and Gameplay Zoom Authority context split; clearance is 10/10 addendum | P0 | E1 | 2026-10-05; baseline 4277b242 | Active |
+| DEC-CAM-001 | Decision | Spatial | Editor center navigation versus Gameplay anchored navigation | P0 | Design | 2026-10-05; baseline 4277b242 | Active |
 | K-XYC-001 | Knowledge | Automation | XYC语义命令使用Editor权威写线程及Revision | P0 | E2 | 2026-10-14 · 6b19798 | Active |
-| K-XYC-002 | Knowledge | Automation | 自动化截图需同帧身份和GPU完成证据 | P0 | E2 | 2026-10-14～15 · d2d011a | Active |
+| K-XYC-002 | Knowledge | Automation | 自动化截图需同帧身份和GPU完成证据 | P0 | E2 | 2026-10-14～17; 71fc8c36静默GPU取证 | Active |
 | K-XYC-003 | Knowledge | Automation | 写命令成功须核对World Projection History | P0 | E2 | 2026-10-18～19 · fa666cb | Active |
 | K-PERF-002 | Knowledge | Performance | 动态SSE须使用Renderer视锥和SourceRevision | P0 | E2 | 2026-10-18 | Active |
 | DEC-XYE-TERRAIN-HYDROLOGY-20261003 | Decision | Terrain | Base DEM只读和水文Graph局部增量更新 | P0 | Design | 2026-10-03～04 | Active |
@@ -121,6 +123,10 @@ Knowledge Preflight 有两个 Phase：`PLANNING` 与 `EXECUTION`。如果计划�
 | DEC-XYE-MCP-SERVER-20261001 | Decision | Automation | MCP Server-only、外置Host和Editor Bridge、源码控制权限 | P0 | Design | 2026-10-01 | Active |
 
 ## 分类文件
+
+- xyk/decisions/camera-zoom-context-2026-10.md — DEC-CAM-001与K-SPA-003/004纠错
+- xyk/governance/conversation-audit-2026-10-r4.md — 10/17 Vulkan取证与跨分支编号冲突
+
 
 - `xyk/decisions/mcp-server-boundary-2026-10.md`：10月1日MCP Server-only与控制权边界
 - `xyk/governance/conversation-audit-2026-10-r3.md`：Editor R1H-R2三条候选及10月1日MCP补证

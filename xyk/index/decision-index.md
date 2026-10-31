@@ -10,3 +10,4 @@
 - `xyk/decisions/empty-world-2026-10.md` — DEC-XYE-EMPTY-WORLD-20261003
 - `xyk/decisions/xyc-control-2026-10.md` — DEC-XYE-XYC-CONTROL-20261014
 - `xyk/decisions/mcp-server-boundary-2026-10.md` — DEC-XYE-MCP-SERVER-20261001 Server-only与Editor Bridge
+- xyk/decisions/camera-zoom-context-2026-10.md — DEC-CAM-001 Zoom权威分域
