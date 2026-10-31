@@ -441,13 +441,6 @@
 - Boundary: Startup/runtime visual validation remains for final integration. Log notifications keep the existing synchronous caller-thread behavior; cross-thread Avalonia binding safety is not established.
 - XYK: NONE (no new durable rule). Existing L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator.
 
-### TASK XYE-EDITOR-UIVM-R9 — Document Status panel binding batch
-- Time: 2026-10-31 (UTC+08:00)
-- Source Identity: Branch=codex/world-r1-migration-20261028; base includes `b6f6160b` (Notification) and `f08bf457` (Logging); Release build identity=78E195BFE6FBF8109480EB0199A49AAFB98BE5C989BFEF9E8019D967AC408E1D.
-- Changes: The Runtime Status badge binds directly to `DocumentStatusPresenter`; the Save button reads its CanRun state through the existing panel reference. Removed UiVm's eight mirrored status/button properties and the presenter-to-UiVm PropertyChanged bridge. Scene dirty authority and save command execution remain with their existing owners.
-- Evidence: Release dependency build compiled `XuanYu.Editor.UI`, `XuanYu.Editor.App`, and `XuanYu.World.Tests` with 0 warnings / 0 errors. DocumentStatusPresenter and SceneDocument feedback contracts passed 12/12.
-- Boundary: The callback into scene dirty state remains read-only. Runtime UI/thread validation remains for final integration.
-- XYK: NONE (no new durable rule). Existing L-TEST-001 STRENGTHEN formal receipt remains OPEN with XYK Coordinator.
 
 ### TASK XYE-EDITOR-UIVM-R9 — Document Status panel binding batch
 - Time: 2026-10-31 (UTC+08:00)
